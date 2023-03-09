@@ -1,0 +1,17 @@
+__pycache__
+.vscode
+.vs
+
+build/
+cimgui/
+Include/
+Lib/
+
+pygui/*.dll
+pygui/*.lib
+pygui/*.pyd
+pygui/*.cpp
+
+Scripts/
+
+imgui.ini
