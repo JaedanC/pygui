@@ -299,7 +299,7 @@ def parse_reduced_cimgui(src):
             for value in values.split(","):
                 if value == "":
                     continue
-                
+
                 enum.add_value(value)
             enums.append(enum)
             continue
@@ -685,15 +685,10 @@ def main():
         f.write(pxd_structs_forward_declaration(structs))
         f.write("\n")
         f.write(pxd_typedefs(typedefs))
+        f.write(pxd_enums(enums))
         f.write("\n\n")
         f.write(pxd_structs(structs))
         f.write(pxd_functions(functions))
-
-    with open("pygui/ccimgui_enums.pxd", "w") as f:
-        f.write("# -*- coding: utf-8 -*-\n")
-        f.write("# distutils: language = c++\n\n")
-        f.write('cdef extern from "cimgui.h":\n')
-        f.write(pxd_enums(enums))
 
     # print(pxd_structs_forward_declaration(structs))
     # print(pxd_typedefs(typedefs))
