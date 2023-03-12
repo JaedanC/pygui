@@ -1,5 +1,7 @@
 import json
 import re
+import keyword 
+from typing import Tuple, List
 
 
 class Parameter:
@@ -8,10 +10,15 @@ class Parameter:
         self.variable_name = None
     
     def set_data_type(self, data_type: str):
-        self.data_type = data_type
+        data_type = data_type.replace("struct", "")
+        self.data_type = data_type.strip()
         return self
     
     def set_variable_name(self, name: str):
+        if name in keyword.kwlist or name in dir(__builtins__):
+            name = name + "_"
+        
+        
         name = name.replace(",", ", ")
         self.variable_name = name
         return self
@@ -44,7 +51,7 @@ class Typedef:
 
 class Struct:
     def __init__(self):
-        self.parameters = []
+        self.parameters: List[Parameter] = []
         self.name = None
         self.typedef = None
     
@@ -140,7 +147,7 @@ class Function:
         )
 
 
-def reduce_cimgui_h(src):
+def reduce_cimgui_h(src) -> str:
     lines: list = src.split("\n")
     if "#ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS" not in lines:
         assert False
@@ -233,9 +240,11 @@ def reduce_cimgui_h(src):
     return src
 
 
-def parse_reduced_cimgui(src):
-    def parse_parameter_list(parameter_list):
+def parse_reduced_cimgui(src: str) -> \
+        Tuple[List[Enum], List[Struct], List[Typedef], List[Function]]:
+    def parse_parameter_list(parameter_list: List[str]) -> List[Parameter]:
         field_regex = re.compile("^(.*) (.*?)$")
+        function_pointer_regex = re.compile("^([_* a-zA-Z]*)(\(\*.*?\)\(.*\))$")
 
         parameters = []
         for field in parameter_list:
@@ -247,17 +256,157 @@ def parse_reduced_cimgui(src):
             
             if field == "void" or field == "" or field == "...":
                 continue
-
-            found = field_regex.match(field)
-            if found is None:
-                assert False, "Parameter does not match spec"
+        
+            # Can't play nice? No const for you
+            if field.count("const") > 1:
+                field = field.replace("const", "")
+            
+            # Accounts for function pointers that have const* in them
+            # which Cython does not like. It just removes the const in that
+            # case.
+            func_pointer_found = function_pointer_regex.match(field)
+            if func_pointer_found is not None:
+                _type = func_pointer_found.group(1)
+                name = func_pointer_found.group(2)
+                name = name.replace(" const", "")
+                name = name.replace(";", "")
+            else:
+                found = field_regex.match(field)
+                if found is None:
+                    assert False, "Parameter does not match spec"
+                _type = found.group(1)
+                name = found.group(2)
             
             parameter = Parameter()
-            parameter.set_data_type(found.group(1))
-            parameter.set_variable_name(found.group(2))
+            parameter.set_data_type(_type)
+            parameter.set_variable_name(name)
             parameters.append(parameter)
-
         return parameters
+    
+    def parameter_split(parameters: str, split_char: str) -> List[str]:
+        in_brackets = 0
+        groups = []
+        current = ""
+        for char in parameters:
+            if char == "(":
+                in_brackets += 1
+            if char == ")":
+                in_brackets -= 1
+            
+            if char == split_char and in_brackets == 0:
+                groups.append(current)
+                current = ""
+                continue
+            
+            current += char
+        groups.append(current)
+        return groups
+
+    def parse_typedef_lines(typedef_lines: List[str]) -> \
+            Tuple[List[Enum], List[Struct], List[Typedef]]:
+        enums = []
+        enum_regex = re.compile("typedef enum{(.*)}(.*);")
+
+        structs = []
+        typedef_struct_regex = re.compile("typedef struct (.*?)(?:{(.*?)}| ).*?;")
+
+        typedefs = []
+        typedef_regex = re.compile("typedef ([ _*a-zA-Z0-9]+) (.+?);")
+        for line in typedef_lines:
+            enum_found = enum_regex.match(line)
+            if enum_found is not None:
+                values = enum_found.group(1)
+                name = enum_found.group(2)
+
+                enum = Enum()
+                enum.add_name(name)
+                for value in values.split(","):
+                    if value == "":
+                        continue
+
+                    enum.add_value(value)
+                enums.append(enum)
+                continue
+            
+            struct_found = typedef_struct_regex.match(line)
+            if struct_found is not None:
+                name = struct_found.group(1)
+                fields = struct_found.group(2)
+
+                struct = Struct()
+                struct.add_name(name)
+                if fields is not None:
+                    for field in parse_parameter_list(parameter_split(fields, ";")):
+                        struct.add_parameter(field)
+                structs.append(struct)
+                continue
+            
+            typedef_found = typedef_regex.match(line)
+            if typedef_found is not None:
+                base = typedef_found.group(1)
+                definition = typedef_found.group(2)
+                typedefs.append(Typedef(base, definition))
+                continue
+        
+            print(line)
+            assert False, "Line did not match spec"
+        
+        
+        def custom_typedef_sort(typedef):
+            priority = [
+                "int",
+                "unsigned",
+                "signed",
+            ]
+
+            for i, _type in enumerate(priority):
+                if typedef.base.startswith(_type):
+                    return (i, typedef.base)
+            return (len(priority), typedef.base)
+        typedefs.sort(key=custom_typedef_sort)
+        return enums, structs, typedefs
+
+    def parse_struct_lines(struct_lines: List[str]) -> List[Struct]:
+        structs = []
+        struct_regex = re.compile("struct (.*?)(?:{(.*)})?;")
+        for line in struct_lines:
+            found = struct_regex.match(line)
+            if found is None:
+                print(line)
+                assert False, "Line did not match spec"
+            
+            name = found.group(1)
+            fields = found.group(2)
+            if fields is None:
+                continue
+
+            struct = Struct()
+            struct.add_name(name)
+            for field in parse_parameter_list(parameter_split(fields, ";")):
+                struct.add_parameter(field)
+            structs.append(struct)
+        return structs
+
+    def parse_function_lines(function_lines: List[str]) -> List[Function]:
+        functions = []
+        function_regex = re.compile("^(.+?) (.+?)\((.*?)\);$")
+        for line in function_lines:
+            found = function_regex.match(line)
+            if found is None:
+                print(line)
+                assert False, "Line did not match spec"
+            
+            _type = found.group(1)
+            name = found.group(2)
+            parameter_list = found.group(3)
+
+            function = Function()
+            function.add_return_type(_type)
+            function.add_name(name)
+            for field in parse_parameter_list(parameter_split(parameter_list, ",")):
+                function.add_parameter(field)
+            functions.append(function)
+        return functions
     
     typedef_lines = []
     struct_lines = []
@@ -279,323 +428,65 @@ def parse_reduced_cimgui(src):
         
         function_lines.append(line)
     
-    enums = []
-    enum_regex = re.compile("typedef enum{(.*)}(.*);")
-
-    structs = []
-    typedef_struct_regex = re.compile("typedef struct (.*?)(?:{(.*?)}| ).*?;")
-
-    typedefs = []
-    typedef_regex = re.compile("typedef ([ _*a-zA-Z0-9]+) (.+?);")
-
-    for line in typedef_lines:
-        enum_found = enum_regex.match(line)
-        if enum_found is not None:
-            values = enum_found.group(1)
-            name = enum_found.group(2)
-
-            enum = Enum()
-            enum.add_name(name)
-            for value in values.split(","):
-                if value == "":
-                    continue
-
-                enum.add_value(value)
-            enums.append(enum)
-            continue
-        
-        struct_found = typedef_struct_regex.match(line)
-        if struct_found is not None:
-            name = struct_found.group(1)
-            fields = struct_found.group(2)
-
-            struct = Struct()
-            struct.add_name(name)
-            if fields is not None:
-                for field in parse_parameter_list(fields.split(";")):
-                    struct.add_parameter(field)
-            structs.append(struct)
-            continue
-        
-        typedef_found = typedef_regex.match(line)
-        if typedef_found is not None:
-            base = typedef_found.group(1)
-            definition = typedef_found.group(2)
-            typedefs.append(Typedef(base, definition))
-            continue
-    
-        print(line)
-        assert False, "Line did not match spec"
-
-    struct_regex = re.compile("struct (.*?)(?:{(.*)})?;")
-    for line in struct_lines:
-        found = struct_regex.match(line)
-        if found is None:
-            print(line)
-            assert False, "Line did not match spec"
-        
-        name = found.group(1)
-        fields = found.group(2)
-        if fields is None:
-            continue
-
-        struct = Struct()
-        struct.add_name(name)
-        for field in parse_parameter_list(fields.split(";")):
-            struct.add_parameter(field)
-        structs.append(struct)
-    
-    functions = []
-    function_regex = re.compile("^(.+?) (.+?)\((.*?)\);$")
-    for line in function_lines:
-        found = function_regex.match(line)
-        if found is None:
-            print(line)
-            assert False, "Line did not match spec"
-        
-        _type = found.group(1)
-        name = found.group(2)
-        parameter_list = found.group(3)
-
-        function = Function()
-        function.add_return_type(_type)
-        function.add_name(name)
-        for field in parse_parameter_list(parameter_list.split(",")):
-            function.add_parameter(field)
-        functions.append(function)
-    
-
-    def custom_typedef_sort(typedef):
-        priority = [
-            "int",
-            "unsigned",
-            "signed",
-        ]
-
-        for i, _type in enumerate(priority):
-            if typedef.base.startswith(_type):
-                return (i, typedef.base)
-        return (len(priority), typedef.base)
-    typedefs.sort(key=custom_typedef_sort)
+    enums, structs, typedefs = parse_typedef_lines(typedef_lines)
+    structs += parse_struct_lines(struct_lines)
+    functions = parse_function_lines(function_lines)
 
     return enums, structs, typedefs, functions
 
 
-def get_structs(base):
-    with open(base + "structs_and_enums.json") as f:
-        structs_and_enums = json.load(f)
-    
-    structs = []
-    structs_obj = structs_and_enums["structs"]
-    for name, fields_obj in structs_obj.items():
-        struct = Struct()
-        struct.add_name(name)
-        for field_obj in fields_obj:
-            parameter = Parameter()
+def dependency_aware_sort(structs: List[Struct]) -> List[Struct]:
+    # First, initialise the dictionary to contain the names of the structs
+    # as keys
+    dependency_graph = { s.name: [] for s in structs }
 
-            name = field_obj["name"]
-            _type = field_obj["type"]
-
-            # TODO: Could find a way to get each component later
-            if "union" in _type:
+    # Then, add the parameters to each struct that is known to be a struct
+    # itself. Pointers to structs are okay because we know their size on
+    # compilation.
+    for struct in structs:
+        for parameter in struct.parameters:
+            # We know the size of pointers so they
+            # can be ignored
+            if "*" in parameter.data_type:
                 continue
 
-            if "(*)" in _type:
-                new_type = _type[:_type.find("(*)")]
-                _type = _type[_type.find("(*)"):]
-                _type = _type.replace("(*)", f"(*{name})")
-                name = _type
-                _type = new_type
-            
-            parameter.set_variable_name(name)
-            parameter.set_data_type(_type)
-            parameter.set_const(parameter.data_type.startswith("const"))
-            struct.add_parameter(parameter)
-        structs.append(struct)
-    
-    # Manual additions
-    def add_data_struct(structs, name, data_type):
-        extra_struct = Struct()
-        extra_struct.add_name(name)
-        extra_struct.add_parameter(Parameter().set_variable_name("Size").set_data_type("int"))
-        extra_struct.add_parameter(Parameter().set_variable_name("Capacity").set_data_type("int"))
-        extra_struct.add_parameter(Parameter().set_variable_name("Data").set_data_type(data_type))
-        structs.append(extra_struct)
+            if parameter.data_type in dependency_graph:
+                dependency_graph[struct.name].append(parameter)
 
-    add_data_struct(structs, "ImVector_ImU32", "ImU32*")
-    add_data_struct(structs, "ImVector_ImDrawCmd", "ImDrawCmd*")
-    add_data_struct(structs, "ImVector_ImDrawIdx", "ImDrawIdx*")
-    add_data_struct(structs, "ImVector_ImU32", "ImU32*")
-    add_data_struct(structs, "ImVector_ImDrawListPtr", "ImDrawList**")
-    add_data_struct(structs, "ImVector_ImDrawVert", "ImDrawVert*")
-    add_data_struct(structs, "ImVector_ImVec2", "ImVec2*")
-    add_data_struct(structs, "ImVector_ImVec4", "ImVec4*")
-    add_data_struct(structs, "ImVector_ImTextureID", "ImTextureID*")
-    add_data_struct(structs, "ImVector_ImDrawChannel", "ImDrawChannel*")
-    add_data_struct(structs, "ImVector_float", "float*")
-    add_data_struct(structs, "ImVector_ImGuiSettingsHandler", "ImGuiSettingsHandler*")
-    add_data_struct(structs, "ImVector_char", "char*")
-    add_data_struct(structs, "ImVector_ImGuiDockRequest", "ImGuiDockRequest*")
-    add_data_struct(structs, "ImVector_ImGuiDockNodeSettings", "ImGuiDockNodeSettings*")
-    add_data_struct(structs, "ImVector_ImGuiWindowPtr", "ImGuiWindow**")
-    add_data_struct(structs, "ImVector_unsigned_char", "unsigned char*")
-    add_data_struct(structs, "ImVector_ImGuiListClipperData", "ImGuiListClipperData*")
-    add_data_struct(structs, "ImVector_ImGuiTableTempData", "ImGuiTableTempData*")
-    add_data_struct(structs, "ImVector_ImGuiTable", "ImGuiTable*")
-    add_data_struct(structs, "ImPool_ImGuiTable", "ImPoolIdx")
-    add_data_struct(structs, "ImVector_ImGuiTabBar", "ImGuiTabBar*")
-    add_data_struct(structs, "ImPool_ImGuiTabBar", "ImPoolIdx")
-    add_data_struct(structs, "ImVector_ImGuiPtrOrIndex", "ImGuiPtrOrIndex*")
-    add_data_struct(structs, "ImVector_ImGuiShrinkWidthItem", "ImGuiShrinkWidthItem*")
-    add_data_struct(structs, "ImVector_ImGuiSettingsHandler", "ImGuiSettingsHandler*")
-    add_data_struct(structs, "ImChunkStream_ImGuiWindowSettings", "ImVector_char")
-    add_data_struct(structs, "ImChunkStream_ImGuiTableSettings", "ImVector_char")
-    add_data_struct(structs, "ImVector_ImGuiContextHook", "ImGuiContextHook*")
-    add_data_struct(structs, "ImVector_ImGuiInputEvent", "ImGuiInputEvent*")
-    add_data_struct(structs, "ImVector_ImWchar", "ImWchar*")
-    add_data_struct(structs, "ImVector_ImFontGlyph", "ImFontGlyph*")
-    add_data_struct(structs, "ImVector_ImFontPtr", "ImFont**")
-    add_data_struct(structs, "ImVector_ImFontAtlasCustomRect", "ImFontAtlasCustomRect*")
-    add_data_struct(structs, "ImVector_ImFontConfig", "ImFontConfig*")
-    add_data_struct(structs, "ImVector_ImGuiWindowStackData", "ImGuiWindowStackData*")
-    add_data_struct(structs, "ImVector_ImGuiColorMod", "ImGuiColorMod*")
-    add_data_struct(structs, "ImVector_ImGuiStyleMod", "ImGuiStyleMod*")
-    add_data_struct(structs, "ImVector_ImGuiID", "ImGuiID*")
-    add_data_struct(structs, "ImVector_ImGuiItemFlags", "ImGuiItemFlags*")
-    add_data_struct(structs, "ImVector_ImGuiGroupData", "ImGuiGroupData*")
-    add_data_struct(structs, "ImVector_ImGuiPopupData", "ImGuiPopupData*")
-    add_data_struct(structs, "ImVector_ImGuiViewportPPtr", "ImGuiViewportP**")
-    add_data_struct(structs, "ImVector_ImGuiKeyRoutingData", "ImGuiKeyRoutingData*")
-    add_data_struct(structs, "ImVector_ImGuiListClipperRange", "ImGuiListClipperRange*")
-    add_data_struct(structs, "ImVector_ImGuiOldColumnData", "ImGuiOldColumnData*")
-    add_data_struct(structs, "ImVector_ImGuiPlatformMonitor", "ImGuiPlatformMonitor*")
-    add_data_struct(structs, "ImVector_ImGuiViewportPtr", "ImGuiViewport**")
-    add_data_struct(structs, "ImVector_ImGuiStackLevelInfo", "ImGuiStackLevelInfo*")
-    add_data_struct(structs, "ImVector_ImGuiStoragePair", "ImGuiStoragePair*")
-    add_data_struct(structs, "ImVector_ImGuiTabItem", "ImGuiTabItem*")
-    add_data_struct(structs, "ImSpan_ImGuiTableColumn", "ImGuiTableColumn*")
-    add_data_struct(structs, "ImSpan_ImGuiTableColumnIdx", "ImGuiTableColumnIdx*")
-    add_data_struct(structs, "ImSpan_ImGuiTableCellData", "ImGuiTableCellData*")
-    add_data_struct(structs, "ImVector_ImGuiTableInstanceData", "ImGuiTableInstanceData*")
-    add_data_struct(structs, "ImVector_ImGuiTableColumnSortSpecs", "ImGuiTableColumnSortSpecs*")
-    add_data_struct(structs, "ImVector_ImGuiTextRange", "ImGuiTextRange*")
-    add_data_struct(structs, "ImVector_int", "int*")
-    add_data_struct(structs, "ImVector_ImGuiOldColumns", "ImGuiOldColumns*")
-    add_data_struct(structs, "ImVector_ImGuiDockRequest", "ImGuiDockRequest*")
-    add_data_struct(structs, "ImVector_ImGuiDockNodeSettings", "ImGuiDockNodeSettings*")
+    # To improve time complexity, create a lookup between the name of the struct
+    # to the struct itself.
+    struct_lookup = {}
+    for struct in structs:
+        struct_lookup[struct.name] = struct
 
-    structs.sort(key=lambda s: s.name)
-    return structs
-
-
-def get_enums(base):
-    with open(base + "structs_and_enums.json") as f:
-        structs_and_enums = json.load(f)
-    
-    enums = []
-    enums_obj = structs_and_enums["enums"]
-    for name, values_obj in enums_obj.items():
-        enum = Enum()
-        enum.add_name(name)
-        for field_obj in values_obj:
-            parameter = Parameter()
-            parameter.set_variable_name(field_obj["name"])
-            enum.add_value(parameter)
-        enums.append(enum)
-    
-    enums.sort(key=lambda s: s.name)
-    return enums
-
-
-def get_functions(base):
-    with open(base + "definitions.json") as f:
-        definitions = json.load(f)
-    
-    functions = []
-    for name, functions_obj in definitions.items():
-        for function_obj in functions_obj:
-            if "location" not in function_obj or \
-                function_obj["location"].startswith("imgui_internal"):
+    # Continue to pop structs that have no more dependencies.
+    safe_struct_order = []
+    while len(dependency_graph) > 0:
+        to_remove = []
+        for struct_name, parameters in dependency_graph.items():
+            if len(parameters) != 0:
                 continue
 
-            function = Function()
-            function.add_name(name)
-            for field_obj in function_obj["argsT"]:
-                parameter = Parameter()
-                parameter.set_variable_name(field_obj["name"])
-                parameter.set_data_type(field_obj["type"])
-                function.add_parameter(parameter)
-            functions.append(function)
-
-    functions.sort(key=lambda f: f.name)
-    return functions
-
-
-def get_typedefs(base):
-    with open(base + "typedefs_dict.json") as f:
-        typedefs_dict = json.load(f)
-    
-    typedefs = []
-    for definition, base in typedefs_dict.items():
-        # We get these from get_structs
-        if base.startswith("struct"):
-            definition = ""
-
-        # Function pointer
-        if "(*)" in base:
-            callback_name = definition
-            callback_type = base[:base.find("(*)")]
-            base = base[base.find("(*)"):]
-            base = base.strip(";")
-            base = base.replace("(*)", f"(*{callback_name})")
-            definition = base
-            base = callback_type
+            safe_struct_order.append(struct_lookup[struct_name])
+            to_remove.append(struct_name)
         
-        # Remove ... in function pointers
-        definition = definition.replace(",...", "")
-
-        typedefs.append(Typedef(base, definition))
-
-    # Remove some exceptions
-
-    exception_definitions = [
-        "const_iterator",
-        "ImBitArrayForNamedKeys",
-        "ImFileHandle",
-        "iterator",
-    ]
-
-    exception_bases = [
-        "T"
-    ]
-
-    typedefs = list(filter(
-        lambda t: t.definition not in exception_definitions, typedefs
-    ))
-    typedefs = list(filter(
-        lambda t: t.base not in exception_bases, typedefs
-    ))
-
-    # Add Manual
-    typedefs.append(Typedef("void*", "ImFileHandle"))
-
-    def custom_typedef_sort(typedef):
-        priority = [
-            "int",
-            "unsigned",
-            "signed",
-        ]
-
-        for i, _type in enumerate(priority):
-            if typedef.base.startswith(_type):
-                return (i, typedef.base)
-        return (len(priority), typedef.base)
-
-    typedefs.sort(key=custom_typedef_sort)
-    return typedefs
+        for old_struct_name in to_remove:
+            dependency_graph.pop(old_struct_name)
+        
+        # When we find the structs with no dependencies, go and remove themself
+        # from the other structs who might be waiting on this one.
+        for parameters in dependency_graph.values():
+            parameter_to_remove = []
+            for parameter in parameters:
+                if parameter.data_type in to_remove:
+                    parameter_to_remove.append(parameter)
+            
+            for parameter in parameter_to_remove:
+                parameters.remove(parameter)
+    return safe_struct_order
 
 
-def pxd_typedefs(typedefs):
+def pxd_typedefs(typedefs: List[Typedef]):
     output = ""
     for typedef in typedefs:
         output += "    {}\n".format(
@@ -604,7 +495,7 @@ def pxd_typedefs(typedefs):
     return output
 
 
-def pxd_structs_forward_declaration(structs):
+def pxd_structs_forward_declaration(structs: List[Struct]):
     output = ""
     for struct in structs:
         output += "    {}\n".format(
@@ -613,21 +504,7 @@ def pxd_structs_forward_declaration(structs):
     return output
 
 
-def pxd_structs(structs):
-    struct_dict = {}
-
-    for struct in structs:
-        if struct.name not in struct_dict:
-            struct_dict[struct.name] = struct
-            continue
-        
-        if len(struct.parameters) > len(struct_dict[struct.name].parameters):
-            struct_dict[struct.name] = struct
-            continue
-    
-    structs = list(struct_dict.values())
-    structs.sort(key=lambda s: s.name)
-
+def pxd_structs(structs: List[Struct]):
     output = ""
     for struct in structs:
         output += "    {}\n".format(
@@ -636,7 +513,7 @@ def pxd_structs(structs):
     return output
 
 
-def pxd_enums(enums):
+def pxd_enums(enums: List[Function]):
     output = ""
     for enum in enums:
         output += "    {}\n".format(
@@ -645,21 +522,27 @@ def pxd_enums(enums):
     return output
 
 
-def pxd_functions(functions):
+def pxd_functions(functions: List[Function]):
     output = ""
     for function in functions:
         output += "    {}\n".format(function.as_cython())
     return output
 
 
+def keep_unique_structs(structs: List[Struct]):
+    struct_dict = {}
+    for struct in structs:
+        if struct.name not in struct_dict:
+            struct_dict[struct.name] = struct
+            continue
+        
+        if len(struct.parameters) > len(struct_dict[struct.name].parameters):
+            struct_dict[struct.name] = struct
+            continue
+    return list(struct_dict.values())
+
+
 def main():
-    # base = "cimgui/generator/output/"
-
-    # structs = get_structs(base)
-    # enums = get_enums(base)
-    # functions = get_functions(base)
-    # typedefs = get_typedefs(base)
-
     with open("cimgui/cimgui.h") as f:
         src = f.read()
     
@@ -669,13 +552,8 @@ def main():
         f.write(src)
 
     enums, structs, typedefs, functions = parse_reduced_cimgui(src)
-
-    # for function in functions:
-    #     print(function)
-    
-    
-    # for typedef in typedefs:
-    #     print(typedef.as_cython())
+    structs = keep_unique_structs(structs)
+    structs = dependency_aware_sort(structs)
 
     with open("pygui/ccimgui.pxd", "w") as f:
         f.write("# -*- coding: utf-8 -*-\n")

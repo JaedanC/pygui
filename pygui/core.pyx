@@ -8,7 +8,6 @@ from cython.operator import dereference
 from collections import namedtuple
 
 from . cimport ccimgui
-from . cimport ccimgui_enums
 from libcpp cimport bool
 from libc.stdint cimport uintptr_t
 from cython.view cimport array as cvarray
@@ -22,27 +21,27 @@ from cpython.version cimport PY_MAJOR_VERSION
 # cdef unsigned short* _LATIN_ALL = [0x0020, 0x024F , 0]
 
 
-KEY_TAB = ccimgui_enums.ImGuiKey_Tab                 # for tabbing through fields
-KEY_LEFT_ARROW = ccimgui_enums.ImGuiKey_LeftArrow    # for text edit
-KEY_RIGHT_ARROW = ccimgui_enums.ImGuiKey_RightArrow  # for text edit
-KEY_UP_ARROW = ccimgui_enums.ImGuiKey_UpArrow        # for text edit
-KEY_DOWN_ARROW = ccimgui_enums.ImGuiKey_DownArrow    # for text edit
-KEY_PAGE_UP = ccimgui_enums.ImGuiKey_PageUp
-KEY_PAGE_DOWN = ccimgui_enums.ImGuiKey_PageDown
-KEY_HOME = ccimgui_enums.ImGuiKey_Home               # for text edit
-KEY_END = ccimgui_enums.ImGuiKey_End                 # for text edit
-KEY_INSERT = ccimgui_enums.ImGuiKey_Insert           # for text edit
-KEY_DELETE = ccimgui_enums.ImGuiKey_Delete           # for text edit
-KEY_BACKSPACE = ccimgui_enums.ImGuiKey_Backspace     # for text edit
-KEY_SPACE = ccimgui_enums.ImGuiKey_Space             # for text edit
-KEY_ENTER = ccimgui_enums.ImGuiKey_Enter             # for text edit
-KEY_ESCAPE = ccimgui_enums.ImGuiKey_Escape           # for text edit
-KEY_A = ccimgui_enums.ImGuiKey_A                     # for text edit CTRL+A: select all
-KEY_C = ccimgui_enums.ImGuiKey_C                     # for text edit CTRL+C: copy
-KEY_V = ccimgui_enums.ImGuiKey_V                     # for text edit CTRL+V: paste
-KEY_X = ccimgui_enums.ImGuiKey_X                     # for text edit CTRL+X: cut
-KEY_Y = ccimgui_enums.ImGuiKey_Y                     # for text edit CTRL+Y: redo
-KEY_Z = ccimgui_enums.ImGuiKey_Z                     # for text edit CTRL+Z: undo
+KEY_TAB = ccimgui.ImGuiKey_Tab                 # for tabbing through fields
+KEY_LEFT_ARROW = ccimgui.ImGuiKey_LeftArrow    # for text edit
+KEY_RIGHT_ARROW = ccimgui.ImGuiKey_RightArrow  # for text edit
+KEY_UP_ARROW = ccimgui.ImGuiKey_UpArrow        # for text edit
+KEY_DOWN_ARROW = ccimgui.ImGuiKey_DownArrow    # for text edit
+KEY_PAGE_UP = ccimgui.ImGuiKey_PageUp
+KEY_PAGE_DOWN = ccimgui.ImGuiKey_PageDown
+KEY_HOME = ccimgui.ImGuiKey_Home               # for text edit
+KEY_END = ccimgui.ImGuiKey_End                 # for text edit
+KEY_INSERT = ccimgui.ImGuiKey_Insert           # for text edit
+KEY_DELETE = ccimgui.ImGuiKey_Delete           # for text edit
+KEY_BACKSPACE = ccimgui.ImGuiKey_Backspace     # for text edit
+KEY_SPACE = ccimgui.ImGuiKey_Space             # for text edit
+KEY_ENTER = ccimgui.ImGuiKey_Enter             # for text edit
+KEY_ESCAPE = ccimgui.ImGuiKey_Escape           # for text edit
+KEY_A = ccimgui.ImGuiKey_A                     # for text edit CTRL+A: select all
+KEY_C = ccimgui.ImGuiKey_C                     # for text edit CTRL+C: copy
+KEY_V = ccimgui.ImGuiKey_V                     # for text edit CTRL+V: paste
+KEY_X = ccimgui.ImGuiKey_X                     # for text edit CTRL+X: cut
+KEY_Y = ccimgui.ImGuiKey_Y                     # for text edit CTRL+Y: redo
+KEY_Z = ccimgui.ImGuiKey_Z                     # for text edit CTRL+Z: undo
 
 
 Vec2 = namedtuple("Vec2", ['x', 'y'])
@@ -258,7 +257,7 @@ cdef class _IO(object):
     @property
     def key_map(self):
         cdef cvarray key_map = cvarray(
-            shape=(ccimgui_enums.ImGuiKey.ImGuiKey_COUNT,),
+            shape=(ccimgui.ImGuiKey.ImGuiKey_COUNT,),
             format='i',
             itemsize=sizeof(int),
             allocate_buffer=False
