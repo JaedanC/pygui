@@ -1,100 +1,177 @@
+# -*- coding: utf-8 -*-
+# distutils: language = c++
+
 cdef extern from "cimgui.h":
-    ctypedef enum ImGuiWindowFlags_:
-        ImGuiWindowFlags_None
-        ImGuiWindowFlags_NoTitleBar
-        ImGuiWindowFlags_NoResize
-        ImGuiWindowFlags_NoMove
-        ImGuiWindowFlags_NoScrollbar
-        ImGuiWindowFlags_NoScrollWithMouse
-        ImGuiWindowFlags_NoCollapse
-        ImGuiWindowFlags_AlwaysAutoResize
-        ImGuiWindowFlags_NoBackground
-        ImGuiWindowFlags_NoSavedSettings
-        ImGuiWindowFlags_NoMouseInputs
-        ImGuiWindowFlags_MenuBar
-        ImGuiWindowFlags_HorizontalScrollbar
-        ImGuiWindowFlags_NoFocusOnAppearing
-        ImGuiWindowFlags_NoBringToFrontOnFocus
-        ImGuiWindowFlags_AlwaysVerticalScrollbar
-        ImGuiWindowFlags_AlwaysHorizontalScrollbar
-        ImGuiWindowFlags_AlwaysUseWindowPadding
-        ImGuiWindowFlags_NoNavInputs
-        ImGuiWindowFlags_NoNavFocus
-        ImGuiWindowFlags_UnsavedDocument
-        ImGuiWindowFlags_NoDocking
-        ImGuiWindowFlags_NoNav
-        ImGuiWindowFlags_NoDecoration
-        ImGuiWindowFlags_NoInputs
-        ImGuiWindowFlags_NavFlattened
-        ImGuiWindowFlags_ChildWindow
-        ImGuiWindowFlags_Tooltip
-        ImGuiWindowFlags_Popup
-        ImGuiWindowFlags_Modal
-        ImGuiWindowFlags_ChildMenu
-        ImGuiWindowFlags_DockNodeHost
+    ctypedef enum ImDrawFlags_:
+        ImDrawFlags_None
+        ImDrawFlags_Closed
+        ImDrawFlags_RoundCornersTopLeft
+        ImDrawFlags_RoundCornersTopRight
+        ImDrawFlags_RoundCornersBottomLeft
+        ImDrawFlags_RoundCornersBottomRight
+        ImDrawFlags_RoundCornersNone
+        ImDrawFlags_RoundCornersTop
+        ImDrawFlags_RoundCornersBottom
+        ImDrawFlags_RoundCornersLeft
+        ImDrawFlags_RoundCornersRight
+        ImDrawFlags_RoundCornersAll
+        ImDrawFlags_RoundCornersDefault_
+        ImDrawFlags_RoundCornersMask_
 
-    ctypedef enum ImGuiInputTextFlags_:
-        ImGuiInputTextFlags_None
-        ImGuiInputTextFlags_CharsDecimal
-        ImGuiInputTextFlags_CharsHexadecimal
-        ImGuiInputTextFlags_CharsUppercase
-        ImGuiInputTextFlags_CharsNoBlank
-        ImGuiInputTextFlags_AutoSelectAll
-        ImGuiInputTextFlags_EnterReturnsTrue
-        ImGuiInputTextFlags_CallbackCompletion
-        ImGuiInputTextFlags_CallbackHistory
-        ImGuiInputTextFlags_CallbackAlways
-        ImGuiInputTextFlags_CallbackCharFilter
-        ImGuiInputTextFlags_AllowTabInput
-        ImGuiInputTextFlags_CtrlEnterForNewLine
-        ImGuiInputTextFlags_NoHorizontalScroll
-        ImGuiInputTextFlags_AlwaysOverwrite
-        ImGuiInputTextFlags_ReadOnly
-        ImGuiInputTextFlags_Password
-        ImGuiInputTextFlags_NoUndoRedo
-        ImGuiInputTextFlags_CharsScientific
-        ImGuiInputTextFlags_CallbackResize
-        ImGuiInputTextFlags_CallbackEdit
-        ImGuiInputTextFlags_EscapeClearsAll
+    ctypedef enum ImDrawListFlags_:
+        ImDrawListFlags_None
+        ImDrawListFlags_AntiAliasedLines
+        ImDrawListFlags_AntiAliasedLinesUseTex
+        ImDrawListFlags_AntiAliasedFill
+        ImDrawListFlags_AllowVtxOffset
 
-    ctypedef enum ImGuiTreeNodeFlags_:
-        ImGuiTreeNodeFlags_None
-        ImGuiTreeNodeFlags_Selected
-        ImGuiTreeNodeFlags_Framed
-        ImGuiTreeNodeFlags_AllowItemOverlap
-        ImGuiTreeNodeFlags_NoTreePushOnOpen
-        ImGuiTreeNodeFlags_NoAutoOpenOnLog
-        ImGuiTreeNodeFlags_DefaultOpen
-        ImGuiTreeNodeFlags_OpenOnDoubleClick
-        ImGuiTreeNodeFlags_OpenOnArrow
-        ImGuiTreeNodeFlags_Leaf
-        ImGuiTreeNodeFlags_Bullet
-        ImGuiTreeNodeFlags_FramePadding
-        ImGuiTreeNodeFlags_SpanAvailWidth
-        ImGuiTreeNodeFlags_SpanFullWidth
-        ImGuiTreeNodeFlags_NavLeftJumpsBackHere
-        ImGuiTreeNodeFlags_CollapsingHeader
+    ctypedef enum ImFontAtlasFlags_:
+        ImFontAtlasFlags_None
+        ImFontAtlasFlags_NoPowerOfTwoHeight
+        ImFontAtlasFlags_NoMouseCursors
+        ImFontAtlasFlags_NoBakedLines
 
-    ctypedef enum ImGuiPopupFlags_:
-        ImGuiPopupFlags_None
-        ImGuiPopupFlags_MouseButtonLeft
-        ImGuiPopupFlags_MouseButtonRight
-        ImGuiPopupFlags_MouseButtonMiddle
-        ImGuiPopupFlags_MouseButtonMask_
-        ImGuiPopupFlags_MouseButtonDefault_
-        ImGuiPopupFlags_NoOpenOverExistingPopup
-        ImGuiPopupFlags_NoOpenOverItems
-        ImGuiPopupFlags_AnyPopupId
-        ImGuiPopupFlags_AnyPopupLevel
-        ImGuiPopupFlags_AnyPopup
+    ctypedef enum ImGuiActivateFlags_:
+        ImGuiActivateFlags_None
+        ImGuiActivateFlags_PreferInput
+        ImGuiActivateFlags_PreferTweak
+        ImGuiActivateFlags_TryToPreserveState
 
-    ctypedef enum ImGuiSelectableFlags_:
-        ImGuiSelectableFlags_None
-        ImGuiSelectableFlags_DontClosePopups
-        ImGuiSelectableFlags_SpanAllColumns
-        ImGuiSelectableFlags_AllowDoubleClick
-        ImGuiSelectableFlags_Disabled
-        ImGuiSelectableFlags_AllowItemOverlap
+    ctypedef enum ImGuiAxis:
+        ImGuiAxis_None
+        ImGuiAxis_X
+        ImGuiAxis_Y
+
+    ctypedef enum ImGuiBackendFlags_:
+        ImGuiBackendFlags_None
+        ImGuiBackendFlags_HasGamepad
+        ImGuiBackendFlags_HasMouseCursors
+        ImGuiBackendFlags_HasSetMousePos
+        ImGuiBackendFlags_RendererHasVtxOffset
+        ImGuiBackendFlags_PlatformHasViewports
+        ImGuiBackendFlags_HasMouseHoveredViewport
+        ImGuiBackendFlags_RendererHasViewports
+
+    ctypedef enum ImGuiButtonFlags_:
+        ImGuiButtonFlags_None
+        ImGuiButtonFlags_MouseButtonLeft
+        ImGuiButtonFlags_MouseButtonRight
+        ImGuiButtonFlags_MouseButtonMiddle
+        ImGuiButtonFlags_MouseButtonMask_
+        ImGuiButtonFlags_MouseButtonDefault_
+
+    ctypedef enum ImGuiButtonFlagsPrivate_:
+        ImGuiButtonFlags_PressedOnClick
+        ImGuiButtonFlags_PressedOnClickRelease
+        ImGuiButtonFlags_PressedOnClickReleaseAnywhere
+        ImGuiButtonFlags_PressedOnRelease
+        ImGuiButtonFlags_PressedOnDoubleClick
+        ImGuiButtonFlags_PressedOnDragDropHold
+        ImGuiButtonFlags_Repeat
+        ImGuiButtonFlags_FlattenChildren
+        ImGuiButtonFlags_AllowItemOverlap
+        ImGuiButtonFlags_DontClosePopups
+        ImGuiButtonFlags_AlignTextBaseLine
+        ImGuiButtonFlags_NoKeyModifiers
+        ImGuiButtonFlags_NoHoldingActiveId
+        ImGuiButtonFlags_NoNavFocus
+        ImGuiButtonFlags_NoHoveredOnFocus
+        ImGuiButtonFlags_NoSetKeyOwner
+        ImGuiButtonFlags_NoTestKeyOwner
+        ImGuiButtonFlags_PressedOnMask_
+        ImGuiButtonFlags_PressedOnDefault_
+
+    ctypedef enum ImGuiCol_:
+        ImGuiCol_Text
+        ImGuiCol_TextDisabled
+        ImGuiCol_WindowBg
+        ImGuiCol_ChildBg
+        ImGuiCol_PopupBg
+        ImGuiCol_Border
+        ImGuiCol_BorderShadow
+        ImGuiCol_FrameBg
+        ImGuiCol_FrameBgHovered
+        ImGuiCol_FrameBgActive
+        ImGuiCol_TitleBg
+        ImGuiCol_TitleBgActive
+        ImGuiCol_TitleBgCollapsed
+        ImGuiCol_MenuBarBg
+        ImGuiCol_ScrollbarBg
+        ImGuiCol_ScrollbarGrab
+        ImGuiCol_ScrollbarGrabHovered
+        ImGuiCol_ScrollbarGrabActive
+        ImGuiCol_CheckMark
+        ImGuiCol_SliderGrab
+        ImGuiCol_SliderGrabActive
+        ImGuiCol_Button
+        ImGuiCol_ButtonHovered
+        ImGuiCol_ButtonActive
+        ImGuiCol_Header
+        ImGuiCol_HeaderHovered
+        ImGuiCol_HeaderActive
+        ImGuiCol_Separator
+        ImGuiCol_SeparatorHovered
+        ImGuiCol_SeparatorActive
+        ImGuiCol_ResizeGrip
+        ImGuiCol_ResizeGripHovered
+        ImGuiCol_ResizeGripActive
+        ImGuiCol_Tab
+        ImGuiCol_TabHovered
+        ImGuiCol_TabActive
+        ImGuiCol_TabUnfocused
+        ImGuiCol_TabUnfocusedActive
+        ImGuiCol_DockingPreview
+        ImGuiCol_DockingEmptyBg
+        ImGuiCol_PlotLines
+        ImGuiCol_PlotLinesHovered
+        ImGuiCol_PlotHistogram
+        ImGuiCol_PlotHistogramHovered
+        ImGuiCol_TableHeaderBg
+        ImGuiCol_TableBorderStrong
+        ImGuiCol_TableBorderLight
+        ImGuiCol_TableRowBg
+        ImGuiCol_TableRowBgAlt
+        ImGuiCol_TextSelectedBg
+        ImGuiCol_DragDropTarget
+        ImGuiCol_NavHighlight
+        ImGuiCol_NavWindowingHighlight
+        ImGuiCol_NavWindowingDimBg
+        ImGuiCol_ModalWindowDimBg
+        ImGuiCol_COUNT
+
+    ctypedef enum ImGuiColorEditFlags_:
+        ImGuiColorEditFlags_None
+        ImGuiColorEditFlags_NoAlpha
+        ImGuiColorEditFlags_NoPicker
+        ImGuiColorEditFlags_NoOptions
+        ImGuiColorEditFlags_NoSmallPreview
+        ImGuiColorEditFlags_NoInputs
+        ImGuiColorEditFlags_NoTooltip
+        ImGuiColorEditFlags_NoLabel
+        ImGuiColorEditFlags_NoSidePreview
+        ImGuiColorEditFlags_NoDragDrop
+        ImGuiColorEditFlags_NoBorder
+        ImGuiColorEditFlags_AlphaBar
+        ImGuiColorEditFlags_AlphaPreview
+        ImGuiColorEditFlags_AlphaPreviewHalf
+        ImGuiColorEditFlags_HDR
+        ImGuiColorEditFlags_DisplayRGB
+        ImGuiColorEditFlags_DisplayHSV
+        ImGuiColorEditFlags_DisplayHex
+        ImGuiColorEditFlags_Uint8
+        ImGuiColorEditFlags_Float
+        ImGuiColorEditFlags_PickerHueBar
+        ImGuiColorEditFlags_PickerHueWheel
+        ImGuiColorEditFlags_InputRGB
+        ImGuiColorEditFlags_InputHSV
+        ImGuiColorEditFlags_DefaultOptions_
+        ImGuiColorEditFlags_DisplayMask_
+        ImGuiColorEditFlags_DataTypeMask_
+        ImGuiColorEditFlags_PickerMask_
+        ImGuiColorEditFlags_InputMask_
+
+    ctypedef enum ImGuiComboFlagsPrivate_:
+        ImGuiComboFlags_CustomPreview
 
     ctypedef enum ImGuiComboFlags_:
         ImGuiComboFlags_None
@@ -107,106 +184,130 @@ cdef extern from "cimgui.h":
         ImGuiComboFlags_NoPreview
         ImGuiComboFlags_HeightMask_
 
-    ctypedef enum ImGuiTabBarFlags_:
-        ImGuiTabBarFlags_None
-        ImGuiTabBarFlags_Reorderable
-        ImGuiTabBarFlags_AutoSelectNewTabs
-        ImGuiTabBarFlags_TabListPopupButton
-        ImGuiTabBarFlags_NoCloseWithMiddleMouseButton
-        ImGuiTabBarFlags_NoTabListScrollingButtons
-        ImGuiTabBarFlags_NoTooltip
-        ImGuiTabBarFlags_FittingPolicyResizeDown
-        ImGuiTabBarFlags_FittingPolicyScroll
-        ImGuiTabBarFlags_FittingPolicyMask_
-        ImGuiTabBarFlags_FittingPolicyDefault_
+    ctypedef enum ImGuiCond_:
+        ImGuiCond_None
+        ImGuiCond_Always
+        ImGuiCond_Once
+        ImGuiCond_FirstUseEver
+        ImGuiCond_Appearing
 
-    ctypedef enum ImGuiTabItemFlags_:
-        ImGuiTabItemFlags_None
-        ImGuiTabItemFlags_UnsavedDocument
-        ImGuiTabItemFlags_SetSelected
-        ImGuiTabItemFlags_NoCloseWithMiddleMouseButton
-        ImGuiTabItemFlags_NoPushId
-        ImGuiTabItemFlags_NoTooltip
-        ImGuiTabItemFlags_NoReorder
-        ImGuiTabItemFlags_Leading
-        ImGuiTabItemFlags_Trailing
-    
-    ctypedef enum ImGuiTableFlags_:
-        ImGuiTableFlags_None
-        ImGuiTableFlags_Resizable
-        ImGuiTableFlags_Reorderable
-        ImGuiTableFlags_Hideable
-        ImGuiTableFlags_Sortable
-        ImGuiTableFlags_NoSavedSettings
-        ImGuiTableFlags_ContextMenuInBody
-        ImGuiTableFlags_RowBg
-        ImGuiTableFlags_BordersInnerH
-        ImGuiTableFlags_BordersOuterH
-        ImGuiTableFlags_BordersInnerV
-        ImGuiTableFlags_BordersOuterV
-        ImGuiTableFlags_BordersH
-        ImGuiTableFlags_BordersV
-        ImGuiTableFlags_BordersInner
-        ImGuiTableFlags_BordersOuter
-        ImGuiTableFlags_Borders
-        ImGuiTableFlags_NoBordersInBody
-        ImGuiTableFlags_NoBordersInBodyUntilResize
-        ImGuiTableFlags_SizingFixedFit
-        ImGuiTableFlags_SizingFixedSame
-        ImGuiTableFlags_SizingStretchProp
-        ImGuiTableFlags_SizingStretchSame
-        ImGuiTableFlags_NoHostExtendX
-        ImGuiTableFlags_NoHostExtendY
-        ImGuiTableFlags_NoKeepColumnsVisible
-        ImGuiTableFlags_PreciseWidths
-        ImGuiTableFlags_NoClip
-        ImGuiTableFlags_PadOuterX
-        ImGuiTableFlags_NoPadOuterX
-        ImGuiTableFlags_NoPadInnerX
-        ImGuiTableFlags_ScrollX
-        ImGuiTableFlags_ScrollY
-        ImGuiTableFlags_SortMulti
-        ImGuiTableFlags_SortTristate
-        ImGuiTableFlags_SizingMask_
+    ctypedef enum ImGuiConfigFlags_:
+        ImGuiConfigFlags_None
+        ImGuiConfigFlags_NavEnableKeyboard
+        ImGuiConfigFlags_NavEnableGamepad
+        ImGuiConfigFlags_NavEnableSetMousePos
+        ImGuiConfigFlags_NavNoCaptureKeyboard
+        ImGuiConfigFlags_NoMouse
+        ImGuiConfigFlags_NoMouseCursorChange
+        ImGuiConfigFlags_DockingEnable
+        ImGuiConfigFlags_ViewportsEnable
+        ImGuiConfigFlags_DpiEnableScaleViewports
+        ImGuiConfigFlags_DpiEnableScaleFonts
+        ImGuiConfigFlags_IsSRGB
+        ImGuiConfigFlags_IsTouchScreen
 
-    ctypedef enum ImGuiTableColumnFlags_:
-        ImGuiTableColumnFlags_None
-        ImGuiTableColumnFlags_Disabled
-        ImGuiTableColumnFlags_DefaultHide
-        ImGuiTableColumnFlags_DefaultSort
-        ImGuiTableColumnFlags_WidthStretch
-        ImGuiTableColumnFlags_WidthFixed
-        ImGuiTableColumnFlags_NoResize
-        ImGuiTableColumnFlags_NoReorder
-        ImGuiTableColumnFlags_NoHide
-        ImGuiTableColumnFlags_NoClip
-        ImGuiTableColumnFlags_NoSort
-        ImGuiTableColumnFlags_NoSortAscending
-        ImGuiTableColumnFlags_NoSortDescending
-        ImGuiTableColumnFlags_NoHeaderLabel
-        ImGuiTableColumnFlags_NoHeaderWidth
-        ImGuiTableColumnFlags_PreferSortAscending
-        ImGuiTableColumnFlags_PreferSortDescending
-        ImGuiTableColumnFlags_IndentEnable
-        ImGuiTableColumnFlags_IndentDisable
-        ImGuiTableColumnFlags_IsEnabled
-        ImGuiTableColumnFlags_IsVisible
-        ImGuiTableColumnFlags_IsSorted
-        ImGuiTableColumnFlags_IsHovered
-        ImGuiTableColumnFlags_WidthMask_
-        ImGuiTableColumnFlags_IndentMask_
-        ImGuiTableColumnFlags_StatusMask_
-        ImGuiTableColumnFlags_NoDirectResize_
+    ctypedef enum ImGuiContextHookType:
+        ImGuiContextHookType_NewFramePre
+        ImGuiContextHookType_NewFramePost
+        ImGuiContextHookType_EndFramePre
+        ImGuiContextHookType_EndFramePost
+        ImGuiContextHookType_RenderPre
+        ImGuiContextHookType_RenderPost
+        ImGuiContextHookType_Shutdown
+        ImGuiContextHookType_PendingRemoval_
 
-    ctypedef enum ImGuiTableRowFlags_:
-        ImGuiTableRowFlags_None
-        ImGuiTableRowFlags_Headers
+    ctypedef enum ImGuiDataAuthority_:
+        ImGuiDataAuthority_Auto
+        ImGuiDataAuthority_DockNode
+        ImGuiDataAuthority_Window
 
-    ctypedef enum ImGuiTableBgTarget_:
-        ImGuiTableBgTarget_None
-        ImGuiTableBgTarget_RowBg0
-        ImGuiTableBgTarget_RowBg1
-        ImGuiTableBgTarget_CellBg
+    ctypedef enum ImGuiDataType_:
+        ImGuiDataType_S8
+        ImGuiDataType_U8
+        ImGuiDataType_S16
+        ImGuiDataType_U16
+        ImGuiDataType_S32
+        ImGuiDataType_U32
+        ImGuiDataType_S64
+        ImGuiDataType_U64
+        ImGuiDataType_Float
+        ImGuiDataType_Double
+        ImGuiDataType_COUNT
+
+    ctypedef enum ImGuiDataTypePrivate_:
+        ImGuiDataType_String
+        ImGuiDataType_Pointer
+        ImGuiDataType_ID
+
+    ctypedef enum ImGuiDebugLogFlags_:
+        ImGuiDebugLogFlags_None
+        ImGuiDebugLogFlags_EventActiveId
+        ImGuiDebugLogFlags_EventFocus
+        ImGuiDebugLogFlags_EventPopup
+        ImGuiDebugLogFlags_EventNav
+        ImGuiDebugLogFlags_EventClipper
+        ImGuiDebugLogFlags_EventIO
+        ImGuiDebugLogFlags_EventDocking
+        ImGuiDebugLogFlags_EventViewport
+        ImGuiDebugLogFlags_EventMask_
+        ImGuiDebugLogFlags_OutputToTTY
+
+    ctypedef enum ImGuiDir_:
+        ImGuiDir_None
+        ImGuiDir_Left
+        ImGuiDir_Right
+        ImGuiDir_Up
+        ImGuiDir_Down
+        ImGuiDir_COUNT
+
+    ctypedef enum ImGuiDockNodeFlagsPrivate_:
+        ImGuiDockNodeFlags_DockSpace
+        ImGuiDockNodeFlags_CentralNode
+        ImGuiDockNodeFlags_NoTabBar
+        ImGuiDockNodeFlags_HiddenTabBar
+        ImGuiDockNodeFlags_NoWindowMenuButton
+        ImGuiDockNodeFlags_NoCloseButton
+        ImGuiDockNodeFlags_NoDocking
+        ImGuiDockNodeFlags_NoDockingSplitMe
+        ImGuiDockNodeFlags_NoDockingSplitOther
+        ImGuiDockNodeFlags_NoDockingOverMe
+        ImGuiDockNodeFlags_NoDockingOverOther
+        ImGuiDockNodeFlags_NoDockingOverEmpty
+        ImGuiDockNodeFlags_NoResizeX
+        ImGuiDockNodeFlags_NoResizeY
+        ImGuiDockNodeFlags_SharedFlagsInheritMask_
+        ImGuiDockNodeFlags_NoResizeFlagsMask_
+        ImGuiDockNodeFlags_LocalFlagsMask_
+        ImGuiDockNodeFlags_LocalFlagsTransferMask_
+        ImGuiDockNodeFlags_SavedFlagsMask_
+
+    ctypedef enum ImGuiDockNodeFlags_:
+        ImGuiDockNodeFlags_None
+        ImGuiDockNodeFlags_KeepAliveOnly
+        ImGuiDockNodeFlags_NoDockingInCentralNode
+        ImGuiDockNodeFlags_PassthruCentralNode
+        ImGuiDockNodeFlags_NoSplit
+        ImGuiDockNodeFlags_NoResize
+        ImGuiDockNodeFlags_AutoHideTabBar
+
+    ctypedef enum ImGuiDockNodeState:
+        ImGuiDockNodeState_Unknown
+        ImGuiDockNodeState_HostWindowHiddenBecauseSingleWindow
+        ImGuiDockNodeState_HostWindowHiddenBecauseWindowsAreResizing
+        ImGuiDockNodeState_HostWindowVisible
+
+    ctypedef enum ImGuiDragDropFlags_:
+        ImGuiDragDropFlags_None
+        ImGuiDragDropFlags_SourceNoPreviewTooltip
+        ImGuiDragDropFlags_SourceNoDisableHover
+        ImGuiDragDropFlags_SourceNoHoldToOpenOthers
+        ImGuiDragDropFlags_SourceAllowNullID
+        ImGuiDragDropFlags_SourceExtern
+        ImGuiDragDropFlags_SourceAutoExpirePayload
+        ImGuiDragDropFlags_AcceptBeforeDelivery
+        ImGuiDragDropFlags_AcceptNoDrawDefaultRect
+        ImGuiDragDropFlags_AcceptNoPreviewTooltip
+        ImGuiDragDropFlags_AcceptPeekOnly
 
     ctypedef enum ImGuiFocusedFlags_:
         ImGuiFocusedFlags_None
@@ -235,54 +336,107 @@ cdef extern from "cimgui.h":
         ImGuiHoveredFlags_DelayShort
         ImGuiHoveredFlags_NoSharedDelay
 
-    ctypedef enum ImGuiDockNodeFlags_:
-        ImGuiDockNodeFlags_None
-        ImGuiDockNodeFlags_KeepAliveOnly
-        ImGuiDockNodeFlags_NoDockingInCentralNode
-        ImGuiDockNodeFlags_PassthruCentralNode
-        ImGuiDockNodeFlags_NoSplit
-        ImGuiDockNodeFlags_NoResize
-        ImGuiDockNodeFlags_AutoHideTabBar
+    ctypedef enum ImGuiInputEventType:
+        ImGuiInputEventType_None
+        ImGuiInputEventType_MousePos
+        ImGuiInputEventType_MouseWheel
+        ImGuiInputEventType_MouseButton
+        ImGuiInputEventType_MouseViewport
+        ImGuiInputEventType_Key
+        ImGuiInputEventType_Text
+        ImGuiInputEventType_Focus
+        ImGuiInputEventType_COUNT
 
-    ctypedef enum ImGuiDragDropFlags_:
-        ImGuiDragDropFlags_None
-        ImGuiDragDropFlags_SourceNoPreviewTooltip
-        ImGuiDragDropFlags_SourceNoDisableHover
-        ImGuiDragDropFlags_SourceNoHoldToOpenOthers
-        ImGuiDragDropFlags_SourceAllowNullID
-        ImGuiDragDropFlags_SourceExtern
-        ImGuiDragDropFlags_SourceAutoExpirePayload
-        ImGuiDragDropFlags_AcceptBeforeDelivery
-        ImGuiDragDropFlags_AcceptNoDrawDefaultRect
-        ImGuiDragDropFlags_AcceptNoPreviewTooltip
-        ImGuiDragDropFlags_AcceptPeekOnly
+    ctypedef enum ImGuiInputFlags_:
+        ImGuiInputFlags_None
+        ImGuiInputFlags_Repeat
+        ImGuiInputFlags_RepeatRateDefault
+        ImGuiInputFlags_RepeatRateNavMove
+        ImGuiInputFlags_RepeatRateNavTweak
+        ImGuiInputFlags_RepeatRateMask_
+        ImGuiInputFlags_CondHovered
+        ImGuiInputFlags_CondActive
+        ImGuiInputFlags_CondDefault_
+        ImGuiInputFlags_CondMask_
+        ImGuiInputFlags_LockThisFrame
+        ImGuiInputFlags_LockUntilRelease
+        ImGuiInputFlags_RouteFocused
+        ImGuiInputFlags_RouteGlobalLow
+        ImGuiInputFlags_RouteGlobal
+        ImGuiInputFlags_RouteGlobalHigh
+        ImGuiInputFlags_RouteMask_
+        ImGuiInputFlags_RouteAlways
+        ImGuiInputFlags_RouteUnlessBgFocused
+        ImGuiInputFlags_RouteExtraMask_
+        ImGuiInputFlags_SupportedByIsKeyPressed
+        ImGuiInputFlags_SupportedByShortcut
+        ImGuiInputFlags_SupportedBySetKeyOwner
+        ImGuiInputFlags_SupportedBySetItemKeyOwner
 
-    ctypedef enum ImGuiDataType_:
-        ImGuiDataType_S8
-        ImGuiDataType_U8
-        ImGuiDataType_S16
-        ImGuiDataType_U16
-        ImGuiDataType_S32
-        ImGuiDataType_U32
-        ImGuiDataType_S64
-        ImGuiDataType_U64
-        ImGuiDataType_Float
-        ImGuiDataType_Double
-        ImGuiDataType_COUNT
+    ctypedef enum ImGuiInputSource:
+        ImGuiInputSource_None
+        ImGuiInputSource_Mouse
+        ImGuiInputSource_Keyboard
+        ImGuiInputSource_Gamepad
+        ImGuiInputSource_Clipboard
+        ImGuiInputSource_Nav
+        ImGuiInputSource_COUNT
 
-    ctypedef enum ImGuiDir_:
-        ImGuiDir_None
-        ImGuiDir_Left
-        ImGuiDir_Right
-        ImGuiDir_Up
-        ImGuiDir_Down
-        ImGuiDir_COUNT
+    ctypedef enum ImGuiInputTextFlagsPrivate_:
+        ImGuiInputTextFlags_Multiline
+        ImGuiInputTextFlags_NoMarkEdited
+        ImGuiInputTextFlags_MergedItem
 
-    ctypedef enum ImGuiSortDirection_:
-        ImGuiSortDirection_None
-        ImGuiSortDirection_Ascending
-        ImGuiSortDirection_Descending
-    
+    ctypedef enum ImGuiInputTextFlags_:
+        ImGuiInputTextFlags_None
+        ImGuiInputTextFlags_CharsDecimal
+        ImGuiInputTextFlags_CharsHexadecimal
+        ImGuiInputTextFlags_CharsUppercase
+        ImGuiInputTextFlags_CharsNoBlank
+        ImGuiInputTextFlags_AutoSelectAll
+        ImGuiInputTextFlags_EnterReturnsTrue
+        ImGuiInputTextFlags_CallbackCompletion
+        ImGuiInputTextFlags_CallbackHistory
+        ImGuiInputTextFlags_CallbackAlways
+        ImGuiInputTextFlags_CallbackCharFilter
+        ImGuiInputTextFlags_AllowTabInput
+        ImGuiInputTextFlags_CtrlEnterForNewLine
+        ImGuiInputTextFlags_NoHorizontalScroll
+        ImGuiInputTextFlags_AlwaysOverwrite
+        ImGuiInputTextFlags_ReadOnly
+        ImGuiInputTextFlags_Password
+        ImGuiInputTextFlags_NoUndoRedo
+        ImGuiInputTextFlags_CharsScientific
+        ImGuiInputTextFlags_CallbackResize
+        ImGuiInputTextFlags_CallbackEdit
+        ImGuiInputTextFlags_EscapeClearsAll
+
+    ctypedef enum ImGuiItemFlags_:
+        ImGuiItemFlags_None
+        ImGuiItemFlags_NoTabStop
+        ImGuiItemFlags_ButtonRepeat
+        ImGuiItemFlags_Disabled
+        ImGuiItemFlags_NoNav
+        ImGuiItemFlags_NoNavDefaultFocus
+        ImGuiItemFlags_SelectableDontClosePopup
+        ImGuiItemFlags_MixedValue
+        ImGuiItemFlags_ReadOnly
+        ImGuiItemFlags_NoWindowHoverableCheck
+        ImGuiItemFlags_Inputable
+
+    ctypedef enum ImGuiItemStatusFlags_:
+        ImGuiItemStatusFlags_None
+        ImGuiItemStatusFlags_HoveredRect
+        ImGuiItemStatusFlags_HasDisplayRect
+        ImGuiItemStatusFlags_Edited
+        ImGuiItemStatusFlags_ToggledSelection
+        ImGuiItemStatusFlags_ToggledOpen
+        ImGuiItemStatusFlags_HasDeactivated
+        ImGuiItemStatusFlags_Deactivated
+        ImGuiItemStatusFlags_HoveredWindow
+        ImGuiItemStatusFlags_FocusedByTabbing
+        ImGuiItemStatusFlags_Visible
+
     ctypedef enum ImGuiKey:
         ImGuiKey_None
         ImGuiKey_Tab
@@ -439,6 +593,54 @@ cdef extern from "cimgui.h":
         ImGuiKey_KeysData_SIZE
         ImGuiKey_KeysData_OFFSET
 
+    ctypedef enum ImGuiLayoutType_:
+        ImGuiLayoutType_Horizontal
+        ImGuiLayoutType_Vertical
+
+    ctypedef enum ImGuiLocKey:
+        ImGuiLocKey_TableSizeOne
+        ImGuiLocKey_TableSizeAllFit
+        ImGuiLocKey_TableSizeAllDefault
+        ImGuiLocKey_TableResetOrder
+        ImGuiLocKey_WindowingMainMenuBar
+        ImGuiLocKey_WindowingPopup
+        ImGuiLocKey_WindowingUntitled
+        ImGuiLocKey_DockingHideTabBar
+        ImGuiLocKey_COUNT
+
+    ctypedef enum ImGuiLogType:
+        ImGuiLogType_None
+        ImGuiLogType_TTY
+        ImGuiLogType_File
+        ImGuiLogType_Buffer
+        ImGuiLogType_Clipboard
+
+    ctypedef enum ImGuiMouseButton_:
+        ImGuiMouseButton_Left
+        ImGuiMouseButton_Right
+        ImGuiMouseButton_Middle
+        ImGuiMouseButton_COUNT
+
+    ctypedef enum ImGuiMouseCursor_:
+        ImGuiMouseCursor_None
+        ImGuiMouseCursor_Arrow
+        ImGuiMouseCursor_TextInput
+        ImGuiMouseCursor_ResizeAll
+        ImGuiMouseCursor_ResizeNS
+        ImGuiMouseCursor_ResizeEW
+        ImGuiMouseCursor_ResizeNESW
+        ImGuiMouseCursor_ResizeNWSE
+        ImGuiMouseCursor_Hand
+        ImGuiMouseCursor_NotAllowed
+        ImGuiMouseCursor_COUNT
+
+    ctypedef enum ImGuiNavHighlightFlags_:
+        ImGuiNavHighlightFlags_None
+        ImGuiNavHighlightFlags_TypeDefault
+        ImGuiNavHighlightFlags_TypeThin
+        ImGuiNavHighlightFlags_AlwaysDraw
+        ImGuiNavHighlightFlags_NoRounding
+
     ctypedef enum ImGuiNavInput:
         ImGuiNavInput_Activate
         ImGuiNavInput_Cancel
@@ -458,88 +660,128 @@ cdef extern from "cimgui.h":
         ImGuiNavInput_TweakFast
         ImGuiNavInput_COUNT
 
-    ctypedef enum ImGuiConfigFlags_:
-        ImGuiConfigFlags_None
-        ImGuiConfigFlags_NavEnableKeyboard
-        ImGuiConfigFlags_NavEnableGamepad
-        ImGuiConfigFlags_NavEnableSetMousePos
-        ImGuiConfigFlags_NavNoCaptureKeyboard
-        ImGuiConfigFlags_NoMouse
-        ImGuiConfigFlags_NoMouseCursorChange
-        ImGuiConfigFlags_DockingEnable
-        ImGuiConfigFlags_ViewportsEnable
-        ImGuiConfigFlags_DpiEnableScaleViewports
-        ImGuiConfigFlags_DpiEnableScaleFonts
-        ImGuiConfigFlags_IsSRGB
-        ImGuiConfigFlags_IsTouchScreen
+    ctypedef enum ImGuiNavLayer:
+        ImGuiNavLayer_Main
+        ImGuiNavLayer_Menu
+        ImGuiNavLayer_COUNT
 
-    ctypedef enum ImGuiBackendFlags_:
-        ImGuiBackendFlags_None
-        ImGuiBackendFlags_HasGamepad
-        ImGuiBackendFlags_HasMouseCursors
-        ImGuiBackendFlags_HasSetMousePos
-        ImGuiBackendFlags_RendererHasVtxOffset
-        ImGuiBackendFlags_PlatformHasViewports
-        ImGuiBackendFlags_HasMouseHoveredViewport
-        ImGuiBackendFlags_RendererHasViewports
+    ctypedef enum ImGuiNavMoveFlags_:
+        ImGuiNavMoveFlags_None
+        ImGuiNavMoveFlags_LoopX
+        ImGuiNavMoveFlags_LoopY
+        ImGuiNavMoveFlags_WrapX
+        ImGuiNavMoveFlags_WrapY
+        ImGuiNavMoveFlags_AllowCurrentNavId
+        ImGuiNavMoveFlags_AlsoScoreVisibleSet
+        ImGuiNavMoveFlags_ScrollToEdgeY
+        ImGuiNavMoveFlags_Forwarded
+        ImGuiNavMoveFlags_DebugNoResult
+        ImGuiNavMoveFlags_FocusApi
+        ImGuiNavMoveFlags_Tabbing
+        ImGuiNavMoveFlags_Activate
+        ImGuiNavMoveFlags_DontSetNavHighlight
 
-    ctypedef enum ImGuiCol_:
-        ImGuiCol_Text
-        ImGuiCol_TextDisabled
-        ImGuiCol_WindowBg
-        ImGuiCol_ChildBg
-        ImGuiCol_PopupBg
-        ImGuiCol_Border
-        ImGuiCol_BorderShadow
-        ImGuiCol_FrameBg
-        ImGuiCol_FrameBgHovered
-        ImGuiCol_FrameBgActive
-        ImGuiCol_TitleBg
-        ImGuiCol_TitleBgActive
-        ImGuiCol_TitleBgCollapsed
-        ImGuiCol_MenuBarBg
-        ImGuiCol_ScrollbarBg
-        ImGuiCol_ScrollbarGrab
-        ImGuiCol_ScrollbarGrabHovered
-        ImGuiCol_ScrollbarGrabActive
-        ImGuiCol_CheckMark
-        ImGuiCol_SliderGrab
-        ImGuiCol_SliderGrabActive
-        ImGuiCol_Button
-        ImGuiCol_ButtonHovered
-        ImGuiCol_ButtonActive
-        ImGuiCol_Header
-        ImGuiCol_HeaderHovered
-        ImGuiCol_HeaderActive
-        ImGuiCol_Separator
-        ImGuiCol_SeparatorHovered
-        ImGuiCol_SeparatorActive
-        ImGuiCol_ResizeGrip
-        ImGuiCol_ResizeGripHovered
-        ImGuiCol_ResizeGripActive
-        ImGuiCol_Tab
-        ImGuiCol_TabHovered
-        ImGuiCol_TabActive
-        ImGuiCol_TabUnfocused
-        ImGuiCol_TabUnfocusedActive
-        ImGuiCol_DockingPreview
-        ImGuiCol_DockingEmptyBg
-        ImGuiCol_PlotLines
-        ImGuiCol_PlotLinesHovered
-        ImGuiCol_PlotHistogram
-        ImGuiCol_PlotHistogramHovered
-        ImGuiCol_TableHeaderBg
-        ImGuiCol_TableBorderStrong
-        ImGuiCol_TableBorderLight
-        ImGuiCol_TableRowBg
-        ImGuiCol_TableRowBgAlt
-        ImGuiCol_TextSelectedBg
-        ImGuiCol_DragDropTarget
-        ImGuiCol_NavHighlight
-        ImGuiCol_NavWindowingHighlight
-        ImGuiCol_NavWindowingDimBg
-        ImGuiCol_ModalWindowDimBg
-        ImGuiCol_COUNT
+    ctypedef enum ImGuiNextItemDataFlags_:
+        ImGuiNextItemDataFlags_None
+        ImGuiNextItemDataFlags_HasWidth
+        ImGuiNextItemDataFlags_HasOpen
+
+    ctypedef enum ImGuiNextWindowDataFlags_:
+        ImGuiNextWindowDataFlags_None
+        ImGuiNextWindowDataFlags_HasPos
+        ImGuiNextWindowDataFlags_HasSize
+        ImGuiNextWindowDataFlags_HasContentSize
+        ImGuiNextWindowDataFlags_HasCollapsed
+        ImGuiNextWindowDataFlags_HasSizeConstraint
+        ImGuiNextWindowDataFlags_HasFocus
+        ImGuiNextWindowDataFlags_HasBgAlpha
+        ImGuiNextWindowDataFlags_HasScroll
+        ImGuiNextWindowDataFlags_HasViewport
+        ImGuiNextWindowDataFlags_HasDock
+        ImGuiNextWindowDataFlags_HasWindowClass
+
+    ctypedef enum ImGuiOldColumnFlags_:
+        ImGuiOldColumnFlags_None
+        ImGuiOldColumnFlags_NoBorder
+        ImGuiOldColumnFlags_NoResize
+        ImGuiOldColumnFlags_NoPreserveWidths
+        ImGuiOldColumnFlags_NoForceWithinWindow
+        ImGuiOldColumnFlags_GrowParentContentsSize
+
+    ctypedef enum ImGuiPlotType:
+        ImGuiPlotType_Lines
+        ImGuiPlotType_Histogram
+
+    ctypedef enum ImGuiPopupFlags_:
+        ImGuiPopupFlags_None
+        ImGuiPopupFlags_MouseButtonLeft
+        ImGuiPopupFlags_MouseButtonRight
+        ImGuiPopupFlags_MouseButtonMiddle
+        ImGuiPopupFlags_MouseButtonMask_
+        ImGuiPopupFlags_MouseButtonDefault_
+        ImGuiPopupFlags_NoOpenOverExistingPopup
+        ImGuiPopupFlags_NoOpenOverItems
+        ImGuiPopupFlags_AnyPopupId
+        ImGuiPopupFlags_AnyPopupLevel
+        ImGuiPopupFlags_AnyPopup
+
+    ctypedef enum ImGuiPopupPositionPolicy:
+        ImGuiPopupPositionPolicy_Default
+        ImGuiPopupPositionPolicy_ComboBox
+        ImGuiPopupPositionPolicy_Tooltip
+
+    ctypedef enum ImGuiScrollFlags_:
+        ImGuiScrollFlags_None
+        ImGuiScrollFlags_KeepVisibleEdgeX
+        ImGuiScrollFlags_KeepVisibleEdgeY
+        ImGuiScrollFlags_KeepVisibleCenterX
+        ImGuiScrollFlags_KeepVisibleCenterY
+        ImGuiScrollFlags_AlwaysCenterX
+        ImGuiScrollFlags_AlwaysCenterY
+        ImGuiScrollFlags_NoScrollParent
+        ImGuiScrollFlags_MaskX_
+        ImGuiScrollFlags_MaskY_
+
+    ctypedef enum ImGuiSelectableFlagsPrivate_:
+        ImGuiSelectableFlags_NoHoldingActiveID
+        ImGuiSelectableFlags_SelectOnNav
+        ImGuiSelectableFlags_SelectOnClick
+        ImGuiSelectableFlags_SelectOnRelease
+        ImGuiSelectableFlags_SpanAvailWidth
+        ImGuiSelectableFlags_SetNavIdOnHover
+        ImGuiSelectableFlags_NoPadWithHalfSpacing
+        ImGuiSelectableFlags_NoSetKeyOwner
+
+    ctypedef enum ImGuiSelectableFlags_:
+        ImGuiSelectableFlags_None
+        ImGuiSelectableFlags_DontClosePopups
+        ImGuiSelectableFlags_SpanAllColumns
+        ImGuiSelectableFlags_AllowDoubleClick
+        ImGuiSelectableFlags_Disabled
+        ImGuiSelectableFlags_AllowItemOverlap
+
+    ctypedef enum ImGuiSeparatorFlags_:
+        ImGuiSeparatorFlags_None
+        ImGuiSeparatorFlags_Horizontal
+        ImGuiSeparatorFlags_Vertical
+        ImGuiSeparatorFlags_SpanAllColumns
+
+    ctypedef enum ImGuiSliderFlags_:
+        ImGuiSliderFlags_None
+        ImGuiSliderFlags_AlwaysClamp
+        ImGuiSliderFlags_Logarithmic
+        ImGuiSliderFlags_NoRoundToFormat
+        ImGuiSliderFlags_NoInput
+        ImGuiSliderFlags_InvalidMask_
+
+    ctypedef enum ImGuiSliderFlagsPrivate_:
+        ImGuiSliderFlags_Vertical
+        ImGuiSliderFlags_ReadOnly
+
+    ctypedef enum ImGuiSortDirection_:
+        ImGuiSortDirection_None
+        ImGuiSortDirection_Ascending
+        ImGuiSortDirection_Descending
 
     ctypedef enum ImGuiStyleVar_:
         ImGuiStyleVar_Alpha
@@ -572,107 +814,147 @@ cdef extern from "cimgui.h":
         ImGuiStyleVar_SeparatorTextPadding
         ImGuiStyleVar_COUNT
 
-    ctypedef enum ImGuiButtonFlags_:
-        ImGuiButtonFlags_None
-        ImGuiButtonFlags_MouseButtonLeft
-        ImGuiButtonFlags_MouseButtonRight
-        ImGuiButtonFlags_MouseButtonMiddle
-        ImGuiButtonFlags_MouseButtonMask_
-        ImGuiButtonFlags_MouseButtonDefault_
+    ctypedef enum ImGuiTabBarFlagsPrivate_:
+        ImGuiTabBarFlags_DockNode
+        ImGuiTabBarFlags_IsFocused
+        ImGuiTabBarFlags_SaveSettings
 
-    ctypedef enum ImGuiColorEditFlags_:
-        ImGuiColorEditFlags_None
-        ImGuiColorEditFlags_NoAlpha
-        ImGuiColorEditFlags_NoPicker
-        ImGuiColorEditFlags_NoOptions
-        ImGuiColorEditFlags_NoSmallPreview
-        ImGuiColorEditFlags_NoInputs
-        ImGuiColorEditFlags_NoTooltip
-        ImGuiColorEditFlags_NoLabel
-        ImGuiColorEditFlags_NoSidePreview
-        ImGuiColorEditFlags_NoDragDrop
-        ImGuiColorEditFlags_NoBorder
-        ImGuiColorEditFlags_AlphaBar
-        ImGuiColorEditFlags_AlphaPreview
-        ImGuiColorEditFlags_AlphaPreviewHalf
-        ImGuiColorEditFlags_HDR
-        ImGuiColorEditFlags_DisplayRGB
-        ImGuiColorEditFlags_DisplayHSV
-        ImGuiColorEditFlags_DisplayHex
-        ImGuiColorEditFlags_Uint8
-        ImGuiColorEditFlags_Float
-        ImGuiColorEditFlags_PickerHueBar
-        ImGuiColorEditFlags_PickerHueWheel
-        ImGuiColorEditFlags_InputRGB
-        ImGuiColorEditFlags_InputHSV
-        ImGuiColorEditFlags_DefaultOptions_
-        ImGuiColorEditFlags_DisplayMask_
-        ImGuiColorEditFlags_DataTypeMask_
-        ImGuiColorEditFlags_PickerMask_
-        ImGuiColorEditFlags_InputMask_
+    ctypedef enum ImGuiTabBarFlags_:
+        ImGuiTabBarFlags_None
+        ImGuiTabBarFlags_Reorderable
+        ImGuiTabBarFlags_AutoSelectNewTabs
+        ImGuiTabBarFlags_TabListPopupButton
+        ImGuiTabBarFlags_NoCloseWithMiddleMouseButton
+        ImGuiTabBarFlags_NoTabListScrollingButtons
+        ImGuiTabBarFlags_NoTooltip
+        ImGuiTabBarFlags_FittingPolicyResizeDown
+        ImGuiTabBarFlags_FittingPolicyScroll
+        ImGuiTabBarFlags_FittingPolicyMask_
+        ImGuiTabBarFlags_FittingPolicyDefault_
 
-    ctypedef enum ImGuiSliderFlags_:
-        ImGuiSliderFlags_None
-        ImGuiSliderFlags_AlwaysClamp
-        ImGuiSliderFlags_Logarithmic
-        ImGuiSliderFlags_NoRoundToFormat
-        ImGuiSliderFlags_NoInput
-        ImGuiSliderFlags_InvalidMask_
+    ctypedef enum ImGuiTabItemFlags_:
+        ImGuiTabItemFlags_None
+        ImGuiTabItemFlags_UnsavedDocument
+        ImGuiTabItemFlags_SetSelected
+        ImGuiTabItemFlags_NoCloseWithMiddleMouseButton
+        ImGuiTabItemFlags_NoPushId
+        ImGuiTabItemFlags_NoTooltip
+        ImGuiTabItemFlags_NoReorder
+        ImGuiTabItemFlags_Leading
+        ImGuiTabItemFlags_Trailing
 
-    ctypedef enum ImGuiMouseButton_:
-        ImGuiMouseButton_Left
-        ImGuiMouseButton_Right
-        ImGuiMouseButton_Middle
-        ImGuiMouseButton_COUNT
+    ctypedef enum ImGuiTabItemFlagsPrivate_:
+        ImGuiTabItemFlags_SectionMask_
+        ImGuiTabItemFlags_NoCloseButton
+        ImGuiTabItemFlags_Button
+        ImGuiTabItemFlags_Unsorted
+        ImGuiTabItemFlags_Preview
 
-    ctypedef enum ImGuiMouseCursor_:
-        ImGuiMouseCursor_None
-        ImGuiMouseCursor_Arrow
-        ImGuiMouseCursor_TextInput
-        ImGuiMouseCursor_ResizeAll
-        ImGuiMouseCursor_ResizeNS
-        ImGuiMouseCursor_ResizeEW
-        ImGuiMouseCursor_ResizeNESW
-        ImGuiMouseCursor_ResizeNWSE
-        ImGuiMouseCursor_Hand
-        ImGuiMouseCursor_NotAllowed
-        ImGuiMouseCursor_COUNT
-    
-    ctypedef enum ImGuiCond_:
-        ImGuiCond_None
-        ImGuiCond_Always
-        ImGuiCond_Once
-        ImGuiCond_FirstUseEver
-        ImGuiCond_Appearing
+    ctypedef enum ImGuiTableBgTarget_:
+        ImGuiTableBgTarget_None
+        ImGuiTableBgTarget_RowBg0
+        ImGuiTableBgTarget_RowBg1
+        ImGuiTableBgTarget_CellBg
 
-    ctypedef enum ImDrawFlags_:
-        ImDrawFlags_None
-        ImDrawFlags_Closed
-        ImDrawFlags_RoundCornersTopLeft
-        ImDrawFlags_RoundCornersTopRight
-        ImDrawFlags_RoundCornersBottomLeft
-        ImDrawFlags_RoundCornersBottomRight
-        ImDrawFlags_RoundCornersNone
-        ImDrawFlags_RoundCornersTop
-        ImDrawFlags_RoundCornersBottom
-        ImDrawFlags_RoundCornersLeft
-        ImDrawFlags_RoundCornersRight
-        ImDrawFlags_RoundCornersAll
-        ImDrawFlags_RoundCornersDefault_
-        ImDrawFlags_RoundCornersMask_
+    ctypedef enum ImGuiTableColumnFlags_:
+        ImGuiTableColumnFlags_None
+        ImGuiTableColumnFlags_Disabled
+        ImGuiTableColumnFlags_DefaultHide
+        ImGuiTableColumnFlags_DefaultSort
+        ImGuiTableColumnFlags_WidthStretch
+        ImGuiTableColumnFlags_WidthFixed
+        ImGuiTableColumnFlags_NoResize
+        ImGuiTableColumnFlags_NoReorder
+        ImGuiTableColumnFlags_NoHide
+        ImGuiTableColumnFlags_NoClip
+        ImGuiTableColumnFlags_NoSort
+        ImGuiTableColumnFlags_NoSortAscending
+        ImGuiTableColumnFlags_NoSortDescending
+        ImGuiTableColumnFlags_NoHeaderLabel
+        ImGuiTableColumnFlags_NoHeaderWidth
+        ImGuiTableColumnFlags_PreferSortAscending
+        ImGuiTableColumnFlags_PreferSortDescending
+        ImGuiTableColumnFlags_IndentEnable
+        ImGuiTableColumnFlags_IndentDisable
+        ImGuiTableColumnFlags_IsEnabled
+        ImGuiTableColumnFlags_IsVisible
+        ImGuiTableColumnFlags_IsSorted
+        ImGuiTableColumnFlags_IsHovered
+        ImGuiTableColumnFlags_WidthMask_
+        ImGuiTableColumnFlags_IndentMask_
+        ImGuiTableColumnFlags_StatusMask_
+        ImGuiTableColumnFlags_NoDirectResize_
 
-    ctypedef enum ImDrawListFlags_:
-        ImDrawListFlags_None
-        ImDrawListFlags_AntiAliasedLines
-        ImDrawListFlags_AntiAliasedLinesUseTex
-        ImDrawListFlags_AntiAliasedFill
-        ImDrawListFlags_AllowVtxOffset
+    ctypedef enum ImGuiTableFlags_:
+        ImGuiTableFlags_None
+        ImGuiTableFlags_Resizable
+        ImGuiTableFlags_Reorderable
+        ImGuiTableFlags_Hideable
+        ImGuiTableFlags_Sortable
+        ImGuiTableFlags_NoSavedSettings
+        ImGuiTableFlags_ContextMenuInBody
+        ImGuiTableFlags_RowBg
+        ImGuiTableFlags_BordersInnerH
+        ImGuiTableFlags_BordersOuterH
+        ImGuiTableFlags_BordersInnerV
+        ImGuiTableFlags_BordersOuterV
+        ImGuiTableFlags_BordersH
+        ImGuiTableFlags_BordersV
+        ImGuiTableFlags_BordersInner
+        ImGuiTableFlags_BordersOuter
+        ImGuiTableFlags_Borders
+        ImGuiTableFlags_NoBordersInBody
+        ImGuiTableFlags_NoBordersInBodyUntilResize
+        ImGuiTableFlags_SizingFixedFit
+        ImGuiTableFlags_SizingFixedSame
+        ImGuiTableFlags_SizingStretchProp
+        ImGuiTableFlags_SizingStretchSame
+        ImGuiTableFlags_NoHostExtendX
+        ImGuiTableFlags_NoHostExtendY
+        ImGuiTableFlags_NoKeepColumnsVisible
+        ImGuiTableFlags_PreciseWidths
+        ImGuiTableFlags_NoClip
+        ImGuiTableFlags_PadOuterX
+        ImGuiTableFlags_NoPadOuterX
+        ImGuiTableFlags_NoPadInnerX
+        ImGuiTableFlags_ScrollX
+        ImGuiTableFlags_ScrollY
+        ImGuiTableFlags_SortMulti
+        ImGuiTableFlags_SortTristate
+        ImGuiTableFlags_SizingMask_
 
-    ctypedef enum ImFontAtlasFlags_:
-        ImFontAtlasFlags_None
-        ImFontAtlasFlags_NoPowerOfTwoHeight
-        ImFontAtlasFlags_NoMouseCursors
-        ImFontAtlasFlags_NoBakedLines
+    ctypedef enum ImGuiTableRowFlags_:
+        ImGuiTableRowFlags_None
+        ImGuiTableRowFlags_Headers
+
+    ctypedef enum ImGuiTextFlags_:
+        ImGuiTextFlags_None
+        ImGuiTextFlags_NoWidthForLargeClippedText
+
+    ctypedef enum ImGuiTooltipFlags_:
+        ImGuiTooltipFlags_None
+        ImGuiTooltipFlags_OverridePreviousTooltip
+
+    ctypedef enum ImGuiTreeNodeFlagsPrivate_:
+        ImGuiTreeNodeFlags_ClipLabelForTrailingButton
+
+    ctypedef enum ImGuiTreeNodeFlags_:
+        ImGuiTreeNodeFlags_None
+        ImGuiTreeNodeFlags_Selected
+        ImGuiTreeNodeFlags_Framed
+        ImGuiTreeNodeFlags_AllowItemOverlap
+        ImGuiTreeNodeFlags_NoTreePushOnOpen
+        ImGuiTreeNodeFlags_NoAutoOpenOnLog
+        ImGuiTreeNodeFlags_DefaultOpen
+        ImGuiTreeNodeFlags_OpenOnDoubleClick
+        ImGuiTreeNodeFlags_OpenOnArrow
+        ImGuiTreeNodeFlags_Leaf
+        ImGuiTreeNodeFlags_Bullet
+        ImGuiTreeNodeFlags_FramePadding
+        ImGuiTreeNodeFlags_SpanAvailWidth
+        ImGuiTreeNodeFlags_SpanFullWidth
+        ImGuiTreeNodeFlags_NavLeftJumpsBackHere
+        ImGuiTreeNodeFlags_CollapsingHeader
 
     ctypedef enum ImGuiViewportFlags_:
         ImGuiViewportFlags_None
@@ -689,3 +971,47 @@ cdef extern from "cimgui.h":
         ImGuiViewportFlags_Minimized
         ImGuiViewportFlags_NoAutoMerge
         ImGuiViewportFlags_CanHostOtherWindows
+
+    ctypedef enum ImGuiWindowDockStyleCol:
+        ImGuiWindowDockStyleCol_Text
+        ImGuiWindowDockStyleCol_Tab
+        ImGuiWindowDockStyleCol_TabHovered
+        ImGuiWindowDockStyleCol_TabActive
+        ImGuiWindowDockStyleCol_TabUnfocused
+        ImGuiWindowDockStyleCol_TabUnfocusedActive
+        ImGuiWindowDockStyleCol_COUNT
+
+    ctypedef enum ImGuiWindowFlags_:
+        ImGuiWindowFlags_None
+        ImGuiWindowFlags_NoTitleBar
+        ImGuiWindowFlags_NoResize
+        ImGuiWindowFlags_NoMove
+        ImGuiWindowFlags_NoScrollbar
+        ImGuiWindowFlags_NoScrollWithMouse
+        ImGuiWindowFlags_NoCollapse
+        ImGuiWindowFlags_AlwaysAutoResize
+        ImGuiWindowFlags_NoBackground
+        ImGuiWindowFlags_NoSavedSettings
+        ImGuiWindowFlags_NoMouseInputs
+        ImGuiWindowFlags_MenuBar
+        ImGuiWindowFlags_HorizontalScrollbar
+        ImGuiWindowFlags_NoFocusOnAppearing
+        ImGuiWindowFlags_NoBringToFrontOnFocus
+        ImGuiWindowFlags_AlwaysVerticalScrollbar
+        ImGuiWindowFlags_AlwaysHorizontalScrollbar
+        ImGuiWindowFlags_AlwaysUseWindowPadding
+        ImGuiWindowFlags_NoNavInputs
+        ImGuiWindowFlags_NoNavFocus
+        ImGuiWindowFlags_UnsavedDocument
+        ImGuiWindowFlags_NoDocking
+        ImGuiWindowFlags_NoNav
+        ImGuiWindowFlags_NoDecoration
+        ImGuiWindowFlags_NoInputs
+        ImGuiWindowFlags_NavFlattened
+        ImGuiWindowFlags_ChildWindow
+        ImGuiWindowFlags_Tooltip
+        ImGuiWindowFlags_Popup
+        ImGuiWindowFlags_Modal
+        ImGuiWindowFlags_ChildMenu
+        ImGuiWindowFlags_DockNodeHost
+
