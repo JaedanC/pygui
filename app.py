@@ -16,6 +16,7 @@ def render_frame(impl, window):
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
     pygui.show_demo_window()
+    pygui.show_user_guide()
 
     pygui.render()
     impl.render(pygui.get_draw_data())

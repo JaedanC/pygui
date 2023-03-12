@@ -36,6 +36,12 @@ class Parameter:
             self.variable_name
         )
 
+    def as_python(self):
+        return "{}{}".format(
+            self.variable_name,
+            ": " + self.data_type if self.data_type is not None else "",
+        )
+
 
 class Typedef:
     def __init__(self, base, definition):
@@ -93,7 +99,7 @@ class Struct:
 class Enum:
     def __init__(self):
         self.values = []
-        self.name = None
+        self.name: str = None
 
     def add_name(self, name):
         self.name = name
@@ -145,6 +151,13 @@ class Function:
             self.name,
             ", ".join(map(lambda p: p.as_cython(), self.parameters))
         )
+    
+    def pythonised_name(self):
+        function_name = self.name
+        function_name = function_name.replace("ImGui", "Imgui")
+        python_style_name = pythonise_string(function_name)
+        python_style_name = re.sub("^ig_", "", python_style_name)
+        return python_style_name
 
 
 def reduce_cimgui_h(src) -> str:
@@ -389,7 +402,7 @@ def parse_reduced_cimgui(src: str) -> \
 
     def parse_function_lines(function_lines: List[str]) -> List[Function]:
         functions = []
-        function_regex = re.compile("^(.+?) (.+?)\((.*?)\);$")
+        function_regex = re.compile("^(.+) ([^,\n]+?)\((.*?)\);$")
         for line in function_lines:
             found = function_regex.match(line)
             if found is None:
@@ -433,6 +446,19 @@ def parse_reduced_cimgui(src: str) -> \
     functions = parse_function_lines(function_lines)
 
     return enums, structs, typedefs, functions
+
+
+def keep_unique_structs(structs: List[Struct]):
+    struct_dict = {}
+    for struct in structs:
+        if struct.name not in struct_dict:
+            struct_dict[struct.name] = struct
+            continue
+        
+        if len(struct.parameters) > len(struct_dict[struct.name].parameters):
+            struct_dict[struct.name] = struct
+            continue
+    return list(struct_dict.values())
 
 
 def dependency_aware_sort(structs: List[Struct]) -> List[Struct]:
@@ -486,7 +512,7 @@ def dependency_aware_sort(structs: List[Struct]) -> List[Struct]:
     return safe_struct_order
 
 
-def pxd_typedefs(typedefs: List[Typedef]):
+def pxd_typedefs(typedefs: List[Typedef]) -> str:
     output = ""
     for typedef in typedefs:
         output += "    {}\n".format(
@@ -495,7 +521,7 @@ def pxd_typedefs(typedefs: List[Typedef]):
     return output
 
 
-def pxd_structs_forward_declaration(structs: List[Struct]):
+def pxd_structs_forward_declaration(structs: List[Struct]) -> str:
     output = ""
     for struct in structs:
         output += "    {}\n".format(
@@ -504,7 +530,7 @@ def pxd_structs_forward_declaration(structs: List[Struct]):
     return output
 
 
-def pxd_structs(structs: List[Struct]):
+def pxd_structs(structs: List[Struct]) -> str:
     output = ""
     for struct in structs:
         output += "    {}\n".format(
@@ -513,7 +539,7 @@ def pxd_structs(structs: List[Struct]):
     return output
 
 
-def pxd_enums(enums: List[Function]):
+def pxd_enums(enums: List[Function]) -> str:
     output = ""
     for enum in enums:
         output += "    {}\n".format(
@@ -522,24 +548,90 @@ def pxd_enums(enums: List[Function]):
     return output
 
 
-def pxd_functions(functions: List[Function]):
+def pxd_functions(functions: List[Function]) -> str:
     output = ""
     for function in functions:
         output += "    {}\n".format(function.as_cython())
     return output
 
 
-def keep_unique_structs(structs: List[Struct]):
-    struct_dict = {}
-    for struct in structs:
-        if struct.name not in struct_dict:
-            struct_dict[struct.name] = struct
+def pythonise_string(string: str, make_upper=False) -> str:
+    pythonised_string = ""
+    for i, char in enumerate(string):
+        skip_underscore = True
+        if i > 0 and i < len(string) - 1:
+            back = string[i - 1]
+            forw = string[i + 1]
+            skip_underscore = (back.isupper() or back.isnumeric()) \
+                          and (forw.isupper() or forw.isnumeric() or forw == "_") or back == "_"
+        
+        if char == "_":
+            skip_underscore = True
+
+        if make_upper:
+            if (char.isupper() or char.isnumeric()) and i != 0 and not skip_underscore:
+                pythonised_string += "_" + char.upper()
+                continue
+            pythonised_string += char.upper()
+        else:
+            if (char.isupper() or char.isnumeric()) and i != 0 and not skip_underscore:
+                pythonised_string += "_" + char.lower()
+                continue
+            pythonised_string += char.lower()
+    return pythonised_string
+
+
+def pyx_enums(enums: List[Enum], extension_name) -> str:
+    output = ""
+    for enum in enums:
+        for value_name in enum.values:
+            value_name = value_name.replace("ImGui", "Imgui")
+            python_constant_name = pythonise_string(value_name, make_upper=True)
+            output += "{} = {}.{}\n".format(
+                python_constant_name,
+                extension_name,
+                value_name
+            )
+        output += "\n"
+    return output
+
+
+def pyx_functions(functions: List[Function]) -> Tuple[str, None]:
+    functions.sort(key=lambda f: f.pythonised_name())
+    output = ""
+
+    # Knockout the easy ones first
+    for function in functions:
+        function: Function
+        if function.return_type not in dir(__builtins__) and \
+            function.return_type != "void":
             continue
         
-        if len(struct.parameters) > len(struct_dict[struct.name].parameters):
-            struct_dict[struct.name] = struct
+        skip = False
+        for parameter in function.parameters:
+            parameter: Parameter
+            if parameter.data_type not in dir(__builtins__) and \
+                parameter.data_type != "void":
+                skip = True
+                break
+        
+        if skip:
             continue
-    return list(struct_dict.values())
+        
+        # Get the easy ones out first
+        template = \
+        "def {}({}):\n" \
+        "    return ccimgui.{}({})\n\n"
+        
+        output += template.format(
+            function.pythonised_name(),
+            ", ".join(map(lambda f: f.as_python(), function.parameters)),
+            function.name,
+            ", ".join(map(lambda f: f.variable_name, function.parameters))
+        )
+    
+    print(output)
+
 
 
 def main():
@@ -555,18 +647,32 @@ def main():
     structs = keep_unique_structs(structs)
     structs = dependency_aware_sort(structs)
 
-    with open("pygui/ccimgui.pxd", "w") as f:
-        f.write("# -*- coding: utf-8 -*-\n")
-        f.write("# distutils: language = c++\n\n")
-        f.write("from libcpp cimport bool\n\n")
-        f.write('cdef extern from "cimgui.h":\n')
-        f.write(pxd_structs_forward_declaration(structs))
-        f.write("\n")
-        f.write(pxd_typedefs(typedefs))
-        f.write(pxd_enums(enums))
-        f.write("\n\n")
-        f.write(pxd_structs(structs))
-        f.write(pxd_functions(functions))
+
+    # with open("pygui/ccimgui.pxd", "w") as f:
+    #     f.write("# -*- coding: utf-8 -*-\n")
+    #     f.write("# distutils: language = c++\n\n")
+    #     f.write("from libcpp cimport bool\n\n")
+    #     f.write('cdef extern from "cimgui.h":\n')
+    #     f.write(pxd_structs_forward_declaration(structs))
+    #     f.write("\n")
+    #     f.write(pxd_typedefs(typedefs))
+    #     f.write(pxd_enums(enums))
+    #     f.write("\n\n")
+    #     f.write(pxd_structs(structs))
+    #     f.write(pxd_functions(functions))
+
+    with open("pygui/core_test.pyx", "w") as f:
+        f.write("import cython\n")
+        f.write("from cython.operator import dereference\n\n")
+        f.write("from collections import namedtuple\n\n")
+        f.write("from . cimport ccimgui\n")
+        f.write("from libcpp cimport bool\n")
+        f.write("from libc.stdint cimport uintptr_t\n")
+        f.write("from cython.view cimport array as cvarray\n")
+        f.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
+        f.write(pyx_enums(enums, "ccimgui"))
+
+    pyx_functions(functions)
 
     # print(pxd_structs_forward_declaration(structs))
     # print(pxd_typedefs(typedefs))
@@ -576,3 +682,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # print(dir(__builtins__))

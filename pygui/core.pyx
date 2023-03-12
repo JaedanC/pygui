@@ -469,6 +469,10 @@ def render():
     ccimgui.igRender()
 
 
+def show_user_guide():
+    return ccimgui.igShowUserGuide()
+
+
 def _py_vertex_buffer_vertex_pos_offset():
     return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos
 
