@@ -443,7 +443,6 @@ cdef class _DrawData(object):
             for idx in range(dereference(self._ptr).CmdListsCount)
         ]
     
-
     
 @cython.returns(_DrawData)
 def get_draw_data():

@@ -32,57 +32,45 @@ class Parameter:
     def get_name(self) -> str:
         return self._name
 
+    def get_function_pointer_safe_name(self):
+        if not self._is_function_pointer():
+            return self._name
+        return self._name_if_function_pointer()
+
     def get_type(self) -> str:
         return self._type
 
     def in_pxd_format(self) -> str:
-        return "{}{}".format(
-            self._type + " " if self._type is not None else "",
-            self._name
-        )
+        if not self._is_function_pointer():
+            return "{}{}".format(
+                self._type + " " if self._type is not None else "",
+                self._name
+            )
+        function_pointer_regex = re.compile("^\(\*(.*?)\)")
+        found = function_pointer_regex.match(self._name)
+        return found.group(1)
 
     def in_pyx_format(
             self, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
-        pyx_type = self._convert_type_to_pyx_type(enums, typedefs, library_name)
-        return "{}{}".format(
-            self._name,
-            ": " + pyx_type if pyx_type is not None else "",
-        )
-
-    def _convert_type_to_pyx_type(
-            self, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
-        _type = self._type
-        _type = re.sub("^const ", "", _type)
-        _type = re.sub("^unsigned ", "", _type)
-        _type = re.sub("^signed ", "", _type)
+        if not self._is_function_pointer():
+            pyx_type = convert_type_to_pyx_type(self._type, enums, typedefs, library_name)
+            return "{}{}".format(
+                self._name,
+                ": " + pyx_type if pyx_type is not None else "",
+            )
         
-        mapping = {
-            ("bool"): "bool",
-            ("char*"): "str",
-            ("double"): "double",
-            ("float", "float*"): "float",
-            # ("ImVec2"): "",
-            ("int", "int*"): "int",
-            ("void"): "",
-        }
-
-        for types, mapped_to in mapping.items():
-            if _type in types:
-                return mapped_to
-        
-        for enum in enums:
-            if _type == enum.get_name():
-                return "{}.{}".format(
-                    library_name,
-                    enum.get_name()
-                )
-        
-        # Could be recursive. Will need to check
-        for typedef in typedefs:
-            if _type == typedef.get_definition():
-                return str(typedef.get_base())
-
-        return None
+        function_pointer_regex = re.compile("^\(\*(.*?)\)")
+        found = function_pointer_regex.match(self._name)
+        return found.group(1)
+    
+    def _name_if_function_pointer(self):
+        assert self._is_function_pointer()
+        function_pointer_regex = re.compile("^\(\*(.*?)\)")
+        found = function_pointer_regex.match(self._name)
+        return found.group(1)
+    
+    def _is_function_pointer(self):
+        return self._name.startswith("(*")
 
 
 class FunctionPointer(Parameter):
@@ -251,12 +239,17 @@ class Function:
         "    cdef {} return_value = {}({})\n" \
         "    return return_value\n\n"
 
+
+        # pyx_return_format = convert_type_to_pyx_type(self._return_type, enums, typedefs, library_name)
+
+        print(self)
         return template.format(
             self.pythonised_name(),
             ", ".join(map(lambda p: p.in_pyx_format(enums, typedefs, library_name), self._parameters)),
-            library_name + "." + self._return_type,
+            # library_name + "." + pyx_return_format,
+            "bool",
             library_name + "." + self._name,
-            ", ".join(map(lambda p: p.get_name(), self._parameters)),
+            ", ".join(map(lambda p: p.get_function_pointer_safe_name(), self._parameters)),
         )
 
 
@@ -681,6 +674,41 @@ def pyx_enums(enums: List[Enum], extension_name) -> str:
     return output
 
 
+def convert_type_to_pyx_type(
+        _type, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
+    for enum in enums:
+        if _type == enum.get_name():
+            return "{}.{}".format(
+                library_name,
+                enum.get_name()
+            )
+    
+    _type = re.sub("^const ", "", _type)
+    _type = re.sub("^unsigned ", "", _type)
+    _type = re.sub("^signed ", "", _type)
+    
+    # Could be recursive. Will need to check
+    for typedef in typedefs:
+        if _type == typedef.get_definition():
+            _type = str(typedef.get_base())
+            break
+    
+    mapping = {
+        ("bool"): "bool",
+        ("char*"): "str",
+        ("double"): "double",
+        ("float", "float*"): "float",
+        # ("ImVec2"): "",
+        ("int", "int*"): "int",
+        ("void"): "",
+    }
+
+    for types, mapped_to in mapping.items():
+        if _type in types:
+            return mapped_to
+
+    return None
+
 # def pyx_builtin_functions(functions: List[Function], library_name) -> str:
 #     # Knockout the easy ones first
 #     to_remove = []
@@ -767,6 +795,9 @@ def main():
     #     f.write(pxd_structs(structs))
     #     f.write(pxd_functions(functions))
 
+    enum_text = pyx_enums(enums, "ccimgui")
+    function_text = pyx_functions(functions, enums, typedefs, "ccimgui")
+
     with open("pygui/core_test.pyx", "w") as f:
         f.write("import cython\n")
         f.write("from cython.operator import dereference\n\n")
@@ -776,8 +807,8 @@ def main():
         f.write("from libc.stdint cimport uintptr_t\n")
         f.write("from cython.view cimport array as cvarray\n")
         f.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
-        f.write(pyx_enums(enums, "ccimgui"))
-        f.write(pyx_functions(functions, enums, typedefs, "ccimgui"))
+        f.write(enum_text)
+        f.write(function_text)
 
     # print(pxd_structs_forward_declaration(structs))
     # print(pxd_typedefs(typedefs))
