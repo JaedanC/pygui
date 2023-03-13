@@ -15,4 +15,4 @@ pygui/*.cpp
 Scripts/
 
 imgui.ini
-# pyvenv.cfg
+pyvenv.cfg
