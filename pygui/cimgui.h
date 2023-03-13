@@ -1058,8 +1058,8 @@ struct ImGuiOnceUponAFrame
 };
 struct ImGuiTextRange
 {
-    const char* b;
-    const char* e;
+        const char* b;
+        const char* e;
 };
 typedef struct ImGuiTextRange ImGuiTextRange;
 

@@ -1,167 +1,267 @@
-import json
+from __future__ import annotations
 import re
 import keyword 
 from typing import Tuple, List
 
 
 class Parameter:
-    def __init__(self):
-        self.data_type = None
-        self.variable_name = None
-    
-    def set_data_type(self, data_type: str):
-        data_type = data_type.replace("struct", "")
-        self.data_type = data_type.strip()
-        return self
-    
-    def set_variable_name(self, name: str):
-        if name in keyword.kwlist or name in dir(__builtins__):
-            name = name + "_"
+    def __init__(self, _type: str, name: str):
+        self._name: str = name.strip()
+        self._type: str = _type.strip().replace("struct", "")
+
+        self._name = self._name.replace(",", ", ")
+
+        # Make sure the name does not use a keyword
+        if self._name in keyword.kwlist or self._name in dir(__builtins__):
+            self._name = self._name + "_"
         
-        
-        name = name.replace(",", ", ")
-        self.variable_name = name
-        return self
+        # Standardise how pointers are shown
+        if self._name.startswith("*"):
+            if self._type is None:
+                self._type = ""
+            
+            self._type += "*" * self._name.count("*")
+            self._name = self._name.replace("*", "")
     
     def __repr__(self):
         return "Parameter({}, {})".format(
-            self.data_type,
-            self.variable_name
+            self._type,
+            self._name
         )
     
-    def as_cython(self):
-        # "const " if self.is_const else "",
+    def get_name(self) -> str:
+        return self._name
+
+    def get_type(self) -> str:
+        return self._type
+
+    def in_pxd_format(self) -> str:
         return "{}{}".format(
-            self.data_type + " " if self.data_type is not None else "",
-            self.variable_name
+            self._type + " " if self._type is not None else "",
+            self._name
         )
 
-    def as_python(self):
+    def in_pyx_format(
+            self, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
+        pyx_type = self._convert_type_to_pyx_type(enums, typedefs, library_name)
         return "{}{}".format(
-            self.variable_name,
-            ": " + self.data_type if self.data_type is not None else "",
+            self._name,
+            ": " + pyx_type if pyx_type is not None else "",
         )
 
+    def _convert_type_to_pyx_type(
+            self, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
+        _type = self._type
+        _type = re.sub("^const ", "", _type)
+        _type = re.sub("^unsigned ", "", _type)
+        _type = re.sub("^signed ", "", _type)
+        
+        mapping = {
+            ("bool"): "bool",
+            ("char*"): "str",
+            ("double"): "double",
+            ("float", "float*"): "float",
+            # ("ImVec2"): "",
+            ("int", "int*"): "int",
+            ("void"): "",
+        }
+
+        for types, mapped_to in mapping.items():
+            if _type in types:
+                return mapped_to
+        
+        for enum in enums:
+            if _type == enum.get_name():
+                return "{}.{}".format(
+                    library_name,
+                    enum.get_name()
+                )
+        
+        # Could be recursive. Will need to check
+        for typedef in typedefs:
+            if _type == typedef.get_definition():
+                return str(typedef.get_base())
+
+        return None
+
+
+class FunctionPointer(Parameter):
+    def __init__(self, return_type: str, name: str, parameters: List[Parameter]):
+        Parameter.__init__(self, "", name)
+        self._return_type: str = return_type
+        self._parameters: List[Parameter] = parameters
+    
+    def __repr__(self):
+        raise NotImplementedError
+
+    def in_pxd_format(self) -> str:
+        raise NotImplementedError
+
+    def in_pyx_format(self, enums, typedefs, library_name) -> str:
+        raise NotImplementedError
+    
 
 class Typedef:
-    def __init__(self, base, definition):
-        self.base = base
-        self.definition = definition
+    def __init__(self, base: str, definition: str):
+        self._base: str = base
+        self._definition: str = definition
 
-    def as_cython(self):
+    def get_base(self) -> str:
+        return self._base
+
+    def get_definition(self) -> str:
+        return self._definition
+
+    def in_pxd_format(self) -> str:
         return "ctypedef {} {}".format(
-            self.base,
-            self.definition
+            self._base,
+            self._definition
         )
 
 
 class Struct:
-    def __init__(self):
-        self.parameters: List[Parameter] = []
-        self.name = None
-        self.typedef = None
+    def __init__(self, name: str, parameters: List[Parameter]):
+        self._name: str = name
+        self._parameters: List[Parameter] = parameters
     
-    def add_name(self, name):
-        self.name = name
-    
-    def add_typedef(self, typedef):
-        self.typedef = typedef
-    
-    def add_parameter(self, parameter):
-        self.parameters.append(parameter)
+    def __iter__(self):
+        self.i = 0
+        return self
+
+    def __next__(self):
+        if self.i < len(self._parameters):
+            to_return = self._parameters[self.i]
+            self.i += 1
+            return to_return
+        raise StopIteration
 
     def __repr__(self):
-        return "{}{}{}".format(
-            ("(typedef " + self.typedef + ") ") if self.typedef is not None else "",
-            self.name,
-            ":\n\t" + "\n\t".join(list(map(str, self.parameters))) if len(self.parameters) > 0 else ""
+        return "{}{}".format(
+            self._name,
+            ":\n\t" + "\n\t".join(list(map(str, self._parameters))) if len(self._parameters) > 0 else ""
         )
 
-    def as_cython(self, indent=4):
+    def __len__(self):
+        return len(self._parameters)
+
+    def get_name(self) -> str:
+        return self._name
+
+    def get_parameters(self) -> List[Parameter]:
+        return self._parameters
+
+    def in_pxd_format(self, indent=4) -> str:
         output = ""
-        if len(self.parameters) == 0:
+        if len(self._parameters) == 0:
             output = indent * " " + "pass\n"
         else:
-            for parameter in self.parameters:
+            for parameter in self._parameters:
                 output += "{}{}\n".format(
                     " " * indent,
-                    parameter.as_cython()
+                    parameter.in_pxd_format()
                 )
         return "ctypedef struct {}:\n{}".format(
-            self.name,
+            self._name,
             output
         )
 
-    def as_cython_forward_declration(self):
-        return f"ctypedef struct {self.name}"
+    def in_pxd_forward_declaration_format(self) -> str:
+        return f"ctypedef struct {self._name}"
 
 
 class Enum:
-    def __init__(self):
-        self.values = []
-        self.name: str = None
+    def __init__(self, name: str, values: List[str]):
+        self._name: str = name
+        self._values: List[str] = values
 
-    def add_name(self, name):
-        self.name = name
+    def __iter__(self):
+        self.i = 0
+        return self
 
-    def add_value(self, value):
-        self.values.append(value)
+    def __next__(self):
+        if self.i < len(self._values):
+            to_return = self._values[self.i]
+            self.i += 1
+            return to_return
+        raise StopIteration
 
-    def as_cython(self, indent=4):
+    def get_name(self) -> str:
+        return self._name
+
+    def get_values(self) -> List[str]:
+        return self._values
+
+    def in_pxd_format(self, indent=4):
         output = ""
-        if len(self.values) == 0:
+        if len(self._values) == 0:
             output = "pass"
         else:
-            for value in self.values:
+            for value in self._values:
                 output += "{}{}\n".format(
                     " " * indent,
                     value
                 )
         return "ctypedef enum {}:\n{}".format(
-            self.name,
+            self._name,
             output
         )
 
 
 class Function:
-    def __init__(self):
-        self.parameters = []
-        self.name = None
-        self.return_type = None
+    def __init__(self, return_type: str, name: str, parameters: List[str]):
+        self._return_type: str = return_type
+        self._name: str = name
+        self._parameters: List[Parameter] = parameters
     
-    def add_parameter(self, parameter):
-        self.parameters.append(parameter)
-
-    def add_name(self, name):
-        self.name = name
-    
-    def add_return_type(self, _type):
-        self.return_type = _type
-
     def __repr__(self):
         return "{} {}{}".format(
-            self.return_type,
-            self.name,
-            ":\n\t" + "\n\t".join(list(map(str, self.parameters))) if len(self.parameters) > 0 else ""
+            self._return_type,
+            self._name,
+            ":\n\t" + "\n\t".join(list(map(str, self._parameters))) if len(self._parameters) > 0 else ""
         )
     
-    def as_cython(self):
+    def __iter__(self):
+        self.i = 0
+        return self
+    
+    def __next__(self):
+        if self.i < len(self._parameters):
+            to_return = self._parameters[self.i]
+            self.i += 1
+            return to_return
+        raise StopIteration
+
+    def in_pxd_format(self):
         return "{} {}({})".format(
-            self.return_type,
-            self.name,
-            ", ".join(map(lambda p: p.as_cython(), self.parameters))
+            self._return_type,
+            self._name,
+            ", ".join(map(lambda p: p.in_pxd_format(), self._parameters))
         )
     
     def pythonised_name(self):
-        function_name = self.name
+        function_name = self._name
         function_name = function_name.replace("ImGui", "Imgui")
         python_style_name = pythonise_string(function_name)
         python_style_name = re.sub("^ig_", "", python_style_name)
         return python_style_name
 
+    def in_pyx_format(self, enums, typedefs, library_name):
+        template = \
+        "def {}({}):\n" \
+        "    cdef {} return_value = {}({})\n" \
+        "    return return_value\n\n"
+
+        return template.format(
+            self.pythonised_name(),
+            ", ".join(map(lambda p: p.in_pyx_format(enums, typedefs, library_name), self._parameters)),
+            library_name + "." + self._return_type,
+            library_name + "." + self._name,
+            ", ".join(map(lambda p: p.get_name(), self._parameters)),
+        )
+
 
 def reduce_cimgui_h(src) -> str:
-    lines: list = src.split("\n")
+    lines: List[str] = src.split("\n")
     if "#ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS" not in lines:
         assert False
     
@@ -290,10 +390,7 @@ def parse_reduced_cimgui(src: str) -> \
                 _type = found.group(1)
                 name = found.group(2)
             
-            parameter = Parameter()
-            parameter.set_data_type(_type)
-            parameter.set_variable_name(name)
-            parameters.append(parameter)
+            parameters.append(Parameter(_type, name))
         return parameters
     
     def parameter_split(parameters: str, split_char: str) -> List[str]:
@@ -330,15 +427,8 @@ def parse_reduced_cimgui(src: str) -> \
             if enum_found is not None:
                 values = enum_found.group(1)
                 name = enum_found.group(2)
-
-                enum = Enum()
-                enum.add_name(name)
-                for value in values.split(","):
-                    if value == "":
-                        continue
-
-                    enum.add_value(value)
-                enums.append(enum)
+                enum_values = [v for v in values.split(",") if v != ""]
+                enums.append(Enum(name, enum_values))
                 continue
             
             struct_found = typedef_struct_regex.match(line)
@@ -346,12 +436,11 @@ def parse_reduced_cimgui(src: str) -> \
                 name = struct_found.group(1)
                 fields = struct_found.group(2)
 
-                struct = Struct()
-                struct.add_name(name)
                 if fields is not None:
-                    for field in parse_parameter_list(parameter_split(fields, ";")):
-                        struct.add_parameter(field)
-                structs.append(struct)
+                    parameters = parse_parameter_list(parameter_split(fields, ";"))
+                    structs.append(Struct(name, parameters))
+                else:
+                    structs.append(Struct(name, []))
                 continue
             
             typedef_found = typedef_regex.match(line)
@@ -365,7 +454,7 @@ def parse_reduced_cimgui(src: str) -> \
             assert False, "Line did not match spec"
         
         
-        def custom_typedef_sort(typedef):
+        def custom_typedef_sort(typedef: Typedef):
             priority = [
                 "int",
                 "unsigned",
@@ -373,9 +462,10 @@ def parse_reduced_cimgui(src: str) -> \
             ]
 
             for i, _type in enumerate(priority):
-                if typedef.base.startswith(_type):
-                    return (i, typedef.base)
-            return (len(priority), typedef.base)
+                if typedef.get_base().startswith(_type):
+                    return (i, typedef.get_base())
+            return (len(priority), typedef.get_base())
+        
         typedefs.sort(key=custom_typedef_sort)
         return enums, structs, typedefs
 
@@ -392,12 +482,9 @@ def parse_reduced_cimgui(src: str) -> \
             fields = found.group(2)
             if fields is None:
                 continue
-
-            struct = Struct()
-            struct.add_name(name)
-            for field in parse_parameter_list(parameter_split(fields, ";")):
-                struct.add_parameter(field)
-            structs.append(struct)
+            
+            parameters = parse_parameter_list(parameter_split(fields, ";"))
+            structs.append(Struct(name, parameters))
         return structs
 
     def parse_function_lines(function_lines: List[str]) -> List[Function]:
@@ -413,12 +500,8 @@ def parse_reduced_cimgui(src: str) -> \
             name = found.group(2)
             parameter_list = found.group(3)
 
-            function = Function()
-            function.add_return_type(_type)
-            function.add_name(name)
-            for field in parse_parameter_list(parameter_split(parameter_list, ",")):
-                function.add_parameter(field)
-            functions.append(function)
+            parameters = parse_parameter_list(parameter_split(parameter_list, ","))
+            functions.append(Function(_type, name, parameters))
         return functions
     
     typedef_lines = []
@@ -451,39 +534,40 @@ def parse_reduced_cimgui(src: str) -> \
 def keep_unique_structs(structs: List[Struct]):
     struct_dict = {}
     for struct in structs:
-        if struct.name not in struct_dict:
-            struct_dict[struct.name] = struct
+        if struct.get_name() not in struct_dict:
+            struct_dict[struct.get_name()] = struct
             continue
         
-        if len(struct.parameters) > len(struct_dict[struct.name].parameters):
-            struct_dict[struct.name] = struct
+        if len(struct) > len(struct_dict[struct.get_name()]):
+            struct_dict[struct.get_name()] = struct
             continue
+    
     return list(struct_dict.values())
 
 
 def dependency_aware_sort(structs: List[Struct]) -> List[Struct]:
     # First, initialise the dictionary to contain the names of the structs
     # as keys
-    dependency_graph = { s.name: [] for s in structs }
+    dependency_graph = { s.get_name(): [] for s in structs }
 
     # Then, add the parameters to each struct that is known to be a struct
     # itself. Pointers to structs are okay because we know their size on
     # compilation.
     for struct in structs:
-        for parameter in struct.parameters:
+        for parameter in struct:
             # We know the size of pointers so they
             # can be ignored
-            if "*" in parameter.data_type:
+            if "*" in parameter.get_type():
                 continue
 
-            if parameter.data_type in dependency_graph:
-                dependency_graph[struct.name].append(parameter)
+            if parameter.get_type() in dependency_graph:
+                dependency_graph[struct.get_name()].append(parameter)
 
     # To improve time complexity, create a lookup between the name of the struct
     # to the struct itself.
     struct_lookup = {}
     for struct in structs:
-        struct_lookup[struct.name] = struct
+        struct_lookup[struct.get_name()] = struct
 
     # Continue to pop structs that have no more dependencies.
     safe_struct_order = []
@@ -504,7 +588,8 @@ def dependency_aware_sort(structs: List[Struct]) -> List[Struct]:
         for parameters in dependency_graph.values():
             parameter_to_remove = []
             for parameter in parameters:
-                if parameter.data_type in to_remove:
+                parameter: Parameter
+                if parameter.get_type() in to_remove:
                     parameter_to_remove.append(parameter)
             
             for parameter in parameter_to_remove:
@@ -516,7 +601,7 @@ def pxd_typedefs(typedefs: List[Typedef]) -> str:
     output = ""
     for typedef in typedefs:
         output += "    {}\n".format(
-            typedef.as_cython()
+            typedef.in_pxd_format()
         )
     return output
 
@@ -525,7 +610,7 @@ def pxd_structs_forward_declaration(structs: List[Struct]) -> str:
     output = ""
     for struct in structs:
         output += "    {}\n".format(
-            struct.as_cython_forward_declration()
+            struct.in_pxd_forward_declaration_format()
         )
     return output
 
@@ -534,7 +619,7 @@ def pxd_structs(structs: List[Struct]) -> str:
     output = ""
     for struct in structs:
         output += "    {}\n".format(
-            struct.as_cython(indent=8)
+            struct.in_pxd_format(indent=8)
         )
     return output
 
@@ -543,7 +628,7 @@ def pxd_enums(enums: List[Function]) -> str:
     output = ""
     for enum in enums:
         output += "    {}\n".format(
-            enum.as_cython(indent=8)
+            enum.in_pxd_format(indent=8)
         )
     return output
 
@@ -551,7 +636,7 @@ def pxd_enums(enums: List[Function]) -> str:
 def pxd_functions(functions: List[Function]) -> str:
     output = ""
     for function in functions:
-        output += "    {}\n".format(function.as_cython())
+        output += "    {}\n".format(function.in_pxd_format())
     return output
 
 
@@ -584,63 +669,84 @@ def pythonise_string(string: str, make_upper=False) -> str:
 def pyx_enums(enums: List[Enum], extension_name) -> str:
     output = ""
     for enum in enums:
-        for value_name in enum.values:
-            value_name = value_name.replace("ImGui", "Imgui")
-            python_constant_name = pythonise_string(value_name, make_upper=True)
+        for value in enum:
+            value = value.replace("ImGui", "Imgui")
+            python_constant_name = pythonise_string(value, make_upper=True)
             output += "{} = {}.{}\n".format(
                 python_constant_name,
                 extension_name,
-                value_name
+                value
             )
         output += "\n"
     return output
 
 
-def pyx_functions(functions: List[Function]) -> Tuple[str, None]:
-    functions.sort(key=lambda f: f.pythonised_name())
-    output = ""
-
-    # Knockout the easy ones first
-    for function in functions:
-        function: Function
-        if function.return_type not in dir(__builtins__) and \
-            function.return_type != "void":
-            continue
+# def pyx_builtin_functions(functions: List[Function], library_name) -> str:
+#     # Knockout the easy ones first
+#     to_remove = []
+#     output = ""
+#     for function in functions:
+#         function: Function
+#         if function.return_type not in dir(__builtins__) and \
+#             function.return_type != "void":
+#             continue
         
-        skip = False
-        for parameter in function.parameters:
-            parameter: Parameter
-            if parameter.data_type not in dir(__builtins__) and \
-                parameter.data_type != "void":
-                skip = True
-                break
+#         skip = False
+#         for parameter in function.parameters:
+#             parameter: Parameter
+#             if parameter.data_type not in dir(__builtins__) and \
+#                 parameter.data_type != "void":
+#                 skip = True
+#                 break
         
-        if skip:
-            continue
+#         if skip:
+#             continue
         
-        # Get the easy ones out first
-        template = \
-        "def {}({}):\n" \
-        "    return ccimgui.{}({})\n\n"
+#         # Get the easy ones out first
+#         template = \
+#             "def {}({}):\n" \
+#             "    return {}.{}({})\n\n"
         
-        output += template.format(
-            function.pythonised_name(),
-            ", ".join(map(lambda f: f.as_python(), function.parameters)),
-            function.name,
-            ", ".join(map(lambda f: f.variable_name, function.parameters))
-        )
+#         output += template.format(
+#             function.pythonised_name(),
+#             ", ".join(map(lambda f: f.as_python(), function.parameters)),
+#             library_name,
+#             function.name,
+#             ", ".join(map(lambda f: f.variable_name, function.parameters))
+#         )
+#         to_remove.append(function)
     
-    print(output)
+#     for function in to_remove:
+#         functions.remove(function)
 
+#     return output
+
+
+def pyx_functions(
+        functions: List[Function],
+        enums: List[Enum],
+        typedefs: List[Typedef],
+        library_name: str) -> Tuple[str, None]:
+    functions.sort(key=lambda f: f.pythonised_name())
+
+    output = ""
+    for function in functions:
+        output += function.in_pyx_format(enums, typedefs, library_name)
+    
+    return output
+            
 
 
 def main():
     with open("cimgui/cimgui.h") as f:
         src = f.read()
     
+    with open("pygui/cimgui.h", "w") as f:
+        f.write(src)
+    
     src = reduce_cimgui_h(src)
 
-    with open("pygui/cimgui_test.h", "w") as f:
+    with open("pygui/cimgui_flat.h", "w") as f:
         f.write(src)
 
     enums, structs, typedefs, functions = parse_reduced_cimgui(src)
@@ -671,8 +777,7 @@ def main():
         f.write("from cython.view cimport array as cvarray\n")
         f.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
         f.write(pyx_enums(enums, "ccimgui"))
-
-    pyx_functions(functions)
+        f.write(pyx_functions(functions, enums, typedefs, "ccimgui"))
 
     # print(pxd_structs_forward_declaration(structs))
     # print(pxd_typedefs(typedefs))
