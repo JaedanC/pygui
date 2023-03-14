@@ -954,7 +954,7 @@ def accept_drag_drop_payload(type_: str, flags: int):
     cdef bool return_value = ccimgui.igAcceptDragDropPayload(type_, flags)
     return return_value
 
-def activate_item(id_):
+def activate_item(id_: int):
     cdef bool return_value = ccimgui.igActivateItem(id_)
     return return_value
 
@@ -982,15 +982,15 @@ def begin(name: str, p_open, flags: int):
     cdef bool return_value = ccimgui.igBegin(name, p_open, flags)
     return return_value
 
-def begin_child_ex(name: str, id_, size_arg, border: bool, flags: int):
+def begin_child_ex(name: str, id_: int, size_arg, border: bool, flags: int):
     cdef bool return_value = ccimgui.igBeginChildEx(name, id_, size_arg, border, flags)
     return return_value
 
-def begin_child_frame(id_, size, flags: int):
+def begin_child_frame(id_: int, size, flags: int):
     cdef bool return_value = ccimgui.igBeginChildFrame(id_, size, flags)
     return return_value
 
-def begin_child_id(id_, size, border: bool, flags: int):
+def begin_child_id(id_: int, size, border: bool, flags: int):
     cdef bool return_value = ccimgui.igBeginChild_ID(id_, size, border, flags)
     return return_value
 
@@ -1006,7 +1006,7 @@ def begin_combo(label: str, preview_value: str, flags: int):
     cdef bool return_value = ccimgui.igBeginCombo(label, preview_value, flags)
     return return_value
 
-def begin_combo_popup(popup_id, bb, flags: int):
+def begin_combo_popup(popup_id: int, bb, flags: int):
     cdef bool return_value = ccimgui.igBeginComboPopup(popup_id, bb, flags)
     return return_value
 
@@ -1038,7 +1038,7 @@ def begin_drag_drop_target():
     cdef bool return_value = ccimgui.igBeginDragDropTarget()
     return return_value
 
-def begin_drag_drop_target_custom(bb, id_):
+def begin_drag_drop_target_custom(bb, id_: int):
     cdef bool return_value = ccimgui.igBeginDragDropTargetCustom(bb, id_)
     return return_value
 
@@ -1082,7 +1082,7 @@ def begin_popup_context_window(str_id: str, popup_flags: int):
     cdef bool return_value = ccimgui.igBeginPopupContextWindow(str_id, popup_flags)
     return return_value
 
-def begin_popup_ex(id_, extra_flags: int):
+def begin_popup_ex(id_: int, extra_flags: int):
     cdef bool return_value = ccimgui.igBeginPopupEx(id_, extra_flags)
     return return_value
 
@@ -1106,7 +1106,7 @@ def begin_table(str_id: str, column: int, flags: int, outer_size, inner_width: f
     cdef bool return_value = ccimgui.igBeginTable(str_id, column, flags, outer_size, inner_width)
     return return_value
 
-def begin_table_ex(name: str, id_, columns_count: int, flags: int, outer_size, inner_width: float):
+def begin_table_ex(name: str, id_: int, columns_count: int, flags: int, outer_size, inner_width: float):
     cdef bool return_value = ccimgui.igBeginTableEx(name, id_, columns_count, flags, outer_size, inner_width)
     return return_value
 
@@ -1154,7 +1154,7 @@ def button(label: str, size):
     cdef bool return_value = ccimgui.igButton(label, size)
     return return_value
 
-def button_behavior(bb, id_, out_hovered, out_held, flags: int):
+def button_behavior(bb, id_: int, out_hovered, out_held, flags: int):
     cdef bool return_value = ccimgui.igButtonBehavior(bb, id_, out_hovered, out_held, flags)
     return return_value
 
@@ -1230,7 +1230,7 @@ def clear_window_settings(name: str):
     cdef bool return_value = ccimgui.igClearWindowSettings(name)
     return return_value
 
-def close_button(id_, pos):
+def close_button(id_: int, pos):
     cdef bool return_value = ccimgui.igCloseButton(id_, pos)
     return return_value
 
@@ -1250,7 +1250,7 @@ def close_popups_over_window(ref_window, restore_focus_to_window_under_popup: bo
     cdef bool return_value = ccimgui.igClosePopupsOverWindow(ref_window, restore_focus_to_window_under_popup)
     return return_value
 
-def collapse_button(id_, pos, dock_node):
+def collapse_button(id_: int, pos, dock_node):
     cdef bool return_value = ccimgui.igCollapseButton(id_, pos, dock_node)
     return return_value
 
@@ -1278,7 +1278,7 @@ def color_convert_rg_bto_hsv(r: float, g: float, b: float, out_h: float, out_s: 
     cdef bool return_value = ccimgui.igColorConvertRGBtoHSV(r, g, b, out_h, out_s, out_v)
     return return_value
 
-def color_convert_u32_to_float4(pOut, in_):
+def color_convert_u32_to_float4(pOut, in_: int):
     cdef bool return_value = ccimgui.igColorConvertU32ToFloat4(pOut, in_)
     return return_value
 
@@ -1370,19 +1370,19 @@ def debug_check_version_and_data_layout(version_str: str, sz_io, sz_style, sz_ve
     cdef bool return_value = ccimgui.igDebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx)
     return return_value
 
-def debug_draw_item_rect(col):
+def debug_draw_item_rect(col: int):
     cdef bool return_value = ccimgui.igDebugDrawItemRect(col)
     return return_value
 
-def debug_hook_id_info(id_, data_type: int, data_id, data_id_end):
+def debug_hook_id_info(id_: int, data_type: int, data_id, data_id_end):
     cdef bool return_value = ccimgui.igDebugHookIdInfo(id_, data_type, data_id, data_id_end)
     return return_value
 
-def debug_locate_item(target_id):
+def debug_locate_item(target_id: int):
     cdef bool return_value = ccimgui.igDebugLocateItem(target_id)
     return return_value
 
-def debug_locate_item_on_hover(target_id):
+def debug_locate_item_on_hover(target_id: int):
     cdef bool return_value = ccimgui.igDebugLocateItemOnHover(target_id)
     return return_value
 
@@ -1490,15 +1490,15 @@ def destroy_platform_windows():
     cdef bool return_value = ccimgui.igDestroyPlatformWindows()
     return return_value
 
-def dock_builder_add_node(node_id, flags: int):
+def dock_builder_add_node(node_id: int, flags: int):
     cdef bool return_value = ccimgui.igDockBuilderAddNode(node_id, flags)
     return return_value
 
-def dock_builder_copy_dock_space(src_dockspace_id, dst_dockspace_id, in_window_remap_pairs):
+def dock_builder_copy_dock_space(src_dockspace_id: int, dst_dockspace_id: int, in_window_remap_pairs):
     cdef bool return_value = ccimgui.igDockBuilderCopyDockSpace(src_dockspace_id, dst_dockspace_id, in_window_remap_pairs)
     return return_value
 
-def dock_builder_copy_node(src_node_id, dst_node_id, out_node_remap_pairs):
+def dock_builder_copy_node(src_node_id: int, dst_node_id: int, out_node_remap_pairs):
     cdef bool return_value = ccimgui.igDockBuilderCopyNode(src_node_id, dst_node_id, out_node_remap_pairs)
     return return_value
 
@@ -1506,43 +1506,43 @@ def dock_builder_copy_window_settings(src_name: str, dst_name: str):
     cdef bool return_value = ccimgui.igDockBuilderCopyWindowSettings(src_name, dst_name)
     return return_value
 
-def dock_builder_dock_window(window_name: str, node_id):
+def dock_builder_dock_window(window_name: str, node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderDockWindow(window_name, node_id)
     return return_value
 
-def dock_builder_finish(node_id):
+def dock_builder_finish(node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderFinish(node_id)
     return return_value
 
-def dock_builder_get_central_node(node_id):
+def dock_builder_get_central_node(node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderGetCentralNode(node_id)
     return return_value
 
-def dock_builder_get_node(node_id):
+def dock_builder_get_node(node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderGetNode(node_id)
     return return_value
 
-def dock_builder_remove_node(node_id):
+def dock_builder_remove_node(node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderRemoveNode(node_id)
     return return_value
 
-def dock_builder_remove_node_child_nodes(node_id):
+def dock_builder_remove_node_child_nodes(node_id: int):
     cdef bool return_value = ccimgui.igDockBuilderRemoveNodeChildNodes(node_id)
     return return_value
 
-def dock_builder_remove_node_docked_windows(node_id, clear_settings_refs: bool):
+def dock_builder_remove_node_docked_windows(node_id: int, clear_settings_refs: bool):
     cdef bool return_value = ccimgui.igDockBuilderRemoveNodeDockedWindows(node_id, clear_settings_refs)
     return return_value
 
-def dock_builder_set_node_pos(node_id, pos):
+def dock_builder_set_node_pos(node_id: int, pos):
     cdef bool return_value = ccimgui.igDockBuilderSetNodePos(node_id, pos)
     return return_value
 
-def dock_builder_set_node_size(node_id, size):
+def dock_builder_set_node_size(node_id: int, size):
     cdef bool return_value = ccimgui.igDockBuilderSetNodeSize(node_id, size)
     return return_value
 
-def dock_builder_split_node(node_id, split_dir: int, size_ratio_for_node_at_dir: float, out_id_at_dir, out_id_at_opposite_dir):
+def dock_builder_split_node(node_id: int, split_dir: int, size_ratio_for_node_at_dir: float, out_id_at_dir, out_id_at_opposite_dir):
     cdef bool return_value = ccimgui.igDockBuilderSplitNode(node_id, split_dir, size_ratio_for_node_at_dir, out_id_at_dir, out_id_at_opposite_dir)
     return return_value
 
@@ -1550,7 +1550,7 @@ def dock_context_calc_drop_pos_for_docking(target, target_node, payload_window, 
     cdef bool return_value = ccimgui.igDockContextCalcDropPosForDocking(target, target_node, payload_window, payload_node, split_dir, split_outer, out_pos)
     return return_value
 
-def dock_context_clear_nodes(ctx, root_id, clear_settings_refs: bool):
+def dock_context_clear_nodes(ctx, root_id: int, clear_settings_refs: bool):
     cdef bool return_value = ccimgui.igDockContextClearNodes(ctx, root_id, clear_settings_refs)
     return return_value
 
@@ -1558,7 +1558,7 @@ def dock_context_end_frame(ctx):
     cdef bool return_value = ccimgui.igDockContextEndFrame(ctx)
     return return_value
 
-def dock_context_find_node_by_id(ctx, id_):
+def dock_context_find_node_by_id(ctx, id_: int):
     cdef bool return_value = ccimgui.igDockContextFindNodeByID(ctx, id_)
     return return_value
 
@@ -1630,7 +1630,7 @@ def dock_node_is_in_hierarchy_of(node, parent):
     cdef bool return_value = ccimgui.igDockNodeIsInHierarchyOf(node, parent)
     return return_value
 
-def dock_space(id_, size, flags: int, window_class):
+def dock_space(id_: int, size, flags: int, window_class):
     cdef bool return_value = ccimgui.igDockSpace(id_, size, flags, window_class)
     return return_value
 
@@ -1638,7 +1638,7 @@ def dock_space_over_viewport(viewport, flags: int, window_class):
     cdef bool return_value = ccimgui.igDockSpaceOverViewport(viewport, flags, window_class)
     return return_value
 
-def drag_behavior(id_, data_type: int, p_v, v_speed: float, p_min, p_max, format_: str, flags: int):
+def drag_behavior(id_: int, data_type: int, p_v, v_speed: float, p_min, p_max, format_: str, flags: int):
     cdef bool return_value = ccimgui.igDragBehavior(id_, data_type, p_v, v_speed, p_min, p_max, format_, flags)
     return return_value
 
@@ -1802,7 +1802,7 @@ def find_hovered_viewport_from_platform_window_stack(mouse_platform_pos):
     cdef bool return_value = ccimgui.igFindHoveredViewportFromPlatformWindowStack(mouse_platform_pos)
     return return_value
 
-def find_or_create_columns(window, id_):
+def find_or_create_columns(window, id_: int):
     cdef bool return_value = ccimgui.igFindOrCreateColumns(window, id_)
     return return_value
 
@@ -1814,7 +1814,7 @@ def find_settings_handler(type_name: str):
     cdef bool return_value = ccimgui.igFindSettingsHandler(type_name)
     return return_value
 
-def find_viewport_by_id(id_):
+def find_viewport_by_id(id_: int):
     cdef bool return_value = ccimgui.igFindViewportByID(id_)
     return return_value
 
@@ -1822,7 +1822,7 @@ def find_viewport_by_platform_handle(platform_handle):
     cdef bool return_value = ccimgui.igFindViewportByPlatformHandle(platform_handle)
     return return_value
 
-def find_window_by_id(id_):
+def find_window_by_id(id_: int):
     cdef bool return_value = ccimgui.igFindWindowByID(id_)
     return return_value
 
@@ -1834,7 +1834,7 @@ def find_window_display_index(window):
     cdef bool return_value = ccimgui.igFindWindowDisplayIndex(window)
     return return_value
 
-def find_window_settings_by_id(id_):
+def find_window_settings_by_id(id_: int):
     cdef bool return_value = ccimgui.igFindWindowSettingsByID(id_)
     return return_value
 
@@ -1886,7 +1886,7 @@ def get_color_u32_col(idx: int, alpha_mul: float):
     cdef bool return_value = ccimgui.igGetColorU32_Col(idx, alpha_mul)
     return return_value
 
-def get_color_u32_u32(col):
+def get_color_u32_u32(col: int):
     cdef bool return_value = ccimgui.igGetColorU32_U32(col)
     return return_value
 
@@ -2058,15 +2058,15 @@ def get_id_str_str(str_id_begin: str, str_id_end: str):
     cdef bool return_value = ccimgui.igGetID_StrStr(str_id_begin, str_id_end)
     return return_value
 
-def get_id_with_seed_int(n: int, seed):
+def get_id_with_seed_int(n: int, seed: int):
     cdef bool return_value = ccimgui.igGetIDWithSeed_Int(n, seed)
     return return_value
 
-def get_id_with_seed_str(str_id_begin: str, str_id_end: str, seed):
+def get_id_with_seed_str(str_id_begin: str, str_id_end: str, seed: int):
     cdef bool return_value = ccimgui.igGetIDWithSeed_Str(str_id_begin, str_id_end, seed)
     return return_value
 
-def get_input_text_state(id_):
+def get_input_text_state(id_: int):
     cdef bool return_value = ccimgui.igGetInputTextState(id_)
     return return_value
 
@@ -2314,7 +2314,7 @@ def im_abs_int(x: int):
     cdef bool return_value = ccimgui.igImAbs_Int(x)
     return return_value
 
-def im_alpha_blend_colors(col_a, col_b):
+def im_alpha_blend_colors(col_a: int, col_b: int):
     cdef bool return_value = ccimgui.igImAlphaBlendColors(col_a, col_b)
     return return_value
 
@@ -2410,7 +2410,7 @@ def im_color_im_color_nil():
     cdef bool return_value = ccimgui.ImColor_ImColor_Nil()
     return return_value
 
-def im_color_im_color_u32(rgba):
+def im_color_im_color_u32(rgba: int):
     cdef bool return_value = ccimgui.ImColor_ImColor_U32(rgba)
     return return_value
 
@@ -2514,11 +2514,11 @@ def im_draw_list__try_merge_draw_cmds(self):
     cdef bool return_value = ccimgui.ImDrawList__TryMergeDrawCmds(self)
     return return_value
 
-def im_draw_list_add_bezier_cubic(self, p1, p2, p3, p4, col, thickness: float, num_segments: int):
+def im_draw_list_add_bezier_cubic(self, p1, p2, p3, p4, col: int, thickness: float, num_segments: int):
     cdef bool return_value = ccimgui.ImDrawList_AddBezierCubic(self, p1, p2, p3, p4, col, thickness, num_segments)
     return return_value
 
-def im_draw_list_add_bezier_quadratic(self, p1, p2, p3, col, thickness: float, num_segments: int):
+def im_draw_list_add_bezier_quadratic(self, p1, p2, p3, col: int, thickness: float, num_segments: int):
     cdef bool return_value = ccimgui.ImDrawList_AddBezierQuadratic(self, p1, p2, p3, col, thickness, num_segments)
     return return_value
 
@@ -2526,15 +2526,15 @@ def im_draw_list_add_callback(self, callback, callback_data):
     cdef bool return_value = ccimgui.ImDrawList_AddCallback(self, callback, callback_data)
     return return_value
 
-def im_draw_list_add_circle(self, center, radius: float, col, num_segments: int, thickness: float):
+def im_draw_list_add_circle(self, center, radius: float, col: int, num_segments: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddCircle(self, center, radius, col, num_segments, thickness)
     return return_value
 
-def im_draw_list_add_circle_filled(self, center, radius: float, col, num_segments: int):
+def im_draw_list_add_circle_filled(self, center, radius: float, col: int, num_segments: int):
     cdef bool return_value = ccimgui.ImDrawList_AddCircleFilled(self, center, radius, col, num_segments)
     return return_value
 
-def im_draw_list_add_convex_poly_filled(self, points, num_points: int, col):
+def im_draw_list_add_convex_poly_filled(self, points, num_points: int, col: int):
     cdef bool return_value = ccimgui.ImDrawList_AddConvexPolyFilled(self, points, num_points, col)
     return return_value
 
@@ -2542,67 +2542,67 @@ def im_draw_list_add_draw_cmd(self):
     cdef bool return_value = ccimgui.ImDrawList_AddDrawCmd(self)
     return return_value
 
-def im_draw_list_add_image(self, user_texture_id, p_min, p_max, uv_min, uv_max, col):
+def im_draw_list_add_image(self, user_texture_id, p_min, p_max, uv_min, uv_max, col: int):
     cdef bool return_value = ccimgui.ImDrawList_AddImage(self, user_texture_id, p_min, p_max, uv_min, uv_max, col)
     return return_value
 
-def im_draw_list_add_image_quad(self, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col):
+def im_draw_list_add_image_quad(self, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col: int):
     cdef bool return_value = ccimgui.ImDrawList_AddImageQuad(self, user_texture_id, p1, p2, p3, p4, uv1, uv2, uv3, uv4, col)
     return return_value
 
-def im_draw_list_add_image_rounded(self, user_texture_id, p_min, p_max, uv_min, uv_max, col, rounding: float, flags: int):
+def im_draw_list_add_image_rounded(self, user_texture_id, p_min, p_max, uv_min, uv_max, col: int, rounding: float, flags: int):
     cdef bool return_value = ccimgui.ImDrawList_AddImageRounded(self, user_texture_id, p_min, p_max, uv_min, uv_max, col, rounding, flags)
     return return_value
 
-def im_draw_list_add_line(self, p1, p2, col, thickness: float):
+def im_draw_list_add_line(self, p1, p2, col: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddLine(self, p1, p2, col, thickness)
     return return_value
 
-def im_draw_list_add_ngon(self, center, radius: float, col, num_segments: int, thickness: float):
+def im_draw_list_add_ngon(self, center, radius: float, col: int, num_segments: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddNgon(self, center, radius, col, num_segments, thickness)
     return return_value
 
-def im_draw_list_add_ngon_filled(self, center, radius: float, col, num_segments: int):
+def im_draw_list_add_ngon_filled(self, center, radius: float, col: int, num_segments: int):
     cdef bool return_value = ccimgui.ImDrawList_AddNgonFilled(self, center, radius, col, num_segments)
     return return_value
 
-def im_draw_list_add_polyline(self, points, num_points: int, col, flags: int, thickness: float):
+def im_draw_list_add_polyline(self, points, num_points: int, col: int, flags: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddPolyline(self, points, num_points, col, flags, thickness)
     return return_value
 
-def im_draw_list_add_quad(self, p1, p2, p3, p4, col, thickness: float):
+def im_draw_list_add_quad(self, p1, p2, p3, p4, col: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddQuad(self, p1, p2, p3, p4, col, thickness)
     return return_value
 
-def im_draw_list_add_quad_filled(self, p1, p2, p3, p4, col):
+def im_draw_list_add_quad_filled(self, p1, p2, p3, p4, col: int):
     cdef bool return_value = ccimgui.ImDrawList_AddQuadFilled(self, p1, p2, p3, p4, col)
     return return_value
 
-def im_draw_list_add_rect(self, p_min, p_max, col, rounding: float, flags: int, thickness: float):
+def im_draw_list_add_rect(self, p_min, p_max, col: int, rounding: float, flags: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddRect(self, p_min, p_max, col, rounding, flags, thickness)
     return return_value
 
-def im_draw_list_add_rect_filled(self, p_min, p_max, col, rounding: float, flags: int):
+def im_draw_list_add_rect_filled(self, p_min, p_max, col: int, rounding: float, flags: int):
     cdef bool return_value = ccimgui.ImDrawList_AddRectFilled(self, p_min, p_max, col, rounding, flags)
     return return_value
 
-def im_draw_list_add_rect_filled_multi_color(self, p_min, p_max, col_upr_left, col_upr_right, col_bot_right, col_bot_left):
+def im_draw_list_add_rect_filled_multi_color(self, p_min, p_max, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
     cdef bool return_value = ccimgui.ImDrawList_AddRectFilledMultiColor(self, p_min, p_max, col_upr_left, col_upr_right, col_bot_right, col_bot_left)
     return return_value
 
-def im_draw_list_add_text_font_ptr(self, font, font_size: float, pos, col, text_begin: str, text_end: str, wrap_width: float, cpu_fine_clip_rect):
+def im_draw_list_add_text_font_ptr(self, font, font_size: float, pos, col: int, text_begin: str, text_end: str, wrap_width: float, cpu_fine_clip_rect):
     cdef bool return_value = ccimgui.ImDrawList_AddText_FontPtr(self, font, font_size, pos, col, text_begin, text_end, wrap_width, cpu_fine_clip_rect)
     return return_value
 
-def im_draw_list_add_text_vec2(self, pos, col, text_begin: str, text_end: str):
+def im_draw_list_add_text_vec2(self, pos, col: int, text_begin: str, text_end: str):
     cdef bool return_value = ccimgui.ImDrawList_AddText_Vec2(self, pos, col, text_begin, text_end)
     return return_value
 
-def im_draw_list_add_triangle(self, p1, p2, p3, col, thickness: float):
+def im_draw_list_add_triangle(self, p1, p2, p3, col: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_AddTriangle(self, p1, p2, p3, col, thickness)
     return return_value
 
-def im_draw_list_add_triangle_filled(self, p1, p2, p3, col):
+def im_draw_list_add_triangle_filled(self, p1, p2, p3, col: int):
     cdef bool return_value = ccimgui.ImDrawList_AddTriangleFilled(self, p1, p2, p3, col)
     return return_value
 
@@ -2658,7 +2658,7 @@ def im_draw_list_path_clear(self):
     cdef bool return_value = ccimgui.ImDrawList_PathClear(self)
     return return_value
 
-def im_draw_list_path_fill_convex(self, col):
+def im_draw_list_path_fill_convex(self, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PathFillConvex(self, col)
     return return_value
 
@@ -2674,7 +2674,7 @@ def im_draw_list_path_rect(self, rect_min, rect_max, rounding: float, flags: int
     cdef bool return_value = ccimgui.ImDrawList_PathRect(self, rect_min, rect_max, rounding, flags)
     return return_value
 
-def im_draw_list_path_stroke(self, col, flags: int, thickness: float):
+def im_draw_list_path_stroke(self, col: int, flags: int, thickness: float):
     cdef bool return_value = ccimgui.ImDrawList_PathStroke(self, col, flags, thickness)
     return return_value
 
@@ -2686,15 +2686,15 @@ def im_draw_list_pop_texture_id(self):
     cdef bool return_value = ccimgui.ImDrawList_PopTextureID(self)
     return return_value
 
-def im_draw_list_prim_quad_uv(self, a, b, c, d, uv_a, uv_b, uv_c, uv_d, col):
+def im_draw_list_prim_quad_uv(self, a, b, c, d, uv_a, uv_b, uv_c, uv_d, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimQuadUV(self, a, b, c, d, uv_a, uv_b, uv_c, uv_d, col)
     return return_value
 
-def im_draw_list_prim_rect(self, a, b, col):
+def im_draw_list_prim_rect(self, a, b, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimRect(self, a, b, col)
     return return_value
 
-def im_draw_list_prim_rect_uv(self, a, b, uv_a, uv_b, col):
+def im_draw_list_prim_rect_uv(self, a, b, uv_a, uv_b, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimRectUV(self, a, b, uv_a, uv_b, col)
     return return_value
 
@@ -2706,7 +2706,7 @@ def im_draw_list_prim_unreserve(self, idx_count: int, vtx_count: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimUnreserve(self, idx_count, vtx_count)
     return return_value
 
-def im_draw_list_prim_vtx(self, pos, uv, col):
+def im_draw_list_prim_vtx(self, pos, uv, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimVtx(self, pos, uv, col)
     return return_value
 
@@ -2714,7 +2714,7 @@ def im_draw_list_prim_write_idx(self, idx):
     cdef bool return_value = ccimgui.ImDrawList_PrimWriteIdx(self, idx)
     return return_value
 
-def im_draw_list_prim_write_vtx(self, pos, uv, col):
+def im_draw_list_prim_write_vtx(self, pos, uv, col: int):
     cdef bool return_value = ccimgui.ImDrawList_PrimWriteVtx(self, pos, uv, col)
     return return_value
 
@@ -3090,11 +3090,11 @@ def im_font_is_loaded(self):
     cdef bool return_value = ccimgui.ImFont_IsLoaded(self)
     return return_value
 
-def im_font_render_char(self, draw_list, size: float, pos, col, c):
+def im_font_render_char(self, draw_list, size: float, pos, col: int, c):
     cdef bool return_value = ccimgui.ImFont_RenderChar(self, draw_list, size, pos, col, c)
     return return_value
 
-def im_font_render_text(self, draw_list, size: float, pos, col, clip_rect, text_begin: str, text_end: str, wrap_width: float, cpu_fine_clip: bool):
+def im_font_render_text(self, draw_list, size: float, pos, col: int, clip_rect, text_begin: str, text_end: str, wrap_width: float, cpu_fine_clip: bool):
     cdef bool return_value = ccimgui.ImFont_RenderText(self, draw_list, size, pos, col, clip_rect, text_begin, text_end, wrap_width, cpu_fine_clip)
     return return_value
 
@@ -3122,11 +3122,11 @@ def im_get_dir_quadrant_from_delta(dx: float, dy: float):
     cdef bool return_value = ccimgui.igImGetDirQuadrantFromDelta(dx, dy)
     return return_value
 
-def im_hash_data(data, data_size, seed):
+def im_hash_data(data, data_size, seed: int):
     cdef bool return_value = ccimgui.igImHashData(data, data_size, seed)
     return return_value
 
-def im_hash_str(data: str, data_size, seed):
+def im_hash_str(data: str, data_size, seed: int):
     cdef bool return_value = ccimgui.igImHashStr(data, data_size, seed)
     return return_value
 
@@ -3550,7 +3550,7 @@ def image_button(str_id: str, user_texture_id, size, uv0, uv1, bg_col, tint_col)
     cdef bool return_value = ccimgui.igImageButton(str_id, user_texture_id, size, uv0, uv1, bg_col, tint_col)
     return return_value
 
-def image_button_ex(id_, texture_id, size, uv0, uv1, bg_col, tint_col, flags: int):
+def image_button_ex(id_: int, texture_id, size, uv0, uv1, bg_col, tint_col, flags: int):
     cdef bool return_value = ccimgui.igImageButtonEx(id_, texture_id, size, uv0, uv1, bg_col, tint_col, flags)
     return return_value
 
@@ -3590,7 +3590,7 @@ def imgui_dock_node_destroy(self):
     cdef bool return_value = ccimgui.ImGuiDockNode_destroy(self)
     return return_value
 
-def imgui_dock_node_imgui_dock_node(id_):
+def imgui_dock_node_imgui_dock_node(id_: int):
     cdef bool return_value = ccimgui.ImGuiDockNode_ImGuiDockNode(id_)
     return return_value
 
@@ -3770,7 +3770,7 @@ def imgui_io_add_mouse_pos_event(self, x: float, y: float):
     cdef bool return_value = ccimgui.ImGuiIO_AddMousePosEvent(self, x, y)
     return return_value
 
-def imgui_io_add_mouse_viewport_event(self, id_):
+def imgui_io_add_mouse_viewport_event(self, id_: int):
     cdef bool return_value = ccimgui.ImGuiIO_AddMouseViewportEvent(self, id_)
     return return_value
 
@@ -4078,35 +4078,35 @@ def imgui_storage_clear(self):
     cdef bool return_value = ccimgui.ImGuiStorage_Clear(self)
     return return_value
 
-def imgui_storage_get_bool(self, key, default_val: bool):
+def imgui_storage_get_bool(self, key: int, default_val: bool):
     cdef bool return_value = ccimgui.ImGuiStorage_GetBool(self, key, default_val)
     return return_value
 
-def imgui_storage_get_bool_ref(self, key, default_val: bool):
+def imgui_storage_get_bool_ref(self, key: int, default_val: bool):
     cdef bool return_value = ccimgui.ImGuiStorage_GetBoolRef(self, key, default_val)
     return return_value
 
-def imgui_storage_get_float(self, key, default_val: float):
+def imgui_storage_get_float(self, key: int, default_val: float):
     cdef bool return_value = ccimgui.ImGuiStorage_GetFloat(self, key, default_val)
     return return_value
 
-def imgui_storage_get_float_ref(self, key, default_val: float):
+def imgui_storage_get_float_ref(self, key: int, default_val: float):
     cdef bool return_value = ccimgui.ImGuiStorage_GetFloatRef(self, key, default_val)
     return return_value
 
-def imgui_storage_get_int(self, key, default_val: int):
+def imgui_storage_get_int(self, key: int, default_val: int):
     cdef bool return_value = ccimgui.ImGuiStorage_GetInt(self, key, default_val)
     return return_value
 
-def imgui_storage_get_int_ref(self, key, default_val: int):
+def imgui_storage_get_int_ref(self, key: int, default_val: int):
     cdef bool return_value = ccimgui.ImGuiStorage_GetIntRef(self, key, default_val)
     return return_value
 
-def imgui_storage_get_void_ptr(self, key):
+def imgui_storage_get_void_ptr(self, key: int):
     cdef bool return_value = ccimgui.ImGuiStorage_GetVoidPtr(self, key)
     return return_value
 
-def imgui_storage_get_void_ptr_ref(self, key, default_val):
+def imgui_storage_get_void_ptr_ref(self, key: int, default_val):
     cdef bool return_value = ccimgui.ImGuiStorage_GetVoidPtrRef(self, key, default_val)
     return return_value
 
@@ -4114,15 +4114,15 @@ def imgui_storage_pair_destroy(self):
     cdef bool return_value = ccimgui.ImGuiStoragePair_destroy(self)
     return return_value
 
-def imgui_storage_pair_imgui_storage_pair_float(_key, _val_f: float):
+def imgui_storage_pair_imgui_storage_pair_float(_key: int, _val_f: float):
     cdef bool return_value = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Float(_key, _val_f)
     return return_value
 
-def imgui_storage_pair_imgui_storage_pair_int(_key, _val_i: int):
+def imgui_storage_pair_imgui_storage_pair_int(_key: int, _val_i: int):
     cdef bool return_value = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Int(_key, _val_i)
     return return_value
 
-def imgui_storage_pair_imgui_storage_pair_ptr(_key, _val_p):
+def imgui_storage_pair_imgui_storage_pair_ptr(_key: int, _val_p):
     cdef bool return_value = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Ptr(_key, _val_p)
     return return_value
 
@@ -4130,19 +4130,19 @@ def imgui_storage_set_all_int(self, val: int):
     cdef bool return_value = ccimgui.ImGuiStorage_SetAllInt(self, val)
     return return_value
 
-def imgui_storage_set_bool(self, key, val: bool):
+def imgui_storage_set_bool(self, key: int, val: bool):
     cdef bool return_value = ccimgui.ImGuiStorage_SetBool(self, key, val)
     return return_value
 
-def imgui_storage_set_float(self, key, val: float):
+def imgui_storage_set_float(self, key: int, val: float):
     cdef bool return_value = ccimgui.ImGuiStorage_SetFloat(self, key, val)
     return return_value
 
-def imgui_storage_set_int(self, key, val: int):
+def imgui_storage_set_int(self, key: int, val: int):
     cdef bool return_value = ccimgui.ImGuiStorage_SetInt(self, key, val)
     return return_value
 
-def imgui_storage_set_void_ptr(self, key, val):
+def imgui_storage_set_void_ptr(self, key: int, val):
     cdef bool return_value = ccimgui.ImGuiStorage_SetVoidPtr(self, key, val)
     return return_value
 
@@ -4590,7 +4590,7 @@ def is_any_mouse_down():
     cdef bool return_value = ccimgui.igIsAnyMouseDown()
     return return_value
 
-def is_clipped_ex(bb, id_):
+def is_clipped_ex(bb, id_: int):
     cdef bool return_value = ccimgui.igIsClippedEx(bb, id_)
     return return_value
 
@@ -4650,7 +4650,7 @@ def is_item_visible():
     cdef bool return_value = ccimgui.igIsItemVisible()
     return return_value
 
-def is_key_down_id(key: ccimgui.ImGuiKey, owner_id):
+def is_key_down_id(key: ccimgui.ImGuiKey, owner_id: int):
     cdef bool return_value = ccimgui.igIsKeyDown_ID(key, owner_id)
     return return_value
 
@@ -4662,7 +4662,7 @@ def is_key_pressed_bool(key: ccimgui.ImGuiKey, repeat: bool):
     cdef bool return_value = ccimgui.igIsKeyPressed_Bool(key, repeat)
     return return_value
 
-def is_key_pressed_id(key: ccimgui.ImGuiKey, owner_id, flags: int):
+def is_key_pressed_id(key: ccimgui.ImGuiKey, owner_id: int, flags: int):
     cdef bool return_value = ccimgui.igIsKeyPressed_ID(key, owner_id, flags)
     return return_value
 
@@ -4670,7 +4670,7 @@ def is_key_pressed_map(key: ccimgui.ImGuiKey, repeat: bool):
     cdef bool return_value = ccimgui.igIsKeyPressedMap(key, repeat)
     return return_value
 
-def is_key_released_id(key: ccimgui.ImGuiKey, owner_id):
+def is_key_released_id(key: ccimgui.ImGuiKey, owner_id: int):
     cdef bool return_value = ccimgui.igIsKeyReleased_ID(key, owner_id)
     return return_value
 
@@ -4690,7 +4690,7 @@ def is_mouse_clicked_bool(button: int, repeat: bool):
     cdef bool return_value = ccimgui.igIsMouseClicked_Bool(button, repeat)
     return return_value
 
-def is_mouse_clicked_id(button: int, owner_id, flags: int):
+def is_mouse_clicked_id(button: int, owner_id: int, flags: int):
     cdef bool return_value = ccimgui.igIsMouseClicked_ID(button, owner_id, flags)
     return return_value
 
@@ -4698,7 +4698,7 @@ def is_mouse_double_clicked(button: int):
     cdef bool return_value = ccimgui.igIsMouseDoubleClicked(button)
     return return_value
 
-def is_mouse_down_id(button: int, owner_id):
+def is_mouse_down_id(button: int, owner_id: int):
     cdef bool return_value = ccimgui.igIsMouseDown_ID(button, owner_id)
     return return_value
 
@@ -4726,7 +4726,7 @@ def is_mouse_pos_valid(mouse_pos):
     cdef bool return_value = ccimgui.igIsMousePosValid(mouse_pos)
     return return_value
 
-def is_mouse_released_id(button: int, owner_id):
+def is_mouse_released_id(button: int, owner_id: int):
     cdef bool return_value = ccimgui.igIsMouseReleased_ID(button, owner_id)
     return return_value
 
@@ -4742,7 +4742,7 @@ def is_named_key_or_mod_key(key: ccimgui.ImGuiKey):
     cdef bool return_value = ccimgui.igIsNamedKeyOrModKey(key)
     return return_value
 
-def is_popup_open_id(id_, popup_flags: int):
+def is_popup_open_id(id_: int, popup_flags: int):
     cdef bool return_value = ccimgui.igIsPopupOpen_ID(id_, popup_flags)
     return return_value
 
@@ -4794,11 +4794,11 @@ def is_window_within_begin_stack_of(window, potential_parent):
     cdef bool return_value = ccimgui.igIsWindowWithinBeginStackOf(window, potential_parent)
     return return_value
 
-def item_add(bb, id_, nav_bb, extra_flags: int):
+def item_add(bb, id_: int, nav_bb, extra_flags: int):
     cdef bool return_value = ccimgui.igItemAdd(bb, id_, nav_bb, extra_flags)
     return return_value
 
-def item_hoverable(bb, id_):
+def item_hoverable(bb, id_: int):
     cdef bool return_value = ccimgui.igItemHoverable(bb, id_)
     return return_value
 
@@ -4810,7 +4810,7 @@ def item_size_vec2(size, text_baseline_y: float):
     cdef bool return_value = ccimgui.igItemSize_Vec2(size, text_baseline_y)
     return return_value
 
-def keep_alive_id(id_):
+def keep_alive_id(id_: int):
     cdef bool return_value = ccimgui.igKeepAliveID(id_)
     return return_value
 
@@ -4898,7 +4898,7 @@ def mark_ini_settings_dirty_window_ptr(window):
     cdef bool return_value = ccimgui.igMarkIniSettingsDirty_WindowPtr(window)
     return return_value
 
-def mark_item_edited(id_):
+def mark_item_edited(id_: int):
     cdef bool return_value = ccimgui.igMarkItemEdited(id_)
     return return_value
 
@@ -4974,11 +4974,11 @@ def next_column():
     cdef bool return_value = ccimgui.igNextColumn()
     return return_value
 
-def open_popup_ex(id_, popup_flags: int):
+def open_popup_ex(id_: int, popup_flags: int):
     cdef bool return_value = ccimgui.igOpenPopupEx(id_, popup_flags)
     return return_value
 
-def open_popup_id(id_, popup_flags: int):
+def open_popup_id(id_: int, popup_flags: int):
     cdef bool return_value = ccimgui.igOpenPopup_ID(id_, popup_flags)
     return return_value
 
@@ -5082,7 +5082,7 @@ def push_columns_background():
     cdef bool return_value = ccimgui.igPushColumnsBackground()
     return return_value
 
-def push_focus_scope(id_):
+def push_focus_scope(id_: int):
     cdef bool return_value = ccimgui.igPushFocusScope(id_)
     return return_value
 
@@ -5118,11 +5118,11 @@ def push_multi_items_widths(components: int, width_full: float):
     cdef bool return_value = ccimgui.igPushMultiItemsWidths(components, width_full)
     return return_value
 
-def push_override_id(id_):
+def push_override_id(id_: int):
     cdef bool return_value = ccimgui.igPushOverrideID(id_)
     return return_value
 
-def push_style_color_u32(idx: int, col):
+def push_style_color_u32(idx: int, col: int):
     cdef bool return_value = ccimgui.igPushStyleColor_U32(idx, col)
     return return_value
 
@@ -5150,7 +5150,7 @@ def radio_button_int_ptr(label: str, v: int, v_button: int):
     cdef bool return_value = ccimgui.igRadioButton_IntPtr(label, v, v_button)
     return return_value
 
-def remove_context_hook(context, hook_to_remove):
+def remove_context_hook(context, hook_to_remove: int):
     cdef bool return_value = ccimgui.igRemoveContextHook(context, hook_to_remove)
     return return_value
 
@@ -5162,27 +5162,27 @@ def render():
     cdef bool return_value = ccimgui.igRender()
     return return_value
 
-def render_arrow(draw_list, pos, col, dir_: int, scale: float):
+def render_arrow(draw_list, pos, col: int, dir_: int, scale: float):
     cdef bool return_value = ccimgui.igRenderArrow(draw_list, pos, col, dir_, scale)
     return return_value
 
-def render_arrow_dock_menu(draw_list, p_min, sz: float, col):
+def render_arrow_dock_menu(draw_list, p_min, sz: float, col: int):
     cdef bool return_value = ccimgui.igRenderArrowDockMenu(draw_list, p_min, sz, col)
     return return_value
 
-def render_arrow_pointing_at(draw_list, pos, half_sz, direction: int, col):
+def render_arrow_pointing_at(draw_list, pos, half_sz, direction: int, col: int):
     cdef bool return_value = ccimgui.igRenderArrowPointingAt(draw_list, pos, half_sz, direction, col)
     return return_value
 
-def render_bullet(draw_list, pos, col):
+def render_bullet(draw_list, pos, col: int):
     cdef bool return_value = ccimgui.igRenderBullet(draw_list, pos, col)
     return return_value
 
-def render_check_mark(draw_list, pos, col, sz: float):
+def render_check_mark(draw_list, pos, col: int, sz: float):
     cdef bool return_value = ccimgui.igRenderCheckMark(draw_list, pos, col, sz)
     return return_value
 
-def render_color_rect_with_alpha_checkerboard(draw_list, p_min, p_max, fill_col, grid_step: float, grid_off, rounding: float, flags: int):
+def render_color_rect_with_alpha_checkerboard(draw_list, p_min, p_max, fill_col: int, grid_step: float, grid_off, rounding: float, flags: int):
     cdef bool return_value = ccimgui.igRenderColorRectWithAlphaCheckerboard(draw_list, p_min, p_max, fill_col, grid_step, grid_off, rounding, flags)
     return return_value
 
@@ -5190,7 +5190,7 @@ def render_drag_drop_target_rect(bb):
     cdef bool return_value = ccimgui.igRenderDragDropTargetRect(bb)
     return return_value
 
-def render_frame(p_min, p_max, fill_col, border: bool, rounding: float):
+def render_frame(p_min, p_max, fill_col: int, border: bool, rounding: float):
     cdef bool return_value = ccimgui.igRenderFrame(p_min, p_max, fill_col, border, rounding)
     return return_value
 
@@ -5198,11 +5198,11 @@ def render_frame_border(p_min, p_max, rounding: float):
     cdef bool return_value = ccimgui.igRenderFrameBorder(p_min, p_max, rounding)
     return return_value
 
-def render_mouse_cursor(pos, scale: float, mouse_cursor: int, col_fill, col_border, col_shadow):
+def render_mouse_cursor(pos, scale: float, mouse_cursor: int, col_fill: int, col_border: int, col_shadow: int):
     cdef bool return_value = ccimgui.igRenderMouseCursor(pos, scale, mouse_cursor, col_fill, col_border, col_shadow)
     return return_value
 
-def render_nav_highlight(bb, id_, flags: int):
+def render_nav_highlight(bb, id_: int, flags: int):
     cdef bool return_value = ccimgui.igRenderNavHighlight(bb, id_, flags)
     return return_value
 
@@ -5210,11 +5210,11 @@ def render_platform_windows_default(platform_render_arg, renderer_render_arg):
     cdef bool return_value = ccimgui.igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
     return return_value
 
-def render_rect_filled_rangeh(draw_list, rect, col, x_start_norm: float, x_end_norm: float, rounding: float):
+def render_rect_filled_rangeh(draw_list, rect, col: int, x_start_norm: float, x_end_norm: float, rounding: float):
     cdef bool return_value = ccimgui.igRenderRectFilledRangeH(draw_list, rect, col, x_start_norm, x_end_norm, rounding)
     return return_value
 
-def render_rect_filled_with_hole(draw_list, outer, inner, col, rounding: float):
+def render_rect_filled_with_hole(draw_list, outer, inner, col: int, rounding: float):
     cdef bool return_value = ccimgui.igRenderRectFilledWithHole(draw_list, outer, inner, col, rounding)
     return return_value
 
@@ -5278,7 +5278,7 @@ def scrollbar(axis: ccimgui.ImGuiAxis):
     cdef bool return_value = ccimgui.igScrollbar(axis)
     return return_value
 
-def scrollbar_ex(bb, id_, axis: ccimgui.ImGuiAxis, p_scroll_v, avail_v, contents_v, flags: int):
+def scrollbar_ex(bb, id_: int, axis: ccimgui.ImGuiAxis, p_scroll_v, avail_v, contents_v, flags: int):
     cdef bool return_value = ccimgui.igScrollbarEx(bb, id_, axis, p_scroll_v, avail_v, contents_v, flags)
     return return_value
 
@@ -5302,11 +5302,11 @@ def separator_text(label: str):
     cdef bool return_value = ccimgui.igSeparatorText(label)
     return return_value
 
-def separator_text_ex(id_, label: str, label_end: str, extra_width: float):
+def separator_text_ex(id_: int, label: str, label_end: str, extra_width: float):
     cdef bool return_value = ccimgui.igSeparatorTextEx(id_, label, label_end, extra_width)
     return return_value
 
-def set_active_id(id_, window):
+def set_active_id(id_: int, window):
     cdef bool return_value = ccimgui.igSetActiveID(id_, window)
     return return_value
 
@@ -5366,11 +5366,11 @@ def set_drag_drop_payload(type_: str, data, sz, cond: int):
     cdef bool return_value = ccimgui.igSetDragDropPayload(type_, data, sz, cond)
     return return_value
 
-def set_focus_id(id_, window):
+def set_focus_id(id_: int, window):
     cdef bool return_value = ccimgui.igSetFocusID(id_, window)
     return return_value
 
-def set_hovered_id(id_):
+def set_hovered_id(id_: int):
     cdef bool return_value = ccimgui.igSetHoveredID(id_)
     return return_value
 
@@ -5386,7 +5386,7 @@ def set_item_key_owner(key: ccimgui.ImGuiKey, flags: int):
     cdef bool return_value = ccimgui.igSetItemKeyOwner(key, flags)
     return return_value
 
-def set_key_owner(key: ccimgui.ImGuiKey, owner_id, flags: int):
+def set_key_owner(key: ccimgui.ImGuiKey, owner_id: int, flags: int):
     cdef bool return_value = ccimgui.igSetKeyOwner(key, owner_id, flags)
     return return_value
 
@@ -5394,7 +5394,7 @@ def set_keyboard_focus_here(offset: int):
     cdef bool return_value = ccimgui.igSetKeyboardFocusHere(offset)
     return return_value
 
-def set_last_item_data(item_id, in_flags: int, status_flags: int, item_rect):
+def set_last_item_data(item_id: int, in_flags: int, status_flags: int, item_rect):
     cdef bool return_value = ccimgui.igSetLastItemData(item_id, in_flags, status_flags, item_rect)
     return return_value
 
@@ -5402,7 +5402,7 @@ def set_mouse_cursor(cursor_type: int):
     cdef bool return_value = ccimgui.igSetMouseCursor(cursor_type)
     return return_value
 
-def set_nav_id(id_, nav_layer: ccimgui.ImGuiNavLayer, focus_scope_id, rect_rel):
+def set_nav_id(id_: int, nav_layer: ccimgui.ImGuiNavLayer, focus_scope_id: int, rect_rel):
     cdef bool return_value = ccimgui.igSetNavID(id_, nav_layer, focus_scope_id, rect_rel)
     return return_value
 
@@ -5442,7 +5442,7 @@ def set_next_window_content_size(size):
     cdef bool return_value = ccimgui.igSetNextWindowContentSize(size)
     return return_value
 
-def set_next_window_dock_id(dock_id, cond: int):
+def set_next_window_dock_id(dock_id: int, cond: int):
     cdef bool return_value = ccimgui.igSetNextWindowDockID(dock_id, cond)
     return return_value
 
@@ -5466,7 +5466,7 @@ def set_next_window_size_constraints(size_min, size_max, custom_callback, custom
     cdef bool return_value = ccimgui.igSetNextWindowSizeConstraints(size_min, size_max, custom_callback, custom_callback_data)
     return return_value
 
-def set_next_window_viewport(viewport_id):
+def set_next_window_viewport(viewport_id: int):
     cdef bool return_value = ccimgui.igSetNextWindowViewport(viewport_id)
     return return_value
 
@@ -5510,7 +5510,7 @@ def set_scroll_y_window_ptr(window, scroll_y: float):
     cdef bool return_value = ccimgui.igSetScrollY_WindowPtr(window, scroll_y)
     return return_value
 
-def set_shortcut_routing(key_chord: int, owner_id, flags: int):
+def set_shortcut_routing(key_chord: int, owner_id: int, flags: int):
     cdef bool return_value = ccimgui.igSetShortcutRouting(key_chord, owner_id, flags)
     return return_value
 
@@ -5546,7 +5546,7 @@ def set_window_collapsed_window_ptr(window, collapsed: bool, cond: int):
     cdef bool return_value = ccimgui.igSetWindowCollapsed_WindowPtr(window, collapsed, cond)
     return return_value
 
-def set_window_dock(window, dock_id, cond: int):
+def set_window_dock(window, dock_id: int, cond: int):
     cdef bool return_value = ccimgui.igSetWindowDock(window, dock_id, cond)
     return return_value
 
@@ -5594,7 +5594,7 @@ def set_window_viewport(window, viewport):
     cdef bool return_value = ccimgui.igSetWindowViewport(window, viewport)
     return return_value
 
-def shade_verts_linear_color_gradient_keep_alpha(draw_list, vert_start_idx: int, vert_end_idx: int, gradient_p0, gradient_p1, col0, col1):
+def shade_verts_linear_color_gradient_keep_alpha(draw_list, vert_start_idx: int, vert_end_idx: int, gradient_p0, gradient_p1, col0: int, col1: int):
     cdef bool return_value = ccimgui.igShadeVertsLinearColorGradientKeepAlpha(draw_list, vert_start_idx, vert_end_idx, gradient_p0, gradient_p1, col0, col1)
     return return_value
 
@@ -5602,7 +5602,7 @@ def shade_verts_linear_uv(draw_list, vert_start_idx: int, vert_end_idx: int, a, 
     cdef bool return_value = ccimgui.igShadeVertsLinearUV(draw_list, vert_start_idx, vert_end_idx, a, b, uv_a, uv_b, clamp)
     return return_value
 
-def shortcut(key_chord: int, owner_id, flags: int):
+def shortcut(key_chord: int, owner_id: int, flags: int):
     cdef bool return_value = ccimgui.igShortcut(key_chord, owner_id, flags)
     return return_value
 
@@ -5658,7 +5658,7 @@ def slider_angle(label: str, v_rad: float, v_degrees_min: float, v_degrees_max: 
     cdef bool return_value = ccimgui.igSliderAngle(label, v_rad, v_degrees_min, v_degrees_max, format_, flags)
     return return_value
 
-def slider_behavior(bb, id_, data_type: int, p_v, p_min, p_max, format_: str, flags: int, out_grab_bb):
+def slider_behavior(bb, id_: int, data_type: int, p_v, p_min, p_max, format_: str, flags: int, out_grab_bb):
     cdef bool return_value = ccimgui.igSliderBehavior(bb, id_, data_type, p_v, p_min, p_max, format_, flags, out_grab_bb)
     return return_value
 
@@ -5710,7 +5710,7 @@ def spacing():
     cdef bool return_value = ccimgui.igSpacing()
     return return_value
 
-def splitter_behavior(bb, id_, axis: ccimgui.ImGuiAxis, size1: float, size2: float, min_size1: float, min_size2: float, hover_extend: float, hover_visibility_delay: float, bg_col):
+def splitter_behavior(bb, id_: int, axis: ccimgui.ImGuiAxis, size1: float, size2: float, min_size1: float, min_size2: float, hover_extend: float, hover_visibility_delay: float, bg_col: int):
     cdef bool return_value = ccimgui.igSplitterBehavior(bb, id_, axis, size1, size2, min_size1, min_size2, hover_extend, hover_visibility_delay, bg_col)
     return return_value
 
@@ -5746,7 +5746,7 @@ def tab_bar_find_most_recently_selected_tab_for_active_window(tab_bar):
     cdef bool return_value = ccimgui.igTabBarFindMostRecentlySelectedTabForActiveWindow(tab_bar)
     return return_value
 
-def tab_bar_find_tab_by_id(tab_bar, tab_id):
+def tab_bar_find_tab_by_id(tab_bar, tab_id: int):
     cdef bool return_value = ccimgui.igTabBarFindTabByID(tab_bar, tab_id)
     return return_value
 
@@ -5782,11 +5782,11 @@ def tab_bar_queue_reorder_from_mouse_pos(tab_bar, tab, mouse_pos):
     cdef bool return_value = ccimgui.igTabBarQueueReorderFromMousePos(tab_bar, tab, mouse_pos)
     return return_value
 
-def tab_bar_remove_tab(tab_bar, tab_id):
+def tab_bar_remove_tab(tab_bar, tab_id: int):
     cdef bool return_value = ccimgui.igTabBarRemoveTab(tab_bar, tab_id)
     return return_value
 
-def tab_item_background(draw_list, bb, flags: int, col):
+def tab_item_background(draw_list, bb, flags: int, col: int):
     cdef bool return_value = ccimgui.igTabItemBackground(draw_list, bb, flags, col)
     return return_value
 
@@ -5806,7 +5806,7 @@ def tab_item_ex(tab_bar, label: str, p_open, flags: int, docked_window):
     cdef bool return_value = ccimgui.igTabItemEx(tab_bar, label, p_open, flags, docked_window)
     return return_value
 
-def tab_item_label_and_close_button(draw_list, bb, flags: int, frame_padding, label: str, tab_id, close_button_id, is_contents_visible: bool, out_just_closed, out_text_clipped):
+def tab_item_label_and_close_button(draw_list, bb, flags: int, frame_padding, label: str, tab_id: int, close_button_id: int, is_contents_visible: bool, out_just_closed, out_text_clipped):
     cdef bool return_value = ccimgui.igTabItemLabelAndCloseButton(draw_list, bb, flags, frame_padding, label, tab_id, close_button_id, is_contents_visible, out_just_closed, out_text_clipped)
     return return_value
 
@@ -5846,7 +5846,7 @@ def table_end_row(table):
     cdef bool return_value = ccimgui.igTableEndRow(table)
     return return_value
 
-def table_find_by_id(id_):
+def table_find_by_id(id_: int):
     cdef bool return_value = ccimgui.igTableFindByID(id_)
     return return_value
 
@@ -5982,7 +5982,7 @@ def table_save_settings(table):
     cdef bool return_value = ccimgui.igTableSaveSettings(table)
     return return_value
 
-def table_set_bg_color(target: int, color, column_n: int):
+def table_set_bg_color(target: int, color: int, column_n: int):
     cdef bool return_value = ccimgui.igTableSetBgColor(target, color, column_n)
     return return_value
 
@@ -6014,15 +6014,15 @@ def table_settings_add_settings_handler():
     cdef bool return_value = ccimgui.igTableSettingsAddSettingsHandler()
     return return_value
 
-def table_settings_create(id_, columns_count: int):
+def table_settings_create(id_: int, columns_count: int):
     cdef bool return_value = ccimgui.igTableSettingsCreate(id_, columns_count)
     return return_value
 
-def table_settings_find_by_id(id_):
+def table_settings_find_by_id(id_: int):
     cdef bool return_value = ccimgui.igTableSettingsFindByID(id_)
     return return_value
 
-def table_setup_column(label: str, flags: int, init_width_or_weight: float, user_id):
+def table_setup_column(label: str, flags: int, init_width_or_weight: float, user_id: int):
     cdef bool return_value = ccimgui.igTableSetupColumn(label, flags, init_width_or_weight, user_id)
     return return_value
 
@@ -6054,23 +6054,23 @@ def table_update_layout(table):
     cdef bool return_value = ccimgui.igTableUpdateLayout(table)
     return return_value
 
-def temp_input_is_active(id_):
+def temp_input_is_active(id_: int):
     cdef bool return_value = ccimgui.igTempInputIsActive(id_)
     return return_value
 
-def temp_input_scalar(bb, id_, label: str, data_type: int, p_data, format_: str, p_clamp_min, p_clamp_max):
+def temp_input_scalar(bb, id_: int, label: str, data_type: int, p_data, format_: str, p_clamp_min, p_clamp_max):
     cdef bool return_value = ccimgui.igTempInputScalar(bb, id_, label, data_type, p_data, format_, p_clamp_min, p_clamp_max)
     return return_value
 
-def temp_input_text(bb, id_, label: str, buf: str, buf_size: int, flags: int):
+def temp_input_text(bb, id_: int, label: str, buf: str, buf_size: int, flags: int):
     cdef bool return_value = ccimgui.igTempInputText(bb, id_, label, buf, buf_size, flags)
     return return_value
 
-def test_key_owner(key: ccimgui.ImGuiKey, owner_id):
+def test_key_owner(key: ccimgui.ImGuiKey, owner_id: int):
     cdef bool return_value = ccimgui.igTestKeyOwner(key, owner_id)
     return return_value
 
-def test_shortcut_routing(key_chord: int, owner_id):
+def test_shortcut_routing(key_chord: int, owner_id: int):
     cdef bool return_value = ccimgui.igTestShortcutRouting(key_chord, owner_id)
     return return_value
 
@@ -6118,7 +6118,7 @@ def translate_windows_in_viewport(viewport, old_pos, new_pos):
     cdef bool return_value = ccimgui.igTranslateWindowsInViewport(viewport, old_pos, new_pos)
     return return_value
 
-def tree_node_behavior(id_, flags: int, label: str, label_end: str):
+def tree_node_behavior(id_: int, flags: int, label: str, label_end: str):
     cdef bool return_value = ccimgui.igTreeNodeBehavior(id_, flags, label, label_end)
     return return_value
 
@@ -6146,7 +6146,7 @@ def tree_node_ptr(ptr_id, fmt: str):
     cdef bool return_value = ccimgui.igTreeNode_Ptr(ptr_id, fmt)
     return return_value
 
-def tree_node_set_open(id_, open_: bool):
+def tree_node_set_open(id_: int, open_: bool):
     cdef bool return_value = ccimgui.igTreeNodeSetOpen(id_, open_)
     return return_value
 
@@ -6158,7 +6158,7 @@ def tree_node_str_str(str_id: str, fmt: str):
     cdef bool return_value = ccimgui.igTreeNode_StrStr(str_id, fmt)
     return return_value
 
-def tree_node_update_next_open(id_, flags: int):
+def tree_node_update_next_open(id_: int, flags: int):
     cdef bool return_value = ccimgui.igTreeNodeUpdateNextOpen(id_, flags)
     return return_value
 
@@ -6174,7 +6174,7 @@ def tree_pop():
     cdef bool return_value = ccimgui.igTreePop()
     return return_value
 
-def tree_push_override_id(id_):
+def tree_push_override_id(id_: int):
     cdef bool return_value = ccimgui.igTreePushOverrideID(id_)
     return return_value
 
