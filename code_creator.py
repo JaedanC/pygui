@@ -426,7 +426,7 @@ class PYXFunctionTemplate:
 
     def set_function_name(self, name) -> PYXFunctionTemplate:
         self._function_name = name
-        self._replace("function_name", name)
+        self.replace("function_name", name)
         return self
 
     def set_parameters(self, header: HeaderSpec, parameters: List[Parameter], library_name: str) -> PYXFunctionTemplate:
@@ -444,15 +444,22 @@ class PYXFunctionTemplate:
             comma_delimited_parameters = ", ".join(parameter_pyxs)
 
         comma_delimited_parameter_names = ", ".join([p.get_name() for p in self._parameters])
-        self._replace("parameters", comma_delimited_parameters)
-        self._replace("function_parameter_names", comma_delimited_parameter_names)
+        self.replace("parameters", comma_delimited_parameters)
+        self.replace("function_parameter_names", comma_delimited_parameter_names)
+        return self
 
     def compile(self):
         if self._function_name is None:
             raise RuntimeError("Function name must be set")
+        
+        if self._parameters is None:
+            raise RuntimeError("Parameters must be set")
+        
+        return self._template
     
-    def _replace(self, parameter: str, with_value: str) -> PYXFunctionTemplate:
+    def replace(self, parameter: str, with_value: str) -> PYXFunctionTemplate:
         self._template = self._template.replace(f"<{parameter}>", with_value)
+        return self
 
     def add_var(self, var: str, value: bool):
         found_header = False
@@ -471,10 +478,12 @@ class PYXFunctionTemplate:
             if line.startswith("#"):
                 continue
 
-            if (found_header and value) or (in_else_block and not value):
+            if (found_header and value and not in_else_block) \
+                or (found_header and in_else_block and not value) or not found_header:
                 filtered_lines.append(line)
         
         self._template = "\n".join(filtered_lines)
+        return self
 
 
 class Parameter(ABC):
@@ -803,30 +812,39 @@ class Function:
         return python_style_name
 
     def in_pyx_format(self, header: HeaderSpec, library_name):
-        template = \
-        "def {}({}):\n" \
-        "    cdef {} return_value = {}({})\n" \
-        "    return return_value\n\n"
+        return PYXFunctionTemplate() \
+            .add_var("has_return_type", self._return_type.get_ctype() != "void") \
+            .set_function_name(self.pythonised_name()) \
+            .set_parameters(header, self._parameters, library_name) \
+            .replace("library_name", library_name) \
+            .replace("function_pxd_name", self._name) \
+            .replace("return_type", self._return_type.get_ctype()) \
+            .compile()
 
-        alternate_parameters = "\n" \
-        "        {}\n" \
-        "    " \
+        # template = \
+        # "def {}({}):\n" \
+        # "    cdef {} return_value = {}({})\n" \
+        # "    return return_value\n\n"
+
+        # alternate_parameters = "\n" \
+        # "        {}\n" \
+        # "    " \
         
-        parameters = [p.in_pyx_python_format(header, library_name) for p in self._parameters]
-        if len(self._parameters) > 3:
-            comma_delimited_parameters = alternate_parameters.format(",\n        ".join(parameters))
-        else:
-            comma_delimited_parameters = ", ".join(parameters)
+        # parameters = [p.in_pyx_python_format(header, library_name) for p in self._parameters]
+        # if len(self._parameters) > 3:
+        #     comma_delimited_parameters = alternate_parameters.format(",\n        ".join(parameters))
+        # else:
+        #     comma_delimited_parameters = ", ".join(parameters)
 
-        comma_delimited_parameter_names = ", ".join([p.get_name() for p in self._parameters])
+        # comma_delimited_parameter_names = ", ".join([p.get_name() for p in self._parameters])
 
-        return template.format(
-            self.pythonised_name(),
-            comma_delimited_parameters,
-            self._return_type.get_ctype(),
-            library_name + "." + self._name,
-            comma_delimited_parameter_names,
-        )
+        # return template.format(
+        #     self.pythonised_name(),
+        #     comma_delimited_parameters,
+        #     self._return_type.get_ctype(),
+        #     library_name + "." + self._name,
+        #     comma_delimited_parameter_names,
+        # )
 
 
 def pythonise_string(string: str, make_upper=False) -> str:
