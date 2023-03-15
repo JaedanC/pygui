@@ -3,7 +3,7 @@ import re
 import keyword 
 from typing import Tuple, List
 from abc import ABC, abstractmethod
-from dataclasses import dataclass 
+from io import StringIO
 
 
 class HeaderSpec:
@@ -49,7 +49,7 @@ class HeaderSpec:
         lines = [l for l in lines if not l.startswith("//")]
         lines = [l for l in lines if not l.startswith("#")]
         lines = [l for l in lines if not l.startswith("typedef union")]
-        lines = [l for l in lines if not l != ""]
+        lines = [l for l in lines if l != ""]
         src = "\n".join(lines)
 
         src = src.replace("va_list", "char*")
@@ -112,10 +112,7 @@ class HeaderSpec:
         return src
 
     def __parse_reduced_cimgui(self):
-        def parse_parameter_list(parameter_list: List[str]) -> List[NormalParameter]:
-            field_regex = re.compile("^(.*) (.*?)$")
-            function_pointer_regex = re.compile("^([_* a-zA-Z]*)(\(\*.*?\)\(.*\))$")
-
+        def parse_parameter_list(parameter_list: List[str]) -> List[NormalParameter | CType]:
             parameters = []
             for field in parameter_list:
                 field = field.strip()
@@ -134,20 +131,34 @@ class HeaderSpec:
                 # Accounts for function pointers that have const* in them
                 # which Cython does not like. It just removes the const in that
                 # case.
+                function_pointer_regex = re.compile("^(.*?)\(\*(.*?)\)\((.*)\)$")
                 func_pointer_found = function_pointer_regex.match(field)
                 if func_pointer_found is not None:
-                    _type = func_pointer_found.group(1)
+                    ctype = func_pointer_found.group(1)
                     name = func_pointer_found.group(2)
-                    name = name.replace(" const", "")
-                    name = name.replace(";", "")
-                else:
-                    found = field_regex.match(field)
-                    if found is None:
-                        assert False, "Parameter does not match spec"
+                    func_parameters = func_pointer_found.group(3)
+
+                    parameters.append(FunctionPointerParameter(
+                        CType(ctype), name, parse_parameter_list(func_parameters.split(","))))
+                    continue
+
+                # Ensure that Ctype parameters are okay
+                field = field.replace(" const", "")
+
+                field_regex = re.compile("^(.*) (.*?)$")
+                found = field_regex.match(field)
+                if found is not None:
                     _type = found.group(1)
                     name = found.group(2)
+
+                    # Sometimes a struct will have the spec:
+                    # int x, y, z
+                    # This will extract y and z to their own Normal Parameter
+                    for lazy_var in name.split(","):
+                        parameters.append(NormalParameter(CType(_type), lazy_var))
+                    continue
                 
-                parameters.append(NormalParameter(_type, name))
+                parameters.append(CType(field))
             return parameters
         
         def parameter_split(parameters: str, split_char: str) -> List[str]:
@@ -204,7 +215,7 @@ class HeaderSpec:
                 if typedef_found is not None:
                     base = typedef_found.group(1)
                     definition = typedef_found.group(2)
-                    typedefs.append(Typedef(base, definition))
+                    typedefs.append(Typedef(CType(base), CType(definition)))
                     continue
             
                 print(line)
@@ -219,9 +230,9 @@ class HeaderSpec:
                 ]
 
                 for i, _type in enumerate(priority):
-                    if typedef.get_base().startswith(_type):
-                        return (i, typedef.get_base())
-                return (len(priority), typedef.get_base())
+                    if typedef.get_base().get_ctype().startswith(_type):
+                        return (i, typedef.get_base().get_ctype())
+                return (len(priority), typedef.get_base().get_ctype())
             
             typedefs.sort(key=custom_typedef_sort)
             return enums, structs, typedefs
@@ -232,7 +243,6 @@ class HeaderSpec:
             for line in struct_lines:
                 found = struct_regex.match(line)
                 if found is None:
-                    print(line)
                     assert False, "Line did not match spec"
                 
                 name = found.group(1)
@@ -258,7 +268,7 @@ class HeaderSpec:
                 parameter_list = found.group(3)
 
                 parameters = parse_parameter_list(parameter_split(parameter_list, ","))
-                functions.append(Function(_type, name, parameters))
+                functions.append(Function(CType(_type), name, parameters))
             return functions
         
         typedef_lines = []
@@ -308,12 +318,18 @@ class HeaderSpec:
         # compilation.
         for struct in self.structs:
             for parameter in struct:
-                # We know the size of pointers so they
-                # can be ignored
-                if "*" in parameter.get_ctype():
+                # If this parameter is a function pointer, then we know the size
+                # of the member.
+                if isinstance(parameter, FunctionPointerParameter):
+                    continue
+                
+                assert not isinstance(parameter, CType)
+
+                # We know the size of pointers so they can be ignored
+                if "*" in parameter.get_ctype().get_ctype():
                     continue
 
-                if parameter.get_ctype() in dependency_graph:
+                if parameter.get_ctype().get_ctype() in dependency_graph:
                     dependency_graph[struct.get_name()].append(parameter)
 
         # To improve time complexity, create a lookup between the name of the struct
@@ -342,12 +358,123 @@ class HeaderSpec:
                 parameter_to_remove = []
                 for parameter in parameters:
                     parameter: NormalParameter
-                    if parameter.get_ctype() in to_remove:
+                    if parameter.get_ctype().get_ctype() in to_remove:
                         parameter_to_remove.append(parameter)
                 
                 for parameter in parameter_to_remove:
                     parameters.remove(parameter)
         return safe_struct_order
+
+    def as_pxd_file(self):
+        def pxd_typedefs(typedefs: List[Typedef]) -> str:
+            output = ""
+            for typedef in typedefs:
+                output += "    {}\n".format(
+                    typedef.in_pxd_format()
+                )
+            return output
+
+        def pxd_structs_forward_declaration(structs: List[Struct]) -> str:
+            output = ""
+            for struct in structs:
+                output += "    {}\n".format(
+                    struct.in_pxd_forward_declaration_format()
+                )
+            return output
+
+        def pxd_structs(structs: List[Struct]) -> str:
+            output = ""
+            for struct in structs:
+                output += "    {}\n".format(
+                    struct.in_pxd_format(indent=8)
+                )
+            return output
+
+        def pxd_enums(enums: List[Enum]) -> str:
+            output = ""
+            for enum in enums:
+                output += "    {}\n".format(enum.in_pxd_format(indent=8))
+            return output
+
+        def pxd_functions(functions: List[Function]) -> str:
+            output = ""
+            for function in functions:
+                output += "    {}\n".format(function.in_pxd_format())
+            return output
+
+        output = StringIO()
+        output.write("# -*- coding: utf-8 -*-\n")
+        output.write("# distutils: language = c++\n\n")
+        output.write("from libcpp cimport bool\n\n")
+        output.write('cdef extern from "cimgui.h":\n')
+        output.write(pxd_structs_forward_declaration(self.structs))
+        output.write("\n")
+        output.write(pxd_typedefs(self.typedefs))
+        output.write(pxd_enums(self.enums))
+        output.write("\n\n")
+        output.write(pxd_structs(self.structs))
+        output.write(pxd_functions(self.functions))
+        return output.getvalue()
+
+
+class PYXFunctionTemplate:
+    def __init__(self):
+        self._function_name: str = None
+        self._parameters: List[Parameter] = []
+        with open("function_template.h") as f:
+            self._template = f.read()
+
+    def set_function_name(self, name) -> PYXFunctionTemplate:
+        self._function_name = name
+        self._replace("function_name", name)
+        return self
+
+    def set_parameters(self, header: HeaderSpec, parameters: List[Parameter], library_name: str) -> PYXFunctionTemplate:
+        self._parameters = parameters
+
+        alternate_parameters = "\n" \
+        "        {}\n" \
+        "    " \
+
+        parameter_pyxs = [p.in_pyx_python_format(header, library_name) for p in parameters]
+        if len(self._parameters) > 3:
+            comma_delimited_parameters = alternate_parameters.format(
+                ",\n        ".join(parameter_pyxs))
+        else:
+            comma_delimited_parameters = ", ".join(parameter_pyxs)
+
+        comma_delimited_parameter_names = ", ".join([p.get_name() for p in self._parameters])
+        self._replace("parameters", comma_delimited_parameters)
+        self._replace("function_parameter_names", comma_delimited_parameter_names)
+
+    def compile(self):
+        if self._function_name is None:
+            raise RuntimeError("Function name must be set")
+    
+    def _replace(self, parameter: str, with_value: str) -> PYXFunctionTemplate:
+        self._template = self._template.replace(f"<{parameter}>", with_value)
+
+    def add_var(self, var: str, value: bool):
+        found_header = False
+        in_else_block = False
+
+        filtered_lines = []
+        for line in self._template.split("\n"):
+            if line.startswith(f"# {var}"):
+                found_header = True
+            elif line.startswith("#else"):
+                in_else_block = True
+            elif line.startswith("#endif") and found_header:
+                found_header = False
+                in_else_block = False
+            
+            if line.startswith("#"):
+                continue
+
+            if (found_header and value) or (in_else_block and not value):
+                filtered_lines.append(line)
+        
+        self._template = "\n".join(filtered_lines)
 
 
 class Parameter(ABC):
@@ -360,8 +487,7 @@ class Parameter(ABC):
         pass
 
     @abstractmethod
-    def in_pyx_python_format(self, enums: List[Enum], typedefs: List[Typedef],
-                             library_name: str) -> str:
+    def in_pyx_python_format(self, header: HeaderSpec, library_name: str) -> str:
         pass
     
     @abstractmethod
@@ -376,17 +502,13 @@ class CType:
 
         self.internal_str: str = _type.strip().replace("struct", "")
 
-    def __eq__(self, other: CType) -> bool:
-        assert isinstance(other, CType)
-        return self.internal_str == other.internal_str
-
     def __repr__(self):
         return f"CType({self.internal_str})"
 
     def get_ctype(self) -> str:
         return self.internal_str
 
-    def get_standardised_ctype(self, typedefs: List[Typedef]) -> str:
+    def get_ctype_without_const(self, typedefs: List[Typedef]) -> str:
         assert typedefs is not None
 
         _type = self.internal_str
@@ -395,36 +517,38 @@ class CType:
         _type = re.sub("^signed ", "", _type)
 
         for typedef in typedefs:
-            if _type == typedef.get_definition():
+            if _type == typedef.get_definition().get_ctype():
                 base: CType = typedef.get_base()
-                return base.get_standardised_ctype(typedefs)
+                return base.get_ctype_without_const(typedefs)
 
         return _type
 
     def in_pxd_format(self):
         return self.get_ctype()
 
-    def in_pyx_cython_format(self, enums: List[Enum], typedefs: List[Typedef], library_name: str) -> str:
+    def in_pyx_cython_format(self, header: HeaderSpec, library_name: str) -> str:
         _type = self.get_ctype()
-        for enum in enums:
+        for enum in header.enums:
             if _type == enum.get_name():
-                assert False, "The enum should be typedef'd instead!"
-                return "{}.{}".format(
-                    library_name,
-                    enum.get_name()
-                )
+                return "int"
+                # print(_type)
+                # assert False, "The enum should be typedef'd instead!"
+                # return "{}.{}".format(
+                #     library_name,
+                #     enum.get_name()
+                # )
         
         _type = re.sub("^const ", "", _type)
         _type = re.sub("^unsigned ", "", _type)
         _type = re.sub("^signed ", "", _type)
         
         # Is recursive so that we continue to follow any typedefs.
-        for typedef in typedefs:
+        for typedef in header.typedefs:
             if _type == typedef.get_definition():
-                return typedef.get_base().convert_type_to_pyx_type(enums, typedefs, library_name)
+                return typedef.get_base().in_pyx_cython_format(header, library_name)
         
         mapping = {
-            ("bool"): "bool",
+            ("bool"): library_name + ".bool",
             ("char*"): "str",
             ("double"): "double",
             ("float", "float*"): "float",
@@ -445,7 +569,8 @@ class FunctionPointerParameter(Parameter):
         assert return_type is not None
         assert name is not None
         assert fields is not None
-        
+        assert isinstance(fields, list)
+
         self._return_type: CType = return_type
         self._name: str = name
         self._fields: List[Parameter | CType] = fields
@@ -458,19 +583,22 @@ class FunctionPointerParameter(Parameter):
         return self._name
 
     def in_pxd_format(self):
-        raise NotImplementedError()
-
-    def in_pyx_python_format(self, enums: List[Enum], typedefs: List[Typedef],
-                             library_name: str):
-        raise NotImplementedError()
+        return "{} (*{})({})".format(
+            self._return_type.get_ctype(),
+            self._name,
+            ", ".join(map(lambda x: x.in_pxd_format(), self._fields))
+        )
 
     def in_pyx_cython_format(self) -> str:
-        raise NotImplementedError()
+        return self.in_pxd_format()
 
+    def in_pyx_python_format(self, header: HeaderSpec, library_name: str):
+        return f"Callable {self.get_name()}"
+    
 
 class NormalParameter(Parameter):
     def __init__(self, ctype: CType, name: str):
-        assert self._ctype is not None
+        assert ctype is not None
         assert name is not None
         assert name != ""
 
@@ -493,59 +621,35 @@ class NormalParameter(Parameter):
     def get_name(self) -> str:
         return self._name
 
-    # def get_function_pointer_safe_name(self):
-    #     if not self._is_function_pointer():
-    #         return self._name
-    #     return self._name_if_function_pointer()
-
     def get_ctype(self) -> CType:
         return self._ctype
 
     def in_pxd_format(self) -> str:
         return "{} {}".format(self._ctype.in_pxd_format(), self._name)
-        # if not self._is_function_pointer():
-        
-        # function_pointer_regex = re.compile("^\(\*(.*?)\)")
-        # found = function_pointer_regex.match(self._name)
-        # assert found is not None
-
-        # return found.group(1)
-
-    def in_pyx_python_format(self, enums: List[Enum], typedefs: List[Typedef],
-                             library_name: str) -> str:
-        assert enums is not None
-        assert typedefs is not None
-        assert library_name is not None
-        assert library_name != ""
-        
-        # if not self._is_function_pointer():
-        pyx_type = self._ctype.in_pyx_cython_format(enums, typedefs, library_name)
-        return "{}{}".format(
-            self._name,
-            ": " + pyx_type if pyx_type is not None else "",
-        )
-    
-        # function_pointer_regex = re.compile("^\(\*(.*?)\)")
-        # found = function_pointer_regex.match(self._name)
-        # assert found is not None
-
-        # return found.group(1)
     
     def in_pyx_cython_format(self):
         return self.in_pxd_format()
-    
-    # def _name_if_function_pointer(self):
-    #     assert self._is_function_pointer()
-    #     function_pointer_regex = re.compile("^\(\*(.*?)\)")
-    #     found = function_pointer_regex.match(self._name)
-    #     return found.group(1)
-    
-    # def _is_function_pointer(self):
-    #     return self._name.startswith("(*")
+
+    def in_pyx_python_format(self, header: HeaderSpec, library_name: str) -> str:
+        assert header is not None
+        assert library_name is not None
+        assert library_name != ""
+        
+        pyx_type = self._ctype.in_pyx_cython_format(header, library_name)
+
+        return "{}{}".format(
+            pyx_type + " " if pyx_type is not None else "",
+            self._name,
+        )
 
 
 class Typedef:
     def __init__(self, base: CType, definition: CType):
+        assert base is not None
+        assert definition is not None
+        assert isinstance(base, CType)
+        assert isinstance(definition, CType)
+
         self._base: CType = base
         self._definition: CType = definition
 
@@ -564,6 +668,10 @@ class Typedef:
 
 class Struct:
     def __init__(self, name: str, parameters: List[Parameter]):
+        # Should not allow blank name (CType) parameters
+        for p in parameters:
+            assert isinstance(p, Parameter)
+        
         self._name: str = name
         self._parameters: List[Parameter] = parameters
     
@@ -652,6 +760,12 @@ class Enum:
 
 class Function:
     def __init__(self, return_type: CType, name: str, parameters: List[Parameter]):
+        assert return_type is not None
+        assert name is not None
+        assert parameters is not None
+        assert isinstance(return_type, CType)
+        assert isinstance(name, str)
+
         self._return_type: CType = return_type
         self._name: str = name
         self._parameters: List[Parameter] = parameters
@@ -676,7 +790,7 @@ class Function:
 
     def in_pxd_format(self):
         return "{} {}({})".format(
-            self._return_type,
+            self._return_type.get_ctype(),
             self._name,
             ", ".join(map(lambda p: p.in_pxd_format(), self._parameters))
         )
@@ -688,16 +802,23 @@ class Function:
         python_style_name = re.sub("^ig_", "", python_style_name)
         return python_style_name
 
-    def in_pyx_format(self, enums, typedefs, library_name):
+    def in_pyx_format(self, header: HeaderSpec, library_name):
         template = \
         "def {}({}):\n" \
         "    cdef {} return_value = {}({})\n" \
         "    return return_value\n\n"
 
-        comma_delimited_parameters = ", ".join(map(
-            lambda p: p.in_pyx_python_format(enums, typedefs, library_name), self._parameters))
+        alternate_parameters = "\n" \
+        "        {}\n" \
+        "    " \
+        
+        parameters = [p.in_pyx_python_format(header, library_name) for p in self._parameters]
+        if len(self._parameters) > 3:
+            comma_delimited_parameters = alternate_parameters.format(",\n        ".join(parameters))
+        else:
+            comma_delimited_parameters = ", ".join(parameters)
 
-        comma_delimited_parameter_names = ", ".join(map(lambda p: p.get_name(), self._parameters))
+        comma_delimited_parameter_names = ", ".join([p.get_name() for p in self._parameters])
 
         return template.format(
             self.pythonised_name(),
@@ -706,47 +827,6 @@ class Function:
             library_name + "." + self._name,
             comma_delimited_parameter_names,
         )
-
-
-def pxd_typedefs(typedefs: List[Typedef]) -> str:
-    output = ""
-    for typedef in typedefs:
-        output += "    {}\n".format(
-            typedef.in_pxd_format()
-        )
-    return output
-
-
-def pxd_structs_forward_declaration(structs: List[Struct]) -> str:
-    output = ""
-    for struct in structs:
-        output += "    {}\n".format(
-            struct.in_pxd_forward_declaration_format()
-        )
-    return output
-
-
-def pxd_structs(structs: List[Struct]) -> str:
-    output = ""
-    for struct in structs:
-        output += "    {}\n".format(
-            struct.in_pxd_format(indent=8)
-        )
-    return output
-
-
-def pxd_enums(enums: List[Enum]) -> str:
-    output = ""
-    for enum in enums:
-        output += "    {}\n".format(enum.in_pxd_format(indent=8))
-    return output
-
-
-def pxd_functions(functions: List[Function]) -> str:
-    output = ""
-    for function in functions:
-        output += "    {}\n".format(function.in_pxd_format())
-    return output
 
 
 def pythonise_string(string: str, make_upper=False) -> str:
@@ -775,15 +855,15 @@ def pythonise_string(string: str, make_upper=False) -> str:
     return pythonised_string
 
 
-def pyx_enums(enums: List[Enum], extension_name) -> str:
+def pyx_enums(header: HeaderSpec, library_name: str) -> str:
     output = ""
-    for enum in enums:
+    for enum in header.enums:
         for value in enum:
             value = value.replace("ImGui", "Imgui")
             python_constant_name = pythonise_string(value, make_upper=True)
             output += "{} = {}.{}\n".format(
                 python_constant_name,
-                extension_name,
+                library_name,
                 value
             )
         output += "\n"
@@ -793,16 +873,12 @@ def pyx_enums(enums: List[Enum], extension_name) -> str:
 def pyx_classes(): ...
 
 
-def pyx_functions(
-        functions: List[Function],
-        enums: List[Enum],
-        typedefs: List[Typedef],
-        library_name: str) -> Tuple[str, None]:
-    functions.sort(key=lambda f: f.pythonised_name())
+def pyx_functions(header: HeaderSpec, library_name: str) -> Tuple[str, None]:
+    header.functions.sort(key=lambda f: f.pythonised_name())
 
     output = ""
-    for function in functions:
-        output += function.in_pyx_format(enums, typedefs, library_name)
+    for function in header.functions:
+        output += function.in_pyx_format(header, library_name)
     
     return output
             
@@ -819,26 +895,17 @@ def main():
     with open("pygui/cimgui_flat.h", "w") as f:
         f.write(header.reduced_src)
 
-    # with open("pygui/ccimgui.pxd", "w") as f:
-    #     f.write("# -*- coding: utf-8 -*-\n")
-    #     f.write("# distutils: language = c++\n\n")
-    #     f.write("from libcpp cimport bool\n\n")
-    #     f.write('cdef extern from "cimgui.h":\n')
-    #     f.write(pxd_structs_forward_declaration(structs))
-    #     f.write("\n")
-    #     f.write(pxd_typedefs(typedefs))
-    #     f.write(pxd_enums(enums))
-    #     f.write("\n\n")
-    #     f.write(pxd_structs(structs))
-    #     f.write(pxd_functions(functions))
+    with open("pygui/ccimgui.pxd", "w") as f:
+        f.write(header.as_pxd_file())
 
-    enum_text = pyx_enums(enums, "ccimgui")
-    function_text = pyx_functions(functions, enums, typedefs, "ccimgui")
+    enum_text = pyx_enums(header, "ccimgui")
+    function_text = pyx_functions(header, "ccimgui")
 
     with open("pygui/core_test.pyx", "w") as f:
         f.write("import cython\n")
         f.write("from cython.operator import dereference\n\n")
-        f.write("from collections import namedtuple\n\n")
+        f.write("from collections import namedtuple\n")
+        f.write("from typing import Callable\n\n")
         f.write("from . cimport ccimgui\n")
         f.write("from libcpp cimport bool\n")
         f.write("from libc.stdint cimport uintptr_t\n")

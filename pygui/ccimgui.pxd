@@ -1274,8 +1274,14 @@ cdef extern from "cimgui.h":
         unsigned int Visible
         unsigned int Codepoint
         float AdvanceX
-        float X0, Y0, X1, Y1
-        float U0, V0, U1, V1
+        float X0
+        float Y0
+        float X1
+        float Y1
+        float U0
+        float V0
+        float U1
+        float V1
 
     ctypedef struct ImGuiContextHook:
         ImGuiID HookId
@@ -1312,13 +1318,15 @@ cdef extern from "cimgui.h":
         bool Down
 
     ctypedef struct ImGuiInputEventMousePos:
-        float PosX, PosY
+        float PosX
+        float PosY
 
     ctypedef struct ImGuiInputEventMouseViewport:
         ImGuiID HoveredViewportID
 
     ctypedef struct ImGuiInputEventMouseWheel:
-        float WheelX, WheelY
+        float WheelX
+        float WheelY
 
     ctypedef struct ImGuiInputEventText:
         unsigned int Char
@@ -1557,13 +1565,18 @@ cdef extern from "cimgui.h":
         float x
 
     ctypedef struct ImVec2:
-        float x, y
+        float x
+        float y
 
     ctypedef struct ImVec2ih:
-        short x, y
+        short x
+        short y
 
     ctypedef struct ImVec4:
-        float x, y, z, w
+        float x
+        float y
+        float z
+        float w
 
     ctypedef struct ImVector_ImDrawChannel:
         int Size
@@ -1821,9 +1834,11 @@ cdef extern from "cimgui.h":
         unsigned char* Data
 
     ctypedef struct StbTexteditRow:
-        float x0, x1
+        float x0
+        float x1
         float baseline_y_delta
-        float ymin, ymax
+        float ymin
+        float ymax
         int num_chars
 
     ctypedef struct StbUndoRecord:
@@ -1917,7 +1932,8 @@ cdef extern from "cimgui.h":
         float EllipsisCharStep
         bool DirtyLookupTables
         float Scale
-        float Ascent, Descent
+        float Ascent
+        float Descent
         int MetricsTotalSurface
         ImU8 Used4kPagesMap
 
@@ -1946,8 +1962,10 @@ cdef extern from "cimgui.h":
         int PackIdLines
 
     ctypedef struct ImFontAtlasCustomRect:
-        unsigned short Width, Height
-        unsigned short X, Y
+        unsigned short Width
+        unsigned short Height
+        unsigned short X
+        unsigned short Y
         unsigned int GlyphID
         float GlyphAdvanceX
         ImVec2 GlyphOffset
@@ -2171,7 +2189,7 @@ cdef extern from "cimgui.h":
         void (*Platform_SetWindowFocus)(ImGuiViewport* vp)
         bool (*Platform_GetWindowFocus)(ImGuiViewport* vp)
         bool (*Platform_GetWindowMinimized)(ImGuiViewport* vp)
-        void (*Platform_SetWindowTitle)(ImGuiViewport* vp, const char* str)
+        void (*Platform_SetWindowTitle)(ImGuiViewport* vp, const char* str_)
         void (*Platform_SetWindowAlpha)(ImGuiViewport* vp, float alpha)
         void (*Platform_UpdateWindow)(ImGuiViewport* vp)
         void (*Platform_RenderWindow)(ImGuiViewport* vp, void* render_arg)
@@ -2193,8 +2211,10 @@ cdef extern from "cimgui.h":
         float InputLineHeight
 
     ctypedef struct ImGuiPlatformMonitor:
-        ImVec2 MainPos, MainSize
-        ImVec2 WorkPos, WorkSize
+        ImVec2 MainPos
+        ImVec2 MainSize
+        ImVec2 WorkPos
+        ImVec2 WorkSize
         float DpiScale
 
     ctypedef struct ImGuiPopupData:
@@ -2358,8 +2378,10 @@ cdef extern from "cimgui.h":
     ctypedef struct StbUndoState:
         StbUndoRecord undo_rec
         ImWchar undo_char
-        short undo_point, redo_point
-        int undo_char_point, redo_char_point
+        short undo_point
+        short redo_point
+        int undo_char_point
+        int redo_char_point
 
     ctypedef struct ImDrawList:
         ImVector_ImDrawCmd CmdBuffer
@@ -2445,8 +2467,10 @@ cdef extern from "cimgui.h":
         bool IsBeingResized
         int Current
         int Count
-        float OffMinX, OffMaxX
-        float LineMinY, LineMaxY
+        float OffMinX
+        float OffMaxX
+        float LineMinY
+        float LineMaxY
         float HostCursorPosY
         float HostCursorMaxPosX
         ImRect HostInitialClipRect
@@ -2697,14 +2721,17 @@ cdef extern from "cimgui.h":
         unsigned char initialized
         unsigned char has_preferred_x
         unsigned char single_line
-        unsigned char padding1, padding2, padding3
+        unsigned char padding1
+        unsigned char padding2
+        unsigned char padding3
         float preferred_x
         StbUndoState undostate
 
     ctypedef struct ImGuiInputTextState:
         ImGuiContext* Ctx
         ImGuiID ID
-        int CurLenW, CurLenA
+        int CurLenW
+        int CurLenA
         ImVector_ImWchar TextW
         ImVector_char TextA
         ImVector_char InitialTextA
@@ -2721,7 +2748,8 @@ cdef extern from "cimgui.h":
     ctypedef struct ImGuiWindow:
         char* Name
         ImGuiID ID
-        ImGuiWindowFlags Flags, FlagsPreviousFrame
+        ImGuiWindowFlags Flags
+        ImGuiWindowFlags FlagsPreviousFrame
         ImGuiWindowClass WindowClass
         ImGuiViewportP* Viewport
         ImGuiID ViewportId
@@ -2736,9 +2764,12 @@ cdef extern from "cimgui.h":
         ImVec2 WindowPadding
         float WindowRounding
         float WindowBorderSize
-        float DecoOuterSizeX1, DecoOuterSizeY1
-        float DecoOuterSizeX2, DecoOuterSizeY2
-        float DecoInnerSizeX1, DecoInnerSizeY1
+        float DecoOuterSizeX1
+        float DecoOuterSizeY1
+        float DecoOuterSizeX2
+        float DecoOuterSizeY2
+        float DecoInnerSizeX1
+        float DecoInnerSizeY1
         int NameBufLen
         ImGuiID MoveId
         ImGuiID TabId
@@ -2749,7 +2780,8 @@ cdef extern from "cimgui.h":
         ImVec2 ScrollTargetCenterRatio
         ImVec2 ScrollTargetEdgeSnapDist
         ImVec2 ScrollbarSizes
-        bool ScrollbarX, ScrollbarY
+        bool ScrollbarX
+        bool ScrollbarY
         bool ViewportOwned
         bool Active
         bool WasActive
@@ -2769,7 +2801,8 @@ cdef extern from "cimgui.h":
         short BeginOrderWithinContext
         short FocusOrder
         ImGuiID PopupId
-        ImS8 AutoFitFramesX, AutoFitFramesY
+        ImS8 AutoFitFramesX
+        ImS8 AutoFitFramesY
         ImS8 AutoFitChildAxises
         bool AutoFitOnlyGrows
         ImGuiDir AutoPosLastDirection
@@ -4122,7 +4155,7 @@ cdef extern from "cimgui.h":
     void igImMin(ImVec2* pOut, const ImVec2 lhs, const ImVec2 rhs)
     void igImMul(ImVec2* pOut, const ImVec2 lhs, const ImVec2 rhs)
     void igImParseFormatSanitizeForPrinting(const char* fmt_in, char* fmt_out, size_t fmt_out_size)
-    void igImQsort(void* base, size_t count, size_t size_of_element, int (*compare_func)(void *, void *))
+    void igImQsort(void* base, size_t count, size_t size_of_element, int (*compare_func)(void* , void* ))
     void igImRotate(ImVec2* pOut, const ImVec2 v, float cos_a, float sin_a)
     void igImStrTrimBlanks(char* str_)
     void igImStrncpy(char* dst, const char* src, size_t count)
