@@ -295,6 +295,9 @@ class HeaderSpec:
         self.structs += parse_struct_lines(struct_lines)
         self.functions = parse_function_lines(function_lines)
 
+        for typedef in self.typedefs:
+            print(typedef)
+
     def keep_unique_structs(self):
         struct_dict = {}
         for struct in self.structs:
@@ -416,6 +419,11 @@ class HeaderSpec:
         output.write(pxd_functions(self.functions))
         return output.getvalue()
 
+    def typedef_to_base(self, _type: str):
+        for typedef in self.typedefs:
+            if _type == typedef.get_definition().get_ctype():
+                return self.typedef_to_base(typedef.get_base().get_ctype())
+        return _type
 
 class PYXFunctionTemplate:
     def __init__(self):
@@ -455,6 +463,11 @@ class PYXFunctionTemplate:
         if self._parameters is None:
             raise RuntimeError("Parameters must be set")
         
+        for line in self._template.split("\n"):
+            assert not line.startswith("#if")
+            assert not line.startswith("#else")
+            assert not line.startswith("#elif")
+
         return self._template
     
     def replace(self, parameter: str, with_value: str) -> PYXFunctionTemplate:
@@ -462,24 +475,27 @@ class PYXFunctionTemplate:
         return self
 
     def add_var(self, var: str, value: bool):
-        found_header = False
+        in_if_block = False
         in_else_block = False
 
         filtered_lines = []
         for line in self._template.split("\n"):
-            if line.startswith(f"# {var}"):
-                found_header = True
-            elif line.startswith("#else"):
+            include_this_line = True
+            if line.startswith(f"#if {var}"):
+                in_if_block = True
+                include_this_line = False
+            elif line.startswith("#else") and in_if_block:
                 in_else_block = True
-            elif line.startswith("#endif") and found_header:
-                found_header = False
+                include_this_line = False
+            elif line.startswith("#endif") and in_if_block:
+                in_if_block = False
                 in_else_block = False
+                include_this_line = False
             
-            if line.startswith("#"):
-                continue
+            # If we are in the corresponding block
+            show_line = (in_if_block and (in_else_block != value)) or not in_if_block
 
-            if (found_header and value and not in_else_block) \
-                or (found_header and in_else_block and not value) or not found_header:
+            if show_line and include_this_line:
                 filtered_lines.append(line)
         
         self._template = "\n".join(filtered_lines)
@@ -514,23 +530,38 @@ class CType:
     def __repr__(self):
         return f"CType({self.internal_str})"
 
+    def is_primitive_type(self, header: HeaderSpec):
+        ctype_without_pointer = self.get_ctype_without_const_and_pointer(header)
+        if ctype_without_pointer in [s.get_name() for s in header.structs]:
+            return False
+        
+        if header.typedef_to_base(ctype_without_pointer) != \
+            ctype_without_pointer:
+            print("Skipping", ctype_without_pointer)
+            return False
+        
+        if ctype_without_pointer in [e.get_name() for e in header.enums]:
+            return False
+
+        if self.get_ctype() == "ImGuiItemStatusFlags":
+            print("wtf")
+
+        return True
+        
     def get_ctype(self) -> str:
         return self.internal_str
 
-    def get_ctype_without_const(self, typedefs: List[Typedef]) -> str:
-        assert typedefs is not None
+    def get_ctype_without_const(self, header: HeaderSpec) -> str:
+        assert header is not None
 
         _type = self.internal_str
         _type = re.sub("^const ", "", _type)
         _type = re.sub("^unsigned ", "", _type)
         _type = re.sub("^signed ", "", _type)
+        return header.typedef_to_base(_type)
 
-        for typedef in typedefs:
-            if _type == typedef.get_definition().get_ctype():
-                base: CType = typedef.get_base()
-                return base.get_ctype_without_const(typedefs)
-
-        return _type
+    def get_ctype_without_const_and_pointer(self, header: HeaderSpec):
+        return self.get_ctype_without_const(header).replace("*", "")
 
     def in_pxd_format(self):
         return self.get_ctype()
@@ -661,6 +692,12 @@ class Typedef:
 
         self._base: CType = base
         self._definition: CType = definition
+
+    def __repr__(self):
+        return "Typedef({}, {})".format(
+            self._base.get_ctype(),
+            self._definition.get_ctype(),
+        )
 
     def get_base(self) -> CType:
         return self._base
@@ -811,14 +848,19 @@ class Function:
         python_style_name = re.sub("^ig_", "", python_style_name)
         return python_style_name
 
-    def in_pyx_format(self, header: HeaderSpec, library_name):
+    def in_pyx_format(self, header: HeaderSpec, library_name: str):
+        if self._return_type.is_primitive_type(header):
+            return_string = self._return_type.get_ctype()
+        else:
+            return_string = library_name + "." + self._return_type.get_ctype_without_const(header)
+
         return PYXFunctionTemplate() \
             .add_var("has_return_type", self._return_type.get_ctype() != "void") \
             .set_function_name(self.pythonised_name()) \
             .set_parameters(header, self._parameters, library_name) \
             .replace("library_name", library_name) \
             .replace("function_pxd_name", self._name) \
-            .replace("return_type", self._return_type.get_ctype()) \
+            .replace("return_type", return_string) \
             .compile()
 
         # template = \
