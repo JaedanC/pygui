@@ -295,9 +295,6 @@ class HeaderSpec:
         self.structs += parse_struct_lines(struct_lines)
         self.functions = parse_function_lines(function_lines)
 
-        for typedef in self.typedefs:
-            print(typedef)
-
     def keep_unique_structs(self):
         struct_dict = {}
         for struct in self.structs:
@@ -425,6 +422,7 @@ class HeaderSpec:
                 return self.typedef_to_base(typedef.get_base().get_ctype())
         return _type
 
+
 class PYXFunctionTemplate:
     def __init__(self):
         self._function_name: str = None
@@ -519,6 +517,10 @@ class Parameter(ABC):
     def in_pyx_cython_format(self) -> str:
         pass
 
+    @abstractmethod
+    def in_pyi_format(self, header: HeaderSpec) -> str:
+        pass
+
 
 class CType:
     def __init__(self, _type: str):
@@ -537,17 +539,22 @@ class CType:
         
         if header.typedef_to_base(ctype_without_pointer) != \
             ctype_without_pointer:
-            print("Skipping", ctype_without_pointer)
             return False
         
         if ctype_without_pointer in [e.get_name() for e in header.enums]:
             return False
 
-        if self.get_ctype() == "ImGuiItemStatusFlags":
-            print("wtf")
-
         return True
-        
+    
+    def is_python_type(self):
+        return self.internal_str in [
+            "int",
+            "bool",
+            "float",
+            "double",
+            "str",
+        ]
+
     def get_ctype(self) -> str:
         return self.internal_str
 
@@ -558,7 +565,8 @@ class CType:
         _type = re.sub("^const ", "", _type)
         _type = re.sub("^unsigned ", "", _type)
         _type = re.sub("^signed ", "", _type)
-        return header.typedef_to_base(_type)
+        # return header.typedef_to_base(_type)
+        return _type
 
     def get_ctype_without_const_and_pointer(self, header: HeaderSpec):
         return self.get_ctype_without_const(header).replace("*", "")
@@ -603,6 +611,13 @@ class CType:
 
         return None
 
+    def in_pyi_format(self, header: HeaderSpec):
+        if self.is_python_type():
+            return self.internal_str
+        elif self.internal_str == "void":
+            return "None"
+        return "Any"
+
 
 class FunctionPointerParameter(Parameter):
     def __init__(self, return_type: CType, name: str, fields: List[Parameter | CType]):
@@ -635,6 +650,8 @@ class FunctionPointerParameter(Parameter):
     def in_pyx_python_format(self, header: HeaderSpec, library_name: str):
         return f"Callable {self.get_name()}"
     
+    def in_pyi_format(self, header: HeaderSpec):
+        return f"{self.get_name()}: Callable"
 
 class NormalParameter(Parameter):
     def __init__(self, ctype: CType, name: str):
@@ -680,6 +697,12 @@ class NormalParameter(Parameter):
         return "{}{}".format(
             pyx_type + " " if pyx_type is not None else "",
             self._name,
+        )
+    
+    def in_pyi_format(self, header: HeaderSpec):
+        return "{}: {}".format(
+            self.get_name(),
+            self.get_ctype().in_pyi_format(header)
         )
 
 
@@ -888,6 +911,15 @@ class Function:
         #     comma_delimited_parameter_names,
         # )
 
+    def in_pyi_format(self, header: HeaderSpec):
+        return_str = self._return_type.in_pyi_format(header)
+
+        return "def {}({}) -> {}: ...".format(
+            self.pythonised_name(),
+            ", ".join([p.in_pyi_format(header) for p in self._parameters]),
+            return_str if return_str != "void" else "Variant"
+        )
+
 
 def pythonise_string(string: str, make_upper=False) -> str:
     pythonised_string = ""
@@ -973,6 +1005,9 @@ def main():
         f.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
         f.write(enum_text)
         f.write(function_text)
+    
+    for function in header.functions:
+        print(function.in_pyi_format(header))
 
     # print(pxd_structs_forward_declaration(structs))
     # print(pxd_typedefs(typedefs))

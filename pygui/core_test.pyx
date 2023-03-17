@@ -960,7 +960,7 @@ def activate_item(id_):
     ccimgui.igActivateItem(id_)
 
 def add_context_hook(context, hook):
-    cdef ImGuiID res = ccimgui.igAddContextHook(context, hook)
+    cdef ccimgui.ImGuiID res = ccimgui.igAddContextHook(context, hook)
     return res
 
 def add_settings_handler(handler):
@@ -1210,7 +1210,7 @@ def calc_item_width():
     return res
 
 def calc_rounding_flags_for_rect_in_rect(r_in, r_outer, float threshold):
-    cdef ImDrawFlags res = ccimgui.igCalcRoundingFlagsForRectInRect(r_in, r_outer, threshold)
+    cdef ccimgui.ImDrawFlags res = ccimgui.igCalcRoundingFlagsForRectInRect(r_in, r_outer, threshold)
     return res
 
 def calc_text_size(
@@ -1311,7 +1311,7 @@ def color_button(
     return res
 
 def color_convert_float_4_to_u32(in_):
-    cdef ImU32 res = ccimgui.igColorConvertFloat4ToU32(in_)
+    cdef ccimgui.ImU32 res = ccimgui.igColorConvertFloat4ToU32(in_)
     return res
 
 def color_convert_hs_vto_rgb(
@@ -1401,7 +1401,7 @@ def combo_str_arr(
     return res
 
 def convert_shortcut_mod(key_chord):
-    cdef ImGuiKeyChord res = ccimgui.igConvertShortcutMod(key_chord)
+    cdef ccimgui.ImGuiKeyChord res = ccimgui.igConvertShortcutMod(key_chord)
     return res
 
 def convert_single_mod_flag_to_key(int key):
@@ -1580,7 +1580,7 @@ def destroy_platform_windows():
     ccimgui.igDestroyPlatformWindows()
 
 def dock_builder_add_node(node_id, flags):
-    cdef ImGuiID res = ccimgui.igDockBuilderAddNode(node_id, flags)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockBuilderAddNode(node_id, flags)
     return res
 
 def dock_builder_copy_dock_space(src_dockspace_id, dst_dockspace_id, in_window_remap_pairs):
@@ -1628,7 +1628,7 @@ def dock_builder_split_node(
         out_id_at_dir,
         out_id_at_opposite_dir
     ):
-    cdef ImGuiID res = ccimgui.igDockBuilderSplitNode(node_id, split_dir, size_ratio_for_node_at_dir, out_id_at_dir, out_id_at_opposite_dir)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockBuilderSplitNode(node_id, split_dir, size_ratio_for_node_at_dir, out_id_at_dir, out_id_at_opposite_dir)
     return res
 
 def dock_context_calc_drop_pos_for_docking(
@@ -1654,7 +1654,7 @@ def dock_context_find_node_by_id(ctx, id_):
     return res
 
 def dock_context_gen_node_id(ctx):
-    cdef ImGuiID res = ccimgui.igDockContextGenNodeID(ctx)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockContextGenNodeID(ctx)
     return res
 
 def dock_context_initialize(ctx):
@@ -1711,7 +1711,7 @@ def dock_node_get_root_node(node):
     return res
 
 def dock_node_get_window_menu_button_id(node):
-    cdef ImGuiID res = ccimgui.igDockNodeGetWindowMenuButtonId(node)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockNodeGetWindowMenuButtonId(node)
     return res
 
 def dock_node_is_in_hierarchy_of(node, parent):
@@ -1724,11 +1724,11 @@ def dock_space(
         flags,
         window_class
     ):
-    cdef ImGuiID res = ccimgui.igDockSpace(id_, size, flags, window_class)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id_, size, flags, window_class)
     return res
 
 def dock_space_over_viewport(viewport, flags, window_class):
-    cdef ImGuiID res = ccimgui.igDockSpaceOverViewport(viewport, flags, window_class)
+    cdef ccimgui.ImGuiID res = ccimgui.igDockSpaceOverViewport(viewport, flags, window_class)
     return res
 
 def drag_behavior(
@@ -2045,7 +2045,7 @@ def gc_compact_transient_window_buffers(window):
     ccimgui.igGcCompactTransientWindowBuffers(window)
 
 def get_active_id():
-    cdef ImGuiID res = ccimgui.igGetActiveID()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetActiveID()
     return res
 
 def get_allocator_functions(p_alloc_func, p_free_func, p_user_data):
@@ -2064,15 +2064,15 @@ def get_clipboard_text():
     return res
 
 def get_color_u32_col(idx, float alpha_mul):
-    cdef ImU32 res = ccimgui.igGetColorU32_Col(idx, alpha_mul)
+    cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Col(idx, alpha_mul)
     return res
 
 def get_color_u32_u32(col):
-    cdef ImU32 res = ccimgui.igGetColorU32_U32(col)
+    cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_U32(col)
     return res
 
 def get_color_u32_vec4(col):
-    cdef ImU32 res = ccimgui.igGetColorU32_Vec4(col)
+    cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Vec4(col)
     return res
 
 def get_column_index():
@@ -2100,7 +2100,7 @@ def get_columns_count():
     return res
 
 def get_columns_id(str str_id, int count):
-    cdef ImGuiID res = ccimgui.igGetColumnsID(str_id, count)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetColumnsID(str_id, count)
     return res
 
 def get_content_region_avail(pOut):
@@ -2117,7 +2117,7 @@ def get_current_context():
     return res
 
 def get_current_focus_scope():
-    cdef ImGuiID res = ccimgui.igGetCurrentFocusScope()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetCurrentFocusScope()
     return res
 
 def get_current_tab_bar():
@@ -2178,7 +2178,7 @@ def get_flt_min():
     return res
 
 def get_focus_id():
-    cdef ImGuiID res = ccimgui.igGetFocusID()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetFocusID()
     return res
 
 def get_font():
@@ -2217,27 +2217,27 @@ def get_frame_height_with_spacing():
     return res
 
 def get_hovered_id():
-    cdef ImGuiID res = ccimgui.igGetHoveredID()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetHoveredID()
     return res
 
 def get_id_ptr(ptr_id):
-    cdef ImGuiID res = ccimgui.igGetID_Ptr(ptr_id)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetID_Ptr(ptr_id)
     return res
 
 def get_id_str(str str_id):
-    cdef ImGuiID res = ccimgui.igGetID_Str(str_id)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetID_Str(str_id)
     return res
 
 def get_id_str_str(str str_id_begin, str str_id_end):
-    cdef ImGuiID res = ccimgui.igGetID_StrStr(str_id_begin, str_id_end)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetID_StrStr(str_id_begin, str_id_end)
     return res
 
 def get_id_with_seed_int(int n, seed):
-    cdef ImGuiID res = ccimgui.igGetIDWithSeed_Int(n, seed)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetIDWithSeed_Int(n, seed)
     return res
 
 def get_id_with_seed_str(str str_id_begin, str str_id_end, seed):
-    cdef ImGuiID res = ccimgui.igGetIDWithSeed_Str(str_id_begin, str_id_end, seed)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetIDWithSeed_Str(str_id_begin, str_id_end, seed)
     return res
 
 def get_input_text_state(id_):
@@ -2249,11 +2249,11 @@ def get_io():
     return res
 
 def get_item_flags():
-    cdef ImGuiItemFlags res = ccimgui.igGetItemFlags()
+    cdef ccimgui.ImGuiItemFlags res = ccimgui.igGetItemFlags()
     return res
 
 def get_item_id():
-    cdef ImGuiID res = ccimgui.igGetItemID()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetItemID()
     return res
 
 def get_item_rect_max(pOut):
@@ -2266,7 +2266,7 @@ def get_item_rect_size(pOut):
     ccimgui.igGetItemRectSize(pOut)
 
 def get_item_status_flags():
-    cdef ImGuiItemStatusFlags res = ccimgui.igGetItemStatusFlags()
+    cdef ccimgui.ImGuiItemStatusFlags res = ccimgui.igGetItemStatusFlags()
     return res
 
 def get_key_chord_name(key_chord, str out_buf, int out_buf_size):
@@ -2294,7 +2294,7 @@ def get_key_name(int key):
     return res
 
 def get_key_owner(int key):
-    cdef ImGuiID res = ccimgui.igGetKeyOwner(key)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetKeyOwner(key)
     return res
 
 def get_key_owner_data(int key):
@@ -2314,7 +2314,7 @@ def get_mouse_clicked_count(button):
     return res
 
 def get_mouse_cursor():
-    cdef ImGuiMouseCursor res = ccimgui.igGetMouseCursor()
+    cdef ccimgui.ImGuiMouseCursor res = ccimgui.igGetMouseCursor()
     return res
 
 def get_mouse_drag_delta(pOut, button, float lock_threshold):
@@ -2419,7 +2419,7 @@ def get_window_content_region_min(pOut):
     ccimgui.igGetWindowContentRegionMin(pOut)
 
 def get_window_dock_id():
-    cdef ImGuiID res = ccimgui.igGetWindowDockID()
+    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowDockID()
     return res
 
 def get_window_dock_node():
@@ -2442,15 +2442,15 @@ def get_window_pos(pOut):
     ccimgui.igGetWindowPos(pOut)
 
 def get_window_resize_border_id(window, dir_):
-    cdef ImGuiID res = ccimgui.igGetWindowResizeBorderID(window, dir_)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowResizeBorderID(window, dir_)
     return res
 
 def get_window_resize_corner_id(window, int n):
-    cdef ImGuiID res = ccimgui.igGetWindowResizeCornerID(window, n)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowResizeCornerID(window, n)
     return res
 
 def get_window_scrollbar_id(window, int axis):
-    cdef ImGuiID res = ccimgui.igGetWindowScrollbarID(window, axis)
+    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowScrollbarID(window, axis)
     return res
 
 def get_window_scrollbar_rect(pOut, window, int axis):
@@ -2480,7 +2480,7 @@ def im_abs_int(int x):
     return res
 
 def im_alpha_blend_colors(col_a, col_b):
-    cdef ImU32 res = ccimgui.igImAlphaBlendColors(col_a, col_b)
+    cdef ccimgui.ImU32 res = ccimgui.igImAlphaBlendColors(col_a, col_b)
     return res
 
 def im_bezier_cubic_calc(
@@ -2635,7 +2635,7 @@ def im_draw_cmd_destroy(self):
     ccimgui.ImDrawCmd_destroy(self)
 
 def im_draw_cmd_get_tex_id(self):
-    cdef ImTextureID res = ccimgui.ImDrawCmd_GetTexID(self)
+    cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(self)
     return res
 
 def im_draw_cmd_im_draw_cmd():
@@ -3152,7 +3152,7 @@ def im_file_close(file):
     return res
 
 def im_file_get_size(file):
-    cdef ImU64 res = ccimgui.igImFileGetSize(file)
+    cdef ccimgui.ImU64 res = ccimgui.igImFileGetSize(file)
     return res
 
 def im_file_load_to_memory(
@@ -3165,7 +3165,7 @@ def im_file_load_to_memory(
     return res
 
 def im_file_open(str filename, str mode):
-    cdef ImFileHandle res = ccimgui.igImFileOpen(filename, mode)
+    cdef ccimgui.ImFileHandle res = ccimgui.igImFileOpen(filename, mode)
     return res
 
 def im_file_read(
@@ -3174,7 +3174,7 @@ def im_file_read(
         count,
         file
     ):
-    cdef ImU64 res = ccimgui.igImFileRead(data, size, count, file)
+    cdef ccimgui.ImU64 res = ccimgui.igImFileRead(data, size, count, file)
     return res
 
 def im_file_write(
@@ -3183,7 +3183,7 @@ def im_file_write(
         count,
         file
     ):
-    cdef ImU64 res = ccimgui.igImFileWrite(data, size, count, file)
+    cdef ccimgui.ImU64 res = ccimgui.igImFileWrite(data, size, count, file)
     return res
 
 def im_floor_float(float f):
@@ -3618,15 +3618,15 @@ def im_format_stringv(
     return res
 
 def im_get_dir_quadrant_from_delta(float dx, float dy):
-    cdef ImGuiDir res = ccimgui.igImGetDirQuadrantFromDelta(dx, dy)
+    cdef ccimgui.ImGuiDir res = ccimgui.igImGetDirQuadrantFromDelta(dx, dy)
     return res
 
 def im_hash_data(data, data_size, seed):
-    cdef ImGuiID res = ccimgui.igImHashData(data, data_size, seed)
+    cdef ccimgui.ImGuiID res = ccimgui.igImHashData(data, data_size, seed)
     return res
 
 def im_hash_str(str data, data_size, seed):
-    cdef ImGuiID res = ccimgui.igImHashStr(data, data_size, seed)
+    cdef ccimgui.ImGuiID res = ccimgui.igImHashStr(data, data_size, seed)
     return res
 
 def im_inv_length(lhs, float fail_value):
@@ -4918,19 +4918,19 @@ def imgui_window_destroy(self):
     ccimgui.ImGuiWindow_destroy(self)
 
 def imgui_window_get_id_from_rectangle(self, r_abs):
-    cdef ImGuiID res = ccimgui.ImGuiWindow_GetIDFromRectangle(self, r_abs)
+    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetIDFromRectangle(self, r_abs)
     return res
 
 def imgui_window_get_id_int(self, int n):
-    cdef ImGuiID res = ccimgui.ImGuiWindow_GetID_Int(self, n)
+    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Int(self, n)
     return res
 
 def imgui_window_get_id_ptr(self, ptr):
-    cdef ImGuiID res = ccimgui.ImGuiWindow_GetID_Ptr(self, ptr)
+    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Ptr(self, ptr)
     return res
 
 def imgui_window_get_id_str(self, str str_, str str_end):
-    cdef ImGuiID res = ccimgui.ImGuiWindow_GetID_Str(self, str_, str_end)
+    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Str(self, str_, str_end)
     return res
 
 def imgui_window_imgui_window(context, str name):
@@ -6591,7 +6591,7 @@ def table_get_column_count():
     return res
 
 def table_get_column_flags(int column_n):
-    cdef ImGuiTableColumnFlags res = ccimgui.igTableGetColumnFlags(column_n)
+    cdef ccimgui.ImGuiTableColumnFlags res = ccimgui.igTableGetColumnFlags(column_n)
     return res
 
 def table_get_column_index():
@@ -6607,11 +6607,11 @@ def table_get_column_name_table_ptr(table, int column_n):
     return res
 
 def table_get_column_next_sort_direction(column):
-    cdef ImGuiSortDirection res = ccimgui.igTableGetColumnNextSortDirection(column)
+    cdef ccimgui.ImGuiSortDirection res = ccimgui.igTableGetColumnNextSortDirection(column)
     return res
 
 def table_get_column_resize_id(table, int column_n, int instance_no):
-    cdef ImGuiID res = ccimgui.igTableGetColumnResizeID(table, column_n, instance_no)
+    cdef ccimgui.ImGuiID res = ccimgui.igTableGetColumnResizeID(table, column_n, instance_no)
     return res
 
 def table_get_column_width_auto(table, column):
@@ -6631,7 +6631,7 @@ def table_get_instance_data(table, int instance_no):
     return res
 
 def table_get_instance_id(table, int instance_no):
-    cdef ImGuiID res = ccimgui.igTableGetInstanceID(table, instance_no)
+    cdef ccimgui.ImGuiID res = ccimgui.igTableGetInstanceID(table, instance_no)
     return res
 
 def table_get_max_column_width(table, int column_n):
