@@ -366,54 +366,28 @@ class HeaderSpec:
         return safe_struct_order
 
     def as_pxd_file(self):
-        def pxd_typedefs(typedefs: List[Typedef]) -> str:
-            output = ""
-            for typedef in typedefs:
-                output += "    {}\n".format(
-                    typedef.in_pxd_format()
-                )
-            return output
-
-        def pxd_structs_forward_declaration(structs: List[Struct]) -> str:
-            output = ""
-            for struct in structs:
-                output += "    {}\n".format(
-                    struct.in_pxd_forward_declaration_format()
-                )
-            return output
-
-        def pxd_structs(structs: List[Struct]) -> str:
-            output = ""
-            for struct in structs:
-                output += "    {}\n".format(
-                    struct.in_pxd_format(indent=8)
-                )
-            return output
-
-        def pxd_enums(enums: List[Enum]) -> str:
-            output = ""
-            for enum in enums:
-                output += "    {}\n".format(enum.in_pxd_format(indent=8))
-            return output
-
-        def pxd_functions(functions: List[Function]) -> str:
-            output = ""
-            for function in functions:
-                output += "    {}\n".format(function.in_pxd_format())
-            return output
-
         output = StringIO()
         output.write("# -*- coding: utf-8 -*-\n")
         output.write("# distutils: language = c++\n\n")
         output.write("from libcpp cimport bool\n\n")
         output.write('cdef extern from "cimgui.h":\n')
-        output.write(pxd_structs_forward_declaration(self.structs))
+        for struct in self.structs:
+            output.write(f"    {struct.in_pxd_forward_declaration_format()}\n")
         output.write("\n")
-        output.write(pxd_typedefs(self.typedefs))
-        output.write(pxd_enums(self.enums))
+
+        for typedef in self.typedefs:
+            output.write(f"    {typedef.in_pxd_format()}\n")
+        
+        for enum in self.enums:
+            output.write(f"    {enum.in_pxd_format(indent=8)}\n")
         output.write("\n\n")
-        output.write(pxd_structs(self.structs))
-        output.write(pxd_functions(self.functions))
+
+        for struct in self.structs:
+            output.write(f"    {struct.in_pxd_format(indent=8)}\n")
+
+        for function in self.functions:
+            output.write(f"    {function.in_pxd_format()}\n")
+
         return output.getvalue()
 
     def typedef_to_base(self, _type: str):
@@ -421,6 +395,35 @@ class HeaderSpec:
             if _type == typedef.get_definition().get_ctype():
                 return self.typedef_to_base(typedef.get_base().get_ctype())
         return _type
+
+    def as_pyx_file(self, library_name) -> str:
+        self.functions.sort(key=lambda f: f.pythonised_name())
+
+        output = StringIO()
+        output.write("import cython\n")
+        output.write("from cython.operator import dereference\n\n")
+        output.write("from collections import namedtuple\n")
+        output.write("from typing import Callable\n\n")
+        output.write("from . cimport ccimgui\n")
+        output.write("from libcpp cimport bool\n")
+        output.write("from libc.stdint cimport uintptr_t\n")
+        output.write("from cython.view cimport array as cvarray\n")
+        output.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
+        for enum in self.enums:
+            output.write(enum.in_pyx_format(library_name))
+        
+        for function in self.functions:
+            output.write(function.in_pyx_format(self, library_name))
+        
+        return output.getvalue()
+
+    def as_pyi_file(self):
+        output = StringIO()
+        output.write("from typing import Any, Callable\n\n")
+        for function in self.functions:
+            output.write(function.in_pyi_format(self) + "\n")
+        
+        return output.getvalue()
 
 
 class PYXFunctionTemplate:
@@ -551,7 +554,6 @@ class CType:
             "int",
             "bool",
             "float",
-            "double",
             "str",
         ]
 
@@ -612,10 +614,20 @@ class CType:
         return None
 
     def in_pyi_format(self, header: HeaderSpec):
+        if self.internal_str in [e.get_name() for e in header.enums]:
+            return "int"
+        
+        if header.typedef_to_base(self.internal_str) == "int":
+            return "int"
+
         if self.is_python_type():
             return self.internal_str
         elif self.internal_str == "void":
             return "None"
+        elif self.internal_str == "double":
+            return "float"
+        elif self.get_ctype_without_const(header) == "char*":
+            return "str"
         return "Any"
 
 
@@ -652,6 +664,7 @@ class FunctionPointerParameter(Parameter):
     
     def in_pyi_format(self, header: HeaderSpec):
         return f"{self.get_name()}: Callable"
+
 
 class NormalParameter(Parameter):
     def __init__(self, ctype: CType, name: str):
@@ -825,6 +838,22 @@ class Enum:
             self._name,
             output
         )
+    
+    def in_pyx_format(self, library_name):
+        output = StringIO()
+        for value in self._values:
+            value = value.replace("ImGui", "Imgui")
+            python_constant_name = pythonise_string(value, make_upper=True)
+            output.write("{} = {}.{}\n".format(
+                python_constant_name,
+                library_name,
+                value
+            ))
+        output.write("\n")
+        return output.getvalue()
+
+    def in_pyi_format(self):
+        return "\n".join([pythonise_string(v, make_upper=True) for v in self._values])
 
 
 class Function:
@@ -858,7 +887,7 @@ class Function:
         raise StopIteration
 
     def in_pxd_format(self):
-        return "{} {}({})".format(
+        return "{} {}({}) except +".format(
             self._return_type.get_ctype(),
             self._name,
             ", ".join(map(lambda p: p.in_pxd_format(), self._parameters))
@@ -947,21 +976,6 @@ def pythonise_string(string: str, make_upper=False) -> str:
     return pythonised_string
 
 
-def pyx_enums(header: HeaderSpec, library_name: str) -> str:
-    output = ""
-    for enum in header.enums:
-        for value in enum:
-            value = value.replace("ImGui", "Imgui")
-            python_constant_name = pythonise_string(value, make_upper=True)
-            output += "{} = {}.{}\n".format(
-                python_constant_name,
-                library_name,
-                value
-            )
-        output += "\n"
-    return output
-
-
 def pyx_classes(): ...
 
 
@@ -990,29 +1004,11 @@ def main():
     with open("pygui/ccimgui.pxd", "w") as f:
         f.write(header.as_pxd_file())
 
-    enum_text = pyx_enums(header, "ccimgui")
-    function_text = pyx_functions(header, "ccimgui")
-
     with open("pygui/core_test.pyx", "w") as f:
-        f.write("import cython\n")
-        f.write("from cython.operator import dereference\n\n")
-        f.write("from collections import namedtuple\n")
-        f.write("from typing import Callable\n\n")
-        f.write("from . cimport ccimgui\n")
-        f.write("from libcpp cimport bool\n")
-        f.write("from libc.stdint cimport uintptr_t\n")
-        f.write("from cython.view cimport array as cvarray\n")
-        f.write("from cpython.version cimport PY_MAJOR_VERSION\n\n")
-        f.write(enum_text)
-        f.write(function_text)
+        f.write(header.as_pyx_file("ccimgui"))
     
-    for function in header.functions:
-        print(function.in_pyi_format(header))
-
-    # print(pxd_structs_forward_declaration(structs))
-    # print(pxd_typedefs(typedefs))
-    # print(pxd_enums(enums))
-    # print(pxd_structs(structs))
+    with open("pygui/core_text.pyi", "w") as f:
+        f.write(header.as_pyi_file())
 
 
 if __name__ == "__main__":
