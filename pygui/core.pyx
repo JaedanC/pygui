@@ -6,7 +6,7 @@ import cython
 from cython.operator import dereference
 
 from collections import namedtuple
-from typeing import Callable
+from typing import Callable
 
 from . cimport ccimgui
 from libcpp cimport bool

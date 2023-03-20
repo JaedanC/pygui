@@ -1001,7 +1001,8 @@ def main():
     with open("pygui/cimgui_flat.h", "w") as f:
         f.write(header.reduced_src)
 
-    with open("pygui/ccimgui.pxd", "w") as f:
+    # with open("pygui/ccimgui.pxd", "w") as f:
+    with open("pygui/ccimgui_v1.pxd", "w") as f:
         f.write(header.as_pxd_file())
 
     with open("pygui/core_test.pyx", "w") as f:

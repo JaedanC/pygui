@@ -36,15 +36,6 @@ IM_FONT_ATLAS_FLAGS_NO_POWER_OF_TWO_HEIGHT = ccimgui.ImFontAtlasFlags_NoPowerOfT
 IM_FONT_ATLAS_FLAGS_NO_MOUSE_CURSORS = ccimgui.ImFontAtlasFlags_NoMouseCursors
 IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES = ccimgui.ImFontAtlasFlags_NoBakedLines
 
-IMGUI_ACTIVATE_FLAGS_NONE = ccimgui.ImguiActivateFlags_None
-IMGUI_ACTIVATE_FLAGS_PREFER_INPUT = ccimgui.ImguiActivateFlags_PreferInput
-IMGUI_ACTIVATE_FLAGS_PREFER_TWEAK = ccimgui.ImguiActivateFlags_PreferTweak
-IMGUI_ACTIVATE_FLAGS_TRY_TO_PRESERVE_STATE = ccimgui.ImguiActivateFlags_TryToPreserveState
-
-IMGUI_AXIS_NONE = ccimgui.ImguiAxis_None
-IMGUI_AXIS_X = ccimgui.ImguiAxis_X
-IMGUI_AXIS_Y = ccimgui.ImguiAxis_Y
-
 IMGUI_BACKEND_FLAGS_NONE = ccimgui.ImguiBackendFlags_None
 IMGUI_BACKEND_FLAGS_HAS_GAMEPAD = ccimgui.ImguiBackendFlags_HasGamepad
 IMGUI_BACKEND_FLAGS_HAS_MOUSE_CURSORS = ccimgui.ImguiBackendFlags_HasMouseCursors
@@ -60,26 +51,6 @@ IMGUI_BUTTON_FLAGS_MOUSE_BUTTON_RIGHT = ccimgui.ImguiButtonFlags_MouseButtonRigh
 IMGUI_BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE = ccimgui.ImguiButtonFlags_MouseButtonMiddle
 IMGUI_BUTTON_FLAGS_MOUSE_BUTTON_MASK_ = ccimgui.ImguiButtonFlags_MouseButtonMask_
 IMGUI_BUTTON_FLAGS_MOUSE_BUTTON_DEFAULT_ = ccimgui.ImguiButtonFlags_MouseButtonDefault_
-
-IMGUI_BUTTON_FLAGS_PRESSED_ON_CLICK = ccimgui.ImguiButtonFlags_PressedOnClick
-IMGUI_BUTTON_FLAGS_PRESSED_ON_CLICK_RELEASE = ccimgui.ImguiButtonFlags_PressedOnClickRelease
-IMGUI_BUTTON_FLAGS_PRESSED_ON_CLICK_RELEASE_ANYWHERE = ccimgui.ImguiButtonFlags_PressedOnClickReleaseAnywhere
-IMGUI_BUTTON_FLAGS_PRESSED_ON_RELEASE = ccimgui.ImguiButtonFlags_PressedOnRelease
-IMGUI_BUTTON_FLAGS_PRESSED_ON_DOUBLE_CLICK = ccimgui.ImguiButtonFlags_PressedOnDoubleClick
-IMGUI_BUTTON_FLAGS_PRESSED_ON_DRAG_DROP_HOLD = ccimgui.ImguiButtonFlags_PressedOnDragDropHold
-IMGUI_BUTTON_FLAGS_REPEAT = ccimgui.ImguiButtonFlags_Repeat
-IMGUI_BUTTON_FLAGS_FLATTEN_CHILDREN = ccimgui.ImguiButtonFlags_FlattenChildren
-IMGUI_BUTTON_FLAGS_ALLOW_ITEM_OVERLAP = ccimgui.ImguiButtonFlags_AllowItemOverlap
-IMGUI_BUTTON_FLAGS_DONT_CLOSE_POPUPS = ccimgui.ImguiButtonFlags_DontClosePopups
-IMGUI_BUTTON_FLAGS_ALIGN_TEXT_BASE_LINE = ccimgui.ImguiButtonFlags_AlignTextBaseLine
-IMGUI_BUTTON_FLAGS_NO_KEY_MODIFIERS = ccimgui.ImguiButtonFlags_NoKeyModifiers
-IMGUI_BUTTON_FLAGS_NO_HOLDING_ACTIVE_ID = ccimgui.ImguiButtonFlags_NoHoldingActiveId
-IMGUI_BUTTON_FLAGS_NO_NAV_FOCUS = ccimgui.ImguiButtonFlags_NoNavFocus
-IMGUI_BUTTON_FLAGS_NO_HOVERED_ON_FOCUS = ccimgui.ImguiButtonFlags_NoHoveredOnFocus
-IMGUI_BUTTON_FLAGS_NO_SET_KEY_OWNER = ccimgui.ImguiButtonFlags_NoSetKeyOwner
-IMGUI_BUTTON_FLAGS_NO_TEST_KEY_OWNER = ccimgui.ImguiButtonFlags_NoTestKeyOwner
-IMGUI_BUTTON_FLAGS_PRESSED_ON_MASK_ = ccimgui.ImguiButtonFlags_PressedOnMask_
-IMGUI_BUTTON_FLAGS_PRESSED_ON_DEFAULT_ = ccimgui.ImguiButtonFlags_PressedOnDefault_
 
 IMGUI_COL_TEXT = ccimgui.ImguiCol_Text
 IMGUI_COL_TEXT_DISABLED = ccimgui.ImguiCol_TextDisabled
@@ -168,8 +139,6 @@ IMGUI_COLOR_EDIT_FLAGS_DATA_TYPE_MASK_ = ccimgui.ImguiColorEditFlags_DataTypeMas
 IMGUI_COLOR_EDIT_FLAGS_PICKER_MASK_ = ccimgui.ImguiColorEditFlags_PickerMask_
 IMGUI_COLOR_EDIT_FLAGS_INPUT_MASK_ = ccimgui.ImguiColorEditFlags_InputMask_
 
-IMGUI_COMBO_FLAGS_CUSTOM_PREVIEW = ccimgui.ImguiComboFlags_CustomPreview
-
 IMGUI_COMBO_FLAGS_NONE = ccimgui.ImguiComboFlags_None
 IMGUI_COMBO_FLAGS_POPUP_ALIGN_LEFT = ccimgui.ImguiComboFlags_PopupAlignLeft
 IMGUI_COMBO_FLAGS_HEIGHT_SMALL = ccimgui.ImguiComboFlags_HeightSmall
@@ -200,19 +169,6 @@ IMGUI_CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS = ccimgui.ImguiConfigFlags_DpiEnableSc
 IMGUI_CONFIG_FLAGS_IS_SRGB = ccimgui.ImguiConfigFlags_IsSRGB
 IMGUI_CONFIG_FLAGS_IS_TOUCH_SCREEN = ccimgui.ImguiConfigFlags_IsTouchScreen
 
-IMGUI_CONTEXT_HOOK_TYPE_NEW_FRAME_PRE = ccimgui.ImguiContextHookType_NewFramePre
-IMGUI_CONTEXT_HOOK_TYPE_NEW_FRAME_POST = ccimgui.ImguiContextHookType_NewFramePost
-IMGUI_CONTEXT_HOOK_TYPE_END_FRAME_PRE = ccimgui.ImguiContextHookType_EndFramePre
-IMGUI_CONTEXT_HOOK_TYPE_END_FRAME_POST = ccimgui.ImguiContextHookType_EndFramePost
-IMGUI_CONTEXT_HOOK_TYPE_RENDER_PRE = ccimgui.ImguiContextHookType_RenderPre
-IMGUI_CONTEXT_HOOK_TYPE_RENDER_POST = ccimgui.ImguiContextHookType_RenderPost
-IMGUI_CONTEXT_HOOK_TYPE_SHUTDOWN = ccimgui.ImguiContextHookType_Shutdown
-IMGUI_CONTEXT_HOOK_TYPE_PENDING_REMOVAL_ = ccimgui.ImguiContextHookType_PendingRemoval_
-
-IMGUI_DATA_AUTHORITY_AUTO = ccimgui.ImguiDataAuthority_Auto
-IMGUI_DATA_AUTHORITY_DOCK_NODE = ccimgui.ImguiDataAuthority_DockNode
-IMGUI_DATA_AUTHORITY_WINDOW = ccimgui.ImguiDataAuthority_Window
-
 IMGUI_DATA_TYPE_S8 = ccimgui.ImguiDataType_S8
 IMGUI_DATA_TYPE_U8 = ccimgui.ImguiDataType_U8
 IMGUI_DATA_TYPE_S16 = ccimgui.ImguiDataType_S16
@@ -225,48 +181,12 @@ IMGUI_DATA_TYPE_FLOAT = ccimgui.ImguiDataType_Float
 IMGUI_DATA_TYPE_DOUBLE = ccimgui.ImguiDataType_Double
 IMGUI_DATA_TYPE_COUNT = ccimgui.ImguiDataType_COUNT
 
-IMGUI_DATA_TYPE_STRING = ccimgui.ImguiDataType_String
-IMGUI_DATA_TYPE_POINTER = ccimgui.ImguiDataType_Pointer
-IMGUI_DATA_TYPE_ID = ccimgui.ImguiDataType_ID
-
-IMGUI_DEBUG_LOG_FLAGS_NONE = ccimgui.ImguiDebugLogFlags_None
-IMGUI_DEBUG_LOG_FLAGS_EVENT_ACTIVE_ID = ccimgui.ImguiDebugLogFlags_EventActiveId
-IMGUI_DEBUG_LOG_FLAGS_EVENT_FOCUS = ccimgui.ImguiDebugLogFlags_EventFocus
-IMGUI_DEBUG_LOG_FLAGS_EVENT_POPUP = ccimgui.ImguiDebugLogFlags_EventPopup
-IMGUI_DEBUG_LOG_FLAGS_EVENT_NAV = ccimgui.ImguiDebugLogFlags_EventNav
-IMGUI_DEBUG_LOG_FLAGS_EVENT_CLIPPER = ccimgui.ImguiDebugLogFlags_EventClipper
-IMGUI_DEBUG_LOG_FLAGS_EVENT_IO = ccimgui.ImguiDebugLogFlags_EventIO
-IMGUI_DEBUG_LOG_FLAGS_EVENT_DOCKING = ccimgui.ImguiDebugLogFlags_EventDocking
-IMGUI_DEBUG_LOG_FLAGS_EVENT_VIEWPORT = ccimgui.ImguiDebugLogFlags_EventViewport
-IMGUI_DEBUG_LOG_FLAGS_EVENT_MASK_ = ccimgui.ImguiDebugLogFlags_EventMask_
-IMGUI_DEBUG_LOG_FLAGS_OUTPUT_TO_TTY = ccimgui.ImguiDebugLogFlags_OutputToTTY
-
 IMGUI_DIR_NONE = ccimgui.ImguiDir_None
 IMGUI_DIR_LEFT = ccimgui.ImguiDir_Left
 IMGUI_DIR_RIGHT = ccimgui.ImguiDir_Right
 IMGUI_DIR_UP = ccimgui.ImguiDir_Up
 IMGUI_DIR_DOWN = ccimgui.ImguiDir_Down
 IMGUI_DIR_COUNT = ccimgui.ImguiDir_COUNT
-
-IMGUI_DOCK_NODE_FLAGS_DOCK_SPACE = ccimgui.ImguiDockNodeFlags_DockSpace
-IMGUI_DOCK_NODE_FLAGS_CENTRAL_NODE = ccimgui.ImguiDockNodeFlags_CentralNode
-IMGUI_DOCK_NODE_FLAGS_NO_TAB_BAR = ccimgui.ImguiDockNodeFlags_NoTabBar
-IMGUI_DOCK_NODE_FLAGS_HIDDEN_TAB_BAR = ccimgui.ImguiDockNodeFlags_HiddenTabBar
-IMGUI_DOCK_NODE_FLAGS_NO_WINDOW_MENU_BUTTON = ccimgui.ImguiDockNodeFlags_NoWindowMenuButton
-IMGUI_DOCK_NODE_FLAGS_NO_CLOSE_BUTTON = ccimgui.ImguiDockNodeFlags_NoCloseButton
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING = ccimgui.ImguiDockNodeFlags_NoDocking
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING_SPLIT_ME = ccimgui.ImguiDockNodeFlags_NoDockingSplitMe
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING_SPLIT_OTHER = ccimgui.ImguiDockNodeFlags_NoDockingSplitOther
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING_OVER_ME = ccimgui.ImguiDockNodeFlags_NoDockingOverMe
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING_OVER_OTHER = ccimgui.ImguiDockNodeFlags_NoDockingOverOther
-IMGUI_DOCK_NODE_FLAGS_NO_DOCKING_OVER_EMPTY = ccimgui.ImguiDockNodeFlags_NoDockingOverEmpty
-IMGUI_DOCK_NODE_FLAGS_NO_RESIZEX = ccimgui.ImguiDockNodeFlags_NoResizeX
-IMGUI_DOCK_NODE_FLAGS_NO_RESIZEY = ccimgui.ImguiDockNodeFlags_NoResizeY
-IMGUI_DOCK_NODE_FLAGS_SHARED_FLAGS_INHERIT_MASK_ = ccimgui.ImguiDockNodeFlags_SharedFlagsInheritMask_
-IMGUI_DOCK_NODE_FLAGS_NO_RESIZE_FLAGS_MASK_ = ccimgui.ImguiDockNodeFlags_NoResizeFlagsMask_
-IMGUI_DOCK_NODE_FLAGS_LOCAL_FLAGS_MASK_ = ccimgui.ImguiDockNodeFlags_LocalFlagsMask_
-IMGUI_DOCK_NODE_FLAGS_LOCAL_FLAGS_TRANSFER_MASK_ = ccimgui.ImguiDockNodeFlags_LocalFlagsTransferMask_
-IMGUI_DOCK_NODE_FLAGS_SAVED_FLAGS_MASK_ = ccimgui.ImguiDockNodeFlags_SavedFlagsMask_
 
 IMGUI_DOCK_NODE_FLAGS_NONE = ccimgui.ImguiDockNodeFlags_None
 IMGUI_DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY = ccimgui.ImguiDockNodeFlags_KeepAliveOnly
@@ -275,11 +195,6 @@ IMGUI_DOCK_NODE_FLAGS_PASSTHRU_CENTRAL_NODE = ccimgui.ImguiDockNodeFlags_Passthr
 IMGUI_DOCK_NODE_FLAGS_NO_SPLIT = ccimgui.ImguiDockNodeFlags_NoSplit
 IMGUI_DOCK_NODE_FLAGS_NO_RESIZE = ccimgui.ImguiDockNodeFlags_NoResize
 IMGUI_DOCK_NODE_FLAGS_AUTO_HIDE_TAB_BAR = ccimgui.ImguiDockNodeFlags_AutoHideTabBar
-
-IMGUI_DOCK_NODE_STATE_UNKNOWN = ccimgui.ImguiDockNodeState_Unknown
-IMGUI_DOCK_NODE_STATE_HOST_WINDOW_HIDDEN_BECAUSE_SINGLE_WINDOW = ccimgui.ImguiDockNodeState_HostWindowHiddenBecauseSingleWindow
-IMGUI_DOCK_NODE_STATE_HOST_WINDOW_HIDDEN_BECAUSE_WINDOWS_ARE_RESIZING = ccimgui.ImguiDockNodeState_HostWindowHiddenBecauseWindowsAreResizing
-IMGUI_DOCK_NODE_STATE_HOST_WINDOW_VISIBLE = ccimgui.ImguiDockNodeState_HostWindowVisible
 
 IMGUI_DRAG_DROP_FLAGS_NONE = ccimgui.ImguiDragDropFlags_None
 IMGUI_DRAG_DROP_FLAGS_SOURCE_NO_PREVIEW_TOOLTIP = ccimgui.ImguiDragDropFlags_SourceNoPreviewTooltip
@@ -318,53 +233,6 @@ IMGUI_HOVERED_FLAGS_DELAY_NORMAL = ccimgui.ImguiHoveredFlags_DelayNormal
 IMGUI_HOVERED_FLAGS_DELAY_SHORT = ccimgui.ImguiHoveredFlags_DelayShort
 IMGUI_HOVERED_FLAGS_NO_SHARED_DELAY = ccimgui.ImguiHoveredFlags_NoSharedDelay
 
-IMGUI_INPUT_EVENT_TYPE_NONE = ccimgui.ImguiInputEventType_None
-IMGUI_INPUT_EVENT_TYPE_MOUSE_POS = ccimgui.ImguiInputEventType_MousePos
-IMGUI_INPUT_EVENT_TYPE_MOUSE_WHEEL = ccimgui.ImguiInputEventType_MouseWheel
-IMGUI_INPUT_EVENT_TYPE_MOUSE_BUTTON = ccimgui.ImguiInputEventType_MouseButton
-IMGUI_INPUT_EVENT_TYPE_MOUSE_VIEWPORT = ccimgui.ImguiInputEventType_MouseViewport
-IMGUI_INPUT_EVENT_TYPE_KEY = ccimgui.ImguiInputEventType_Key
-IMGUI_INPUT_EVENT_TYPE_TEXT = ccimgui.ImguiInputEventType_Text
-IMGUI_INPUT_EVENT_TYPE_FOCUS = ccimgui.ImguiInputEventType_Focus
-IMGUI_INPUT_EVENT_TYPE_COUNT = ccimgui.ImguiInputEventType_COUNT
-
-IMGUI_INPUT_FLAGS_NONE = ccimgui.ImguiInputFlags_None
-IMGUI_INPUT_FLAGS_REPEAT = ccimgui.ImguiInputFlags_Repeat
-IMGUI_INPUT_FLAGS_REPEAT_RATE_DEFAULT = ccimgui.ImguiInputFlags_RepeatRateDefault
-IMGUI_INPUT_FLAGS_REPEAT_RATE_NAV_MOVE = ccimgui.ImguiInputFlags_RepeatRateNavMove
-IMGUI_INPUT_FLAGS_REPEAT_RATE_NAV_TWEAK = ccimgui.ImguiInputFlags_RepeatRateNavTweak
-IMGUI_INPUT_FLAGS_REPEAT_RATE_MASK_ = ccimgui.ImguiInputFlags_RepeatRateMask_
-IMGUI_INPUT_FLAGS_COND_HOVERED = ccimgui.ImguiInputFlags_CondHovered
-IMGUI_INPUT_FLAGS_COND_ACTIVE = ccimgui.ImguiInputFlags_CondActive
-IMGUI_INPUT_FLAGS_COND_DEFAULT_ = ccimgui.ImguiInputFlags_CondDefault_
-IMGUI_INPUT_FLAGS_COND_MASK_ = ccimgui.ImguiInputFlags_CondMask_
-IMGUI_INPUT_FLAGS_LOCK_THIS_FRAME = ccimgui.ImguiInputFlags_LockThisFrame
-IMGUI_INPUT_FLAGS_LOCK_UNTIL_RELEASE = ccimgui.ImguiInputFlags_LockUntilRelease
-IMGUI_INPUT_FLAGS_ROUTE_FOCUSED = ccimgui.ImguiInputFlags_RouteFocused
-IMGUI_INPUT_FLAGS_ROUTE_GLOBAL_LOW = ccimgui.ImguiInputFlags_RouteGlobalLow
-IMGUI_INPUT_FLAGS_ROUTE_GLOBAL = ccimgui.ImguiInputFlags_RouteGlobal
-IMGUI_INPUT_FLAGS_ROUTE_GLOBAL_HIGH = ccimgui.ImguiInputFlags_RouteGlobalHigh
-IMGUI_INPUT_FLAGS_ROUTE_MASK_ = ccimgui.ImguiInputFlags_RouteMask_
-IMGUI_INPUT_FLAGS_ROUTE_ALWAYS = ccimgui.ImguiInputFlags_RouteAlways
-IMGUI_INPUT_FLAGS_ROUTE_UNLESS_BG_FOCUSED = ccimgui.ImguiInputFlags_RouteUnlessBgFocused
-IMGUI_INPUT_FLAGS_ROUTE_EXTRA_MASK_ = ccimgui.ImguiInputFlags_RouteExtraMask_
-IMGUI_INPUT_FLAGS_SUPPORTED_BY_IS_KEY_PRESSED = ccimgui.ImguiInputFlags_SupportedByIsKeyPressed
-IMGUI_INPUT_FLAGS_SUPPORTED_BY_SHORTCUT = ccimgui.ImguiInputFlags_SupportedByShortcut
-IMGUI_INPUT_FLAGS_SUPPORTED_BY_SET_KEY_OWNER = ccimgui.ImguiInputFlags_SupportedBySetKeyOwner
-IMGUI_INPUT_FLAGS_SUPPORTED_BY_SET_ITEM_KEY_OWNER = ccimgui.ImguiInputFlags_SupportedBySetItemKeyOwner
-
-IMGUI_INPUT_SOURCE_NONE = ccimgui.ImguiInputSource_None
-IMGUI_INPUT_SOURCE_MOUSE = ccimgui.ImguiInputSource_Mouse
-IMGUI_INPUT_SOURCE_KEYBOARD = ccimgui.ImguiInputSource_Keyboard
-IMGUI_INPUT_SOURCE_GAMEPAD = ccimgui.ImguiInputSource_Gamepad
-IMGUI_INPUT_SOURCE_CLIPBOARD = ccimgui.ImguiInputSource_Clipboard
-IMGUI_INPUT_SOURCE_NAV = ccimgui.ImguiInputSource_Nav
-IMGUI_INPUT_SOURCE_COUNT = ccimgui.ImguiInputSource_COUNT
-
-IMGUI_INPUT_TEXT_FLAGS_MULTILINE = ccimgui.ImguiInputTextFlags_Multiline
-IMGUI_INPUT_TEXT_FLAGS_NO_MARK_EDITED = ccimgui.ImguiInputTextFlags_NoMarkEdited
-IMGUI_INPUT_TEXT_FLAGS_MERGED_ITEM = ccimgui.ImguiInputTextFlags_MergedItem
-
 IMGUI_INPUT_TEXT_FLAGS_NONE = ccimgui.ImguiInputTextFlags_None
 IMGUI_INPUT_TEXT_FLAGS_CHARS_DECIMAL = ccimgui.ImguiInputTextFlags_CharsDecimal
 IMGUI_INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL = ccimgui.ImguiInputTextFlags_CharsHexadecimal
@@ -387,30 +255,6 @@ IMGUI_INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC = ccimgui.ImguiInputTextFlags_CharsScien
 IMGUI_INPUT_TEXT_FLAGS_CALLBACK_RESIZE = ccimgui.ImguiInputTextFlags_CallbackResize
 IMGUI_INPUT_TEXT_FLAGS_CALLBACK_EDIT = ccimgui.ImguiInputTextFlags_CallbackEdit
 IMGUI_INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL = ccimgui.ImguiInputTextFlags_EscapeClearsAll
-
-IMGUI_ITEM_FLAGS_NONE = ccimgui.ImguiItemFlags_None
-IMGUI_ITEM_FLAGS_NO_TAB_STOP = ccimgui.ImguiItemFlags_NoTabStop
-IMGUI_ITEM_FLAGS_BUTTON_REPEAT = ccimgui.ImguiItemFlags_ButtonRepeat
-IMGUI_ITEM_FLAGS_DISABLED = ccimgui.ImguiItemFlags_Disabled
-IMGUI_ITEM_FLAGS_NO_NAV = ccimgui.ImguiItemFlags_NoNav
-IMGUI_ITEM_FLAGS_NO_NAV_DEFAULT_FOCUS = ccimgui.ImguiItemFlags_NoNavDefaultFocus
-IMGUI_ITEM_FLAGS_SELECTABLE_DONT_CLOSE_POPUP = ccimgui.ImguiItemFlags_SelectableDontClosePopup
-IMGUI_ITEM_FLAGS_MIXED_VALUE = ccimgui.ImguiItemFlags_MixedValue
-IMGUI_ITEM_FLAGS_READ_ONLY = ccimgui.ImguiItemFlags_ReadOnly
-IMGUI_ITEM_FLAGS_NO_WINDOW_HOVERABLE_CHECK = ccimgui.ImguiItemFlags_NoWindowHoverableCheck
-IMGUI_ITEM_FLAGS_INPUTABLE = ccimgui.ImguiItemFlags_Inputable
-
-IMGUI_ITEM_STATUS_FLAGS_NONE = ccimgui.ImguiItemStatusFlags_None
-IMGUI_ITEM_STATUS_FLAGS_HOVERED_RECT = ccimgui.ImguiItemStatusFlags_HoveredRect
-IMGUI_ITEM_STATUS_FLAGS_HAS_DISPLAY_RECT = ccimgui.ImguiItemStatusFlags_HasDisplayRect
-IMGUI_ITEM_STATUS_FLAGS_EDITED = ccimgui.ImguiItemStatusFlags_Edited
-IMGUI_ITEM_STATUS_FLAGS_TOGGLED_SELECTION = ccimgui.ImguiItemStatusFlags_ToggledSelection
-IMGUI_ITEM_STATUS_FLAGS_TOGGLED_OPEN = ccimgui.ImguiItemStatusFlags_ToggledOpen
-IMGUI_ITEM_STATUS_FLAGS_HAS_DEACTIVATED = ccimgui.ImguiItemStatusFlags_HasDeactivated
-IMGUI_ITEM_STATUS_FLAGS_DEACTIVATED = ccimgui.ImguiItemStatusFlags_Deactivated
-IMGUI_ITEM_STATUS_FLAGS_HOVERED_WINDOW = ccimgui.ImguiItemStatusFlags_HoveredWindow
-IMGUI_ITEM_STATUS_FLAGS_FOCUSED_BY_TABBING = ccimgui.ImguiItemStatusFlags_FocusedByTabbing
-IMGUI_ITEM_STATUS_FLAGS_VISIBLE = ccimgui.ImguiItemStatusFlags_Visible
 
 IMGUI_KEY_NONE = ccimgui.ImguiKey_None
 IMGUI_KEY_TAB = ccimgui.ImguiKey_Tab
@@ -567,25 +411,6 @@ IMGUI_KEY_NAMED_KEY_COUNT = ccimgui.ImguiKey_NamedKey_COUNT
 IMGUI_KEY_KEYS_DATA_SIZE = ccimgui.ImguiKey_KeysData_SIZE
 IMGUI_KEY_KEYS_DATA_OFFSET = ccimgui.ImguiKey_KeysData_OFFSET
 
-IMGUI_LAYOUT_TYPE_HORIZONTAL = ccimgui.ImguiLayoutType_Horizontal
-IMGUI_LAYOUT_TYPE_VERTICAL = ccimgui.ImguiLayoutType_Vertical
-
-IMGUI_LOC_KEY_TABLE_SIZE_ONE = ccimgui.ImguiLocKey_TableSizeOne
-IMGUI_LOC_KEY_TABLE_SIZE_ALL_FIT = ccimgui.ImguiLocKey_TableSizeAllFit
-IMGUI_LOC_KEY_TABLE_SIZE_ALL_DEFAULT = ccimgui.ImguiLocKey_TableSizeAllDefault
-IMGUI_LOC_KEY_TABLE_RESET_ORDER = ccimgui.ImguiLocKey_TableResetOrder
-IMGUI_LOC_KEY_WINDOWING_MAIN_MENU_BAR = ccimgui.ImguiLocKey_WindowingMainMenuBar
-IMGUI_LOC_KEY_WINDOWING_POPUP = ccimgui.ImguiLocKey_WindowingPopup
-IMGUI_LOC_KEY_WINDOWING_UNTITLED = ccimgui.ImguiLocKey_WindowingUntitled
-IMGUI_LOC_KEY_DOCKING_HIDE_TAB_BAR = ccimgui.ImguiLocKey_DockingHideTabBar
-IMGUI_LOC_KEY_COUNT = ccimgui.ImguiLocKey_COUNT
-
-IMGUI_LOG_TYPE_NONE = ccimgui.ImguiLogType_None
-IMGUI_LOG_TYPE_TTY = ccimgui.ImguiLogType_TTY
-IMGUI_LOG_TYPE_FILE = ccimgui.ImguiLogType_File
-IMGUI_LOG_TYPE_BUFFER = ccimgui.ImguiLogType_Buffer
-IMGUI_LOG_TYPE_CLIPBOARD = ccimgui.ImguiLogType_Clipboard
-
 IMGUI_MOUSE_BUTTON_LEFT = ccimgui.ImguiMouseButton_Left
 IMGUI_MOUSE_BUTTON_RIGHT = ccimgui.ImguiMouseButton_Right
 IMGUI_MOUSE_BUTTON_MIDDLE = ccimgui.ImguiMouseButton_Middle
@@ -602,12 +427,6 @@ IMGUI_MOUSE_CURSOR_RESIZE_NWSE = ccimgui.ImguiMouseCursor_ResizeNWSE
 IMGUI_MOUSE_CURSOR_HAND = ccimgui.ImguiMouseCursor_Hand
 IMGUI_MOUSE_CURSOR_NOT_ALLOWED = ccimgui.ImguiMouseCursor_NotAllowed
 IMGUI_MOUSE_CURSOR_COUNT = ccimgui.ImguiMouseCursor_COUNT
-
-IMGUI_NAV_HIGHLIGHT_FLAGS_NONE = ccimgui.ImguiNavHighlightFlags_None
-IMGUI_NAV_HIGHLIGHT_FLAGS_TYPE_DEFAULT = ccimgui.ImguiNavHighlightFlags_TypeDefault
-IMGUI_NAV_HIGHLIGHT_FLAGS_TYPE_THIN = ccimgui.ImguiNavHighlightFlags_TypeThin
-IMGUI_NAV_HIGHLIGHT_FLAGS_ALWAYS_DRAW = ccimgui.ImguiNavHighlightFlags_AlwaysDraw
-IMGUI_NAV_HIGHLIGHT_FLAGS_NO_ROUNDING = ccimgui.ImguiNavHighlightFlags_NoRounding
 
 IMGUI_NAV_INPUT_ACTIVATE = ccimgui.ImguiNavInput_Activate
 IMGUI_NAV_INPUT_CANCEL = ccimgui.ImguiNavInput_Cancel
@@ -627,52 +446,6 @@ IMGUI_NAV_INPUT_TWEAK_SLOW = ccimgui.ImguiNavInput_TweakSlow
 IMGUI_NAV_INPUT_TWEAK_FAST = ccimgui.ImguiNavInput_TweakFast
 IMGUI_NAV_INPUT_COUNT = ccimgui.ImguiNavInput_COUNT
 
-IMGUI_NAV_LAYER_MAIN = ccimgui.ImguiNavLayer_Main
-IMGUI_NAV_LAYER_MENU = ccimgui.ImguiNavLayer_Menu
-IMGUI_NAV_LAYER_COUNT = ccimgui.ImguiNavLayer_COUNT
-
-IMGUI_NAV_MOVE_FLAGS_NONE = ccimgui.ImguiNavMoveFlags_None
-IMGUI_NAV_MOVE_FLAGS_LOOPX = ccimgui.ImguiNavMoveFlags_LoopX
-IMGUI_NAV_MOVE_FLAGS_LOOPY = ccimgui.ImguiNavMoveFlags_LoopY
-IMGUI_NAV_MOVE_FLAGS_WRAPX = ccimgui.ImguiNavMoveFlags_WrapX
-IMGUI_NAV_MOVE_FLAGS_WRAPY = ccimgui.ImguiNavMoveFlags_WrapY
-IMGUI_NAV_MOVE_FLAGS_ALLOW_CURRENT_NAV_ID = ccimgui.ImguiNavMoveFlags_AllowCurrentNavId
-IMGUI_NAV_MOVE_FLAGS_ALSO_SCORE_VISIBLE_SET = ccimgui.ImguiNavMoveFlags_AlsoScoreVisibleSet
-IMGUI_NAV_MOVE_FLAGS_SCROLL_TO_EDGEY = ccimgui.ImguiNavMoveFlags_ScrollToEdgeY
-IMGUI_NAV_MOVE_FLAGS_FORWARDED = ccimgui.ImguiNavMoveFlags_Forwarded
-IMGUI_NAV_MOVE_FLAGS_DEBUG_NO_RESULT = ccimgui.ImguiNavMoveFlags_DebugNoResult
-IMGUI_NAV_MOVE_FLAGS_FOCUS_API = ccimgui.ImguiNavMoveFlags_FocusApi
-IMGUI_NAV_MOVE_FLAGS_TABBING = ccimgui.ImguiNavMoveFlags_Tabbing
-IMGUI_NAV_MOVE_FLAGS_ACTIVATE = ccimgui.ImguiNavMoveFlags_Activate
-IMGUI_NAV_MOVE_FLAGS_DONT_SET_NAV_HIGHLIGHT = ccimgui.ImguiNavMoveFlags_DontSetNavHighlight
-
-IMGUI_NEXT_ITEM_DATA_FLAGS_NONE = ccimgui.ImguiNextItemDataFlags_None
-IMGUI_NEXT_ITEM_DATA_FLAGS_HAS_WIDTH = ccimgui.ImguiNextItemDataFlags_HasWidth
-IMGUI_NEXT_ITEM_DATA_FLAGS_HAS_OPEN = ccimgui.ImguiNextItemDataFlags_HasOpen
-
-IMGUI_NEXT_WINDOW_DATA_FLAGS_NONE = ccimgui.ImguiNextWindowDataFlags_None
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_POS = ccimgui.ImguiNextWindowDataFlags_HasPos
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_SIZE = ccimgui.ImguiNextWindowDataFlags_HasSize
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_CONTENT_SIZE = ccimgui.ImguiNextWindowDataFlags_HasContentSize
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_COLLAPSED = ccimgui.ImguiNextWindowDataFlags_HasCollapsed
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_SIZE_CONSTRAINT = ccimgui.ImguiNextWindowDataFlags_HasSizeConstraint
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_FOCUS = ccimgui.ImguiNextWindowDataFlags_HasFocus
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_BG_ALPHA = ccimgui.ImguiNextWindowDataFlags_HasBgAlpha
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_SCROLL = ccimgui.ImguiNextWindowDataFlags_HasScroll
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_VIEWPORT = ccimgui.ImguiNextWindowDataFlags_HasViewport
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_DOCK = ccimgui.ImguiNextWindowDataFlags_HasDock
-IMGUI_NEXT_WINDOW_DATA_FLAGS_HAS_WINDOW_CLASS = ccimgui.ImguiNextWindowDataFlags_HasWindowClass
-
-IMGUI_OLD_COLUMN_FLAGS_NONE = ccimgui.ImguiOldColumnFlags_None
-IMGUI_OLD_COLUMN_FLAGS_NO_BORDER = ccimgui.ImguiOldColumnFlags_NoBorder
-IMGUI_OLD_COLUMN_FLAGS_NO_RESIZE = ccimgui.ImguiOldColumnFlags_NoResize
-IMGUI_OLD_COLUMN_FLAGS_NO_PRESERVE_WIDTHS = ccimgui.ImguiOldColumnFlags_NoPreserveWidths
-IMGUI_OLD_COLUMN_FLAGS_NO_FORCE_WITHIN_WINDOW = ccimgui.ImguiOldColumnFlags_NoForceWithinWindow
-IMGUI_OLD_COLUMN_FLAGS_GROW_PARENT_CONTENTS_SIZE = ccimgui.ImguiOldColumnFlags_GrowParentContentsSize
-
-IMGUI_PLOT_TYPE_LINES = ccimgui.ImguiPlotType_Lines
-IMGUI_PLOT_TYPE_HISTOGRAM = ccimgui.ImguiPlotType_Histogram
-
 IMGUI_POPUP_FLAGS_NONE = ccimgui.ImguiPopupFlags_None
 IMGUI_POPUP_FLAGS_MOUSE_BUTTON_LEFT = ccimgui.ImguiPopupFlags_MouseButtonLeft
 IMGUI_POPUP_FLAGS_MOUSE_BUTTON_RIGHT = ccimgui.ImguiPopupFlags_MouseButtonRight
@@ -685,30 +458,6 @@ IMGUI_POPUP_FLAGS_ANY_POPUP_ID = ccimgui.ImguiPopupFlags_AnyPopupId
 IMGUI_POPUP_FLAGS_ANY_POPUP_LEVEL = ccimgui.ImguiPopupFlags_AnyPopupLevel
 IMGUI_POPUP_FLAGS_ANY_POPUP = ccimgui.ImguiPopupFlags_AnyPopup
 
-IMGUI_POPUP_POSITION_POLICY_DEFAULT = ccimgui.ImguiPopupPositionPolicy_Default
-IMGUI_POPUP_POSITION_POLICY_COMBO_BOX = ccimgui.ImguiPopupPositionPolicy_ComboBox
-IMGUI_POPUP_POSITION_POLICY_TOOLTIP = ccimgui.ImguiPopupPositionPolicy_Tooltip
-
-IMGUI_SCROLL_FLAGS_NONE = ccimgui.ImguiScrollFlags_None
-IMGUI_SCROLL_FLAGS_KEEP_VISIBLE_EDGEX = ccimgui.ImguiScrollFlags_KeepVisibleEdgeX
-IMGUI_SCROLL_FLAGS_KEEP_VISIBLE_EDGEY = ccimgui.ImguiScrollFlags_KeepVisibleEdgeY
-IMGUI_SCROLL_FLAGS_KEEP_VISIBLE_CENTERX = ccimgui.ImguiScrollFlags_KeepVisibleCenterX
-IMGUI_SCROLL_FLAGS_KEEP_VISIBLE_CENTERY = ccimgui.ImguiScrollFlags_KeepVisibleCenterY
-IMGUI_SCROLL_FLAGS_ALWAYS_CENTERX = ccimgui.ImguiScrollFlags_AlwaysCenterX
-IMGUI_SCROLL_FLAGS_ALWAYS_CENTERY = ccimgui.ImguiScrollFlags_AlwaysCenterY
-IMGUI_SCROLL_FLAGS_NO_SCROLL_PARENT = ccimgui.ImguiScrollFlags_NoScrollParent
-IMGUI_SCROLL_FLAGS_MASK_X_ = ccimgui.ImguiScrollFlags_MaskX_
-IMGUI_SCROLL_FLAGS_MASK_Y_ = ccimgui.ImguiScrollFlags_MaskY_
-
-IMGUI_SELECTABLE_FLAGS_NO_HOLDING_ACTIVE_ID = ccimgui.ImguiSelectableFlags_NoHoldingActiveID
-IMGUI_SELECTABLE_FLAGS_SELECT_ON_NAV = ccimgui.ImguiSelectableFlags_SelectOnNav
-IMGUI_SELECTABLE_FLAGS_SELECT_ON_CLICK = ccimgui.ImguiSelectableFlags_SelectOnClick
-IMGUI_SELECTABLE_FLAGS_SELECT_ON_RELEASE = ccimgui.ImguiSelectableFlags_SelectOnRelease
-IMGUI_SELECTABLE_FLAGS_SPAN_AVAIL_WIDTH = ccimgui.ImguiSelectableFlags_SpanAvailWidth
-IMGUI_SELECTABLE_FLAGS_SET_NAV_ID_ON_HOVER = ccimgui.ImguiSelectableFlags_SetNavIdOnHover
-IMGUI_SELECTABLE_FLAGS_NO_PAD_WITH_HALF_SPACING = ccimgui.ImguiSelectableFlags_NoPadWithHalfSpacing
-IMGUI_SELECTABLE_FLAGS_NO_SET_KEY_OWNER = ccimgui.ImguiSelectableFlags_NoSetKeyOwner
-
 IMGUI_SELECTABLE_FLAGS_NONE = ccimgui.ImguiSelectableFlags_None
 IMGUI_SELECTABLE_FLAGS_DONT_CLOSE_POPUPS = ccimgui.ImguiSelectableFlags_DontClosePopups
 IMGUI_SELECTABLE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImguiSelectableFlags_SpanAllColumns
@@ -716,20 +465,12 @@ IMGUI_SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK = ccimgui.ImguiSelectableFlags_AllowDo
 IMGUI_SELECTABLE_FLAGS_DISABLED = ccimgui.ImguiSelectableFlags_Disabled
 IMGUI_SELECTABLE_FLAGS_ALLOW_ITEM_OVERLAP = ccimgui.ImguiSelectableFlags_AllowItemOverlap
 
-IMGUI_SEPARATOR_FLAGS_NONE = ccimgui.ImguiSeparatorFlags_None
-IMGUI_SEPARATOR_FLAGS_HORIZONTAL = ccimgui.ImguiSeparatorFlags_Horizontal
-IMGUI_SEPARATOR_FLAGS_VERTICAL = ccimgui.ImguiSeparatorFlags_Vertical
-IMGUI_SEPARATOR_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImguiSeparatorFlags_SpanAllColumns
-
 IMGUI_SLIDER_FLAGS_NONE = ccimgui.ImguiSliderFlags_None
 IMGUI_SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImguiSliderFlags_AlwaysClamp
 IMGUI_SLIDER_FLAGS_LOGARITHMIC = ccimgui.ImguiSliderFlags_Logarithmic
 IMGUI_SLIDER_FLAGS_NO_ROUND_TO_FORMAT = ccimgui.ImguiSliderFlags_NoRoundToFormat
 IMGUI_SLIDER_FLAGS_NO_INPUT = ccimgui.ImguiSliderFlags_NoInput
 IMGUI_SLIDER_FLAGS_INVALID_MASK_ = ccimgui.ImguiSliderFlags_InvalidMask_
-
-IMGUI_SLIDER_FLAGS_VERTICAL = ccimgui.ImguiSliderFlags_Vertical
-IMGUI_SLIDER_FLAGS_READ_ONLY = ccimgui.ImguiSliderFlags_ReadOnly
 
 IMGUI_SORT_DIRECTION_NONE = ccimgui.ImguiSortDirection_None
 IMGUI_SORT_DIRECTION_ASCENDING = ccimgui.ImguiSortDirection_Ascending
@@ -765,10 +506,6 @@ IMGUI_STYLE_VAR_SEPARATOR_TEXT_ALIGN = ccimgui.ImguiStyleVar_SeparatorTextAlign
 IMGUI_STYLE_VAR_SEPARATOR_TEXT_PADDING = ccimgui.ImguiStyleVar_SeparatorTextPadding
 IMGUI_STYLE_VAR_COUNT = ccimgui.ImguiStyleVar_COUNT
 
-IMGUI_TAB_BAR_FLAGS_DOCK_NODE = ccimgui.ImguiTabBarFlags_DockNode
-IMGUI_TAB_BAR_FLAGS_IS_FOCUSED = ccimgui.ImguiTabBarFlags_IsFocused
-IMGUI_TAB_BAR_FLAGS_SAVE_SETTINGS = ccimgui.ImguiTabBarFlags_SaveSettings
-
 IMGUI_TAB_BAR_FLAGS_NONE = ccimgui.ImguiTabBarFlags_None
 IMGUI_TAB_BAR_FLAGS_REORDERABLE = ccimgui.ImguiTabBarFlags_Reorderable
 IMGUI_TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS = ccimgui.ImguiTabBarFlags_AutoSelectNewTabs
@@ -790,12 +527,6 @@ IMGUI_TAB_ITEM_FLAGS_NO_TOOLTIP = ccimgui.ImguiTabItemFlags_NoTooltip
 IMGUI_TAB_ITEM_FLAGS_NO_REORDER = ccimgui.ImguiTabItemFlags_NoReorder
 IMGUI_TAB_ITEM_FLAGS_LEADING = ccimgui.ImguiTabItemFlags_Leading
 IMGUI_TAB_ITEM_FLAGS_TRAILING = ccimgui.ImguiTabItemFlags_Trailing
-
-IMGUI_TAB_ITEM_FLAGS_SECTION_MASK_ = ccimgui.ImguiTabItemFlags_SectionMask_
-IMGUI_TAB_ITEM_FLAGS_NO_CLOSE_BUTTON = ccimgui.ImguiTabItemFlags_NoCloseButton
-IMGUI_TAB_ITEM_FLAGS_BUTTON = ccimgui.ImguiTabItemFlags_Button
-IMGUI_TAB_ITEM_FLAGS_UNSORTED = ccimgui.ImguiTabItemFlags_Unsorted
-IMGUI_TAB_ITEM_FLAGS_PREVIEW = ccimgui.ImguiTabItemFlags_Preview
 
 IMGUI_TABLE_BG_TARGET_NONE = ccimgui.ImguiTableBgTarget_None
 IMGUI_TABLE_BG_TARGET_ROW_BG0 = ccimgui.ImguiTableBgTarget_RowBg0
@@ -870,14 +601,6 @@ IMGUI_TABLE_FLAGS_SIZING_MASK_ = ccimgui.ImguiTableFlags_SizingMask_
 IMGUI_TABLE_ROW_FLAGS_NONE = ccimgui.ImguiTableRowFlags_None
 IMGUI_TABLE_ROW_FLAGS_HEADERS = ccimgui.ImguiTableRowFlags_Headers
 
-IMGUI_TEXT_FLAGS_NONE = ccimgui.ImguiTextFlags_None
-IMGUI_TEXT_FLAGS_NO_WIDTH_FOR_LARGE_CLIPPED_TEXT = ccimgui.ImguiTextFlags_NoWidthForLargeClippedText
-
-IMGUI_TOOLTIP_FLAGS_NONE = ccimgui.ImguiTooltipFlags_None
-IMGUI_TOOLTIP_FLAGS_OVERRIDE_PREVIOUS_TOOLTIP = ccimgui.ImguiTooltipFlags_OverridePreviousTooltip
-
-IMGUI_TREE_NODE_FLAGS_CLIP_LABEL_FOR_TRAILING_BUTTON = ccimgui.ImguiTreeNodeFlags_ClipLabelForTrailingButton
-
 IMGUI_TREE_NODE_FLAGS_NONE = ccimgui.ImguiTreeNodeFlags_None
 IMGUI_TREE_NODE_FLAGS_SELECTED = ccimgui.ImguiTreeNodeFlags_Selected
 IMGUI_TREE_NODE_FLAGS_FRAMED = ccimgui.ImguiTreeNodeFlags_Framed
@@ -909,14 +632,6 @@ IMGUI_VIEWPORT_FLAGS_TOP_MOST = ccimgui.ImguiViewportFlags_TopMost
 IMGUI_VIEWPORT_FLAGS_MINIMIZED = ccimgui.ImguiViewportFlags_Minimized
 IMGUI_VIEWPORT_FLAGS_NO_AUTO_MERGE = ccimgui.ImguiViewportFlags_NoAutoMerge
 IMGUI_VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS = ccimgui.ImguiViewportFlags_CanHostOtherWindows
-
-IMGUI_WINDOW_DOCK_STYLE_COL_TEXT = ccimgui.ImguiWindowDockStyleCol_Text
-IMGUI_WINDOW_DOCK_STYLE_COL_TAB = ccimgui.ImguiWindowDockStyleCol_Tab
-IMGUI_WINDOW_DOCK_STYLE_COL_TAB_HOVERED = ccimgui.ImguiWindowDockStyleCol_TabHovered
-IMGUI_WINDOW_DOCK_STYLE_COL_TAB_ACTIVE = ccimgui.ImguiWindowDockStyleCol_TabActive
-IMGUI_WINDOW_DOCK_STYLE_COL_TAB_UNFOCUSED = ccimgui.ImguiWindowDockStyleCol_TabUnfocused
-IMGUI_WINDOW_DOCK_STYLE_COL_TAB_UNFOCUSED_ACTIVE = ccimgui.ImguiWindowDockStyleCol_TabUnfocusedActive
-IMGUI_WINDOW_DOCK_STYLE_COL_COUNT = ccimgui.ImguiWindowDockStyleCol_COUNT
 
 IMGUI_WINDOW_FLAGS_NONE = ccimgui.ImguiWindowFlags_None
 IMGUI_WINDOW_FLAGS_NO_TITLE_BAR = ccimgui.ImguiWindowFlags_NoTitleBar
@@ -956,16 +671,6 @@ def accept_drag_drop_payload(str type_, flags):
     cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(type_, flags)
     return res
 
-def activate_item(id_):
-    ccimgui.igActivateItem(id_)
-
-def add_context_hook(context, hook):
-    cdef ccimgui.ImGuiID res = ccimgui.igAddContextHook(context, hook)
-    return res
-
-def add_settings_handler(handler):
-    ccimgui.igAddSettingsHandler(handler)
-
 def align_text_to_frame_padding():
     ccimgui.igAlignTextToFramePadding()
 
@@ -973,27 +678,8 @@ def arrow_button(str str_id, dir_):
     cdef bool res = ccimgui.igArrowButton(str_id, dir_)
     return res
 
-def arrow_button_ex(
-        str str_id,
-        dir_,
-        size_arg,
-        flags
-    ):
-    cdef bool res = ccimgui.igArrowButtonEx(str_id, dir_, size_arg, flags)
-    return res
-
 def begin(str name, p_open, flags):
     cdef bool res = ccimgui.igBegin(name, p_open, flags)
-    return res
-
-def begin_child_ex(
-        str name,
-        id_,
-        size_arg,
-        ccimgui.bool border,
-        flags
-    ):
-    cdef bool res = ccimgui.igBeginChildEx(name, id_, size_arg, border, flags)
     return res
 
 def begin_child_frame(id_, size, flags):
@@ -1018,32 +704,12 @@ def begin_child_str(
     cdef bool res = ccimgui.igBeginChild_Str(str_id, size, border, flags)
     return res
 
-def begin_columns(str str_id, int count, flags):
-    ccimgui.igBeginColumns(str_id, count, flags)
-
 def begin_combo(str label, str preview_value, flags):
     cdef bool res = ccimgui.igBeginCombo(label, preview_value, flags)
     return res
 
-def begin_combo_popup(popup_id, bb, flags):
-    cdef bool res = ccimgui.igBeginComboPopup(popup_id, bb, flags)
-    return res
-
-def begin_combo_preview():
-    cdef bool res = ccimgui.igBeginComboPreview()
-    return res
-
 def begin_disabled(ccimgui.bool disabled):
     ccimgui.igBeginDisabled(disabled)
-
-def begin_dockable_drag_drop_source(window):
-    ccimgui.igBeginDockableDragDropSource(window)
-
-def begin_dockable_drag_drop_target(window):
-    ccimgui.igBeginDockableDragDropTarget(window)
-
-def begin_docked(window, p_open):
-    ccimgui.igBeginDocked(window, p_open)
 
 def begin_drag_drop_source(flags):
     cdef bool res = ccimgui.igBeginDragDropSource(flags)
@@ -1051,10 +717,6 @@ def begin_drag_drop_source(flags):
 
 def begin_drag_drop_target():
     cdef bool res = ccimgui.igBeginDragDropTarget()
-    return res
-
-def begin_drag_drop_target_custom(bb, id_):
-    cdef bool res = ccimgui.igBeginDragDropTargetCustom(bb, id_)
     return res
 
 def begin_group():
@@ -1076,10 +738,6 @@ def begin_menu_bar():
     cdef bool res = ccimgui.igBeginMenuBar()
     return res
 
-def begin_menu_ex(str label, str icon, ccimgui.bool enabled):
-    cdef bool res = ccimgui.igBeginMenuEx(label, icon, enabled)
-    return res
-
 def begin_popup(str str_id, flags):
     cdef bool res = ccimgui.igBeginPopup(str_id, flags)
     return res
@@ -1096,25 +754,12 @@ def begin_popup_context_window(str str_id, popup_flags):
     cdef bool res = ccimgui.igBeginPopupContextWindow(str_id, popup_flags)
     return res
 
-def begin_popup_ex(id_, extra_flags):
-    cdef bool res = ccimgui.igBeginPopupEx(id_, extra_flags)
-    return res
-
 def begin_popup_modal(str name, p_open, flags):
     cdef bool res = ccimgui.igBeginPopupModal(name, p_open, flags)
     return res
 
 def begin_tab_bar(str str_id, flags):
     cdef bool res = ccimgui.igBeginTabBar(str_id, flags)
-    return res
-
-def begin_tab_bar_ex(
-        tab_bar,
-        bb,
-        flags,
-        dock_node
-    ):
-    cdef bool res = ccimgui.igBeginTabBarEx(tab_bar, bb, flags, dock_node)
     return res
 
 def begin_tab_item(str label, p_open, flags):
@@ -1131,44 +776,8 @@ def begin_table(
     cdef bool res = ccimgui.igBeginTable(str_id, column, flags, outer_size, inner_width)
     return res
 
-def begin_table_ex(
-        str name,
-        id_,
-        int columns_count,
-        flags,
-        outer_size,
-        float inner_width
-    ):
-    cdef bool res = ccimgui.igBeginTableEx(name, id_, columns_count, flags, outer_size, inner_width)
-    return res
-
 def begin_tooltip():
     ccimgui.igBeginTooltip()
-
-def begin_tooltip_ex(tooltip_flags, extra_window_flags):
-    ccimgui.igBeginTooltipEx(tooltip_flags, extra_window_flags)
-
-def begin_viewport_side_bar(
-        str name,
-        viewport,
-        dir_,
-        float size,
-        window_flags
-    ):
-    cdef bool res = ccimgui.igBeginViewportSideBar(name, viewport, dir_, size, window_flags)
-    return res
-
-def bring_window_to_display_back(window):
-    ccimgui.igBringWindowToDisplayBack(window)
-
-def bring_window_to_display_behind(window, above_window):
-    ccimgui.igBringWindowToDisplayBehind(window, above_window)
-
-def bring_window_to_display_front(window):
-    ccimgui.igBringWindowToDisplayFront(window)
-
-def bring_window_to_focus_front(window):
-    ccimgui.igBringWindowToFocusFront(window)
 
 def bullet():
     ccimgui.igBullet()
@@ -1183,34 +792,8 @@ def button(str label, size):
     cdef bool res = ccimgui.igButton(label, size)
     return res
 
-def button_behavior(
-        bb,
-        id_,
-        out_hovered,
-        out_held,
-        flags
-    ):
-    cdef bool res = ccimgui.igButtonBehavior(bb, id_, out_hovered, out_held, flags)
-    return res
-
-def button_ex(str label, size_arg, flags):
-    cdef bool res = ccimgui.igButtonEx(label, size_arg, flags)
-    return res
-
-def calc_item_size(
-        pOut,
-        size,
-        float default_w,
-        float default_h
-    ):
-    ccimgui.igCalcItemSize(pOut, size, default_w, default_h)
-
 def calc_item_width():
     cdef float res = ccimgui.igCalcItemWidth()
-    return res
-
-def calc_rounding_flags_for_rect_in_rect(r_in, r_outer, float threshold):
-    cdef ccimgui.ImDrawFlags res = ccimgui.igCalcRoundingFlagsForRectInRect(r_in, r_outer, threshold)
     return res
 
 def calc_text_size(
@@ -1222,25 +805,6 @@ def calc_text_size(
     ):
     ccimgui.igCalcTextSize(pOut, text, text_end, hide_text_after_double_hash, wrap_width)
 
-def calc_typematic_repeat_amount(
-        float t0,
-        float t1,
-        float repeat_delay,
-        float repeat_rate
-    ):
-    cdef int res = ccimgui.igCalcTypematicRepeatAmount(t0, t1, repeat_delay, repeat_rate)
-    return res
-
-def calc_window_next_auto_fit_size(pOut, window):
-    ccimgui.igCalcWindowNextAutoFitSize(pOut, window)
-
-def calc_wrap_width_for_pos(pos, float wrap_pos_x):
-    cdef float res = ccimgui.igCalcWrapWidthForPos(pos, wrap_pos_x)
-    return res
-
-def call_context_hooks(context, int type_):
-    ccimgui.igCallContextHooks(context, type_)
-
 def checkbox(str label, v):
     cdef bool res = ccimgui.igCheckbox(label, v)
     return res
@@ -1249,49 +813,12 @@ def checkbox_flags_int_ptr(str label, int flags, int flags_value):
     cdef bool res = ccimgui.igCheckboxFlags_IntPtr(label, flags, flags_value)
     return res
 
-def checkbox_flags_s64_ptr(str label, flags, flags_value):
-    cdef bool res = ccimgui.igCheckboxFlags_S64Ptr(label, flags, flags_value)
-    return res
-
-def checkbox_flags_u64_ptr(str label, flags, flags_value):
-    cdef bool res = ccimgui.igCheckboxFlags_U64Ptr(label, flags, flags_value)
-    return res
-
 def checkbox_flags_uint_ptr(str label, int flags, int flags_value):
     cdef bool res = ccimgui.igCheckboxFlags_UintPtr(label, flags, flags_value)
     return res
 
-def clear_active_id():
-    ccimgui.igClearActiveID()
-
-def clear_drag_drop():
-    ccimgui.igClearDragDrop()
-
-def clear_ini_settings():
-    ccimgui.igClearIniSettings()
-
-def clear_window_settings(str name):
-    ccimgui.igClearWindowSettings(name)
-
-def close_button(id_, pos):
-    cdef bool res = ccimgui.igCloseButton(id_, pos)
-    return res
-
 def close_current_popup():
     ccimgui.igCloseCurrentPopup()
-
-def close_popup_to_level(int remaining, ccimgui.bool restore_focus_to_window_under_popup):
-    ccimgui.igClosePopupToLevel(remaining, restore_focus_to_window_under_popup)
-
-def close_popups_except_modals():
-    ccimgui.igClosePopupsExceptModals()
-
-def close_popups_over_window(ref_window, ccimgui.bool restore_focus_to_window_under_popup):
-    ccimgui.igClosePopupsOverWindow(ref_window, restore_focus_to_window_under_popup)
-
-def collapse_button(id_, pos, dock_node):
-    cdef bool res = ccimgui.igCollapseButton(id_, pos, dock_node)
-    return res
 
 def collapsing_header_bool_ptr(str label, p_visible, flags):
     cdef bool res = ccimgui.igCollapsingHeader_BoolPtr(label, p_visible, flags)
@@ -1345,9 +872,6 @@ def color_edit4(str label, float col, flags):
     cdef bool res = ccimgui.igColorEdit4(label, col, flags)
     return res
 
-def color_edit_options_popup(float col, flags):
-    ccimgui.igColorEditOptionsPopup(col, flags)
-
 def color_picker3(str label, float col, flags):
     cdef bool res = ccimgui.igColorPicker3(label, col, flags)
     return res
@@ -1360,12 +884,6 @@ def color_picker4(
     ):
     cdef bool res = ccimgui.igColorPicker4(label, col, flags, ref_col)
     return res
-
-def color_picker_options_popup(float ref_col, flags):
-    ccimgui.igColorPickerOptionsPopup(ref_col, flags)
-
-def color_tooltip(str text, float col, flags):
-    ccimgui.igColorTooltip(text, col, flags)
 
 def columns(int count, str id_, ccimgui.bool border):
     ccimgui.igColumns(count, id_, border)
@@ -1400,65 +918,8 @@ def combo_str_arr(
     cdef bool res = ccimgui.igCombo_Str_arr(label, current_item, items, items_count, popup_max_height_in_items)
     return res
 
-def convert_shortcut_mod(key_chord):
-    cdef ccimgui.ImGuiKeyChord res = ccimgui.igConvertShortcutMod(key_chord)
-    return res
-
-def convert_single_mod_flag_to_key(int key):
-    cdef ccimgui.ImGuiKey res = ccimgui.igConvertSingleModFlagToKey(key)
-    return res
-
 def create_context(shared_font_atlas):
     cdef ccimgui.ImGuiContext* res = ccimgui.igCreateContext(shared_font_atlas)
-    return res
-
-def create_new_window_settings(str name):
-    cdef ccimgui.ImGuiWindowSettings* res = ccimgui.igCreateNewWindowSettings(name)
-    return res
-
-def data_type_apply_from_text(
-        str buf,
-        data_type,
-        p_data,
-        str format_
-    ):
-    cdef bool res = ccimgui.igDataTypeApplyFromText(buf, data_type, p_data, format_)
-    return res
-
-def data_type_apply_op(
-        data_type,
-        int op,
-        output,
-        arg_1,
-        arg_2
-    ):
-    ccimgui.igDataTypeApplyOp(data_type, op, output, arg_1, arg_2)
-
-def data_type_clamp(
-        data_type,
-        p_data,
-        p_min,
-        p_max
-    ):
-    cdef bool res = ccimgui.igDataTypeClamp(data_type, p_data, p_min, p_max)
-    return res
-
-def data_type_compare(data_type, arg_1, arg_2):
-    cdef int res = ccimgui.igDataTypeCompare(data_type, arg_1, arg_2)
-    return res
-
-def data_type_format_string(
-        str buf,
-        int buf_size,
-        data_type,
-        p_data,
-        str format_
-    ):
-    cdef int res = ccimgui.igDataTypeFormatString(buf, buf_size, data_type, p_data, format_)
-    return res
-
-def data_type_get_info(data_type):
-    cdef ccimgui.ImGuiDataTypeInfo* res = ccimgui.igDataTypeGetInfo(data_type)
     return res
 
 def debug_check_version_and_data_layout(
@@ -1473,250 +934,14 @@ def debug_check_version_and_data_layout(
     cdef bool res = ccimgui.igDebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx)
     return res
 
-def debug_draw_item_rect(col):
-    ccimgui.igDebugDrawItemRect(col)
-
-def debug_hook_id_info(
-        id_,
-        data_type,
-        data_id,
-        data_id_end
-    ):
-    ccimgui.igDebugHookIdInfo(id_, data_type, data_id, data_id_end)
-
-def debug_locate_item(target_id):
-    ccimgui.igDebugLocateItem(target_id)
-
-def debug_locate_item_on_hover(target_id):
-    ccimgui.igDebugLocateItemOnHover(target_id)
-
-def debug_locate_item_resolve_with_last_item():
-    ccimgui.igDebugLocateItemResolveWithLastItem()
-
-def debug_log(str fmt):
-    ccimgui.igDebugLog(fmt)
-
-def debug_logv(str fmt, str args):
-    ccimgui.igDebugLogV(fmt, args)
-
-def debug_node_columns(columns):
-    ccimgui.igDebugNodeColumns(columns)
-
-def debug_node_dock_node(node, str label):
-    ccimgui.igDebugNodeDockNode(node, label)
-
-def debug_node_draw_cmd_show_mesh_and_bounding_box(
-        out_draw_list,
-        draw_list,
-        draw_cmd,
-        ccimgui.bool show_mesh,
-        ccimgui.bool show_aabb
-    ):
-    ccimgui.igDebugNodeDrawCmdShowMeshAndBoundingBox(out_draw_list, draw_list, draw_cmd, show_mesh, show_aabb)
-
-def debug_node_draw_list(
-        window,
-        viewport,
-        draw_list,
-        str label
-    ):
-    ccimgui.igDebugNodeDrawList(window, viewport, draw_list, label)
-
-def debug_node_font(font):
-    ccimgui.igDebugNodeFont(font)
-
-def debug_node_font_glyph(font, glyph):
-    ccimgui.igDebugNodeFontGlyph(font, glyph)
-
-def debug_node_input_text_state(state):
-    ccimgui.igDebugNodeInputTextState(state)
-
-def debug_node_storage(storage, str label):
-    ccimgui.igDebugNodeStorage(storage, label)
-
-def debug_node_tab_bar(tab_bar, str label):
-    ccimgui.igDebugNodeTabBar(tab_bar, label)
-
-def debug_node_table(table):
-    ccimgui.igDebugNodeTable(table)
-
-def debug_node_table_settings(settings):
-    ccimgui.igDebugNodeTableSettings(settings)
-
-def debug_node_viewport(viewport):
-    ccimgui.igDebugNodeViewport(viewport)
-
-def debug_node_window(window, str label):
-    ccimgui.igDebugNodeWindow(window, label)
-
-def debug_node_window_settings(settings):
-    ccimgui.igDebugNodeWindowSettings(settings)
-
-def debug_node_windows_list(windows, str label):
-    ccimgui.igDebugNodeWindowsList(windows, label)
-
-def debug_node_windows_list_by_begin_stack_parent(windows, int windows_size, parent_in_begin_stack):
-    ccimgui.igDebugNodeWindowsListByBeginStackParent(windows, windows_size, parent_in_begin_stack)
-
-def debug_render_keyboard_preview(draw_list):
-    ccimgui.igDebugRenderKeyboardPreview(draw_list)
-
-def debug_render_viewport_thumbnail(draw_list, viewport, bb):
-    ccimgui.igDebugRenderViewportThumbnail(draw_list, viewport, bb)
-
-def debug_start_item_picker():
-    ccimgui.igDebugStartItemPicker()
-
 def debug_text_encoding(str text):
     ccimgui.igDebugTextEncoding(text)
 
 def destroy_context(ctx):
     ccimgui.igDestroyContext(ctx)
 
-def destroy_platform_window(viewport):
-    ccimgui.igDestroyPlatformWindow(viewport)
-
 def destroy_platform_windows():
     ccimgui.igDestroyPlatformWindows()
-
-def dock_builder_add_node(node_id, flags):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockBuilderAddNode(node_id, flags)
-    return res
-
-def dock_builder_copy_dock_space(src_dockspace_id, dst_dockspace_id, in_window_remap_pairs):
-    ccimgui.igDockBuilderCopyDockSpace(src_dockspace_id, dst_dockspace_id, in_window_remap_pairs)
-
-def dock_builder_copy_node(src_node_id, dst_node_id, out_node_remap_pairs):
-    ccimgui.igDockBuilderCopyNode(src_node_id, dst_node_id, out_node_remap_pairs)
-
-def dock_builder_copy_window_settings(str src_name, str dst_name):
-    ccimgui.igDockBuilderCopyWindowSettings(src_name, dst_name)
-
-def dock_builder_dock_window(str window_name, node_id):
-    ccimgui.igDockBuilderDockWindow(window_name, node_id)
-
-def dock_builder_finish(node_id):
-    ccimgui.igDockBuilderFinish(node_id)
-
-def dock_builder_get_central_node(node_id):
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.igDockBuilderGetCentralNode(node_id)
-    return res
-
-def dock_builder_get_node(node_id):
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.igDockBuilderGetNode(node_id)
-    return res
-
-def dock_builder_remove_node(node_id):
-    ccimgui.igDockBuilderRemoveNode(node_id)
-
-def dock_builder_remove_node_child_nodes(node_id):
-    ccimgui.igDockBuilderRemoveNodeChildNodes(node_id)
-
-def dock_builder_remove_node_docked_windows(node_id, ccimgui.bool clear_settings_refs):
-    ccimgui.igDockBuilderRemoveNodeDockedWindows(node_id, clear_settings_refs)
-
-def dock_builder_set_node_pos(node_id, pos):
-    ccimgui.igDockBuilderSetNodePos(node_id, pos)
-
-def dock_builder_set_node_size(node_id, size):
-    ccimgui.igDockBuilderSetNodeSize(node_id, size)
-
-def dock_builder_split_node(
-        node_id,
-        split_dir,
-        float size_ratio_for_node_at_dir,
-        out_id_at_dir,
-        out_id_at_opposite_dir
-    ):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockBuilderSplitNode(node_id, split_dir, size_ratio_for_node_at_dir, out_id_at_dir, out_id_at_opposite_dir)
-    return res
-
-def dock_context_calc_drop_pos_for_docking(
-        target,
-        target_node,
-        payload_window,
-        payload_node,
-        split_dir,
-        ccimgui.bool split_outer,
-        out_pos
-    ):
-    cdef bool res = ccimgui.igDockContextCalcDropPosForDocking(target, target_node, payload_window, payload_node, split_dir, split_outer, out_pos)
-    return res
-
-def dock_context_clear_nodes(ctx, root_id, ccimgui.bool clear_settings_refs):
-    ccimgui.igDockContextClearNodes(ctx, root_id, clear_settings_refs)
-
-def dock_context_end_frame(ctx):
-    ccimgui.igDockContextEndFrame(ctx)
-
-def dock_context_find_node_by_id(ctx, id_):
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.igDockContextFindNodeByID(ctx, id_)
-    return res
-
-def dock_context_gen_node_id(ctx):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockContextGenNodeID(ctx)
-    return res
-
-def dock_context_initialize(ctx):
-    ccimgui.igDockContextInitialize(ctx)
-
-def dock_context_new_frame_update_docking(ctx):
-    ccimgui.igDockContextNewFrameUpdateDocking(ctx)
-
-def dock_context_new_frame_update_undocking(ctx):
-    ccimgui.igDockContextNewFrameUpdateUndocking(ctx)
-
-def dock_context_process_undock_node(ctx, node):
-    ccimgui.igDockContextProcessUndockNode(ctx, node)
-
-def dock_context_process_undock_window(ctx, window, ccimgui.bool clear_persistent_docking_ref):
-    ccimgui.igDockContextProcessUndockWindow(ctx, window, clear_persistent_docking_ref)
-
-def dock_context_queue_dock(
-        ctx,
-        target,
-        target_node,
-        payload,
-        split_dir,
-        float split_ratio,
-        ccimgui.bool split_outer
-    ):
-    ccimgui.igDockContextQueueDock(ctx, target, target_node, payload, split_dir, split_ratio, split_outer)
-
-def dock_context_queue_undock_node(ctx, node):
-    ccimgui.igDockContextQueueUndockNode(ctx, node)
-
-def dock_context_queue_undock_window(ctx, window):
-    ccimgui.igDockContextQueueUndockWindow(ctx, window)
-
-def dock_context_rebuild_nodes(ctx):
-    ccimgui.igDockContextRebuildNodes(ctx)
-
-def dock_context_shutdown(ctx):
-    ccimgui.igDockContextShutdown(ctx)
-
-def dock_node_begin_amend_tab_bar(node):
-    cdef bool res = ccimgui.igDockNodeBeginAmendTabBar(node)
-    return res
-
-def dock_node_end_amend_tab_bar():
-    ccimgui.igDockNodeEndAmendTabBar()
-
-def dock_node_get_depth(node):
-    cdef int res = ccimgui.igDockNodeGetDepth(node)
-    return res
-
-def dock_node_get_root_node(node):
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.igDockNodeGetRootNode(node)
-    return res
-
-def dock_node_get_window_menu_button_id(node):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockNodeGetWindowMenuButtonId(node)
-    return res
-
-def dock_node_is_in_hierarchy_of(node, parent):
-    cdef bool res = ccimgui.igDockNodeIsInHierarchyOf(node, parent)
-    return res
 
 def dock_space(
         id_,
@@ -1729,19 +954,6 @@ def dock_space(
 
 def dock_space_over_viewport(viewport, flags, window_class):
     cdef ccimgui.ImGuiID res = ccimgui.igDockSpaceOverViewport(viewport, flags, window_class)
-    return res
-
-def drag_behavior(
-        id_,
-        data_type,
-        p_v,
-        float v_speed,
-        p_min,
-        p_max,
-        str format_,
-        flags
-    ):
-    cdef bool res = ccimgui.igDragBehavior(id_, data_type, p_v, v_speed, p_min, p_max, format_, flags)
     return res
 
 def drag_float(
@@ -1907,14 +1119,8 @@ def end_child():
 def end_child_frame():
     ccimgui.igEndChildFrame()
 
-def end_columns():
-    ccimgui.igEndColumns()
-
 def end_combo():
     ccimgui.igEndCombo()
-
-def end_combo_preview():
-    ccimgui.igEndComboPreview()
 
 def end_disabled():
     ccimgui.igEndDisabled()
@@ -1958,94 +1164,12 @@ def end_table():
 def end_tooltip():
     ccimgui.igEndTooltip()
 
-def error_check_end_frame_recover(log_callback, user_data):
-    ccimgui.igErrorCheckEndFrameRecover(log_callback, user_data)
-
-def error_check_end_window_recover(log_callback, user_data):
-    ccimgui.igErrorCheckEndWindowRecover(log_callback, user_data)
-
-def error_check_using_set_cursor_pos_to_extend_parent_boundaries():
-    ccimgui.igErrorCheckUsingSetCursorPosToExtendParentBoundaries()
-
-def find_best_window_pos_for_popup(pOut, window):
-    ccimgui.igFindBestWindowPosForPopup(pOut, window)
-
-def find_best_window_pos_for_popup_ex(
-        pOut,
-        ref_pos,
-        size,
-        last_dir,
-        r_outer,
-        r_avoid,
-        int policy
-    ):
-    ccimgui.igFindBestWindowPosForPopupEx(pOut, ref_pos, size, last_dir, r_outer, r_avoid, policy)
-
-def find_bottom_most_visible_window_within_begin_stack(window):
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igFindBottomMostVisibleWindowWithinBeginStack(window)
-    return res
-
-def find_hovered_viewport_from_platform_window_stack(mouse_platform_pos):
-    cdef ccimgui.ImGuiViewportP* res = ccimgui.igFindHoveredViewportFromPlatformWindowStack(mouse_platform_pos)
-    return res
-
-def find_or_create_columns(window, id_):
-    cdef ccimgui.ImGuiOldColumns* res = ccimgui.igFindOrCreateColumns(window, id_)
-    return res
-
-def find_rendered_text_end(str text, str text_end):
-    cdef const char* res = ccimgui.igFindRenderedTextEnd(text, text_end)
-    return res
-
-def find_settings_handler(str type_name):
-    cdef ccimgui.ImGuiSettingsHandler* res = ccimgui.igFindSettingsHandler(type_name)
-    return res
-
 def find_viewport_by_id(id_):
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id_)
     return res
 
 def find_viewport_by_platform_handle(platform_handle):
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByPlatformHandle(platform_handle)
-    return res
-
-def find_window_by_id(id_):
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igFindWindowByID(id_)
-    return res
-
-def find_window_by_name(str name):
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igFindWindowByName(name)
-    return res
-
-def find_window_display_index(window):
-    cdef int res = ccimgui.igFindWindowDisplayIndex(window)
-    return res
-
-def find_window_settings_by_id(id_):
-    cdef ccimgui.ImGuiWindowSettings* res = ccimgui.igFindWindowSettingsByID(id_)
-    return res
-
-def find_window_settings_by_window(window):
-    cdef ccimgui.ImGuiWindowSettings* res = ccimgui.igFindWindowSettingsByWindow(window)
-    return res
-
-def focus_top_most_window_under_one(under_this_window, ignore_window):
-    ccimgui.igFocusTopMostWindowUnderOne(under_this_window, ignore_window)
-
-def focus_window(window):
-    ccimgui.igFocusWindow(window)
-
-def gc_awake_transient_window_buffers(window):
-    ccimgui.igGcAwakeTransientWindowBuffers(window)
-
-def gc_compact_transient_misc_buffers():
-    ccimgui.igGcCompactTransientMiscBuffers()
-
-def gc_compact_transient_window_buffers(window):
-    ccimgui.igGcCompactTransientWindowBuffers(window)
-
-def get_active_id():
-    cdef ccimgui.ImGuiID res = ccimgui.igGetActiveID()
     return res
 
 def get_allocator_functions(p_alloc_func, p_free_func, p_user_data):
@@ -2079,16 +1203,8 @@ def get_column_index():
     cdef int res = ccimgui.igGetColumnIndex()
     return res
 
-def get_column_norm_from_offset(columns, float offset):
-    cdef float res = ccimgui.igGetColumnNormFromOffset(columns, offset)
-    return res
-
 def get_column_offset(int column_index):
     cdef float res = ccimgui.igGetColumnOffset(column_index)
-    return res
-
-def get_column_offset_from_norm(columns, float offset_norm):
-    cdef float res = ccimgui.igGetColumnOffsetFromNorm(columns, offset_norm)
     return res
 
 def get_column_width(int column_index):
@@ -2099,41 +1215,14 @@ def get_columns_count():
     cdef int res = ccimgui.igGetColumnsCount()
     return res
 
-def get_columns_id(str str_id, int count):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetColumnsID(str_id, count)
-    return res
-
 def get_content_region_avail(pOut):
     ccimgui.igGetContentRegionAvail(pOut)
 
 def get_content_region_max(pOut):
     ccimgui.igGetContentRegionMax(pOut)
 
-def get_content_region_max_abs(pOut):
-    ccimgui.igGetContentRegionMaxAbs(pOut)
-
 def get_current_context():
     cdef ccimgui.ImGuiContext* res = ccimgui.igGetCurrentContext()
-    return res
-
-def get_current_focus_scope():
-    cdef ccimgui.ImGuiID res = ccimgui.igGetCurrentFocusScope()
-    return res
-
-def get_current_tab_bar():
-    cdef ccimgui.ImGuiTabBar* res = ccimgui.igGetCurrentTabBar()
-    return res
-
-def get_current_table():
-    cdef ccimgui.ImGuiTable* res = ccimgui.igGetCurrentTable()
-    return res
-
-def get_current_window():
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igGetCurrentWindow()
-    return res
-
-def get_current_window_read():
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igGetCurrentWindowRead()
     return res
 
 def get_cursor_pos(pOut):
@@ -2152,10 +1241,6 @@ def get_cursor_screen_pos(pOut):
 
 def get_cursor_start_pos(pOut):
     ccimgui.igGetCursorStartPos(pOut)
-
-def get_default_font():
-    cdef ccimgui.ImFont* res = ccimgui.igGetDefaultFont()
-    return res
 
 def get_drag_drop_payload():
     cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
@@ -2177,10 +1262,6 @@ def get_flt_min():
     cdef float res = ccimgui.igGET_FLT_MIN()
     return res
 
-def get_focus_id():
-    cdef ccimgui.ImGuiID res = ccimgui.igGetFocusID()
-    return res
-
 def get_font():
     cdef ccimgui.ImFont* res = ccimgui.igGetFont()
     return res
@@ -2200,10 +1281,6 @@ def get_foreground_draw_list_viewport_ptr(viewport):
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_ViewportPtr(viewport)
     return res
 
-def get_foreground_draw_list_window_ptr(window):
-    cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_WindowPtr(window)
-    return res
-
 def get_frame_count():
     cdef int res = ccimgui.igGetFrameCount()
     return res
@@ -2214,10 +1291,6 @@ def get_frame_height():
 
 def get_frame_height_with_spacing():
     cdef float res = ccimgui.igGetFrameHeightWithSpacing()
-    return res
-
-def get_hovered_id():
-    cdef ccimgui.ImGuiID res = ccimgui.igGetHoveredID()
     return res
 
 def get_id_ptr(ptr_id):
@@ -2232,24 +1305,8 @@ def get_id_str_str(str str_id_begin, str str_id_end):
     cdef ccimgui.ImGuiID res = ccimgui.igGetID_StrStr(str_id_begin, str_id_end)
     return res
 
-def get_id_with_seed_int(int n, seed):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetIDWithSeed_Int(n, seed)
-    return res
-
-def get_id_with_seed_str(str str_id_begin, str str_id_end, seed):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetIDWithSeed_Str(str_id_begin, str_id_end, seed)
-    return res
-
-def get_input_text_state(id_):
-    cdef ccimgui.ImGuiInputTextState* res = ccimgui.igGetInputTextState(id_)
-    return res
-
 def get_io():
     cdef ccimgui.ImGuiIO* res = ccimgui.igGetIO()
-    return res
-
-def get_item_flags():
-    cdef ccimgui.ImGuiItemFlags res = ccimgui.igGetItemFlags()
     return res
 
 def get_item_id():
@@ -2265,40 +1322,12 @@ def get_item_rect_min(pOut):
 def get_item_rect_size(pOut):
     ccimgui.igGetItemRectSize(pOut)
 
-def get_item_status_flags():
-    cdef ccimgui.ImGuiItemStatusFlags res = ccimgui.igGetItemStatusFlags()
-    return res
-
-def get_key_chord_name(key_chord, str out_buf, int out_buf_size):
-    ccimgui.igGetKeyChordName(key_chord, out_buf, out_buf_size)
-
-def get_key_data(int key):
-    cdef ccimgui.ImGuiKeyData* res = ccimgui.igGetKeyData(key)
-    return res
-
 def get_key_index(int key):
     cdef ccimgui.ImGuiKey res = ccimgui.igGetKeyIndex(key)
     return res
 
-def get_key_magnitude_2d(
-        pOut,
-        int key_left,
-        int key_right,
-        int key_up,
-        int key_down
-    ):
-    ccimgui.igGetKeyMagnitude2d(pOut, key_left, key_right, key_up, key_down)
-
 def get_key_name(int key):
     cdef const char* res = ccimgui.igGetKeyName(key)
-    return res
-
-def get_key_owner(int key):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetKeyOwner(key)
-    return res
-
-def get_key_owner_data(int key):
-    cdef ccimgui.ImGuiKeyOwnerData* res = ccimgui.igGetKeyOwnerData(key)
     return res
 
 def get_key_pressed_amount(int key, float repeat_delay, float rate):
@@ -2326,16 +1355,9 @@ def get_mouse_pos(pOut):
 def get_mouse_pos_on_opening_current_popup(pOut):
     ccimgui.igGetMousePosOnOpeningCurrentPopup(pOut)
 
-def get_nav_tweak_pressed_amount(int axis):
-    cdef float res = ccimgui.igGetNavTweakPressedAmount(axis)
-    return res
-
 def get_platform_io():
     cdef ccimgui.ImGuiPlatformIO* res = ccimgui.igGetPlatformIO()
     return res
-
-def get_popup_allowed_extent_rect(pOut, window):
-    ccimgui.igGetPopupAllowedExtentRect(pOut, window)
 
 def get_scroll_maxx():
     cdef float res = ccimgui.igGetScrollMaxX()
@@ -2351,10 +1373,6 @@ def get_scrollx():
 
 def get_scrolly():
     cdef float res = ccimgui.igGetScrollY()
-    return res
-
-def get_shortcut_routing_data(key_chord):
-    cdef ccimgui.ImGuiKeyRoutingData* res = ccimgui.igGetShortcutRoutingData(key_chord)
     return res
 
 def get_state_storage():
@@ -2385,31 +1403,12 @@ def get_time():
     cdef double res = ccimgui.igGetTime()
     return res
 
-def get_top_most_and_visible_popup_modal():
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igGetTopMostAndVisiblePopupModal()
-    return res
-
-def get_top_most_popup_modal():
-    cdef ccimgui.ImGuiWindow* res = ccimgui.igGetTopMostPopupModal()
-    return res
-
 def get_tree_node_to_label_spacing():
     cdef float res = ccimgui.igGetTreeNodeToLabelSpacing()
     return res
 
-def get_typematic_repeat_rate(flags, float repeat_delay, float repeat_rate):
-    ccimgui.igGetTypematicRepeatRate(flags, repeat_delay, repeat_rate)
-
 def get_version():
     cdef const char* res = ccimgui.igGetVersion()
-    return res
-
-def get_viewport_platform_monitor(viewport):
-    cdef ccimgui.ImGuiPlatformMonitor* res = ccimgui.igGetViewportPlatformMonitor(viewport)
-    return res
-
-def get_window_always_want_own_tab_bar(window):
-    cdef bool res = ccimgui.igGetWindowAlwaysWantOwnTabBar(window)
     return res
 
 def get_window_content_region_max(pOut):
@@ -2420,10 +1419,6 @@ def get_window_content_region_min(pOut):
 
 def get_window_dock_id():
     cdef ccimgui.ImGuiID res = ccimgui.igGetWindowDockID()
-    return res
-
-def get_window_dock_node():
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.igGetWindowDockNode()
     return res
 
 def get_window_dpi_scale():
@@ -2441,21 +1436,6 @@ def get_window_height():
 def get_window_pos(pOut):
     ccimgui.igGetWindowPos(pOut)
 
-def get_window_resize_border_id(window, dir_):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowResizeBorderID(window, dir_)
-    return res
-
-def get_window_resize_corner_id(window, int n):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowResizeCornerID(window, n)
-    return res
-
-def get_window_scrollbar_id(window, int axis):
-    cdef ccimgui.ImGuiID res = ccimgui.igGetWindowScrollbarID(window, axis)
-    return res
-
-def get_window_scrollbar_rect(pOut, window, int axis):
-    ccimgui.igGetWindowScrollbarRect(pOut, window, axis)
-
 def get_window_size(pOut):
     ccimgui.igGetWindowSize(pOut)
 
@@ -2466,115 +1446,6 @@ def get_window_viewport():
 def get_window_width():
     cdef float res = ccimgui.igGetWindowWidth()
     return res
-
-def im_abs_double(double x):
-    cdef double res = ccimgui.igImAbs_double(x)
-    return res
-
-def im_abs_float(float x):
-    cdef float res = ccimgui.igImAbs_Float(x)
-    return res
-
-def im_abs_int(int x):
-    cdef int res = ccimgui.igImAbs_Int(x)
-    return res
-
-def im_alpha_blend_colors(col_a, col_b):
-    cdef ccimgui.ImU32 res = ccimgui.igImAlphaBlendColors(col_a, col_b)
-    return res
-
-def im_bezier_cubic_calc(
-        pOut,
-        p1,
-        p2,
-        p3,
-        p4,
-        float t
-    ):
-    ccimgui.igImBezierCubicCalc(pOut, p1, p2, p3, p4, t)
-
-def im_bezier_cubic_closest_point(
-        pOut,
-        p1,
-        p2,
-        p3,
-        p4,
-        p,
-        int num_segments
-    ):
-    ccimgui.igImBezierCubicClosestPoint(pOut, p1, p2, p3, p4, p, num_segments)
-
-def im_bezier_cubic_closest_point_casteljau(
-        pOut,
-        p1,
-        p2,
-        p3,
-        p4,
-        p,
-        float tess_tol
-    ):
-    ccimgui.igImBezierCubicClosestPointCasteljau(pOut, p1, p2, p3, p4, p, tess_tol)
-
-def im_bezier_quadratic_calc(
-        pOut,
-        p1,
-        p2,
-        p3,
-        float t
-    ):
-    ccimgui.igImBezierQuadraticCalc(pOut, p1, p2, p3, t)
-
-def im_bit_array_clear_all_bits(arr, int bitcount):
-    ccimgui.igImBitArrayClearAllBits(arr, bitcount)
-
-def im_bit_array_clear_bit(arr, int n):
-    ccimgui.igImBitArrayClearBit(arr, n)
-
-def im_bit_array_get_storage_size_in_bytes(int bitcount):
-    cdef size_t res = ccimgui.igImBitArrayGetStorageSizeInBytes(bitcount)
-    return res
-
-def im_bit_array_set_bit(arr, int n):
-    ccimgui.igImBitArraySetBit(arr, n)
-
-def im_bit_array_set_bit_range(arr, int n, int n2):
-    ccimgui.igImBitArraySetBitRange(arr, n, n2)
-
-def im_bit_array_test_bit(arr, int n):
-    cdef bool res = ccimgui.igImBitArrayTestBit(arr, n)
-    return res
-
-def im_bit_vector_clear(self):
-    ccimgui.ImBitVector_Clear(self)
-
-def im_bit_vector_clear_bit(self, int n):
-    ccimgui.ImBitVector_ClearBit(self, n)
-
-def im_bit_vector_create(self, int sz):
-    ccimgui.ImBitVector_Create(self, sz)
-
-def im_bit_vector_set_bit(self, int n):
-    ccimgui.ImBitVector_SetBit(self, n)
-
-def im_bit_vector_test_bit(self, int n):
-    cdef bool res = ccimgui.ImBitVector_TestBit(self, n)
-    return res
-
-def im_char_is_blanka(str c):
-    cdef bool res = ccimgui.igImCharIsBlankA(c)
-    return res
-
-def im_char_is_blankw(int c):
-    cdef bool res = ccimgui.igImCharIsBlankW(c)
-    return res
-
-def im_clamp(
-        pOut,
-        v,
-        mn,
-        mx
-    ):
-    ccimgui.igImClamp(pOut, v, mn, mx)
 
 def im_color_destroy(self):
     ccimgui.ImColor_destroy(self)
@@ -2627,10 +1498,6 @@ def im_color_set_hsv(
     ):
     ccimgui.ImColor_SetHSV(self, h, s, v, a)
 
-def im_dot(a, b):
-    cdef float res = ccimgui.igImDot(a, b)
-    return res
-
 def im_draw_cmd_destroy(self):
     ccimgui.ImDrawCmd_destroy(self)
 
@@ -2640,19 +1507,6 @@ def im_draw_cmd_get_tex_id(self):
 
 def im_draw_cmd_im_draw_cmd():
     cdef ccimgui.ImDrawCmd* res = ccimgui.ImDrawCmd_ImDrawCmd()
-    return res
-
-def im_draw_data_builder_clear(self):
-    ccimgui.ImDrawDataBuilder_Clear(self)
-
-def im_draw_data_builder_clear_free_memory(self):
-    ccimgui.ImDrawDataBuilder_ClearFreeMemory(self)
-
-def im_draw_data_builder_flatten_into_single_layer(self):
-    ccimgui.ImDrawDataBuilder_FlattenIntoSingleLayer(self)
-
-def im_draw_data_builder_get_draw_list_count(self):
-    cdef int res = ccimgui.ImDrawDataBuilder_GetDrawListCount(self)
     return res
 
 def im_draw_data_clear(self):
@@ -3111,16 +1965,6 @@ def im_draw_list_push_clip_rect_full_screen(self):
 def im_draw_list_push_texture_id(self, texture_id):
     ccimgui.ImDrawList_PushTextureID(self, texture_id)
 
-def im_draw_list_shared_data_destroy(self):
-    ccimgui.ImDrawListSharedData_destroy(self)
-
-def im_draw_list_shared_data_im_draw_list_shared_data():
-    cdef ccimgui.ImDrawListSharedData* res = ccimgui.ImDrawListSharedData_ImDrawListSharedData()
-    return res
-
-def im_draw_list_shared_data_set_circle_tessellation_max_error(self, float max_error):
-    ccimgui.ImDrawListSharedData_SetCircleTessellationMaxError(self, max_error)
-
 def im_draw_list_splitter_clear(self):
     ccimgui.ImDrawListSplitter_Clear(self)
 
@@ -3142,63 +1986,6 @@ def im_draw_list_splitter_set_current_channel(self, draw_list, int channel_idx):
 
 def im_draw_list_splitter_split(self, draw_list, int count):
     ccimgui.ImDrawListSplitter_Split(self, draw_list, count)
-
-def im_exponential_moving_average(float avg, float sample, int n):
-    cdef float res = ccimgui.igImExponentialMovingAverage(avg, sample, n)
-    return res
-
-def im_file_close(file):
-    cdef bool res = ccimgui.igImFileClose(file)
-    return res
-
-def im_file_get_size(file):
-    cdef ccimgui.ImU64 res = ccimgui.igImFileGetSize(file)
-    return res
-
-def im_file_load_to_memory(
-        str filename,
-        str mode,
-        out_file_size,
-        int padding_bytes
-    ):
-    cdef void* res = ccimgui.igImFileLoadToMemory(filename, mode, out_file_size, padding_bytes)
-    return res
-
-def im_file_open(str filename, str mode):
-    cdef ccimgui.ImFileHandle res = ccimgui.igImFileOpen(filename, mode)
-    return res
-
-def im_file_read(
-        data,
-        size,
-        count,
-        file
-    ):
-    cdef ccimgui.ImU64 res = ccimgui.igImFileRead(data, size, count, file)
-    return res
-
-def im_file_write(
-        data,
-        size,
-        count,
-        file
-    ):
-    cdef ccimgui.ImU64 res = ccimgui.igImFileWrite(data, size, count, file)
-    return res
-
-def im_floor_float(float f):
-    cdef float res = ccimgui.igImFloor_Float(f)
-    return res
-
-def im_floor_signed_float(float f):
-    cdef float res = ccimgui.igImFloorSigned_Float(f)
-    return res
-
-def im_floor_signed_vec2(pOut, v):
-    ccimgui.igImFloorSigned_Vec2(pOut, v)
-
-def im_floor_vec2(pOut, v):
-    ccimgui.igImFloor_Vec2(pOut, v)
 
 def im_font_add_glyph(
         self,
@@ -3294,62 +2081,6 @@ def im_font_atlas_build(self):
     cdef bool res = ccimgui.ImFontAtlas_Build(self)
     return res
 
-def im_font_atlas_build_finish(atlas):
-    ccimgui.igImFontAtlasBuildFinish(atlas)
-
-def im_font_atlas_build_init(atlas):
-    ccimgui.igImFontAtlasBuildInit(atlas)
-
-def im_font_atlas_build_multiply_calc_lookup_table(str out_table, float in_multiply_factor):
-    ccimgui.igImFontAtlasBuildMultiplyCalcLookupTable(out_table, in_multiply_factor)
-
-def im_font_atlas_build_multiply_rect_alpha8(
-        str table,
-        str pixels,
-        int x,
-        int y,
-        int w,
-        int h,
-        int stride
-    ):
-    ccimgui.igImFontAtlasBuildMultiplyRectAlpha8(table, pixels, x, y, w, h, stride)
-
-def im_font_atlas_build_pack_custom_rects(atlas, stbrp_context_opaque):
-    ccimgui.igImFontAtlasBuildPackCustomRects(atlas, stbrp_context_opaque)
-
-def im_font_atlas_build_render_3_2bpp_rect_from_string(
-        atlas,
-        int x,
-        int y,
-        int w,
-        int h,
-        str in_str,
-        str in_marker_char,
-        int in_marker_pixel_value
-    ):
-    ccimgui.igImFontAtlasBuildRender32bppRectFromString(atlas, x, y, w, h, in_str, in_marker_char, in_marker_pixel_value)
-
-def im_font_atlas_build_render_8bpp_rect_from_string(
-        atlas,
-        int x,
-        int y,
-        int w,
-        int h,
-        str in_str,
-        str in_marker_char,
-        str in_marker_pixel_value
-    ):
-    ccimgui.igImFontAtlasBuildRender8bppRectFromString(atlas, x, y, w, h, in_str, in_marker_char, in_marker_pixel_value)
-
-def im_font_atlas_build_setup_font(
-        atlas,
-        font,
-        font_config,
-        float ascent,
-        float descent
-    ):
-    ccimgui.igImFontAtlasBuildSetupFont(atlas, font, font_config, ascent, descent)
-
 def im_font_atlas_calc_custom_rect_uv(
         self,
         rect,
@@ -3383,10 +2114,6 @@ def im_font_atlas_custom_rect_is_packed(self):
 
 def im_font_atlas_destroy(self):
     ccimgui.ImFontAtlas_destroy(self)
-
-def im_font_atlas_get_builder_for_stb_truetype():
-    cdef ccimgui.ImFontBuilderIO* res = ccimgui.igImFontAtlasGetBuilderForStbTruetype()
-    return res
 
 def im_font_atlas_get_custom_rect_by_index(self, int index):
     cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(self, index)
@@ -3593,435 +2320,6 @@ def im_font_render_text(
 def im_font_set_glyph_visible(self, c, ccimgui.bool visible):
     ccimgui.ImFont_SetGlyphVisible(self, c, visible)
 
-def im_format_string(str buf, buf_size, str fmt):
-    cdef int res = ccimgui.igImFormatString(buf, buf_size, fmt)
-    return res
-
-def im_format_string_to_temp_buffer(out_buf, out_buf_end, str fmt):
-    ccimgui.igImFormatStringToTempBuffer(out_buf, out_buf_end, fmt)
-
-def im_format_string_to_temp_bufferv(
-        out_buf,
-        out_buf_end,
-        str fmt,
-        str args
-    ):
-    ccimgui.igImFormatStringToTempBufferV(out_buf, out_buf_end, fmt, args)
-
-def im_format_stringv(
-        str buf,
-        buf_size,
-        str fmt,
-        str args
-    ):
-    cdef int res = ccimgui.igImFormatStringV(buf, buf_size, fmt, args)
-    return res
-
-def im_get_dir_quadrant_from_delta(float dx, float dy):
-    cdef ccimgui.ImGuiDir res = ccimgui.igImGetDirQuadrantFromDelta(dx, dy)
-    return res
-
-def im_hash_data(data, data_size, seed):
-    cdef ccimgui.ImGuiID res = ccimgui.igImHashData(data, data_size, seed)
-    return res
-
-def im_hash_str(str data, data_size, seed):
-    cdef ccimgui.ImGuiID res = ccimgui.igImHashStr(data, data_size, seed)
-    return res
-
-def im_inv_length(lhs, float fail_value):
-    cdef float res = ccimgui.igImInvLength(lhs, fail_value)
-    return res
-
-def im_is_float_above_guaranteed_integer_precision(float f):
-    cdef bool res = ccimgui.igImIsFloatAboveGuaranteedIntegerPrecision(f)
-    return res
-
-def im_is_power_of_two_int(int v):
-    cdef bool res = ccimgui.igImIsPowerOfTwo_Int(v)
-    return res
-
-def im_is_power_of_two_u64(v):
-    cdef bool res = ccimgui.igImIsPowerOfTwo_U64(v)
-    return res
-
-def im_length_sqr_vec2(lhs):
-    cdef float res = ccimgui.igImLengthSqr_Vec2(lhs)
-    return res
-
-def im_length_sqr_vec4(lhs):
-    cdef float res = ccimgui.igImLengthSqr_Vec4(lhs)
-    return res
-
-def im_lerp_vec4(
-        pOut,
-        a,
-        b,
-        float t
-    ):
-    ccimgui.igImLerp_Vec4(pOut, a, b, t)
-
-def im_lerp_vec_2_float(
-        pOut,
-        a,
-        b,
-        float t
-    ):
-    ccimgui.igImLerp_Vec2Float(pOut, a, b, t)
-
-def im_lerp_vec_2_vec2(
-        pOut,
-        a,
-        b,
-        t
-    ):
-    ccimgui.igImLerp_Vec2Vec2(pOut, a, b, t)
-
-def im_line_closest_point(
-        pOut,
-        a,
-        b,
-        p
-    ):
-    ccimgui.igImLineClosestPoint(pOut, a, b, p)
-
-def im_linear_sweep(float current, float target, float speed):
-    cdef float res = ccimgui.igImLinearSweep(current, target, speed)
-    return res
-
-def im_log_double(double x):
-    cdef double res = ccimgui.igImLog_double(x)
-    return res
-
-def im_log_float(float x):
-    cdef float res = ccimgui.igImLog_Float(x)
-    return res
-
-def im_max(pOut, lhs, rhs):
-    ccimgui.igImMax(pOut, lhs, rhs)
-
-def im_min(pOut, lhs, rhs):
-    ccimgui.igImMin(pOut, lhs, rhs)
-
-def im_mod_positive(int a, int b):
-    cdef int res = ccimgui.igImModPositive(a, b)
-    return res
-
-def im_mul(pOut, lhs, rhs):
-    ccimgui.igImMul(pOut, lhs, rhs)
-
-def im_parse_format_find_end(str format_):
-    cdef const char* res = ccimgui.igImParseFormatFindEnd(format_)
-    return res
-
-def im_parse_format_find_start(str format_):
-    cdef const char* res = ccimgui.igImParseFormatFindStart(format_)
-    return res
-
-def im_parse_format_precision(str format_, int default_value):
-    cdef int res = ccimgui.igImParseFormatPrecision(format_, default_value)
-    return res
-
-def im_parse_format_sanitize_for_printing(str fmt_in, str fmt_out, fmt_out_size):
-    ccimgui.igImParseFormatSanitizeForPrinting(fmt_in, fmt_out, fmt_out_size)
-
-def im_parse_format_sanitize_for_scanning(str fmt_in, str fmt_out, fmt_out_size):
-    cdef const char* res = ccimgui.igImParseFormatSanitizeForScanning(fmt_in, fmt_out, fmt_out_size)
-    return res
-
-def im_parse_format_trim_decorations(str format_, str buf, buf_size):
-    cdef const char* res = ccimgui.igImParseFormatTrimDecorations(format_, buf, buf_size)
-    return res
-
-def im_pow_double(double x, double y):
-    cdef double res = ccimgui.igImPow_double(x, y)
-    return res
-
-def im_pow_float(float x, float y):
-    cdef float res = ccimgui.igImPow_Float(x, y)
-    return res
-
-def im_qsort(
-        base,
-        count,
-        size_of_element,
-        Callable compare_func
-    ):
-    ccimgui.igImQsort(base, count, size_of_element, compare_func)
-
-def im_rect_add_rect(self, r):
-    ccimgui.ImRect_Add_Rect(self, r)
-
-def im_rect_add_vec2(self, p):
-    ccimgui.ImRect_Add_Vec2(self, p)
-
-def im_rect_clip_with(self, r):
-    ccimgui.ImRect_ClipWith(self, r)
-
-def im_rect_clip_with_full(self, r):
-    ccimgui.ImRect_ClipWithFull(self, r)
-
-def im_rect_contains_rect(self, r):
-    cdef bool res = ccimgui.ImRect_Contains_Rect(self, r)
-    return res
-
-def im_rect_contains_vec2(self, p):
-    cdef bool res = ccimgui.ImRect_Contains_Vec2(self, p)
-    return res
-
-def im_rect_destroy(self):
-    ccimgui.ImRect_destroy(self)
-
-def im_rect_expand_float(self, float amount):
-    ccimgui.ImRect_Expand_Float(self, amount)
-
-def im_rect_expand_vec2(self, amount):
-    ccimgui.ImRect_Expand_Vec2(self, amount)
-
-def im_rect_floor(self):
-    ccimgui.ImRect_Floor(self)
-
-def im_rect_get_area(self):
-    cdef float res = ccimgui.ImRect_GetArea(self)
-    return res
-
-def im_rect_get_bl(pOut, self):
-    ccimgui.ImRect_GetBL(pOut, self)
-
-def im_rect_get_br(pOut, self):
-    ccimgui.ImRect_GetBR(pOut, self)
-
-def im_rect_get_center(pOut, self):
-    ccimgui.ImRect_GetCenter(pOut, self)
-
-def im_rect_get_height(self):
-    cdef float res = ccimgui.ImRect_GetHeight(self)
-    return res
-
-def im_rect_get_size(pOut, self):
-    ccimgui.ImRect_GetSize(pOut, self)
-
-def im_rect_get_tl(pOut, self):
-    ccimgui.ImRect_GetTL(pOut, self)
-
-def im_rect_get_tr(pOut, self):
-    ccimgui.ImRect_GetTR(pOut, self)
-
-def im_rect_get_width(self):
-    cdef float res = ccimgui.ImRect_GetWidth(self)
-    return res
-
-def im_rect_im_rect_float(
-        float x1,
-        float y1,
-        float x2,
-        float y2
-    ):
-    cdef ccimgui.ImRect* res = ccimgui.ImRect_ImRect_Float(x1, y1, x2, y2)
-    return res
-
-def im_rect_im_rect_nil():
-    cdef ccimgui.ImRect* res = ccimgui.ImRect_ImRect_Nil()
-    return res
-
-def im_rect_im_rect_vec2(min_, max_):
-    cdef ccimgui.ImRect* res = ccimgui.ImRect_ImRect_Vec2(min_, max_)
-    return res
-
-def im_rect_im_rect_vec4(v):
-    cdef ccimgui.ImRect* res = ccimgui.ImRect_ImRect_Vec4(v)
-    return res
-
-def im_rect_is_inverted(self):
-    cdef bool res = ccimgui.ImRect_IsInverted(self)
-    return res
-
-def im_rect_overlaps(self, r):
-    cdef bool res = ccimgui.ImRect_Overlaps(self, r)
-    return res
-
-def im_rect_to_vec4(pOut, self):
-    ccimgui.ImRect_ToVec4(pOut, self)
-
-def im_rect_translate(self, d):
-    ccimgui.ImRect_Translate(self, d)
-
-def im_rect_translatex(self, float dx):
-    ccimgui.ImRect_TranslateX(self, dx)
-
-def im_rect_translatey(self, float dy):
-    ccimgui.ImRect_TranslateY(self, dy)
-
-def im_rotate(
-        pOut,
-        v,
-        float cos_a,
-        float sin_a
-    ):
-    ccimgui.igImRotate(pOut, v, cos_a, sin_a)
-
-def im_rsqrt_double(double x):
-    cdef double res = ccimgui.igImRsqrt_double(x)
-    return res
-
-def im_rsqrt_float(float x):
-    cdef float res = ccimgui.igImRsqrt_Float(x)
-    return res
-
-def im_saturate(float f):
-    cdef float res = ccimgui.igImSaturate(f)
-    return res
-
-def im_sign_double(double x):
-    cdef double res = ccimgui.igImSign_double(x)
-    return res
-
-def im_sign_float(float x):
-    cdef float res = ccimgui.igImSign_Float(x)
-    return res
-
-def im_str_skip_blank(str str_):
-    cdef const char* res = ccimgui.igImStrSkipBlank(str_)
-    return res
-
-def im_str_trim_blanks(str str_):
-    ccimgui.igImStrTrimBlanks(str_)
-
-def im_strbolw(buf_mid_line, buf_begin):
-    cdef ccimgui.ImWchar* res = ccimgui.igImStrbolW(buf_mid_line, buf_begin)
-    return res
-
-def im_strchr_range(str str_begin, str str_end, str c):
-    cdef const char* res = ccimgui.igImStrchrRange(str_begin, str_end, c)
-    return res
-
-def im_strdup(str str_):
-    cdef char* res = ccimgui.igImStrdup(str_)
-    return res
-
-def im_strdupcpy(str dst, p_dst_size, str str_):
-    cdef char* res = ccimgui.igImStrdupcpy(dst, p_dst_size, str_)
-    return res
-
-def im_streol_range(str str_, str str_end):
-    cdef const char* res = ccimgui.igImStreolRange(str_, str_end)
-    return res
-
-def im_stricmp(str str1, str str2):
-    cdef int res = ccimgui.igImStricmp(str1, str2)
-    return res
-
-def im_stristr(
-        str haystack,
-        str haystack_end,
-        str needle,
-        str needle_end
-    ):
-    cdef const char* res = ccimgui.igImStristr(haystack, haystack_end, needle, needle_end)
-    return res
-
-def im_strlenw(str_):
-    cdef int res = ccimgui.igImStrlenW(str_)
-    return res
-
-def im_strncpy(str dst, str src, count):
-    ccimgui.igImStrncpy(dst, src, count)
-
-def im_strnicmp(str str1, str str2, count):
-    cdef int res = ccimgui.igImStrnicmp(str1, str2, count)
-    return res
-
-def im_text_char_from_utf8(int out_char, str in_text, str in_text_end):
-    cdef int res = ccimgui.igImTextCharFromUtf8(out_char, in_text, in_text_end)
-    return res
-
-def im_text_char_to_utf8(str out_buf, int c):
-    cdef const char* res = ccimgui.igImTextCharToUtf8(out_buf, c)
-    return res
-
-def im_text_count_chars_from_utf8(str in_text, str in_text_end):
-    cdef int res = ccimgui.igImTextCountCharsFromUtf8(in_text, in_text_end)
-    return res
-
-def im_text_count_utf_8_bytes_from_char(str in_text, str in_text_end):
-    cdef int res = ccimgui.igImTextCountUtf8BytesFromChar(in_text, in_text_end)
-    return res
-
-def im_text_count_utf_8_bytes_from_str(in_text, in_text_end):
-    cdef int res = ccimgui.igImTextCountUtf8BytesFromStr(in_text, in_text_end)
-    return res
-
-def im_text_str_from_utf8(
-        out_buf,
-        int out_buf_size,
-        str in_text,
-        str in_text_end,
-        in_remaining
-    ):
-    cdef int res = ccimgui.igImTextStrFromUtf8(out_buf, out_buf_size, in_text, in_text_end, in_remaining)
-    return res
-
-def im_text_str_to_utf8(
-        str out_buf,
-        int out_buf_size,
-        in_text,
-        in_text_end
-    ):
-    cdef int res = ccimgui.igImTextStrToUtf8(out_buf, out_buf_size, in_text, in_text_end)
-    return res
-
-def im_to_upper(str c):
-    cdef char res = ccimgui.igImToUpper(c)
-    return res
-
-def im_triangle_area(a, b, c):
-    cdef float res = ccimgui.igImTriangleArea(a, b, c)
-    return res
-
-def im_triangle_barycentric_coords(
-        a,
-        b,
-        c,
-        p,
-        float out_u,
-        float out_v,
-        float out_w
-    ):
-    ccimgui.igImTriangleBarycentricCoords(a, b, c, p, out_u, out_v, out_w)
-
-def im_triangle_closest_point(
-        pOut,
-        a,
-        b,
-        c,
-        p
-    ):
-    ccimgui.igImTriangleClosestPoint(pOut, a, b, c, p)
-
-def im_triangle_contains_point(
-        a,
-        b,
-        c,
-        p
-    ):
-    cdef bool res = ccimgui.igImTriangleContainsPoint(a, b, c, p)
-    return res
-
-def im_upper_power_of_two(int v):
-    cdef int res = ccimgui.igImUpperPowerOfTwo(v)
-    return res
-
-def im_vec_1_destroy(self):
-    ccimgui.ImVec1_destroy(self)
-
-def im_vec_1_im_vec_1_float(float _x):
-    cdef ccimgui.ImVec1* res = ccimgui.ImVec1_ImVec1_Float(_x)
-    return res
-
-def im_vec_1_im_vec_1_nil():
-    cdef ccimgui.ImVec1* res = ccimgui.ImVec1_ImVec1_Nil()
-    return res
-
 def im_vec_2_destroy(self):
     ccimgui.ImVec2_destroy(self)
 
@@ -4031,21 +2329,6 @@ def im_vec_2_im_vec_2_float(float _x, float _y):
 
 def im_vec_2_im_vec_2_nil():
     cdef ccimgui.ImVec2* res = ccimgui.ImVec2_ImVec2_Nil()
-    return res
-
-def im_vec_2ih_destroy(self):
-    ccimgui.ImVec2ih_destroy(self)
-
-def im_vec_2ih_im_vec_2ih_nil():
-    cdef ccimgui.ImVec2ih* res = ccimgui.ImVec2ih_ImVec2ih_Nil()
-    return res
-
-def im_vec_2ih_im_vec_2ih_short(_x, _y):
-    cdef ccimgui.ImVec2ih* res = ccimgui.ImVec2ih_ImVec2ih_short(_x, _y)
-    return res
-
-def im_vec_2ih_im_vec_2ih_vec2(rhs):
-    cdef ccimgui.ImVec2ih* res = ccimgui.ImVec2ih_ImVec2ih_Vec2(rhs)
     return res
 
 def im_vec_4_destroy(self):
@@ -4099,106 +2382,6 @@ def image_button(
     cdef bool res = ccimgui.igImageButton(str_id, user_texture_id, size, uv0, uv1, bg_col, tint_col)
     return res
 
-def image_button_ex(
-        id_,
-        texture_id,
-        size,
-        uv0,
-        uv1,
-        bg_col,
-        tint_col,
-        flags
-    ):
-    cdef bool res = ccimgui.igImageButtonEx(id_, texture_id, size, uv0, uv1, bg_col, tint_col, flags)
-    return res
-
-def imgui_combo_preview_data_destroy(self):
-    ccimgui.ImGuiComboPreviewData_destroy(self)
-
-def imgui_combo_preview_data_imgui_combo_preview_data():
-    cdef ccimgui.ImGuiComboPreviewData* res = ccimgui.ImGuiComboPreviewData_ImGuiComboPreviewData()
-    return res
-
-def imgui_context_destroy(self):
-    ccimgui.ImGuiContext_destroy(self)
-
-def imgui_context_hook_destroy(self):
-    ccimgui.ImGuiContextHook_destroy(self)
-
-def imgui_context_hook_imgui_context_hook():
-    cdef ccimgui.ImGuiContextHook* res = ccimgui.ImGuiContextHook_ImGuiContextHook()
-    return res
-
-def imgui_context_imgui_context(shared_font_atlas):
-    cdef ccimgui.ImGuiContext* res = ccimgui.ImGuiContext_ImGuiContext(shared_font_atlas)
-    return res
-
-def imgui_dock_context_destroy(self):
-    ccimgui.ImGuiDockContext_destroy(self)
-
-def imgui_dock_context_imgui_dock_context():
-    cdef ccimgui.ImGuiDockContext* res = ccimgui.ImGuiDockContext_ImGuiDockContext()
-    return res
-
-def imgui_dock_node_destroy(self):
-    ccimgui.ImGuiDockNode_destroy(self)
-
-def imgui_dock_node_imgui_dock_node(id_):
-    cdef ccimgui.ImGuiDockNode* res = ccimgui.ImGuiDockNode_ImGuiDockNode(id_)
-    return res
-
-def imgui_dock_node_is_central_node(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsCentralNode(self)
-    return res
-
-def imgui_dock_node_is_dock_space(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsDockSpace(self)
-    return res
-
-def imgui_dock_node_is_empty(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsEmpty(self)
-    return res
-
-def imgui_dock_node_is_floating_node(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsFloatingNode(self)
-    return res
-
-def imgui_dock_node_is_hidden_tab_bar(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsHiddenTabBar(self)
-    return res
-
-def imgui_dock_node_is_leaf_node(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsLeafNode(self)
-    return res
-
-def imgui_dock_node_is_no_tab_bar(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsNoTabBar(self)
-    return res
-
-def imgui_dock_node_is_root_node(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsRootNode(self)
-    return res
-
-def imgui_dock_node_is_split_node(self):
-    cdef bool res = ccimgui.ImGuiDockNode_IsSplitNode(self)
-    return res
-
-def imgui_dock_node_rect(pOut, self):
-    ccimgui.ImGuiDockNode_Rect(pOut, self)
-
-def imgui_dock_node_set_local_flags(self, flags):
-    ccimgui.ImGuiDockNode_SetLocalFlags(self, flags)
-
-def imgui_dock_node_update_merged_flags(self):
-    ccimgui.ImGuiDockNode_UpdateMergedFlags(self)
-
-def imgui_input_event_destroy(self):
-    ccimgui.ImGuiInputEvent_destroy(self)
-
-def imgui_input_event_imgui_input_event():
-    cdef ccimgui.ImGuiInputEvent* res = ccimgui.ImGuiInputEvent_ImGuiInputEvent()
-    return res
-
 def imgui_input_text_callback_data_clear_selection(self):
     ccimgui.ImGuiInputTextCallbackData_ClearSelection(self)
 
@@ -4226,58 +2409,6 @@ def imgui_input_text_callback_data_insert_chars(
 
 def imgui_input_text_callback_data_select_all(self):
     ccimgui.ImGuiInputTextCallbackData_SelectAll(self)
-
-def imgui_input_text_state_clear_free_memory(self):
-    ccimgui.ImGuiInputTextState_ClearFreeMemory(self)
-
-def imgui_input_text_state_clear_selection(self):
-    ccimgui.ImGuiInputTextState_ClearSelection(self)
-
-def imgui_input_text_state_clear_text(self):
-    ccimgui.ImGuiInputTextState_ClearText(self)
-
-def imgui_input_text_state_cursor_anim_reset(self):
-    ccimgui.ImGuiInputTextState_CursorAnimReset(self)
-
-def imgui_input_text_state_cursor_clamp(self):
-    ccimgui.ImGuiInputTextState_CursorClamp(self)
-
-def imgui_input_text_state_destroy(self):
-    ccimgui.ImGuiInputTextState_destroy(self)
-
-def imgui_input_text_state_get_cursor_pos(self):
-    cdef int res = ccimgui.ImGuiInputTextState_GetCursorPos(self)
-    return res
-
-def imgui_input_text_state_get_redo_avail_count(self):
-    cdef int res = ccimgui.ImGuiInputTextState_GetRedoAvailCount(self)
-    return res
-
-def imgui_input_text_state_get_selection_end(self):
-    cdef int res = ccimgui.ImGuiInputTextState_GetSelectionEnd(self)
-    return res
-
-def imgui_input_text_state_get_selection_start(self):
-    cdef int res = ccimgui.ImGuiInputTextState_GetSelectionStart(self)
-    return res
-
-def imgui_input_text_state_get_undo_avail_count(self):
-    cdef int res = ccimgui.ImGuiInputTextState_GetUndoAvailCount(self)
-    return res
-
-def imgui_input_text_state_has_selection(self):
-    cdef bool res = ccimgui.ImGuiInputTextState_HasSelection(self)
-    return res
-
-def imgui_input_text_state_imgui_input_text_state(ctx):
-    cdef ccimgui.ImGuiInputTextState* res = ccimgui.ImGuiInputTextState_ImGuiInputTextState(ctx)
-    return res
-
-def imgui_input_text_state_on_key_pressed(self, int key):
-    ccimgui.ImGuiInputTextState_OnKeyPressed(self, key)
-
-def imgui_input_text_state_select_all(self):
-    ccimgui.ImGuiInputTextState_SelectAll(self)
 
 def imgui_io_add_focus_event(self, ccimgui.bool focused):
     ccimgui.ImGuiIO_AddFocusEvent(self, focused)
@@ -4339,49 +2470,8 @@ def imgui_io_set_key_event_native_data(
     ):
     ccimgui.ImGuiIO_SetKeyEventNativeData(self, key, native_keycode, native_scancode, native_legacy_index)
 
-def imgui_key_owner_data_destroy(self):
-    ccimgui.ImGuiKeyOwnerData_destroy(self)
-
-def imgui_key_owner_data_imgui_key_owner_data():
-    cdef ccimgui.ImGuiKeyOwnerData* res = ccimgui.ImGuiKeyOwnerData_ImGuiKeyOwnerData()
-    return res
-
-def imgui_key_routing_data_destroy(self):
-    ccimgui.ImGuiKeyRoutingData_destroy(self)
-
-def imgui_key_routing_data_imgui_key_routing_data():
-    cdef ccimgui.ImGuiKeyRoutingData* res = ccimgui.ImGuiKeyRoutingData_ImGuiKeyRoutingData()
-    return res
-
-def imgui_key_routing_table_clear(self):
-    ccimgui.ImGuiKeyRoutingTable_Clear(self)
-
-def imgui_key_routing_table_destroy(self):
-    ccimgui.ImGuiKeyRoutingTable_destroy(self)
-
-def imgui_key_routing_table_imgui_key_routing_table():
-    cdef ccimgui.ImGuiKeyRoutingTable* res = ccimgui.ImGuiKeyRoutingTable_ImGuiKeyRoutingTable()
-    return res
-
-def imgui_last_item_data_destroy(self):
-    ccimgui.ImGuiLastItemData_destroy(self)
-
-def imgui_last_item_data_imgui_last_item_data():
-    cdef ccimgui.ImGuiLastItemData* res = ccimgui.ImGuiLastItemData_ImGuiLastItemData()
-    return res
-
 def imgui_list_clipper_begin(self, int items_count, float items_height):
     ccimgui.ImGuiListClipper_Begin(self, items_count, items_height)
-
-def imgui_list_clipper_data_destroy(self):
-    ccimgui.ImGuiListClipperData_destroy(self)
-
-def imgui_list_clipper_data_imgui_list_clipper_data():
-    cdef ccimgui.ImGuiListClipperData* res = ccimgui.ImGuiListClipperData_ImGuiListClipperData()
-    return res
-
-def imgui_list_clipper_data_reset(self, clipper):
-    ccimgui.ImGuiListClipperData_Reset(self, clipper)
 
 def imgui_list_clipper_destroy(self):
     ccimgui.ImGuiListClipper_destroy(self)
@@ -4396,88 +2486,8 @@ def imgui_list_clipper_imgui_list_clipper():
     cdef ccimgui.ImGuiListClipper* res = ccimgui.ImGuiListClipper_ImGuiListClipper()
     return res
 
-def imgui_list_clipper_range_from_indices(int min_, int max_):
-    cdef ccimgui.ImGuiListClipperRange res = ccimgui.ImGuiListClipperRange_FromIndices(min_, max_)
-    return res
-
-def imgui_list_clipper_range_from_positions(
-        float y1,
-        float y2,
-        int off_min,
-        int off_max
-    ):
-    cdef ccimgui.ImGuiListClipperRange res = ccimgui.ImGuiListClipperRange_FromPositions(y1, y2, off_min, off_max)
-    return res
-
 def imgui_list_clipper_step(self):
     cdef bool res = ccimgui.ImGuiListClipper_Step(self)
-    return res
-
-def imgui_menu_columns_calc_next_total_width(self, ccimgui.bool update_offsets):
-    ccimgui.ImGuiMenuColumns_CalcNextTotalWidth(self, update_offsets)
-
-def imgui_menu_columns_decl_columns(
-        self,
-        float w_icon,
-        float w_label,
-        float w_shortcut,
-        float w_mark
-    ):
-    cdef float res = ccimgui.ImGuiMenuColumns_DeclColumns(self, w_icon, w_label, w_shortcut, w_mark)
-    return res
-
-def imgui_menu_columns_destroy(self):
-    ccimgui.ImGuiMenuColumns_destroy(self)
-
-def imgui_menu_columns_imgui_menu_columns():
-    cdef ccimgui.ImGuiMenuColumns* res = ccimgui.ImGuiMenuColumns_ImGuiMenuColumns()
-    return res
-
-def imgui_menu_columns_update(self, float spacing, ccimgui.bool window_reappearing):
-    ccimgui.ImGuiMenuColumns_Update(self, spacing, window_reappearing)
-
-def imgui_nav_item_data_clear(self):
-    ccimgui.ImGuiNavItemData_Clear(self)
-
-def imgui_nav_item_data_destroy(self):
-    ccimgui.ImGuiNavItemData_destroy(self)
-
-def imgui_nav_item_data_imgui_nav_item_data():
-    cdef ccimgui.ImGuiNavItemData* res = ccimgui.ImGuiNavItemData_ImGuiNavItemData()
-    return res
-
-def imgui_next_item_data_clear_flags(self):
-    ccimgui.ImGuiNextItemData_ClearFlags(self)
-
-def imgui_next_item_data_destroy(self):
-    ccimgui.ImGuiNextItemData_destroy(self)
-
-def imgui_next_item_data_imgui_next_item_data():
-    cdef ccimgui.ImGuiNextItemData* res = ccimgui.ImGuiNextItemData_ImGuiNextItemData()
-    return res
-
-def imgui_next_window_data_clear_flags(self):
-    ccimgui.ImGuiNextWindowData_ClearFlags(self)
-
-def imgui_next_window_data_destroy(self):
-    ccimgui.ImGuiNextWindowData_destroy(self)
-
-def imgui_next_window_data_imgui_next_window_data():
-    cdef ccimgui.ImGuiNextWindowData* res = ccimgui.ImGuiNextWindowData_ImGuiNextWindowData()
-    return res
-
-def imgui_old_column_data_destroy(self):
-    ccimgui.ImGuiOldColumnData_destroy(self)
-
-def imgui_old_column_data_imgui_old_column_data():
-    cdef ccimgui.ImGuiOldColumnData* res = ccimgui.ImGuiOldColumnData_ImGuiOldColumnData()
-    return res
-
-def imgui_old_columns_destroy(self):
-    ccimgui.ImGuiOldColumns_destroy(self)
-
-def imgui_old_columns_imgui_old_columns():
-    cdef ccimgui.ImGuiOldColumns* res = ccimgui.ImGuiOldColumns_ImGuiOldColumns()
     return res
 
 def imgui_once_upon_a_frame_destroy(self):
@@ -4528,58 +2538,6 @@ def imgui_platform_monitor_destroy(self):
 
 def imgui_platform_monitor_imgui_platform_monitor():
     cdef ccimgui.ImGuiPlatformMonitor* res = ccimgui.ImGuiPlatformMonitor_ImGuiPlatformMonitor()
-    return res
-
-def imgui_popup_data_destroy(self):
-    ccimgui.ImGuiPopupData_destroy(self)
-
-def imgui_popup_data_imgui_popup_data():
-    cdef ccimgui.ImGuiPopupData* res = ccimgui.ImGuiPopupData_ImGuiPopupData()
-    return res
-
-def imgui_ptr_or_index_destroy(self):
-    ccimgui.ImGuiPtrOrIndex_destroy(self)
-
-def imgui_ptr_or_index_imgui_ptr_or_index_int(int index):
-    cdef ccimgui.ImGuiPtrOrIndex* res = ccimgui.ImGuiPtrOrIndex_ImGuiPtrOrIndex_Int(index)
-    return res
-
-def imgui_ptr_or_index_imgui_ptr_or_index_ptr(ptr):
-    cdef ccimgui.ImGuiPtrOrIndex* res = ccimgui.ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr(ptr)
-    return res
-
-def imgui_settings_handler_destroy(self):
-    ccimgui.ImGuiSettingsHandler_destroy(self)
-
-def imgui_settings_handler_imgui_settings_handler():
-    cdef ccimgui.ImGuiSettingsHandler* res = ccimgui.ImGuiSettingsHandler_ImGuiSettingsHandler()
-    return res
-
-def imgui_stack_level_info_destroy(self):
-    ccimgui.ImGuiStackLevelInfo_destroy(self)
-
-def imgui_stack_level_info_imgui_stack_level_info():
-    cdef ccimgui.ImGuiStackLevelInfo* res = ccimgui.ImGuiStackLevelInfo_ImGuiStackLevelInfo()
-    return res
-
-def imgui_stack_sizes_compare_with_current_state(self):
-    ccimgui.ImGuiStackSizes_CompareWithCurrentState(self)
-
-def imgui_stack_sizes_destroy(self):
-    ccimgui.ImGuiStackSizes_destroy(self)
-
-def imgui_stack_sizes_imgui_stack_sizes():
-    cdef ccimgui.ImGuiStackSizes* res = ccimgui.ImGuiStackSizes_ImGuiStackSizes()
-    return res
-
-def imgui_stack_sizes_set_to_current_state(self):
-    ccimgui.ImGuiStackSizes_SetToCurrentState(self)
-
-def imgui_stack_tool_destroy(self):
-    ccimgui.ImGuiStackTool_destroy(self)
-
-def imgui_stack_tool_imgui_stack_tool():
-    cdef ccimgui.ImGuiStackTool* res = ccimgui.ImGuiStackTool_ImGuiStackTool()
     return res
 
 def imgui_storage_build_sort_by_key(self):
@@ -4657,51 +2615,8 @@ def imgui_style_imgui_style():
     cdef ccimgui.ImGuiStyle* res = ccimgui.ImGuiStyle_ImGuiStyle()
     return res
 
-def imgui_style_mod_destroy(self):
-    ccimgui.ImGuiStyleMod_destroy(self)
-
-def imgui_style_mod_imgui_style_mod_float(idx, float v):
-    cdef ccimgui.ImGuiStyleMod* res = ccimgui.ImGuiStyleMod_ImGuiStyleMod_Float(idx, v)
-    return res
-
-def imgui_style_mod_imgui_style_mod_int(idx, int v):
-    cdef ccimgui.ImGuiStyleMod* res = ccimgui.ImGuiStyleMod_ImGuiStyleMod_Int(idx, v)
-    return res
-
-def imgui_style_mod_imgui_style_mod_vec2(idx, v):
-    cdef ccimgui.ImGuiStyleMod* res = ccimgui.ImGuiStyleMod_ImGuiStyleMod_Vec2(idx, v)
-    return res
-
 def imgui_style_scale_all_sizes(self, float scale_factor):
     ccimgui.ImGuiStyle_ScaleAllSizes(self, scale_factor)
-
-def imgui_tab_bar_destroy(self):
-    ccimgui.ImGuiTabBar_destroy(self)
-
-def imgui_tab_bar_imgui_tab_bar():
-    cdef ccimgui.ImGuiTabBar* res = ccimgui.ImGuiTabBar_ImGuiTabBar()
-    return res
-
-def imgui_tab_item_destroy(self):
-    ccimgui.ImGuiTabItem_destroy(self)
-
-def imgui_tab_item_imgui_tab_item():
-    cdef ccimgui.ImGuiTabItem* res = ccimgui.ImGuiTabItem_ImGuiTabItem()
-    return res
-
-def imgui_table_column_destroy(self):
-    ccimgui.ImGuiTableColumn_destroy(self)
-
-def imgui_table_column_imgui_table_column():
-    cdef ccimgui.ImGuiTableColumn* res = ccimgui.ImGuiTableColumn_ImGuiTableColumn()
-    return res
-
-def imgui_table_column_settings_destroy(self):
-    ccimgui.ImGuiTableColumnSettings_destroy(self)
-
-def imgui_table_column_settings_imgui_table_column_settings():
-    cdef ccimgui.ImGuiTableColumnSettings* res = ccimgui.ImGuiTableColumnSettings_ImGuiTableColumnSettings()
-    return res
 
 def imgui_table_column_sort_specs_destroy(self):
     ccimgui.ImGuiTableColumnSortSpecs_destroy(self)
@@ -4710,43 +2625,11 @@ def imgui_table_column_sort_specs_imgui_table_column_sort_specs():
     cdef ccimgui.ImGuiTableColumnSortSpecs* res = ccimgui.ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs()
     return res
 
-def imgui_table_destroy(self):
-    ccimgui.ImGuiTable_destroy(self)
-
-def imgui_table_imgui_table():
-    cdef ccimgui.ImGuiTable* res = ccimgui.ImGuiTable_ImGuiTable()
-    return res
-
-def imgui_table_instance_data_destroy(self):
-    ccimgui.ImGuiTableInstanceData_destroy(self)
-
-def imgui_table_instance_data_imgui_table_instance_data():
-    cdef ccimgui.ImGuiTableInstanceData* res = ccimgui.ImGuiTableInstanceData_ImGuiTableInstanceData()
-    return res
-
-def imgui_table_settings_destroy(self):
-    ccimgui.ImGuiTableSettings_destroy(self)
-
-def imgui_table_settings_get_column_settings(self):
-    cdef ccimgui.ImGuiTableColumnSettings* res = ccimgui.ImGuiTableSettings_GetColumnSettings(self)
-    return res
-
-def imgui_table_settings_imgui_table_settings():
-    cdef ccimgui.ImGuiTableSettings* res = ccimgui.ImGuiTableSettings_ImGuiTableSettings()
-    return res
-
 def imgui_table_sort_specs_destroy(self):
     ccimgui.ImGuiTableSortSpecs_destroy(self)
 
 def imgui_table_sort_specs_imgui_table_sort_specs():
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.ImGuiTableSortSpecs_ImGuiTableSortSpecs()
-    return res
-
-def imgui_table_temp_data_destroy(self):
-    ccimgui.ImGuiTableTempData_destroy(self)
-
-def imgui_table_temp_data_imgui_table_temp_data():
-    cdef ccimgui.ImGuiTableTempData* res = ccimgui.ImGuiTableTempData_ImGuiTableTempData()
     return res
 
 def imgui_text_buffer_append(self, str str_, str str_end):
@@ -4816,29 +2699,6 @@ def imgui_text_filter_pass_filter(self, str text, str text_end):
     cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(self, text, text_end)
     return res
 
-def imgui_text_index_append(
-        self,
-        str base,
-        int old_size,
-        int new_size
-    ):
-    ccimgui.ImGuiTextIndex_append(self, base, old_size, new_size)
-
-def imgui_text_index_clear(self):
-    ccimgui.ImGuiTextIndex_clear(self)
-
-def imgui_text_index_get_line_begin(self, str base, int n):
-    cdef const char* res = ccimgui.ImGuiTextIndex_get_line_begin(self, base, n)
-    return res
-
-def imgui_text_index_get_line_end(self, str base, int n):
-    cdef const char* res = ccimgui.ImGuiTextIndex_get_line_end(self, base, n)
-    return res
-
-def imgui_text_index_size(self):
-    cdef int res = ccimgui.ImGuiTextIndex_size(self)
-    return res
-
 def imgui_text_range_destroy(self):
     ccimgui.ImGuiTextRange_destroy(self)
 
@@ -4870,43 +2730,6 @@ def imgui_viewport_imgui_viewport():
     cdef ccimgui.ImGuiViewport* res = ccimgui.ImGuiViewport_ImGuiViewport()
     return res
 
-def imgui_viewport_p_calc_work_rect_pos(pOut, self, off_min):
-    ccimgui.ImGuiViewportP_CalcWorkRectPos(pOut, self, off_min)
-
-def imgui_viewport_p_calc_work_rect_size(
-        pOut,
-        self,
-        off_min,
-        off_max
-    ):
-    ccimgui.ImGuiViewportP_CalcWorkRectSize(pOut, self, off_min, off_max)
-
-def imgui_viewport_p_clear_request_flags(self):
-    ccimgui.ImGuiViewportP_ClearRequestFlags(self)
-
-def imgui_viewport_p_destroy(self):
-    ccimgui.ImGuiViewportP_destroy(self)
-
-def imgui_viewport_p_get_build_work_rect(pOut, self):
-    ccimgui.ImGuiViewportP_GetBuildWorkRect(pOut, self)
-
-def imgui_viewport_p_get_main_rect(pOut, self):
-    ccimgui.ImGuiViewportP_GetMainRect(pOut, self)
-
-def imgui_viewport_p_get_work_rect(pOut, self):
-    ccimgui.ImGuiViewportP_GetWorkRect(pOut, self)
-
-def imgui_viewport_p_imgui_viewportp():
-    cdef ccimgui.ImGuiViewportP* res = ccimgui.ImGuiViewportP_ImGuiViewportP()
-    return res
-
-def imgui_viewport_p_update_work_rect(self):
-    ccimgui.ImGuiViewportP_UpdateWorkRect(self)
-
-def imgui_window_calc_font_size(self):
-    cdef float res = ccimgui.ImGuiWindow_CalcFontSize(self)
-    return res
-
 def imgui_window_class_destroy(self):
     ccimgui.ImGuiWindowClass_destroy(self)
 
@@ -4914,62 +2737,8 @@ def imgui_window_class_imgui_window_class():
     cdef ccimgui.ImGuiWindowClass* res = ccimgui.ImGuiWindowClass_ImGuiWindowClass()
     return res
 
-def imgui_window_destroy(self):
-    ccimgui.ImGuiWindow_destroy(self)
-
-def imgui_window_get_id_from_rectangle(self, r_abs):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetIDFromRectangle(self, r_abs)
-    return res
-
-def imgui_window_get_id_int(self, int n):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Int(self, n)
-    return res
-
-def imgui_window_get_id_ptr(self, ptr):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Ptr(self, ptr)
-    return res
-
-def imgui_window_get_id_str(self, str str_, str str_end):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGuiWindow_GetID_Str(self, str_, str_end)
-    return res
-
-def imgui_window_imgui_window(context, str name):
-    cdef ccimgui.ImGuiWindow* res = ccimgui.ImGuiWindow_ImGuiWindow(context, name)
-    return res
-
-def imgui_window_menu_bar_height(self):
-    cdef float res = ccimgui.ImGuiWindow_MenuBarHeight(self)
-    return res
-
-def imgui_window_menu_bar_rect(pOut, self):
-    ccimgui.ImGuiWindow_MenuBarRect(pOut, self)
-
-def imgui_window_rect(pOut, self):
-    ccimgui.ImGuiWindow_Rect(pOut, self)
-
-def imgui_window_settings_destroy(self):
-    ccimgui.ImGuiWindowSettings_destroy(self)
-
-def imgui_window_settings_get_name(self):
-    cdef char* res = ccimgui.ImGuiWindowSettings_GetName(self)
-    return res
-
-def imgui_window_settings_imgui_window_settings():
-    cdef ccimgui.ImGuiWindowSettings* res = ccimgui.ImGuiWindowSettings_ImGuiWindowSettings()
-    return res
-
-def imgui_window_title_bar_height(self):
-    cdef float res = ccimgui.ImGuiWindow_TitleBarHeight(self)
-    return res
-
-def imgui_window_title_bar_rect(pOut, self):
-    ccimgui.ImGuiWindow_TitleBarRect(pOut, self)
-
 def indent(float indent_w):
     ccimgui.igIndent(indent_w)
-
-def initialize():
-    ccimgui.igInitialize()
 
 def input_double(
         str label,
@@ -5078,19 +2847,6 @@ def input_text(
     cdef bool res = ccimgui.igInputText(label, buf, buf_size, flags, callback, user_data)
     return res
 
-def input_text_ex(
-        str label,
-        str hint,
-        str buf,
-        int buf_size,
-        size_arg,
-        flags,
-        callback,
-        user_data
-    ):
-    cdef bool res = ccimgui.igInputTextEx(label, hint, buf, buf_size, size_arg, flags, callback, user_data)
-    return res
-
 def input_text_multiline(
         str label,
         str buf,
@@ -5119,14 +2875,6 @@ def invisible_button(str str_id, size, flags):
     cdef bool res = ccimgui.igInvisibleButton(str_id, size, flags)
     return res
 
-def is_active_id_using_nav_dir(dir_):
-    cdef bool res = ccimgui.igIsActiveIdUsingNavDir(dir_)
-    return res
-
-def is_alias_key(int key):
-    cdef bool res = ccimgui.igIsAliasKey(key)
-    return res
-
 def is_any_item_active():
     cdef bool res = ccimgui.igIsAnyItemActive()
     return res
@@ -5141,22 +2889,6 @@ def is_any_item_hovered():
 
 def is_any_mouse_down():
     cdef bool res = ccimgui.igIsAnyMouseDown()
-    return res
-
-def is_clipped_ex(bb, id_):
-    cdef bool res = ccimgui.igIsClippedEx(bb, id_)
-    return res
-
-def is_drag_drop_active():
-    cdef bool res = ccimgui.igIsDragDropActive()
-    return res
-
-def is_drag_drop_payload_being_accepted():
-    cdef bool res = ccimgui.igIsDragDropPayloadBeingAccepted()
-    return res
-
-def is_gamepad_key(int key):
-    cdef bool res = ccimgui.igIsGamepadKey(key)
     return res
 
 def is_item_activated():
@@ -5195,72 +2927,32 @@ def is_item_toggled_open():
     cdef bool res = ccimgui.igIsItemToggledOpen()
     return res
 
-def is_item_toggled_selection():
-    cdef bool res = ccimgui.igIsItemToggledSelection()
-    return res
-
 def is_item_visible():
     cdef bool res = ccimgui.igIsItemVisible()
     return res
 
-def is_key_down_id(int key, owner_id):
-    cdef bool res = ccimgui.igIsKeyDown_ID(key, owner_id)
+def is_key_down(int key):
+    cdef bool res = ccimgui.igIsKeyDown(key)
     return res
 
-def is_key_down_nil(int key):
-    cdef bool res = ccimgui.igIsKeyDown_Nil(key)
+def is_key_pressed(int key, ccimgui.bool repeat):
+    cdef bool res = ccimgui.igIsKeyPressed(key, repeat)
     return res
 
-def is_key_pressed_bool(int key, ccimgui.bool repeat):
-    cdef bool res = ccimgui.igIsKeyPressed_Bool(key, repeat)
+def is_key_released(int key):
+    cdef bool res = ccimgui.igIsKeyReleased(key)
     return res
 
-def is_key_pressed_id(int key, owner_id, flags):
-    cdef bool res = ccimgui.igIsKeyPressed_ID(key, owner_id, flags)
-    return res
-
-def is_key_pressed_map(int key, ccimgui.bool repeat):
-    cdef bool res = ccimgui.igIsKeyPressedMap(key, repeat)
-    return res
-
-def is_key_released_id(int key, owner_id):
-    cdef bool res = ccimgui.igIsKeyReleased_ID(key, owner_id)
-    return res
-
-def is_key_released_nil(int key):
-    cdef bool res = ccimgui.igIsKeyReleased_Nil(key)
-    return res
-
-def is_keyboard_key(int key):
-    cdef bool res = ccimgui.igIsKeyboardKey(key)
-    return res
-
-def is_legacy_key(int key):
-    cdef bool res = ccimgui.igIsLegacyKey(key)
-    return res
-
-def is_mouse_clicked_bool(button, ccimgui.bool repeat):
-    cdef bool res = ccimgui.igIsMouseClicked_Bool(button, repeat)
-    return res
-
-def is_mouse_clicked_id(button, owner_id, flags):
-    cdef bool res = ccimgui.igIsMouseClicked_ID(button, owner_id, flags)
+def is_mouse_clicked(button, ccimgui.bool repeat):
+    cdef bool res = ccimgui.igIsMouseClicked(button, repeat)
     return res
 
 def is_mouse_double_clicked(button):
     cdef bool res = ccimgui.igIsMouseDoubleClicked(button)
     return res
 
-def is_mouse_down_id(button, owner_id):
-    cdef bool res = ccimgui.igIsMouseDown_ID(button, owner_id)
-    return res
-
-def is_mouse_down_nil(button):
-    cdef bool res = ccimgui.igIsMouseDown_Nil(button)
-    return res
-
-def is_mouse_drag_past_threshold(button, float lock_threshold):
-    cdef bool res = ccimgui.igIsMouseDragPastThreshold(button, lock_threshold)
+def is_mouse_down(button):
+    cdef bool res = ccimgui.igIsMouseDown(button)
     return res
 
 def is_mouse_dragging(button, float lock_threshold):
@@ -5271,36 +2963,16 @@ def is_mouse_hovering_rect(r_min, r_max, ccimgui.bool clip):
     cdef bool res = ccimgui.igIsMouseHoveringRect(r_min, r_max, clip)
     return res
 
-def is_mouse_key(int key):
-    cdef bool res = ccimgui.igIsMouseKey(key)
-    return res
-
 def is_mouse_pos_valid(mouse_pos):
     cdef bool res = ccimgui.igIsMousePosValid(mouse_pos)
     return res
 
-def is_mouse_released_id(button, owner_id):
-    cdef bool res = ccimgui.igIsMouseReleased_ID(button, owner_id)
+def is_mouse_released(button):
+    cdef bool res = ccimgui.igIsMouseReleased(button)
     return res
 
-def is_mouse_released_nil(button):
-    cdef bool res = ccimgui.igIsMouseReleased_Nil(button)
-    return res
-
-def is_named_key(int key):
-    cdef bool res = ccimgui.igIsNamedKey(key)
-    return res
-
-def is_named_key_or_mod_key(int key):
-    cdef bool res = ccimgui.igIsNamedKeyOrModKey(key)
-    return res
-
-def is_popup_open_id(id_, popup_flags):
-    cdef bool res = ccimgui.igIsPopupOpen_ID(id_, popup_flags)
-    return res
-
-def is_popup_open_str(str str_id, flags):
-    cdef bool res = ccimgui.igIsPopupOpen_Str(str_id, flags)
+def is_popup_open(str str_id, flags):
+    cdef bool res = ccimgui.igIsPopupOpen(str_id, flags)
     return res
 
 def is_rect_visible_nil(size):
@@ -5311,21 +2983,8 @@ def is_rect_visible_vec2(rect_min, rect_max):
     cdef bool res = ccimgui.igIsRectVisible_Vec2(rect_min, rect_max)
     return res
 
-def is_window_above(potential_above, potential_below):
-    cdef bool res = ccimgui.igIsWindowAbove(potential_above, potential_below)
-    return res
-
 def is_window_appearing():
     cdef bool res = ccimgui.igIsWindowAppearing()
-    return res
-
-def is_window_child_of(
-        window,
-        potential_parent,
-        ccimgui.bool popup_hierarchy,
-        ccimgui.bool dock_hierarchy
-    ):
-    cdef bool res = ccimgui.igIsWindowChildOf(window, potential_parent, popup_hierarchy, dock_hierarchy)
     return res
 
 def is_window_collapsed():
@@ -5343,36 +3002,6 @@ def is_window_focused(flags):
 def is_window_hovered(flags):
     cdef bool res = ccimgui.igIsWindowHovered(flags)
     return res
-
-def is_window_nav_focusable(window):
-    cdef bool res = ccimgui.igIsWindowNavFocusable(window)
-    return res
-
-def is_window_within_begin_stack_of(window, potential_parent):
-    cdef bool res = ccimgui.igIsWindowWithinBeginStackOf(window, potential_parent)
-    return res
-
-def item_add(
-        bb,
-        id_,
-        nav_bb,
-        extra_flags
-    ):
-    cdef bool res = ccimgui.igItemAdd(bb, id_, nav_bb, extra_flags)
-    return res
-
-def item_hoverable(bb, id_):
-    cdef bool res = ccimgui.igItemHoverable(bb, id_)
-    return res
-
-def item_size_rect(bb, float text_baseline_y):
-    ccimgui.igItemSize_Rect(bb, text_baseline_y)
-
-def item_size_vec2(size, float text_baseline_y):
-    ccimgui.igItemSize_Vec2(size, text_baseline_y)
-
-def keep_alive_id(id_):
-    ccimgui.igKeepAliveID(id_)
 
 def label_text(str label, str fmt):
     ccimgui.igLabelText(label, fmt)
@@ -5407,36 +3036,17 @@ def load_ini_settings_from_disk(str ini_filename):
 def load_ini_settings_from_memory(str ini_data, ini_size):
     ccimgui.igLoadIniSettingsFromMemory(ini_data, ini_size)
 
-def localize_get_msg(int key):
-    cdef const char* res = ccimgui.igLocalizeGetMsg(key)
-    return res
-
-def localize_register_entries(entries, int count):
-    ccimgui.igLocalizeRegisterEntries(entries, count)
-
-def log_begin(int type_, int auto_open_depth):
-    ccimgui.igLogBegin(type_, auto_open_depth)
-
 def log_buttons():
     ccimgui.igLogButtons()
 
 def log_finish():
     ccimgui.igLogFinish()
 
-def log_rendered_text(ref_pos, str text, str text_end):
-    ccimgui.igLogRenderedText(ref_pos, text, text_end)
-
-def log_set_next_text_decoration(str prefix, str suffix):
-    ccimgui.igLogSetNextTextDecoration(prefix, suffix)
-
 def log_text(str fmt):
     ccimgui.igLogText(fmt)
 
 def log_textv(str fmt, str args):
     ccimgui.igLogTextV(fmt, args)
-
-def log_to_buffer(int auto_open_depth):
-    ccimgui.igLogToBuffer(auto_open_depth)
 
 def log_to_clipboard(int auto_open_depth):
     ccimgui.igLogToClipboard(auto_open_depth)
@@ -5446,15 +3056,6 @@ def log_to_file(int auto_open_depth, str filename):
 
 def log_to_tty(int auto_open_depth):
     ccimgui.igLogToTTY(auto_open_depth)
-
-def mark_ini_settings_dirty_nil():
-    ccimgui.igMarkIniSettingsDirty_Nil()
-
-def mark_ini_settings_dirty_window_ptr(window):
-    ccimgui.igMarkIniSettingsDirty_WindowPtr(window)
-
-def mark_item_edited(id_):
-    ccimgui.igMarkItemEdited(id_)
 
 def mem_alloc(size):
     cdef void* res = ccimgui.igMemAlloc(size)
@@ -5481,58 +3082,6 @@ def menu_item_bool_ptr(
     cdef bool res = ccimgui.igMenuItem_BoolPtr(label, shortcut, p_selected, enabled)
     return res
 
-def menu_item_ex(
-        str label,
-        str icon,
-        str shortcut,
-        ccimgui.bool selected,
-        ccimgui.bool enabled
-    ):
-    cdef bool res = ccimgui.igMenuItemEx(label, icon, shortcut, selected, enabled)
-    return res
-
-def mouse_button_to_key(button):
-    cdef ccimgui.ImGuiKey res = ccimgui.igMouseButtonToKey(button)
-    return res
-
-def nav_init_request_apply_result():
-    ccimgui.igNavInitRequestApplyResult()
-
-def nav_init_window(window, ccimgui.bool force_reinit):
-    ccimgui.igNavInitWindow(window, force_reinit)
-
-def nav_move_request_apply_result():
-    ccimgui.igNavMoveRequestApplyResult()
-
-def nav_move_request_but_no_result_yet():
-    cdef bool res = ccimgui.igNavMoveRequestButNoResultYet()
-    return res
-
-def nav_move_request_cancel():
-    ccimgui.igNavMoveRequestCancel()
-
-def nav_move_request_forward(
-        move_dir,
-        clip_dir,
-        move_flags,
-        scroll_flags
-    ):
-    ccimgui.igNavMoveRequestForward(move_dir, clip_dir, move_flags, scroll_flags)
-
-def nav_move_request_resolve_with_last_item(result):
-    ccimgui.igNavMoveRequestResolveWithLastItem(result)
-
-def nav_move_request_submit(
-        move_dir,
-        clip_dir,
-        move_flags,
-        scroll_flags
-    ):
-    ccimgui.igNavMoveRequestSubmit(move_dir, clip_dir, move_flags, scroll_flags)
-
-def nav_move_request_try_wrapping(window, move_flags):
-    ccimgui.igNavMoveRequestTryWrapping(window, move_flags)
-
 def new_frame():
     ccimgui.igNewFrame()
 
@@ -5542,9 +3091,6 @@ def new_line():
 def next_column():
     ccimgui.igNextColumn()
 
-def open_popup_ex(id_, popup_flags):
-    ccimgui.igOpenPopupEx(id_, popup_flags)
-
 def open_popup_id(id_, popup_flags):
     ccimgui.igOpenPopup_ID(id_, popup_flags)
 
@@ -5553,21 +3099,6 @@ def open_popup_on_item_click(str str_id, popup_flags):
 
 def open_popup_str(str str_id, popup_flags):
     ccimgui.igOpenPopup_Str(str_id, popup_flags)
-
-def plot_ex(
-        int plot_type,
-        str label,
-        Callable values_getter,
-        data,
-        int values_count,
-        int values_offset,
-        str overlay_text,
-        float scale_min,
-        float scale_max,
-        size_arg
-    ):
-    cdef int res = ccimgui.igPlotEx(plot_type, label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, size_arg)
-    return res
 
 def plot_histogram_float_ptr(
         str label,
@@ -5630,20 +3161,11 @@ def pop_button_repeat():
 def pop_clip_rect():
     ccimgui.igPopClipRect()
 
-def pop_columns_background():
-    ccimgui.igPopColumnsBackground()
-
-def pop_focus_scope():
-    ccimgui.igPopFocusScope()
-
 def pop_font():
     ccimgui.igPopFont()
 
 def pop_id():
     ccimgui.igPopID()
-
-def pop_item_flag():
-    ccimgui.igPopItemFlag()
 
 def pop_item_width():
     ccimgui.igPopItemWidth()
@@ -5669,15 +3191,6 @@ def push_button_repeat(ccimgui.bool repeat):
 def push_clip_rect(clip_rect_min, clip_rect_max, ccimgui.bool intersect_with_current_clip_rect):
     ccimgui.igPushClipRect(clip_rect_min, clip_rect_max, intersect_with_current_clip_rect)
 
-def push_column_clip_rect(int column_index):
-    ccimgui.igPushColumnClipRect(column_index)
-
-def push_columns_background():
-    ccimgui.igPushColumnsBackground()
-
-def push_focus_scope(id_):
-    ccimgui.igPushFocusScope(id_)
-
 def push_font(font):
     ccimgui.igPushFont(font)
 
@@ -5693,17 +3206,8 @@ def push_id_str(str str_id):
 def push_id_str_str(str str_id_begin, str str_id_end):
     ccimgui.igPushID_StrStr(str_id_begin, str_id_end)
 
-def push_item_flag(option, ccimgui.bool enabled):
-    ccimgui.igPushItemFlag(option, enabled)
-
 def push_item_width(float item_width):
     ccimgui.igPushItemWidth(item_width)
-
-def push_multi_items_widths(int components, float width_full):
-    ccimgui.igPushMultiItemsWidths(components, width_full)
-
-def push_override_id(id_):
-    ccimgui.igPushOverrideID(id_)
 
 def push_style_color_u32(idx, col):
     ccimgui.igPushStyleColor_U32(idx, col)
@@ -5728,164 +3232,11 @@ def radio_button_int_ptr(str label, int v, int v_button):
     cdef bool res = ccimgui.igRadioButton_IntPtr(label, v, v_button)
     return res
 
-def remove_context_hook(context, hook_to_remove):
-    ccimgui.igRemoveContextHook(context, hook_to_remove)
-
-def remove_settings_handler(str type_name):
-    ccimgui.igRemoveSettingsHandler(type_name)
-
 def render():
     ccimgui.igRender()
 
-def render_arrow(
-        draw_list,
-        pos,
-        col,
-        dir_,
-        float scale
-    ):
-    ccimgui.igRenderArrow(draw_list, pos, col, dir_, scale)
-
-def render_arrow_dock_menu(
-        draw_list,
-        p_min,
-        float sz,
-        col
-    ):
-    ccimgui.igRenderArrowDockMenu(draw_list, p_min, sz, col)
-
-def render_arrow_pointing_at(
-        draw_list,
-        pos,
-        half_sz,
-        direction,
-        col
-    ):
-    ccimgui.igRenderArrowPointingAt(draw_list, pos, half_sz, direction, col)
-
-def render_bullet(draw_list, pos, col):
-    ccimgui.igRenderBullet(draw_list, pos, col)
-
-def render_check_mark(
-        draw_list,
-        pos,
-        col,
-        float sz
-    ):
-    ccimgui.igRenderCheckMark(draw_list, pos, col, sz)
-
-def render_color_rect_with_alpha_checkerboard(
-        draw_list,
-        p_min,
-        p_max,
-        fill_col,
-        float grid_step,
-        grid_off,
-        float rounding,
-        flags
-    ):
-    ccimgui.igRenderColorRectWithAlphaCheckerboard(draw_list, p_min, p_max, fill_col, grid_step, grid_off, rounding, flags)
-
-def render_drag_drop_target_rect(bb):
-    ccimgui.igRenderDragDropTargetRect(bb)
-
-def render_frame(
-        p_min,
-        p_max,
-        fill_col,
-        ccimgui.bool border,
-        float rounding
-    ):
-    ccimgui.igRenderFrame(p_min, p_max, fill_col, border, rounding)
-
-def render_frame_border(p_min, p_max, float rounding):
-    ccimgui.igRenderFrameBorder(p_min, p_max, rounding)
-
-def render_mouse_cursor(
-        pos,
-        float scale,
-        mouse_cursor,
-        col_fill,
-        col_border,
-        col_shadow
-    ):
-    ccimgui.igRenderMouseCursor(pos, scale, mouse_cursor, col_fill, col_border, col_shadow)
-
-def render_nav_highlight(bb, id_, flags):
-    ccimgui.igRenderNavHighlight(bb, id_, flags)
-
 def render_platform_windows_default(platform_render_arg, renderer_render_arg):
     ccimgui.igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
-
-def render_rect_filled_rangeh(
-        draw_list,
-        rect,
-        col,
-        float x_start_norm,
-        float x_end_norm,
-        float rounding
-    ):
-    ccimgui.igRenderRectFilledRangeH(draw_list, rect, col, x_start_norm, x_end_norm, rounding)
-
-def render_rect_filled_with_hole(
-        draw_list,
-        outer,
-        inner,
-        col,
-        float rounding
-    ):
-    ccimgui.igRenderRectFilledWithHole(draw_list, outer, inner, col, rounding)
-
-def render_text(
-        pos,
-        str text,
-        str text_end,
-        ccimgui.bool hide_text_after_hash
-    ):
-    ccimgui.igRenderText(pos, text, text_end, hide_text_after_hash)
-
-def render_text_clipped(
-        pos_min,
-        pos_max,
-        str text,
-        str text_end,
-        text_size_if_known,
-        align,
-        clip_rect
-    ):
-    ccimgui.igRenderTextClipped(pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect)
-
-def render_text_clipped_ex(
-        draw_list,
-        pos_min,
-        pos_max,
-        str text,
-        str text_end,
-        text_size_if_known,
-        align,
-        clip_rect
-    ):
-    ccimgui.igRenderTextClippedEx(draw_list, pos_min, pos_max, text, text_end, text_size_if_known, align, clip_rect)
-
-def render_text_ellipsis(
-        draw_list,
-        pos_min,
-        pos_max,
-        float clip_max_x,
-        float ellipsis_max_x,
-        str text,
-        str text_end,
-        text_size_if_known
-    ):
-    ccimgui.igRenderTextEllipsis(draw_list, pos_min, pos_max, clip_max_x, ellipsis_max_x, text, text_end, text_size_if_known)
-
-def render_text_wrapped(
-        pos,
-        str text,
-        str text_end,
-        float wrap_width
-    ):
-    ccimgui.igRenderTextWrapped(pos, text, text_end, wrap_width)
 
 def reset_mouse_drag_delta(button):
     ccimgui.igResetMouseDragDelta(button)
@@ -5898,41 +3249,6 @@ def save_ini_settings_to_disk(str ini_filename):
 
 def save_ini_settings_to_memory(out_ini_size):
     cdef const char* res = ccimgui.igSaveIniSettingsToMemory(out_ini_size)
-    return res
-
-def scale_windows_in_viewport(viewport, float scale):
-    ccimgui.igScaleWindowsInViewport(viewport, scale)
-
-def scroll_to_bring_rect_into_view(window, rect):
-    ccimgui.igScrollToBringRectIntoView(window, rect)
-
-def scroll_to_item(flags):
-    ccimgui.igScrollToItem(flags)
-
-def scroll_to_rect(window, rect, flags):
-    ccimgui.igScrollToRect(window, rect, flags)
-
-def scroll_to_rect_ex(
-        pOut,
-        window,
-        rect,
-        flags
-    ):
-    ccimgui.igScrollToRectEx(pOut, window, rect, flags)
-
-def scrollbar(int axis):
-    ccimgui.igScrollbar(axis)
-
-def scrollbar_ex(
-        bb,
-        id_,
-        int axis,
-        p_scroll_v,
-        avail_v,
-        contents_v,
-        flags
-    ):
-    cdef bool res = ccimgui.igScrollbarEx(bb, id_, axis, p_scroll_v, avail_v, contents_v, flags)
     return res
 
 def selectable_bool(
@@ -5956,25 +3272,8 @@ def selectable_bool_ptr(
 def separator():
     ccimgui.igSeparator()
 
-def separator_ex(flags):
-    ccimgui.igSeparatorEx(flags)
-
 def separator_text(str label):
     ccimgui.igSeparatorText(label)
-
-def separator_text_ex(
-        id_,
-        str label,
-        str label_end,
-        float extra_width
-    ):
-    ccimgui.igSeparatorTextEx(id_, label, label_end, extra_width)
-
-def set_active_id(id_, window):
-    ccimgui.igSetActiveID(id_, window)
-
-def set_active_id_using_all_keyboard_keys():
-    ccimgui.igSetActiveIdUsingAllKeyboardKeys()
 
 def set_allocator_functions(alloc_func, free_func, user_data):
     ccimgui.igSetAllocatorFunctions(alloc_func, free_func, user_data)
@@ -5993,12 +3292,6 @@ def set_column_width(int column_index, float width):
 
 def set_current_context(ctx):
     ccimgui.igSetCurrentContext(ctx)
-
-def set_current_font(font):
-    ccimgui.igSetCurrentFont(font)
-
-def set_current_viewport(window, viewport):
-    ccimgui.igSetCurrentViewport(window, viewport)
 
 def set_cursor_pos(local_pos):
     ccimgui.igSetCursorPos(local_pos)
@@ -6021,48 +3314,17 @@ def set_drag_drop_payload(
     cdef bool res = ccimgui.igSetDragDropPayload(type_, data, sz, cond)
     return res
 
-def set_focus_id(id_, window):
-    ccimgui.igSetFocusID(id_, window)
-
-def set_hovered_id(id_):
-    ccimgui.igSetHoveredID(id_)
-
 def set_item_allow_overlap():
     ccimgui.igSetItemAllowOverlap()
 
 def set_item_default_focus():
     ccimgui.igSetItemDefaultFocus()
 
-def set_item_key_owner(int key, flags):
-    ccimgui.igSetItemKeyOwner(key, flags)
-
-def set_key_owner(int key, owner_id, flags):
-    ccimgui.igSetKeyOwner(key, owner_id, flags)
-
 def set_keyboard_focus_here(int offset):
     ccimgui.igSetKeyboardFocusHere(offset)
 
-def set_last_item_data(
-        item_id,
-        in_flags,
-        status_flags,
-        item_rect
-    ):
-    ccimgui.igSetLastItemData(item_id, in_flags, status_flags, item_rect)
-
 def set_mouse_cursor(cursor_type):
     ccimgui.igSetMouseCursor(cursor_type)
-
-def set_nav_id(
-        id_,
-        int nav_layer,
-        focus_scope_id,
-        rect_rel
-    ):
-    ccimgui.igSetNavID(id_, nav_layer, focus_scope_id, rect_rel)
-
-def set_nav_window(window):
-    ccimgui.igSetNavWindow(window)
 
 def set_next_frame_want_capture_keyboard(ccimgui.bool want_capture_keyboard):
     ccimgui.igSetNextFrameWantCaptureKeyboard(want_capture_keyboard)
@@ -6114,17 +3376,11 @@ def set_next_window_size_constraints(
 def set_next_window_viewport(viewport_id):
     ccimgui.igSetNextWindowViewport(viewport_id)
 
-def set_scroll_from_pos_x_float(float local_x, float center_x_ratio):
-    ccimgui.igSetScrollFromPosX_Float(local_x, center_x_ratio)
+def set_scroll_from_posx(float local_x, float center_x_ratio):
+    ccimgui.igSetScrollFromPosX(local_x, center_x_ratio)
 
-def set_scroll_from_pos_x_window_ptr(window, float local_x, float center_x_ratio):
-    ccimgui.igSetScrollFromPosX_WindowPtr(window, local_x, center_x_ratio)
-
-def set_scroll_from_pos_y_float(float local_y, float center_y_ratio):
-    ccimgui.igSetScrollFromPosY_Float(local_y, center_y_ratio)
-
-def set_scroll_from_pos_y_window_ptr(window, float local_y, float center_y_ratio):
-    ccimgui.igSetScrollFromPosY_WindowPtr(window, local_y, center_y_ratio)
+def set_scroll_from_posy(float local_y, float center_y_ratio):
+    ccimgui.igSetScrollFromPosY(local_y, center_y_ratio)
 
 def set_scroll_herex(float center_x_ratio):
     ccimgui.igSetScrollHereX(center_x_ratio)
@@ -6132,21 +3388,11 @@ def set_scroll_herex(float center_x_ratio):
 def set_scroll_herey(float center_y_ratio):
     ccimgui.igSetScrollHereY(center_y_ratio)
 
-def set_scroll_x_float(float scroll_x):
-    ccimgui.igSetScrollX_Float(scroll_x)
+def set_scrollx(float scroll_x):
+    ccimgui.igSetScrollX(scroll_x)
 
-def set_scroll_x_window_ptr(window, float scroll_x):
-    ccimgui.igSetScrollX_WindowPtr(window, scroll_x)
-
-def set_scroll_y_float(float scroll_y):
-    ccimgui.igSetScrollY_Float(scroll_y)
-
-def set_scroll_y_window_ptr(window, float scroll_y):
-    ccimgui.igSetScrollY_WindowPtr(window, scroll_y)
-
-def set_shortcut_routing(key_chord, owner_id, flags):
-    cdef bool res = ccimgui.igSetShortcutRouting(key_chord, owner_id, flags)
-    return res
+def set_scrolly(float scroll_y):
+    ccimgui.igSetScrollY(scroll_y)
 
 def set_state_storage(storage):
     ccimgui.igSetStateStorage(storage)
@@ -6160,20 +3406,11 @@ def set_tooltip(str fmt):
 def set_tooltipv(str fmt, str args):
     ccimgui.igSetTooltipV(fmt, args)
 
-def set_window_clip_rect_before_set_channel(window, clip_rect):
-    ccimgui.igSetWindowClipRectBeforeSetChannel(window, clip_rect)
-
 def set_window_collapsed_bool(ccimgui.bool collapsed, cond):
     ccimgui.igSetWindowCollapsed_Bool(collapsed, cond)
 
 def set_window_collapsed_str(str name, ccimgui.bool collapsed, cond):
     ccimgui.igSetWindowCollapsed_Str(name, collapsed, cond)
-
-def set_window_collapsed_window_ptr(window, ccimgui.bool collapsed, cond):
-    ccimgui.igSetWindowCollapsed_WindowPtr(window, collapsed, cond)
-
-def set_window_dock(window, dock_id, cond):
-    ccimgui.igSetWindowDock(window, dock_id, cond)
 
 def set_window_focus_nil():
     ccimgui.igSetWindowFocus_Nil()
@@ -6184,56 +3421,17 @@ def set_window_focus_str(str name):
 def set_window_font_scale(float scale):
     ccimgui.igSetWindowFontScale(scale)
 
-def set_window_hit_test_hole(window, pos, size):
-    ccimgui.igSetWindowHitTestHole(window, pos, size)
-
 def set_window_pos_str(str name, pos, cond):
     ccimgui.igSetWindowPos_Str(name, pos, cond)
 
 def set_window_pos_vec2(pos, cond):
     ccimgui.igSetWindowPos_Vec2(pos, cond)
 
-def set_window_pos_window_ptr(window, pos, cond):
-    ccimgui.igSetWindowPos_WindowPtr(window, pos, cond)
-
 def set_window_size_str(str name, size, cond):
     ccimgui.igSetWindowSize_Str(name, size, cond)
 
 def set_window_size_vec2(size, cond):
     ccimgui.igSetWindowSize_Vec2(size, cond)
-
-def set_window_size_window_ptr(window, size, cond):
-    ccimgui.igSetWindowSize_WindowPtr(window, size, cond)
-
-def set_window_viewport(window, viewport):
-    ccimgui.igSetWindowViewport(window, viewport)
-
-def shade_verts_linear_color_gradient_keep_alpha(
-        draw_list,
-        int vert_start_idx,
-        int vert_end_idx,
-        gradient_p0,
-        gradient_p1,
-        col0,
-        col1
-    ):
-    ccimgui.igShadeVertsLinearColorGradientKeepAlpha(draw_list, vert_start_idx, vert_end_idx, gradient_p0, gradient_p1, col0, col1)
-
-def shade_verts_linear_uv(
-        draw_list,
-        int vert_start_idx,
-        int vert_end_idx,
-        a,
-        b,
-        uv_a,
-        uv_b,
-        ccimgui.bool clamp
-    ):
-    ccimgui.igShadeVertsLinearUV(draw_list, vert_start_idx, vert_end_idx, a, b, uv_a, uv_b, clamp)
-
-def shortcut(key_chord, owner_id, flags):
-    cdef bool res = ccimgui.igShortcut(key_chord, owner_id, flags)
-    return res
 
 def show_about_window(p_open):
     ccimgui.igShowAboutWindow(p_open)
@@ -6243,9 +3441,6 @@ def show_debug_log_window(p_open):
 
 def show_demo_window(p_open):
     ccimgui.igShowDemoWindow(p_open)
-
-def show_font_atlas(atlas):
-    ccimgui.igShowFontAtlas(atlas)
 
 def show_font_selector(str label):
     ccimgui.igShowFontSelector(label)
@@ -6266,12 +3461,6 @@ def show_style_selector(str label):
 def show_user_guide():
     ccimgui.igShowUserGuide()
 
-def shrink_widths(items, int count, float width_excess):
-    ccimgui.igShrinkWidths(items, count, width_excess)
-
-def shutdown():
-    ccimgui.igShutdown()
-
 def slider_angle(
         str label,
         float v_rad,
@@ -6281,20 +3470,6 @@ def slider_angle(
         flags
     ):
     cdef bool res = ccimgui.igSliderAngle(label, v_rad, v_degrees_min, v_degrees_max, format_, flags)
-    return res
-
-def slider_behavior(
-        bb,
-        id_,
-        data_type,
-        p_v,
-        p_min,
-        p_max,
-        str format_,
-        flags,
-        out_grab_bb
-    ):
-    cdef bool res = ccimgui.igSliderBehavior(bb, id_, data_type, p_v, p_min, p_max, format_, flags, out_grab_bb)
     return res
 
 def slider_float(
@@ -6417,27 +3592,6 @@ def small_button(str label):
 def spacing():
     ccimgui.igSpacing()
 
-def splitter_behavior(
-        bb,
-        id_,
-        int axis,
-        float size1,
-        float size2,
-        float min_size1,
-        float min_size2,
-        float hover_extend,
-        float hover_visibility_delay,
-        bg_col
-    ):
-    cdef bool res = ccimgui.igSplitterBehavior(bb, id_, axis, size1, size2, min_size1, min_size2, hover_extend, hover_visibility_delay, bg_col)
-    return res
-
-def start_mouse_moving_window(window):
-    ccimgui.igStartMouseMovingWindow(window)
-
-def start_mouse_moving_window_or_node(window, node, ccimgui.bool undock_floating_node):
-    ccimgui.igStartMouseMovingWindowOrNode(window, node, undock_floating_node)
-
 def style_colors_classic(dst):
     ccimgui.igStyleColorsClassic(dst)
 
@@ -6447,144 +3601,9 @@ def style_colors_dark(dst):
 def style_colors_light(dst):
     ccimgui.igStyleColorsLight(dst)
 
-def tab_bar_add_tab(tab_bar, tab_flags, window):
-    ccimgui.igTabBarAddTab(tab_bar, tab_flags, window)
-
-def tab_bar_close_tab(tab_bar, tab):
-    ccimgui.igTabBarCloseTab(tab_bar, tab)
-
-def tab_bar_find_most_recently_selected_tab_for_active_window(tab_bar):
-    cdef ccimgui.ImGuiTabItem* res = ccimgui.igTabBarFindMostRecentlySelectedTabForActiveWindow(tab_bar)
-    return res
-
-def tab_bar_find_tab_by_id(tab_bar, tab_id):
-    cdef ccimgui.ImGuiTabItem* res = ccimgui.igTabBarFindTabByID(tab_bar, tab_id)
-    return res
-
-def tab_bar_find_tab_by_order(tab_bar, int order):
-    cdef ccimgui.ImGuiTabItem* res = ccimgui.igTabBarFindTabByOrder(tab_bar, order)
-    return res
-
-def tab_bar_get_current_tab(tab_bar):
-    cdef ccimgui.ImGuiTabItem* res = ccimgui.igTabBarGetCurrentTab(tab_bar)
-    return res
-
-def tab_bar_get_tab_name(tab_bar, tab):
-    cdef const char* res = ccimgui.igTabBarGetTabName(tab_bar, tab)
-    return res
-
-def tab_bar_get_tab_order(tab_bar, tab):
-    cdef int res = ccimgui.igTabBarGetTabOrder(tab_bar, tab)
-    return res
-
-def tab_bar_process_reorder(tab_bar):
-    cdef bool res = ccimgui.igTabBarProcessReorder(tab_bar)
-    return res
-
-def tab_bar_queue_focus(tab_bar, tab):
-    ccimgui.igTabBarQueueFocus(tab_bar, tab)
-
-def tab_bar_queue_reorder(tab_bar, tab, int offset):
-    ccimgui.igTabBarQueueReorder(tab_bar, tab, offset)
-
-def tab_bar_queue_reorder_from_mouse_pos(tab_bar, tab, mouse_pos):
-    ccimgui.igTabBarQueueReorderFromMousePos(tab_bar, tab, mouse_pos)
-
-def tab_bar_remove_tab(tab_bar, tab_id):
-    ccimgui.igTabBarRemoveTab(tab_bar, tab_id)
-
-def tab_item_background(
-        draw_list,
-        bb,
-        flags,
-        col
-    ):
-    ccimgui.igTabItemBackground(draw_list, bb, flags, col)
-
 def tab_item_button(str label, flags):
     cdef bool res = ccimgui.igTabItemButton(label, flags)
     return res
-
-def tab_item_calc_size_str(pOut, str label, ccimgui.bool has_close_button_or_unsaved_marker):
-    ccimgui.igTabItemCalcSize_Str(pOut, label, has_close_button_or_unsaved_marker)
-
-def tab_item_calc_size_window_ptr(pOut, window):
-    ccimgui.igTabItemCalcSize_WindowPtr(pOut, window)
-
-def tab_item_ex(
-        tab_bar,
-        str label,
-        p_open,
-        flags,
-        docked_window
-    ):
-    cdef bool res = ccimgui.igTabItemEx(tab_bar, label, p_open, flags, docked_window)
-    return res
-
-def tab_item_label_and_close_button(
-        draw_list,
-        bb,
-        flags,
-        frame_padding,
-        str label,
-        tab_id,
-        close_button_id,
-        ccimgui.bool is_contents_visible,
-        out_just_closed,
-        out_text_clipped
-    ):
-    ccimgui.igTabItemLabelAndCloseButton(draw_list, bb, flags, frame_padding, label, tab_id, close_button_id, is_contents_visible, out_just_closed, out_text_clipped)
-
-def table_begin_apply_requests(table):
-    ccimgui.igTableBeginApplyRequests(table)
-
-def table_begin_cell(table, int column_n):
-    ccimgui.igTableBeginCell(table, column_n)
-
-def table_begin_context_menu_popup(table):
-    cdef bool res = ccimgui.igTableBeginContextMenuPopup(table)
-    return res
-
-def table_begin_init_memory(table, int columns_count):
-    ccimgui.igTableBeginInitMemory(table, columns_count)
-
-def table_begin_row(table):
-    ccimgui.igTableBeginRow(table)
-
-def table_draw_borders(table):
-    ccimgui.igTableDrawBorders(table)
-
-def table_draw_context_menu(table):
-    ccimgui.igTableDrawContextMenu(table)
-
-def table_end_cell(table):
-    ccimgui.igTableEndCell(table)
-
-def table_end_row(table):
-    ccimgui.igTableEndRow(table)
-
-def table_find_by_id(id_):
-    cdef ccimgui.ImGuiTable* res = ccimgui.igTableFindByID(id_)
-    return res
-
-def table_fix_column_sort_direction(table, column):
-    ccimgui.igTableFixColumnSortDirection(table, column)
-
-def table_gc_compact_settings():
-    ccimgui.igTableGcCompactSettings()
-
-def table_gc_compact_transient_buffers_table_ptr(table):
-    ccimgui.igTableGcCompactTransientBuffers_TablePtr(table)
-
-def table_gc_compact_transient_buffers_table_temp_data_ptr(table):
-    ccimgui.igTableGcCompactTransientBuffers_TableTempDataPtr(table)
-
-def table_get_bound_settings(table):
-    cdef ccimgui.ImGuiTableSettings* res = ccimgui.igTableGetBoundSettings(table)
-    return res
-
-def table_get_cell_bg_rect(pOut, table, int column_n):
-    ccimgui.igTableGetCellBgRect(pOut, table, column_n)
 
 def table_get_column_count():
     cdef int res = ccimgui.igTableGetColumnCount()
@@ -6598,44 +3617,8 @@ def table_get_column_index():
     cdef int res = ccimgui.igTableGetColumnIndex()
     return res
 
-def table_get_column_name_int(int column_n):
-    cdef const char* res = ccimgui.igTableGetColumnName_Int(column_n)
-    return res
-
-def table_get_column_name_table_ptr(table, int column_n):
-    cdef const char* res = ccimgui.igTableGetColumnName_TablePtr(table, column_n)
-    return res
-
-def table_get_column_next_sort_direction(column):
-    cdef ccimgui.ImGuiSortDirection res = ccimgui.igTableGetColumnNextSortDirection(column)
-    return res
-
-def table_get_column_resize_id(table, int column_n, int instance_no):
-    cdef ccimgui.ImGuiID res = ccimgui.igTableGetColumnResizeID(table, column_n, instance_no)
-    return res
-
-def table_get_column_width_auto(table, column):
-    cdef float res = ccimgui.igTableGetColumnWidthAuto(table, column)
-    return res
-
-def table_get_header_row_height():
-    cdef float res = ccimgui.igTableGetHeaderRowHeight()
-    return res
-
-def table_get_hovered_column():
-    cdef int res = ccimgui.igTableGetHoveredColumn()
-    return res
-
-def table_get_instance_data(table, int instance_no):
-    cdef ccimgui.ImGuiTableInstanceData* res = ccimgui.igTableGetInstanceData(table, instance_no)
-    return res
-
-def table_get_instance_id(table, int instance_no):
-    cdef ccimgui.ImGuiID res = ccimgui.igTableGetInstanceID(table, instance_no)
-    return res
-
-def table_get_max_column_width(table, int column_n):
-    cdef float res = ccimgui.igTableGetMaxColumnWidth(table, column_n)
+def table_get_column_name(int column_n):
+    cdef const char* res = ccimgui.igTableGetColumnName(column_n)
     return res
 
 def table_get_row_index():
@@ -6652,36 +3635,12 @@ def table_header(str label):
 def table_headers_row():
     ccimgui.igTableHeadersRow()
 
-def table_load_settings(table):
-    ccimgui.igTableLoadSettings(table)
-
-def table_merge_draw_channels(table):
-    ccimgui.igTableMergeDrawChannels(table)
-
 def table_next_column():
     cdef bool res = ccimgui.igTableNextColumn()
     return res
 
 def table_next_row(row_flags, float min_row_height):
     ccimgui.igTableNextRow(row_flags, min_row_height)
-
-def table_open_context_menu(int column_n):
-    ccimgui.igTableOpenContextMenu(column_n)
-
-def table_pop_background_channel():
-    ccimgui.igTablePopBackgroundChannel()
-
-def table_push_background_channel():
-    ccimgui.igTablePushBackgroundChannel()
-
-def table_remove(table):
-    ccimgui.igTableRemove(table)
-
-def table_reset_settings(table):
-    ccimgui.igTableResetSettings(table)
-
-def table_save_settings(table):
-    ccimgui.igTableSaveSettings(table)
 
 def table_set_bg_color(target, color, int column_n):
     ccimgui.igTableSetBgColor(target, color, column_n)
@@ -6693,29 +3652,6 @@ def table_set_column_index(int column_n):
     cdef bool res = ccimgui.igTableSetColumnIndex(column_n)
     return res
 
-def table_set_column_sort_direction(int column_n, sort_direction, ccimgui.bool append_to_sort_specs):
-    ccimgui.igTableSetColumnSortDirection(column_n, sort_direction, append_to_sort_specs)
-
-def table_set_column_width(int column_n, float width):
-    ccimgui.igTableSetColumnWidth(column_n, width)
-
-def table_set_column_width_auto_all(table):
-    ccimgui.igTableSetColumnWidthAutoAll(table)
-
-def table_set_column_width_auto_single(table, int column_n):
-    ccimgui.igTableSetColumnWidthAutoSingle(table, column_n)
-
-def table_settings_add_settings_handler():
-    ccimgui.igTableSettingsAddSettingsHandler()
-
-def table_settings_create(id_, int columns_count):
-    cdef ccimgui.ImGuiTableSettings* res = ccimgui.igTableSettingsCreate(id_, columns_count)
-    return res
-
-def table_settings_find_by_id(id_):
-    cdef ccimgui.ImGuiTableSettings* res = ccimgui.igTableSettingsFindByID(id_)
-    return res
-
 def table_setup_column(
         str label,
         flags,
@@ -6724,62 +3660,8 @@ def table_setup_column(
     ):
     ccimgui.igTableSetupColumn(label, flags, init_width_or_weight, user_id)
 
-def table_setup_draw_channels(table):
-    ccimgui.igTableSetupDrawChannels(table)
-
 def table_setup_scroll_freeze(int cols, int rows):
     ccimgui.igTableSetupScrollFreeze(cols, rows)
-
-def table_sort_specs_build(table):
-    ccimgui.igTableSortSpecsBuild(table)
-
-def table_sort_specs_sanitize(table):
-    ccimgui.igTableSortSpecsSanitize(table)
-
-def table_update_borders(table):
-    ccimgui.igTableUpdateBorders(table)
-
-def table_update_columns_weight_from_width(table):
-    ccimgui.igTableUpdateColumnsWeightFromWidth(table)
-
-def table_update_layout(table):
-    ccimgui.igTableUpdateLayout(table)
-
-def temp_input_is_active(id_):
-    cdef bool res = ccimgui.igTempInputIsActive(id_)
-    return res
-
-def temp_input_scalar(
-        bb,
-        id_,
-        str label,
-        data_type,
-        p_data,
-        str format_,
-        p_clamp_min,
-        p_clamp_max
-    ):
-    cdef bool res = ccimgui.igTempInputScalar(bb, id_, label, data_type, p_data, format_, p_clamp_min, p_clamp_max)
-    return res
-
-def temp_input_text(
-        bb,
-        id_,
-        str label,
-        str buf,
-        int buf_size,
-        flags
-    ):
-    cdef bool res = ccimgui.igTempInputText(bb, id_, label, buf, buf_size, flags)
-    return res
-
-def test_key_owner(int key, owner_id):
-    cdef bool res = ccimgui.igTestKeyOwner(key, owner_id)
-    return res
-
-def test_shortcut_routing(key_chord, owner_id):
-    cdef bool res = ccimgui.igTestShortcutRouting(key_chord, owner_id)
-    return res
 
 def text(str fmt):
     ccimgui.igText(fmt)
@@ -6796,9 +3678,6 @@ def text_disabled(str fmt):
 def text_disabledv(str fmt, str args):
     ccimgui.igTextDisabledV(fmt, args)
 
-def text_ex(str text, str text_end, flags):
-    ccimgui.igTextEx(text, text_end, flags)
-
 def text_unformatted(str text, str text_end):
     ccimgui.igTextUnformatted(text, text_end)
 
@@ -6810,18 +3689,6 @@ def text_wrappedv(str fmt, str args):
 
 def textv(str fmt, str args):
     ccimgui.igTextV(fmt, args)
-
-def translate_windows_in_viewport(viewport, old_pos, new_pos):
-    ccimgui.igTranslateWindowsInViewport(viewport, old_pos, new_pos)
-
-def tree_node_behavior(
-        id_,
-        flags,
-        str label,
-        str label_end
-    ):
-    cdef bool res = ccimgui.igTreeNodeBehavior(id_, flags, label, label_end)
-    return res
 
 def tree_node_ex_ptr(ptr_id, flags, str fmt):
     cdef bool res = ccimgui.igTreeNodeEx_Ptr(ptr_id, flags, fmt)
@@ -6857,19 +3724,12 @@ def tree_node_ptr(ptr_id, str fmt):
     cdef bool res = ccimgui.igTreeNode_Ptr(ptr_id, fmt)
     return res
 
-def tree_node_set_open(id_, ccimgui.bool open_):
-    ccimgui.igTreeNodeSetOpen(id_, open_)
-
 def tree_node_str(str label):
     cdef bool res = ccimgui.igTreeNode_Str(label)
     return res
 
 def tree_node_str_str(str str_id, str fmt):
     cdef bool res = ccimgui.igTreeNode_StrStr(str_id, fmt)
-    return res
-
-def tree_node_update_next_open(id_, flags):
-    cdef bool res = ccimgui.igTreeNodeUpdateNextOpen(id_, flags)
     return res
 
 def tree_node_v_ptr(ptr_id, str fmt, str args):
@@ -6883,9 +3743,6 @@ def tree_node_v_str(str str_id, str fmt, str args):
 def tree_pop():
     ccimgui.igTreePop()
 
-def tree_push_override_id(id_):
-    ccimgui.igTreePushOverrideID(id_)
-
 def tree_push_ptr(ptr_id):
     ccimgui.igTreePush_Ptr(ptr_id)
 
@@ -6895,23 +3752,8 @@ def tree_push_str(str str_id):
 def unindent(float indent_w):
     ccimgui.igUnindent(indent_w)
 
-def update_hovered_window_and_capture_flags():
-    ccimgui.igUpdateHoveredWindowAndCaptureFlags()
-
-def update_input_events(ccimgui.bool trickle_fast_inputs):
-    ccimgui.igUpdateInputEvents(trickle_fast_inputs)
-
-def update_mouse_moving_window_end_frame():
-    ccimgui.igUpdateMouseMovingWindowEndFrame()
-
-def update_mouse_moving_window_new_frame():
-    ccimgui.igUpdateMouseMovingWindowNewFrame()
-
 def update_platform_windows():
     ccimgui.igUpdatePlatformWindows()
-
-def update_window_parent_and_root_links(window, flags, parent_window):
-    ccimgui.igUpdateWindowParentAndRootLinks(window, flags, parent_window)
 
 def v_slider_float(
         str label,
@@ -6961,9 +3803,3 @@ def value_int(str prefix, int v):
 
 def value_uint(str prefix, int v):
     ccimgui.igValue_Uint(prefix, v)
-
-def window_rect_abs_to_rel(pOut, window, r):
-    ccimgui.igWindowRectAbsToRel(pOut, window, r)
-
-def window_rect_rel_to_abs(pOut, window, r):
-    ccimgui.igWindowRectRelToAbs(pOut, window, r)
