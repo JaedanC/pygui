@@ -1005,7 +1005,7 @@ def main():
     with open("pygui/ccimgui_v1.pxd", "w") as f:
         f.write(header.as_pxd_file())
 
-    with open("pygui/core_test.pyx", "w") as f:
+    with open("pygui/core_v1.pyx", "w") as f:
         f.write(header.as_pyx_file("ccimgui"))
     
     with open("pygui/core_text.pyi", "w") as f:

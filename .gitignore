@@ -11,6 +11,7 @@ pygui/*.dll
 pygui/*.lib
 pygui/*.pyd
 pygui/*.cpp
+pygui/*.c
 
 Scripts/
 

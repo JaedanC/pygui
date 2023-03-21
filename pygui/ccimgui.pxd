@@ -1374,7 +1374,7 @@ cdef extern from "cimgui.h":
     bool igButton(const char* label, const ImVec2 size) except +
     float igCalcItemWidth() except +
     void igCalcTextSize(ImVec2* pOut, const char* text, const char* text_end, bool hide_text_after_double_hash, float wrap_width) except +
-    bool igCheckbox(const char* label, bool* v) except +
+    bool igCheckbox(const char* label, bool* value) except +
     bool igCheckboxFlags_IntPtr(const char* label, int* flags, int flags_value) except +
     bool igCheckboxFlags_UintPtr(const char* label, unsigned int* flags, unsigned int flags_value) except +
     void igCloseCurrentPopup() except +
@@ -1382,13 +1382,13 @@ cdef extern from "cimgui.h":
     bool igCollapsingHeader_TreeNodeFlags(const char* label, ImGuiTreeNodeFlags flags) except +
     bool igColorButton(const char* desc_id, const ImVec4 col, ImGuiColorEditFlags flags, const ImVec2 size) except +
     ImU32 igColorConvertFloat4ToU32(const ImVec4 in_) except +
-    void igColorConvertHSVtoRGB(float h, float s, float v, float* out_r, float* out_g, float* out_b) except +
+    void igColorConvertHSVtoRGB(float h, float s, float value, float* out_r, float* out_g, float* out_b) except +
     void igColorConvertRGBtoHSV(float r, float g, float b, float* out_h, float* out_s, float* out_v) except +
     void igColorConvertU32ToFloat4(ImVec4* pOut, ImU32 in_) except +
-    bool igColorEdit3(const char* label, float[3] col, ImGuiColorEditFlags flags) except +
-    bool igColorEdit4(const char* label, float[4] col, ImGuiColorEditFlags flags) except +
-    bool igColorPicker3(const char* label, float[3] col, ImGuiColorEditFlags flags) except +
-    bool igColorPicker4(const char* label, float[4] col, ImGuiColorEditFlags flags, const float* ref_col) except +
+    bool igColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags) except +
+    bool igColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flags) except +
+    bool igColorPicker3(const char* label, float col[3], ImGuiColorEditFlags flags) except +
+    bool igColorPicker4(const char* label, float col[4], ImGuiColorEditFlags flags, const float* ref_col) except +
     void igColumns(int count, const char* id_, bool border) except +
     bool igCombo_FnBoolPtr(const char* label, int* current_item, bool(*items_getter)(void* data,int idx,const char** out_text), void* data, int items_count, int popup_max_height_in_items) except +
     bool igCombo_Str(const char* label, int* current_item, const char* items_separated_by_zeros, int popup_max_height_in_items) except +
@@ -1400,15 +1400,15 @@ cdef extern from "cimgui.h":
     void igDestroyPlatformWindows() except +
     ImGuiID igDockSpace(ImGuiID id_, const ImVec2 size, ImGuiDockNodeFlags flags, const ImGuiWindowClass* window_class) except +
     ImGuiID igDockSpaceOverViewport(const ImGuiViewport* viewport, ImGuiDockNodeFlags flags, const ImGuiWindowClass* window_class) except +
-    bool igDragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragFloat2(const char* label, float[2] v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragFloat3(const char* label, float[3] v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragFloat4(const char* label, float[4] v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragFloat(const char* label, float* value, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragFloat2(const char* label, float value[2], float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragFloat3(const char* label, float value[3], float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragFloat4(const char* label, float value[4], float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igDragFloatRange2(const char* label, float* v_current_min, float* v_current_max, float v_speed, float v_min, float v_max, const char* format_, const char* format_max, ImGuiSliderFlags flags) except +
-    bool igDragInt(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragInt2(const char* label, int[2] v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragInt3(const char* label, int[3] v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igDragInt4(const char* label, int[4] v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragInt(const char* label, int* value, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragInt2(const char* label, int value[2], float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragInt3(const char* label, int value[3], float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igDragInt4(const char* label, int value[4], float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igDragIntRange2(const char* label, int* v_current_min, int* v_current_max, float v_speed, int v_min, int v_max, const char* format_, const char* format_max, ImGuiSliderFlags flags) except +
     bool igDragScalar(const char* label, ImGuiDataType data_type, void* p_data, float v_speed, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igDragScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -1506,15 +1506,15 @@ cdef extern from "cimgui.h":
     void igImage(ImTextureID user_texture_id, const ImVec2 size, const ImVec2 uv0, const ImVec2 uv1, const ImVec4 tint_col, const ImVec4 border_col) except +
     bool igImageButton(const char* str_id, ImTextureID user_texture_id, const ImVec2 size, const ImVec2 uv0, const ImVec2 uv1, const ImVec4 bg_col, const ImVec4 tint_col) except +
     void igIndent(float indent_w) except +
-    bool igInputDouble(const char* label, double* v, double step, double step_fast, const char* format_, ImGuiInputTextFlags flags) except +
-    bool igInputFloat(const char* label, float* v, float step, float step_fast, const char* format_, ImGuiInputTextFlags flags) except +
-    bool igInputFloat2(const char* label, float[2] v, const char* format_, ImGuiInputTextFlags flags) except +
-    bool igInputFloat3(const char* label, float[3] v, const char* format_, ImGuiInputTextFlags flags) except +
-    bool igInputFloat4(const char* label, float[4] v, const char* format_, ImGuiInputTextFlags flags) except +
-    bool igInputInt(const char* label, int* v, int step, int step_fast, ImGuiInputTextFlags flags) except +
-    bool igInputInt2(const char* label, int[2] v, ImGuiInputTextFlags flags) except +
-    bool igInputInt3(const char* label, int[3] v, ImGuiInputTextFlags flags) except +
-    bool igInputInt4(const char* label, int[4] v, ImGuiInputTextFlags flags) except +
+    bool igInputDouble(const char* label, double* value, double step, double step_fast, const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputFloat(const char* label, float* value, float step, float step_fast, const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputFloat2(const char* label, float value[2], const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputFloat3(const char* label, float value[3], const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputFloat4(const char* label, float value[4], const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputInt(const char* label, int* value, int step, int step_fast, ImGuiInputTextFlags flags) except +
+    bool igInputInt2(const char* label, int value[2], ImGuiInputTextFlags flags) except +
+    bool igInputInt3(const char* label, int value[3], ImGuiInputTextFlags flags) except +
+    bool igInputInt4(const char* label, int value[4], ImGuiInputTextFlags flags) except +
     bool igInputScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step, const void* p_step_fast, const char* format_, ImGuiInputTextFlags flags) except +
     bool igInputScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_step, const void* p_step_fast, const char* format_, ImGuiInputTextFlags flags) except +
     bool igInvisibleButton(const char* str_id, const ImVec2 size, ImGuiButtonFlags flags) except +
@@ -1602,7 +1602,7 @@ cdef extern from "cimgui.h":
     void igPushStyleVar_Vec2(ImGuiStyleVar idx, const ImVec2 val) except +
     void igPushTextWrapPos(float wrap_local_pos_x) except +
     bool igRadioButton_Bool(const char* label, bool active) except +
-    bool igRadioButton_IntPtr(const char* label, int* v, int v_button) except +
+    bool igRadioButton_IntPtr(const char* label, int* value, int v_button) except +
     void igRender() except +
     void igRenderPlatformWindowsDefault(void* platform_render_arg, void* renderer_render_arg) except +
     void igResetMouseDragDelta(ImGuiMouseButton button) except +
@@ -1670,14 +1670,14 @@ cdef extern from "cimgui.h":
     bool igShowStyleSelector(const char* label) except +
     void igShowUserGuide() except +
     bool igSliderAngle(const char* label, float* v_rad, float v_degrees_min, float v_degrees_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderFloat(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderFloat2(const char* label, float[2] v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderFloat3(const char* label, float[3] v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderFloat4(const char* label, float[4] v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderInt(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderInt2(const char* label, int[2] v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderInt3(const char* label, int[3] v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igSliderInt4(const char* label, int[4] v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderFloat(const char* label, float* value, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderFloat2(const char* label, float value[2], float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderFloat3(const char* label, float value[3], float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderFloat4(const char* label, float value[4], float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderInt(const char* label, int* value, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderInt2(const char* label, int value[2], int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderInt3(const char* label, int value[3], int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igSliderInt4(const char* label, int value[4], int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igSliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igSliderScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igSmallButton(const char* label) except +
@@ -1697,7 +1697,7 @@ cdef extern from "cimgui.h":
     bool igTableNextColumn() except +
     void igTableNextRow(ImGuiTableRowFlags row_flags, float min_row_height) except +
     void igTableSetBgColor(ImGuiTableBgTarget target, ImU32 color, int column_n) except +
-    void igTableSetColumnEnabled(int column_n, bool v) except +
+    void igTableSetColumnEnabled(int column_n, bool value) except +
     bool igTableSetColumnIndex(int column_n) except +
     void igTableSetupColumn(const char* label, ImGuiTableColumnFlags flags, float init_width_or_weight, ImGuiID user_id) except +
     void igTableSetupScrollFreeze(int cols, int rows) except +
@@ -1725,73 +1725,73 @@ cdef extern from "cimgui.h":
     void igTreePush_Str(const char* str_id) except +
     void igUnindent(float indent_w) except +
     void igUpdatePlatformWindows() except +
-    bool igVSliderFloat(const char* label, const ImVec2 size, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
-    bool igVSliderInt(const char* label, const ImVec2 size, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igVSliderFloat(const char* label, const ImVec2 size, float* value, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool igVSliderInt(const char* label, const ImVec2 size, int* value, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool igVSliderScalar(const char* label, const ImVec2 size, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
     void igValue_Bool(const char* prefix, bool b) except +
-    void igValue_Float(const char* prefix, float v, const char* float_format) except +
-    void igValue_Int(const char* prefix, int v) except +
-    void igValue_Uint(const char* prefix, unsigned int v) except +
+    void igValue_Float(const char* prefix, float value, const char* float_format) except +
+    void igValue_Int(const char* prefix, int value) except +
+    void igValue_Uint(const char* prefix, unsigned int value) except +
 
-    void ImGuiListClipper_ImGuiListClipper() except +
+    ImGuiListClipper* ImGuiListClipper_ImGuiListClipper() except +
     void ImGuiListClipper_destroy(ImGuiListClipper* self) except +
     void ImGuiListClipper_Begin(ImGuiListClipper* self, int items_count, float items_height) except +
     void ImGuiListClipper_End(ImGuiListClipper* self) except +
     void ImGuiListClipper_ForceDisplayRangeByIndices(ImGuiListClipper* self, int item_min, int item_max) except +
     bool ImGuiListClipper_Step(ImGuiListClipper* self) except +
-    void ImGuiOnceUponAFrame_ImGuiOnceUponAFrame() except +
+    ImGuiOnceUponAFrame* ImGuiOnceUponAFrame_ImGuiOnceUponAFrame() except +
     void ImGuiOnceUponAFrame_destroy(ImGuiOnceUponAFrame* self) except +
-    void ImGuiPayload_ImGuiPayload() except +
+    ImGuiPayload* ImGuiPayload_ImGuiPayload() except +
     void ImGuiPayload_destroy(ImGuiPayload* self) except +
     void ImGuiPayload_Clear(ImGuiPayload* self) except +
     bool ImGuiPayload_IsDataType(ImGuiPayload* self, const char* type_) except +
     bool ImGuiPayload_IsDelivery(ImGuiPayload* self) except +
     bool ImGuiPayload_IsPreview(ImGuiPayload* self) except +
-    void ImGuiStoragePair_ImGuiStoragePair_Float(ImGuiID _key, float _val_f) except +
-    void ImGuiStoragePair_ImGuiStoragePair_Int(ImGuiID _key, int _val_i) except +
-    void ImGuiStoragePair_ImGuiStoragePair_Ptr(ImGuiID _key, void* _val_p) except +
+    ImGuiStoragePair* ImGuiStoragePair_ImGuiStoragePair_Float(ImGuiID _key, float _val_f) except +
+    ImGuiStoragePair* ImGuiStoragePair_ImGuiStoragePair_Int(ImGuiID _key, int _val_i) except +
+    ImGuiStoragePair* ImGuiStoragePair_ImGuiStoragePair_Ptr(ImGuiID _key, void* _val_p) except +
     void ImGuiStoragePair_destroy(ImGuiStoragePair* self) except +
-    void ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs() except +
+    ImGuiTableColumnSortSpecs* ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs() except +
     void ImGuiTableColumnSortSpecs_destroy(ImGuiTableColumnSortSpecs* self) except +
-    void ImGuiTableSortSpecs_ImGuiTableSortSpecs() except +
+    ImGuiTableSortSpecs* ImGuiTableSortSpecs_ImGuiTableSortSpecs() except +
     void ImGuiTableSortSpecs_destroy(ImGuiTableSortSpecs* self) except +
-    void ImGuiTextRange_ImGuiTextRange_Nil() except +
-    void ImGuiTextRange_ImGuiTextRange_Str(const char* _b, const char* _e) except +
+    ImGuiTextRange* ImGuiTextRange_ImGuiTextRange_Nil() except +
+    ImGuiTextRange* ImGuiTextRange_ImGuiTextRange_Str(const char* _b, const char* _e) except +
     void ImGuiTextRange_destroy(ImGuiTextRange* self) except +
     bool ImGuiTextRange_empty(ImGuiTextRange* self) except +
     void ImGuiTextRange_split(ImGuiTextRange* self, char separator, ImVector_ImGuiTextRange* out) except +
-    void ImGuiWindowClass_ImGuiWindowClass() except +
+    ImGuiWindowClass* ImGuiWindowClass_ImGuiWindowClass() except +
     void ImGuiWindowClass_destroy(ImGuiWindowClass* self) except +
-    void ImVec2_ImVec2_Float(float _x, float _y) except +
-    void ImVec2_ImVec2_Nil() except +
+    ImVec2* ImVec2_ImVec2_Float(float _x, float _y) except +
+    ImVec2* ImVec2_ImVec2_Nil() except +
     void ImVec2_destroy(ImVec2* self) except +
-    void ImVec4_ImVec4_Float(float _x, float _y, float _z, float _w) except +
-    void ImVec4_ImVec4_Nil() except +
+    ImVec4* ImVec4_ImVec4_Float(float _x, float _y, float _z, float _w) except +
+    ImVec4* ImVec4_ImVec4_Nil() except +
     void ImVec4_destroy(ImVec4* self) except +
-    void ImColor_ImColor_Float(float r, float g, float b, float a) except +
-    void ImColor_ImColor_Int(int r, int g, int b, int a) except +
-    void ImColor_ImColor_Nil() except +
-    void ImColor_ImColor_U32(ImU32 rgba) except +
-    void ImColor_ImColor_Vec4(const ImVec4 col) except +
+    ImColor* ImColor_ImColor_Float(float r, float g, float b, float a) except +
+    ImColor* ImColor_ImColor_Int(int r, int g, int b, int a) except +
+    ImColor* ImColor_ImColor_Nil() except +
+    ImColor* ImColor_ImColor_U32(ImU32 rgba) except +
+    ImColor* ImColor_ImColor_Vec4(const ImVec4 col) except +
     void ImColor_destroy(ImColor* self) except +
-    void ImColor_HSV(ImColor* pOut, float h, float s, float v, float a) except +
-    void ImColor_SetHSV(ImColor* self, float h, float s, float v, float a) except +
-    void ImDrawCmd_ImDrawCmd() except +
+    void ImColor_HSV(ImColor* pOut, float h, float s, float value, float a) except +
+    void ImColor_SetHSV(ImColor* self, float h, float s, float value, float a) except +
+    ImDrawCmd* ImDrawCmd_ImDrawCmd() except +
     void ImDrawCmd_destroy(ImDrawCmd* self) except +
     ImTextureID ImDrawCmd_GetTexID(ImDrawCmd* self) except +
-    void ImDrawData_ImDrawData() except +
+    ImDrawData* ImDrawData_ImDrawData() except +
     void ImDrawData_destroy(ImDrawData* self) except +
     void ImDrawData_Clear(ImDrawData* self) except +
     void ImDrawData_DeIndexAllBuffers(ImDrawData* self) except +
     void ImDrawData_ScaleClipRects(ImDrawData* self, const ImVec2 fb_scale) except +
-    void ImDrawListSplitter_ImDrawListSplitter() except +
+    ImDrawListSplitter* ImDrawListSplitter_ImDrawListSplitter() except +
     void ImDrawListSplitter_destroy(ImDrawListSplitter* self) except +
     void ImDrawListSplitter_Clear(ImDrawListSplitter* self) except +
     void ImDrawListSplitter_ClearFreeMemory(ImDrawListSplitter* self) except +
     void ImDrawListSplitter_Merge(ImDrawListSplitter* self, ImDrawList* draw_list) except +
     void ImDrawListSplitter_SetCurrentChannel(ImDrawListSplitter* self, ImDrawList* draw_list, int channel_idx) except +
     void ImDrawListSplitter_Split(ImDrawListSplitter* self, ImDrawList* draw_list, int count) except +
-    void ImFont_ImFont() except +
+    ImFont* ImFont_ImFont() except +
     void ImFont_destroy(ImFont* self) except +
     void ImFont_AddGlyph(ImFont* self, const ImFontConfig* src_cfg, ImWchar c, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float advance_x) except +
     void ImFont_AddRemapChar(ImFont* self, ImWchar dst, ImWchar src, bool overwrite_dst) except +
@@ -1809,7 +1809,7 @@ cdef extern from "cimgui.h":
     void ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, const ImVec2 pos, ImU32 col, ImWchar c) except +
     void ImFont_RenderText(ImFont* self, ImDrawList* draw_list, float size, const ImVec2 pos, ImU32 col, const ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip) except +
     void ImFont_SetGlyphVisible(ImFont* self, ImWchar c, bool visible) except +
-    void ImFontAtlas_ImFontAtlas() except +
+    ImFontAtlas* ImFontAtlas_ImFontAtlas() except +
     void ImFontAtlas_destroy(ImFontAtlas* self) except +
     int ImFontAtlas_AddCustomRectFontGlyph(ImFontAtlas* self, ImFont* font, ImWchar id_, int width, int height, float advance_x, const ImVec2 offset) except +
     int ImFontAtlas_AddCustomRectRegular(ImFontAtlas* self, int width, int height) except +
@@ -1835,17 +1835,17 @@ cdef extern from "cimgui.h":
     const ImWchar* ImFontAtlas_GetGlyphRangesKorean(ImFontAtlas* self) except +
     const ImWchar* ImFontAtlas_GetGlyphRangesThai(ImFontAtlas* self) except +
     const ImWchar* ImFontAtlas_GetGlyphRangesVietnamese(ImFontAtlas* self) except +
-    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2[2] out_uv_border, ImVec2[2] out_uv_fill) except +
+    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2 out_uv_border[2], ImVec2 out_uv_fill[2]) except +
     void ImFontAtlas_GetTexDataAsAlpha8(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel) except +
     void ImFontAtlas_GetTexDataAsRGBA32(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel) except +
     bool ImFontAtlas_IsBuilt(ImFontAtlas* self) except +
     void ImFontAtlas_SetTexID(ImFontAtlas* self, ImTextureID id_) except +
-    void ImFontAtlasCustomRect_ImFontAtlasCustomRect() except +
+    ImFontAtlasCustomRect* ImFontAtlasCustomRect_ImFontAtlasCustomRect() except +
     void ImFontAtlasCustomRect_destroy(ImFontAtlasCustomRect* self) except +
     bool ImFontAtlasCustomRect_IsPacked(ImFontAtlasCustomRect* self) except +
-    void ImFontConfig_ImFontConfig() except +
+    ImFontConfig* ImFontConfig_ImFontConfig() except +
     void ImFontConfig_destroy(ImFontConfig* self) except +
-    void ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder() except +
+    ImFontGlyphRangesBuilder* ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder() except +
     void ImFontGlyphRangesBuilder_destroy(ImFontGlyphRangesBuilder* self) except +
     void ImFontGlyphRangesBuilder_AddChar(ImFontGlyphRangesBuilder* self, ImWchar c) except +
     void ImFontGlyphRangesBuilder_AddRanges(ImFontGlyphRangesBuilder* self, const ImWchar* ranges) except +
@@ -1854,13 +1854,13 @@ cdef extern from "cimgui.h":
     void ImFontGlyphRangesBuilder_Clear(ImFontGlyphRangesBuilder* self) except +
     bool ImFontGlyphRangesBuilder_GetBit(ImFontGlyphRangesBuilder* self, size_t n) except +
     void ImFontGlyphRangesBuilder_SetBit(ImFontGlyphRangesBuilder* self, size_t n) except +
-    void ImGuiIO_ImGuiIO() except +
+    ImGuiIO* ImGuiIO_ImGuiIO() except +
     void ImGuiIO_destroy(ImGuiIO* self) except +
     void ImGuiIO_AddFocusEvent(ImGuiIO* self, bool focused) except +
     void ImGuiIO_AddInputCharacter(ImGuiIO* self, unsigned int c) except +
     void ImGuiIO_AddInputCharacterUTF16(ImGuiIO* self, ImWchar16 c) except +
     void ImGuiIO_AddInputCharactersUTF8(ImGuiIO* self, const char* str_) except +
-    void ImGuiIO_AddKeyAnalogEvent(ImGuiIO* self, ImGuiKey key, bool down, float v) except +
+    void ImGuiIO_AddKeyAnalogEvent(ImGuiIO* self, ImGuiKey key, bool down, float value) except +
     void ImGuiIO_AddKeyEvent(ImGuiIO* self, ImGuiKey key, bool down) except +
     void ImGuiIO_AddMouseButtonEvent(ImGuiIO* self, int button, bool down) except +
     void ImGuiIO_AddMousePosEvent(ImGuiIO* self, float x, float y) except +
@@ -1870,11 +1870,11 @@ cdef extern from "cimgui.h":
     void ImGuiIO_ClearInputKeys(ImGuiIO* self) except +
     void ImGuiIO_SetAppAcceptingEvents(ImGuiIO* self, bool accepting_events) except +
     void ImGuiIO_SetKeyEventNativeData(ImGuiIO* self, ImGuiKey key, int native_keycode, int native_scancode, int native_legacy_index) except +
-    void ImGuiPlatformIO_ImGuiPlatformIO() except +
+    ImGuiPlatformIO* ImGuiPlatformIO_ImGuiPlatformIO() except +
     void ImGuiPlatformIO_destroy(ImGuiPlatformIO* self) except +
-    void ImGuiPlatformImeData_ImGuiPlatformImeData() except +
+    ImGuiPlatformImeData* ImGuiPlatformImeData_ImGuiPlatformImeData() except +
     void ImGuiPlatformImeData_destroy(ImGuiPlatformImeData* self) except +
-    void ImGuiPlatformMonitor_ImGuiPlatformMonitor() except +
+    ImGuiPlatformMonitor* ImGuiPlatformMonitor_ImGuiPlatformMonitor() except +
     void ImGuiPlatformMonitor_destroy(ImGuiPlatformMonitor* self) except +
     void ImGuiStorage_BuildSortByKey(ImGuiStorage* self) except +
     void ImGuiStorage_Clear(ImGuiStorage* self) except +
@@ -1891,10 +1891,10 @@ cdef extern from "cimgui.h":
     void ImGuiStorage_SetFloat(ImGuiStorage* self, ImGuiID key, float val) except +
     void ImGuiStorage_SetInt(ImGuiStorage* self, ImGuiID key, int val) except +
     void ImGuiStorage_SetVoidPtr(ImGuiStorage* self, ImGuiID key, void* val) except +
-    void ImGuiStyle_ImGuiStyle() except +
+    ImGuiStyle* ImGuiStyle_ImGuiStyle() except +
     void ImGuiStyle_destroy(ImGuiStyle* self) except +
     void ImGuiStyle_ScaleAllSizes(ImGuiStyle* self, float scale_factor) except +
-    void ImGuiTextBuffer_ImGuiTextBuffer() except +
+    ImGuiTextBuffer* ImGuiTextBuffer_ImGuiTextBuffer() except +
     void ImGuiTextBuffer_destroy(ImGuiTextBuffer* self) except +
     void ImGuiTextBuffer_append(ImGuiTextBuffer* self, const char* str_, const char* str_end) except +
     void ImGuiTextBuffer_appendf(ImGuiTextBuffer* self, const char* fmt) except +
@@ -1906,18 +1906,18 @@ cdef extern from "cimgui.h":
     const char* ImGuiTextBuffer_end(ImGuiTextBuffer* self) except +
     void ImGuiTextBuffer_reserve(ImGuiTextBuffer* self, int capacity) except +
     int ImGuiTextBuffer_size(ImGuiTextBuffer* self) except +
-    void ImGuiTextFilter_ImGuiTextFilter(const char* default_filter) except +
+    ImGuiTextFilter* ImGuiTextFilter_ImGuiTextFilter(const char* default_filter) except +
     void ImGuiTextFilter_destroy(ImGuiTextFilter* self) except +
     void ImGuiTextFilter_Build(ImGuiTextFilter* self) except +
     void ImGuiTextFilter_Clear(ImGuiTextFilter* self) except +
     bool ImGuiTextFilter_Draw(ImGuiTextFilter* self, const char* label, float width) except +
     bool ImGuiTextFilter_IsActive(ImGuiTextFilter* self) except +
     bool ImGuiTextFilter_PassFilter(ImGuiTextFilter* self, const char* text, const char* text_end) except +
-    void ImGuiViewport_ImGuiViewport() except +
+    ImGuiViewport* ImGuiViewport_ImGuiViewport() except +
     void ImGuiViewport_destroy(ImGuiViewport* self) except +
     void ImGuiViewport_GetCenter(ImVec2* pOut, ImGuiViewport* self) except +
     void ImGuiViewport_GetWorkCenter(ImVec2* pOut, ImGuiViewport* self) except +
-    void ImDrawList_ImDrawList(ImDrawListSharedData* shared_data) except +
+    ImDrawList* ImDrawList_ImDrawList(ImDrawListSharedData* shared_data) except +
     void ImDrawList_destroy(ImDrawList* self) except +
     void ImDrawList_AddBezierCubic(ImDrawList* self, const ImVec2 p1, const ImVec2 p2, const ImVec2 p3, const ImVec2 p4, ImU32 col, float thickness, int num_segments) except +
     void ImDrawList_AddBezierQuadratic(ImDrawList* self, const ImVec2 p1, const ImVec2 p2, const ImVec2 p3, ImU32 col, float thickness, int num_segments) except +
