@@ -172,12 +172,12 @@ class Template:
         self.set_condition("has_return_tuple", False)
         self.set_condition("has_body_lines", len(self.implementation_lines) > 0)
         
-        if len(self.parameter_tokens) > 5 or True:
+        if len(self.parameter_tokens) > 5:
             parameter_text = "\n" + indent_by(",\n".join(self.parameter_tokens), 4) + "\n"
         else:
             parameter_text = ", ".join(self.parameter_tokens)
         
-        if len(self.argument_tokens) > 5 or True:
+        if len(self.argument_tokens) > 5:
             argument_text = "\n" + indent_by(",\n".join(self.argument_tokens), 8) + "\n    "
         else:
             argument_text = ", ".join(self.argument_tokens)
@@ -1117,30 +1117,6 @@ def header_model(base, library_name):
     return HeaderSpec(structs, enums, typedefs, functions, library_name)
 
 
-def compare(pyx_template, pyx):
-    pass
-    # base_lines = pyx.split("\n")
-    # temp_lines = pyx_template.split("\n")
-
-    # assert len(temp_lines) >= len(base_lines)
-
-    # i = 0
-    # template_i = 0
-    # detached = False
-    # output = []
-    # while True:
-    #     b_line = base_lines[i]
-    #     t_line = temp_lines[template_i]
-
-    #     if t_line.replace("#", "") == b_line:
-    #         detached = True
-        
-
-
-    #     i += 1
-
-
-
 def main():
     header = header_model("cimgui/generator/output", "ccimgui")
 
@@ -1153,19 +1129,6 @@ def main():
     with open("pygui/core_v2.pyx", "w") as f:
         pyx = header.in_pyx_format()
         f.write(pyx)
-
-    try:
-        with open("pygui/core_v2_template.pyx") as f:
-            pyx_template = f.read()
-
-    except FileNotFoundError:
-        with open("pygui/core_v2_template.pyx", "w") as f:
-            f.write(pyx)
-            pyx_template = pyx
-
-
-    compare(pyx_template, pyx)
-
 
 
     # with open("pygui/core.pyx", "w") as f:
