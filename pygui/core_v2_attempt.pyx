@@ -707,7 +707,7 @@ cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
 
 def accept_drag_drop_payload(str type, ccimgui.ImGuiDragDropFlags flags=0):
     cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type), flags)
-    return _ImGuiPayload.from_ptr(res)
+    return res
 
 def align_text_to_frame_padding():
     ccimgui.igAlignTextToFramePadding()
@@ -955,7 +955,7 @@ def combo_str_arr(str label, int current_item, Any items_, int items_count, int 
 
 def create_context(_ImFontAtlas shared_font_atlas=None):
     cdef ccimgui.ImGuiContext* res = ccimgui.igCreateContext(shared_font_atlas._ptr)
-    return _ImGuiContext.from_ptr(res)
+    return res
 
 def debug_check_version_and_data_layout(
     str version_str,
@@ -1325,19 +1325,19 @@ def end_tooltip():
 
 def find_viewport_by_id(ccimgui.ImGuiID id):
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id)
-    return _ImGuiViewport.from_ptr(res)
+    return res
 
 def find_viewport_by_platform_handle(Any platform_handle):
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByPlatformHandle(platform_handle)
-    return _ImGuiViewport.from_ptr(res)
+    return res
 
 def get_background_draw_list_nil():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_Nil()
-    return _ImDrawList.from_ptr(res)
+    return res
 
 def get_background_draw_list_viewport_ptr(_ImGuiViewport viewport):
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_ViewportPtr(viewport._ptr)
-    return _ImDrawList.from_ptr(res)
+    return res
 
 def get_clipboard_text():
     cdef const char* res = ccimgui.igGetClipboardText()
@@ -1379,7 +1379,7 @@ def get_content_region_max(_ImVec2 pOut):
 
 def get_current_context():
     cdef ccimgui.ImGuiContext* res = ccimgui.igGetCurrentContext()
-    return _ImGuiContext.from_ptr(res)
+    return res
 
 def get_cursor_pos(_ImVec2 pOut):
     ccimgui.igGetCursorPos(pOut._ptr)
@@ -1400,19 +1400,19 @@ def get_cursor_start_pos(_ImVec2 pOut):
 
 def get_drag_drop_payload():
     cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
-    return _ImGuiPayload.from_ptr(res)
+    return res
 
 def get_draw_data():
     cdef ccimgui.ImDrawData* res = ccimgui.igGetDrawData()
-    return _ImDrawData.from_ptr(res)
+    return res
 
 def get_draw_list_shared_data():
     cdef ccimgui.ImDrawListSharedData* res = ccimgui.igGetDrawListSharedData()
-    return _ImDrawListSharedData.from_ptr(res)
+    return res
 
 def get_font():
     cdef ccimgui.ImFont* res = ccimgui.igGetFont()
-    return _ImFont.from_ptr(res)
+    return res
 
 def get_font_size():
     cdef float res = ccimgui.igGetFontSize()
@@ -1423,11 +1423,11 @@ def get_font_tex_uv_white_pixel(_ImVec2 pOut):
 
 def get_foreground_draw_list_nil():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_Nil()
-    return _ImDrawList.from_ptr(res)
+    return res
 
 def get_foreground_draw_list_viewport_ptr(_ImGuiViewport viewport):
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_ViewportPtr(viewport._ptr)
-    return _ImDrawList.from_ptr(res)
+    return res
 
 def get_frame_count():
     cdef int res = ccimgui.igGetFrameCount()
@@ -1455,7 +1455,7 @@ def get_id_str_str(str str_id_begin, str str_id_end):
 
 def get_io():
     cdef ccimgui.ImGuiIO* res = ccimgui.igGetIO()
-    return _ImGuiIO.from_ptr(res)
+    return res
 
 def get_item_id():
     cdef ccimgui.ImGuiID res = ccimgui.igGetItemID()
@@ -1484,7 +1484,7 @@ def get_key_pressed_amount(Any key, float repeat_delay, float rate):
 
 def get_main_viewport():
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetMainViewport()
-    return _ImGuiViewport.from_ptr(res)
+    return res
 
 def get_mouse_clicked_count(ccimgui.ImGuiMouseButton button):
     cdef int res = ccimgui.igGetMouseClickedCount(button)
@@ -1505,7 +1505,7 @@ def get_mouse_pos_on_opening_current_popup(_ImVec2 pOut):
 
 def get_platform_io():
     cdef ccimgui.ImGuiPlatformIO* res = ccimgui.igGetPlatformIO()
-    return _ImGuiPlatformIO.from_ptr(res)
+    return res
 
 def get_scroll_maxx():
     cdef float res = ccimgui.igGetScrollMaxX()
@@ -1525,11 +1525,11 @@ def get_scrolly():
 
 def get_state_storage():
     cdef ccimgui.ImGuiStorage* res = ccimgui.igGetStateStorage()
-    return _ImGuiStorage.from_ptr(res)
+    return res
 
 def get_style():
     cdef ccimgui.ImGuiStyle* res = ccimgui.igGetStyle()
-    return _ImGuiStyle.from_ptr(res)
+    return res
 
 def get_style_color_name(ccimgui.ImGuiCol idx):
     cdef const char* res = ccimgui.igGetStyleColorName(idx)
@@ -1537,7 +1537,7 @@ def get_style_color_name(ccimgui.ImGuiCol idx):
 
 def get_style_color_vec4(ccimgui.ImGuiCol idx):
     cdef ccimgui.ImVec4* res = ccimgui.igGetStyleColorVec4(idx)
-    return _ImVec4.from_ptr(res)
+    return res
 
 def get_text_line_height():
     cdef float res = ccimgui.igGetTextLineHeight()
@@ -1575,7 +1575,7 @@ def get_window_dpi_scale():
 
 def get_window_draw_list():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetWindowDrawList()
-    return _ImDrawList.from_ptr(res)
+    return res
 
 def get_window_height():
     cdef float res = ccimgui.igGetWindowHeight()
@@ -1589,7 +1589,7 @@ def get_window_size(_ImVec2 pOut):
 
 def get_window_viewport():
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetWindowViewport()
-    return _ImGuiViewport.from_ptr(res)
+    return res
 
 def get_window_width():
     cdef float res = ccimgui.igGetWindowWidth()
@@ -2628,7 +2628,7 @@ def table_get_row_index():
 
 def table_get_sort_specs():
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.igTableGetSortSpecs()
-    return _ImGuiTableSortSpecs.from_ptr(res)
+    return res
 
 def table_header(str label):
     ccimgui.igTableHeader(_bytes(label))
@@ -3693,11 +3693,11 @@ cdef class _ImFont:
     
     def find_glyph(_ImFont self, ccimgui.ImWchar c):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(self._ptr, c)
-        return _ImFontGlyph.from_ptr(res)
+        return res
     
     def find_glyph_no_fallback(_ImFont self, ccimgui.ImWchar c):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(self._ptr, c)
-        return _ImFontGlyph.from_ptr(res)
+        return res
     
     def get_char_advance(_ImFont self, ccimgui.ImWchar c):
         cdef float res = ccimgui.ImFont_GetCharAdvance(self._ptr, c)
@@ -3813,19 +3813,19 @@ cdef class _ImFontAtlas:
     
     def add_font(_ImFontAtlas self, _ImFontConfig font_cfg):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(self._ptr, font_cfg._ptr)
-        return _ImFont.from_ptr(res)
+        return res
     
     def add_font_default(_ImFontAtlas self, _ImFontConfig font_cfg=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(self._ptr, font_cfg._ptr)
-        return _ImFont.from_ptr(res)
+        return res
     
     def add_font_from_file_ttf(_ImFontAtlas self, str filename, float size_pixels, _ImFontConfig font_cfg=None, Any glyph_ranges=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(self._ptr, _bytes(filename), size_pixels, font_cfg._ptr, glyph_ranges)
-        return _ImFont.from_ptr(res)
+        return res
     
     def add_font_from_memory_compressed_base_85ttf(_ImFontAtlas self, str compressed_font_data_base85, float size_pixels, _ImFontConfig font_cfg=None, Any glyph_ranges=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(self._ptr, _bytes(compressed_font_data_base85), size_pixels, font_cfg._ptr, glyph_ranges)
-        return _ImFont.from_ptr(res)
+        return res
     
     def add_font_from_memory_compressed_ttf(
         _ImFontAtlas self,
@@ -3843,7 +3843,7 @@ cdef class _ImFontAtlas:
             font_cfg._ptr,
             glyph_ranges
         )
-        return _ImFont.from_ptr(res)
+        return res
     
     def add_font_from_memory_ttf(
         _ImFontAtlas self,
@@ -3861,7 +3861,7 @@ cdef class _ImFontAtlas:
             font_cfg._ptr,
             glyph_ranges
         )
-        return _ImFont.from_ptr(res)
+        return res
     
     def build(_ImFontAtlas self):
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_Build(self._ptr)
@@ -3884,7 +3884,7 @@ cdef class _ImFontAtlas:
     
     def get_custom_rect_by_index(_ImFontAtlas self, int index):
         cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(self._ptr, index)
-        return _ImFontAtlasCustomRect.from_ptr(res)
+        return res
     
     def get_glyph_ranges_chinese_full(_ImFontAtlas self):
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(self._ptr)
@@ -4764,7 +4764,7 @@ cdef class _ImDrawList:
     
     def clone_output(_ImDrawList self):
         cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(self._ptr)
-        return _ImDrawList.from_ptr(res)
+        return res
     
     def get_clip_rect_max(_ImVec2 pOut, _ImDrawList self):
         ccimgui.ImDrawList_GetClipRectMax(pOut._ptr, self._ptr)

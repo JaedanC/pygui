@@ -19,9 +19,9 @@ def {function_name}({parameters}):
     cdef {return_type} res = {library_name}.{function_pxd_name}({arguments})
 ##
         #if has_return_tuple
-    return res, {return_tuple}
+    return {res}, {return_tuple}
         #else
-    return res
+    return {res}
         #endif // has_return_tuple
 ##
     #else

@@ -160,7 +160,10 @@ class Template:
         # This is the string that makes up the return value of the cimgui
         # function call
         self.has_return_type = self.return_type is not None and not self.return_type.is_void()
+        res_name = "res"
         if self.has_return_type:
+            # if header.is_type_class(self.return_type):
+            #     res_name = "_{}.from_ptr(res)".format(self.return_type.with_no_const_or_asterisk())
             if header.is_type_external(self.return_type):
                 self.return_type_string = header.library_name + "." + self.return_type.with_no_const()
             else:
@@ -191,6 +194,7 @@ class Template:
             library_name=header.library_name,
             function_pxd_name=self.cimgui_function_name,
             arguments=argument_text,
+            res=res_name,
             **kwargs
         )
         
@@ -1126,9 +1130,9 @@ def main():
     with open("pygui/ccimgui_v2.pxd", "w") as f:
         f.write(header.in_pxd_format())
     
-    with open("pygui/core_v2.pyx", "w") as f:
-        pyx = header.in_pyx_format()
-        f.write(pyx)
+    # with open("pygui/core_v2.pyx", "w") as f:
+    #     pyx = header.in_pyx_format()
+    #     f.write(pyx)
 
 
     # with open("pygui/core.pyx", "w") as f:
