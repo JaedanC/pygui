@@ -36,42 +36,164 @@ def snake_caseify(string: str, make_upper=False) -> str:
     return pythonised_string
 
 
+def indent_by(string: str, by: int):
+    return "\n".join([by * " " + line for line in string.split("\n")])
+
+
 class Template:
-    def __init__(self, base_template: str):
-        self.base = base_template
+    """Represents a function in a pyx file. Has a specific format to ease with
+    creating the function.
+    """
+    def __init__(self,
+                 base_template: str,
+                 parameter_list: ParameterList,
+                 return_type: CType,
+                 function_name: str,
+                 cimgui_function_name: str,
+        ):
+        self.base: str = base_template
+        self.parameter_list: ParameterList = parameter_list
+        self.return_type: CType = return_type
+        self.function_name: str = function_name
+        self.cimgui_function_name: str = cimgui_function_name
+
+        self.has_return_type = None
+        self.return_type_string = ""
+        # List of additional lines that make up the body
+        # of the function. Here we put any etra code that
+        # helps translate a parameter to an arugument.
+        self.implementation_lines = []
+        self.parameter_tokens = []  # List of strings that determine each parameter
+        self.argument_tokens = []   # List of strings that determine each argument
+        self.to_return_tokens = []
     
     def set_condition(self, condition: str, value: bool) -> Template:
-        in_if_block = False
-        in_else_block = False
+        """Any conditions in the file will be included or excluded based on
+        value. Example:
+        
+        --------------------
+        #if show_this
+            print("hello")
+        #else
+            print("world)
+        #endif
+        --------------------
 
+        template.set_condition("show_this", True)
+
+        ----- Results ------
+            print("hello")
+        --------------------
+        """
+        in_correct_block = False
+        in_correct_if_block = False
+        in_correct_else_block = False
+        if_block_stack = 0
         filtered_lines = []
+        # print()
+        # print(condition + " == " + str(value))
         for line in self.base.split("\n"):
+            line_stripped = line.strip()
             include_this_line = True
-            if line.strip().startswith(f"#if {condition}"):
-                in_if_block = True
+
+            # Custom comments
+            if line.startswith("##"):
                 include_this_line = False
-            elif line.strip().startswith("#else") and in_if_block:
-                in_else_block = True
-                include_this_line = False
-            elif line.strip().startswith("#endif") and in_if_block:
-                in_if_block = False
-                in_else_block = False
+
+            if line_stripped.startswith(f"#if {condition}"):
+                in_correct_block = True
+                in_correct_if_block = True
                 include_this_line = False
             
-            # If we are in the corresponding block
-            show_line = (in_if_block and (in_else_block != value)) or not in_if_block
+            if in_correct_block and line_stripped.startswith("#if"):
+                if_block_stack += 1 
+            elif in_correct_block and line_stripped.startswith("#endif"):
+                if_block_stack -= 1
+            
+            if line_stripped.startswith("#else") and in_correct_block and if_block_stack == 1:
+                in_correct_else_block = True
+                in_correct_if_block = False
+                include_this_line = False
+            if line_stripped.startswith("#endif") and in_correct_block and if_block_stack == 0:
+                in_correct_block = False
+                in_correct_else_block = False
+                in_correct_if_block = False
+                include_this_line = False
 
+            # If we are in the corresponding block
+            show_line = (in_correct_if_block and value) or (in_correct_else_block and not value) or not in_correct_block
+            # print(show_line, include_this_line, "\t", line)
             if show_line and include_this_line:
                 filtered_lines.append(line)
         
         self.base = "\n".join(filtered_lines)
         return self
 
-    def format(self, *args, **kwargs):
-        self.base = self.base.format(*args, **kwargs)
+    def format(self, **kwargs) -> Template:
+        """Works like a normal string .format except this does not error if a
+        {placeholder} is missing a corresponding =kwargs, or a =kwarg does not match a
+        {placeholder}. It's like a "safe" .format.
+        """
+        # From https://www.programiz.com/python-programming/methods/string/format_map
+        class IgnoreMissing(dict):
+            def __missing__(self, key):
+                return "{" + key + "}"
+            
+        self.base = self.base.format_map(IgnoreMissing(**kwargs))
         return self
 
-    def compile(self):
+    def compile(self, header: HeaderSpec, **kwargs) -> str:
+        """Compiles the resulting function based on the information provided
+        in the constructor and the conditions.
+
+        Returns:
+            str: A non-indented function. May still contain missing {placeholders}
+        """
+        # Expand array parameters:
+        # float value[2] == float value0, float value1
+        for parameter in self.parameter_list:
+            self.parameter_tokens += parameter.in_pyx_type_name_default_format(header)
+            self.argument_tokens += parameter.in_pyx_name_format(header)
+            self.implementation_lines += parameter.implementation_lines
+            self.to_return_tokens += parameter.additional_returns
+        
+        # This is the string that makes up the return value of the cimgui
+        # function call
+        self.has_return_type = self.return_type is not None and not self.return_type.is_void()
+        if self.has_return_type:
+            if header.is_type_external(self.return_type):
+                self.return_type_string = header.library_name + "." + self.return_type.with_no_const()
+            else:
+                self.return_type_string = self.return_type.internal_str
+            
+        for kwarg, value in kwargs.items():
+            self.set_condition(kwarg, value)
+        self.set_condition("has_return_type", self.has_return_type)
+        self.set_condition("has_return_tuple", False)
+        self.set_condition("has_body_lines", len(self.implementation_lines) > 0)
+        
+        if len(self.parameter_tokens) > 5 or True:
+            parameter_text = "\n" + indent_by(",\n".join(self.parameter_tokens), 4) + "\n"
+        else:
+            parameter_text = ", ".join(self.parameter_tokens)
+        
+        if len(self.argument_tokens) > 5 or True:
+            argument_text = "\n" + indent_by(",\n".join(self.argument_tokens), 8) + "\n    "
+        else:
+            argument_text = ", ".join(self.argument_tokens)
+        
+
+        self.format(
+            function_name=self.function_name,
+            parameters=parameter_text,
+            body_lines=indent_by("\n".join(self.implementation_lines), 4),
+            return_type=self.return_type_string,
+            library_name=header.library_name,
+            function_pxd_name=self.cimgui_function_name,
+            arguments=argument_text,
+            **kwargs
+        )
+        
         return self.base
 
 
@@ -136,6 +258,9 @@ class CType:
         return self.with_no_const() \
             .replace("*", "")
 
+    def is_void(self):
+        return self.internal_str == "void"
+
 
 class Parameter:
     """Represents a CType, name pair. A parameter may also have a default value
@@ -163,13 +288,45 @@ class Parameter:
             default_value = default_value.replace("ImVec2", "")
             default_value = default_value.replace("ImVec4", "")
             default_value = default_value.replace(",", ", ")
-            # default_value = default_value.replace("-FLT_MIN", "0")
-            # default_value = default_value.replace("FLT_MAX", "0")
-            # default_value = default_value.replace("-FLT_MIN", "0")
-        
 
         self.default_value = default_value
         self.size = size
+
+        self.expanded_parameters: List[Parameter] = [ self ]
+        self.expanded_arguments: List[str] = [ self.name ]
+
+        self.implementation_lines: List[str] = []
+        self.additional_returns: List[str] = []
+
+        if self.size > 1:
+            self._expand_parameter()
+
+    def _expand_parameter(self):
+        self.expanded_parameters = self.expand_self()
+        self.implementation_lines.append("cdef {type}[{size}] io_{type}_{name} = [{expanded_names}]" \
+            .format(
+                type=self.type.with_no_const_or_asterisk(),
+                size=len(self.expanded_parameters),
+                name=self.name,
+                expanded_names=", ".join([p.name for p in self.expanded_parameters])
+            ))
+
+        if self.type.with_no_const_or_asterisk() == "ImVec2":
+            self.type_string = self.type.with_no_const_or_asterisk()
+        
+        self.expanded_arguments = ["<{type}*>&io_{type}_{name}".format(
+            type=self.type.with_no_const_or_asterisk(),
+            name=self.name
+        )]
+
+        return_extra = "[{}]"
+        argument_return_list = []
+        for i in range(len(self.expanded_parameters)):
+            argument_return_list.append(
+                f"io_{self.type.with_no_const_or_asterisk()}_{self.name}[{i}]"
+            )
+
+        self.additional_returns.append(return_extra.format(", ".join(argument_return_list)))
 
     def __repr__(self):
         return "Param({}, {}){} {}".format(
@@ -190,7 +347,7 @@ class Parameter:
             f"[{self.size}]" if self.size > 1 else ""
         )
     
-    def in_pyx_expanded_format(self) -> List[Parameter]:
+    def expand_self(self) -> List[Parameter]:
         """This returns a list of strings because some types have a length. I
         want to unpack these. For example:
         
@@ -206,77 +363,64 @@ class Parameter:
         ))
         return parameters
 
-    def in_pyx_type_name_format(self, header: HeaderSpec):
-        assert self.size == 1
-        return "{} {}".format(
-            self.type.as_cython_type(header),
-            self.name
-        )
+    def in_pyx_type_name_default_format(self, header: HeaderSpec) -> List[str]:
+        output = []
+        for local_parameter in self.expanded_parameters:
+            assert not local_parameter.is_array()
+            type_string = self.type.as_cython_type(header)
+
+            if header.is_type_class(self.type) and type_string == "Any":
+                type_string = "_" + self.type.with_no_const_or_asterisk()
+            
+            # if type_string == "_ImVec2":
+            #     type_string = "bruh"
+            
+            output.append("{} {}{}".format(
+                type_string,
+                local_parameter.name,
+                "=" + self.default_value if self.default_value is not None else ""
+            ))
+        return output
     
-    def in_pyx_name_format(self):
-        assert self.size == 1
-        return self.name
+    def in_pyx_name_format(self, header: HeaderSpec) -> List[str]:
+        if header.is_type_class(self.type):
+            return [a + "._ptr" for a in self.expanded_arguments]
+
+        if self.type.as_cython_type(header) == "str":
+            return [f"_bytes({a})" for a in self.expanded_arguments]
+        
+        return self.expanded_arguments
+
+    def is_array(self) -> bool:
+        return self.size > 1
+    
+    def has_pyx_implementation_lines(self) -> bool:
+        return self.implementation_lines > 0
+
+    def has_pyx_additional_returns(self) -> bool:
+        return self.additional_returns > 0
 
 
 class ParameterList:
     def __init__(self, parameters: List[Parameter]):
         self.internal_parameters = parameters
     
-    def parameters_expanded(self) -> List[Parameter]:
-        return sum(
-            [p.in_pyx_expanded_format() for p in self.internal_parameters],
-            start=[]
-        )
+    def __iter__(self):
+        self.i = 0
+        return self
+    
+    def __next__(self):
+        if self.i < len(self.internal_parameters):
+            to_return = self.internal_parameters[self.i]
+            self.i += 1
+            return to_return
+        raise StopIteration
 
-    def expanded_inout_implementation(self, index) -> Tuple[str, str, str]:
-        parameter: Parameter = self.internal_parameters[index]
-        
-        # No expansion occured
-        if parameter.size == 1:
-            assert False, "Parameter cannot be expanded"
-        
-        expanded = parameter.in_pyx_expanded_format()
-        first = expanded[0]
-        
-        template = "cdef {type}[{size}] io_{type}_{name} = [{expanded_names}]" \
-            .format(
-                type=first.type.internal_str,
-                size=len(expanded),
-                name=first.name,
-                expanded_names=", ".join([p.name for p in expanded])
-            )
-        def_lines = template
-
-        replace_arguments_with = "<{type}*>&io_{type}_{name}".format(
-            type=first.type.internal_str,
-            name=first.name
-        )
-
-        additional_return_values = "[{}]".format(
-            ", ".join([f"io_{first.type.internal_str}_{first.name}[{i}]" for i in range(len(expanded))])
-        )
-        return def_lines, replace_arguments_with, additional_return_values
+    def __len__(self):
+        return len(self.internal_parameters)
 
     def in_pxd_format(self):
         return [p.in_pxd_format() for p in self.internal_parameters]
-
-    def as_cython_arguments(self, header) -> List[str]:
-        arguments = []
-        for i, parameter in enumerate(self.internal_parameters):
-            if parameter.size > 1:
-                _, return_as, _ = self.expanded_inout_implementation(i)
-            elif parameter.type.as_cython_type(header) == "str":
-                return_as = "_bytes({})".format(parameter.name)
-            else:
-                return_as = parameter.name
-            arguments.append(return_as)
-        return arguments
-    
-    def as_cython_parameters(self, header: HeaderSpec) -> List[str]:
-        parameters = []
-        for parameter in self.parameters_expanded():
-            parameters.append(parameter.in_pyx_type_name_format(header))
-        return parameters
 
 
 class Typedef:
@@ -374,59 +518,18 @@ class Function:
         )
     
     def in_pyx_format(self, header: HeaderSpec):
-        if header.is_type_external(self.return_type):
-            return_type = "{}.{}".format(header.library_name, self.return_type.with_no_const())
-        else:
-            return_type = self.return_type.internal_str
-
-        function_name = re.sub("^ig_", "", snake_caseify(self.name))
-        
-        parameters_list = self.parameters.parameters_expanded()
-        parameters_type_name_list = self.parameters.as_cython_parameters(header)
-        parameters_name_list = self.parameters.as_cython_arguments(header)
-        if len(parameters_list) < 6:
-            parameters_type_name_text = ", ".join(parameters_type_name_list)
-            parameters_name_text = ", ".join(parameters_name_list)
-        else:
-            parameters_type_name_text = "\n    {}\n".format(
-                ",\n    ".join(parameters_type_name_list)
+        with open("pygui/templates/functions.h") as f:
+            template = Template(
+                f.read(),
+                self.parameters,
+                self.return_type,
+                re.sub("^ig_", "", snake_caseify(self.name)),
+                self.name
             )
-            parameters_name_text = "\n        {}\n    ".format(
-                ",\n        ".join(parameters_name_list)
-            )
-        
-        has_expanded_parameters = False
-        expanded_parameters = []
-        for i, parameter in enumerate(self.parameters.internal_parameters):
-            if parameter.size > 1:
-                has_expanded_parameters = True
-                io_impl, _, _ = self.parameters.expanded_inout_implementation(i)
-                expanded_parameters.append(io_impl)
-        
-        return Template(
-            "def {function_name}({parameters}):\n"
-            "#if has_expanded_parameters\n"
-            "    {expanded_parameters}\n"
-            "    #endif\n"
-            "#if has_return_type\n"
-            "    cdef {return_type} res = {library_name}.{function_pxd_name}({function_parameter_names})\n"
-            "    return res\n"
-            "#else\n"
-            "    {library_name}.{function_pxd_name}({function_parameter_names})\n"
-            "#endif\n"
-            ) \
-            .set_condition("has_return_type", self.return_type.internal_str != "void") \
-            .set_condition("has_expanded_parameters", has_expanded_parameters) \
-            .format(
-                function_name=function_name,
-                parameters=parameters_type_name_text,
-                return_type=return_type,
-                library_name=header.library_name,
-                function_pxd_name=self.name,
-                function_parameter_names=parameters_name_text,
-                expanded_parameters="    \n".join(expanded_parameters)
-            ) \
-            .compile()
+        return template.compile(
+            header,
+            is_constructor=False
+        )
 
 
 class Method:
@@ -474,96 +577,19 @@ class Method:
         function_name = safe_python_name(function_name)
         function_name = re.sub("^im_", "", function_name)
 
-        has_return_type = self.return_type is not None \
-            and self.return_type.internal_str != "void"
-
-        parameters_list = self.parameters.parameters_expanded()
-        parameters_type_name_list = self.parameters.as_cython_parameters(header)
-        parameters_name_list = self.parameters.as_cython_arguments(header)
-        # Most methods have self as the first parameter, but this ensures that
-        # if this is the case if doesn't bother showing a type. The only methods
-        # that do not start with self are the constructors.
-        if not self.is_constructor and parameters_list[0].name == "self":
-            parameters_type_name_list[0] = "self"
-
-        if len(parameters_list) < 5:
-            parameters_type_name_text = ", ".join(parameters_type_name_list)
-            parameters_name_text = ", ".join(parameters_name_list)
-        else:
-            parameters_type_name_text = "\n        {}\n    ".format(
-                ",\n        ".join(parameters_type_name_list)
+        with open("pygui/templates/functions.h") as f:
+            template = Template(
+                f.read(),
+                self.parameters,
+                self.return_type,
+                function_name,
+                self.cimgui_name
             )
-            parameters_name_text = "\n            {}\n        ".format(
-                ",\n            ".join(parameters_name_list)
-            )
-        
-        # Need to deference self when calling to cimgui
-        if not self.is_constructor:
-            for i, argument in enumerate(parameters_name_list):
-                if argument == "self":
-                    parameters_name_list[i] = "self._ptr"
-        
-        has_expanded_parameters = False
-        expanded_parameters = []
-        for i, parameter in enumerate(self.parameters.internal_parameters):
-            if parameter.size > 1:
-                has_expanded_parameters = True
-                io_impl, _, _ = self.parameters.expanded_inout_implementation(i)
-                expanded_parameters.append(io_impl)
-
-        if self.return_type is None:
-            return_type = ""
-        elif header.is_type_external(self.return_type):
-            return_type = "{}.{}".format(header.library_name, self.return_type.with_no_const())
-        else:
-            return_type = self.return_type.internal_str
-
-        if self.is_constructor:
-            return Template(
-                "    # Constructor\n"
-                "    @staticmethod\n"
-                "    def {function_name}({parameters}):\n"
-                "        cdef {return_type} _ptr = {library_name}.{function_pxd_name}({function_parameter_names})\n"
-                "        if _ptr is NULL:\n"
-                "            raise MemoryError\n"
-                "        \n"
-                "        return _{struct_name}.from_ptr(_ptr)\n"
-                ) \
-                .format(
-                    function_name=function_name,
-                    parameters=parameters_type_name_text,
-                    return_type=return_type,
-                    library_name=header.library_name,
-                    function_pxd_name=self.cimgui_name,
-                    function_parameter_names=parameters_name_text,
-                    struct_name=self.struct_name
-                ) \
-                .compile()
-        else:
-            return Template(
-                "    def {function_name}({parameters}):\n"
-                "    #if has_expanded_parameters\n"
-                "        {expanded_parameters}\n"
-                "    #endif\n"
-                "    #if has_return_type\n"
-                "        cdef {return_type} res = {library_name}.{function_pxd_name}({function_parameter_names})\n"
-                "        return res\n"
-                "    #else\n"
-                "        {library_name}.{function_pxd_name}({function_parameter_names})\n"
-                "    #endif\n"
-                ) \
-                .set_condition("has_return_type", has_return_type) \
-                .set_condition("has_expanded_parameters", has_expanded_parameters) \
-                .format(
-                    function_name=function_name,
-                    parameters=parameters_type_name_text,
-                    return_type=return_type,
-                    library_name=header.library_name,
-                    function_pxd_name=self.cimgui_name,
-                    function_parameter_names=parameters_name_text,
-                    expanded_parameters="\n        ".join(expanded_parameters)
-                ) \
-                .compile()
+        return indent_by(template.compile(
+            header,
+            is_constructor=self.is_constructor,
+            struct_name=self.struct_name
+        ), 4)
 
 
 class Struct:
@@ -679,6 +705,10 @@ class HeaderSpec:
 
     def in_pyx_format(self):
         output = StringIO()
+        output.write("# distutils: language = c++\n")
+        output.write("# cython: language_level = 3\n")
+        output.write("# cython: embedsignature=True\n\n")
+
         output.write("")
         output.write("import cython\n")
         output.write("from cython.operator import dereference\n\n")
@@ -695,39 +725,47 @@ class HeaderSpec:
             output.write(enum.in_pyx_format(self.library_name) + "\n")
         output.write("\n")
 
+        output.write("Vec2 = namedtuple('Vec2', ['x', 'y'])\n")
+        output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
+
         output.write("cdef bytes _bytes(str text):\n")
         output.write("    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))\n\n")
 
         output.write("cdef str _from_bytes(bytes text):\n")
         output.write("    return <str>(text if PY_MAJOR_VERSION < 3 else text.decode('utf-8', errors='ignore'))\n\n\n")
         
+        output.write(f"cdef _cast_ImVec2_tuple({self.library_name}.ImVec2 vec):\n")
+        output.write("    return Vec2(vec.x, vec.y)\n\n")
+
+        output.write(f"cdef {self.library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:\n")
+        output.write(f"    cdef {self.library_name}.ImVec2 vec\n")
+        output.write("    if len(pair) != 2:\n")
+        output.write("        raise ValueError('pair param must be length of 2')\n")
+        output.write("    vec.x, vec.y = pair\n")
+        output.write("    return vec\n\n")
+
+        output.write(f"cdef _cast_ImVec4_tuple({self.library_name}.ImVec4 vec):\n")
+        output.write("    return Vec4(vec.x, vec.y, vec.z, vec.w)\n\n")
+
+        output.write(f"cdef {self.library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):\n")
+        output.write(f"    cdef {self.library_name}.ImVec4 vec\n")
+        output.write("    if len(quadruple) != 4:\n")
+        output.write("        raise ValueError('quadruple param must be length of 4')\n\n")
+        output.write("    vec.x, vec.y, vec.z, vec.w = quadruple\n")
+        output.write("    return vec\n\n\n")
+
         for function in self.functions:
             output.write(function.in_pyx_format(self) + "\n")
         output.write("\n")
         
         for struct in self.structs:
-            if len(struct.methods) == 0:
-                continue
+            with open("pygui/templates/classes.h") as f:
+                template = f.read()
             
-            class_template = Template(
-                "cdef class _{struct_name}:\n"
-                "    cdef {library_name}.{struct_name}* _ptr\n"
-                "    \n"
-                "    @staticmethod\n"
-                "    cdef _{struct_name} from_ptr({library_name}.{struct_name}* _ptr):\n"
-                "       cdef _{struct_name} wrapper = _{struct_name}.__new__(_{struct_name})\n"
-                "       wrapper._ptr = _ptr\n"
-                "       return wrapper\n"
-                "    \n"
-                "    def __init__(self):\n"
-                "        raise TypeError('This class cannot be instantiated directly.')\n\n"
-                ) \
-                .format(
-                    library_name=self.library_name,
-                    struct_name=struct.name
-                )
-
-            output.write(class_template.compile())
+            output.write(template.format(
+                struct_name=struct.name,
+                library_name=self.library_name,
+            ))
 
             for method in struct.methods:
                 output.write(method.in_pyx_format(self) + "\n")
@@ -743,7 +781,7 @@ class HeaderSpec:
         assert _type is not None
         type_string = _type.with_no_const_or_asterisk()
 
-        if type_string in [s.name for s in self.structs]:
+        if self.is_type_class(_type):
             return True
         
         if type_string in [e.name for e in self.enums]:
@@ -756,6 +794,13 @@ class HeaderSpec:
             return True
         
         return False
+
+    def is_type_class(self, _type: CType):
+        assert _type is not None
+        type_string = _type.with_no_const_or_asterisk()
+
+        if type_string in [s.name for s in self.structs]:
+            return True
 
 
 def safe_python_name(name: str, suffix="_") -> str:
@@ -1072,6 +1117,30 @@ def header_model(base, library_name):
     return HeaderSpec(structs, enums, typedefs, functions, library_name)
 
 
+def compare(pyx_template, pyx):
+    pass
+    # base_lines = pyx.split("\n")
+    # temp_lines = pyx_template.split("\n")
+
+    # assert len(temp_lines) >= len(base_lines)
+
+    # i = 0
+    # template_i = 0
+    # detached = False
+    # output = []
+    # while True:
+    #     b_line = base_lines[i]
+    #     t_line = temp_lines[template_i]
+
+    #     if t_line.replace("#", "") == b_line:
+    #         detached = True
+        
+
+
+    #     i += 1
+
+
+
 def main():
     header = header_model("cimgui/generator/output", "ccimgui")
 
@@ -1082,10 +1151,25 @@ def main():
         f.write(header.in_pxd_format())
     
     with open("pygui/core_v2.pyx", "w") as f:
-        f.write(header.in_pyx_format())
+        pyx = header.in_pyx_format()
+        f.write(pyx)
 
-    with open("pygui/core.pyx", "w") as f:
-        f.write(header.in_pyx_format())
+    try:
+        with open("pygui/core_v2_template.pyx") as f:
+            pyx_template = f.read()
+
+    except FileNotFoundError:
+        with open("pygui/core_v2_template.pyx", "w") as f:
+            f.write(pyx)
+            pyx_template = pyx
+
+
+    compare(pyx_template, pyx)
+
+
+
+    # with open("pygui/core.pyx", "w") as f:
+    #     f.write(header.in_pyx_format())
 
     # for function in header.functions:
     #     print(function)
