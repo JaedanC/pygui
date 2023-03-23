@@ -4624,7 +4624,6 @@ cdef class _ImDrawData:
     def cmd_lists(self):
         return [
             _ImDrawList.from_ptr(dereference(self._ptr).CmdLists[idx])
-            # perf: short-wiring instead of using property
             for idx in range(dereference(self._ptr).CmdListsCount)
         ]
     # @cmd_lists.setter
@@ -4904,16 +4903,16 @@ cdef class _ImFontAtlas:
     #     float advance_x,
     #     tuple offset=(0, 0)
     # ):
-    # cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
-    #     self._ptr,
-    #     font._ptr,
-    #     id,
-    #     width,
-    #     height,
-    #     advance_x,
-    #     _cast_tuple_ImVec2(offset)
-    # )
-    # return res
+    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
+    #         self._ptr,
+    #         font._ptr,
+    #         id,
+    #         width,
+    #         height,
+    #         advance_x,
+    #         _cast_tuple_ImVec2(offset)
+    #     )
+    #     return res
     
 #     def add_custom_rect_regular(_ImFontAtlas self, int width, int height):
 #         cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(self._ptr, width, height)
@@ -8068,7 +8067,6 @@ cdef class _ImDrawList:
     def cmd_buffer(self):
         return [
             _ImDrawCmd.from_ptr(&dereference(self._ptr).CmdBuffer.Data[idx])
-            # perf: short-wiring instead of using property
             for idx in range(dereference(self._ptr).CmdBuffer.Size)
         ]
     # @cmd_buffer.setter

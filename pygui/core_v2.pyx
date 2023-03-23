@@ -721,27 +721,27 @@ def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
 
 
-def accept_drag_drop_payload(str type_, ccimgui.ImGuiDragDropFlags flags=0):
-    cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type_), flags)
+def accept_drag_drop_payload(str type, ccimgui.ImGuiDragDropFlags flags=0):
+    cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type), flags)
     return _ImGuiPayload.from_ptr(res)
 
 def align_text_to_frame_padding():
     ccimgui.igAlignTextToFramePadding()
 
-def arrow_button(str str_id, ccimgui.ImGuiDir dir_):
-    cdef ccimgui.bool res = ccimgui.igArrowButton(_bytes(str_id), dir_)
+def arrow_button(str str_id, ccimgui.ImGuiDir dir):
+    cdef ccimgui.bool res = ccimgui.igArrowButton(_bytes(str_id), dir)
     return res
 
 def begin(str name, Any p_open=None, ccimgui.ImGuiWindowFlags flags=0):
     cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), p_open, flags)
     return res
 
-def begin_child_frame(ccimgui.ImGuiID id_, tuple size, ccimgui.ImGuiWindowFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igBeginChildFrame(id_, _cast_tuple_ImVec2(size), flags)
+def begin_child_frame(ccimgui.ImGuiID id, tuple size, ccimgui.ImGuiWindowFlags flags=0):
+    cdef ccimgui.bool res = ccimgui.igBeginChildFrame(id, _cast_tuple_ImVec2(size), flags)
     return res
 
-def begin_child_id(ccimgui.ImGuiID id_, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igBeginChild_ID(id_, _cast_tuple_ImVec2(size), border, flags)
+def begin_child_id(ccimgui.ImGuiID id, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
+    cdef ccimgui.bool res = ccimgui.igBeginChild_ID(id, _cast_tuple_ImVec2(size), border, flags)
     return res
 
 def begin_child_str(str str_id, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
@@ -940,8 +940,8 @@ def color_picker4(
     cdef ccimgui.bool res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, ref_col)
     return res
 
-def columns(int count=1, str id_=None, Any border=True):
-    ccimgui.igColumns(count, _bytes(id_), border)
+def columns(int count=1, str id=None, Any border=True):
+    ccimgui.igColumns(count, _bytes(id), border)
 
 def combo_fn_bool_ptr(
     str label,
@@ -965,8 +965,8 @@ def combo_str(str label, int current_item, str items_separated_by_zeros, int pop
     cdef ccimgui.bool res = ccimgui.igCombo_Str(_bytes(label), current_item, _bytes(items_separated_by_zeros), popup_max_height_in_items)
     return res
 
-def combo_str_arr(str label, int current_item, Any items, int items_count, int popup_max_height_in_items=-1):
-    cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items, items_count, popup_max_height_in_items)
+def combo_str_arr(str label, int current_item, Any items_, int items_count, int popup_max_height_in_items=-1):
+    cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items_, items_count, popup_max_height_in_items)
     return res
 
 def create_context(_ImFontAtlas shared_font_atlas=None):
@@ -1002,8 +1002,8 @@ def destroy_context(_ImGuiContext ctx=None):
 def destroy_platform_windows():
     ccimgui.igDestroyPlatformWindows()
 
-def dock_space(ccimgui.ImGuiID id_, tuple size=(0, 0), ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id_, _cast_tuple_ImVec2(size), flags, window_class._ptr)
+def dock_space(ccimgui.ImGuiID id, tuple size=(0, 0), ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
+    cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id, _cast_tuple_ImVec2(size), flags, window_class._ptr)
     return res
 
 def dock_space_over_viewport(_ImGuiViewport viewport=None, ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
@@ -1339,8 +1339,8 @@ def end_table():
 def end_tooltip():
     ccimgui.igEndTooltip()
 
-def find_viewport_by_id(ccimgui.ImGuiID id_):
-    cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id_)
+def find_viewport_by_id(ccimgui.ImGuiID id):
+    cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id)
     return _ImGuiViewport.from_ptr(res)
 
 def find_viewport_by_platform_handle(Any platform_handle):
@@ -1941,8 +1941,8 @@ def list_box_fn_bool_ptr(
     )
     return res
 
-def list_box_str_arr(str label, int current_item, Any items, int items_count, int height_in_items=-1):
-    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(_bytes(label), current_item, items, items_count, height_in_items)
+def list_box_str_arr(str label, int current_item, Any items_, int items_count, int height_in_items=-1):
+    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(_bytes(label), current_item, items_, items_count, height_in_items)
     return res
 
 def load_ini_settings_from_disk(str ini_filename):
@@ -1999,15 +1999,15 @@ def next_column():
 def open_popup_on_item_click(str str_id=None, ccimgui.ImGuiPopupFlags popup_flags=1):
     ccimgui.igOpenPopupOnItemClick(_bytes(str_id), popup_flags)
 
-def open_popup_id(ccimgui.ImGuiID id_, ccimgui.ImGuiPopupFlags popup_flags=0):
-    ccimgui.igOpenPopup_ID(id_, popup_flags)
+def open_popup_id(ccimgui.ImGuiID id, ccimgui.ImGuiPopupFlags popup_flags=0):
+    ccimgui.igOpenPopup_ID(id, popup_flags)
 
 def open_popup_str(str str_id, ccimgui.ImGuiPopupFlags popup_flags=0):
     ccimgui.igOpenPopup_Str(_bytes(str_id), popup_flags)
 
 def plot_histogram_float_ptr(
     str label,
-    Any values,
+    Any values_,
     int values_count,
     int values_offset=0,
     str overlay_text=None,
@@ -2018,7 +2018,7 @@ def plot_histogram_float_ptr(
 ):
     ccimgui.igPlotHistogram_FloatPtr(
         _bytes(label),
-        values,
+        values_,
         values_count,
         values_offset,
         _bytes(overlay_text),
@@ -2053,7 +2053,7 @@ def plot_histogram_fn_float_ptr(
 
 def plot_lines_float_ptr(
     str label,
-    Any values,
+    Any values_,
     int values_count,
     int values_offset=0,
     str overlay_text=None,
@@ -2064,7 +2064,7 @@ def plot_lines_float_ptr(
 ):
     ccimgui.igPlotLines_FloatPtr(
         _bytes(label),
-        values,
+        values_,
         values_count,
         values_offset,
         _bytes(overlay_text),
@@ -2237,8 +2237,8 @@ def set_cursor_posy(float local_y):
 def set_cursor_screen_pos(tuple pos):
     ccimgui.igSetCursorScreenPos(_cast_tuple_ImVec2(pos))
 
-def set_drag_drop_payload(str type_, Any data, Any sz, ccimgui.ImGuiCond cond=0):
-    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type_), data, sz, cond)
+def set_drag_drop_payload(str type, Any data, Any sz, ccimgui.ImGuiCond cond=0):
+    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type), data, sz, cond)
     return res
 
 def set_item_allow_overlap():
@@ -3641,11 +3641,11 @@ cdef class _ImGuiPayload:
     def destroy(_ImGuiPayload self):
         ccimgui.ImGuiPayload_destroy(self._ptr)
     
-    def clear(_ImGuiPayload self):
+    def clear_(_ImGuiPayload self):
         ccimgui.ImGuiPayload_Clear(self._ptr)
     
-    def is_data_type(_ImGuiPayload self, str type_):
-        cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDataType(self._ptr, _bytes(type_))
+    def is_data_type(_ImGuiPayload self, str type):
+        cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDataType(self._ptr, _bytes(type))
         return res
     
     def is_delivery(_ImGuiPayload self):
@@ -3845,14 +3845,14 @@ cdef class _ImGuiStoragePair:
         raise TypeError('This class cannot be instantiated directly.')
 
     @staticmethod
-    def float_(ccimgui.ImGuiID _key, float _val_f):
+    def float(ccimgui.ImGuiID _key, float _val_f):
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Float(_key, _val_f)
         if _ptr is NULL:
             raise MemoryError
         return _ImGuiStoragePair.from_ptr(_ptr)
     
     @staticmethod
-    def int_(ccimgui.ImGuiID _key, int _val_i):
+    def int(ccimgui.ImGuiID _key, int _val_i):
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Int(_key, _val_i)
         if _ptr is NULL:
             raise MemoryError
@@ -4090,7 +4090,7 @@ cdef class _ImGuiTextRange:
         return _ImGuiTextRange.from_ptr(_ptr)
     
     @staticmethod
-    def str_(str _b, str _e):
+    def str(str _b, str _e):
         cdef ccimgui.ImGuiTextRange* _ptr = ccimgui.ImGuiTextRange_ImGuiTextRange_Str(_bytes(_b), _bytes(_e))
         if _ptr is NULL:
             raise MemoryError
@@ -4209,7 +4209,7 @@ cdef class _ImVec2:
         raise TypeError('This class cannot be instantiated directly.')
 
     @staticmethod
-    def float_(float _x, float _y):
+    def float(float _x, float _y):
         cdef ccimgui.ImVec2* _ptr = ccimgui.ImVec2_ImVec2_Float(_x, _y)
         if _ptr is NULL:
             raise MemoryError
@@ -4255,7 +4255,7 @@ cdef class _ImVec4:
         raise TypeError('This class cannot be instantiated directly.')
 
     @staticmethod
-    def float_(float _x, float _y, float _z, float _w):
+    def float(float _x, float _y, float _z, float _w):
         cdef ccimgui.ImVec4* _ptr = ccimgui.ImVec4_ImVec4_Float(_x, _y, _z, _w)
         if _ptr is NULL:
             raise MemoryError
@@ -4317,14 +4317,14 @@ cdef class _ImColor:
         raise TypeError('This class cannot be instantiated directly.')
 
     @staticmethod
-    def float_(float r, float g, float b, float a=1.0):
+    def float(float r, float g, float b, float a=1.0):
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Float(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
     
     @staticmethod
-    def int_(int r, int g, int b, int a=255):
+    def int(int r, int g, int b, int a=255):
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Int(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
@@ -4532,7 +4532,7 @@ cdef class _ImDrawData:
     def destroy(_ImDrawData self):
         ccimgui.ImDrawData_destroy(self._ptr)
     
-    def clear(_ImDrawData self):
+    def clear_(_ImDrawData self):
         ccimgui.ImDrawData_Clear(self._ptr)
     
     def de_index_all_buffers(_ImDrawData self):
@@ -4636,7 +4636,7 @@ cdef class _ImDrawListSplitter:
     def destroy(_ImDrawListSplitter self):
         ccimgui.ImDrawListSplitter_destroy(self._ptr)
     
-    def clear(_ImDrawListSplitter self):
+    def clear_(_ImDrawListSplitter self):
         ccimgui.ImDrawListSplitter_Clear(self._ptr)
     
     def clear_free_memory(_ImDrawListSplitter self):
@@ -5056,7 +5056,7 @@ cdef class _ImFontAtlas:
     def add_custom_rect_font_glyph(
         _ImFontAtlas self,
         _ImFont font,
-        ccimgui.ImWchar id_,
+        ccimgui.ImWchar id,
         int width,
         int height,
         float advance_x,
@@ -5065,7 +5065,7 @@ cdef class _ImFontAtlas:
         cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
             self._ptr,
             font._ptr,
-            id_,
+            id,
             width,
             height,
             advance_x,
@@ -5136,7 +5136,7 @@ cdef class _ImFontAtlas:
     def calc_custom_rect_uv(_ImFontAtlas self, _ImFontAtlasCustomRect rect, _ImVec2 out_uv_min, _ImVec2 out_uv_max):
         ccimgui.ImFontAtlas_CalcCustomRectUV(self._ptr, rect._ptr, out_uv_min._ptr, out_uv_max._ptr)
     
-    def clear(_ImFontAtlas self):
+    def clear_(_ImFontAtlas self):
         ccimgui.ImFontAtlas_Clear(self._ptr)
     
     def clear_fonts(_ImFontAtlas self):
@@ -5220,8 +5220,8 @@ cdef class _ImFontAtlas:
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_IsBuilt(self._ptr)
         return res
     
-    def set_tex_id(_ImFontAtlas self, ccimgui.ImTextureID id_):
-        ccimgui.ImFontAtlas_SetTexID(self._ptr, id_)
+    def set_tex_id(_ImFontAtlas self, ccimgui.ImTextureID id):
+        ccimgui.ImFontAtlas_SetTexID(self._ptr, id)
     
     @property
     def flags(self):
@@ -5700,7 +5700,7 @@ cdef class _ImFontGlyphRangesBuilder:
     def build_ranges(_ImFontGlyphRangesBuilder self, _ImVector_ImWchar out_ranges):
         ccimgui.ImFontGlyphRangesBuilder_BuildRanges(self._ptr, out_ranges._ptr)
     
-    def clear(_ImFontGlyphRangesBuilder self):
+    def clear_(_ImFontGlyphRangesBuilder self):
         ccimgui.ImFontGlyphRangesBuilder_Clear(self._ptr)
     
     def get_bit(_ImFontGlyphRangesBuilder self, Any n):
@@ -5750,8 +5750,8 @@ cdef class _ImGuiIO:
     def add_input_character_utf16(_ImGuiIO self, ccimgui.ImWchar16 c):
         ccimgui.ImGuiIO_AddInputCharacterUTF16(self._ptr, c)
     
-    def add_input_characters_utf8(_ImGuiIO self, str str_):
-        ccimgui.ImGuiIO_AddInputCharactersUTF8(self._ptr, _bytes(str_))
+    def add_input_characters_utf8(_ImGuiIO self, str str):
+        ccimgui.ImGuiIO_AddInputCharactersUTF8(self._ptr, _bytes(str))
     
     def add_key_analog_event(_ImGuiIO self, Any key, Any down, float value):
         ccimgui.ImGuiIO_AddKeyAnalogEvent(self._ptr, key, down, value)
@@ -5765,8 +5765,8 @@ cdef class _ImGuiIO:
     def add_mouse_pos_event(_ImGuiIO self, float x, float y):
         ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
     
-    def add_mouse_viewport_event(_ImGuiIO self, ccimgui.ImGuiID id_):
-        ccimgui.ImGuiIO_AddMouseViewportEvent(self._ptr, id_)
+    def add_mouse_viewport_event(_ImGuiIO self, ccimgui.ImGuiID id):
+        ccimgui.ImGuiIO_AddMouseViewportEvent(self._ptr, id)
     
     def add_mouse_wheel_event(_ImGuiIO self, float wheel_x, float wheel_y):
         ccimgui.ImGuiIO_AddMouseWheelEvent(self._ptr, wheel_x, wheel_y)
@@ -6880,7 +6880,7 @@ cdef class _ImGuiStorage:
     def build_sort_by_key(_ImGuiStorage self):
         ccimgui.ImGuiStorage_BuildSortByKey(self._ptr)
     
-    def clear(_ImGuiStorage self):
+    def clear_(_ImGuiStorage self):
         ccimgui.ImGuiStorage_Clear(self._ptr)
     
     def get_bool(_ImGuiStorage self, ccimgui.ImGuiID key, Any default_val=False):
@@ -7339,8 +7339,8 @@ cdef class _ImGuiTextBuffer:
     def destroy(_ImGuiTextBuffer self):
         ccimgui.ImGuiTextBuffer_destroy(self._ptr)
     
-    def append(_ImGuiTextBuffer self, str str_, str str_end=None):
-        ccimgui.ImGuiTextBuffer_append(self._ptr, _bytes(str_), _bytes(str_end))
+    def append(_ImGuiTextBuffer self, str str, str str_end=None):
+        ccimgui.ImGuiTextBuffer_append(self._ptr, _bytes(str), _bytes(str_end))
     
     def appendf(_ImGuiTextBuffer self, str fmt):
         ccimgui.ImGuiTextBuffer_appendf(self._ptr, _bytes(fmt))
@@ -7356,7 +7356,7 @@ cdef class _ImGuiTextBuffer:
         cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(self._ptr)
         return res
     
-    def clear(_ImGuiTextBuffer self):
+    def clear_(_ImGuiTextBuffer self):
         ccimgui.ImGuiTextBuffer_clear(self._ptr)
     
     def empty(_ImGuiTextBuffer self):
@@ -7408,7 +7408,7 @@ cdef class _ImGuiTextFilter:
     def build(_ImGuiTextFilter self):
         ccimgui.ImGuiTextFilter_Build(self._ptr)
     
-    def clear(_ImGuiTextFilter self):
+    def clear_(_ImGuiTextFilter self):
         ccimgui.ImGuiTextFilter_Clear(self._ptr)
     
     def draw(_ImGuiTextFilter self, str label="Filter(inc, -exc)", float width=0.0):

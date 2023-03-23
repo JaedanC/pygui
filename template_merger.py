@@ -70,6 +70,9 @@ def patch_sync(
     # Apply those changes to the templated content.
     template_and_changes_merged, successes = dmp.patch_apply(
         commits, uncomment_except(template_content, 3))
+    
+    with open("pygui/core_v2_uncommented.pyx", "w") as f:
+        f.write(uncomment_except(template_content, 3))
 
     if False in successes:
         patch_failed(
@@ -133,7 +136,7 @@ def main():
         print("Usage: python template_merger.py <OPTION>")
         print("  --pxd     Will create the pxd file only")
         print("  --try     Will run a trial patch and save the output to a trial file")
-        print("  --build   Patch the core file using the changes")
+        print("  --merge   Patch the core file using the changes")
         return
     
     header = header_model("cimgui/generator/output", "ccimgui")
