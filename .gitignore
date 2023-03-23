@@ -12,6 +12,8 @@ pygui/*.lib
 pygui/*.pyd
 pygui/*.cpp
 pygui/*.c
+pygui/*_attempt.pyx
+pygui/*_trial.pyx
 
 Scripts/
 

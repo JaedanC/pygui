@@ -1,5 +1,5 @@
 #if is_constructor
-# Constructor
+## Constructor
 @staticmethod
 def {function_name}({parameters}):
     #if has_body_lines

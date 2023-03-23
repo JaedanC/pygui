@@ -40,32 +40,79 @@ def indent_by(string: str, by: int):
     return "\n".join([by * " " + line for line in string.split("\n")])
 
 
+def function_body_template(
+    header: HeaderSpec,
+    parameter_list: ParameterList,
+    return_type: CType,
+    function_name: str,
+    cimgui_function_name: str,
+    **kwargs
+):
+    parameter_tokens = []
+    argument_tokens = []
+    implementation_lines = []
+    to_return_tokens = []
+
+    # Expand array parameters:
+    # float value[2] == float value0, float value1
+    for parameter in parameter_list:
+        parameter_tokens += parameter.in_pyx_type_name_default_format(header)
+        argument_tokens += parameter.in_pyx_name_format(header)
+        implementation_lines += parameter.implementation_lines
+        to_return_tokens += parameter.additional_returns
+    
+    # This is the string that makes up the return value of the cimgui
+    # function call
+    has_return_type = return_type is not None and not return_type.is_void()
+    res_name = "res"
+    return_type_string = ""
+    if has_return_type:
+        if header.is_type_class(return_type):
+            res_name = "_{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
+        
+        if header.is_type_external(return_type):
+            return_type_string = header.library_name + "." + return_type.with_no_const()
+        else:
+            return_type_string = return_type.internal_str
+
+    if len(parameter_tokens) > 5:
+        parameter_text = "\n" + indent_by(",\n".join(parameter_tokens), 4) + "\n"
+    else:
+        parameter_text = ", ".join(parameter_tokens)
+    
+    if len(argument_tokens) > 5:
+        argument_text = "\n" + indent_by(",\n".join(argument_tokens), 8) + "\n    "
+    else:
+        argument_text = ", ".join(argument_tokens)
+
+    with open("pygui/templates/functions.h") as f:
+        template = Template(f.read())
+
+    template.set_condition("has_return_type", has_return_type)
+    template.set_condition("has_return_tuple", False)
+    template.set_condition("has_body_lines", len(implementation_lines) > 0)
+
+    template.format(
+        function_name=function_name,
+        parameters=parameter_text,
+        body_lines=indent_by("\n".join(implementation_lines), 4),
+        return_type=return_type_string,
+        library_name=header.library_name,
+        function_pxd_name=cimgui_function_name,
+        arguments=argument_text,
+        res=res_name,
+        **kwargs
+    )
+        
+    return template.compile(**kwargs)
+
+
 class Template:
     """Represents a function in a pyx file. Has a specific format to ease with
     creating the function.
     """
-    def __init__(self,
-                 base_template: str,
-                 parameter_list: ParameterList,
-                 return_type: CType,
-                 function_name: str,
-                 cimgui_function_name: str,
-        ):
+    def __init__(self, base_template: str):
         self.base: str = base_template
-        self.parameter_list: ParameterList = parameter_list
-        self.return_type: CType = return_type
-        self.function_name: str = function_name
-        self.cimgui_function_name: str = cimgui_function_name
-
-        self.has_return_type = None
-        self.return_type_string = ""
-        # List of additional lines that make up the body
-        # of the function. Here we put any etra code that
-        # helps translate a parameter to an arugument.
-        self.implementation_lines = []
-        self.parameter_tokens = []  # List of strings that determine each parameter
-        self.argument_tokens = []   # List of strings that determine each argument
-        self.to_return_tokens = []
     
     def set_condition(self, condition: str, value: bool) -> Template:
         """Any conditions in the file will be included or excluded based on
@@ -142,62 +189,18 @@ class Template:
         self.base = self.base.format_map(IgnoreMissing(**kwargs))
         return self
 
-    def compile(self, header: HeaderSpec, **kwargs) -> str:
+    def compile(self, **kwargs) -> str:
         """Compiles the resulting function based on the information provided
         in the constructor and the conditions.
 
         Returns:
-            str: A non-indented function. May still contain missing {placeholders}
+            str: A non-indented template string. May still contain missing
+                 {placeholders}
         """
-        # Expand array parameters:
-        # float value[2] == float value0, float value1
-        for parameter in self.parameter_list:
-            self.parameter_tokens += parameter.in_pyx_type_name_default_format(header)
-            self.argument_tokens += parameter.in_pyx_name_format(header)
-            self.implementation_lines += parameter.implementation_lines
-            self.to_return_tokens += parameter.additional_returns
-        
-        # This is the string that makes up the return value of the cimgui
-        # function call
-        self.has_return_type = self.return_type is not None and not self.return_type.is_void()
-        res_name = "res"
-        if self.has_return_type:
-            # if header.is_type_class(self.return_type):
-            #     res_name = "_{}.from_ptr(res)".format(self.return_type.with_no_const_or_asterisk())
-            if header.is_type_external(self.return_type):
-                self.return_type_string = header.library_name + "." + self.return_type.with_no_const()
-            else:
-                self.return_type_string = self.return_type.internal_str
-            
         for kwarg, value in kwargs.items():
             self.set_condition(kwarg, value)
-        self.set_condition("has_return_type", self.has_return_type)
-        self.set_condition("has_return_tuple", False)
-        self.set_condition("has_body_lines", len(self.implementation_lines) > 0)
         
-        if len(self.parameter_tokens) > 5:
-            parameter_text = "\n" + indent_by(",\n".join(self.parameter_tokens), 4) + "\n"
-        else:
-            parameter_text = ", ".join(self.parameter_tokens)
-        
-        if len(self.argument_tokens) > 5:
-            argument_text = "\n" + indent_by(",\n".join(self.argument_tokens), 8) + "\n    "
-        else:
-            argument_text = ", ".join(self.argument_tokens)
-        
-
-        self.format(
-            function_name=self.function_name,
-            parameters=parameter_text,
-            body_lines=indent_by("\n".join(self.implementation_lines), 4),
-            return_type=self.return_type_string,
-            library_name=header.library_name,
-            function_pxd_name=self.cimgui_function_name,
-            arguments=argument_text,
-            res=res_name,
-            **kwargs
-        )
-        
+        self.format(**kwargs)
         return self.base
 
 
@@ -315,9 +318,6 @@ class Parameter:
                 expanded_names=", ".join([p.name for p in self.expanded_parameters])
             ))
 
-        if self.type.with_no_const_or_asterisk() == "ImVec2":
-            self.type_string = self.type.with_no_const_or_asterisk()
-        
         self.expanded_arguments = ["<{type}*>&io_{type}_{name}".format(
             type=self.type.with_no_const_or_asterisk(),
             name=self.name
@@ -387,12 +387,18 @@ class Parameter:
         return output
     
     def in_pyx_name_format(self, header: HeaderSpec) -> List[str]:
+        if self.type.with_no_const() == "ImVec2":
+            return [f"_cast_tuple_ImVec2({a})" for a in self.expanded_arguments]
+        
+        if self.type.with_no_const() == "ImVec4":
+            return [f"_cast_tuple_ImVec4({a})" for a in self.expanded_arguments]
+        
         if header.is_type_class(self.type):
             return [a + "._ptr" for a in self.expanded_arguments]
 
         if self.type.as_cython_type(header) == "str":
             return [f"_bytes({a})" for a in self.expanded_arguments]
-        
+
         return self.expanded_arguments
 
     def is_array(self) -> bool:
@@ -403,6 +409,58 @@ class Parameter:
 
     def has_pyx_additional_returns(self) -> bool:
         return self.additional_returns > 0
+
+    def in_field_pyx_format(self, header: HeaderSpec):
+        with open("pygui/templates/fields.h") as f:
+            text = f.read()
+            getter = Template(text)
+            setter = Template(text)
+
+        type_string = self.type.as_cython_type(header)
+        res = "res"
+        if header.is_type_class(self.type) and type_string == "Any":
+            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
+            res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
+
+        getter.format(
+            field_name = snake_caseify(self.name),
+            cimgui_field_name = self.name,
+            field_type = type_string,
+            res = res,
+        )
+
+        value = "value"
+        if self.type.with_no_const() == "ImVec2":
+            value = "_cast_tuple_ImVec2(value)"
+        elif self.type.with_no_const() == "ImVec4":
+            value = "_cast_tuple_ImVec4(value)"
+        elif header.is_type_class(self.type):
+            value = "value._ptr"
+        elif self.type.as_cython_type(header) == "str":
+            return "_bytes(value)"
+
+        python_type = self.type.as_cython_type(header)
+        if python_type == "Any":
+            python_type = ""
+
+        setter.format(
+            field_name = snake_caseify(self.name),
+            cimgui_field_name = self.name,
+            field_type = type_string,
+            res = res,
+            value = value,
+            python_type = self.type.as_cython_type(header),
+        )
+
+        get_func = getter.compile(
+            is_getter=True
+        )
+
+        set_func = setter.compile(
+            is_getter=False
+        )
+
+        return indent_by(get_func + "\n" + set_func + "\n", 4)
 
 
 class ParameterList:
@@ -522,16 +580,12 @@ class Function:
         )
     
     def in_pyx_format(self, header: HeaderSpec):
-        with open("pygui/templates/functions.h") as f:
-            template = Template(
-                f.read(),
-                self.parameters,
-                self.return_type,
-                re.sub("^ig_", "", snake_caseify(self.name)),
-                self.name
-            )
-        return template.compile(
+        return function_body_template(
             header,
+            self.parameters,
+            self.return_type,
+            re.sub("^ig_", "", snake_caseify(self.name)), 
+            self.name,
             is_constructor=False
         )
 
@@ -581,19 +635,16 @@ class Method:
         function_name = safe_python_name(function_name)
         function_name = re.sub("^im_", "", function_name)
 
-        with open("pygui/templates/functions.h") as f:
-            template = Template(
-                f.read(),
-                self.parameters,
-                self.return_type,
-                function_name,
-                self.cimgui_name
-            )
-        return indent_by(template.compile(
+        output = function_body_template(
             header,
+            self.parameters,
+            self.return_type,
+            function_name,
+            self.cimgui_name,
             is_constructor=self.is_constructor,
             struct_name=self.struct_name
-        ), 4)
+        )
+        return indent_by(output, 4)
 
 
 class Struct:
@@ -758,6 +809,21 @@ class HeaderSpec:
         output.write("    vec.x, vec.y, vec.z, vec.w = quadruple\n")
         output.write("    return vec\n\n\n")
 
+        output.write("def _py_vertex_buffer_vertex_pos_offset():\n")
+        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos\n\n")
+
+        output.write("def _py_vertex_buffer_vertex_uv_offset():\n")
+        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv\n\n")
+
+        output.write("def _py_vertex_buffer_vertex_col_offset():\n")
+        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col\n\n")
+
+        output.write("def _py_vertex_buffer_vertex_size():\n")
+        output.write("    return sizeof(ccimgui.ImDrawVert)\n\n")
+
+        output.write("def _py_index_buffer_index_size():\n")
+        output.write("    return sizeof(ccimgui.ImDrawIdx)\n\n\n")
+
         for function in self.functions:
             output.write(function.in_pyx_format(self) + "\n")
         output.write("\n")
@@ -773,6 +839,9 @@ class HeaderSpec:
 
             for method in struct.methods:
                 output.write(method.in_pyx_format(self) + "\n")
+
+            for field in struct.fields:
+                output.write(field.in_field_pyx_format(self) + "\n")
             output.write("\n")
 
         return output.getvalue()
@@ -812,7 +881,7 @@ def safe_python_name(name: str, suffix="_") -> str:
     this causes Cython to freak out. This adds an underscore if a conflict is
     found. A new string is returned.
     """
-    if name in keyword.kwlist or name in dir(__builtins__):
+    if name in keyword.kwlist or name in dir(__builtins__) or name == "format":
         name = name + suffix
     return name
 
@@ -1127,16 +1196,9 @@ def main():
     with open("pygui/ccimgui.pxd", "w") as f:
         f.write(header.in_pxd_format())
 
-    with open("pygui/ccimgui_v2.pxd", "w") as f:
-        f.write(header.in_pxd_format())
-    
     # with open("pygui/core_v2.pyx", "w") as f:
     #     pyx = header.in_pyx_format()
     #     f.write(pyx)
-
-
-    # with open("pygui/core.pyx", "w") as f:
-    #     f.write(header.in_pyx_format())
 
     # for function in header.functions:
     #     print(function)

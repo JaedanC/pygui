@@ -705,31 +705,47 @@ cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     return vec
 
 
-def accept_drag_drop_payload(str type, ccimgui.ImGuiDragDropFlags flags=0):
-    cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type), flags)
-    return res
+def _py_vertex_buffer_vertex_pos_offset():
+    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos
+
+def _py_vertex_buffer_vertex_uv_offset():
+    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv
+
+def _py_vertex_buffer_vertex_col_offset():
+    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col
+
+def _py_vertex_buffer_vertex_size():
+    return sizeof(ccimgui.ImDrawVert)
+
+def _py_index_buffer_index_size():
+    return sizeof(ccimgui.ImDrawIdx)
+
+
+def accept_drag_drop_payload(str type_, ccimgui.ImGuiDragDropFlags flags=0):
+    cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type_), flags)
+    return _ImGuiPayload.from_ptr(res)
 
 def align_text_to_frame_padding():
     ccimgui.igAlignTextToFramePadding()
 
-def arrow_button(str str_id, ccimgui.ImGuiDir dir):
-    cdef ccimgui.bool res = ccimgui.igArrowButton(_bytes(str_id), dir)
+def arrow_button(str str_id, ccimgui.ImGuiDir dir_):
+    cdef ccimgui.bool res = ccimgui.igArrowButton(_bytes(str_id), dir_)
     return res
 
 def begin(str name, Any p_open=None, ccimgui.ImGuiWindowFlags flags=0):
     cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), p_open, flags)
     return res
 
-def begin_child_frame(ccimgui.ImGuiID id, tuple size, ccimgui.ImGuiWindowFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igBeginChildFrame(id, size._ptr, flags)
+def begin_child_frame(ccimgui.ImGuiID id_, tuple size, ccimgui.ImGuiWindowFlags flags=0):
+    cdef ccimgui.bool res = ccimgui.igBeginChildFrame(id_, _cast_tuple_ImVec2(size), flags)
     return res
 
-def begin_child_id(ccimgui.ImGuiID id, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igBeginChild_ID(id, size._ptr, border, flags)
+def begin_child_id(ccimgui.ImGuiID id_, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
+    cdef ccimgui.bool res = ccimgui.igBeginChild_ID(id_, _cast_tuple_ImVec2(size), border, flags)
     return res
 
 def begin_child_str(str str_id, tuple size=(0, 0), Any border=False, ccimgui.ImGuiWindowFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igBeginChild_Str(_bytes(str_id), size._ptr, border, flags)
+    cdef ccimgui.bool res = ccimgui.igBeginChild_Str(_bytes(str_id), _cast_tuple_ImVec2(size), border, flags)
     return res
 
 def begin_combo(str label, str preview_value, ccimgui.ImGuiComboFlags flags=0):
@@ -751,7 +767,7 @@ def begin_group():
     ccimgui.igBeginGroup()
 
 def begin_list_box(str label, tuple size=(0, 0)):
-    cdef ccimgui.bool res = ccimgui.igBeginListBox(_bytes(label), size._ptr)
+    cdef ccimgui.bool res = ccimgui.igBeginListBox(_bytes(label), _cast_tuple_ImVec2(size))
     return res
 
 def begin_main_menu_bar():
@@ -795,7 +811,7 @@ def begin_tab_item(str label, Any p_open=None, ccimgui.ImGuiTabItemFlags flags=0
     return res
 
 def begin_table(str str_id, int column, ccimgui.ImGuiTableFlags flags=0, tuple outer_size=(0.0, 0.0), float inner_width=0.0):
-    cdef ccimgui.bool res = ccimgui.igBeginTable(_bytes(str_id), column, flags, outer_size._ptr, inner_width)
+    cdef ccimgui.bool res = ccimgui.igBeginTable(_bytes(str_id), column, flags, _cast_tuple_ImVec2(outer_size), inner_width)
     return res
 
 def begin_tooltip():
@@ -811,7 +827,7 @@ def bullet_textv(str fmt, str args):
     ccimgui.igBulletTextV(_bytes(fmt), _bytes(args))
 
 def button(str label, tuple size=(0, 0)):
-    cdef ccimgui.bool res = ccimgui.igButton(_bytes(label), size._ptr)
+    cdef ccimgui.bool res = ccimgui.igButton(_bytes(label), _cast_tuple_ImVec2(size))
     return res
 
 def calc_item_width():
@@ -845,11 +861,11 @@ def collapsing_header_tree_node_flags(str label, ccimgui.ImGuiTreeNodeFlags flag
     return res
 
 def color_button(str desc_id, tuple col, ccimgui.ImGuiColorEditFlags flags=0, tuple size=(0, 0)):
-    cdef ccimgui.bool res = ccimgui.igColorButton(_bytes(desc_id), col._ptr, flags, size._ptr)
+    cdef ccimgui.bool res = ccimgui.igColorButton(_bytes(desc_id), _cast_tuple_ImVec4(col), flags, _cast_tuple_ImVec2(size))
     return res
 
 def color_convert_float_4_to_u32(tuple in_):
-    cdef ccimgui.ImU32 res = ccimgui.igColorConvertFloat4ToU32(in_._ptr)
+    cdef ccimgui.ImU32 res = ccimgui.igColorConvertFloat4ToU32(_cast_tuple_ImVec4(in_))
     return res
 
 def color_convert_hs_vto_rgb(
@@ -924,8 +940,8 @@ def color_picker4(
     cdef ccimgui.bool res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, ref_col)
     return res
 
-def columns(int count=1, str id=None, Any border=True):
-    ccimgui.igColumns(count, _bytes(id), border)
+def columns(int count=1, str id_=None, Any border=True):
+    ccimgui.igColumns(count, _bytes(id_), border)
 
 def combo_fn_bool_ptr(
     str label,
@@ -949,13 +965,13 @@ def combo_str(str label, int current_item, str items_separated_by_zeros, int pop
     cdef ccimgui.bool res = ccimgui.igCombo_Str(_bytes(label), current_item, _bytes(items_separated_by_zeros), popup_max_height_in_items)
     return res
 
-def combo_str_arr(str label, int current_item, Any items_, int items_count, int popup_max_height_in_items=-1):
-    cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items_, items_count, popup_max_height_in_items)
+def combo_str_arr(str label, int current_item, Any items, int items_count, int popup_max_height_in_items=-1):
+    cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items, items_count, popup_max_height_in_items)
     return res
 
 def create_context(_ImFontAtlas shared_font_atlas=None):
     cdef ccimgui.ImGuiContext* res = ccimgui.igCreateContext(shared_font_atlas._ptr)
-    return res
+    return _ImGuiContext.from_ptr(res)
 
 def debug_check_version_and_data_layout(
     str version_str,
@@ -986,8 +1002,8 @@ def destroy_context(_ImGuiContext ctx=None):
 def destroy_platform_windows():
     ccimgui.igDestroyPlatformWindows()
 
-def dock_space(ccimgui.ImGuiID id, tuple size=(0, 0), ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
-    cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id, size._ptr, flags, window_class._ptr)
+def dock_space(ccimgui.ImGuiID id_, tuple size=(0, 0), ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
+    cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id_, _cast_tuple_ImVec2(size), flags, window_class._ptr)
     return res
 
 def dock_space_over_viewport(_ImGuiViewport viewport=None, ccimgui.ImGuiDockNodeFlags flags=0, _ImGuiWindowClass window_class=None):
@@ -1000,7 +1016,7 @@ def drag_float(
     float v_speed=1.0,
     float v_min=0.0,
     float v_max=0.0,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igDragFloat(
@@ -1009,7 +1025,7 @@ def drag_float(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1021,7 +1037,7 @@ def drag_float2(
     float v_speed=1.0,
     float v_min=0.0,
     float v_max=0.0,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[2] io_float_value = [value0, value1]
@@ -1031,7 +1047,7 @@ def drag_float2(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1044,7 +1060,7 @@ def drag_float3(
     float v_speed=1.0,
     float v_min=0.0,
     float v_max=0.0,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[3] io_float_value = [value0, value1, value2]
@@ -1054,7 +1070,7 @@ def drag_float3(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1068,7 +1084,7 @@ def drag_float4(
     float v_speed=1.0,
     float v_min=0.0,
     float v_max=0.0,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[4] io_float_value = [value0, value1, value2, value3]
@@ -1078,7 +1094,7 @@ def drag_float4(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1090,7 +1106,7 @@ def drag_float_range2(
     float v_speed=1.0,
     float v_min=0.0,
     float v_max=0.0,
-    str format="%.3",
+    str format_="%.3",
     str format_max=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
@@ -1101,7 +1117,7 @@ def drag_float_range2(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         _bytes(format_max),
         flags
     )
@@ -1113,7 +1129,7 @@ def drag_int(
     float v_speed=1.0,
     int v_min=0,
     int v_max=0,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igDragInt(
@@ -1122,7 +1138,7 @@ def drag_int(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1134,7 +1150,7 @@ def drag_int2(
     float v_speed=1.0,
     int v_min=0,
     int v_max=0,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[2] io_int_value = [value0, value1]
@@ -1144,7 +1160,7 @@ def drag_int2(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1157,7 +1173,7 @@ def drag_int3(
     float v_speed=1.0,
     int v_min=0,
     int v_max=0,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[3] io_int_value = [value0, value1, value2]
@@ -1167,7 +1183,7 @@ def drag_int3(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1181,7 +1197,7 @@ def drag_int4(
     float v_speed=1.0,
     int v_min=0,
     int v_max=0,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[4] io_int_value = [value0, value1, value2, value3]
@@ -1191,7 +1207,7 @@ def drag_int4(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1203,7 +1219,7 @@ def drag_int_range2(
     float v_speed=1.0,
     int v_min=0,
     int v_max=0,
-    str format="%d",
+    str format_="%d",
     str format_max=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
@@ -1214,7 +1230,7 @@ def drag_int_range2(
         v_speed,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         _bytes(format_max),
         flags
     )
@@ -1227,7 +1243,7 @@ def drag_scalar(
     float v_speed=1.0,
     Any p_min=None,
     Any p_max=None,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igDragScalar(
@@ -1237,7 +1253,7 @@ def drag_scalar(
         v_speed,
         p_min,
         p_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1250,7 +1266,7 @@ def drag_scalarn(
     float v_speed=1.0,
     Any p_min=None,
     Any p_max=None,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igDragScalarN(
@@ -1261,13 +1277,13 @@ def drag_scalarn(
         v_speed,
         p_min,
         p_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
 
 def dummy(tuple size):
-    ccimgui.igDummy(size._ptr)
+    ccimgui.igDummy(_cast_tuple_ImVec2(size))
 
 def end():
     ccimgui.igEnd()
@@ -1323,21 +1339,21 @@ def end_table():
 def end_tooltip():
     ccimgui.igEndTooltip()
 
-def find_viewport_by_id(ccimgui.ImGuiID id):
-    cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id)
-    return res
+def find_viewport_by_id(ccimgui.ImGuiID id_):
+    cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id_)
+    return _ImGuiViewport.from_ptr(res)
 
 def find_viewport_by_platform_handle(Any platform_handle):
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByPlatformHandle(platform_handle)
-    return res
+    return _ImGuiViewport.from_ptr(res)
 
 def get_background_draw_list_nil():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_Nil()
-    return res
+    return _ImDrawList.from_ptr(res)
 
 def get_background_draw_list_viewport_ptr(_ImGuiViewport viewport):
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_ViewportPtr(viewport._ptr)
-    return res
+    return _ImDrawList.from_ptr(res)
 
 def get_clipboard_text():
     cdef const char* res = ccimgui.igGetClipboardText()
@@ -1352,7 +1368,7 @@ def get_color_u32_u32(ccimgui.ImU32 col):
     return res
 
 def get_color_u32_vec4(tuple col):
-    cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Vec4(col._ptr)
+    cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Vec4(_cast_tuple_ImVec4(col))
     return res
 
 def get_column_index():
@@ -1379,7 +1395,7 @@ def get_content_region_max(_ImVec2 pOut):
 
 def get_current_context():
     cdef ccimgui.ImGuiContext* res = ccimgui.igGetCurrentContext()
-    return res
+    return _ImGuiContext.from_ptr(res)
 
 def get_cursor_pos(_ImVec2 pOut):
     ccimgui.igGetCursorPos(pOut._ptr)
@@ -1400,19 +1416,19 @@ def get_cursor_start_pos(_ImVec2 pOut):
 
 def get_drag_drop_payload():
     cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
-    return res
+    return _ImGuiPayload.from_ptr(res)
 
 def get_draw_data():
     cdef ccimgui.ImDrawData* res = ccimgui.igGetDrawData()
-    return res
+    return _ImDrawData.from_ptr(res)
 
 def get_draw_list_shared_data():
     cdef ccimgui.ImDrawListSharedData* res = ccimgui.igGetDrawListSharedData()
-    return res
+    return _ImDrawListSharedData.from_ptr(res)
 
 def get_font():
     cdef ccimgui.ImFont* res = ccimgui.igGetFont()
-    return res
+    return _ImFont.from_ptr(res)
 
 def get_font_size():
     cdef float res = ccimgui.igGetFontSize()
@@ -1423,11 +1439,11 @@ def get_font_tex_uv_white_pixel(_ImVec2 pOut):
 
 def get_foreground_draw_list_nil():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_Nil()
-    return res
+    return _ImDrawList.from_ptr(res)
 
 def get_foreground_draw_list_viewport_ptr(_ImGuiViewport viewport):
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_ViewportPtr(viewport._ptr)
-    return res
+    return _ImDrawList.from_ptr(res)
 
 def get_frame_count():
     cdef int res = ccimgui.igGetFrameCount()
@@ -1455,7 +1471,7 @@ def get_id_str_str(str str_id_begin, str str_id_end):
 
 def get_io():
     cdef ccimgui.ImGuiIO* res = ccimgui.igGetIO()
-    return res
+    return _ImGuiIO.from_ptr(res)
 
 def get_item_id():
     cdef ccimgui.ImGuiID res = ccimgui.igGetItemID()
@@ -1484,7 +1500,7 @@ def get_key_pressed_amount(Any key, float repeat_delay, float rate):
 
 def get_main_viewport():
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetMainViewport()
-    return res
+    return _ImGuiViewport.from_ptr(res)
 
 def get_mouse_clicked_count(ccimgui.ImGuiMouseButton button):
     cdef int res = ccimgui.igGetMouseClickedCount(button)
@@ -1505,7 +1521,7 @@ def get_mouse_pos_on_opening_current_popup(_ImVec2 pOut):
 
 def get_platform_io():
     cdef ccimgui.ImGuiPlatformIO* res = ccimgui.igGetPlatformIO()
-    return res
+    return _ImGuiPlatformIO.from_ptr(res)
 
 def get_scroll_maxx():
     cdef float res = ccimgui.igGetScrollMaxX()
@@ -1525,11 +1541,11 @@ def get_scrolly():
 
 def get_state_storage():
     cdef ccimgui.ImGuiStorage* res = ccimgui.igGetStateStorage()
-    return res
+    return _ImGuiStorage.from_ptr(res)
 
 def get_style():
     cdef ccimgui.ImGuiStyle* res = ccimgui.igGetStyle()
-    return res
+    return _ImGuiStyle.from_ptr(res)
 
 def get_style_color_name(ccimgui.ImGuiCol idx):
     cdef const char* res = ccimgui.igGetStyleColorName(idx)
@@ -1537,7 +1553,7 @@ def get_style_color_name(ccimgui.ImGuiCol idx):
 
 def get_style_color_vec4(ccimgui.ImGuiCol idx):
     cdef ccimgui.ImVec4* res = ccimgui.igGetStyleColorVec4(idx)
-    return res
+    return _ImVec4.from_ptr(res)
 
 def get_text_line_height():
     cdef float res = ccimgui.igGetTextLineHeight()
@@ -1575,7 +1591,7 @@ def get_window_dpi_scale():
 
 def get_window_draw_list():
     cdef ccimgui.ImDrawList* res = ccimgui.igGetWindowDrawList()
-    return res
+    return _ImDrawList.from_ptr(res)
 
 def get_window_height():
     cdef float res = ccimgui.igGetWindowHeight()
@@ -1589,7 +1605,7 @@ def get_window_size(_ImVec2 pOut):
 
 def get_window_viewport():
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetWindowViewport()
-    return res
+    return _ImGuiViewport.from_ptr(res)
 
 def get_window_width():
     cdef float res = ccimgui.igGetWindowWidth()
@@ -1605,11 +1621,11 @@ def image(
 ):
     ccimgui.igImage(
         user_texture_id,
-        size._ptr,
-        uv0._ptr,
-        uv1._ptr,
-        tint_col._ptr,
-        border_col._ptr
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(tint_col),
+        _cast_tuple_ImVec4(border_col)
     )
 
 def image_button(
@@ -1624,11 +1640,11 @@ def image_button(
     cdef ccimgui.bool res = ccimgui.igImageButton(
         _bytes(str_id),
         user_texture_id,
-        size._ptr,
-        uv0._ptr,
-        uv1._ptr,
-        bg_col._ptr,
-        tint_col._ptr
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(bg_col),
+        _cast_tuple_ImVec4(tint_col)
     )
     return res
 
@@ -1640,7 +1656,7 @@ def input_double(
     Any value,
     Any step=0.0,
     Any step_fast=0.0,
-    str format="%.6",
+    str format_="%.6",
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igInputDouble(
@@ -1648,7 +1664,7 @@ def input_double(
         value,
         step,
         step_fast,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1658,7 +1674,7 @@ def input_float(
     float value,
     float step=0.0,
     float step_fast=0.0,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igInputFloat(
@@ -1666,14 +1682,14 @@ def input_float(
         value,
         step,
         step_fast,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
 
-def input_float2(str label, float value0, float value1, str format="%.3", ccimgui.ImGuiInputTextFlags flags=0):
+def input_float2(str label, float value0, float value1, str format_="%.3", ccimgui.ImGuiInputTextFlags flags=0):
     cdef float[2] io_float_value = [value0, value1]
-    cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), <float*>&io_float_value, _bytes(format), flags)
+    cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 
 def input_float3(
@@ -1681,11 +1697,11 @@ def input_float3(
     float value0,
     float value1,
     float value2,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef float[3] io_float_value = [value0, value1, value2]
-    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), <float*>&io_float_value, _bytes(format), flags)
+    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 
 def input_float4(
@@ -1694,11 +1710,11 @@ def input_float4(
     float value1,
     float value2,
     float value3,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef float[4] io_float_value = [value0, value1, value2, value3]
-    cdef ccimgui.bool res = ccimgui.igInputFloat4(_bytes(label), <float*>&io_float_value, _bytes(format), flags)
+    cdef ccimgui.bool res = ccimgui.igInputFloat4(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 
 def input_int(str label, int value, int step=1, int step_fast=100, ccimgui.ImGuiInputTextFlags flags=0):
@@ -1733,7 +1749,7 @@ def input_scalar(
     Any p_data,
     Any p_step=None,
     Any p_step_fast=None,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igInputScalar(
@@ -1742,7 +1758,7 @@ def input_scalar(
         p_data,
         p_step,
         p_step_fast,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -1754,7 +1770,7 @@ def input_scalarn(
     int components,
     Any p_step=None,
     Any p_step_fast=None,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiInputTextFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igInputScalarN(
@@ -1764,13 +1780,13 @@ def input_scalarn(
         components,
         p_step,
         p_step_fast,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
 
 def invisible_button(str str_id, tuple size, ccimgui.ImGuiButtonFlags flags=0):
-    cdef ccimgui.bool res = ccimgui.igInvisibleButton(_bytes(str_id), size._ptr, flags)
+    cdef ccimgui.bool res = ccimgui.igInvisibleButton(_bytes(str_id), _cast_tuple_ImVec2(size), flags)
     return res
 
 def is_any_item_active():
@@ -1858,7 +1874,7 @@ def is_mouse_dragging(ccimgui.ImGuiMouseButton button, float lock_threshold=-1.0
     return res
 
 def is_mouse_hovering_rect(tuple r_min, tuple r_max, Any clip=True):
-    cdef ccimgui.bool res = ccimgui.igIsMouseHoveringRect(r_min._ptr, r_max._ptr, clip)
+    cdef ccimgui.bool res = ccimgui.igIsMouseHoveringRect(_cast_tuple_ImVec2(r_min), _cast_tuple_ImVec2(r_max), clip)
     return res
 
 def is_mouse_pos_valid(_ImVec2 mouse_pos=None):
@@ -1874,11 +1890,11 @@ def is_popup_open(str str_id, ccimgui.ImGuiPopupFlags flags=0):
     return res
 
 def is_rect_visible_nil(tuple size):
-    cdef ccimgui.bool res = ccimgui.igIsRectVisible_Nil(size._ptr)
+    cdef ccimgui.bool res = ccimgui.igIsRectVisible_Nil(_cast_tuple_ImVec2(size))
     return res
 
 def is_rect_visible_vec2(tuple rect_min, tuple rect_max):
-    cdef ccimgui.bool res = ccimgui.igIsRectVisible_Vec2(rect_min._ptr, rect_max._ptr)
+    cdef ccimgui.bool res = ccimgui.igIsRectVisible_Vec2(_cast_tuple_ImVec2(rect_min), _cast_tuple_ImVec2(rect_max))
     return res
 
 def is_window_appearing():
@@ -1925,8 +1941,8 @@ def list_box_fn_bool_ptr(
     )
     return res
 
-def list_box_str_arr(str label, int current_item, Any items_, int items_count, int height_in_items=-1):
-    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(_bytes(label), current_item, items_, items_count, height_in_items)
+def list_box_str_arr(str label, int current_item, Any items, int items_count, int height_in_items=-1):
+    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(_bytes(label), current_item, items, items_count, height_in_items)
     return res
 
 def load_ini_settings_from_disk(str ini_filename):
@@ -1983,15 +1999,15 @@ def next_column():
 def open_popup_on_item_click(str str_id=None, ccimgui.ImGuiPopupFlags popup_flags=1):
     ccimgui.igOpenPopupOnItemClick(_bytes(str_id), popup_flags)
 
-def open_popup_id(ccimgui.ImGuiID id, ccimgui.ImGuiPopupFlags popup_flags=0):
-    ccimgui.igOpenPopup_ID(id, popup_flags)
+def open_popup_id(ccimgui.ImGuiID id_, ccimgui.ImGuiPopupFlags popup_flags=0):
+    ccimgui.igOpenPopup_ID(id_, popup_flags)
 
 def open_popup_str(str str_id, ccimgui.ImGuiPopupFlags popup_flags=0):
     ccimgui.igOpenPopup_Str(_bytes(str_id), popup_flags)
 
 def plot_histogram_float_ptr(
     str label,
-    Any values_,
+    Any values,
     int values_count,
     int values_offset=0,
     str overlay_text=None,
@@ -2002,13 +2018,13 @@ def plot_histogram_float_ptr(
 ):
     ccimgui.igPlotHistogram_FloatPtr(
         _bytes(label),
-        values_,
+        values,
         values_count,
         values_offset,
         _bytes(overlay_text),
         scale_min,
         scale_max,
-        graph_size._ptr,
+        _cast_tuple_ImVec2(graph_size),
         stride
     )
 
@@ -2032,12 +2048,12 @@ def plot_histogram_fn_float_ptr(
         _bytes(overlay_text),
         scale_min,
         scale_max,
-        graph_size._ptr
+        _cast_tuple_ImVec2(graph_size)
     )
 
 def plot_lines_float_ptr(
     str label,
-    Any values_,
+    Any values,
     int values_count,
     int values_offset=0,
     str overlay_text=None,
@@ -2048,13 +2064,13 @@ def plot_lines_float_ptr(
 ):
     ccimgui.igPlotLines_FloatPtr(
         _bytes(label),
-        values_,
+        values,
         values_count,
         values_offset,
         _bytes(overlay_text),
         scale_min,
         scale_max,
-        graph_size._ptr,
+        _cast_tuple_ImVec2(graph_size),
         stride
     )
 
@@ -2078,7 +2094,7 @@ def plot_lines_fn_float_ptr(
         _bytes(overlay_text),
         scale_min,
         scale_max,
-        graph_size._ptr
+        _cast_tuple_ImVec2(graph_size)
     )
 
 def pop_allow_keyboard_focus():
@@ -2109,7 +2125,7 @@ def pop_text_wrap_pos():
     ccimgui.igPopTextWrapPos()
 
 def progress_bar(float fraction, tuple size_arg=(-FLT_MIN, 0), str overlay=None):
-    ccimgui.igProgressBar(fraction, size_arg._ptr, _bytes(overlay))
+    ccimgui.igProgressBar(fraction, _cast_tuple_ImVec2(size_arg), _bytes(overlay))
 
 def push_allow_keyboard_focus(Any allow_keyboard_focus):
     ccimgui.igPushAllowKeyboardFocus(allow_keyboard_focus)
@@ -2118,7 +2134,7 @@ def push_button_repeat(Any repeat):
     ccimgui.igPushButtonRepeat(repeat)
 
 def push_clip_rect(tuple clip_rect_min, tuple clip_rect_max, Any intersect_with_current_clip_rect):
-    ccimgui.igPushClipRect(clip_rect_min._ptr, clip_rect_max._ptr, intersect_with_current_clip_rect)
+    ccimgui.igPushClipRect(_cast_tuple_ImVec2(clip_rect_min), _cast_tuple_ImVec2(clip_rect_max), intersect_with_current_clip_rect)
 
 def push_font(_ImFont font):
     ccimgui.igPushFont(font._ptr)
@@ -2142,13 +2158,13 @@ def push_style_color_u32(ccimgui.ImGuiCol idx, ccimgui.ImU32 col):
     ccimgui.igPushStyleColor_U32(idx, col)
 
 def push_style_color_vec4(ccimgui.ImGuiCol idx, tuple col):
-    ccimgui.igPushStyleColor_Vec4(idx, col._ptr)
+    ccimgui.igPushStyleColor_Vec4(idx, _cast_tuple_ImVec4(col))
 
 def push_style_var_float(ccimgui.ImGuiStyleVar idx, float val):
     ccimgui.igPushStyleVar_Float(idx, val)
 
 def push_style_var_vec2(ccimgui.ImGuiStyleVar idx, tuple val):
-    ccimgui.igPushStyleVar_Vec2(idx, val._ptr)
+    ccimgui.igPushStyleVar_Vec2(idx, _cast_tuple_ImVec2(val))
 
 def push_text_wrap_pos(float wrap_local_pos_x=0.0):
     ccimgui.igPushTextWrapPos(wrap_local_pos_x)
@@ -2181,11 +2197,11 @@ def save_ini_settings_to_memory(Any out_ini_size=None):
     return res
 
 def selectable_bool(str label, Any selected=False, ccimgui.ImGuiSelectableFlags flags=0, tuple size=(0, 0)):
-    cdef ccimgui.bool res = ccimgui.igSelectable_Bool(_bytes(label), selected, flags, size._ptr)
+    cdef ccimgui.bool res = ccimgui.igSelectable_Bool(_bytes(label), selected, flags, _cast_tuple_ImVec2(size))
     return res
 
 def selectable_bool_ptr(str label, Any p_selected, ccimgui.ImGuiSelectableFlags flags=0, tuple size=(0, 0)):
-    cdef ccimgui.bool res = ccimgui.igSelectable_BoolPtr(_bytes(label), p_selected, flags, size._ptr)
+    cdef ccimgui.bool res = ccimgui.igSelectable_BoolPtr(_bytes(label), p_selected, flags, _cast_tuple_ImVec2(size))
     return res
 
 def separator():
@@ -2210,7 +2226,7 @@ def set_current_context(_ImGuiContext ctx):
     ccimgui.igSetCurrentContext(ctx._ptr)
 
 def set_cursor_pos(tuple local_pos):
-    ccimgui.igSetCursorPos(local_pos._ptr)
+    ccimgui.igSetCursorPos(_cast_tuple_ImVec2(local_pos))
 
 def set_cursor_posx(float local_x):
     ccimgui.igSetCursorPosX(local_x)
@@ -2219,10 +2235,10 @@ def set_cursor_posy(float local_y):
     ccimgui.igSetCursorPosY(local_y)
 
 def set_cursor_screen_pos(tuple pos):
-    ccimgui.igSetCursorScreenPos(pos._ptr)
+    ccimgui.igSetCursorScreenPos(_cast_tuple_ImVec2(pos))
 
-def set_drag_drop_payload(str type, Any data, Any sz, ccimgui.ImGuiCond cond=0):
-    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type), data, sz, cond)
+def set_drag_drop_payload(str type_, Any data, Any sz, ccimgui.ImGuiCond cond=0):
+    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type_), data, sz, cond)
     return res
 
 def set_item_allow_overlap():
@@ -2259,7 +2275,7 @@ def set_next_window_collapsed(Any collapsed, ccimgui.ImGuiCond cond=0):
     ccimgui.igSetNextWindowCollapsed(collapsed, cond)
 
 def set_next_window_content_size(tuple size):
-    ccimgui.igSetNextWindowContentSize(size._ptr)
+    ccimgui.igSetNextWindowContentSize(_cast_tuple_ImVec2(size))
 
 def set_next_window_dock_id(ccimgui.ImGuiID dock_id, ccimgui.ImGuiCond cond=0):
     ccimgui.igSetNextWindowDockID(dock_id, cond)
@@ -2268,13 +2284,13 @@ def set_next_window_focus():
     ccimgui.igSetNextWindowFocus()
 
 def set_next_window_pos(tuple pos, ccimgui.ImGuiCond cond=0, tuple pivot=(0, 0)):
-    ccimgui.igSetNextWindowPos(pos._ptr, cond, pivot._ptr)
+    ccimgui.igSetNextWindowPos(_cast_tuple_ImVec2(pos), cond, _cast_tuple_ImVec2(pivot))
 
 def set_next_window_scroll(tuple scroll):
-    ccimgui.igSetNextWindowScroll(scroll._ptr)
+    ccimgui.igSetNextWindowScroll(_cast_tuple_ImVec2(scroll))
 
 def set_next_window_size(tuple size, ccimgui.ImGuiCond cond=0):
-    ccimgui.igSetNextWindowSize(size._ptr, cond)
+    ccimgui.igSetNextWindowSize(_cast_tuple_ImVec2(size), cond)
 
 def set_next_window_viewport(ccimgui.ImGuiID viewport_id):
     ccimgui.igSetNextWindowViewport(viewport_id)
@@ -2325,16 +2341,16 @@ def set_window_font_scale(float scale):
     ccimgui.igSetWindowFontScale(scale)
 
 def set_window_pos_str(str name, tuple pos, ccimgui.ImGuiCond cond=0):
-    ccimgui.igSetWindowPos_Str(_bytes(name), pos._ptr, cond)
+    ccimgui.igSetWindowPos_Str(_bytes(name), _cast_tuple_ImVec2(pos), cond)
 
 def set_window_pos_vec2(tuple pos, ccimgui.ImGuiCond cond=0):
-    ccimgui.igSetWindowPos_Vec2(pos._ptr, cond)
+    ccimgui.igSetWindowPos_Vec2(_cast_tuple_ImVec2(pos), cond)
 
 def set_window_size_str(str name, tuple size, ccimgui.ImGuiCond cond=0):
-    ccimgui.igSetWindowSize_Str(_bytes(name), size._ptr, cond)
+    ccimgui.igSetWindowSize_Str(_bytes(name), _cast_tuple_ImVec2(size), cond)
 
 def set_window_size_vec2(tuple size, ccimgui.ImGuiCond cond=0):
-    ccimgui.igSetWindowSize_Vec2(size._ptr, cond)
+    ccimgui.igSetWindowSize_Vec2(_cast_tuple_ImVec2(size), cond)
 
 def show_about_window(Any p_open=None):
     ccimgui.igShowAboutWindow(p_open)
@@ -2369,7 +2385,7 @@ def slider_angle(
     float v_rad,
     float v_degrees_min=-360.0,
     float v_degrees_max=+360.0,
-    str format="%.0 deg",
+    str format_="%.0 deg",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igSliderAngle(
@@ -2377,7 +2393,7 @@ def slider_angle(
         v_rad,
         v_degrees_min,
         v_degrees_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2387,7 +2403,7 @@ def slider_float(
     float value,
     float v_min,
     float v_max,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igSliderFloat(
@@ -2395,7 +2411,7 @@ def slider_float(
         value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2406,7 +2422,7 @@ def slider_float2(
     float value1,
     float v_min,
     float v_max,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[2] io_float_value = [value0, value1]
@@ -2415,7 +2431,7 @@ def slider_float2(
         <float*>&io_float_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2427,7 +2443,7 @@ def slider_float3(
     float value2,
     float v_min,
     float v_max,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[3] io_float_value = [value0, value1, value2]
@@ -2436,7 +2452,7 @@ def slider_float3(
         <float*>&io_float_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2449,7 +2465,7 @@ def slider_float4(
     float value3,
     float v_min,
     float v_max,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef float[4] io_float_value = [value0, value1, value2, value3]
@@ -2458,7 +2474,7 @@ def slider_float4(
         <float*>&io_float_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2468,7 +2484,7 @@ def slider_int(
     int value,
     int v_min,
     int v_max,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igSliderInt(
@@ -2476,7 +2492,7 @@ def slider_int(
         value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2487,7 +2503,7 @@ def slider_int2(
     int value1,
     int v_min,
     int v_max,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[2] io_int_value = [value0, value1]
@@ -2496,7 +2512,7 @@ def slider_int2(
         <int*>&io_int_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2508,7 +2524,7 @@ def slider_int3(
     int value2,
     int v_min,
     int v_max,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[3] io_int_value = [value0, value1, value2]
@@ -2517,7 +2533,7 @@ def slider_int3(
         <int*>&io_int_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2530,7 +2546,7 @@ def slider_int4(
     int value3,
     int v_min,
     int v_max,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef int[4] io_int_value = [value0, value1, value2, value3]
@@ -2539,7 +2555,7 @@ def slider_int4(
         <int*>&io_int_value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2550,7 +2566,7 @@ def slider_scalar(
     Any p_data,
     Any p_min,
     Any p_max,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igSliderScalar(
@@ -2559,7 +2575,7 @@ def slider_scalar(
         p_data,
         p_min,
         p_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2571,7 +2587,7 @@ def slider_scalarn(
     int components,
     Any p_min,
     Any p_max,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igSliderScalarN(
@@ -2581,7 +2597,7 @@ def slider_scalarn(
         components,
         p_min,
         p_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2628,7 +2644,7 @@ def table_get_row_index():
 
 def table_get_sort_specs():
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.igTableGetSortSpecs()
-    return res
+    return _ImGuiTableSortSpecs.from_ptr(res)
 
 def table_header(str label):
     ccimgui.igTableHeader(_bytes(label))
@@ -2663,10 +2679,10 @@ def text(str fmt):
     ccimgui.igText(_bytes(fmt))
 
 def text_colored(tuple col, str fmt):
-    ccimgui.igTextColored(col._ptr, _bytes(fmt))
+    ccimgui.igTextColored(_cast_tuple_ImVec4(col), _bytes(fmt))
 
 def text_coloredv(tuple col, str fmt, str args):
-    ccimgui.igTextColoredV(col._ptr, _bytes(fmt), _bytes(args))
+    ccimgui.igTextColoredV(_cast_tuple_ImVec4(col), _bytes(fmt), _bytes(args))
 
 def text_disabled(str fmt):
     ccimgui.igTextDisabled(_bytes(fmt))
@@ -2747,16 +2763,16 @@ def v_slider_float(
     float value,
     float v_min,
     float v_max,
-    str format="%.3",
+    str format_="%.3",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igVSliderFloat(
         _bytes(label),
-        size._ptr,
+        _cast_tuple_ImVec2(size),
         value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2767,16 +2783,16 @@ def v_slider_int(
     int value,
     int v_min,
     int v_max,
-    str format="%d",
+    str format_="%d",
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igVSliderInt(
         _bytes(label),
-        size._ptr,
+        _cast_tuple_ImVec2(size),
         value,
         v_min,
         v_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2788,17 +2804,17 @@ def v_slider_scalar(
     Any p_data,
     Any p_min,
     Any p_max,
-    str format=None,
+    str format_=None,
     ccimgui.ImGuiSliderFlags flags=0
 ):
     cdef ccimgui.bool res = ccimgui.igVSliderScalar(
         _bytes(label),
-        size._ptr,
+        _cast_tuple_ImVec2(size),
         data_type,
         p_data,
         p_min,
         p_max,
-        _bytes(format),
+        _bytes(format_),
         flags
     )
     return res
@@ -2828,6 +2844,30 @@ cdef class _ImVector_ImDrawCmd:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImDrawCmd res = dereference(self._ptr).Data
+        return _ImDrawCmd.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImDrawIdx:
     cdef ccimgui.ImVector_ImDrawIdx* _ptr
@@ -2841,6 +2881,30 @@ cdef class _ImVector_ImDrawIdx:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef Any res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value
+    
 
 cdef class _ImVector_ImDrawVert:
     cdef ccimgui.ImVector_ImDrawVert* _ptr
@@ -2854,6 +2918,30 @@ cdef class _ImVector_ImDrawVert:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImDrawVert res = dereference(self._ptr).Data
+        return _ImDrawVert.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
@@ -2867,6 +2955,30 @@ cdef class _ImVector_ImVec4:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImVec4 res = dereference(self._ptr).Data
+        return _ImVec4.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
@@ -2880,6 +2992,30 @@ cdef class _ImVector_ImTextureID:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef Any res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value
+    
 
 cdef class _ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
@@ -2893,6 +3029,30 @@ cdef class _ImVector_ImVec2:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).Data
+        return _ImVec2.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
@@ -2906,6 +3066,30 @@ cdef class _ImVector_ImDrawChannel:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImDrawChannel res = dereference(self._ptr).Data
+        return _ImDrawChannel.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_float:
     cdef ccimgui.ImVector_float* _ptr
@@ -2919,6 +3103,30 @@ cdef class _ImVector_float:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef float res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, float value):
+        dereference(self._ptr).Data = value
+    
 
 cdef class _ImVector_ImWchar:
     cdef ccimgui.ImVector_ImWchar* _ptr
@@ -2932,6 +3140,30 @@ cdef class _ImVector_ImWchar:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef Any res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value
+    
 
 cdef class _ImVector_ImFontGlyph:
     cdef ccimgui.ImVector_ImFontGlyph* _ptr
@@ -2945,6 +3177,30 @@ cdef class _ImVector_ImFontGlyph:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImFontGlyph res = dereference(self._ptr).Data
+        return _ImFontGlyph.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
@@ -2958,6 +3214,30 @@ cdef class _ImVector_ImFontPtr:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImFont res = dereference(self._ptr).Data
+        return _ImFont.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
@@ -2971,6 +3251,30 @@ cdef class _ImVector_ImFontAtlasCustomRect:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImFontAtlasCustomRect res = dereference(self._ptr).Data
+        return _ImFontAtlasCustomRect.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
@@ -2984,6 +3288,30 @@ cdef class _ImVector_ImFontConfig:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImFontConfig res = dereference(self._ptr).Data
+        return _ImFontConfig.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImFontGlyph:
     cdef ccimgui.ImFontGlyph* _ptr
@@ -2997,6 +3325,102 @@ cdef class _ImFontGlyph:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def colored(self):
+        cdef Any res = dereference(self._ptr).Colored
+        return res
+    @colored.setter
+    def colored(self, Any value):
+        dereference(self._ptr).Colored = value
+    
+    @property
+    def visible(self):
+        cdef Any res = dereference(self._ptr).Visible
+        return res
+    @visible.setter
+    def visible(self, Any value):
+        dereference(self._ptr).Visible = value
+    
+    @property
+    def codepoint(self):
+        cdef Any res = dereference(self._ptr).Codepoint
+        return res
+    @codepoint.setter
+    def codepoint(self, Any value):
+        dereference(self._ptr).Codepoint = value
+    
+    @property
+    def advancex(self):
+        cdef float res = dereference(self._ptr).AdvanceX
+        return res
+    @advancex.setter
+    def advancex(self, float value):
+        dereference(self._ptr).AdvanceX = value
+    
+    @property
+    def x0(self):
+        cdef float res = dereference(self._ptr).X0
+        return res
+    @x0.setter
+    def x0(self, float value):
+        dereference(self._ptr).X0 = value
+    
+    @property
+    def y0(self):
+        cdef float res = dereference(self._ptr).Y0
+        return res
+    @y0.setter
+    def y0(self, float value):
+        dereference(self._ptr).Y0 = value
+    
+    @property
+    def x1(self):
+        cdef float res = dereference(self._ptr).X1
+        return res
+    @x1.setter
+    def x1(self, float value):
+        dereference(self._ptr).X1 = value
+    
+    @property
+    def y1(self):
+        cdef float res = dereference(self._ptr).Y1
+        return res
+    @y1.setter
+    def y1(self, float value):
+        dereference(self._ptr).Y1 = value
+    
+    @property
+    def u0(self):
+        cdef float res = dereference(self._ptr).U0
+        return res
+    @u0.setter
+    def u0(self, float value):
+        dereference(self._ptr).U0 = value
+    
+    @property
+    def v0(self):
+        cdef float res = dereference(self._ptr).V0
+        return res
+    @v0.setter
+    def v0(self, float value):
+        dereference(self._ptr).V0 = value
+    
+    @property
+    def u1(self):
+        cdef float res = dereference(self._ptr).U1
+        return res
+    @u1.setter
+    def u1(self, float value):
+        dereference(self._ptr).U1 = value
+    
+    @property
+    def v1(self):
+        cdef float res = dereference(self._ptr).V1
+        return res
+    @v1.setter
+    def v1(self, float value):
+        dereference(self._ptr).V1 = value
+    
 
 cdef class _ImVector_ImU32:
     cdef ccimgui.ImVector_ImU32* _ptr
@@ -3010,6 +3434,30 @@ cdef class _ImVector_ImU32:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef Any res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value
+    
 
 cdef class _ImGuiKeyData:
     cdef ccimgui.ImGuiKeyData* _ptr
@@ -3023,6 +3471,38 @@ cdef class _ImGuiKeyData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def down(self):
+        cdef Any res = dereference(self._ptr).Down
+        return res
+    @down.setter
+    def down(self, Any value):
+        dereference(self._ptr).Down = value
+    
+    @property
+    def down_duration(self):
+        cdef float res = dereference(self._ptr).DownDuration
+        return res
+    @down_duration.setter
+    def down_duration(self, float value):
+        dereference(self._ptr).DownDuration = value
+    
+    @property
+    def down_duration_prev(self):
+        cdef float res = dereference(self._ptr).DownDurationPrev
+        return res
+    @down_duration_prev.setter
+    def down_duration_prev(self, float value):
+        dereference(self._ptr).DownDurationPrev = value
+    
+    @property
+    def analog_value(self):
+        cdef float res = dereference(self._ptr).AnalogValue
+        return res
+    @analog_value.setter
+    def analog_value(self, float value):
+        dereference(self._ptr).AnalogValue = value
+    
 
 cdef class _ImGuiListClipper:
     cdef ccimgui.ImGuiListClipper* _ptr
@@ -3036,7 +3516,6 @@ cdef class _ImGuiListClipper:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_list_clipper():
         cdef ccimgui.ImGuiListClipper* _ptr = ccimgui.ImGuiListClipper_ImGuiListClipper()
@@ -3060,6 +3539,54 @@ cdef class _ImGuiListClipper:
         cdef ccimgui.bool res = ccimgui.ImGuiListClipper_Step(self._ptr)
         return res
     
+    @property
+    def display_start(self):
+        cdef int res = dereference(self._ptr).DisplayStart
+        return res
+    @display_start.setter
+    def display_start(self, int value):
+        dereference(self._ptr).DisplayStart = value
+    
+    @property
+    def display_end(self):
+        cdef int res = dereference(self._ptr).DisplayEnd
+        return res
+    @display_end.setter
+    def display_end(self, int value):
+        dereference(self._ptr).DisplayEnd = value
+    
+    @property
+    def items_count(self):
+        cdef int res = dereference(self._ptr).ItemsCount
+        return res
+    @items_count.setter
+    def items_count(self, int value):
+        dereference(self._ptr).ItemsCount = value
+    
+    @property
+    def items_height(self):
+        cdef float res = dereference(self._ptr).ItemsHeight
+        return res
+    @items_height.setter
+    def items_height(self, float value):
+        dereference(self._ptr).ItemsHeight = value
+    
+    @property
+    def start_posy(self):
+        cdef float res = dereference(self._ptr).StartPosY
+        return res
+    @start_posy.setter
+    def start_posy(self, float value):
+        dereference(self._ptr).StartPosY = value
+    
+    @property
+    def temp_data(self):
+        cdef Any res = dereference(self._ptr).TempData
+        return res
+    @temp_data.setter
+    def temp_data(self, Any value):
+        dereference(self._ptr).TempData = value
+    
 
 cdef class _ImGuiOnceUponAFrame:
     cdef ccimgui.ImGuiOnceUponAFrame* _ptr
@@ -3073,7 +3600,6 @@ cdef class _ImGuiOnceUponAFrame:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_once_upon_a_frame():
         cdef ccimgui.ImGuiOnceUponAFrame* _ptr = ccimgui.ImGuiOnceUponAFrame_ImGuiOnceUponAFrame()
@@ -3083,6 +3609,14 @@ cdef class _ImGuiOnceUponAFrame:
     
     def destroy(_ImGuiOnceUponAFrame self):
         ccimgui.ImGuiOnceUponAFrame_destroy(self._ptr)
+    
+    @property
+    def ref_frame(self):
+        cdef int res = dereference(self._ptr).RefFrame
+        return res
+    @ref_frame.setter
+    def ref_frame(self, int value):
+        dereference(self._ptr).RefFrame = value
     
 
 cdef class _ImGuiPayload:
@@ -3097,7 +3631,6 @@ cdef class _ImGuiPayload:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_payload():
         cdef ccimgui.ImGuiPayload* _ptr = ccimgui.ImGuiPayload_ImGuiPayload()
@@ -3108,11 +3641,11 @@ cdef class _ImGuiPayload:
     def destroy(_ImGuiPayload self):
         ccimgui.ImGuiPayload_destroy(self._ptr)
     
-    def clear_(_ImGuiPayload self):
+    def clear(_ImGuiPayload self):
         ccimgui.ImGuiPayload_Clear(self._ptr)
     
-    def is_data_type(_ImGuiPayload self, str type):
-        cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDataType(self._ptr, _bytes(type))
+    def is_data_type(_ImGuiPayload self, str type_):
+        cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDataType(self._ptr, _bytes(type_))
         return res
     
     def is_delivery(_ImGuiPayload self):
@@ -3122,6 +3655,70 @@ cdef class _ImGuiPayload:
     def is_preview(_ImGuiPayload self):
         cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsPreview(self._ptr)
         return res
+    
+    @property
+    def data(self):
+        cdef Any res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value
+    
+    @property
+    def data_size(self):
+        cdef int res = dereference(self._ptr).DataSize
+        return res
+    @data_size.setter
+    def data_size(self, int value):
+        dereference(self._ptr).DataSize = value
+    
+    @property
+    def source_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceId
+        return res
+    @source_id.setter
+    def source_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).SourceId = value
+    
+    @property
+    def source_parent_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceParentId
+        return res
+    @source_parent_id.setter
+    def source_parent_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).SourceParentId = value
+    
+    @property
+    def data_frame_count(self):
+        cdef int res = dereference(self._ptr).DataFrameCount
+        return res
+    @data_frame_count.setter
+    def data_frame_count(self, int value):
+        dereference(self._ptr).DataFrameCount = value
+    
+    @property
+    def data_type(self):
+        cdef Any res = dereference(self._ptr).DataType
+        return res
+    @data_type.setter
+    def data_type(self, Any value):
+        dereference(self._ptr).DataType = value
+    
+    @property
+    def preview(self):
+        cdef Any res = dereference(self._ptr).Preview
+        return res
+    @preview.setter
+    def preview(self, Any value):
+        dereference(self._ptr).Preview = value
+    
+    @property
+    def delivery(self):
+        cdef Any res = dereference(self._ptr).Delivery
+        return res
+    @delivery.setter
+    def delivery(self, Any value):
+        dereference(self._ptr).Delivery = value
     
 
 cdef class _ImVector_ImGuiPlatformMonitor:
@@ -3136,6 +3733,30 @@ cdef class _ImVector_ImGuiPlatformMonitor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImGuiPlatformMonitor res = dereference(self._ptr).Data
+        return _ImGuiPlatformMonitor.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
@@ -3149,6 +3770,30 @@ cdef class _ImVector_ImGuiViewportPtr:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImGuiViewport res = dereference(self._ptr).Data
+        return _ImGuiViewport.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImVector_ImGuiStoragePair:
     cdef ccimgui.ImVector_ImGuiStoragePair* _ptr
@@ -3162,6 +3807,30 @@ cdef class _ImVector_ImGuiStoragePair:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImGuiStoragePair res = dereference(self._ptr).Data
+        return _ImGuiStoragePair.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImGuiStoragePair:
     cdef ccimgui.ImGuiStoragePair* _ptr
@@ -3175,23 +3844,20 @@ cdef class _ImGuiStoragePair:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
-    def float(ccimgui.ImGuiID _key, float _val_f):
+    def float_(ccimgui.ImGuiID _key, float _val_f):
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Float(_key, _val_f)
         if _ptr is NULL:
             raise MemoryError
         return _ImGuiStoragePair.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
-    def int(ccimgui.ImGuiID _key, int _val_i):
+    def int_(ccimgui.ImGuiID _key, int _val_i):
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Int(_key, _val_i)
         if _ptr is NULL:
             raise MemoryError
         return _ImGuiStoragePair.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def ptr(ccimgui.ImGuiID _key, Any _val_p):
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Ptr(_key, _val_p)
@@ -3201,6 +3867,38 @@ cdef class _ImGuiStoragePair:
     
     def destroy(_ImGuiStoragePair self):
         ccimgui.ImGuiStoragePair_destroy(self._ptr)
+    
+    @property
+    def key(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).key
+        return res
+    @key.setter
+    def key(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).key = value
+    
+    @property
+    def val_i(self):
+        cdef int res = dereference(self._ptr).val_i
+        return res
+    @val_i.setter
+    def val_i(self, int value):
+        dereference(self._ptr).val_i = value
+    
+    @property
+    def val_f(self):
+        cdef float res = dereference(self._ptr).val_f
+        return res
+    @val_f.setter
+    def val_f(self, float value):
+        dereference(self._ptr).val_f = value
+    
+    @property
+    def val_p(self):
+        cdef Any res = dereference(self._ptr).val_p
+        return res
+    @val_p.setter
+    def val_p(self, Any value):
+        dereference(self._ptr).val_p = value
     
 
 cdef class _ImGuiTableColumnSortSpecs:
@@ -3215,7 +3913,6 @@ cdef class _ImGuiTableColumnSortSpecs:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_table_column_sort_specs():
         cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr = ccimgui.ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs()
@@ -3225,6 +3922,38 @@ cdef class _ImGuiTableColumnSortSpecs:
     
     def destroy(_ImGuiTableColumnSortSpecs self):
         ccimgui.ImGuiTableColumnSortSpecs_destroy(self._ptr)
+    
+    @property
+    def column_user_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
+        return res
+    @column_user_id.setter
+    def column_user_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).ColumnUserID = value
+    
+    @property
+    def column_index(self):
+        cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
+        return res
+    @column_index.setter
+    def column_index(self, ccimgui.ImS16 value):
+        dereference(self._ptr).ColumnIndex = value
+    
+    @property
+    def sort_order(self):
+        cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
+        return res
+    @sort_order.setter
+    def sort_order(self, ccimgui.ImS16 value):
+        dereference(self._ptr).SortOrder = value
+    
+    @property
+    def sort_direction(self):
+        cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
+        return res
+    @sort_direction.setter
+    def sort_direction(self, ccimgui.ImGuiSortDirection value):
+        dereference(self._ptr).SortDirection = value
     
 
 cdef class _ImGuiTableSortSpecs:
@@ -3239,7 +3968,6 @@ cdef class _ImGuiTableSortSpecs:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_table_sort_specs():
         cdef ccimgui.ImGuiTableSortSpecs* _ptr = ccimgui.ImGuiTableSortSpecs_ImGuiTableSortSpecs()
@@ -3249,6 +3977,30 @@ cdef class _ImGuiTableSortSpecs:
     
     def destroy(_ImGuiTableSortSpecs self):
         ccimgui.ImGuiTableSortSpecs_destroy(self._ptr)
+    
+    @property
+    def specs(self):
+        cdef ccimgui.ImGuiTableColumnSortSpecs res = dereference(self._ptr).Specs
+        return _ImGuiTableColumnSortSpecs.from_ptr(res)
+    @specs.setter
+    def specs(self, Any value):
+        dereference(self._ptr).Specs = value._ptr
+    
+    @property
+    def specs_count(self):
+        cdef int res = dereference(self._ptr).SpecsCount
+        return res
+    @specs_count.setter
+    def specs_count(self, int value):
+        dereference(self._ptr).SpecsCount = value
+    
+    @property
+    def specs_dirty(self):
+        cdef Any res = dereference(self._ptr).SpecsDirty
+        return res
+    @specs_dirty.setter
+    def specs_dirty(self, Any value):
+        dereference(self._ptr).SpecsDirty = value
     
 
 cdef class _ImVector_char:
@@ -3263,6 +4015,23 @@ cdef class _ImVector_char:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+_bytes(value)
 
 cdef class _ImVector_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextRange* _ptr
@@ -3276,6 +4045,30 @@ cdef class _ImVector_ImGuiTextRange:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, int value):
+        dereference(self._ptr).Size = value
+    
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, int value):
+        dereference(self._ptr).Capacity = value
+    
+    @property
+    def data(self):
+        cdef ccimgui.ImGuiTextRange res = dereference(self._ptr).Data
+        return _ImGuiTextRange.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImGuiTextRange:
     cdef ccimgui.ImGuiTextRange* _ptr
@@ -3289,7 +4082,6 @@ cdef class _ImGuiTextRange:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def nil():
         cdef ccimgui.ImGuiTextRange* _ptr = ccimgui.ImGuiTextRange_ImGuiTextRange_Nil()
@@ -3297,9 +4089,8 @@ cdef class _ImGuiTextRange:
             raise MemoryError
         return _ImGuiTextRange.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
-    def str(str _b, str _e):
+    def str_(str _b, str _e):
         cdef ccimgui.ImGuiTextRange* _ptr = ccimgui.ImGuiTextRange_ImGuiTextRange_Str(_bytes(_b), _bytes(_e))
         if _ptr is NULL:
             raise MemoryError
@@ -3315,6 +4106,8 @@ cdef class _ImGuiTextRange:
     def split(_ImGuiTextRange self, Any separator, _ImVector_ImGuiTextRange out):
         ccimgui.ImGuiTextRange_split(self._ptr, separator, out._ptr)
     
+_bytes(value)
+_bytes(value)
 
 cdef class _ImGuiWindowClass:
     cdef ccimgui.ImGuiWindowClass* _ptr
@@ -3328,7 +4121,6 @@ cdef class _ImGuiWindowClass:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_window_class():
         cdef ccimgui.ImGuiWindowClass* _ptr = ccimgui.ImGuiWindowClass_ImGuiWindowClass()
@@ -3338,6 +4130,70 @@ cdef class _ImGuiWindowClass:
     
     def destroy(_ImGuiWindowClass self):
         ccimgui.ImGuiWindowClass_destroy(self._ptr)
+    
+    @property
+    def class_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ClassId
+        return res
+    @class_id.setter
+    def class_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).ClassId = value
+    
+    @property
+    def parent_viewport_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
+        return res
+    @parent_viewport_id.setter
+    def parent_viewport_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).ParentViewportId = value
+    
+    @property
+    def viewport_flags_override_set(self):
+        cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideSet
+        return res
+    @viewport_flags_override_set.setter
+    def viewport_flags_override_set(self, ccimgui.ImGuiViewportFlags value):
+        dereference(self._ptr).ViewportFlagsOverrideSet = value
+    
+    @property
+    def viewport_flags_override_clear(self):
+        cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideClear
+        return res
+    @viewport_flags_override_clear.setter
+    def viewport_flags_override_clear(self, ccimgui.ImGuiViewportFlags value):
+        dereference(self._ptr).ViewportFlagsOverrideClear = value
+    
+    @property
+    def tab_item_flags_override_set(self):
+        cdef ccimgui.ImGuiTabItemFlags res = dereference(self._ptr).TabItemFlagsOverrideSet
+        return res
+    @tab_item_flags_override_set.setter
+    def tab_item_flags_override_set(self, ccimgui.ImGuiTabItemFlags value):
+        dereference(self._ptr).TabItemFlagsOverrideSet = value
+    
+    @property
+    def dock_node_flags_override_set(self):
+        cdef ccimgui.ImGuiDockNodeFlags res = dereference(self._ptr).DockNodeFlagsOverrideSet
+        return res
+    @dock_node_flags_override_set.setter
+    def dock_node_flags_override_set(self, ccimgui.ImGuiDockNodeFlags value):
+        dereference(self._ptr).DockNodeFlagsOverrideSet = value
+    
+    @property
+    def docking_always_tab_bar(self):
+        cdef Any res = dereference(self._ptr).DockingAlwaysTabBar
+        return res
+    @docking_always_tab_bar.setter
+    def docking_always_tab_bar(self, Any value):
+        dereference(self._ptr).DockingAlwaysTabBar = value
+    
+    @property
+    def docking_allow_unclassed(self):
+        cdef Any res = dereference(self._ptr).DockingAllowUnclassed
+        return res
+    @docking_allow_unclassed.setter
+    def docking_allow_unclassed(self, Any value):
+        dereference(self._ptr).DockingAllowUnclassed = value
     
 
 cdef class _ImVec2:
@@ -3352,15 +4208,13 @@ cdef class _ImVec2:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
-    def float(float _x, float _y):
+    def float_(float _x, float _y):
         cdef ccimgui.ImVec2* _ptr = ccimgui.ImVec2_ImVec2_Float(_x, _y)
         if _ptr is NULL:
             raise MemoryError
         return _ImVec2.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def nil():
         cdef ccimgui.ImVec2* _ptr = ccimgui.ImVec2_ImVec2_Nil()
@@ -3370,6 +4224,22 @@ cdef class _ImVec2:
     
     def destroy(_ImVec2 self):
         ccimgui.ImVec2_destroy(self._ptr)
+    
+    @property
+    def x(self):
+        cdef float res = dereference(self._ptr).x
+        return res
+    @x.setter
+    def x(self, float value):
+        dereference(self._ptr).x = value
+    
+    @property
+    def y(self):
+        cdef float res = dereference(self._ptr).y
+        return res
+    @y.setter
+    def y(self, float value):
+        dereference(self._ptr).y = value
     
 
 cdef class _ImVec4:
@@ -3384,15 +4254,13 @@ cdef class _ImVec4:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
-    def float(float _x, float _y, float _z, float _w):
+    def float_(float _x, float _y, float _z, float _w):
         cdef ccimgui.ImVec4* _ptr = ccimgui.ImVec4_ImVec4_Float(_x, _y, _z, _w)
         if _ptr is NULL:
             raise MemoryError
         return _ImVec4.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def nil():
         cdef ccimgui.ImVec4* _ptr = ccimgui.ImVec4_ImVec4_Nil()
@@ -3402,6 +4270,38 @@ cdef class _ImVec4:
     
     def destroy(_ImVec4 self):
         ccimgui.ImVec4_destroy(self._ptr)
+    
+    @property
+    def x(self):
+        cdef float res = dereference(self._ptr).x
+        return res
+    @x.setter
+    def x(self, float value):
+        dereference(self._ptr).x = value
+    
+    @property
+    def y(self):
+        cdef float res = dereference(self._ptr).y
+        return res
+    @y.setter
+    def y(self, float value):
+        dereference(self._ptr).y = value
+    
+    @property
+    def z(self):
+        cdef float res = dereference(self._ptr).z
+        return res
+    @z.setter
+    def z(self, float value):
+        dereference(self._ptr).z = value
+    
+    @property
+    def w(self):
+        cdef float res = dereference(self._ptr).w
+        return res
+    @w.setter
+    def w(self, float value):
+        dereference(self._ptr).w = value
     
 
 cdef class _ImColor:
@@ -3416,23 +4316,20 @@ cdef class _ImColor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
-    def float(float r, float g, float b, float a=1.0):
+    def float_(float r, float g, float b, float a=1.0):
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Float(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
-    def int(int r, int g, int b, int a=255):
+    def int_(int r, int g, int b, int a=255):
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Int(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def nil():
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Nil()
@@ -3440,7 +4337,6 @@ cdef class _ImColor:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def u32(ccimgui.ImU32 rgba):
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_U32(rgba)
@@ -3448,10 +4344,9 @@ cdef class _ImColor:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
     
-    # Constructor
     @staticmethod
     def vec4(tuple col):
-        cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Vec4(col._ptr)
+        cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Vec4(_cast_tuple_ImVec4(col))
         if _ptr is NULL:
             raise MemoryError
         return _ImColor.from_ptr(_ptr)
@@ -3464,6 +4359,14 @@ cdef class _ImColor:
     
     def set_hsv(_ImColor self, float h, float s, float value, float a=1.0):
         ccimgui.ImColor_SetHSV(self._ptr, h, s, value, a)
+    
+    @property
+    def value(self):
+        cdef tuple res = dereference(self._ptr).Value
+        return res
+    @value.setter
+    def value(self, tuple value):
+        dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
     
 
 cdef class _ImDrawChannel:
@@ -3478,6 +4381,22 @@ cdef class _ImDrawChannel:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def _cmd_buffer(self):
+        cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr)._CmdBuffer
+        return _ImVector_ImDrawCmd.from_ptr(res)
+    @_cmd_buffer.setter
+    def _cmd_buffer(self, Any value):
+        dereference(self._ptr)._CmdBuffer = value._ptr
+    
+    @property
+    def _idx_buffer(self):
+        cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr)._IdxBuffer
+        return _ImVector_ImDrawIdx.from_ptr(res)
+    @_idx_buffer.setter
+    def _idx_buffer(self, Any value):
+        dereference(self._ptr)._IdxBuffer = value._ptr
+    
 
 cdef class _ImDrawCmd:
     cdef ccimgui.ImDrawCmd* _ptr
@@ -3491,7 +4410,6 @@ cdef class _ImDrawCmd:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def draw_cmd():
         cdef ccimgui.ImDrawCmd* _ptr = ccimgui.ImDrawCmd_ImDrawCmd()
@@ -3506,6 +4424,54 @@ cdef class _ImDrawCmd:
         cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(self._ptr)
         return res
     
+    @property
+    def clip_rect(self):
+        cdef tuple res = dereference(self._ptr).ClipRect
+        return res
+    @clip_rect.setter
+    def clip_rect(self, tuple value):
+        dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+    
+    @property
+    def texture_id(self):
+        cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
+        return res
+    @texture_id.setter
+    def texture_id(self, ccimgui.ImTextureID value):
+        dereference(self._ptr).TextureId = value
+    
+    @property
+    def vtx_offset(self):
+        cdef Any res = dereference(self._ptr).VtxOffset
+        return res
+    @vtx_offset.setter
+    def vtx_offset(self, Any value):
+        dereference(self._ptr).VtxOffset = value
+    
+    @property
+    def idx_offset(self):
+        cdef Any res = dereference(self._ptr).IdxOffset
+        return res
+    @idx_offset.setter
+    def idx_offset(self, Any value):
+        dereference(self._ptr).IdxOffset = value
+    
+    @property
+    def elem_count(self):
+        cdef Any res = dereference(self._ptr).ElemCount
+        return res
+    @elem_count.setter
+    def elem_count(self, Any value):
+        dereference(self._ptr).ElemCount = value
+    
+    @property
+    def user_callback_data(self):
+        cdef Any res = dereference(self._ptr).UserCallbackData
+        return res
+    @user_callback_data.setter
+    def user_callback_data(self, Any value):
+        dereference(self._ptr).UserCallbackData = value
+    
 
 cdef class _ImDrawCmdHeader:
     cdef ccimgui.ImDrawCmdHeader* _ptr
@@ -3519,6 +4485,30 @@ cdef class _ImDrawCmdHeader:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def clip_rect(self):
+        cdef tuple res = dereference(self._ptr).ClipRect
+        return res
+    @clip_rect.setter
+    def clip_rect(self, tuple value):
+        dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+    
+    @property
+    def texture_id(self):
+        cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
+        return res
+    @texture_id.setter
+    def texture_id(self, ccimgui.ImTextureID value):
+        dereference(self._ptr).TextureId = value
+    
+    @property
+    def vtx_offset(self):
+        cdef Any res = dereference(self._ptr).VtxOffset
+        return res
+    @vtx_offset.setter
+    def vtx_offset(self, Any value):
+        dereference(self._ptr).VtxOffset = value
+    
 
 cdef class _ImDrawData:
     cdef ccimgui.ImDrawData* _ptr
@@ -3532,7 +4522,6 @@ cdef class _ImDrawData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def draw_data():
         cdef ccimgui.ImDrawData* _ptr = ccimgui.ImDrawData_ImDrawData()
@@ -3543,14 +4532,86 @@ cdef class _ImDrawData:
     def destroy(_ImDrawData self):
         ccimgui.ImDrawData_destroy(self._ptr)
     
-    def clear_(_ImDrawData self):
+    def clear(_ImDrawData self):
         ccimgui.ImDrawData_Clear(self._ptr)
     
     def de_index_all_buffers(_ImDrawData self):
         ccimgui.ImDrawData_DeIndexAllBuffers(self._ptr)
     
     def scale_clip_rects(_ImDrawData self, tuple fb_scale):
-        ccimgui.ImDrawData_ScaleClipRects(self._ptr, fb_scale._ptr)
+        ccimgui.ImDrawData_ScaleClipRects(self._ptr, _cast_tuple_ImVec2(fb_scale))
+    
+    @property
+    def valid(self):
+        cdef Any res = dereference(self._ptr).Valid
+        return res
+    @valid.setter
+    def valid(self, Any value):
+        dereference(self._ptr).Valid = value
+    
+    @property
+    def cmd_lists_count(self):
+        cdef int res = dereference(self._ptr).CmdListsCount
+        return res
+    @cmd_lists_count.setter
+    def cmd_lists_count(self, int value):
+        dereference(self._ptr).CmdListsCount = value
+    
+    @property
+    def total_idx_count(self):
+        cdef int res = dereference(self._ptr).TotalIdxCount
+        return res
+    @total_idx_count.setter
+    def total_idx_count(self, int value):
+        dereference(self._ptr).TotalIdxCount = value
+    
+    @property
+    def total_vtx_count(self):
+        cdef int res = dereference(self._ptr).TotalVtxCount
+        return res
+    @total_vtx_count.setter
+    def total_vtx_count(self, int value):
+        dereference(self._ptr).TotalVtxCount = value
+    
+    @property
+    def cmd_lists(self):
+        cdef ccimgui.ImDrawList res = dereference(self._ptr).CmdLists
+        return _ImDrawList.from_ptr(res)
+    @cmd_lists.setter
+    def cmd_lists(self, Any value):
+        dereference(self._ptr).CmdLists = value._ptr
+    
+    @property
+    def display_pos(self):
+        cdef tuple res = dereference(self._ptr).DisplayPos
+        return res
+    @display_pos.setter
+    def display_pos(self, tuple value):
+        dereference(self._ptr).DisplayPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def display_size(self):
+        cdef tuple res = dereference(self._ptr).DisplaySize
+        return res
+    @display_size.setter
+    def display_size(self, tuple value):
+        dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def framebuffer_scale(self):
+        cdef tuple res = dereference(self._ptr).FramebufferScale
+        return res
+    @framebuffer_scale.setter
+    def framebuffer_scale(self, tuple value):
+        dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
+    
+    @property
+    def owner_viewport(self):
+        cdef ccimgui.ImGuiViewport res = dereference(self._ptr).OwnerViewport
+        return _ImGuiViewport.from_ptr(res)
+    @owner_viewport.setter
+    def owner_viewport(self, Any value):
+        dereference(self._ptr).OwnerViewport = value._ptr
     
 
 cdef class _ImDrawListSplitter:
@@ -3565,7 +4626,6 @@ cdef class _ImDrawListSplitter:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def draw_list_splitter():
         cdef ccimgui.ImDrawListSplitter* _ptr = ccimgui.ImDrawListSplitter_ImDrawListSplitter()
@@ -3576,7 +4636,7 @@ cdef class _ImDrawListSplitter:
     def destroy(_ImDrawListSplitter self):
         ccimgui.ImDrawListSplitter_destroy(self._ptr)
     
-    def clear_(_ImDrawListSplitter self):
+    def clear(_ImDrawListSplitter self):
         ccimgui.ImDrawListSplitter_Clear(self._ptr)
     
     def clear_free_memory(_ImDrawListSplitter self):
@@ -3591,6 +4651,30 @@ cdef class _ImDrawListSplitter:
     def split(_ImDrawListSplitter self, _ImDrawList draw_list, int count):
         ccimgui.ImDrawListSplitter_Split(self._ptr, draw_list._ptr, count)
     
+    @property
+    def _current(self):
+        cdef int res = dereference(self._ptr)._Current
+        return res
+    @_current.setter
+    def _current(self, int value):
+        dereference(self._ptr)._Current = value
+    
+    @property
+    def _count(self):
+        cdef int res = dereference(self._ptr)._Count
+        return res
+    @_count.setter
+    def _count(self, int value):
+        dereference(self._ptr)._Count = value
+    
+    @property
+    def _channels(self):
+        cdef ccimgui.ImVector_ImDrawChannel res = dereference(self._ptr)._Channels
+        return _ImVector_ImDrawChannel.from_ptr(res)
+    @_channels.setter
+    def _channels(self, Any value):
+        dereference(self._ptr)._Channels = value._ptr
+    
 
 cdef class _ImDrawVert:
     cdef ccimgui.ImDrawVert* _ptr
@@ -3604,6 +4688,30 @@ cdef class _ImDrawVert:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
+    @property
+    def pos(self):
+        cdef tuple res = dereference(self._ptr).pos
+        return res
+    @pos.setter
+    def pos(self, tuple value):
+        dereference(self._ptr).pos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def uv(self):
+        cdef tuple res = dereference(self._ptr).uv
+        return res
+    @uv.setter
+    def uv(self, tuple value):
+        dereference(self._ptr).uv = _cast_tuple_ImVec2(value)
+    
+    @property
+    def col(self):
+        cdef ccimgui.ImU32 res = dereference(self._ptr).col
+        return res
+    @col.setter
+    def col(self, ccimgui.ImU32 value):
+        dereference(self._ptr).col = value
+    
 
 cdef class _ImFont:
     cdef ccimgui.ImFont* _ptr
@@ -3617,7 +4725,6 @@ cdef class _ImFont:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def font():
         cdef ccimgui.ImFont* _ptr = ccimgui.ImFont_ImFont()
@@ -3693,11 +4800,11 @@ cdef class _ImFont:
     
     def find_glyph(_ImFont self, ccimgui.ImWchar c):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(self._ptr, c)
-        return res
+        return _ImFontGlyph.from_ptr(res)
     
     def find_glyph_no_fallback(_ImFont self, ccimgui.ImWchar c):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(self._ptr, c)
-        return res
+        return _ImFontGlyph.from_ptr(res)
     
     def get_char_advance(_ImFont self, ccimgui.ImWchar c):
         cdef float res = ccimgui.ImFont_GetCharAdvance(self._ptr, c)
@@ -3730,7 +4837,7 @@ cdef class _ImFont:
             self._ptr,
             draw_list._ptr,
             size,
-            pos._ptr,
+            _cast_tuple_ImVec2(pos),
             col,
             c
         )
@@ -3751,9 +4858,9 @@ cdef class _ImFont:
             self._ptr,
             draw_list._ptr,
             size,
-            pos._ptr,
+            _cast_tuple_ImVec2(pos),
             col,
-            clip_rect._ptr,
+            _cast_tuple_ImVec4(clip_rect),
             _bytes(text_begin),
             _bytes(text_end),
             wrap_width,
@@ -3762,6 +4869,166 @@ cdef class _ImFont:
     
     def set_glyph_visible(_ImFont self, ccimgui.ImWchar c, Any visible):
         ccimgui.ImFont_SetGlyphVisible(self._ptr, c, visible)
+    
+    @property
+    def index_advancex(self):
+        cdef ccimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
+        return _ImVector_float.from_ptr(res)
+    @index_advancex.setter
+    def index_advancex(self, Any value):
+        dereference(self._ptr).IndexAdvanceX = value._ptr
+    
+    @property
+    def fallback_advancex(self):
+        cdef float res = dereference(self._ptr).FallbackAdvanceX
+        return res
+    @fallback_advancex.setter
+    def fallback_advancex(self, float value):
+        dereference(self._ptr).FallbackAdvanceX = value
+    
+    @property
+    def font_size(self):
+        cdef float res = dereference(self._ptr).FontSize
+        return res
+    @font_size.setter
+    def font_size(self, float value):
+        dereference(self._ptr).FontSize = value
+    
+    @property
+    def index_lookup(self):
+        cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).IndexLookup
+        return _ImVector_ImWchar.from_ptr(res)
+    @index_lookup.setter
+    def index_lookup(self, Any value):
+        dereference(self._ptr).IndexLookup = value._ptr
+    
+    @property
+    def glyphs(self):
+        cdef ccimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
+        return _ImVector_ImFontGlyph.from_ptr(res)
+    @glyphs.setter
+    def glyphs(self, Any value):
+        dereference(self._ptr).Glyphs = value._ptr
+    
+    @property
+    def fallback_glyph(self):
+        cdef ccimgui.ImFontGlyph res = dereference(self._ptr).FallbackGlyph
+        return _ImFontGlyph.from_ptr(res)
+    @fallback_glyph.setter
+    def fallback_glyph(self, Any value):
+        dereference(self._ptr).FallbackGlyph = value._ptr
+    
+    @property
+    def container_atlas(self):
+        cdef ccimgui.ImFontAtlas res = dereference(self._ptr).ContainerAtlas
+        return _ImFontAtlas.from_ptr(res)
+    @container_atlas.setter
+    def container_atlas(self, Any value):
+        dereference(self._ptr).ContainerAtlas = value._ptr
+    
+    @property
+    def config_data(self):
+        cdef ccimgui.ImFontConfig res = dereference(self._ptr).ConfigData
+        return _ImFontConfig.from_ptr(res)
+    @config_data.setter
+    def config_data(self, Any value):
+        dereference(self._ptr).ConfigData = value._ptr
+    
+    @property
+    def config_data_count(self):
+        cdef Any res = dereference(self._ptr).ConfigDataCount
+        return res
+    @config_data_count.setter
+    def config_data_count(self, Any value):
+        dereference(self._ptr).ConfigDataCount = value
+    
+    @property
+    def fallback_char(self):
+        cdef ccimgui.ImWchar res = dereference(self._ptr).FallbackChar
+        return res
+    @fallback_char.setter
+    def fallback_char(self, ccimgui.ImWchar value):
+        dereference(self._ptr).FallbackChar = value
+    
+    @property
+    def ellipsis_char(self):
+        cdef ccimgui.ImWchar res = dereference(self._ptr).EllipsisChar
+        return res
+    @ellipsis_char.setter
+    def ellipsis_char(self, ccimgui.ImWchar value):
+        dereference(self._ptr).EllipsisChar = value
+    
+    @property
+    def ellipsis_char_count(self):
+        cdef Any res = dereference(self._ptr).EllipsisCharCount
+        return res
+    @ellipsis_char_count.setter
+    def ellipsis_char_count(self, Any value):
+        dereference(self._ptr).EllipsisCharCount = value
+    
+    @property
+    def ellipsis_width(self):
+        cdef float res = dereference(self._ptr).EllipsisWidth
+        return res
+    @ellipsis_width.setter
+    def ellipsis_width(self, float value):
+        dereference(self._ptr).EllipsisWidth = value
+    
+    @property
+    def ellipsis_char_step(self):
+        cdef float res = dereference(self._ptr).EllipsisCharStep
+        return res
+    @ellipsis_char_step.setter
+    def ellipsis_char_step(self, float value):
+        dereference(self._ptr).EllipsisCharStep = value
+    
+    @property
+    def dirty_lookup_tables(self):
+        cdef Any res = dereference(self._ptr).DirtyLookupTables
+        return res
+    @dirty_lookup_tables.setter
+    def dirty_lookup_tables(self, Any value):
+        dereference(self._ptr).DirtyLookupTables = value
+    
+    @property
+    def scale(self):
+        cdef float res = dereference(self._ptr).Scale
+        return res
+    @scale.setter
+    def scale(self, float value):
+        dereference(self._ptr).Scale = value
+    
+    @property
+    def ascent(self):
+        cdef float res = dereference(self._ptr).Ascent
+        return res
+    @ascent.setter
+    def ascent(self, float value):
+        dereference(self._ptr).Ascent = value
+    
+    @property
+    def descent(self):
+        cdef float res = dereference(self._ptr).Descent
+        return res
+    @descent.setter
+    def descent(self, float value):
+        dereference(self._ptr).Descent = value
+    
+    @property
+    def metrics_total_surface(self):
+        cdef int res = dereference(self._ptr).MetricsTotalSurface
+        return res
+    @metrics_total_surface.setter
+    def metrics_total_surface(self, int value):
+        dereference(self._ptr).MetricsTotalSurface = value
+    
+    @property
+    def used_4k_pages_map(self):
+        cdef ccimgui.ImU8 res = dereference(self._ptr).Used4kPagesMap
+        return res
+    @used_4k_pages_map.setter
+    def used_4k_pages_map(self, ccimgui.ImU8 value):
+        dereference(self._ptr).Used4kPagesMap = value
     
 
 cdef class _ImFontAtlas:
@@ -3776,7 +5043,6 @@ cdef class _ImFontAtlas:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def font_atlas():
         cdef ccimgui.ImFontAtlas* _ptr = ccimgui.ImFontAtlas_ImFontAtlas()
@@ -3790,7 +5056,7 @@ cdef class _ImFontAtlas:
     def add_custom_rect_font_glyph(
         _ImFontAtlas self,
         _ImFont font,
-        ccimgui.ImWchar id,
+        ccimgui.ImWchar id_,
         int width,
         int height,
         float advance_x,
@@ -3799,11 +5065,11 @@ cdef class _ImFontAtlas:
         cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
             self._ptr,
             font._ptr,
-            id,
+            id_,
             width,
             height,
             advance_x,
-            offset._ptr
+            _cast_tuple_ImVec2(offset)
         )
         return res
     
@@ -3813,19 +5079,19 @@ cdef class _ImFontAtlas:
     
     def add_font(_ImFontAtlas self, _ImFontConfig font_cfg):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(self._ptr, font_cfg._ptr)
-        return res
+        return _ImFont.from_ptr(res)
     
     def add_font_default(_ImFontAtlas self, _ImFontConfig font_cfg=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(self._ptr, font_cfg._ptr)
-        return res
+        return _ImFont.from_ptr(res)
     
     def add_font_from_file_ttf(_ImFontAtlas self, str filename, float size_pixels, _ImFontConfig font_cfg=None, Any glyph_ranges=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(self._ptr, _bytes(filename), size_pixels, font_cfg._ptr, glyph_ranges)
-        return res
+        return _ImFont.from_ptr(res)
     
     def add_font_from_memory_compressed_base_85ttf(_ImFontAtlas self, str compressed_font_data_base85, float size_pixels, _ImFontConfig font_cfg=None, Any glyph_ranges=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(self._ptr, _bytes(compressed_font_data_base85), size_pixels, font_cfg._ptr, glyph_ranges)
-        return res
+        return _ImFont.from_ptr(res)
     
     def add_font_from_memory_compressed_ttf(
         _ImFontAtlas self,
@@ -3843,7 +5109,7 @@ cdef class _ImFontAtlas:
             font_cfg._ptr,
             glyph_ranges
         )
-        return res
+        return _ImFont.from_ptr(res)
     
     def add_font_from_memory_ttf(
         _ImFontAtlas self,
@@ -3861,7 +5127,7 @@ cdef class _ImFontAtlas:
             font_cfg._ptr,
             glyph_ranges
         )
-        return res
+        return _ImFont.from_ptr(res)
     
     def build(_ImFontAtlas self):
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_Build(self._ptr)
@@ -3870,7 +5136,7 @@ cdef class _ImFontAtlas:
     def calc_custom_rect_uv(_ImFontAtlas self, _ImFontAtlasCustomRect rect, _ImVec2 out_uv_min, _ImVec2 out_uv_max):
         ccimgui.ImFontAtlas_CalcCustomRectUV(self._ptr, rect._ptr, out_uv_min._ptr, out_uv_max._ptr)
     
-    def clear_(_ImFontAtlas self):
+    def clear(_ImFontAtlas self):
         ccimgui.ImFontAtlas_Clear(self._ptr)
     
     def clear_fonts(_ImFontAtlas self):
@@ -3884,7 +5150,7 @@ cdef class _ImFontAtlas:
     
     def get_custom_rect_by_index(_ImFontAtlas self, int index):
         cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(self._ptr, index)
-        return res
+        return _ImFontAtlasCustomRect.from_ptr(res)
     
     def get_glyph_ranges_chinese_full(_ImFontAtlas self):
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(self._ptr)
@@ -3939,8 +5205,8 @@ cdef class _ImFontAtlas:
             cursor,
             out_offset._ptr,
             out_size._ptr,
-            <ImVec2*>&io_ImVec2_out_uv_border._ptr,
-            <ImVec2*>&io_ImVec2_out_uv_fill._ptr
+            _cast_tuple_ImVec2(<ImVec2*>&io_ImVec2_out_uv_border),
+            _cast_tuple_ImVec2(<ImVec2*>&io_ImVec2_out_uv_fill)
         )
         return res
     
@@ -3954,8 +5220,184 @@ cdef class _ImFontAtlas:
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_IsBuilt(self._ptr)
         return res
     
-    def set_tex_id(_ImFontAtlas self, ccimgui.ImTextureID id):
-        ccimgui.ImFontAtlas_SetTexID(self._ptr, id)
+    def set_tex_id(_ImFontAtlas self, ccimgui.ImTextureID id_):
+        ccimgui.ImFontAtlas_SetTexID(self._ptr, id_)
+    
+    @property
+    def flags(self):
+        cdef ccimgui.ImFontAtlasFlags res = dereference(self._ptr).Flags
+        return res
+    @flags.setter
+    def flags(self, ccimgui.ImFontAtlasFlags value):
+        dereference(self._ptr).Flags = value
+    
+    @property
+    def tex_id(self):
+        cdef ccimgui.ImTextureID res = dereference(self._ptr).TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, ccimgui.ImTextureID value):
+        dereference(self._ptr).TexID = value
+    
+    @property
+    def tex_desired_width(self):
+        cdef int res = dereference(self._ptr).TexDesiredWidth
+        return res
+    @tex_desired_width.setter
+    def tex_desired_width(self, int value):
+        dereference(self._ptr).TexDesiredWidth = value
+    
+    @property
+    def tex_glyph_padding(self):
+        cdef int res = dereference(self._ptr).TexGlyphPadding
+        return res
+    @tex_glyph_padding.setter
+    def tex_glyph_padding(self, int value):
+        dereference(self._ptr).TexGlyphPadding = value
+    
+    @property
+    def locked(self):
+        cdef Any res = dereference(self._ptr).Locked
+        return res
+    @locked.setter
+    def locked(self, Any value):
+        dereference(self._ptr).Locked = value
+    
+    @property
+    def user_data(self):
+        cdef Any res = dereference(self._ptr).UserData
+        return res
+    @user_data.setter
+    def user_data(self, Any value):
+        dereference(self._ptr).UserData = value
+    
+    @property
+    def tex_ready(self):
+        cdef Any res = dereference(self._ptr).TexReady
+        return res
+    @tex_ready.setter
+    def tex_ready(self, Any value):
+        dereference(self._ptr).TexReady = value
+    
+    @property
+    def tex_pixels_use_colors(self):
+        cdef Any res = dereference(self._ptr).TexPixelsUseColors
+        return res
+    @tex_pixels_use_colors.setter
+    def tex_pixels_use_colors(self, Any value):
+        dereference(self._ptr).TexPixelsUseColors = value
+    
+    @property
+    def tex_pixels_alpha8(self):
+        cdef Any res = dereference(self._ptr).TexPixelsAlpha8
+        return res
+    @tex_pixels_alpha8.setter
+    def tex_pixels_alpha8(self, Any value):
+        dereference(self._ptr).TexPixelsAlpha8 = value
+    
+    @property
+    def tex_pixels_rgba32(self):
+        cdef Any res = dereference(self._ptr).TexPixelsRGBA32
+        return res
+    @tex_pixels_rgba32.setter
+    def tex_pixels_rgba32(self, Any value):
+        dereference(self._ptr).TexPixelsRGBA32 = value
+    
+    @property
+    def tex_width(self):
+        cdef int res = dereference(self._ptr).TexWidth
+        return res
+    @tex_width.setter
+    def tex_width(self, int value):
+        dereference(self._ptr).TexWidth = value
+    
+    @property
+    def tex_height(self):
+        cdef int res = dereference(self._ptr).TexHeight
+        return res
+    @tex_height.setter
+    def tex_height(self, int value):
+        dereference(self._ptr).TexHeight = value
+    
+    @property
+    def tex_uv_scale(self):
+        cdef tuple res = dereference(self._ptr).TexUvScale
+        return res
+    @tex_uv_scale.setter
+    def tex_uv_scale(self, tuple value):
+        dereference(self._ptr).TexUvScale = _cast_tuple_ImVec2(value)
+    
+    @property
+    def tex_uv_white_pixel(self):
+        cdef tuple res = dereference(self._ptr).TexUvWhitePixel
+        return res
+    @tex_uv_white_pixel.setter
+    def tex_uv_white_pixel(self, tuple value):
+        dereference(self._ptr).TexUvWhitePixel = _cast_tuple_ImVec2(value)
+    
+    @property
+    def fonts(self):
+        cdef ccimgui.ImVector_ImFontPtr res = dereference(self._ptr).Fonts
+        return _ImVector_ImFontPtr.from_ptr(res)
+    @fonts.setter
+    def fonts(self, Any value):
+        dereference(self._ptr).Fonts = value._ptr
+    
+    @property
+    def custom_rects(self):
+        cdef ccimgui.ImVector_ImFontAtlasCustomRect res = dereference(self._ptr).CustomRects
+        return _ImVector_ImFontAtlasCustomRect.from_ptr(res)
+    @custom_rects.setter
+    def custom_rects(self, Any value):
+        dereference(self._ptr).CustomRects = value._ptr
+    
+    @property
+    def config_data(self):
+        cdef ccimgui.ImVector_ImFontConfig res = dereference(self._ptr).ConfigData
+        return _ImVector_ImFontConfig.from_ptr(res)
+    @config_data.setter
+    def config_data(self, Any value):
+        dereference(self._ptr).ConfigData = value._ptr
+    
+    @property
+    def tex_uv_lines(self):
+        cdef tuple res = dereference(self._ptr).TexUvLines
+        return res
+    @tex_uv_lines.setter
+    def tex_uv_lines(self, tuple value):
+        dereference(self._ptr).TexUvLines = _cast_tuple_ImVec4(value)
+    
+    @property
+    def font_builder_io(self):
+        cdef ccimgui.ImFontBuilderIO res = dereference(self._ptr).FontBuilderIO
+        return _ImFontBuilderIO.from_ptr(res)
+    @font_builder_io.setter
+    def font_builder_io(self, Any value):
+        dereference(self._ptr).FontBuilderIO = value._ptr
+    
+    @property
+    def font_builder_flags(self):
+        cdef Any res = dereference(self._ptr).FontBuilderFlags
+        return res
+    @font_builder_flags.setter
+    def font_builder_flags(self, Any value):
+        dereference(self._ptr).FontBuilderFlags = value
+    
+    @property
+    def pack_id_mouse_cursors(self):
+        cdef int res = dereference(self._ptr).PackIdMouseCursors
+        return res
+    @pack_id_mouse_cursors.setter
+    def pack_id_mouse_cursors(self, int value):
+        dereference(self._ptr).PackIdMouseCursors = value
+    
+    @property
+    def pack_id_lines(self):
+        cdef int res = dereference(self._ptr).PackIdLines
+        return res
+    @pack_id_lines.setter
+    def pack_id_lines(self, int value):
+        dereference(self._ptr).PackIdLines = value
     
 
 cdef class _ImFontAtlasCustomRect:
@@ -3970,7 +5412,6 @@ cdef class _ImFontAtlasCustomRect:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def font_atlas_custom_rect():
         cdef ccimgui.ImFontAtlasCustomRect* _ptr = ccimgui.ImFontAtlasCustomRect_ImFontAtlasCustomRect()
@@ -3985,6 +5426,70 @@ cdef class _ImFontAtlasCustomRect:
         cdef ccimgui.bool res = ccimgui.ImFontAtlasCustomRect_IsPacked(self._ptr)
         return res
     
+    @property
+    def width(self):
+        cdef Any res = dereference(self._ptr).Width
+        return res
+    @width.setter
+    def width(self, Any value):
+        dereference(self._ptr).Width = value
+    
+    @property
+    def height(self):
+        cdef Any res = dereference(self._ptr).Height
+        return res
+    @height.setter
+    def height(self, Any value):
+        dereference(self._ptr).Height = value
+    
+    @property
+    def x(self):
+        cdef Any res = dereference(self._ptr).X
+        return res
+    @x.setter
+    def x(self, Any value):
+        dereference(self._ptr).X = value
+    
+    @property
+    def y(self):
+        cdef Any res = dereference(self._ptr).Y
+        return res
+    @y.setter
+    def y(self, Any value):
+        dereference(self._ptr).Y = value
+    
+    @property
+    def glyph_id(self):
+        cdef Any res = dereference(self._ptr).GlyphID
+        return res
+    @glyph_id.setter
+    def glyph_id(self, Any value):
+        dereference(self._ptr).GlyphID = value
+    
+    @property
+    def glyph_advancex(self):
+        cdef float res = dereference(self._ptr).GlyphAdvanceX
+        return res
+    @glyph_advancex.setter
+    def glyph_advancex(self, float value):
+        dereference(self._ptr).GlyphAdvanceX = value
+    
+    @property
+    def glyph_offset(self):
+        cdef tuple res = dereference(self._ptr).GlyphOffset
+        return res
+    @glyph_offset.setter
+    def glyph_offset(self, tuple value):
+        dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+    
+    @property
+    def font(self):
+        cdef ccimgui.ImFont res = dereference(self._ptr).Font
+        return _ImFont.from_ptr(res)
+    @font.setter
+    def font(self, Any value):
+        dereference(self._ptr).Font = value._ptr
+    
 
 cdef class _ImFontConfig:
     cdef ccimgui.ImFontConfig* _ptr
@@ -3998,7 +5503,6 @@ cdef class _ImFontConfig:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def font_config():
         cdef ccimgui.ImFontConfig* _ptr = ccimgui.ImFontConfig_ImFontConfig()
@@ -4008,6 +5512,158 @@ cdef class _ImFontConfig:
     
     def destroy(_ImFontConfig self):
         ccimgui.ImFontConfig_destroy(self._ptr)
+    
+    @property
+    def font_data(self):
+        cdef Any res = dereference(self._ptr).FontData
+        return res
+    @font_data.setter
+    def font_data(self, Any value):
+        dereference(self._ptr).FontData = value
+    
+    @property
+    def font_data_size(self):
+        cdef int res = dereference(self._ptr).FontDataSize
+        return res
+    @font_data_size.setter
+    def font_data_size(self, int value):
+        dereference(self._ptr).FontDataSize = value
+    
+    @property
+    def font_data_owned_by_atlas(self):
+        cdef Any res = dereference(self._ptr).FontDataOwnedByAtlas
+        return res
+    @font_data_owned_by_atlas.setter
+    def font_data_owned_by_atlas(self, Any value):
+        dereference(self._ptr).FontDataOwnedByAtlas = value
+    
+    @property
+    def font_no(self):
+        cdef int res = dereference(self._ptr).FontNo
+        return res
+    @font_no.setter
+    def font_no(self, int value):
+        dereference(self._ptr).FontNo = value
+    
+    @property
+    def size_pixels(self):
+        cdef float res = dereference(self._ptr).SizePixels
+        return res
+    @size_pixels.setter
+    def size_pixels(self, float value):
+        dereference(self._ptr).SizePixels = value
+    
+    @property
+    def oversampleh(self):
+        cdef int res = dereference(self._ptr).OversampleH
+        return res
+    @oversampleh.setter
+    def oversampleh(self, int value):
+        dereference(self._ptr).OversampleH = value
+    
+    @property
+    def oversamplev(self):
+        cdef int res = dereference(self._ptr).OversampleV
+        return res
+    @oversamplev.setter
+    def oversamplev(self, int value):
+        dereference(self._ptr).OversampleV = value
+    
+    @property
+    def pixel_snaph(self):
+        cdef Any res = dereference(self._ptr).PixelSnapH
+        return res
+    @pixel_snaph.setter
+    def pixel_snaph(self, Any value):
+        dereference(self._ptr).PixelSnapH = value
+    
+    @property
+    def glyph_extra_spacing(self):
+        cdef tuple res = dereference(self._ptr).GlyphExtraSpacing
+        return res
+    @glyph_extra_spacing.setter
+    def glyph_extra_spacing(self, tuple value):
+        dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
+    
+    @property
+    def glyph_offset(self):
+        cdef tuple res = dereference(self._ptr).GlyphOffset
+        return res
+    @glyph_offset.setter
+    def glyph_offset(self, tuple value):
+        dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+    
+    @property
+    def glyph_ranges(self):
+        cdef Any res = dereference(self._ptr).GlyphRanges
+        return res
+    @glyph_ranges.setter
+    def glyph_ranges(self, Any value):
+        dereference(self._ptr).GlyphRanges = value
+    
+    @property
+    def glyph_min_advancex(self):
+        cdef float res = dereference(self._ptr).GlyphMinAdvanceX
+        return res
+    @glyph_min_advancex.setter
+    def glyph_min_advancex(self, float value):
+        dereference(self._ptr).GlyphMinAdvanceX = value
+    
+    @property
+    def glyph_max_advancex(self):
+        cdef float res = dereference(self._ptr).GlyphMaxAdvanceX
+        return res
+    @glyph_max_advancex.setter
+    def glyph_max_advancex(self, float value):
+        dereference(self._ptr).GlyphMaxAdvanceX = value
+    
+    @property
+    def merge_mode(self):
+        cdef Any res = dereference(self._ptr).MergeMode
+        return res
+    @merge_mode.setter
+    def merge_mode(self, Any value):
+        dereference(self._ptr).MergeMode = value
+    
+    @property
+    def font_builder_flags(self):
+        cdef Any res = dereference(self._ptr).FontBuilderFlags
+        return res
+    @font_builder_flags.setter
+    def font_builder_flags(self, Any value):
+        dereference(self._ptr).FontBuilderFlags = value
+    
+    @property
+    def rasterizer_multiply(self):
+        cdef float res = dereference(self._ptr).RasterizerMultiply
+        return res
+    @rasterizer_multiply.setter
+    def rasterizer_multiply(self, float value):
+        dereference(self._ptr).RasterizerMultiply = value
+    
+    @property
+    def ellipsis_char(self):
+        cdef ccimgui.ImWchar res = dereference(self._ptr).EllipsisChar
+        return res
+    @ellipsis_char.setter
+    def ellipsis_char(self, ccimgui.ImWchar value):
+        dereference(self._ptr).EllipsisChar = value
+    
+    @property
+    def name(self):
+        cdef Any res = dereference(self._ptr).Name
+        return res
+    @name.setter
+    def name(self, Any value):
+        dereference(self._ptr).Name = value
+    
+    @property
+    def dst_font(self):
+        cdef ccimgui.ImFont res = dereference(self._ptr).DstFont
+        return _ImFont.from_ptr(res)
+    @dst_font.setter
+    def dst_font(self, Any value):
+        dereference(self._ptr).DstFont = value._ptr
     
 
 cdef class _ImFontGlyphRangesBuilder:
@@ -4022,7 +5678,6 @@ cdef class _ImFontGlyphRangesBuilder:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def font_glyph_ranges_builder():
         cdef ccimgui.ImFontGlyphRangesBuilder* _ptr = ccimgui.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder()
@@ -4045,7 +5700,7 @@ cdef class _ImFontGlyphRangesBuilder:
     def build_ranges(_ImFontGlyphRangesBuilder self, _ImVector_ImWchar out_ranges):
         ccimgui.ImFontGlyphRangesBuilder_BuildRanges(self._ptr, out_ranges._ptr)
     
-    def clear_(_ImFontGlyphRangesBuilder self):
+    def clear(_ImFontGlyphRangesBuilder self):
         ccimgui.ImFontGlyphRangesBuilder_Clear(self._ptr)
     
     def get_bit(_ImFontGlyphRangesBuilder self, Any n):
@@ -4054,6 +5709,14 @@ cdef class _ImFontGlyphRangesBuilder:
     
     def set_bit(_ImFontGlyphRangesBuilder self, Any n):
         ccimgui.ImFontGlyphRangesBuilder_SetBit(self._ptr, n)
+    
+    @property
+    def used_chars(self):
+        cdef ccimgui.ImVector_ImU32 res = dereference(self._ptr).UsedChars
+        return _ImVector_ImU32.from_ptr(res)
+    @used_chars.setter
+    def used_chars(self, Any value):
+        dereference(self._ptr).UsedChars = value._ptr
     
 
 cdef class _ImGuiIO:
@@ -4068,7 +5731,6 @@ cdef class _ImGuiIO:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_io():
         cdef ccimgui.ImGuiIO* _ptr = ccimgui.ImGuiIO_ImGuiIO()
@@ -4088,8 +5750,8 @@ cdef class _ImGuiIO:
     def add_input_character_utf16(_ImGuiIO self, ccimgui.ImWchar16 c):
         ccimgui.ImGuiIO_AddInputCharacterUTF16(self._ptr, c)
     
-    def add_input_characters_utf8(_ImGuiIO self, str str):
-        ccimgui.ImGuiIO_AddInputCharactersUTF8(self._ptr, _bytes(str))
+    def add_input_characters_utf8(_ImGuiIO self, str str_):
+        ccimgui.ImGuiIO_AddInputCharactersUTF8(self._ptr, _bytes(str_))
     
     def add_key_analog_event(_ImGuiIO self, Any key, Any down, float value):
         ccimgui.ImGuiIO_AddKeyAnalogEvent(self._ptr, key, down, value)
@@ -4103,8 +5765,8 @@ cdef class _ImGuiIO:
     def add_mouse_pos_event(_ImGuiIO self, float x, float y):
         ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
     
-    def add_mouse_viewport_event(_ImGuiIO self, ccimgui.ImGuiID id):
-        ccimgui.ImGuiIO_AddMouseViewportEvent(self._ptr, id)
+    def add_mouse_viewport_event(_ImGuiIO self, ccimgui.ImGuiID id_):
+        ccimgui.ImGuiIO_AddMouseViewportEvent(self._ptr, id_)
     
     def add_mouse_wheel_event(_ImGuiIO self, float wheel_x, float wheel_y):
         ccimgui.ImGuiIO_AddMouseWheelEvent(self._ptr, wheel_x, wheel_y)
@@ -4121,6 +5783,754 @@ cdef class _ImGuiIO:
     def set_key_event_native_data(_ImGuiIO self, Any key, int native_keycode, int native_scancode, int native_legacy_index=-1):
         ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
     
+    @property
+    def config_flags(self):
+        cdef ccimgui.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
+        return res
+    @config_flags.setter
+    def config_flags(self, ccimgui.ImGuiConfigFlags value):
+        dereference(self._ptr).ConfigFlags = value
+    
+    @property
+    def backend_flags(self):
+        cdef ccimgui.ImGuiBackendFlags res = dereference(self._ptr).BackendFlags
+        return res
+    @backend_flags.setter
+    def backend_flags(self, ccimgui.ImGuiBackendFlags value):
+        dereference(self._ptr).BackendFlags = value
+    
+    @property
+    def display_size(self):
+        cdef tuple res = dereference(self._ptr).DisplaySize
+        return res
+    @display_size.setter
+    def display_size(self, tuple value):
+        dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def delta_time(self):
+        cdef float res = dereference(self._ptr).DeltaTime
+        return res
+    @delta_time.setter
+    def delta_time(self, float value):
+        dereference(self._ptr).DeltaTime = value
+    
+    @property
+    def ini_saving_rate(self):
+        cdef float res = dereference(self._ptr).IniSavingRate
+        return res
+    @ini_saving_rate.setter
+    def ini_saving_rate(self, float value):
+        dereference(self._ptr).IniSavingRate = value
+    
+_bytes(value)
+_bytes(value)
+    @property
+    def mouse_double_click_time(self):
+        cdef float res = dereference(self._ptr).MouseDoubleClickTime
+        return res
+    @mouse_double_click_time.setter
+    def mouse_double_click_time(self, float value):
+        dereference(self._ptr).MouseDoubleClickTime = value
+    
+    @property
+    def mouse_double_click_max_dist(self):
+        cdef float res = dereference(self._ptr).MouseDoubleClickMaxDist
+        return res
+    @mouse_double_click_max_dist.setter
+    def mouse_double_click_max_dist(self, float value):
+        dereference(self._ptr).MouseDoubleClickMaxDist = value
+    
+    @property
+    def mouse_drag_threshold(self):
+        cdef float res = dereference(self._ptr).MouseDragThreshold
+        return res
+    @mouse_drag_threshold.setter
+    def mouse_drag_threshold(self, float value):
+        dereference(self._ptr).MouseDragThreshold = value
+    
+    @property
+    def key_repeat_delay(self):
+        cdef float res = dereference(self._ptr).KeyRepeatDelay
+        return res
+    @key_repeat_delay.setter
+    def key_repeat_delay(self, float value):
+        dereference(self._ptr).KeyRepeatDelay = value
+    
+    @property
+    def key_repeat_rate(self):
+        cdef float res = dereference(self._ptr).KeyRepeatRate
+        return res
+    @key_repeat_rate.setter
+    def key_repeat_rate(self, float value):
+        dereference(self._ptr).KeyRepeatRate = value
+    
+    @property
+    def hover_delay_normal(self):
+        cdef float res = dereference(self._ptr).HoverDelayNormal
+        return res
+    @hover_delay_normal.setter
+    def hover_delay_normal(self, float value):
+        dereference(self._ptr).HoverDelayNormal = value
+    
+    @property
+    def hover_delay_short(self):
+        cdef float res = dereference(self._ptr).HoverDelayShort
+        return res
+    @hover_delay_short.setter
+    def hover_delay_short(self, float value):
+        dereference(self._ptr).HoverDelayShort = value
+    
+    @property
+    def user_data(self):
+        cdef Any res = dereference(self._ptr).UserData
+        return res
+    @user_data.setter
+    def user_data(self, Any value):
+        dereference(self._ptr).UserData = value
+    
+    @property
+    def fonts(self):
+        cdef ccimgui.ImFontAtlas res = dereference(self._ptr).Fonts
+        return _ImFontAtlas.from_ptr(res)
+    @fonts.setter
+    def fonts(self, Any value):
+        dereference(self._ptr).Fonts = value._ptr
+    
+    @property
+    def font_global_scale(self):
+        cdef float res = dereference(self._ptr).FontGlobalScale
+        return res
+    @font_global_scale.setter
+    def font_global_scale(self, float value):
+        dereference(self._ptr).FontGlobalScale = value
+    
+    @property
+    def font_allow_user_scaling(self):
+        cdef Any res = dereference(self._ptr).FontAllowUserScaling
+        return res
+    @font_allow_user_scaling.setter
+    def font_allow_user_scaling(self, Any value):
+        dereference(self._ptr).FontAllowUserScaling = value
+    
+    @property
+    def font_default(self):
+        cdef ccimgui.ImFont res = dereference(self._ptr).FontDefault
+        return _ImFont.from_ptr(res)
+    @font_default.setter
+    def font_default(self, Any value):
+        dereference(self._ptr).FontDefault = value._ptr
+    
+    @property
+    def display_framebuffer_scale(self):
+        cdef tuple res = dereference(self._ptr).DisplayFramebufferScale
+        return res
+    @display_framebuffer_scale.setter
+    def display_framebuffer_scale(self, tuple value):
+        dereference(self._ptr).DisplayFramebufferScale = _cast_tuple_ImVec2(value)
+    
+    @property
+    def config_docking_no_split(self):
+        cdef Any res = dereference(self._ptr).ConfigDockingNoSplit
+        return res
+    @config_docking_no_split.setter
+    def config_docking_no_split(self, Any value):
+        dereference(self._ptr).ConfigDockingNoSplit = value
+    
+    @property
+    def config_docking_with_shift(self):
+        cdef Any res = dereference(self._ptr).ConfigDockingWithShift
+        return res
+    @config_docking_with_shift.setter
+    def config_docking_with_shift(self, Any value):
+        dereference(self._ptr).ConfigDockingWithShift = value
+    
+    @property
+    def config_docking_always_tab_bar(self):
+        cdef Any res = dereference(self._ptr).ConfigDockingAlwaysTabBar
+        return res
+    @config_docking_always_tab_bar.setter
+    def config_docking_always_tab_bar(self, Any value):
+        dereference(self._ptr).ConfigDockingAlwaysTabBar = value
+    
+    @property
+    def config_docking_transparent_payload(self):
+        cdef Any res = dereference(self._ptr).ConfigDockingTransparentPayload
+        return res
+    @config_docking_transparent_payload.setter
+    def config_docking_transparent_payload(self, Any value):
+        dereference(self._ptr).ConfigDockingTransparentPayload = value
+    
+    @property
+    def config_viewports_no_auto_merge(self):
+        cdef Any res = dereference(self._ptr).ConfigViewportsNoAutoMerge
+        return res
+    @config_viewports_no_auto_merge.setter
+    def config_viewports_no_auto_merge(self, Any value):
+        dereference(self._ptr).ConfigViewportsNoAutoMerge = value
+    
+    @property
+    def config_viewports_no_task_bar_icon(self):
+        cdef Any res = dereference(self._ptr).ConfigViewportsNoTaskBarIcon
+        return res
+    @config_viewports_no_task_bar_icon.setter
+    def config_viewports_no_task_bar_icon(self, Any value):
+        dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
+    
+    @property
+    def config_viewports_no_decoration(self):
+        cdef Any res = dereference(self._ptr).ConfigViewportsNoDecoration
+        return res
+    @config_viewports_no_decoration.setter
+    def config_viewports_no_decoration(self, Any value):
+        dereference(self._ptr).ConfigViewportsNoDecoration = value
+    
+    @property
+    def config_viewports_no_default_parent(self):
+        cdef Any res = dereference(self._ptr).ConfigViewportsNoDefaultParent
+        return res
+    @config_viewports_no_default_parent.setter
+    def config_viewports_no_default_parent(self, Any value):
+        dereference(self._ptr).ConfigViewportsNoDefaultParent = value
+    
+    @property
+    def mouse_draw_cursor(self):
+        cdef Any res = dereference(self._ptr).MouseDrawCursor
+        return res
+    @mouse_draw_cursor.setter
+    def mouse_draw_cursor(self, Any value):
+        dereference(self._ptr).MouseDrawCursor = value
+    
+    @property
+    def config_mac_osx_behaviors(self):
+        cdef Any res = dereference(self._ptr).ConfigMacOSXBehaviors
+        return res
+    @config_mac_osx_behaviors.setter
+    def config_mac_osx_behaviors(self, Any value):
+        dereference(self._ptr).ConfigMacOSXBehaviors = value
+    
+    @property
+    def config_input_trickle_event_queue(self):
+        cdef Any res = dereference(self._ptr).ConfigInputTrickleEventQueue
+        return res
+    @config_input_trickle_event_queue.setter
+    def config_input_trickle_event_queue(self, Any value):
+        dereference(self._ptr).ConfigInputTrickleEventQueue = value
+    
+    @property
+    def config_input_text_cursor_blink(self):
+        cdef Any res = dereference(self._ptr).ConfigInputTextCursorBlink
+        return res
+    @config_input_text_cursor_blink.setter
+    def config_input_text_cursor_blink(self, Any value):
+        dereference(self._ptr).ConfigInputTextCursorBlink = value
+    
+    @property
+    def config_input_text_enter_keep_active(self):
+        cdef Any res = dereference(self._ptr).ConfigInputTextEnterKeepActive
+        return res
+    @config_input_text_enter_keep_active.setter
+    def config_input_text_enter_keep_active(self, Any value):
+        dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+    
+    @property
+    def config_drag_click_to_input_text(self):
+        cdef Any res = dereference(self._ptr).ConfigDragClickToInputText
+        return res
+    @config_drag_click_to_input_text.setter
+    def config_drag_click_to_input_text(self, Any value):
+        dereference(self._ptr).ConfigDragClickToInputText = value
+    
+    @property
+    def config_windows_resize_from_edges(self):
+        cdef Any res = dereference(self._ptr).ConfigWindowsResizeFromEdges
+        return res
+    @config_windows_resize_from_edges.setter
+    def config_windows_resize_from_edges(self, Any value):
+        dereference(self._ptr).ConfigWindowsResizeFromEdges = value
+    
+    @property
+    def config_windows_move_from_title_bar_only(self):
+        cdef Any res = dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly
+        return res
+    @config_windows_move_from_title_bar_only.setter
+    def config_windows_move_from_title_bar_only(self, Any value):
+        dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
+    
+    @property
+    def config_memory_compact_timer(self):
+        cdef float res = dereference(self._ptr).ConfigMemoryCompactTimer
+        return res
+    @config_memory_compact_timer.setter
+    def config_memory_compact_timer(self, float value):
+        dereference(self._ptr).ConfigMemoryCompactTimer = value
+    
+_bytes(value)
+_bytes(value)
+    @property
+    def backend_platform_user_data(self):
+        cdef Any res = dereference(self._ptr).BackendPlatformUserData
+        return res
+    @backend_platform_user_data.setter
+    def backend_platform_user_data(self, Any value):
+        dereference(self._ptr).BackendPlatformUserData = value
+    
+    @property
+    def backend_renderer_user_data(self):
+        cdef Any res = dereference(self._ptr).BackendRendererUserData
+        return res
+    @backend_renderer_user_data.setter
+    def backend_renderer_user_data(self, Any value):
+        dereference(self._ptr).BackendRendererUserData = value
+    
+    @property
+    def backend_language_user_data(self):
+        cdef Any res = dereference(self._ptr).BackendLanguageUserData
+        return res
+    @backend_language_user_data.setter
+    def backend_language_user_data(self, Any value):
+        dereference(self._ptr).BackendLanguageUserData = value
+    
+    @property
+    def get_clipboard_text_fn(self):
+        cdef Callable res = dereference(self._ptr).GetClipboardTextFn
+        return res
+    @get_clipboard_text_fn.setter
+    def get_clipboard_text_fn(self, Callable value):
+        dereference(self._ptr).GetClipboardTextFn = value
+    
+    @property
+    def set_clipboard_text_fn(self):
+        cdef Callable res = dereference(self._ptr).SetClipboardTextFn
+        return res
+    @set_clipboard_text_fn.setter
+    def set_clipboard_text_fn(self, Callable value):
+        dereference(self._ptr).SetClipboardTextFn = value
+    
+    @property
+    def clipboard_user_data(self):
+        cdef Any res = dereference(self._ptr).ClipboardUserData
+        return res
+    @clipboard_user_data.setter
+    def clipboard_user_data(self, Any value):
+        dereference(self._ptr).ClipboardUserData = value
+    
+    @property
+    def set_platform_ime_data_fn(self):
+        cdef Callable res = dereference(self._ptr).SetPlatformImeDataFn
+        return res
+    @set_platform_ime_data_fn.setter
+    def set_platform_ime_data_fn(self, Callable value):
+        dereference(self._ptr).SetPlatformImeDataFn = value
+    
+    @property
+    def _unused_padding(self):
+        cdef Any res = dereference(self._ptr)._UnusedPadding
+        return res
+    @_unused_padding.setter
+    def _unused_padding(self, Any value):
+        dereference(self._ptr)._UnusedPadding = value
+    
+    @property
+    def want_capture_mouse(self):
+        cdef Any res = dereference(self._ptr).WantCaptureMouse
+        return res
+    @want_capture_mouse.setter
+    def want_capture_mouse(self, Any value):
+        dereference(self._ptr).WantCaptureMouse = value
+    
+    @property
+    def want_capture_keyboard(self):
+        cdef Any res = dereference(self._ptr).WantCaptureKeyboard
+        return res
+    @want_capture_keyboard.setter
+    def want_capture_keyboard(self, Any value):
+        dereference(self._ptr).WantCaptureKeyboard = value
+    
+    @property
+    def want_text_input(self):
+        cdef Any res = dereference(self._ptr).WantTextInput
+        return res
+    @want_text_input.setter
+    def want_text_input(self, Any value):
+        dereference(self._ptr).WantTextInput = value
+    
+    @property
+    def want_set_mouse_pos(self):
+        cdef Any res = dereference(self._ptr).WantSetMousePos
+        return res
+    @want_set_mouse_pos.setter
+    def want_set_mouse_pos(self, Any value):
+        dereference(self._ptr).WantSetMousePos = value
+    
+    @property
+    def want_save_ini_settings(self):
+        cdef Any res = dereference(self._ptr).WantSaveIniSettings
+        return res
+    @want_save_ini_settings.setter
+    def want_save_ini_settings(self, Any value):
+        dereference(self._ptr).WantSaveIniSettings = value
+    
+    @property
+    def nav_active(self):
+        cdef Any res = dereference(self._ptr).NavActive
+        return res
+    @nav_active.setter
+    def nav_active(self, Any value):
+        dereference(self._ptr).NavActive = value
+    
+    @property
+    def nav_visible(self):
+        cdef Any res = dereference(self._ptr).NavVisible
+        return res
+    @nav_visible.setter
+    def nav_visible(self, Any value):
+        dereference(self._ptr).NavVisible = value
+    
+    @property
+    def framerate(self):
+        cdef float res = dereference(self._ptr).Framerate
+        return res
+    @framerate.setter
+    def framerate(self, float value):
+        dereference(self._ptr).Framerate = value
+    
+    @property
+    def metrics_render_vertices(self):
+        cdef int res = dereference(self._ptr).MetricsRenderVertices
+        return res
+    @metrics_render_vertices.setter
+    def metrics_render_vertices(self, int value):
+        dereference(self._ptr).MetricsRenderVertices = value
+    
+    @property
+    def metrics_render_indices(self):
+        cdef int res = dereference(self._ptr).MetricsRenderIndices
+        return res
+    @metrics_render_indices.setter
+    def metrics_render_indices(self, int value):
+        dereference(self._ptr).MetricsRenderIndices = value
+    
+    @property
+    def metrics_render_windows(self):
+        cdef int res = dereference(self._ptr).MetricsRenderWindows
+        return res
+    @metrics_render_windows.setter
+    def metrics_render_windows(self, int value):
+        dereference(self._ptr).MetricsRenderWindows = value
+    
+    @property
+    def metrics_active_windows(self):
+        cdef int res = dereference(self._ptr).MetricsActiveWindows
+        return res
+    @metrics_active_windows.setter
+    def metrics_active_windows(self, int value):
+        dereference(self._ptr).MetricsActiveWindows = value
+    
+    @property
+    def metrics_active_allocations(self):
+        cdef int res = dereference(self._ptr).MetricsActiveAllocations
+        return res
+    @metrics_active_allocations.setter
+    def metrics_active_allocations(self, int value):
+        dereference(self._ptr).MetricsActiveAllocations = value
+    
+    @property
+    def mouse_delta(self):
+        cdef tuple res = dereference(self._ptr).MouseDelta
+        return res
+    @mouse_delta.setter
+    def mouse_delta(self, tuple value):
+        dereference(self._ptr).MouseDelta = _cast_tuple_ImVec2(value)
+    
+    @property
+    def key_map(self):
+        cdef int res = dereference(self._ptr).KeyMap
+        return res
+    @key_map.setter
+    def key_map(self, int value):
+        dereference(self._ptr).KeyMap = value
+    
+    @property
+    def keys_down(self):
+        cdef Any res = dereference(self._ptr).KeysDown
+        return res
+    @keys_down.setter
+    def keys_down(self, Any value):
+        dereference(self._ptr).KeysDown = value
+    
+    @property
+    def nav_inputs(self):
+        cdef float res = dereference(self._ptr).NavInputs
+        return res
+    @nav_inputs.setter
+    def nav_inputs(self, float value):
+        dereference(self._ptr).NavInputs = value
+    
+    @property
+    def mouse_pos(self):
+        cdef tuple res = dereference(self._ptr).MousePos
+        return res
+    @mouse_pos.setter
+    def mouse_pos(self, tuple value):
+        dereference(self._ptr).MousePos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def mouse_down(self):
+        cdef Any res = dereference(self._ptr).MouseDown
+        return res
+    @mouse_down.setter
+    def mouse_down(self, Any value):
+        dereference(self._ptr).MouseDown = value
+    
+    @property
+    def mouse_wheel(self):
+        cdef float res = dereference(self._ptr).MouseWheel
+        return res
+    @mouse_wheel.setter
+    def mouse_wheel(self, float value):
+        dereference(self._ptr).MouseWheel = value
+    
+    @property
+    def mouse_wheelh(self):
+        cdef float res = dereference(self._ptr).MouseWheelH
+        return res
+    @mouse_wheelh.setter
+    def mouse_wheelh(self, float value):
+        dereference(self._ptr).MouseWheelH = value
+    
+    @property
+    def mouse_hovered_viewport(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).MouseHoveredViewport
+        return res
+    @mouse_hovered_viewport.setter
+    def mouse_hovered_viewport(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).MouseHoveredViewport = value
+    
+    @property
+    def key_ctrl(self):
+        cdef Any res = dereference(self._ptr).KeyCtrl
+        return res
+    @key_ctrl.setter
+    def key_ctrl(self, Any value):
+        dereference(self._ptr).KeyCtrl = value
+    
+    @property
+    def key_shift(self):
+        cdef Any res = dereference(self._ptr).KeyShift
+        return res
+    @key_shift.setter
+    def key_shift(self, Any value):
+        dereference(self._ptr).KeyShift = value
+    
+    @property
+    def key_alt(self):
+        cdef Any res = dereference(self._ptr).KeyAlt
+        return res
+    @key_alt.setter
+    def key_alt(self, Any value):
+        dereference(self._ptr).KeyAlt = value
+    
+    @property
+    def key_super(self):
+        cdef Any res = dereference(self._ptr).KeySuper
+        return res
+    @key_super.setter
+    def key_super(self, Any value):
+        dereference(self._ptr).KeySuper = value
+    
+    @property
+    def key_mods(self):
+        cdef ccimgui.ImGuiKeyChord res = dereference(self._ptr).KeyMods
+        return res
+    @key_mods.setter
+    def key_mods(self, ccimgui.ImGuiKeyChord value):
+        dereference(self._ptr).KeyMods = value
+    
+    @property
+    def keys_data(self):
+        cdef ccimgui.ImGuiKeyData res = dereference(self._ptr).KeysData
+        return _ImGuiKeyData.from_ptr(res)
+    @keys_data.setter
+    def keys_data(self, Any value):
+        dereference(self._ptr).KeysData = value._ptr
+    
+    @property
+    def want_capture_mouse_unless_popup_close(self):
+        cdef Any res = dereference(self._ptr).WantCaptureMouseUnlessPopupClose
+        return res
+    @want_capture_mouse_unless_popup_close.setter
+    def want_capture_mouse_unless_popup_close(self, Any value):
+        dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
+    
+    @property
+    def mouse_pos_prev(self):
+        cdef tuple res = dereference(self._ptr).MousePosPrev
+        return res
+    @mouse_pos_prev.setter
+    def mouse_pos_prev(self, tuple value):
+        dereference(self._ptr).MousePosPrev = _cast_tuple_ImVec2(value)
+    
+    @property
+    def mouse_clicked_pos(self):
+        cdef tuple res = dereference(self._ptr).MouseClickedPos
+        return res
+    @mouse_clicked_pos.setter
+    def mouse_clicked_pos(self, tuple value):
+        dereference(self._ptr).MouseClickedPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def mouse_clicked_time(self):
+        cdef Any res = dereference(self._ptr).MouseClickedTime
+        return res
+    @mouse_clicked_time.setter
+    def mouse_clicked_time(self, Any value):
+        dereference(self._ptr).MouseClickedTime = value
+    
+    @property
+    def mouse_clicked(self):
+        cdef Any res = dereference(self._ptr).MouseClicked
+        return res
+    @mouse_clicked.setter
+    def mouse_clicked(self, Any value):
+        dereference(self._ptr).MouseClicked = value
+    
+    @property
+    def mouse_double_clicked(self):
+        cdef Any res = dereference(self._ptr).MouseDoubleClicked
+        return res
+    @mouse_double_clicked.setter
+    def mouse_double_clicked(self, Any value):
+        dereference(self._ptr).MouseDoubleClicked = value
+    
+    @property
+    def mouse_clicked_count(self):
+        cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedCount
+        return res
+    @mouse_clicked_count.setter
+    def mouse_clicked_count(self, ccimgui.ImU16 value):
+        dereference(self._ptr).MouseClickedCount = value
+    
+    @property
+    def mouse_clicked_last_count(self):
+        cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedLastCount
+        return res
+    @mouse_clicked_last_count.setter
+    def mouse_clicked_last_count(self, ccimgui.ImU16 value):
+        dereference(self._ptr).MouseClickedLastCount = value
+    
+    @property
+    def mouse_released(self):
+        cdef Any res = dereference(self._ptr).MouseReleased
+        return res
+    @mouse_released.setter
+    def mouse_released(self, Any value):
+        dereference(self._ptr).MouseReleased = value
+    
+    @property
+    def mouse_down_owned(self):
+        cdef Any res = dereference(self._ptr).MouseDownOwned
+        return res
+    @mouse_down_owned.setter
+    def mouse_down_owned(self, Any value):
+        dereference(self._ptr).MouseDownOwned = value
+    
+    @property
+    def mouse_down_owned_unless_popup_close(self):
+        cdef Any res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
+        return res
+    @mouse_down_owned_unless_popup_close.setter
+    def mouse_down_owned_unless_popup_close(self, Any value):
+        dereference(self._ptr).MouseDownOwnedUnlessPopupClose = value
+    
+    @property
+    def mouse_down_duration(self):
+        cdef float res = dereference(self._ptr).MouseDownDuration
+        return res
+    @mouse_down_duration.setter
+    def mouse_down_duration(self, float value):
+        dereference(self._ptr).MouseDownDuration = value
+    
+    @property
+    def mouse_down_duration_prev(self):
+        cdef float res = dereference(self._ptr).MouseDownDurationPrev
+        return res
+    @mouse_down_duration_prev.setter
+    def mouse_down_duration_prev(self, float value):
+        dereference(self._ptr).MouseDownDurationPrev = value
+    
+    @property
+    def mouse_drag_max_distance_abs(self):
+        cdef tuple res = dereference(self._ptr).MouseDragMaxDistanceAbs
+        return res
+    @mouse_drag_max_distance_abs.setter
+    def mouse_drag_max_distance_abs(self, tuple value):
+        dereference(self._ptr).MouseDragMaxDistanceAbs = _cast_tuple_ImVec2(value)
+    
+    @property
+    def mouse_drag_max_distance_sqr(self):
+        cdef float res = dereference(self._ptr).MouseDragMaxDistanceSqr
+        return res
+    @mouse_drag_max_distance_sqr.setter
+    def mouse_drag_max_distance_sqr(self, float value):
+        dereference(self._ptr).MouseDragMaxDistanceSqr = value
+    
+    @property
+    def pen_pressure(self):
+        cdef float res = dereference(self._ptr).PenPressure
+        return res
+    @pen_pressure.setter
+    def pen_pressure(self, float value):
+        dereference(self._ptr).PenPressure = value
+    
+    @property
+    def app_focus_lost(self):
+        cdef Any res = dereference(self._ptr).AppFocusLost
+        return res
+    @app_focus_lost.setter
+    def app_focus_lost(self, Any value):
+        dereference(self._ptr).AppFocusLost = value
+    
+    @property
+    def app_accepting_events(self):
+        cdef Any res = dereference(self._ptr).AppAcceptingEvents
+        return res
+    @app_accepting_events.setter
+    def app_accepting_events(self, Any value):
+        dereference(self._ptr).AppAcceptingEvents = value
+    
+    @property
+    def backend_using_legacy_key_arrays(self):
+        cdef ccimgui.ImS8 res = dereference(self._ptr).BackendUsingLegacyKeyArrays
+        return res
+    @backend_using_legacy_key_arrays.setter
+    def backend_using_legacy_key_arrays(self, ccimgui.ImS8 value):
+        dereference(self._ptr).BackendUsingLegacyKeyArrays = value
+    
+    @property
+    def backend_using_legacy_nav_input_array(self):
+        cdef Any res = dereference(self._ptr).BackendUsingLegacyNavInputArray
+        return res
+    @backend_using_legacy_nav_input_array.setter
+    def backend_using_legacy_nav_input_array(self, Any value):
+        dereference(self._ptr).BackendUsingLegacyNavInputArray = value
+    
+    @property
+    def input_queue_surrogate(self):
+        cdef ccimgui.ImWchar16 res = dereference(self._ptr).InputQueueSurrogate
+        return res
+    @input_queue_surrogate.setter
+    def input_queue_surrogate(self, ccimgui.ImWchar16 value):
+        dereference(self._ptr).InputQueueSurrogate = value
+    
+    @property
+    def input_queue_characters(self):
+        cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).InputQueueCharacters
+        return _ImVector_ImWchar.from_ptr(res)
+    @input_queue_characters.setter
+    def input_queue_characters(self, Any value):
+        dereference(self._ptr).InputQueueCharacters = value._ptr
+    
 
 cdef class _ImGuiPlatformIO:
     cdef ccimgui.ImGuiPlatformIO* _ptr
@@ -4134,7 +6544,6 @@ cdef class _ImGuiPlatformIO:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_platform_io():
         cdef ccimgui.ImGuiPlatformIO* _ptr = ccimgui.ImGuiPlatformIO_ImGuiPlatformIO()
@@ -4144,6 +6553,206 @@ cdef class _ImGuiPlatformIO:
     
     def destroy(_ImGuiPlatformIO self):
         ccimgui.ImGuiPlatformIO_destroy(self._ptr)
+    
+    @property
+    def platform_create_window(self):
+        cdef Callable res = dereference(self._ptr).Platform_CreateWindow
+        return res
+    @platform_create_window.setter
+    def platform_create_window(self, Callable value):
+        dereference(self._ptr).Platform_CreateWindow = value
+    
+    @property
+    def platform_destroy_window(self):
+        cdef Callable res = dereference(self._ptr).Platform_DestroyWindow
+        return res
+    @platform_destroy_window.setter
+    def platform_destroy_window(self, Callable value):
+        dereference(self._ptr).Platform_DestroyWindow = value
+    
+    @property
+    def platform_show_window(self):
+        cdef Callable res = dereference(self._ptr).Platform_ShowWindow
+        return res
+    @platform_show_window.setter
+    def platform_show_window(self, Callable value):
+        dereference(self._ptr).Platform_ShowWindow = value
+    
+    @property
+    def platform_set_window_pos(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetWindowPos
+        return res
+    @platform_set_window_pos.setter
+    def platform_set_window_pos(self, Callable value):
+        dereference(self._ptr).Platform_SetWindowPos = value
+    
+    @property
+    def platform_get_window_pos(self):
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowPos
+        return res
+    @platform_get_window_pos.setter
+    def platform_get_window_pos(self, Callable value):
+        dereference(self._ptr).Platform_GetWindowPos = value
+    
+    @property
+    def platform_set_window_size(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetWindowSize
+        return res
+    @platform_set_window_size.setter
+    def platform_set_window_size(self, Callable value):
+        dereference(self._ptr).Platform_SetWindowSize = value
+    
+    @property
+    def platform_get_window_size(self):
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowSize
+        return res
+    @platform_get_window_size.setter
+    def platform_get_window_size(self, Callable value):
+        dereference(self._ptr).Platform_GetWindowSize = value
+    
+    @property
+    def platform_set_window_focus(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetWindowFocus
+        return res
+    @platform_set_window_focus.setter
+    def platform_set_window_focus(self, Callable value):
+        dereference(self._ptr).Platform_SetWindowFocus = value
+    
+    @property
+    def platform_get_window_focus(self):
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowFocus
+        return res
+    @platform_get_window_focus.setter
+    def platform_get_window_focus(self, Callable value):
+        dereference(self._ptr).Platform_GetWindowFocus = value
+    
+    @property
+    def platform_get_window_minimized(self):
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowMinimized
+        return res
+    @platform_get_window_minimized.setter
+    def platform_get_window_minimized(self, Callable value):
+        dereference(self._ptr).Platform_GetWindowMinimized = value
+    
+    @property
+    def platform_set_window_title(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetWindowTitle
+        return res
+    @platform_set_window_title.setter
+    def platform_set_window_title(self, Callable value):
+        dereference(self._ptr).Platform_SetWindowTitle = value
+    
+    @property
+    def platform_set_window_alpha(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetWindowAlpha
+        return res
+    @platform_set_window_alpha.setter
+    def platform_set_window_alpha(self, Callable value):
+        dereference(self._ptr).Platform_SetWindowAlpha = value
+    
+    @property
+    def platform_update_window(self):
+        cdef Callable res = dereference(self._ptr).Platform_UpdateWindow
+        return res
+    @platform_update_window.setter
+    def platform_update_window(self, Callable value):
+        dereference(self._ptr).Platform_UpdateWindow = value
+    
+    @property
+    def platform_render_window(self):
+        cdef Callable res = dereference(self._ptr).Platform_RenderWindow
+        return res
+    @platform_render_window.setter
+    def platform_render_window(self, Callable value):
+        dereference(self._ptr).Platform_RenderWindow = value
+    
+    @property
+    def platform_swap_buffers(self):
+        cdef Callable res = dereference(self._ptr).Platform_SwapBuffers
+        return res
+    @platform_swap_buffers.setter
+    def platform_swap_buffers(self, Callable value):
+        dereference(self._ptr).Platform_SwapBuffers = value
+    
+    @property
+    def platform_get_window_dpi_scale(self):
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowDpiScale
+        return res
+    @platform_get_window_dpi_scale.setter
+    def platform_get_window_dpi_scale(self, Callable value):
+        dereference(self._ptr).Platform_GetWindowDpiScale = value
+    
+    @property
+    def platform_on_changed_viewport(self):
+        cdef Callable res = dereference(self._ptr).Platform_OnChangedViewport
+        return res
+    @platform_on_changed_viewport.setter
+    def platform_on_changed_viewport(self, Callable value):
+        dereference(self._ptr).Platform_OnChangedViewport = value
+    
+    @property
+    def platform_create_vk_surface(self):
+        cdef Callable res = dereference(self._ptr).Platform_CreateVkSurface
+        return res
+    @platform_create_vk_surface.setter
+    def platform_create_vk_surface(self, Callable value):
+        dereference(self._ptr).Platform_CreateVkSurface = value
+    
+    @property
+    def renderer_create_window(self):
+        cdef Callable res = dereference(self._ptr).Renderer_CreateWindow
+        return res
+    @renderer_create_window.setter
+    def renderer_create_window(self, Callable value):
+        dereference(self._ptr).Renderer_CreateWindow = value
+    
+    @property
+    def renderer_destroy_window(self):
+        cdef Callable res = dereference(self._ptr).Renderer_DestroyWindow
+        return res
+    @renderer_destroy_window.setter
+    def renderer_destroy_window(self, Callable value):
+        dereference(self._ptr).Renderer_DestroyWindow = value
+    
+    @property
+    def renderer_set_window_size(self):
+        cdef Callable res = dereference(self._ptr).Renderer_SetWindowSize
+        return res
+    @renderer_set_window_size.setter
+    def renderer_set_window_size(self, Callable value):
+        dereference(self._ptr).Renderer_SetWindowSize = value
+    
+    @property
+    def renderer_render_window(self):
+        cdef Callable res = dereference(self._ptr).Renderer_RenderWindow
+        return res
+    @renderer_render_window.setter
+    def renderer_render_window(self, Callable value):
+        dereference(self._ptr).Renderer_RenderWindow = value
+    
+    @property
+    def renderer_swap_buffers(self):
+        cdef Callable res = dereference(self._ptr).Renderer_SwapBuffers
+        return res
+    @renderer_swap_buffers.setter
+    def renderer_swap_buffers(self, Callable value):
+        dereference(self._ptr).Renderer_SwapBuffers = value
+    
+    @property
+    def monitors(self):
+        cdef ccimgui.ImVector_ImGuiPlatformMonitor res = dereference(self._ptr).Monitors
+        return _ImVector_ImGuiPlatformMonitor.from_ptr(res)
+    @monitors.setter
+    def monitors(self, Any value):
+        dereference(self._ptr).Monitors = value._ptr
+    
+    @property
+    def viewports(self):
+        cdef ccimgui.ImVector_ImGuiViewportPtr res = dereference(self._ptr).Viewports
+        return _ImVector_ImGuiViewportPtr.from_ptr(res)
+    @viewports.setter
+    def viewports(self, Any value):
+        dereference(self._ptr).Viewports = value._ptr
     
 
 cdef class _ImGuiPlatformImeData:
@@ -4158,7 +6767,6 @@ cdef class _ImGuiPlatformImeData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_platform_ime_data():
         cdef ccimgui.ImGuiPlatformImeData* _ptr = ccimgui.ImGuiPlatformImeData_ImGuiPlatformImeData()
@@ -4168,6 +6776,30 @@ cdef class _ImGuiPlatformImeData:
     
     def destroy(_ImGuiPlatformImeData self):
         ccimgui.ImGuiPlatformImeData_destroy(self._ptr)
+    
+    @property
+    def want_visible(self):
+        cdef Any res = dereference(self._ptr).WantVisible
+        return res
+    @want_visible.setter
+    def want_visible(self, Any value):
+        dereference(self._ptr).WantVisible = value
+    
+    @property
+    def input_pos(self):
+        cdef tuple res = dereference(self._ptr).InputPos
+        return res
+    @input_pos.setter
+    def input_pos(self, tuple value):
+        dereference(self._ptr).InputPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def input_line_height(self):
+        cdef float res = dereference(self._ptr).InputLineHeight
+        return res
+    @input_line_height.setter
+    def input_line_height(self, float value):
+        dereference(self._ptr).InputLineHeight = value
     
 
 cdef class _ImGuiPlatformMonitor:
@@ -4182,7 +6814,6 @@ cdef class _ImGuiPlatformMonitor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_platform_monitor():
         cdef ccimgui.ImGuiPlatformMonitor* _ptr = ccimgui.ImGuiPlatformMonitor_ImGuiPlatformMonitor()
@@ -4192,6 +6823,46 @@ cdef class _ImGuiPlatformMonitor:
     
     def destroy(_ImGuiPlatformMonitor self):
         ccimgui.ImGuiPlatformMonitor_destroy(self._ptr)
+    
+    @property
+    def main_pos(self):
+        cdef tuple res = dereference(self._ptr).MainPos
+        return res
+    @main_pos.setter
+    def main_pos(self, tuple value):
+        dereference(self._ptr).MainPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def main_size(self):
+        cdef tuple res = dereference(self._ptr).MainSize
+        return res
+    @main_size.setter
+    def main_size(self, tuple value):
+        dereference(self._ptr).MainSize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def work_pos(self):
+        cdef tuple res = dereference(self._ptr).WorkPos
+        return res
+    @work_pos.setter
+    def work_pos(self, tuple value):
+        dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def work_size(self):
+        cdef tuple res = dereference(self._ptr).WorkSize
+        return res
+    @work_size.setter
+    def work_size(self, tuple value):
+        dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def dpi_scale(self):
+        cdef float res = dereference(self._ptr).DpiScale
+        return res
+    @dpi_scale.setter
+    def dpi_scale(self, float value):
+        dereference(self._ptr).DpiScale = value
     
 
 cdef class _ImGuiStorage:
@@ -4209,7 +6880,7 @@ cdef class _ImGuiStorage:
     def build_sort_by_key(_ImGuiStorage self):
         ccimgui.ImGuiStorage_BuildSortByKey(self._ptr)
     
-    def clear_(_ImGuiStorage self):
+    def clear(_ImGuiStorage self):
         ccimgui.ImGuiStorage_Clear(self._ptr)
     
     def get_bool(_ImGuiStorage self, ccimgui.ImGuiID key, Any default_val=False):
@@ -4259,6 +6930,14 @@ cdef class _ImGuiStorage:
     def set_void_ptr(_ImGuiStorage self, ccimgui.ImGuiID key, Any val):
         ccimgui.ImGuiStorage_SetVoidPtr(self._ptr, key, val)
     
+    @property
+    def data(self):
+        cdef ccimgui.ImVector_ImGuiStoragePair res = dereference(self._ptr).Data
+        return _ImVector_ImGuiStoragePair.from_ptr(res)
+    @data.setter
+    def data(self, Any value):
+        dereference(self._ptr).Data = value._ptr
+    
 
 cdef class _ImGuiStyle:
     cdef ccimgui.ImGuiStyle* _ptr
@@ -4272,7 +6951,6 @@ cdef class _ImGuiStyle:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_style():
         cdef ccimgui.ImGuiStyle* _ptr = ccimgui.ImGuiStyle_ImGuiStyle()
@@ -4285,6 +6963,358 @@ cdef class _ImGuiStyle:
     
     def scale_all_sizes(_ImGuiStyle self, float scale_factor):
         ccimgui.ImGuiStyle_ScaleAllSizes(self._ptr, scale_factor)
+    
+    @property
+    def alpha(self):
+        cdef float res = dereference(self._ptr).Alpha
+        return res
+    @alpha.setter
+    def alpha(self, float value):
+        dereference(self._ptr).Alpha = value
+    
+    @property
+    def disabled_alpha(self):
+        cdef float res = dereference(self._ptr).DisabledAlpha
+        return res
+    @disabled_alpha.setter
+    def disabled_alpha(self, float value):
+        dereference(self._ptr).DisabledAlpha = value
+    
+    @property
+    def window_padding(self):
+        cdef tuple res = dereference(self._ptr).WindowPadding
+        return res
+    @window_padding.setter
+    def window_padding(self, tuple value):
+        dereference(self._ptr).WindowPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def window_rounding(self):
+        cdef float res = dereference(self._ptr).WindowRounding
+        return res
+    @window_rounding.setter
+    def window_rounding(self, float value):
+        dereference(self._ptr).WindowRounding = value
+    
+    @property
+    def window_border_size(self):
+        cdef float res = dereference(self._ptr).WindowBorderSize
+        return res
+    @window_border_size.setter
+    def window_border_size(self, float value):
+        dereference(self._ptr).WindowBorderSize = value
+    
+    @property
+    def window_min_size(self):
+        cdef tuple res = dereference(self._ptr).WindowMinSize
+        return res
+    @window_min_size.setter
+    def window_min_size(self, tuple value):
+        dereference(self._ptr).WindowMinSize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def window_title_align(self):
+        cdef tuple res = dereference(self._ptr).WindowTitleAlign
+        return res
+    @window_title_align.setter
+    def window_title_align(self, tuple value):
+        dereference(self._ptr).WindowTitleAlign = _cast_tuple_ImVec2(value)
+    
+    @property
+    def window_menu_button_position(self):
+        cdef ccimgui.ImGuiDir res = dereference(self._ptr).WindowMenuButtonPosition
+        return res
+    @window_menu_button_position.setter
+    def window_menu_button_position(self, ccimgui.ImGuiDir value):
+        dereference(self._ptr).WindowMenuButtonPosition = value
+    
+    @property
+    def child_rounding(self):
+        cdef float res = dereference(self._ptr).ChildRounding
+        return res
+    @child_rounding.setter
+    def child_rounding(self, float value):
+        dereference(self._ptr).ChildRounding = value
+    
+    @property
+    def child_border_size(self):
+        cdef float res = dereference(self._ptr).ChildBorderSize
+        return res
+    @child_border_size.setter
+    def child_border_size(self, float value):
+        dereference(self._ptr).ChildBorderSize = value
+    
+    @property
+    def popup_rounding(self):
+        cdef float res = dereference(self._ptr).PopupRounding
+        return res
+    @popup_rounding.setter
+    def popup_rounding(self, float value):
+        dereference(self._ptr).PopupRounding = value
+    
+    @property
+    def popup_border_size(self):
+        cdef float res = dereference(self._ptr).PopupBorderSize
+        return res
+    @popup_border_size.setter
+    def popup_border_size(self, float value):
+        dereference(self._ptr).PopupBorderSize = value
+    
+    @property
+    def frame_padding(self):
+        cdef tuple res = dereference(self._ptr).FramePadding
+        return res
+    @frame_padding.setter
+    def frame_padding(self, tuple value):
+        dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def frame_rounding(self):
+        cdef float res = dereference(self._ptr).FrameRounding
+        return res
+    @frame_rounding.setter
+    def frame_rounding(self, float value):
+        dereference(self._ptr).FrameRounding = value
+    
+    @property
+    def frame_border_size(self):
+        cdef float res = dereference(self._ptr).FrameBorderSize
+        return res
+    @frame_border_size.setter
+    def frame_border_size(self, float value):
+        dereference(self._ptr).FrameBorderSize = value
+    
+    @property
+    def item_spacing(self):
+        cdef tuple res = dereference(self._ptr).ItemSpacing
+        return res
+    @item_spacing.setter
+    def item_spacing(self, tuple value):
+        dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)
+    
+    @property
+    def item_inner_spacing(self):
+        cdef tuple res = dereference(self._ptr).ItemInnerSpacing
+        return res
+    @item_inner_spacing.setter
+    def item_inner_spacing(self, tuple value):
+        dereference(self._ptr).ItemInnerSpacing = _cast_tuple_ImVec2(value)
+    
+    @property
+    def cell_padding(self):
+        cdef tuple res = dereference(self._ptr).CellPadding
+        return res
+    @cell_padding.setter
+    def cell_padding(self, tuple value):
+        dereference(self._ptr).CellPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def touch_extra_padding(self):
+        cdef tuple res = dereference(self._ptr).TouchExtraPadding
+        return res
+    @touch_extra_padding.setter
+    def touch_extra_padding(self, tuple value):
+        dereference(self._ptr).TouchExtraPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def indent_spacing(self):
+        cdef float res = dereference(self._ptr).IndentSpacing
+        return res
+    @indent_spacing.setter
+    def indent_spacing(self, float value):
+        dereference(self._ptr).IndentSpacing = value
+    
+    @property
+    def columns_min_spacing(self):
+        cdef float res = dereference(self._ptr).ColumnsMinSpacing
+        return res
+    @columns_min_spacing.setter
+    def columns_min_spacing(self, float value):
+        dereference(self._ptr).ColumnsMinSpacing = value
+    
+    @property
+    def scrollbar_size(self):
+        cdef float res = dereference(self._ptr).ScrollbarSize
+        return res
+    @scrollbar_size.setter
+    def scrollbar_size(self, float value):
+        dereference(self._ptr).ScrollbarSize = value
+    
+    @property
+    def scrollbar_rounding(self):
+        cdef float res = dereference(self._ptr).ScrollbarRounding
+        return res
+    @scrollbar_rounding.setter
+    def scrollbar_rounding(self, float value):
+        dereference(self._ptr).ScrollbarRounding = value
+    
+    @property
+    def grab_min_size(self):
+        cdef float res = dereference(self._ptr).GrabMinSize
+        return res
+    @grab_min_size.setter
+    def grab_min_size(self, float value):
+        dereference(self._ptr).GrabMinSize = value
+    
+    @property
+    def grab_rounding(self):
+        cdef float res = dereference(self._ptr).GrabRounding
+        return res
+    @grab_rounding.setter
+    def grab_rounding(self, float value):
+        dereference(self._ptr).GrabRounding = value
+    
+    @property
+    def log_slider_deadzone(self):
+        cdef float res = dereference(self._ptr).LogSliderDeadzone
+        return res
+    @log_slider_deadzone.setter
+    def log_slider_deadzone(self, float value):
+        dereference(self._ptr).LogSliderDeadzone = value
+    
+    @property
+    def tab_rounding(self):
+        cdef float res = dereference(self._ptr).TabRounding
+        return res
+    @tab_rounding.setter
+    def tab_rounding(self, float value):
+        dereference(self._ptr).TabRounding = value
+    
+    @property
+    def tab_border_size(self):
+        cdef float res = dereference(self._ptr).TabBorderSize
+        return res
+    @tab_border_size.setter
+    def tab_border_size(self, float value):
+        dereference(self._ptr).TabBorderSize = value
+    
+    @property
+    def tab_min_width_for_close_button(self):
+        cdef float res = dereference(self._ptr).TabMinWidthForCloseButton
+        return res
+    @tab_min_width_for_close_button.setter
+    def tab_min_width_for_close_button(self, float value):
+        dereference(self._ptr).TabMinWidthForCloseButton = value
+    
+    @property
+    def color_button_position(self):
+        cdef ccimgui.ImGuiDir res = dereference(self._ptr).ColorButtonPosition
+        return res
+    @color_button_position.setter
+    def color_button_position(self, ccimgui.ImGuiDir value):
+        dereference(self._ptr).ColorButtonPosition = value
+    
+    @property
+    def button_text_align(self):
+        cdef tuple res = dereference(self._ptr).ButtonTextAlign
+        return res
+    @button_text_align.setter
+    def button_text_align(self, tuple value):
+        dereference(self._ptr).ButtonTextAlign = _cast_tuple_ImVec2(value)
+    
+    @property
+    def selectable_text_align(self):
+        cdef tuple res = dereference(self._ptr).SelectableTextAlign
+        return res
+    @selectable_text_align.setter
+    def selectable_text_align(self, tuple value):
+        dereference(self._ptr).SelectableTextAlign = _cast_tuple_ImVec2(value)
+    
+    @property
+    def separator_text_border_size(self):
+        cdef float res = dereference(self._ptr).SeparatorTextBorderSize
+        return res
+    @separator_text_border_size.setter
+    def separator_text_border_size(self, float value):
+        dereference(self._ptr).SeparatorTextBorderSize = value
+    
+    @property
+    def separator_text_align(self):
+        cdef tuple res = dereference(self._ptr).SeparatorTextAlign
+        return res
+    @separator_text_align.setter
+    def separator_text_align(self, tuple value):
+        dereference(self._ptr).SeparatorTextAlign = _cast_tuple_ImVec2(value)
+    
+    @property
+    def separator_text_padding(self):
+        cdef tuple res = dereference(self._ptr).SeparatorTextPadding
+        return res
+    @separator_text_padding.setter
+    def separator_text_padding(self, tuple value):
+        dereference(self._ptr).SeparatorTextPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def display_window_padding(self):
+        cdef tuple res = dereference(self._ptr).DisplayWindowPadding
+        return res
+    @display_window_padding.setter
+    def display_window_padding(self, tuple value):
+        dereference(self._ptr).DisplayWindowPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def display_safe_area_padding(self):
+        cdef tuple res = dereference(self._ptr).DisplaySafeAreaPadding
+        return res
+    @display_safe_area_padding.setter
+    def display_safe_area_padding(self, tuple value):
+        dereference(self._ptr).DisplaySafeAreaPadding = _cast_tuple_ImVec2(value)
+    
+    @property
+    def mouse_cursor_scale(self):
+        cdef float res = dereference(self._ptr).MouseCursorScale
+        return res
+    @mouse_cursor_scale.setter
+    def mouse_cursor_scale(self, float value):
+        dereference(self._ptr).MouseCursorScale = value
+    
+    @property
+    def anti_aliased_lines(self):
+        cdef Any res = dereference(self._ptr).AntiAliasedLines
+        return res
+    @anti_aliased_lines.setter
+    def anti_aliased_lines(self, Any value):
+        dereference(self._ptr).AntiAliasedLines = value
+    
+    @property
+    def anti_aliased_lines_use_tex(self):
+        cdef Any res = dereference(self._ptr).AntiAliasedLinesUseTex
+        return res
+    @anti_aliased_lines_use_tex.setter
+    def anti_aliased_lines_use_tex(self, Any value):
+        dereference(self._ptr).AntiAliasedLinesUseTex = value
+    
+    @property
+    def anti_aliased_fill(self):
+        cdef Any res = dereference(self._ptr).AntiAliasedFill
+        return res
+    @anti_aliased_fill.setter
+    def anti_aliased_fill(self, Any value):
+        dereference(self._ptr).AntiAliasedFill = value
+    
+    @property
+    def curve_tessellation_tol(self):
+        cdef float res = dereference(self._ptr).CurveTessellationTol
+        return res
+    @curve_tessellation_tol.setter
+    def curve_tessellation_tol(self, float value):
+        dereference(self._ptr).CurveTessellationTol = value
+    
+    @property
+    def circle_tessellation_max_error(self):
+        cdef float res = dereference(self._ptr).CircleTessellationMaxError
+        return res
+    @circle_tessellation_max_error.setter
+    def circle_tessellation_max_error(self, float value):
+        dereference(self._ptr).CircleTessellationMaxError = value
+    
+    @property
+    def colors(self):
+        cdef tuple res = dereference(self._ptr).Colors
+        return res
+    @colors.setter
+    def colors(self, tuple value):
+        dereference(self._ptr).Colors = _cast_tuple_ImVec4(value)
     
 
 cdef class _ImGuiTextBuffer:
@@ -4299,7 +7329,6 @@ cdef class _ImGuiTextBuffer:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_text_buffer():
         cdef ccimgui.ImGuiTextBuffer* _ptr = ccimgui.ImGuiTextBuffer_ImGuiTextBuffer()
@@ -4310,8 +7339,8 @@ cdef class _ImGuiTextBuffer:
     def destroy(_ImGuiTextBuffer self):
         ccimgui.ImGuiTextBuffer_destroy(self._ptr)
     
-    def append(_ImGuiTextBuffer self, str str, str str_end=None):
-        ccimgui.ImGuiTextBuffer_append(self._ptr, _bytes(str), _bytes(str_end))
+    def append(_ImGuiTextBuffer self, str str_, str str_end=None):
+        ccimgui.ImGuiTextBuffer_append(self._ptr, _bytes(str_), _bytes(str_end))
     
     def appendf(_ImGuiTextBuffer self, str fmt):
         ccimgui.ImGuiTextBuffer_appendf(self._ptr, _bytes(fmt))
@@ -4327,7 +7356,7 @@ cdef class _ImGuiTextBuffer:
         cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(self._ptr)
         return res
     
-    def clear_(_ImGuiTextBuffer self):
+    def clear(_ImGuiTextBuffer self):
         ccimgui.ImGuiTextBuffer_clear(self._ptr)
     
     def empty(_ImGuiTextBuffer self):
@@ -4345,6 +7374,14 @@ cdef class _ImGuiTextBuffer:
         cdef int res = ccimgui.ImGuiTextBuffer_size(self._ptr)
         return res
     
+    @property
+    def buf(self):
+        cdef ccimgui.ImVector_char res = dereference(self._ptr).Buf
+        return _ImVector_char.from_ptr(res)
+    @buf.setter
+    def buf(self, Any value):
+        dereference(self._ptr).Buf = value._ptr
+    
 
 cdef class _ImGuiTextFilter:
     cdef ccimgui.ImGuiTextFilter* _ptr
@@ -4358,7 +7395,6 @@ cdef class _ImGuiTextFilter:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_text_filter(str default_filter=""):
         cdef ccimgui.ImGuiTextFilter* _ptr = ccimgui.ImGuiTextFilter_ImGuiTextFilter(_bytes(default_filter))
@@ -4372,7 +7408,7 @@ cdef class _ImGuiTextFilter:
     def build(_ImGuiTextFilter self):
         ccimgui.ImGuiTextFilter_Build(self._ptr)
     
-    def clear_(_ImGuiTextFilter self):
+    def clear(_ImGuiTextFilter self):
         ccimgui.ImGuiTextFilter_Clear(self._ptr)
     
     def draw(_ImGuiTextFilter self, str label="Filter(inc, -exc)", float width=0.0):
@@ -4387,6 +7423,30 @@ cdef class _ImGuiTextFilter:
         cdef ccimgui.bool res = ccimgui.ImGuiTextFilter_PassFilter(self._ptr, _bytes(text), _bytes(text_end))
         return res
     
+    @property
+    def input_buf(self):
+        cdef Any res = dereference(self._ptr).InputBuf
+        return res
+    @input_buf.setter
+    def input_buf(self, Any value):
+        dereference(self._ptr).InputBuf = value
+    
+    @property
+    def filters(self):
+        cdef ccimgui.ImVector_ImGuiTextRange res = dereference(self._ptr).Filters
+        return _ImVector_ImGuiTextRange.from_ptr(res)
+    @filters.setter
+    def filters(self, Any value):
+        dereference(self._ptr).Filters = value._ptr
+    
+    @property
+    def count_grep(self):
+        cdef int res = dereference(self._ptr).CountGrep
+        return res
+    @count_grep.setter
+    def count_grep(self, int value):
+        dereference(self._ptr).CountGrep = value
+    
 
 cdef class _ImGuiViewport:
     cdef ccimgui.ImGuiViewport* _ptr
@@ -4400,7 +7460,6 @@ cdef class _ImGuiViewport:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def gui_viewport():
         cdef ccimgui.ImGuiViewport* _ptr = ccimgui.ImGuiViewport_ImGuiViewport()
@@ -4417,6 +7476,142 @@ cdef class _ImGuiViewport:
     def get_work_center(_ImVec2 pOut, _ImGuiViewport self):
         ccimgui.ImGuiViewport_GetWorkCenter(pOut._ptr, self._ptr)
     
+    @property
+    def id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ID
+        return res
+    @id.setter
+    def id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).ID = value
+    
+    @property
+    def flags(self):
+        cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).Flags
+        return res
+    @flags.setter
+    def flags(self, ccimgui.ImGuiViewportFlags value):
+        dereference(self._ptr).Flags = value
+    
+    @property
+    def pos(self):
+        cdef tuple res = dereference(self._ptr).Pos
+        return res
+    @pos.setter
+    def pos(self, tuple value):
+        dereference(self._ptr).Pos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def size(self):
+        cdef tuple res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, tuple value):
+        dereference(self._ptr).Size = _cast_tuple_ImVec2(value)
+    
+    @property
+    def work_pos(self):
+        cdef tuple res = dereference(self._ptr).WorkPos
+        return res
+    @work_pos.setter
+    def work_pos(self, tuple value):
+        dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+    
+    @property
+    def work_size(self):
+        cdef tuple res = dereference(self._ptr).WorkSize
+        return res
+    @work_size.setter
+    def work_size(self, tuple value):
+        dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+    
+    @property
+    def dpi_scale(self):
+        cdef float res = dereference(self._ptr).DpiScale
+        return res
+    @dpi_scale.setter
+    def dpi_scale(self, float value):
+        dereference(self._ptr).DpiScale = value
+    
+    @property
+    def parent_viewport_id(self):
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
+        return res
+    @parent_viewport_id.setter
+    def parent_viewport_id(self, ccimgui.ImGuiID value):
+        dereference(self._ptr).ParentViewportId = value
+    
+    @property
+    def draw_data(self):
+        cdef ccimgui.ImDrawData res = dereference(self._ptr).DrawData
+        return _ImDrawData.from_ptr(res)
+    @draw_data.setter
+    def draw_data(self, Any value):
+        dereference(self._ptr).DrawData = value._ptr
+    
+    @property
+    def renderer_user_data(self):
+        cdef Any res = dereference(self._ptr).RendererUserData
+        return res
+    @renderer_user_data.setter
+    def renderer_user_data(self, Any value):
+        dereference(self._ptr).RendererUserData = value
+    
+    @property
+    def platform_user_data(self):
+        cdef Any res = dereference(self._ptr).PlatformUserData
+        return res
+    @platform_user_data.setter
+    def platform_user_data(self, Any value):
+        dereference(self._ptr).PlatformUserData = value
+    
+    @property
+    def platform_handle(self):
+        cdef Any res = dereference(self._ptr).PlatformHandle
+        return res
+    @platform_handle.setter
+    def platform_handle(self, Any value):
+        dereference(self._ptr).PlatformHandle = value
+    
+    @property
+    def platform_handle_raw(self):
+        cdef Any res = dereference(self._ptr).PlatformHandleRaw
+        return res
+    @platform_handle_raw.setter
+    def platform_handle_raw(self, Any value):
+        dereference(self._ptr).PlatformHandleRaw = value
+    
+    @property
+    def platform_window_created(self):
+        cdef Any res = dereference(self._ptr).PlatformWindowCreated
+        return res
+    @platform_window_created.setter
+    def platform_window_created(self, Any value):
+        dereference(self._ptr).PlatformWindowCreated = value
+    
+    @property
+    def platform_request_move(self):
+        cdef Any res = dereference(self._ptr).PlatformRequestMove
+        return res
+    @platform_request_move.setter
+    def platform_request_move(self, Any value):
+        dereference(self._ptr).PlatformRequestMove = value
+    
+    @property
+    def platform_request_resize(self):
+        cdef Any res = dereference(self._ptr).PlatformRequestResize
+        return res
+    @platform_request_resize.setter
+    def platform_request_resize(self, Any value):
+        dereference(self._ptr).PlatformRequestResize = value
+    
+    @property
+    def platform_request_close(self):
+        cdef Any res = dereference(self._ptr).PlatformRequestClose
+        return res
+    @platform_request_close.setter
+    def platform_request_close(self, Any value):
+        dereference(self._ptr).PlatformRequestClose = value
+    
 
 cdef class _ImDrawList:
     cdef ccimgui.ImDrawList* _ptr
@@ -4430,7 +7625,6 @@ cdef class _ImDrawList:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # Constructor
     @staticmethod
     def draw_list(_ImDrawListSharedData shared_data):
         cdef ccimgui.ImDrawList* _ptr = ccimgui.ImDrawList_ImDrawList(shared_data._ptr)
@@ -4453,10 +7647,10 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddBezierCubic(
             self._ptr,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
-            p4._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
+            _cast_tuple_ImVec2(p4),
             col,
             thickness,
             num_segments
@@ -4473,9 +7667,9 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddBezierQuadratic(
             self._ptr,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
             col,
             thickness,
             num_segments
@@ -4491,7 +7685,7 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddCircle(
             self._ptr,
-            center._ptr,
+            _cast_tuple_ImVec2(center),
             radius,
             col,
             num_segments,
@@ -4499,7 +7693,7 @@ cdef class _ImDrawList:
         )
     
     def add_circle_filled(_ImDrawList self, tuple center, float radius, ccimgui.ImU32 col, int num_segments=0):
-        ccimgui.ImDrawList_AddCircleFilled(self._ptr, center._ptr, radius, col, num_segments)
+        ccimgui.ImDrawList_AddCircleFilled(self._ptr, _cast_tuple_ImVec2(center), radius, col, num_segments)
     
     def add_convex_poly_filled(_ImDrawList self, _ImVec2 points, int num_points, ccimgui.ImU32 col):
         ccimgui.ImDrawList_AddConvexPolyFilled(self._ptr, points._ptr, num_points, col)
@@ -4519,10 +7713,10 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList_AddImage(
             self._ptr,
             user_texture_id,
-            p_min._ptr,
-            p_max._ptr,
-            uv_min._ptr,
-            uv_max._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
+            _cast_tuple_ImVec2(uv_min),
+            _cast_tuple_ImVec2(uv_max),
             col
         )
     
@@ -4542,14 +7736,14 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList_AddImageQuad(
             self._ptr,
             user_texture_id,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
-            p4._ptr,
-            uv1._ptr,
-            uv2._ptr,
-            uv3._ptr,
-            uv4._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
+            _cast_tuple_ImVec2(p4),
+            _cast_tuple_ImVec2(uv1),
+            _cast_tuple_ImVec2(uv2),
+            _cast_tuple_ImVec2(uv3),
+            _cast_tuple_ImVec2(uv4),
             col
         )
     
@@ -4567,17 +7761,17 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList_AddImageRounded(
             self._ptr,
             user_texture_id,
-            p_min._ptr,
-            p_max._ptr,
-            uv_min._ptr,
-            uv_max._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
+            _cast_tuple_ImVec2(uv_min),
+            _cast_tuple_ImVec2(uv_max),
             col,
             rounding,
             flags
         )
     
     def add_line(_ImDrawList self, tuple p1, tuple p2, ccimgui.ImU32 col, float thickness=1.0):
-        ccimgui.ImDrawList_AddLine(self._ptr, p1._ptr, p2._ptr, col, thickness)
+        ccimgui.ImDrawList_AddLine(self._ptr, _cast_tuple_ImVec2(p1), _cast_tuple_ImVec2(p2), col, thickness)
     
     def add_ngon(
         _ImDrawList self,
@@ -4589,7 +7783,7 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddNgon(
             self._ptr,
-            center._ptr,
+            _cast_tuple_ImVec2(center),
             radius,
             col,
             num_segments,
@@ -4597,7 +7791,7 @@ cdef class _ImDrawList:
         )
     
     def add_ngon_filled(_ImDrawList self, tuple center, float radius, ccimgui.ImU32 col, int num_segments):
-        ccimgui.ImDrawList_AddNgonFilled(self._ptr, center._ptr, radius, col, num_segments)
+        ccimgui.ImDrawList_AddNgonFilled(self._ptr, _cast_tuple_ImVec2(center), radius, col, num_segments)
     
     def add_polyline(
         _ImDrawList self,
@@ -4627,10 +7821,10 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddQuad(
             self._ptr,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
-            p4._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
+            _cast_tuple_ImVec2(p4),
             col,
             thickness
         )
@@ -4645,10 +7839,10 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddQuadFilled(
             self._ptr,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
-            p4._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
+            _cast_tuple_ImVec2(p4),
             col
         )
     
@@ -4663,8 +7857,8 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddRect(
             self._ptr,
-            p_min._ptr,
-            p_max._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
             col,
             rounding,
             flags,
@@ -4681,8 +7875,8 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddRectFilled(
             self._ptr,
-            p_min._ptr,
-            p_max._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
             col,
             rounding,
             flags
@@ -4699,8 +7893,8 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddRectFilledMultiColor(
             self._ptr,
-            p_min._ptr,
-            p_max._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
             col_upr_left,
             col_upr_right,
             col_bot_right,
@@ -4722,7 +7916,7 @@ cdef class _ImDrawList:
             self._ptr,
             font._ptr,
             font_size,
-            pos._ptr,
+            _cast_tuple_ImVec2(pos),
             col,
             _bytes(text_begin),
             _bytes(text_end),
@@ -4731,7 +7925,7 @@ cdef class _ImDrawList:
         )
     
     def add_text_vec2(_ImDrawList self, tuple pos, ccimgui.ImU32 col, str text_begin, str text_end=None):
-        ccimgui.ImDrawList_AddText_Vec2(self._ptr, pos._ptr, col, _bytes(text_begin), _bytes(text_end))
+        ccimgui.ImDrawList_AddText_Vec2(self._ptr, _cast_tuple_ImVec2(pos), col, _bytes(text_begin), _bytes(text_end))
     
     def add_triangle(
         _ImDrawList self,
@@ -4743,15 +7937,15 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_AddTriangle(
             self._ptr,
-            p1._ptr,
-            p2._ptr,
-            p3._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
             col,
             thickness
         )
     
     def add_triangle_filled(_ImDrawList self, tuple p1, tuple p2, tuple p3, ccimgui.ImU32 col):
-        ccimgui.ImDrawList_AddTriangleFilled(self._ptr, p1._ptr, p2._ptr, p3._ptr, col)
+        ccimgui.ImDrawList_AddTriangleFilled(self._ptr, _cast_tuple_ImVec2(p1), _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), col)
     
     def channels_merge(_ImDrawList self):
         ccimgui.ImDrawList_ChannelsMerge(self._ptr)
@@ -4764,7 +7958,7 @@ cdef class _ImDrawList:
     
     def clone_output(_ImDrawList self):
         cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(self._ptr)
-        return res
+        return _ImDrawList.from_ptr(res)
     
     def get_clip_rect_max(_ImVec2 pOut, _ImDrawList self):
         ccimgui.ImDrawList_GetClipRectMax(pOut._ptr, self._ptr)
@@ -4782,7 +7976,7 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_PathArcTo(
             self._ptr,
-            center._ptr,
+            _cast_tuple_ImVec2(center),
             radius,
             a_min,
             a_max,
@@ -4790,13 +7984,13 @@ cdef class _ImDrawList:
         )
     
     def path_arc_to_fast(_ImDrawList self, tuple center, float radius, int a_min_of_12, int a_max_of_12):
-        ccimgui.ImDrawList_PathArcToFast(self._ptr, center._ptr, radius, a_min_of_12, a_max_of_12)
+        ccimgui.ImDrawList_PathArcToFast(self._ptr, _cast_tuple_ImVec2(center), radius, a_min_of_12, a_max_of_12)
     
     def path_bezier_cubic_curve_to(_ImDrawList self, tuple p2, tuple p3, tuple p4, int num_segments=0):
-        ccimgui.ImDrawList_PathBezierCubicCurveTo(self._ptr, p2._ptr, p3._ptr, p4._ptr, num_segments)
+        ccimgui.ImDrawList_PathBezierCubicCurveTo(self._ptr, _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), _cast_tuple_ImVec2(p4), num_segments)
     
     def path_bezier_quadratic_curve_to(_ImDrawList self, tuple p2, tuple p3, int num_segments=0):
-        ccimgui.ImDrawList_PathBezierQuadraticCurveTo(self._ptr, p2._ptr, p3._ptr, num_segments)
+        ccimgui.ImDrawList_PathBezierQuadraticCurveTo(self._ptr, _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), num_segments)
     
     def path_clear(_ImDrawList self):
         ccimgui.ImDrawList_PathClear(self._ptr)
@@ -4805,13 +7999,13 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList_PathFillConvex(self._ptr, col)
     
     def path_line_to(_ImDrawList self, tuple pos):
-        ccimgui.ImDrawList_PathLineTo(self._ptr, pos._ptr)
+        ccimgui.ImDrawList_PathLineTo(self._ptr, _cast_tuple_ImVec2(pos))
     
     def path_line_to_merge_duplicate(_ImDrawList self, tuple pos):
-        ccimgui.ImDrawList_PathLineToMergeDuplicate(self._ptr, pos._ptr)
+        ccimgui.ImDrawList_PathLineToMergeDuplicate(self._ptr, _cast_tuple_ImVec2(pos))
     
     def path_rect(_ImDrawList self, tuple rect_min, tuple rect_max, float rounding=0.0, ccimgui.ImDrawFlags flags=0):
-        ccimgui.ImDrawList_PathRect(self._ptr, rect_min._ptr, rect_max._ptr, rounding, flags)
+        ccimgui.ImDrawList_PathRect(self._ptr, _cast_tuple_ImVec2(rect_min), _cast_tuple_ImVec2(rect_max), rounding, flags)
     
     def path_stroke(_ImDrawList self, ccimgui.ImU32 col, ccimgui.ImDrawFlags flags=0, float thickness=1.0):
         ccimgui.ImDrawList_PathStroke(self._ptr, col, flags, thickness)
@@ -4836,19 +8030,19 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_PrimQuadUV(
             self._ptr,
-            a._ptr,
-            b._ptr,
-            c._ptr,
-            d._ptr,
-            uv_a._ptr,
-            uv_b._ptr,
-            uv_c._ptr,
-            uv_d._ptr,
+            _cast_tuple_ImVec2(a),
+            _cast_tuple_ImVec2(b),
+            _cast_tuple_ImVec2(c),
+            _cast_tuple_ImVec2(d),
+            _cast_tuple_ImVec2(uv_a),
+            _cast_tuple_ImVec2(uv_b),
+            _cast_tuple_ImVec2(uv_c),
+            _cast_tuple_ImVec2(uv_d),
             col
         )
     
     def prim_rect(_ImDrawList self, tuple a, tuple b, ccimgui.ImU32 col):
-        ccimgui.ImDrawList_PrimRect(self._ptr, a._ptr, b._ptr, col)
+        ccimgui.ImDrawList_PrimRect(self._ptr, _cast_tuple_ImVec2(a), _cast_tuple_ImVec2(b), col)
     
     def prim_rect_uv(
         _ImDrawList self,
@@ -4860,10 +8054,10 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList_PrimRectUV(
             self._ptr,
-            a._ptr,
-            b._ptr,
-            uv_a._ptr,
-            uv_b._ptr,
+            _cast_tuple_ImVec2(a),
+            _cast_tuple_ImVec2(b),
+            _cast_tuple_ImVec2(uv_a),
+            _cast_tuple_ImVec2(uv_b),
             col
         )
     
@@ -4874,16 +8068,16 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList_PrimUnreserve(self._ptr, idx_count, vtx_count)
     
     def prim_vtx(_ImDrawList self, tuple pos, tuple uv, ccimgui.ImU32 col):
-        ccimgui.ImDrawList_PrimVtx(self._ptr, pos._ptr, uv._ptr, col)
+        ccimgui.ImDrawList_PrimVtx(self._ptr, _cast_tuple_ImVec2(pos), _cast_tuple_ImVec2(uv), col)
     
     def prim_write_idx(_ImDrawList self, ccimgui.ImDrawIdx idx):
         ccimgui.ImDrawList_PrimWriteIdx(self._ptr, idx)
     
     def prim_write_vtx(_ImDrawList self, tuple pos, tuple uv, ccimgui.ImU32 col):
-        ccimgui.ImDrawList_PrimWriteVtx(self._ptr, pos._ptr, uv._ptr, col)
+        ccimgui.ImDrawList_PrimWriteVtx(self._ptr, _cast_tuple_ImVec2(pos), _cast_tuple_ImVec2(uv), col)
     
     def push_clip_rect(_ImDrawList self, tuple clip_rect_min, tuple clip_rect_max, Any intersect_with_current_clip_rect=False):
-        ccimgui.ImDrawList_PushClipRect(self._ptr, clip_rect_min._ptr, clip_rect_max._ptr, intersect_with_current_clip_rect)
+        ccimgui.ImDrawList_PushClipRect(self._ptr, _cast_tuple_ImVec2(clip_rect_min), _cast_tuple_ImVec2(clip_rect_max), intersect_with_current_clip_rect)
     
     def push_clip_rect_full_screen(_ImDrawList self):
         ccimgui.ImDrawList_PushClipRectFullScreen(self._ptr)
@@ -4917,7 +8111,7 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList__PathArcToFastEx(
             self._ptr,
-            center._ptr,
+            _cast_tuple_ImVec2(center),
             radius,
             a_min_sample,
             a_max_sample,
@@ -4934,7 +8128,7 @@ cdef class _ImDrawList:
     ):
         ccimgui.ImDrawList__PathArcToN(
             self._ptr,
-            center._ptr,
+            _cast_tuple_ImVec2(center),
             radius,
             a_min,
             a_max,
@@ -4949,6 +8143,119 @@ cdef class _ImDrawList:
     
     def _try_merge_draw_cmds(_ImDrawList self):
         ccimgui.ImDrawList__TryMergeDrawCmds(self._ptr)
+    
+    @property
+    def cmd_buffer(self):
+        cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr).CmdBuffer
+        return _ImVector_ImDrawCmd.from_ptr(res)
+    @cmd_buffer.setter
+    def cmd_buffer(self, Any value):
+        dereference(self._ptr).CmdBuffer = value._ptr
+    
+    @property
+    def idx_buffer(self):
+        cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
+        return _ImVector_ImDrawIdx.from_ptr(res)
+    @idx_buffer.setter
+    def idx_buffer(self, Any value):
+        dereference(self._ptr).IdxBuffer = value._ptr
+    
+    @property
+    def vtx_buffer(self):
+        cdef ccimgui.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
+        return _ImVector_ImDrawVert.from_ptr(res)
+    @vtx_buffer.setter
+    def vtx_buffer(self, Any value):
+        dereference(self._ptr).VtxBuffer = value._ptr
+    
+    @property
+    def flags(self):
+        cdef ccimgui.ImDrawListFlags res = dereference(self._ptr).Flags
+        return res
+    @flags.setter
+    def flags(self, ccimgui.ImDrawListFlags value):
+        dereference(self._ptr).Flags = value
+    
+    @property
+    def _vtx_current_idx(self):
+        cdef Any res = dereference(self._ptr)._VtxCurrentIdx
+        return res
+    @_vtx_current_idx.setter
+    def _vtx_current_idx(self, Any value):
+        dereference(self._ptr)._VtxCurrentIdx = value
+    
+    @property
+    def _data(self):
+        cdef ccimgui.ImDrawListSharedData res = dereference(self._ptr)._Data
+        return _ImDrawListSharedData.from_ptr(res)
+    @_data.setter
+    def _data(self, Any value):
+        dereference(self._ptr)._Data = value._ptr
+    
+_bytes(value)
+    @property
+    def _vtx_write_ptr(self):
+        cdef ccimgui.ImDrawVert res = dereference(self._ptr)._VtxWritePtr
+        return _ImDrawVert.from_ptr(res)
+    @_vtx_write_ptr.setter
+    def _vtx_write_ptr(self, Any value):
+        dereference(self._ptr)._VtxWritePtr = value._ptr
+    
+    @property
+    def _idx_write_ptr(self):
+        cdef Any res = dereference(self._ptr)._IdxWritePtr
+        return res
+    @_idx_write_ptr.setter
+    def _idx_write_ptr(self, Any value):
+        dereference(self._ptr)._IdxWritePtr = value
+    
+    @property
+    def _clip_rect_stack(self):
+        cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
+        return _ImVector_ImVec4.from_ptr(res)
+    @_clip_rect_stack.setter
+    def _clip_rect_stack(self, Any value):
+        dereference(self._ptr)._ClipRectStack = value._ptr
+    
+    @property
+    def _texture_id_stack(self):
+        cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
+        return _ImVector_ImTextureID.from_ptr(res)
+    @_texture_id_stack.setter
+    def _texture_id_stack(self, Any value):
+        dereference(self._ptr)._TextureIdStack = value._ptr
+    
+    @property
+    def _path(self):
+        cdef ccimgui.ImVector_ImVec2 res = dereference(self._ptr)._Path
+        return _ImVector_ImVec2.from_ptr(res)
+    @_path.setter
+    def _path(self, Any value):
+        dereference(self._ptr)._Path = value._ptr
+    
+    @property
+    def _cmd_header(self):
+        cdef ccimgui.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
+        return _ImDrawCmdHeader.from_ptr(res)
+    @_cmd_header.setter
+    def _cmd_header(self, Any value):
+        dereference(self._ptr)._CmdHeader = value._ptr
+    
+    @property
+    def _splitter(self):
+        cdef ccimgui.ImDrawListSplitter res = dereference(self._ptr)._Splitter
+        return _ImDrawListSplitter.from_ptr(res)
+    @_splitter.setter
+    def _splitter(self, Any value):
+        dereference(self._ptr)._Splitter = value._ptr
+    
+    @property
+    def _fringe_scale(self):
+        cdef float res = dereference(self._ptr)._FringeScale
+        return res
+    @_fringe_scale.setter
+    def _fringe_scale(self, float value):
+        dereference(self._ptr)._FringeScale = value
     
 
 cdef class _ImDrawListSharedData:

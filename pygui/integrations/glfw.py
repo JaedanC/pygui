@@ -35,36 +35,29 @@ class GlfwRenderer(ProgrammablePipelineRenderer):
     def _map_keys(self):
         key_map = self.io.key_map
 
-        key_map[pygui.KEY_TAB] = glfw.KEY_TAB
-        key_map[pygui.KEY_LEFT_ARROW] = glfw.KEY_LEFT
-        key_map[pygui.KEY_RIGHT_ARROW] = glfw.KEY_RIGHT
-        key_map[pygui.KEY_UP_ARROW] = glfw.KEY_UP
-        key_map[pygui.KEY_DOWN_ARROW] = glfw.KEY_DOWN
-        key_map[pygui.KEY_PAGE_UP] = glfw.KEY_PAGE_UP
-        key_map[pygui.KEY_PAGE_DOWN] = glfw.KEY_PAGE_DOWN
-        key_map[pygui.KEY_HOME] = glfw.KEY_HOME
-        key_map[pygui.KEY_END] = glfw.KEY_END
-        key_map[pygui.KEY_DELETE] = glfw.KEY_DELETE
-        key_map[pygui.KEY_BACKSPACE] = glfw.KEY_BACKSPACE
-        key_map[pygui.KEY_ENTER] = glfw.KEY_ENTER
-        key_map[pygui.KEY_ESCAPE] = glfw.KEY_ESCAPE
-        key_map[pygui.KEY_A] = glfw.KEY_A
-        key_map[pygui.KEY_C] = glfw.KEY_C
-        key_map[pygui.KEY_V] = glfw.KEY_V
-        key_map[pygui.KEY_X] = glfw.KEY_X
-        key_map[pygui.KEY_Y] = glfw.KEY_Y
-        key_map[pygui.KEY_Z] = glfw.KEY_Z
+        key_map[pygui.IMGUI_KEY_TAB] = glfw.KEY_TAB
+        key_map[pygui.IMGUI_KEY_LEFT_ARROW] = glfw.KEY_LEFT
+        key_map[pygui.IMGUI_KEY_RIGHT_ARROW] = glfw.KEY_RIGHT
+        key_map[pygui.IMGUI_KEY_UP_ARROW] = glfw.KEY_UP
+        key_map[pygui.IMGUI_KEY_DOWN_ARROW] = glfw.KEY_DOWN
+        key_map[pygui.IMGUI_KEY_PAGE_UP] = glfw.KEY_PAGE_UP
+        key_map[pygui.IMGUI_KEY_PAGE_DOWN] = glfw.KEY_PAGE_DOWN
+        key_map[pygui.IMGUI_KEY_HOME] = glfw.KEY_HOME
+        key_map[pygui.IMGUI_KEY_END] = glfw.KEY_END
+        key_map[pygui.IMGUI_KEY_DELETE] = glfw.KEY_DELETE
+        key_map[pygui.IMGUI_KEY_BACKSPACE] = glfw.KEY_BACKSPACE
+        key_map[pygui.IMGUI_KEY_ENTER] = glfw.KEY_ENTER
+        key_map[pygui.IMGUI_KEY_ESCAPE] = glfw.KEY_ESCAPE
+        key_map[pygui.IMGUI_KEY_A] = glfw.KEY_A
+        key_map[pygui.IMGUI_KEY_C] = glfw.KEY_C
+        key_map[pygui.IMGUI_KEY_V] = glfw.KEY_V
+        key_map[pygui.IMGUI_KEY_X] = glfw.KEY_X
+        key_map[pygui.IMGUI_KEY_Y] = glfw.KEY_Y
+        key_map[pygui.IMGUI_KEY_Z] = glfw.KEY_Z
 
     def keyboard_callback(self, window, key, scancode, action, mods):
-        print(key)
         # perf: local for faster access
         io = self.io
-
-        print(self)
-        print(io)
-        print(io.keys_down)
-        print(len(io.keys_down))
-        print(io.keys_down[key])
 
         if action == glfw.PRESS:
             io.keys_down[key] = True
@@ -114,7 +107,7 @@ class GlfwRenderer(ProgrammablePipelineRenderer):
         fb_size = glfw.get_framebuffer_size(self.window)
 
         io.display_size = window_size
-        io.display_fb_scale = compute_fb_scale(window_size, fb_size)
+        io.display_framebuffer_scale = compute_fb_scale(window_size, fb_size)
         io.delta_time = 1.0/60
 
         if glfw.get_window_attrib(self.window, glfw.FOCUSED):

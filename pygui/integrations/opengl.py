@@ -75,7 +75,7 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
         gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR)
         gl.glTexImage2D(gl.GL_TEXTURE_2D, 0, gl.GL_RGBA, width, height, 0, gl.GL_RGBA, gl.GL_UNSIGNED_BYTE, pixels)
 
-        self.io.fonts.texture_id = self._font_texture
+        self.io.fonts.tex_id = self._font_texture
         gl.glBindTexture(gl.GL_TEXTURE_2D, last_texture)
         self.io.fonts.clear_tex_data()
 
@@ -136,13 +136,13 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
         io = self.io
 
         display_width, display_height = io.display_size
-        fb_width = int(display_width * io.display_fb_scale[0])
-        fb_height = int(display_height * io.display_fb_scale[1])
+        fb_width = int(display_width * io.display_framebuffer_scale[0])
+        fb_height = int(display_height * io.display_framebuffer_scale[1])
 
         if fb_width == 0 or fb_height == 0:
             return
 
-        draw_data.scale_clip_rects(*io.display_fb_scale)
+        draw_data.scale_clip_rects(io.display_framebuffer_scale)
 
         # backup GL state
         # todo: provide cleaner version of this backup-restore code
@@ -185,7 +185,7 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
         gl.glUniformMatrix4fv(self._attrib_proj_mtx, 1, gl.GL_FALSE, ortho_projection)
         gl.glBindVertexArray(self._vao_handle)
 
-        for commands in draw_data.commands_lists:
+        for commands in draw_data.cmd_lists:
             idx_buffer_offset = 0
 
             gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._vbo_handle)
@@ -197,7 +197,7 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
             gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer_size * INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer_data), gl.GL_STREAM_DRAW)
 
             # todo: allow to iterate over _CmdList
-            for command in commands.commands:
+            for command in commands.cmd_buffer:
                 gl.glBindTexture(gl.GL_TEXTURE_2D, command.texture_id)
 
                 # todo: use named tuple
@@ -260,7 +260,7 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
 
         if self._font_texture > -1:
             gl.glDeleteTextures([self._font_texture])
-        self.io.fonts.texture_id = 0
+        self.io.fonts.tex_id = 0
         self._font_texture = 0
 
 
@@ -283,7 +283,7 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
         gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR)
         gl.glTexImage2D(gl.GL_TEXTURE_2D, 0, gl.GL_ALPHA, width, height, 0, gl.GL_ALPHA, gl.GL_UNSIGNED_BYTE, pixels)
 
-        self.io.fonts.texture_id = self._font_texture
+        self.io.fonts.tex_id = self._font_texture
         # gl.glBindTexture(gl.GL_TEXTURE_2D, last_texture)
         self.io.fonts.clear_tex_data()
 
@@ -295,13 +295,13 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
         io = self.io
 
         display_width, display_height = io.display_size
-        fb_width = int(display_width * io.display_fb_scale[0])
-        fb_height = int(display_height * io.display_fb_scale[1])
+        fb_width = int(display_width * io.display_framebuffer_scale[0])
+        fb_height = int(display_height * io.display_framebuffer_scale[1])
 
         if fb_width == 0 or fb_height == 0:
             return
 
-        draw_data.scale_clip_rects(*io.display_fb_scale)
+        draw_data.scale_clip_rects(io.display_framebuffer_scale)
 
         # note: we are using fixed pipeline for cocos2d/pyglet
         # todo: consider porting to programmable pipeline
@@ -339,14 +339,14 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
         gl.glPushMatrix()
         gl.glLoadIdentity()
 
-        for commands in draw_data.commands_lists:
+        for commands in draw_data.cmd_lists:
             idx_buffer = commands.idx_buffer_data
 
             gl.glVertexPointer(2, gl.GL_FLOAT, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_POS_OFFSET))
             gl.glTexCoordPointer(2, gl.GL_FLOAT, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_UV_OFFSET))
             gl.glColorPointer(4, gl.GL_UNSIGNED_BYTE, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_COL_OFFSET))
 
-            for command in commands.commands:
+            for command in commands.cmd_buffer:
                 gl.glBindTexture(gl.GL_TEXTURE_2D, command.texture_id)
 
                 x, y, z, w = command.clip_rect
@@ -404,5 +404,5 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
     def _invalidate_device_objects(self):
         if self._font_texture > -1:
             gl.glDeleteTextures([self._font_texture])
-        self.io.fonts.texture_id = 0
+        self.io.fonts.tex_id = 0
         self._font_texture = 0
