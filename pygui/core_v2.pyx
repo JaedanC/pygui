@@ -1301,7 +1301,6 @@ def dock_space_over_viewport(_ImGuiViewport viewport=None, ccimgui.ImGuiDockNode
 # [Function]
 # use_template = False
 # custom_return_type = [Auto]
-@cython.returns(bool)
 def drag_float(
     str label,
     float value,
@@ -4795,10 +4794,6 @@ cdef class _ImVector_ImDrawCmd:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -4835,8 +4830,6 @@ cdef class _ImVector_ImDrawCmd:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -4852,10 +4845,6 @@ cdef class _ImVector_ImDrawIdx:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -4892,8 +4881,6 @@ cdef class _ImVector_ImDrawIdx:
         dereference(self._ptr).Data = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -4909,10 +4896,6 @@ cdef class _ImVector_ImDrawVert:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -4949,8 +4932,6 @@ cdef class _ImVector_ImDrawVert:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -4966,10 +4947,6 @@ cdef class _ImVector_ImVec4:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5006,8 +4983,6 @@ cdef class _ImVector_ImVec4:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5023,10 +4998,6 @@ cdef class _ImVector_ImTextureID:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5063,8 +5034,6 @@ cdef class _ImVector_ImTextureID:
         dereference(self._ptr).Data = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5080,10 +5049,6 @@ cdef class _ImVector_ImVec2:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5120,8 +5085,6 @@ cdef class _ImVector_ImVec2:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5137,10 +5100,6 @@ cdef class _ImVector_ImDrawChannel:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5177,8 +5136,6 @@ cdef class _ImVector_ImDrawChannel:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5194,10 +5151,6 @@ cdef class _ImVector_float:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5234,8 +5187,6 @@ cdef class _ImVector_float:
         dereference(self._ptr).Data = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5251,10 +5202,6 @@ cdef class _ImVector_ImWchar:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5291,8 +5238,6 @@ cdef class _ImVector_ImWchar:
         dereference(self._ptr).Data = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5308,10 +5253,6 @@ cdef class _ImVector_ImFontGlyph:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5348,8 +5289,6 @@ cdef class _ImVector_ImFontGlyph:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5365,10 +5304,6 @@ cdef class _ImVector_ImFontPtr:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5405,8 +5340,6 @@ cdef class _ImVector_ImFontPtr:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5422,10 +5355,6 @@ cdef class _ImVector_ImFontAtlasCustomRect:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5462,8 +5391,6 @@ cdef class _ImVector_ImFontAtlasCustomRect:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5479,10 +5406,6 @@ cdef class _ImVector_ImFontConfig:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5519,8 +5442,6 @@ cdef class _ImVector_ImFontConfig:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5536,10 +5457,6 @@ cdef class _ImFontGlyph:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5684,8 +5601,6 @@ cdef class _ImFontGlyph:
         dereference(self._ptr).V1 = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5701,10 +5616,6 @@ cdef class _ImVector_ImU32:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5741,8 +5652,6 @@ cdef class _ImVector_ImU32:
         dereference(self._ptr).Data = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5758,10 +5667,6 @@ cdef class _ImGuiKeyData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5810,8 +5715,6 @@ cdef class _ImGuiKeyData:
         dereference(self._ptr).AnalogValue = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5827,7 +5730,6 @@ cdef class _ImGuiListClipper:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -5881,9 +5783,6 @@ cdef class _ImGuiListClipper:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -5956,8 +5855,6 @@ cdef class _ImGuiListClipper:
         dereference(self._ptr).TempData = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -5973,7 +5870,6 @@ cdef class _ImGuiOnceUponAFrame:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -5994,9 +5890,6 @@ cdef class _ImGuiOnceUponAFrame:
         ccimgui.ImGuiOnceUponAFrame_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6008,8 +5901,6 @@ cdef class _ImGuiOnceUponAFrame:
     def ref_frame(self, int value):
         dereference(self._ptr).RefFrame = value
     # [End Field]
-
-    # [End Fields]
 
 # [End Class]
 
@@ -6026,7 +5917,6 @@ cdef class _ImGuiPayload:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6082,9 +5972,6 @@ cdef class _ImGuiPayload:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6181,8 +6068,6 @@ cdef class _ImGuiPayload:
         dereference(self._ptr).Delivery = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6198,10 +6083,6 @@ cdef class _ImVector_ImGuiPlatformMonitor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6238,8 +6119,6 @@ cdef class _ImVector_ImGuiPlatformMonitor:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6255,10 +6134,6 @@ cdef class _ImVector_ImGuiViewportPtr:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6295,8 +6170,6 @@ cdef class _ImVector_ImGuiViewportPtr:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6312,10 +6185,6 @@ cdef class _ImVector_ImGuiStoragePair:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6352,8 +6221,6 @@ cdef class _ImVector_ImGuiStoragePair:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6369,7 +6236,6 @@ cdef class _ImGuiStoragePair:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6414,9 +6280,6 @@ cdef class _ImGuiStoragePair:
         ccimgui.ImGuiStoragePair_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6465,8 +6328,6 @@ cdef class _ImGuiStoragePair:
         dereference(self._ptr).val_p = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6482,7 +6343,6 @@ cdef class _ImGuiTableColumnSortSpecs:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6503,9 +6363,6 @@ cdef class _ImGuiTableColumnSortSpecs:
         ccimgui.ImGuiTableColumnSortSpecs_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6554,8 +6411,6 @@ cdef class _ImGuiTableColumnSortSpecs:
         dereference(self._ptr).SortDirection = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6571,7 +6426,6 @@ cdef class _ImGuiTableSortSpecs:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6592,9 +6446,6 @@ cdef class _ImGuiTableSortSpecs:
         ccimgui.ImGuiTableSortSpecs_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6631,8 +6482,6 @@ cdef class _ImGuiTableSortSpecs:
         dereference(self._ptr).SpecsDirty = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6648,10 +6497,6 @@ cdef class _ImVector_char:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6688,8 +6533,6 @@ cdef class _ImVector_char:
         dereference(self._ptr).Data = _bytes(value)
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6705,10 +6548,6 @@ cdef class _ImVector_ImGuiTextRange:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6745,8 +6584,6 @@ cdef class _ImVector_ImGuiTextRange:
         dereference(self._ptr).Data = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6762,7 +6599,6 @@ cdef class _ImGuiTextRange:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6812,9 +6648,6 @@ cdef class _ImGuiTextRange:
         ccimgui.ImGuiTextRange_split(self._ptr, separator, out._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6839,8 +6672,6 @@ cdef class _ImGuiTextRange:
         dereference(self._ptr).e = _bytes(value)
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6856,7 +6687,6 @@ cdef class _ImGuiWindowClass:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -6877,9 +6707,6 @@ cdef class _ImGuiWindowClass:
         ccimgui.ImGuiWindowClass_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -6976,8 +6803,6 @@ cdef class _ImGuiWindowClass:
         dereference(self._ptr).DockingAllowUnclassed = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -6993,7 +6818,6 @@ cdef class _ImVec2:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7026,9 +6850,6 @@ cdef class _ImVec2:
         ccimgui.ImVec2_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7053,8 +6874,6 @@ cdef class _ImVec2:
         dereference(self._ptr).y = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7070,7 +6889,6 @@ cdef class _ImVec4:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7103,9 +6921,6 @@ cdef class _ImVec4:
         ccimgui.ImVec4_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7154,8 +6969,6 @@ cdef class _ImVec4:
         dereference(self._ptr).w = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7171,7 +6984,6 @@ cdef class _ImColor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7256,9 +7068,6 @@ cdef class _ImColor:
         ccimgui.ImColor_SetHSV(self._ptr, h, s, value, a)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7270,8 +7079,6 @@ cdef class _ImColor:
     def value(self, tuple value):
         dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
     # [End Field]
-
-    # [End Fields]
 
 # [End Class]
 
@@ -7288,10 +7095,6 @@ cdef class _ImDrawChannel:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7316,8 +7119,6 @@ cdef class _ImDrawChannel:
         dereference(self._ptr)._IdxBuffer = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7333,7 +7134,6 @@ cdef class _ImDrawCmd:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7363,9 +7163,6 @@ cdef class _ImDrawCmd:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7438,8 +7235,6 @@ cdef class _ImDrawCmd:
         dereference(self._ptr).UserCallbackData = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7455,10 +7250,6 @@ cdef class _ImDrawCmdHeader:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7495,8 +7286,6 @@ cdef class _ImDrawCmdHeader:
         dereference(self._ptr).VtxOffset = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7512,7 +7301,6 @@ cdef class _ImDrawData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7557,9 +7345,6 @@ cdef class _ImDrawData:
         ccimgui.ImDrawData_ScaleClipRects(self._ptr, _cast_tuple_ImVec2(fb_scale))
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7668,8 +7453,6 @@ cdef class _ImDrawData:
         dereference(self._ptr).OwnerViewport = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7685,7 +7468,6 @@ cdef class _ImDrawListSplitter:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -7746,9 +7528,6 @@ cdef class _ImDrawListSplitter:
         ccimgui.ImDrawListSplitter_Split(self._ptr, draw_list._ptr, count)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7785,8 +7564,6 @@ cdef class _ImDrawListSplitter:
         dereference(self._ptr)._Channels = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7802,10 +7579,6 @@ cdef class _ImDrawVert:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -7842,8 +7615,6 @@ cdef class _ImDrawVert:
         dereference(self._ptr).col = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -7859,7 +7630,6 @@ cdef class _ImFont:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -8095,9 +7865,6 @@ cdef class _ImFont:
         ccimgui.ImFont_SetGlyphVisible(self._ptr, c, visible)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -8338,8 +8105,6 @@ cdef class _ImFont:
         dereference(self._ptr).Used4kPagesMap = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -8355,7 +8120,6 @@ cdef class _ImFontAtlas:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -8691,9 +8455,6 @@ cdef class _ImFontAtlas:
         ccimgui.ImFontAtlas_SetTexID(self._ptr, id_)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -8958,8 +8719,6 @@ cdef class _ImFontAtlas:
         dereference(self._ptr).PackIdLines = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -8975,7 +8734,6 @@ cdef class _ImFontAtlasCustomRect:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -9005,9 +8763,6 @@ cdef class _ImFontAtlasCustomRect:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -9104,8 +8859,6 @@ cdef class _ImFontAtlasCustomRect:
         dereference(self._ptr).Font = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -9121,7 +8874,6 @@ cdef class _ImFontConfig:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -9142,9 +8894,6 @@ cdef class _ImFontConfig:
         ccimgui.ImFontConfig_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -9373,8 +9122,6 @@ cdef class _ImFontConfig:
         dereference(self._ptr).DstFont = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -9390,7 +9137,6 @@ cdef class _ImFontGlyphRangesBuilder:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -9468,9 +9214,6 @@ cdef class _ImFontGlyphRangesBuilder:
         ccimgui.ImFontGlyphRangesBuilder_SetBit(self._ptr, n)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -9482,8 +9225,6 @@ cdef class _ImFontGlyphRangesBuilder:
     def used_chars(self, Any value):
         dereference(self._ptr).UsedChars = value._ptr
     # [End Field]
-
-    # [End Fields]
 
 # [End Class]
 
@@ -9500,7 +9241,6 @@ cdef class _ImGuiIO:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -9633,9 +9373,6 @@ cdef class _ImGuiIO:
         ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -10800,8 +10537,6 @@ cdef class _ImGuiIO:
         dereference(self._ptr).InputQueueCharacters = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -10817,7 +10552,6 @@ cdef class _ImGuiPlatformIO:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -10838,9 +10572,6 @@ cdef class _ImGuiPlatformIO:
         ccimgui.ImGuiPlatformIO_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -11141,8 +10872,6 @@ cdef class _ImGuiPlatformIO:
         dereference(self._ptr).Viewports = value._ptr
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -11158,7 +10887,6 @@ cdef class _ImGuiPlatformImeData:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -11179,9 +10907,6 @@ cdef class _ImGuiPlatformImeData:
         ccimgui.ImGuiPlatformImeData_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -11218,8 +10943,6 @@ cdef class _ImGuiPlatformImeData:
         dereference(self._ptr).InputLineHeight = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -11235,7 +10958,6 @@ cdef class _ImGuiPlatformMonitor:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -11256,9 +10978,6 @@ cdef class _ImGuiPlatformMonitor:
         ccimgui.ImGuiPlatformMonitor_destroy(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -11319,8 +11038,6 @@ cdef class _ImGuiPlatformMonitor:
         dereference(self._ptr).DpiScale = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -11336,7 +11053,6 @@ cdef class _ImGuiStorage:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -11465,9 +11181,6 @@ cdef class _ImGuiStorage:
         ccimgui.ImGuiStorage_SetVoidPtr(self._ptr, key, val)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -11479,8 +11192,6 @@ cdef class _ImGuiStorage:
     def data(self, Any value):
         dereference(self._ptr).Data = value._ptr
     # [End Field]
-
-    # [End Fields]
 
 # [End Class]
 
@@ -11497,7 +11208,6 @@ cdef class _ImGuiStyle:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -11526,9 +11236,6 @@ cdef class _ImGuiStyle:
         ccimgui.ImGuiStyle_ScaleAllSizes(self._ptr, scale_factor)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -12057,8 +11764,6 @@ cdef class _ImGuiStyle:
         dereference(self._ptr).Colors = _cast_tuple_ImVec4(value)
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -12074,7 +11779,6 @@ cdef class _ImGuiTextBuffer:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -12180,9 +11884,6 @@ cdef class _ImGuiTextBuffer:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -12194,8 +11895,6 @@ cdef class _ImGuiTextBuffer:
     def buf(self, Any value):
         dereference(self._ptr).Buf = value._ptr
     # [End Field]
-
-    # [End Fields]
 
 # [End Class]
 
@@ -12212,7 +11911,6 @@ cdef class _ImGuiTextFilter:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -12276,9 +11974,6 @@ cdef class _ImGuiTextFilter:
         return res
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -12315,8 +12010,6 @@ cdef class _ImGuiTextFilter:
         dereference(self._ptr).CountGrep = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -12332,7 +12025,6 @@ cdef class _ImGuiViewport:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -12369,9 +12061,6 @@ cdef class _ImGuiViewport:
         ccimgui.ImGuiViewport_GetWorkCenter(pOut._ptr, self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -12576,8 +12265,6 @@ cdef class _ImGuiViewport:
         dereference(self._ptr).PlatformRequestClose = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -12593,7 +12280,6 @@ cdef class _ImDrawList:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
     # [Method]
     # use_template = False
     # custom_return_type = [Auto]
@@ -13428,9 +13114,6 @@ cdef class _ImDrawList:
         ccimgui.ImDrawList__TryMergeDrawCmds(self._ptr)
     # [End Method]
 
-    # [End Methods]
-
-    # [Fields]
     # [Field]
     # use_template = False
     # custom_type = [Auto]
@@ -13611,8 +13294,6 @@ cdef class _ImDrawList:
         dereference(self._ptr)._FringeScale = value
     # [End Field]
 
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -13627,12 +13308,6 @@ cdef class _ImDrawListSharedData:
     
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
-
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
-    # [End Fields]
 
 # [End Class]
 
@@ -13649,12 +13324,6 @@ cdef class _ImFontBuilderIO:
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
 
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
-    # [End Fields]
-
 # [End Class]
 
 # [Class]
@@ -13669,12 +13338,6 @@ cdef class _ImGuiContext:
     
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
-
-    # [Methods]
-    # [End Methods]
-
-    # [Fields]
-    # [End Fields]
 
 # [End Class]
 

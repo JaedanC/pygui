@@ -851,7 +851,6 @@ class HeaderSpec:
                 library_name=self.library_name,
             ))
             
-            output.write("    # [Methods]\n")
             for method in struct.methods:
                 output.write("    # [Method]\n")
                 output.write("    # use_template = False\n")
@@ -859,9 +858,7 @@ class HeaderSpec:
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
             
-            output.write("    # [End Methods]\n\n")
 
-            output.write("    # [Fields]\n")
             for field in struct.fields:
                 output.write("    # [Field]\n")
                 output.write("    # use_template = False\n")
@@ -869,7 +866,6 @@ class HeaderSpec:
                 output.write(field.in_field_pyx_format(self) + "\n")
                 output.write("    # [End Field]\n\n")
 
-            output.write("    # [End Fields]\n\n")
             output.write("# [End Class]\n\n")
         return output.getvalue()
 
