@@ -2,6 +2,7 @@
 ## Constructor
 @staticmethod
 def {function_name}({parameters}):
+    """{comment}"""
     #if has_body_lines
 {body_lines}
     #endif
@@ -12,6 +13,7 @@ def {function_name}({parameters}):
 ##
 #else
 def {function_name}({parameters}):
+    """{comment}"""
     #if has_body_lines
 {body_lines}
     #endif

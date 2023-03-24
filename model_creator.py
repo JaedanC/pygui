@@ -46,6 +46,7 @@ def function_body_template(
     return_type: CType,
     function_name: str,
     cimgui_function_name: str,
+    comment: str,
     **kwargs
 ):
     parameter_tokens = []
@@ -94,6 +95,7 @@ def function_body_template(
 
     template.format(
         function_name=function_name,
+        comment=comment,
         parameters=parameter_text,
         body_lines=indent_by("\n".join(implementation_lines), 4),
         return_type=return_type_string,
@@ -437,7 +439,7 @@ class Parameter:
         elif header.is_type_class(self.type):
             value = "value._ptr"
         elif self.type.as_cython_type(header) == "str":
-            return "_bytes(value)"
+            value = "_bytes(value)"
 
         python_type = self.type.as_cython_type(header)
         if python_type == "Any":
@@ -460,7 +462,7 @@ class Parameter:
             is_getter=False
         )
 
-        return indent_by(get_func + "\n" + set_func + "\n", 4)
+        return indent_by(get_func + "\n" + set_func, 4)
 
 
 class ParameterList:
@@ -558,10 +560,11 @@ class Function:
     class.
     """
 
-    def __init__(self, name: str, return_type: CType, parameters: ParameterList):
+    def __init__(self, name: str, return_type: CType, parameters: ParameterList, comment: str):
         self.name: str = name
         self.parameters: ParameterList = parameters
         self.return_type: CType = return_type
+        self.comment = comment
 
     def __repr__(self):
         return "Function({}) -> {}:\n\t{}".format(
@@ -586,7 +589,8 @@ class Function:
             self.return_type,
             re.sub("^ig_", "", snake_caseify(self.name)), 
             self.name,
-            is_constructor=False
+            self.comment,
+            is_constructor=False,
         )
 
 
@@ -598,7 +602,7 @@ class Method:
 
     def __init__(self, imgui_name: str, cimgui_name: str, struct_name: str,
                  return_type: CType, parameters: ParameterList,
-                 is_constructor: bool, is_destructor: bool):
+                 is_constructor: bool, is_destructor: bool, comment: str):
         self.imgui_name: str = imgui_name
         self.cimgui_name: str = cimgui_name
         self.struct_name: str = struct_name
@@ -606,6 +610,7 @@ class Method:
         self.parameters: ParameterList = parameters
         self.is_constructor: bool = is_constructor
         self.is_destructor: bool = is_destructor
+        self.comment: str = comment
 
     def __repr__(self):
         if self.is_constructor:
@@ -641,6 +646,7 @@ class Method:
             self.return_type,
             function_name,
             self.cimgui_name,
+            self.comment,
             is_constructor=self.is_constructor,
             struct_name=self.struct_name
         )
@@ -776,9 +782,10 @@ class HeaderSpec:
         output.write("from cython.view cimport array as cvarray\n")
         output.write("from cpython.version cimport PY_MAJOR_VERSION\n\n\n")
 
+        output.write("# [Enums]\n")
         for enum in self.enums:
             output.write(enum.in_pyx_format(self.library_name) + "\n")
-        output.write("\n")
+        output.write("# [End Enums]\n\n")
 
         output.write("Vec2 = namedtuple('Vec2', ['x', 'y'])\n")
         output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
@@ -824,26 +831,46 @@ class HeaderSpec:
         output.write("def _py_index_buffer_index_size():\n")
         output.write("    return sizeof(ccimgui.ImDrawIdx)\n\n\n")
 
+        output.write("# [Functions]\n")
         for function in self.functions:
+            output.write("# [Function]\n")
+            output.write("# use_template = False\n")
+            output.write("# custom_return_type = [Auto]\n")
             output.write(function.in_pyx_format(self) + "\n")
-        output.write("\n")
+            output.write("# [End Function]\n\n")
+
+        output.write("# [End Functions]\n\n")
         
         for struct in self.structs:
             with open("pygui/templates/classes.h") as f:
                 template = f.read()
             
+            output.write("# [Class]\n")
             output.write(template.format(
                 struct_name=struct.name,
                 library_name=self.library_name,
             ))
-
+            
+            output.write("    # [Methods]\n")
             for method in struct.methods:
+                output.write("    # [Method]\n")
+                output.write("    # use_template = False\n")
+                output.write("    # custom_return_type = [Auto]\n")
                 output.write(method.in_pyx_format(self) + "\n")
+                output.write("    # [End Method]\n\n")
+            
+            output.write("    # [End Methods]\n\n")
 
+            output.write("    # [Fields]\n")
             for field in struct.fields:
+                output.write("    # [Field]\n")
+                output.write("    # use_template = False\n")
+                output.write("    # custom_type = [Auto]\n")
                 output.write(field.in_field_pyx_format(self) + "\n")
-            output.write("\n")
+                output.write("    # [End Field]\n\n")
 
+            output.write("    # [End Fields]\n\n")
+            output.write("# [End Class]\n\n")
         return output.getvalue()
 
     def in_pyi_format(self):
@@ -1083,6 +1110,13 @@ def header_model(base, library_name):
                 cimgui_name = function_json["cimguiname"]
                 if "ov_cimguiname" in function_json:
                     cimgui_name = function_json["ov_cimguiname"]
+                
+                function_comment = ""
+                if "comment" in function_json:
+                    function_comment = function_json["comment"] \
+                        .replace("// ", "") \
+                        .replace('"', "") \
+                        .capitalize()
 
                 if function_json["stname"] != "":
                     # Method
@@ -1103,14 +1137,16 @@ def header_model(base, library_name):
                         return_type,
                         ParameterList(parameters),
                         is_constructor,
-                        is_destructor
+                        is_destructor,
+                        function_comment
                     ))
                 else:
                     # Function
                     functions.append(Function(
                         cimgui_name,
                         CType(function_json["ret"]),
-                        ParameterList(parameters)
+                        ParameterList(parameters),
+                        function_comment
                     ))
 
         functions.sort(key=lambda f: f.name)
@@ -1196,9 +1232,9 @@ def main():
     with open("pygui/ccimgui.pxd", "w") as f:
         f.write(header.in_pxd_format())
 
-    # with open("pygui/core_v2.pyx", "w") as f:
-    #     pyx = header.in_pyx_format()
-    #     f.write(pyx)
+    with open("pygui/core_v2.pyx", "w") as f:
+        pyx = header.in_pyx_format()
+        f.write(pyx)
 
     # for function in header.functions:
     #     print(function)

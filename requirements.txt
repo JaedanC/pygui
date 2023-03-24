@@ -3,3 +3,4 @@ glfw
 numpy
 PyOpenGL
 PyOpenGL-accelerate
+diff_match_patch

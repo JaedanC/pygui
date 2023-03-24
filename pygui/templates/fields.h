@@ -10,5 +10,4 @@ def {field_name}(self):
 @{field_name}.setter
 def {field_name}(self, {python_type} value):
     dereference(self._ptr).{cimgui_field_name} = {value}
-##
 #endif

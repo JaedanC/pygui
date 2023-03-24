@@ -985,6 +985,7 @@ def _py_index_buffer_index_size():
 #     cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items_, items_count, popup_max_height_in_items)
 #     return res
 
+# @cython.returns(_ImGuiContext)
 def create_context(_ImFontAtlas shared_font_atlas=None):
     cdef ccimgui.ImGuiContext* res
     if shared_font_atlas is None:
@@ -4870,6 +4871,166 @@ cdef class _ImDrawData:
     
 #     def set_glyph_visible(_ImFont self, ccimgui.ImWchar c, Any visible):
 #         ccimgui.ImFont_SetGlyphVisible(self._ptr, c, visible)
+    
+    # @property
+    # def index_advancex(self):
+    #     cdef ccimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
+    #     return _ImVector_float.from_ptr(res)
+    # @index_advancex.setter
+    # def index_advancex(self, Any value):
+    #     dereference(self._ptr).IndexAdvanceX = value._ptr
+    
+    # @property
+    # def fallback_advancex(self):
+    #     cdef float res = dereference(self._ptr).FallbackAdvanceX
+    #     return res
+    # @fallback_advancex.setter
+    # def fallback_advancex(self, float value):
+    #     dereference(self._ptr).FallbackAdvanceX = value
+    
+    # @property
+    # def font_size(self):
+    #     cdef float res = dereference(self._ptr).FontSize
+    #     return res
+    # @font_size.setter
+    # def font_size(self, float value):
+    #     dereference(self._ptr).FontSize = value
+    
+    # @property
+    # def index_lookup(self):
+    #     cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).IndexLookup
+    #     return _ImVector_ImWchar.from_ptr(res)
+    # @index_lookup.setter
+    # def index_lookup(self, Any value):
+    #     dereference(self._ptr).IndexLookup = value._ptr
+    
+    # @property
+    # def glyphs(self):
+    #     cdef ccimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
+    #     return _ImVector_ImFontGlyph.from_ptr(res)
+    # @glyphs.setter
+    # def glyphs(self, Any value):
+    #     dereference(self._ptr).Glyphs = value._ptr
+    
+    # @property
+    # def fallback_glyph(self):
+    #     cdef ccimgui.ImFontGlyph res = dereference(self._ptr).FallbackGlyph
+    #     return _ImFontGlyph.from_ptr(res)
+    # @fallback_glyph.setter
+    # def fallback_glyph(self, Any value):
+    #     dereference(self._ptr).FallbackGlyph = value._ptr
+    
+    # @property
+    # def container_atlas(self):
+    #     cdef ccimgui.ImFontAtlas res = dereference(self._ptr).ContainerAtlas
+    #     return _ImFontAtlas.from_ptr(res)
+    # @container_atlas.setter
+    # def container_atlas(self, Any value):
+    #     dereference(self._ptr).ContainerAtlas = value._ptr
+    
+    # @property
+    # def config_data(self):
+    #     cdef ccimgui.ImFontConfig res = dereference(self._ptr).ConfigData
+    #     return _ImFontConfig.from_ptr(res)
+    # @config_data.setter
+    # def config_data(self, Any value):
+    #     dereference(self._ptr).ConfigData = value._ptr
+    
+    # @property
+    # def config_data_count(self):
+    #     cdef Any res = dereference(self._ptr).ConfigDataCount
+    #     return res
+    # @config_data_count.setter
+    # def config_data_count(self, Any value):
+    #     dereference(self._ptr).ConfigDataCount = value
+    
+    # @property
+    # def fallback_char(self):
+    #     cdef ccimgui.ImWchar res = dereference(self._ptr).FallbackChar
+    #     return res
+    # @fallback_char.setter
+    # def fallback_char(self, ccimgui.ImWchar value):
+    #     dereference(self._ptr).FallbackChar = value
+    
+    # @property
+    # def ellipsis_char(self):
+    #     cdef ccimgui.ImWchar res = dereference(self._ptr).EllipsisChar
+    #     return res
+    # @ellipsis_char.setter
+    # def ellipsis_char(self, ccimgui.ImWchar value):
+    #     dereference(self._ptr).EllipsisChar = value
+    
+    # @property
+    # def ellipsis_char_count(self):
+    #     cdef Any res = dereference(self._ptr).EllipsisCharCount
+    #     return res
+    # @ellipsis_char_count.setter
+    # def ellipsis_char_count(self, Any value):
+    #     dereference(self._ptr).EllipsisCharCount = value
+    
+    # @property
+    # def ellipsis_width(self):
+    #     cdef float res = dereference(self._ptr).EllipsisWidth
+    #     return res
+    # @ellipsis_width.setter
+    # def ellipsis_width(self, float value):
+    #     dereference(self._ptr).EllipsisWidth = value
+    
+    # @property
+    # def ellipsis_char_step(self):
+    #     cdef float res = dereference(self._ptr).EllipsisCharStep
+    #     return res
+    # @ellipsis_char_step.setter
+    # def ellipsis_char_step(self, float value):
+    #     dereference(self._ptr).EllipsisCharStep = value
+    
+    # @property
+    # def dirty_lookup_tables(self):
+    #     cdef Any res = dereference(self._ptr).DirtyLookupTables
+    #     return res
+    # @dirty_lookup_tables.setter
+    # def dirty_lookup_tables(self, Any value):
+    #     dereference(self._ptr).DirtyLookupTables = value
+    
+    # @property
+    # def scale(self):
+    #     cdef float res = dereference(self._ptr).Scale
+    #     return res
+    # @scale.setter
+    # def scale(self, float value):
+    #     dereference(self._ptr).Scale = value
+    
+    # @property
+    # def ascent(self):
+    #     cdef float res = dereference(self._ptr).Ascent
+    #     return res
+    # @ascent.setter
+    # def ascent(self, float value):
+    #     dereference(self._ptr).Ascent = value
+    
+    # @property
+    # def descent(self):
+    #     cdef float res = dereference(self._ptr).Descent
+    #     return res
+    # @descent.setter
+    # def descent(self, float value):
+    #     dereference(self._ptr).Descent = value
+    
+    # @property
+    # def metrics_total_surface(self):
+    #     cdef int res = dereference(self._ptr).MetricsTotalSurface
+    #     return res
+    # @metrics_total_surface.setter
+    # def metrics_total_surface(self, int value):
+    #     dereference(self._ptr).MetricsTotalSurface = value
+    
+    # @property
+    # def used_4k_pages_map(self):
+    #     cdef ccimgui.ImU8 res = dereference(self._ptr).Used4kPagesMap
+    #     return res
+    # @used_4k_pages_map.setter
+    # def used_4k_pages_map(self, ccimgui.ImU8 value):
+    #     dereference(self._ptr).Used4kPagesMap = value
     
 
 cdef class _ImFontAtlas:
