@@ -4,6 +4,7 @@ import keyword
 import re
 from io import StringIO
 from typing import List, Tuple, Any
+import builtins
 
 
 def snake_caseify(string: str, make_upper=False) -> str:
@@ -944,7 +945,7 @@ def safe_python_name(name: str, suffix="_") -> str:
     this causes Cython to freak out. This adds an underscore if a conflict is
     found. A new string is returned.
     """
-    if name in keyword.kwlist or name in dir(__builtins__) or name == "format":
+    if name in keyword.kwlist or name in dir(builtins) or name == "format":
         name = name + suffix
     return name
 

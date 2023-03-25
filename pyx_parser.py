@@ -1,7 +1,22 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Tuple
 from io import StringIO
 import re
+
+
+class PyxEnum:
+    def __init__(self, enum_string: str):
+        self.enum_string = enum_string
+    
+    def __repr__(self):
+        return "Enum({})".format(
+            self.enum_string
+        )
+    
+    def as_pyi_format(self):
+        return "{}: int".format(
+            self.enum_string
+        )
 
 
 class PyxFunction:
@@ -27,6 +42,9 @@ class PyxFunction:
             self.parameters,
             self.custom_return_type
         )
+    
+    def as_pyx_format(self):
+        return "\n".join(self.impl)
     
 
 class PyxField:
@@ -66,6 +84,9 @@ class PyxClass:
         )
     
     def as_pyi_format(self):
+        self.fields.sort(key=lambda f: f.name)
+        self.methods.sort(key=lambda m: m.name)
+
         body = StringIO()
         body.write("\n")
         for field in self.fields:
@@ -80,6 +101,48 @@ class PyxClass:
             " ..." if not has_body else body.getvalue()
         )
     
+
+class PyxCollection:
+    def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction], classes: List[PyxClass]):
+        self.enums = enums
+        self.functions = functions
+        self.classes = classes
+
+    def as_pyi_format(self) -> Tuple[str, str]:
+        pyi_content = StringIO()
+        pyi_content.write("from typing import Any, Callable, Tuple, List\n\n")
+        pyi_content.write("VERTEX_BUFFER_POS_OFFSET: int\n")
+        pyi_content.write("VERTEX_BUFFER_UV_OFFSET: int\n")
+        pyi_content.write("VERTEX_BUFFER_COL_OFFSET: int\n")
+        pyi_content.write("VERTEX_SIZE: int\n")
+        pyi_content.write("INDEX_SIZE: int\n\n")
+
+        self.functions.sort(key=lambda f: f.name)
+        self.classes.sort(key=lambda c: c.name)
+
+        for function in self.functions:
+            pyi_content.write(function.as_pyi_format() + "\n")
+        pyi_content.write("\n")
+
+        for class_ in self.classes:
+            pyi_content.write(class_.as_pyi_format() + "\n")
+        
+        py_content = StringIO()
+        py_content.write("from .core import *\n\n")
+        py_content.write("VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()\n")
+        py_content.write("VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()\n")
+        py_content.write("VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()\n")
+        py_content.write("VERTEX_SIZE = core._py_vertex_buffer_vertex_size()\n")
+        py_content.write("INDEX_SIZE = core._py_index_buffer_index_size()\n")
+        
+        return pyi_content.getvalue(), py_content.getvalue()
+
+    def get_function_by_name(self, name) -> PyxFunction:
+        for function in self.functions:
+            if name == function.name:
+                return function
+        return None
+
 
 def get_sections(src: str, section_name: str) -> List[str]:
     all_sections = []
@@ -121,9 +184,16 @@ def parse_function_options(lines):
     return options
 
 
-def main():
-    with open("pygui/core_v2.pyx") as f:
-        pyx = f.read()
+def create_pyx_collection(pyx):
+    enum_section = get_sections(pyx, "Enums")[0]
+    enum_lines = enum_section.split("\n")
+    enums = []
+    for line in enum_lines:
+        if line == "":
+            continue
+        
+        enum_string = line.split(" = ")[0]
+        enums.append(PyxEnum(enum_string))
     
     functions: List[PyxFunction] = []
     function_section = get_sections(pyx, "Functions")[0]
@@ -187,44 +257,21 @@ def main():
             fields
         ))
     
+    return PyxCollection(enums, functions, classes)
 
-    output = StringIO()
-    output.write("from typing import Any, Callable, Tuple, List\n\n")
 
-    output.write("VERTEX_BUFFER_POS_OFFSET: int\n")
-    output.write("VERTEX_BUFFER_UV_OFFSET: int\n")
-    output.write("VERTEX_BUFFER_COL_OFFSET: int\n")
-    output.write("VERTEX_SIZE: int\n")
-    output.write("INDEX_SIZE: int\n\n")
-
-    enum_section = get_sections(pyx, "Enums")[0]
-    enum_lines = enum_section.split("\n")
-    for line in enum_lines:
-        if line == "":
-            continue
+def main():
+    with open("pygui/core_v2.pyx") as f:
+        pyx = f.read()
     
-        enum_string = line.split(" = ")[0]
-        output.write(f"{enum_string}: int\n")
+    collection = create_pyx_collection(pyx)
+    pyi, py = collection.as_pyi_format()
 
-    output.write("\n")
-    for function in functions:
-        output.write(function.as_pyi_format() + "\n")
-    output.write("\n")
-
-    for class_ in classes:
-        output.write(class_.as_pyi_format() + "\n")
-    
-    pyi_content = output.getvalue()
     with open("pygui/__init__.pyi", "w") as f:
-        f.write(pyi_content)
+        f.write(pyi)
     
     with open("pygui/__init__.py", "w") as f:
-        f.write("from .core import *\n\n")
-        f.write("VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()\n")
-        f.write("VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()\n")
-        f.write("VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()\n")
-        f.write("VERTEX_SIZE = core._py_vertex_buffer_vertex_size()\n")
-        f.write("INDEX_SIZE = core._py_index_buffer_index_size()\n")
+        f.write(py)
 
 if __name__ == "__main__":
     main()

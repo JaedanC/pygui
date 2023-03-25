@@ -1,5 +1,4 @@
 #if is_constructor
-# Constructor
 # @pyi.returns(_{struct_name})
 @staticmethod
 def {function_name}({parameters}):

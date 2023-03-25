@@ -62,7 +62,6 @@ def main():
     impl.shutdown()
     glfw.terminate()
     pygui.destroy_context(ctx)
-    pygui.VERTEX_SIZE
 
 
 if __name__ == "__main__":

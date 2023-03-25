@@ -5789,7 +5789,6 @@ cdef class _ImGuiListClipper:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiListClipper)
     @staticmethod
     def gui_list_clipper():
@@ -5942,7 +5941,6 @@ cdef class _ImGuiOnceUponAFrame:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiOnceUponAFrame)
     @staticmethod
     def gui_once_upon_a_frame():
@@ -5993,7 +5991,6 @@ cdef class _ImGuiPayload:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiPayload)
     @staticmethod
     def gui_payload():
@@ -6336,7 +6333,6 @@ cdef class _ImGuiStoragePair:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiStoragePair)
     @staticmethod
     def float_(_key: int, _val_f: float):
@@ -6350,7 +6346,6 @@ cdef class _ImGuiStoragePair:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiStoragePair)
     @staticmethod
     def int_(_key: int, _val_i: int):
@@ -6364,7 +6359,6 @@ cdef class _ImGuiStoragePair:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiStoragePair)
     @staticmethod
     def ptr(_key: int, _val_p: Any):
@@ -6454,7 +6448,6 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTableColumnSortSpecs)
     @staticmethod
     def gui_table_column_sort_specs():
@@ -6544,7 +6537,6 @@ cdef class _ImGuiTableSortSpecs:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTableSortSpecs)
     @staticmethod
     def gui_table_sort_specs():
@@ -6729,7 +6721,6 @@ cdef class _ImGuiTextRange:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTextRange)
     @staticmethod
     def nil():
@@ -6743,7 +6734,6 @@ cdef class _ImGuiTextRange:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTextRange)
     @staticmethod
     def str_(_b: str, _e: str):
@@ -6826,7 +6816,6 @@ cdef class _ImGuiWindowClass:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiWindowClass)
     @staticmethod
     def gui_window_class():
@@ -6968,7 +6957,6 @@ cdef class _ImVec2:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImVec2)
     @staticmethod
     def float_(_x: float, _y: float):
@@ -6982,7 +6970,6 @@ cdef class _ImVec2:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImVec2)
     @staticmethod
     def nil():
@@ -7046,7 +7033,6 @@ cdef class _ImVec4:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImVec4)
     @staticmethod
     def float_(_x: float, _y: float, _z: float, _w: float):
@@ -7060,7 +7046,6 @@ cdef class _ImVec4:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImVec4)
     @staticmethod
     def nil():
@@ -7150,7 +7135,6 @@ cdef class _ImColor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImColor)
     @staticmethod
     def float_(r: float, g: float, b: float, a: float=1.0):
@@ -7164,7 +7148,6 @@ cdef class _ImColor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImColor)
     @staticmethod
     def int_(r: int, g: int, b: int, a: int=255):
@@ -7178,7 +7161,6 @@ cdef class _ImColor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImColor)
     @staticmethod
     def nil():
@@ -7192,7 +7174,6 @@ cdef class _ImColor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImColor)
     @staticmethod
     def u32(rgba: int):
@@ -7206,7 +7187,6 @@ cdef class _ImColor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImColor)
     @staticmethod
     def vec4(col: tuple):
@@ -7316,7 +7296,6 @@ cdef class _ImDrawCmd:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImDrawCmd)
     @staticmethod
     def draw_cmd():
@@ -7496,7 +7475,6 @@ cdef class _ImDrawData:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImDrawData)
     @staticmethod
     def draw_data():
@@ -7678,7 +7656,6 @@ cdef class _ImDrawListSplitter:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImDrawListSplitter)
     @staticmethod
     def draw_list_splitter():
@@ -7854,7 +7831,6 @@ cdef class _ImFont:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImFont)
     @staticmethod
     def font():
@@ -8343,7 +8319,6 @@ cdef class _ImFontAtlas:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImFontAtlas)
     @staticmethod
     def font_atlas():
@@ -8980,7 +8955,6 @@ cdef class _ImFontAtlasCustomRect:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImFontAtlasCustomRect)
     @staticmethod
     def font_atlas_custom_rect():
@@ -9132,7 +9106,6 @@ cdef class _ImFontConfig:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImFontConfig)
     @staticmethod
     def font_config():
@@ -9417,7 +9390,6 @@ cdef class _ImFontGlyphRangesBuilder:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImFontGlyphRangesBuilder)
     @staticmethod
     def font_glyph_ranges_builder():
@@ -9532,7 +9504,6 @@ cdef class _ImGuiIO:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiIO)
     @staticmethod
     def gui_io():
@@ -10957,7 +10928,6 @@ cdef class _ImGuiPlatformIO:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiPlatformIO)
     @staticmethod
     def gui_platform_io():
@@ -11320,7 +11290,6 @@ cdef class _ImGuiPlatformImeData:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiPlatformImeData)
     @staticmethod
     def gui_platform_ime_data():
@@ -11397,7 +11366,6 @@ cdef class _ImGuiPlatformMonitor:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiPlatformMonitor)
     @staticmethod
     def gui_platform_monitor():
@@ -11671,7 +11639,6 @@ cdef class _ImGuiStyle:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiStyle)
     @staticmethod
     def gui_style():
@@ -12290,7 +12257,6 @@ cdef class _ImGuiTextBuffer:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTextBuffer)
     @staticmethod
     def gui_text_buffer():
@@ -12436,7 +12402,6 @@ cdef class _ImGuiTextFilter:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiTextFilter)
     @staticmethod
     def gui_text_filter(default_filter: str=""):
@@ -12561,7 +12526,6 @@ cdef class _ImGuiViewport:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImGuiViewport)
     @staticmethod
     def gui_viewport():
@@ -12838,7 +12802,6 @@ cdef class _ImDrawList:
     # [Method]
     #? use_template = False
     #? custom_return_type = [Auto]
-    # Constructor
     # @pyi.returns(_ImDrawList)
     @staticmethod
     def draw_list(shared_data: _ImDrawListSharedData):
