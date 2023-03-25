@@ -5,7 +5,8 @@ import OpenGL.GL as gl
 import ctypes
 
 from .base import BaseOpenGLRenderer
-from pygui import *
+# from pygui import *
+import pygui
 
 
 class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
@@ -122,9 +123,9 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
         gl.glEnableVertexAttribArray(self._attrib_location_uv)
         gl.glEnableVertexAttribArray(self._attrib_location_color)
 
-        gl.glVertexAttribPointer(self._attrib_location_position, 2, gl.GL_FLOAT, gl.GL_FALSE, VERTEX_SIZE, ctypes.c_void_p(VERTEX_BUFFER_POS_OFFSET))
-        gl.glVertexAttribPointer(self._attrib_location_uv, 2, gl.GL_FLOAT, gl.GL_FALSE, VERTEX_SIZE, ctypes.c_void_p(VERTEX_BUFFER_UV_OFFSET))
-        gl.glVertexAttribPointer(self._attrib_location_color, 4, gl.GL_UNSIGNED_BYTE, gl.GL_TRUE, VERTEX_SIZE, ctypes.c_void_p(VERTEX_BUFFER_COL_OFFSET))
+        gl.glVertexAttribPointer(self._attrib_location_position, 2, gl.GL_FLOAT, gl.GL_FALSE, pygui.VERTEX_SIZE, ctypes.c_void_p(pygui.VERTEX_BUFFER_POS_OFFSET))
+        gl.glVertexAttribPointer(self._attrib_location_uv, 2, gl.GL_FLOAT, gl.GL_FALSE, pygui.VERTEX_SIZE, ctypes.c_void_p(pygui.VERTEX_BUFFER_UV_OFFSET))
+        gl.glVertexAttribPointer(self._attrib_location_color, 4, gl.GL_UNSIGNED_BYTE, gl.GL_TRUE, pygui.VERTEX_SIZE, ctypes.c_void_p(pygui.VERTEX_BUFFER_COL_OFFSET))
 
         # restore state
         gl.glBindTexture(gl.GL_TEXTURE_2D, last_texture)
@@ -190,11 +191,11 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
 
             gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._vbo_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ARRAY_BUFFER, commands.vtx_buffer_size * VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(gl.GL_ARRAY_BUFFER, commands.vtx_buffer_size * pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data), gl.GL_STREAM_DRAW)
 
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._elements_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer_size * INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer_data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer_size * pygui.INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer_data), gl.GL_STREAM_DRAW)
 
             # todo: allow to iterate over _CmdList
             for command in commands.cmd_buffer:
@@ -204,14 +205,14 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
                 x, y, z, w = command.clip_rect
                 gl.glScissor(int(x), int(fb_height - w), int(z - x), int(w - y))
 
-                if INDEX_SIZE == 2:
+                if pygui.INDEX_SIZE == 2:
                     gltype = gl.GL_UNSIGNED_SHORT
                 else:
                     gltype = gl.GL_UNSIGNED_INT
 
                 gl.glDrawElements(gl.GL_TRIANGLES, command.elem_count, gltype, ctypes.c_void_p(idx_buffer_offset))
 
-                idx_buffer_offset += command.elem_count * INDEX_SIZE
+                idx_buffer_offset += command.elem_count * pygui.INDEX_SIZE
 
         # restore modified GL state
         gl.glUseProgram(last_program)
@@ -342,9 +343,9 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
         for commands in draw_data.cmd_lists:
             idx_buffer = commands.idx_buffer_data
 
-            gl.glVertexPointer(2, gl.GL_FLOAT, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_POS_OFFSET))
-            gl.glTexCoordPointer(2, gl.GL_FLOAT, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_UV_OFFSET))
-            gl.glColorPointer(4, gl.GL_UNSIGNED_BYTE, VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + VERTEX_BUFFER_COL_OFFSET))
+            gl.glVertexPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_POS_OFFSET))
+            gl.glTexCoordPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_UV_OFFSET))
+            gl.glColorPointer(4, gl.GL_UNSIGNED_BYTE, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_COL_OFFSET))
 
             for command in commands.cmd_buffer:
                 gl.glBindTexture(gl.GL_TEXTURE_2D, command.texture_id)
@@ -352,14 +353,14 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
                 x, y, z, w = command.clip_rect
                 gl.glScissor(int(x), int(fb_height - w), int(z - x), int(w - y))
 
-                if INDEX_SIZE == 2:
+                if pygui.INDEX_SIZE == 2:
                     gltype = gl.GL_UNSIGNED_SHORT
                 else:
                     gltype = gl.GL_UNSIGNED_INT
 
                 gl.glDrawElements(gl.GL_TRIANGLES, command.elem_count, gltype, ctypes.c_void_p(idx_buffer))
 
-                idx_buffer += (command.elem_count * INDEX_SIZE)
+                idx_buffer += (command.elem_count * pygui.INDEX_SIZE)
 
         gl.glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha)
         gl.glBlendFunc(last_blend_src, last_blend_dst)

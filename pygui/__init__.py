@@ -1,4 +1,3 @@
-
 from .core import *
 
 VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()

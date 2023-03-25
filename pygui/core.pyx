@@ -5212,7 +5212,7 @@ cdef class _ImFontAtlas:
 #         )
 #         return res
     
-    def get_tex_data_as_alpha8(_ImFontAtlas self):
+    def get_tex_data_as_alpha8(self: _ImFontAtlas):
         cdef unsigned char* pixels
         cdef int width
         cdef int height
@@ -5220,6 +5220,7 @@ cdef class _ImFontAtlas:
         ccimgui.ImFontAtlas_GetTexDataAsAlpha8(self._ptr, &pixels, &width, &height, NULL)
         return width, height, bytes(pixels[:width*height])
     
+    @cython.returns(tuple)
     def get_tex_data_as_rgba32(_ImFontAtlas self):
         cdef unsigned char* pixels
         cdef int width

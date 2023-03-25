@@ -3,8 +3,7 @@ import json
 import keyword
 import re
 from io import StringIO
-from typing import List, Tuple
-
+from typing import List, Tuple, Any
 
 
 def snake_caseify(string: str, make_upper=False) -> str:
@@ -57,29 +56,33 @@ def function_body_template(
     # Expand array parameters:
     # float value[2] == float value0, float value1
     for parameter in parameter_list:
-        parameter_tokens += parameter.in_pyx_type_name_default_format(header)
-        argument_tokens += parameter.in_pyx_name_format(header)
-        implementation_lines += parameter.implementation_lines
-        to_return_tokens += parameter.additional_returns
+        parameter_tokens += parameter.in_pyx_parameter_type_name_defaults(header)
+        argument_tokens += parameter.in_pyx_argument_names(header)
+        implementation_lines += parameter.get_expanded_implementation_lines(header)
+        to_return_tokens += parameter.get_additional_returns()
     
     # This is the string that makes up the return value of the cimgui
     # function call
     has_return_type = return_type is not None and not return_type.is_void()
     res_name = "res"
     return_type_string = ""
+    python_return_type_string = return_type.as_python_type(header)
     if has_return_type:
-        if header.is_type_class(return_type):
-            res_name = "_{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
-        
-        if header.is_type_external(return_type):
+
+        if return_type.is_type_external(header):
             return_type_string = header.library_name + "." + return_type.with_no_const()
         else:
             return_type_string = return_type.internal_str
-
-    if len(parameter_tokens) > 5:
-        parameter_text = "\n" + indent_by(",\n".join(parameter_tokens), 4) + "\n"
-    else:
-        parameter_text = ", ".join(parameter_tokens)
+        
+        if return_type.is_type_class(header):
+            res_name = "_{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
+        elif return_type.is_string():
+            res_name = "_bytes(res)"
+        
+    parameter_text = ", ".join(parameter_tokens)
+    # if len(parameter_tokens) > 5:
+    #     parameter_text = "\n" + indent_by(",\n".join(parameter_tokens), 4) + "\n"
+    # else:
     
     if len(argument_tokens) > 5:
         argument_text = "\n" + indent_by(",\n".join(argument_tokens), 8) + "\n    "
@@ -99,6 +102,7 @@ def function_body_template(
         parameters=parameter_text,
         body_lines=indent_by("\n".join(implementation_lines), 4),
         return_type=return_type_string,
+        python_return_type=python_return_type_string,
         library_name=header.library_name,
         function_pxd_name=cimgui_function_name,
         arguments=argument_text,
@@ -207,6 +211,19 @@ class Template:
 
 
 class CType:
+    lookup = {
+        "void": "None",
+        "char*": "str",
+        "const char*": "str",
+        "float*": "float",
+        "float": "float",
+        "int": "int",
+        "int*": "int",
+        "ImVec2": "tuple",
+        "const ImVec2": "tuple",
+        "ImVec4": "tuple",
+        "const ImVec4": "tuple",
+    }
     """
     Represents a type without a name. Can also be a function pointer. Requires
     a Parameter wrapper to be a function pointer.
@@ -237,27 +254,85 @@ class CType:
         if self.is_function_pointer():
             return "Callable"
         
-        lookup = {
-            "void": "None",
-            "char*": "str",
-            "const char*": "str",
-            "float*": "float",
-            "float": "float",
-            "int": "int",
-            "int*": "int",
-            "ImVec2": "tuple",
-            "const ImVec2": "tuple",
-            "ImVec4": "tuple",
-            "const ImVec4": "tuple",
-        }
-        if self.internal_str in lookup:
-            return lookup[self.internal_str]
+        if self.internal_str in CType.lookup:
+            return CType.lookup[self.internal_str]
         
         for typedef in header.typedefs:
             if typedef.definition.internal_str == self.internal_str:
                 return header.library_name + "." + typedef.definition.internal_str
 
         return "Any"
+
+    def as_python_type(self, header: HeaderSpec):
+        if self.is_function_pointer():
+            return "Callable"
+        
+        shortened_type = self.with_no_const()
+        for (base, definition) in [(t.base, t.definition) for t in header.typedefs]:
+            if definition.internal_str == self.with_no_const_or_asterisk():
+                return base.as_python_type(header)
+
+        shortened_type = shortened_type \
+            .replace("unsigned ", "") \
+            .replace("signed ", "")
+
+        if shortened_type in CType.lookup:
+            return CType.lookup[shortened_type]
+        
+        if CType(shortened_type).is_type_class(header):
+            return "_" + CType(shortened_type).with_no_const_or_asterisk()
+        
+        similar_type_lookup = {
+            "void*": "Any",
+            "short": "int",
+            "long": "int",
+            "double": "float",
+            "char": "int",
+        }
+
+        if shortened_type in similar_type_lookup:
+            return similar_type_lookup[shortened_type]
+        else:
+            return "Any"
+
+    def is_type_class(self, header: HeaderSpec):
+        return self.with_no_const_or_asterisk() in [s.name for s in header.structs]
+
+    def is_type_external(self, header: HeaderSpec):
+        if self.is_type_class(header):
+            return True
+        
+        type_string = self.with_no_const_or_asterisk()
+        if type_string in [e.name for e in header.enums]:
+            return True
+        
+        if type_string in [t.definition.internal_str for t in header.typedefs]:
+            return True
+        
+        if type_string == "bool":
+            return True
+        
+        return False
+    
+    def is_string(self):
+        return self.with_no_const() == "char*"
+
+    def follow_type(self, header: HeaderSpec):
+        type_string = self.with_no_const_or_asterisk()
+        for base, definition in [(t.base, t.definition) for t in header.typedefs]:
+            if definition.internal_str == type_string:
+                return base.follow_type(header)
+        
+        for enum_name in [e.name for e in header.enums]:
+            if enum_name == type_string:
+                return "int"
+        
+        for struct_name in [s.name for s in header.structs]:
+            if struct_name == type_string:
+                return "_" + struct_name
+
+        return type_string \
+            .replace("unsigned ", "")
 
     def with_no_const(self):
         return self.internal_str \
@@ -301,39 +376,6 @@ class Parameter:
         self.default_value = default_value
         self.size = size
 
-        self.expanded_parameters: List[Parameter] = [ self ]
-        self.expanded_arguments: List[str] = [ self.name ]
-
-        self.implementation_lines: List[str] = []
-        self.additional_returns: List[str] = []
-
-        if self.size > 1:
-            self._expand_parameter()
-
-    def _expand_parameter(self):
-        self.expanded_parameters = self.expand_self()
-        self.implementation_lines.append("cdef {type}[{size}] io_{type}_{name} = [{expanded_names}]" \
-            .format(
-                type=self.type.with_no_const_or_asterisk(),
-                size=len(self.expanded_parameters),
-                name=self.name,
-                expanded_names=", ".join([p.name for p in self.expanded_parameters])
-            ))
-
-        self.expanded_arguments = ["<{type}*>&io_{type}_{name}".format(
-            type=self.type.with_no_const_or_asterisk(),
-            name=self.name
-        )]
-
-        return_extra = "[{}]"
-        argument_return_list = []
-        for i in range(len(self.expanded_parameters)):
-            argument_return_list.append(
-                f"io_{self.type.with_no_const_or_asterisk()}_{self.name}[{i}]"
-            )
-
-        self.additional_returns.append(return_extra.format(", ".join(argument_return_list)))
-
     def __repr__(self):
         return "Param({}, {}){} {}".format(
             self.type.__repr__(),
@@ -353,65 +395,91 @@ class Parameter:
             f"[{self.size}]" if self.size > 1 else ""
         )
     
-    def expand_self(self) -> List[Parameter]:
-        """This returns a list of strings because some types have a length. I
-        want to unpack these. For example:
-        
-        float value[3] == "float value0", "float value1", "float value2"
-        """
-        parameters = []
-        for i in range(self.size):
-            parameters.append(Parameter(
-                self.name + (str(i) if self.size > 1 else ""),
-                self.type,
-                self.default_value,
-                size=1
-        ))
-        return parameters
-
-    def in_pyx_type_name_default_format(self, header: HeaderSpec) -> List[str]:
+    def in_pyx_parameter_type_name_defaults(self, header: HeaderSpec) -> List[str]:
         output = []
-        for local_parameter in self.expanded_parameters:
-            assert not local_parameter.is_array()
-            type_string = self.type.as_cython_type(header)
+        for local_name in self._get_expanded_names():
+            # type_string = self.type.as_cython_type(header)
+            type_string = self.type.as_python_type(header)
+            # if self.type.is_type_class(header) and type_string == "Any":
+            #     type_string = "_" + self.type.with_no_const_or_asterisk()
 
-            if header.is_type_class(self.type) and type_string == "Any":
-                type_string = "_" + self.type.with_no_const_or_asterisk()
-            
-            # if type_string == "_ImVec2":
-            #     type_string = "bruh"
-            
-            output.append("{} {}{}".format(
-                type_string,
-                local_parameter.name,
-                "=" + self.default_value if self.default_value is not None else ""
+            output.append("{name}: {type}{default}".format(
+                name=local_name,
+                type=type_string,
+                default="=" + self.default_value if self.default_value is not None else ""
             ))
         return output
     
-    def in_pyx_name_format(self, header: HeaderSpec) -> List[str]:
-        if self.type.with_no_const() == "ImVec2":
-            return [f"_cast_tuple_ImVec2({a})" for a in self.expanded_arguments]
-        
-        if self.type.with_no_const() == "ImVec4":
-            return [f"_cast_tuple_ImVec4({a})" for a in self.expanded_arguments]
-        
-        if header.is_type_class(self.type):
-            return [a + "._ptr" for a in self.expanded_arguments]
+    def in_pyx_argument_names(self, header: HeaderSpec) -> List[str]:
+        output = []
+        for local_argument in self._get_expanded_arguments(header):
+            if self.type.with_no_const() == "ImVec2":
+                output.append(f"_cast_tuple_ImVec2({local_argument})")
+            elif self.type.with_no_const() == "ImVec4":
+                output.append(f"_cast_tuple_ImVec4({local_argument})")
+            elif self.type.is_type_class(header):
+                output.append(local_argument + "._ptr")
+            elif self.type.as_cython_type(header) == "str":
+                output.append(f"_bytes({local_argument})")
+            else:
+                output.append(local_argument)
 
-        if self.type.as_cython_type(header) == "str":
-            return [f"_bytes({a})" for a in self.expanded_arguments]
+        return output
 
-        return self.expanded_arguments
+    def _get_expanded_names(self) -> List[str]:
+        if self.size == 1:
+            return [self.name]
+        return [self.name + str(i) for i in range(self.size)]
+    
+    def get_expanded_implementation_lines(self, header: HeaderSpec) -> List[str]:
+        if self.size == 1:
+            return []
+        
+        if self.type.is_type_external(header):
+            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
+        else:
+            type_string = self.type.with_no_const_or_asterisk()
+
+        implementation_lines = [("cdef {type}[{size}] io_{type_friendly}_{name} = [{expanded_names}]" \
+            .format(
+                type=type_string,
+                type_friendly=self.type.with_no_const_or_asterisk(),
+                size=self.size,
+                name=self.name,
+                expanded_names=", ".join(self._get_expanded_names())
+            ))]
+        return implementation_lines
+    
+    def _get_expanded_arguments(self, header: HeaderSpec) -> List[str]:
+        if self.size == 1:
+            return [ self.name ]
+        
+        if self.type.is_type_external(header):
+            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
+        else:
+            type_string = self.type.with_no_const_or_asterisk()
+
+        return ["<{type}*>&io_{type_friendly}_{name}".format(
+            type=type_string,
+            type_friendly=self.type.with_no_const_or_asterisk(),
+            name=self.name
+        )]
+
+    def get_additional_returns(self) -> List[str]:
+        additional_returns = []
+        for i in range(self.size):
+            additional_returns.append(
+                "io_{type_friendly}_{name}[{i}]".format(
+                    type_friendly=self.type.with_no_const_or_asterisk(),
+                    name=self.name,
+                    i=i
+                )
+            )
+        return additional_returns
 
     def is_array(self) -> bool:
         return self.size > 1
     
-    def has_pyx_implementation_lines(self) -> bool:
-        return self.implementation_lines > 0
-
-    def has_pyx_additional_returns(self) -> bool:
-        return self.additional_returns > 0
-
     def in_field_pyx_format(self, header: HeaderSpec):
         with open("pygui/templates/fields.h") as f:
             text = f.read()
@@ -420,15 +488,16 @@ class Parameter:
 
         type_string = self.type.as_cython_type(header)
         res = "res"
-        if header.is_type_class(self.type) and type_string == "Any":
+        if self.type.is_type_class(header):# and type_string == "Any":
             type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
             res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
-
+        
         getter.format(
             field_name = snake_caseify(self.name),
             cimgui_field_name = self.name,
             field_type = type_string,
             res = res,
+            python_type = self.type.as_python_type(header),
         )
 
         value = "value"
@@ -436,14 +505,10 @@ class Parameter:
             value = "_cast_tuple_ImVec2(value)"
         elif self.type.with_no_const() == "ImVec4":
             value = "_cast_tuple_ImVec4(value)"
-        elif header.is_type_class(self.type):
+        elif self.type.is_type_class(header):
             value = "value._ptr"
         elif self.type.as_cython_type(header) == "str":
             value = "_bytes(value)"
-
-        python_type = self.type.as_cython_type(header)
-        if python_type == "Any":
-            python_type = ""
 
         setter.format(
             field_name = snake_caseify(self.name),
@@ -451,7 +516,7 @@ class Parameter:
             field_type = type_string,
             res = res,
             value = value,
-            python_type = self.type.as_cython_type(header),
+            python_type = self.type.as_python_type(header),
         )
 
         get_func = getter.compile(
@@ -485,7 +550,7 @@ class ParameterList:
 
     def in_pxd_format(self):
         return [p.in_pxd_format() for p in self.internal_parameters]
-
+    
 
 class Typedef:
     """Represents a base -> definition Typedef. Base and defintion are both
@@ -834,8 +899,8 @@ class HeaderSpec:
         output.write("# [Functions]\n")
         for function in self.functions:
             output.write("# [Function]\n")
-            output.write("# use_template = False\n")
-            output.write("# custom_return_type = [Auto]\n")
+            output.write("#? use_template = False\n")
+            output.write("#? custom_return_type = [Auto]\n")
             output.write(function.in_pyx_format(self) + "\n")
             output.write("# [End Function]\n\n")
 
@@ -853,16 +918,16 @@ class HeaderSpec:
             
             for method in struct.methods:
                 output.write("    # [Method]\n")
-                output.write("    # use_template = False\n")
-                output.write("    # custom_return_type = [Auto]\n")
+                output.write("    #? use_template = False\n")
+                output.write("    #? custom_return_type = [Auto]\n")
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
             
 
             for field in struct.fields:
                 output.write("    # [Field]\n")
-                output.write("    # use_template = False\n")
-                output.write("    # custom_type = [Auto]\n")
+                output.write("    #? use_template = False\n")
+                output.write("    #? custom_type = [Auto]\n")
                 output.write(field.in_field_pyx_format(self) + "\n")
                 output.write("    # [End Field]\n\n")
 
@@ -872,31 +937,6 @@ class HeaderSpec:
     def in_pyi_format(self):
         # TODO:
         pass
-    
-    def is_type_external(self, _type: CType):
-        assert _type is not None
-        type_string = _type.with_no_const_or_asterisk()
-
-        if self.is_type_class(_type):
-            return True
-        
-        if type_string in [e.name for e in self.enums]:
-            return True
-        
-        if type_string in [t.definition.internal_str for t in self.typedefs]:
-            return True
-        
-        if type_string == "bool":
-            return True
-        
-        return False
-
-    def is_type_class(self, _type: CType):
-        assert _type is not None
-        type_string = _type.with_no_const_or_asterisk()
-
-        if type_string in [s.name for s in self.structs]:
-            return True
 
 
 def safe_python_name(name: str, suffix="_") -> str:
