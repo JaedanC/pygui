@@ -691,392 +691,456 @@ def _py_index_buffer_index_size():
 # [End Constant Functions]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiPayload)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiPayload)
 def accept_drag_drop_payload(type_: str, flags: int=0):
-    """Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released."""
+    """
+    Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery
+    is set you can peek into the payload before the mouse button
+    is released.
+    """
     cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type_), flags)
     return _ImGuiPayload.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def align_text_to_frame_padding():
-    """Vertically align upcoming text baseline to framepadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)"""
+    """
+    Vertically align upcoming text baseline to framepadding.y so
+    that it will align properly to regularly framed items (call
+    if you have text on a line before a framed item)
+    """
     ccimgui.igAlignTextToFramePadding()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def arrow_button(str_id: str, dir_: int):
-    """Square button with an arrow shape"""
+    """
+    Square button with an arrow shape
+    """
     cdef ccimgui.bool res = ccimgui.igArrowButton(_bytes(str_id), dir_)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin(name: str, p_open: Any=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), p_open, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_child_frame(id_: int, size: tuple, flags: int=0):
-    """Helper to create a child window / scrolling region that looks like a normal widget frame"""
+    """
+    Helper to create a child window / scrolling region that looks
+    like a normal widget frame
+    """
     cdef ccimgui.bool res = ccimgui.igBeginChildFrame(id_, _cast_tuple_ImVec2(size), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_child_id(id_: int, size: tuple=(0, 0), border: Any=False, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igBeginChild_ID(id_, _cast_tuple_ImVec2(size), border, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_child_str(str_id: str, size: tuple=(0, 0), border: Any=False, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igBeginChild_Str(_bytes(str_id), _cast_tuple_ImVec2(size), border, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_combo(label: str, preview_value: str, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igBeginCombo(_bytes(label), _bytes(preview_value), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def begin_disabled(disabled: Any=True):
-    """"""
     ccimgui.igBeginDisabled(disabled)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_drag_drop_source(flags: int=0):
-    """Call after submitting an item which may be dragged. when this return true, you can call setdragdroppayload() + enddragdropsource()"""
+    """
+    Call after submitting an item which may be dragged. when this
+    return true, you can call setdragdroppayload() + enddragdropsource()
+    """
     cdef ccimgui.bool res = ccimgui.igBeginDragDropSource(flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_drag_drop_target():
-    """Call after submitting an item that may receive a payload. if this returns true, you can call acceptdragdroppayload() + enddragdroptarget()"""
+    """
+    Call after submitting an item that may receive a payload. if
+    this returns true, you can call acceptdragdroppayload() + enddragdroptarget()
+    """
     cdef ccimgui.bool res = ccimgui.igBeginDragDropTarget()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def begin_group():
-    """Lock horizontal starting position"""
+    """
+    Lock horizontal starting position
+    """
     ccimgui.igBeginGroup()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_list_box(label: str, size: tuple=(0, 0)):
-    """Open a framed scrolling region"""
+    """
+    Open a framed scrolling region
+    """
     cdef ccimgui.bool res = ccimgui.igBeginListBox(_bytes(label), _cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_main_menu_bar():
-    """Create and append to a full screen menu-bar."""
+    """
+    Create and append to a full screen menu-bar.
+    """
     cdef ccimgui.bool res = ccimgui.igBeginMainMenuBar()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_menu(label: str, enabled: Any=True):
-    """Create a sub-menu entry. only call endmenu() if this returns true!"""
+    """
+    Create a sub-menu entry. only call endmenu() if this returns
+    true!
+    """
     cdef ccimgui.bool res = ccimgui.igBeginMenu(_bytes(label), enabled)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_menu_bar():
-    """Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window)."""
+    """
+    Append to menu-bar of current window (requires imguiwindowflags_menubar
+    flag set on parent window).
+    """
     cdef ccimgui.bool res = ccimgui.igBeginMenuBar()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_popup(str_id: str, flags: int=0):
-    """Return true if the popup is open, and you can start outputting to it."""
+    """
+    Return true if the popup is open, and you can start outputting
+    to it.
+    """
     cdef ccimgui.bool res = ccimgui.igBeginPopup(_bytes(str_id), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_popup_context_item(str_id: str=None, popup_flags: int=1):
-    """Open+begin popup when clicked on last item. use str_id==null to associate the popup to previous item. if you want to use that on a non-interactive item such as text() you need to pass in an explicit id here. read comments in .cpp!"""
+    """
+    Open+begin popup when clicked on last item. use str_id==null
+    to associate the popup to previous item. if you want to use
+    that on a non-interactive item such as text() you need to pass
+    in an explicit id here. read comments in .cpp!
+    """
     cdef ccimgui.bool res = ccimgui.igBeginPopupContextItem(_bytes(str_id), popup_flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_popup_context_void(str_id: str=None, popup_flags: int=1):
-    """Open+begin popup when clicked in void (where there are no windows)."""
+    """
+    Open+begin popup when clicked in void (where there are no windows).
+    """
     cdef ccimgui.bool res = ccimgui.igBeginPopupContextVoid(_bytes(str_id), popup_flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_popup_context_window(str_id: str=None, popup_flags: int=1):
-    """Open+begin popup when clicked on current window."""
+    """
+    Open+begin popup when clicked on current window.
+    """
     cdef ccimgui.bool res = ccimgui.igBeginPopupContextWindow(_bytes(str_id), popup_flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_popup_modal(name: str, p_open: Any=None, flags: int=0):
-    """Return true if the modal is open, and you can start outputting to it."""
+    """
+    Return true if the modal is open, and you can start outputting
+    to it.
+    """
     cdef ccimgui.bool res = ccimgui.igBeginPopupModal(_bytes(name), p_open, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_tab_bar(str_id: str, flags: int=0):
-    """Create and append into a tabbar"""
+    """
+    Create and append into a tabbar
+    """
     cdef ccimgui.bool res = ccimgui.igBeginTabBar(_bytes(str_id), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_tab_item(label: str, p_open: Any=None, flags: int=0):
-    """Create a tab. returns true if the tab is selected."""
+    """
+    Create a tab. returns true if the tab is selected.
+    """
     cdef ccimgui.bool res = ccimgui.igBeginTabItem(_bytes(label), p_open, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igBeginTable(_bytes(str_id), column, flags, _cast_tuple_ImVec2(outer_size), inner_width)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def begin_tooltip():
-    """Begin/append a tooltip window. to create full-featured tooltip (with any kind of items)."""
+    """
+    Begin/append a tooltip window. to create full-featured tooltip
+    (with any kind of items).
+    """
     ccimgui.igBeginTooltip()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def bullet():
-    """Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses"""
+    """
+    Draw a small circle + keep the cursor on the same line. advance
+    cursor x position by gettreenodetolabelspacing(), same distance
+    that treenode() uses
+    """
     ccimgui.igBullet()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def bullet_text(fmt: str):
-    """Shortcut for bullet()+text()"""
+    """
+    Shortcut for bullet()+text()
+    """
     ccimgui.igBulletText(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def bullet_textv(fmt: str, args: str):
-    """"""
     ccimgui.igBulletTextV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def button(label: str, size: tuple=(0, 0)):
-    """Button"""
+    """
+    Button
+    """
     cdef ccimgui.bool res = ccimgui.igButton(_bytes(label), _cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def calc_item_width():
-    """Width of item given pushed settings and current cursor position. not necessarily the width of last item unlike most 'item' functions."""
+    """
+    Width of item given pushed settings and current cursor position.
+    not necessarily the width of last item unlike most 'item' functions.
+    """
     cdef float res = ccimgui.igCalcItemWidth()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def calc_text_size(pOut: _ImVec2, text: str, text_end: str=None, hide_text_after_double_hash: Any=False, wrap_width: float=-1.0):
-    """"""
     ccimgui.igCalcTextSize(pOut._ptr, _bytes(text), _bytes(text_end), hide_text_after_double_hash, wrap_width)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def checkbox(label: str, value: Any):
-    """"""
     cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), value)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def checkbox_flags_int_ptr(label: str, flags: int, flags_value: int):
-    """"""
     cdef ccimgui.bool res = ccimgui.igCheckboxFlags_IntPtr(_bytes(label), flags, flags_value)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def checkbox_flags_uint_ptr(label: str, flags: int, flags_value: int):
-    """"""
     cdef ccimgui.bool res = ccimgui.igCheckboxFlags_UintPtr(_bytes(label), flags, flags_value)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def close_current_popup():
-    """Manually close the popup we have begin-ed into."""
+    """
+    Manually close the popup we have begin-ed into.
+    """
     ccimgui.igCloseCurrentPopup()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def collapsing_header_bool_ptr(label: str, p_visible: Any, flags: int=0):
-    """When 'p_visible != null': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header."""
+    """
+    When 'p_visible != null': if '*p_visible==true' display an additional
+    small close button on upper right of the header which will set
+    the bool to false when clicked, if '*p_visible==false' don't
+    display the header.
+    """
     cdef ccimgui.bool res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), p_visible, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def collapsing_header_tree_node_flags(label: str, flags: int=0):
-    """If returning 'true' the header is open. doesn't indent nor push on id stack. user doesn't have to call treepop()."""
+    """
+    If returning 'true' the header is open. doesn't indent nor push
+    on id stack. user doesn't have to call treepop().
+    """
     cdef ccimgui.bool res = ccimgui.igCollapsingHeader_TreeNodeFlags(_bytes(label), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
-    """Display a color square/button, hover for details, return true when pressed."""
+    """
+    Display a color square/button, hover for details, return true
+    when pressed.
+    """
     cdef ccimgui.bool res = ccimgui.igColorButton(_bytes(desc_id), _cast_tuple_ImVec4(col), flags, _cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def color_convert_float_4_to_u32(in_: tuple):
-    """"""
     cdef ccimgui.ImU32 res = ccimgui.igColorConvertFloat4ToU32(_cast_tuple_ImVec4(in_))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def color_convert_hs_vto_rgb(h: float, s: float, value: float, out_r: float, out_g: float, out_b: float):
-    """"""
     ccimgui.igColorConvertHSVtoRGB(
         h,
         s,
@@ -1088,11 +1152,10 @@ def color_convert_hs_vto_rgb(h: float, s: float, value: float, out_r: float, out
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def color_convert_rg_bto_hsv(r: float, g: float, b: float, out_h: float, out_s: float, out_v: float):
-    """"""
     ccimgui.igColorConvertRGBtoHSV(
         r,
         g,
@@ -1104,73 +1167,66 @@ def color_convert_rg_bto_hsv(r: float, g: float, b: float, out_h: float, out_s: 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def color_convert_u32_to_float4(pOut: _ImVec4, in_: int):
-    """"""
     ccimgui.igColorConvertU32ToFloat4(pOut._ptr, in_)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def color_edit3(label: str, col0: float, col1: float, col2: float, flags: int=0):
-    """"""
     cdef float[3] io_float_col = [col0, col1, col2]
     cdef ccimgui.bool res = ccimgui.igColorEdit3(_bytes(label), <float*>&io_float_col, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def color_edit4(label: str, col0: float, col1: float, col2: float, col3: float, flags: int=0):
-    """"""
     cdef float[4] io_float_col = [col0, col1, col2, col3]
     cdef ccimgui.bool res = ccimgui.igColorEdit4(_bytes(label), <float*>&io_float_col, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def color_picker3(label: str, col0: float, col1: float, col2: float, flags: int=0):
-    """"""
     cdef float[3] io_float_col = [col0, col1, col2]
     cdef ccimgui.bool res = ccimgui.igColorPicker3(_bytes(label), <float*>&io_float_col, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def color_picker4(label: str, col0: float, col1: float, col2: float, col3: float, flags: int=0, ref_col: float=None):
-    """"""
     cdef float[4] io_float_col = [col0, col1, col2, col3]
     cdef ccimgui.bool res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, ref_col)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def columns(count: int=1, id_: str=None, border: Any=True):
-    """"""
     ccimgui.igColumns(count, _bytes(id_), border)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def combo_fn_bool_ptr(label: str, current_item: int, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1):
-    """"""
     cdef ccimgui.bool res = ccimgui.igCombo_FnBoolPtr(
         _bytes(label),
         current_item,
@@ -1183,41 +1239,44 @@ def combo_fn_bool_ptr(label: str, current_item: int, items_getter: Callable, dat
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def combo_str(label: str, current_item: int, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
-    """Separate items with \0 within a string, end item-list with \0\0. e.g. one\0two\0three\0"""
+    """
+    Separate items with \0 within a string, end item-list with \0\0.
+    e.g. one\0two\0three\0
+    """
     cdef ccimgui.bool res = ccimgui.igCombo_Str(_bytes(label), current_item, _bytes(items_separated_by_zeros), popup_max_height_in_items)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def combo_str_arr(label: str, current_item: int, items: Any, items_count: int, popup_max_height_in_items: int=-1):
-    """"""
     cdef ccimgui.bool res = ccimgui.igCombo_Str_arr(_bytes(label), current_item, items, items_count, popup_max_height_in_items)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiContext)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiContext)
 def create_context(shared_font_atlas: _ImFontAtlas=None):
-    """"""
     cdef ccimgui.ImGuiContext* res = ccimgui.igCreateContext(shared_font_atlas._ptr)
     return _ImGuiContext.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: Any, sz_vec2: Any, sz_vec4: Any, sz_drawvert: Any, sz_drawidx: Any):
-    """This is called by imgui_checkversion() macro."""
+    """
+    This is called by imgui_checkversion() macro.
+    """
     cdef ccimgui.bool res = ccimgui.igDebugCheckVersionAndDataLayout(
         _bytes(version_str),
         sz_io,
@@ -1231,58 +1290,63 @@ def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def debug_text_encoding(text: str):
-    """"""
     ccimgui.igDebugTextEncoding(_bytes(text))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def destroy_context(ctx: _ImGuiContext=None):
-    """Null = destroy current context"""
+    """
+    Null = destroy current context
+    """
     ccimgui.igDestroyContext(ctx._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def destroy_platform_windows():
-    """Call destroywindow platform functions for all viewports. call from backend shutdown() if you need to close platform windows before imgui shutdown. otherwise will be called by destroycontext()."""
+    """
+    Call destroywindow platform functions for all viewports. call
+    from backend shutdown() if you need to close platform windows
+    before imgui shutdown. otherwise will be called by destroycontext().
+    """
     ccimgui.igDestroyPlatformWindows()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: _ImGuiWindowClass=None):
-    """"""
     cdef ccimgui.ImGuiID res = ccimgui.igDockSpace(id_, _cast_tuple_ImVec2(size), flags, window_class._ptr)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def dock_space_over_viewport(viewport: _ImGuiViewport=None, flags: int=0, window_class: _ImGuiWindowClass=None):
-    """"""
     cdef ccimgui.ImGuiID res = ccimgui.igDockSpaceOverViewport(viewport._ptr, flags, window_class._ptr)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_float(label: str, value: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
-    """If v_min >= v_max we have no bound"""
+    """
+    If v_min >= v_max we have no bound
+    """
     cdef ccimgui.bool res = ccimgui.igDragFloat(
         _bytes(label),
         value,
@@ -1296,11 +1360,10 @@ def drag_float(label: str, value: float, v_speed: float=1.0, v_min: float=0.0, v
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_float2(label: str, value0: float, value1: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[2] io_float_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igDragFloat2(
         _bytes(label),
@@ -1315,11 +1378,10 @@ def drag_float2(label: str, value0: float, value1: float, v_speed: float=1.0, v_
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_float3(label: str, value0: float, value1: float, value2: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[3] io_float_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igDragFloat3(
         _bytes(label),
@@ -1334,11 +1396,10 @@ def drag_float3(label: str, value0: float, value1: float, value2: float, v_speed
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_float4(label: str, value0: float, value1: float, value2: float, value3: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[4] io_float_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igDragFloat4(
         _bytes(label),
@@ -1353,11 +1414,10 @@ def drag_float4(label: str, value0: float, value1: float, value2: float, value3:
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_float_range2(label: str, v_current_min: float, v_current_max: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", format_max: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igDragFloatRange2(
         _bytes(label),
         v_current_min,
@@ -1373,11 +1433,13 @@ def drag_float_range2(label: str, v_current_min: float, v_current_max: float, v_
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_int(label: str, value: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    """If v_min >= v_max we have no bound"""
+    """
+    If v_min >= v_max we have no bound
+    """
     cdef ccimgui.bool res = ccimgui.igDragInt(
         _bytes(label),
         value,
@@ -1391,11 +1453,10 @@ def drag_int(label: str, value: int, v_speed: float=1.0, v_min: int=0, v_max: in
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_int2(label: str, value0: int, value1: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    """"""
     cdef int[2] io_int_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igDragInt2(
         _bytes(label),
@@ -1410,11 +1471,10 @@ def drag_int2(label: str, value0: int, value1: int, v_speed: float=1.0, v_min: i
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_int3(label: str, value0: int, value1: int, value2: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    """"""
     cdef int[3] io_int_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igDragInt3(
         _bytes(label),
@@ -1429,11 +1489,10 @@ def drag_int3(label: str, value0: int, value1: int, value2: int, v_speed: float=
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_int4(label: str, value0: int, value1: int, value2: int, value3: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    """"""
     cdef int[4] io_int_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igDragInt4(
         _bytes(label),
@@ -1448,11 +1507,10 @@ def drag_int4(label: str, value0: int, value1: int, value2: int, value3: int, v_
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_int_range2(label: str, v_current_min: int, v_current_max: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igDragIntRange2(
         _bytes(label),
         v_current_min,
@@ -1468,11 +1526,10 @@ def drag_int_range2(label: str, v_current_min: int, v_current_max: int, v_speed:
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_scalar(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igDragScalar(
         _bytes(label),
         data_type,
@@ -1487,11 +1544,10 @@ def drag_scalar(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_m
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def drag_scalarn(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igDragScalarN(
         _bytes(label),
         data_type,
@@ -1507,886 +1563,1103 @@ def drag_scalarn(label: str, data_type: int, p_data: Any, components: int, v_spe
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def dummy(size: tuple):
-    """Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into."""
+    """
+    Add a dummy item of given size. unlike invisiblebutton(), dummy()
+    won't take the mouse click or be navigable into.
+    """
     ccimgui.igDummy(_cast_tuple_ImVec2(size))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end():
-    """"""
     ccimgui.igEnd()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_child():
-    """"""
     ccimgui.igEndChild()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_child_frame():
-    """Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)"""
+    """
+    Always call endchildframe() regardless of beginchildframe() return
+    values (which indicates a collapsed/clipped window)
+    """
     ccimgui.igEndChildFrame()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_combo():
-    """Only call endcombo() if begincombo() returns true!"""
+    """
+    Only call endcombo() if begincombo() returns true!
+    """
     ccimgui.igEndCombo()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_disabled():
-    """"""
     ccimgui.igEndDisabled()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_drag_drop_source():
-    """Only call enddragdropsource() if begindragdropsource() returns true!"""
+    """
+    Only call enddragdropsource() if begindragdropsource() returns
+    true!
+    """
     ccimgui.igEndDragDropSource()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_drag_drop_target():
-    """Only call enddragdroptarget() if begindragdroptarget() returns true!"""
+    """
+    Only call enddragdroptarget() if begindragdroptarget() returns
+    true!
+    """
     ccimgui.igEndDragDropTarget()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_frame():
-    """Ends the dear imgui frame. automatically called by render(). if you don't need to render data (skipping rendering) you may call endframe() without render()... but you'll have wasted cpu already! if you don't need to render, better to not create any windows and not call newframe() at all!"""
+    """
+    Ends the dear imgui frame. automatically called by render().
+    if you don't need to render data (skipping rendering) you may
+    call endframe() without render()... but you'll have wasted cpu
+    already! if you don't need to render, better to not create any
+    windows and not call newframe() at all!
+    """
     ccimgui.igEndFrame()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_group():
-    """Unlock horizontal starting position + capture the whole group bounding box into one item (so you can use isitemhovered() or layout primitives such as sameline() on whole group, etc.)"""
+    """
+    Unlock horizontal starting position + capture the whole group
+    bounding box into one item (so you can use isitemhovered() or
+    layout primitives such as sameline() on whole group, etc.)
+    """
     ccimgui.igEndGroup()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_list_box():
-    """Only call endlistbox() if beginlistbox() returned true!"""
+    """
+    Only call endlistbox() if beginlistbox() returned true!
+    """
     ccimgui.igEndListBox()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_main_menu_bar():
-    """Only call endmainmenubar() if beginmainmenubar() returns true!"""
+    """
+    Only call endmainmenubar() if beginmainmenubar() returns true!
+    """
     ccimgui.igEndMainMenuBar()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_menu():
-    """Only call endmenu() if beginmenu() returns true!"""
+    """
+    Only call endmenu() if beginmenu() returns true!
+    """
     ccimgui.igEndMenu()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_menu_bar():
-    """Only call endmenubar() if beginmenubar() returns true!"""
+    """
+    Only call endmenubar() if beginmenubar() returns true!
+    """
     ccimgui.igEndMenuBar()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_popup():
-    """Only call endpopup() if beginpopupxxx() returns true!"""
+    """
+    Only call endpopup() if beginpopupxxx() returns true!
+    """
     ccimgui.igEndPopup()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_tab_bar():
-    """Only call endtabbar() if begintabbar() returns true!"""
+    """
+    Only call endtabbar() if begintabbar() returns true!
+    """
     ccimgui.igEndTabBar()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_tab_item():
-    """Only call endtabitem() if begintabitem() returns true!"""
+    """
+    Only call endtabitem() if begintabitem() returns true!
+    """
     ccimgui.igEndTabItem()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_table():
-    """Only call endtable() if begintable() returns true!"""
+    """
+    Only call endtable() if begintable() returns true!
+    """
     ccimgui.igEndTable()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def end_tooltip():
-    """"""
     ccimgui.igEndTooltip()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiViewport)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiViewport)
 def find_viewport_by_id(id_: int):
-    """This is a helper for backends."""
+    """
+    This is a helper for backends.
+    """
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByID(id_)
     return _ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiViewport)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiViewport)
 def find_viewport_by_platform_handle(platform_handle: Any):
-    """This is a helper for backends. the type platform_handle is decided by the backend (e.g. hwnd, mywindow*, glfwwindow* etc.)"""
+    """
+    This is a helper for backends. the type platform_handle is decided
+    by the backend (e.g. hwnd, mywindow*, glfwwindow* etc.)
+    """
     cdef ccimgui.ImGuiViewport* res = ccimgui.igFindViewportByPlatformHandle(platform_handle)
     return _ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawList)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawList)
 def get_background_draw_list_nil():
-    """Get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents."""
+    """
+    Get background draw list for the viewport associated to the current
+    window. this draw list will be the first rendering one. useful
+    to quickly draw shapes/text behind dear imgui contents.
+    """
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_Nil()
     return _ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawList)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawList)
 def get_background_draw_list_viewport_ptr(viewport: _ImGuiViewport):
-    """Get background draw list for the given viewport. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents."""
+    """
+    Get background draw list for the given viewport. this draw list
+    will be the first rendering one. useful to quickly draw shapes/text
+    behind dear imgui contents.
+    """
     cdef ccimgui.ImDrawList* res = ccimgui.igGetBackgroundDrawList_ViewportPtr(viewport._ptr)
     return _ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def get_clipboard_text():
-    """"""
     cdef const char* res = ccimgui.igGetClipboardText()
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_color_u32_col(idx: int, alpha_mul: float=1.0):
-    """Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist"""
+    """
+    Retrieve given style color with style alpha applied and optional
+    extra alpha multiplier, packed as a 32-bit value suitable for
+    imdrawlist
+    """
     cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Col(idx, alpha_mul)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_color_u32_u32(col: int):
-    """Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist"""
+    """
+    Retrieve given color with style alpha applied, packed as a 32-bit
+    value suitable for imdrawlist
+    """
     cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_U32(col)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_color_u32_vec4(col: tuple):
-    """Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist"""
+    """
+    Retrieve given color with style alpha applied, packed as a 32-bit
+    value suitable for imdrawlist
+    """
     cdef ccimgui.ImU32 res = ccimgui.igGetColorU32_Vec4(_cast_tuple_ImVec4(col))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_column_index():
-    """Get current column index"""
+    """
+    Get current column index
+    """
     cdef int res = ccimgui.igGetColumnIndex()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_column_offset(column_index: int=-1):
-    """Get position of column line (in pixels, from the left side of the contents region). pass -1 to use current column, otherwise 0..getcolumnscount() inclusive. column 0 is typically 0.0f"""
+    """
+    Get position of column line (in pixels, from the left side of
+    the contents region). pass -1 to use current column, otherwise
+    0..getcolumnscount() inclusive. column 0 is typically 0.0f
+    """
     cdef float res = ccimgui.igGetColumnOffset(column_index)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_column_width(column_index: int=-1):
-    """Get column width (in pixels). pass -1 to use current column"""
+    """
+    Get column width (in pixels). pass -1 to use current column
+    """
     cdef float res = ccimgui.igGetColumnWidth(column_index)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_columns_count():
-    """"""
     cdef int res = ccimgui.igGetColumnsCount()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_content_region_avail(pOut: _ImVec2):
-    """== getcontentregionmax() - getcursorpos()"""
+    """
+    == getcontentregionmax() - getcursorpos()
+    """
     ccimgui.igGetContentRegionAvail(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_content_region_max(pOut: _ImVec2):
-    """Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates"""
+    """
+    Current content boundaries (typically window boundaries including
+    scrolling, or current column boundaries), in windows coordinates
+    """
     ccimgui.igGetContentRegionMax(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiContext)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiContext)
 def get_current_context():
-    """"""
     cdef ccimgui.ImGuiContext* res = ccimgui.igGetCurrentContext()
     return _ImGuiContext.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_cursor_pos(pOut: _ImVec2):
-    """Cursor position in window coordinates (relative to window position)"""
+    """
+    Cursor position in window coordinates (relative to window position)
+    """
     ccimgui.igGetCursorPos(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_cursor_posx():
-    """  (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc."""
+    """
+      (some functions are using window-relative coordinates, such
+    as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion*
+    etc.
+    """
     cdef float res = ccimgui.igGetCursorPosX()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_cursor_posy():
-    """   other functions such as getcursorscreenpos or everything in imdrawlist::"""
+    """
+       other functions such as getcursorscreenpos or everything in
+    imdrawlist::
+    """
     cdef float res = ccimgui.igGetCursorPosY()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_cursor_screen_pos(pOut: _ImVec2):
-    """Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode."""
+    """
+    Cursor position in absolute coordinates (useful to work with
+    imdrawlist api). generally top-left == getmainviewport()->pos
+    == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size
+    == io.displaysize in single-viewport mode.
+    """
     ccimgui.igGetCursorScreenPos(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_cursor_start_pos(pOut: _ImVec2):
-    """Initial cursor position in window coordinates"""
+    """
+    Initial cursor position in window coordinates
+    """
     ccimgui.igGetCursorStartPos(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiPayload)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiPayload)
 def get_drag_drop_payload():
-    """Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type."""
+    """
+    Peek directly into the current payload from anywhere. may return
+    null. use imguipayload::isdatatype() to test for the payload
+    type.
+    """
     cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
     return _ImGuiPayload.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawData)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawData)
 def get_draw_data():
-    """Valid after render() and until the next call to newframe(). this is what you have to render."""
+    """
+    Valid after render() and until the next call to newframe(). this
+    is what you have to render.
+    """
     cdef ccimgui.ImDrawData* res = ccimgui.igGetDrawData()
     return _ImDrawData.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawListSharedData)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawListSharedData)
 def get_draw_list_shared_data():
-    """You may use this when creating your own imdrawlist instances."""
+    """
+    You may use this when creating your own imdrawlist instances.
+    """
     cdef ccimgui.ImDrawListSharedData* res = ccimgui.igGetDrawListSharedData()
     return _ImDrawListSharedData.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImFont)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImFont)
 def get_font():
-    """Get current font"""
+    """
+    Get current font
+    """
     cdef ccimgui.ImFont* res = ccimgui.igGetFont()
     return _ImFont.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_font_size():
-    """Get current font size (= height in pixels) of current font with current scale applied"""
+    """
+    Get current font size (= height in pixels) of current font with
+    current scale applied
+    """
     cdef float res = ccimgui.igGetFontSize()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_font_tex_uv_white_pixel(pOut: _ImVec2):
-    """Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api"""
+    """
+    Get uv coordinate for a while pixel, useful to draw custom shapes
+    via the imdrawlist api
+    """
     ccimgui.igGetFontTexUvWhitePixel(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawList)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawList)
 def get_foreground_draw_list_nil():
-    """Get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents."""
+    """
+    Get foreground draw list for the viewport associated to the current
+    window. this draw list will be the last rendered one. useful
+    to quickly draw shapes/text over dear imgui contents.
+    """
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_Nil()
     return _ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawList)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawList)
 def get_foreground_draw_list_viewport_ptr(viewport: _ImGuiViewport):
-    """Get foreground draw list for the given viewport. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents."""
+    """
+    Get foreground draw list for the given viewport. this draw list
+    will be the last rendered one. useful to quickly draw shapes/text
+    over dear imgui contents.
+    """
     cdef ccimgui.ImDrawList* res = ccimgui.igGetForegroundDrawList_ViewportPtr(viewport._ptr)
     return _ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_frame_count():
-    """Get global imgui frame count. incremented by 1 every frame."""
+    """
+    Get global imgui frame count. incremented by 1 every frame.
+    """
     cdef int res = ccimgui.igGetFrameCount()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_frame_height():
-    """~ fontsize + style.framepadding.y * 2"""
+    """
+    ~ fontsize + style.framepadding.y * 2
+    """
     cdef float res = ccimgui.igGetFrameHeight()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_frame_height_with_spacing():
-    """~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance in pixels between 2 consecutive lines of framed widgets)"""
+    """
+    ~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance
+    in pixels between 2 consecutive lines of framed widgets)
+    """
     cdef float res = ccimgui.igGetFrameHeightWithSpacing()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_id_ptr(ptr_id: Any):
-    """"""
     cdef ccimgui.ImGuiID res = ccimgui.igGetID_Ptr(ptr_id)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_id_str(str_id: str):
-    """Calculate unique id (hash of whole id stack + given parameter). e.g. if you want to query into imguistorage yourself"""
+    """
+    Calculate unique id (hash of whole id stack + given parameter).
+    e.g. if you want to query into imguistorage yourself
+    """
     cdef ccimgui.ImGuiID res = ccimgui.igGetID_Str(_bytes(str_id))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_id_str_str(str_id_begin: str, str_id_end: str):
-    """"""
     cdef ccimgui.ImGuiID res = ccimgui.igGetID_StrStr(_bytes(str_id_begin), _bytes(str_id_end))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiIO)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiIO)
 def get_io():
-    """Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)"""
+    """
+    Access the io structure (mouse/keyboard/gamepad inputs, time,
+    various configuration options/flags)
+    """
     cdef ccimgui.ImGuiIO* res = ccimgui.igGetIO()
     return _ImGuiIO.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_item_id():
-    """Get id of last item (~~ often same imgui::getid(label) beforehand)"""
+    """
+    Get id of last item (~~ often same imgui::getid(label) beforehand)
+    """
     cdef ccimgui.ImGuiID res = ccimgui.igGetItemID()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_item_rect_max(pOut: _ImVec2):
-    """Get lower-right bounding rectangle of the last item (screen space)"""
+    """
+    Get lower-right bounding rectangle of the last item (screen space)
+    """
     ccimgui.igGetItemRectMax(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_item_rect_min(pOut: _ImVec2):
-    """Get upper-left bounding rectangle of the last item (screen space)"""
+    """
+    Get upper-left bounding rectangle of the last item (screen space)
+    """
     ccimgui.igGetItemRectMin(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_item_rect_size(pOut: _ImVec2):
-    """Get size of last item"""
+    """
+    Get size of last item
+    """
     ccimgui.igGetItemRectSize(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def get_key_index(key: Any):
-    """Map imguikey_* values into legacy native key index. == io.keymap[key]"""
+    """
+    Map imguikey_* values into legacy native key index. == io.keymap[key]
+    """
     cdef ccimgui.ImGuiKey res = ccimgui.igGetKeyIndex(key)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def get_key_name(key: Any):
-    """[debug] returns english name of the key. those names a provided for debugging purpose and are not meant to be saved persistently not compared."""
+    """
+    [debug] returns english name of the key. those names a provided
+    for debugging purpose and are not meant to be saved persistently
+    not compared.
+    """
     cdef const char* res = ccimgui.igGetKeyName(key)
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_key_pressed_amount(key: Any, repeat_delay: float, rate: float):
-    """Uses provided repeat rate/delay. return a count, most often 0 or 1 but might be >1 if repeatrate is small enough that deltatime > repeatrate"""
+    """
+    Uses provided repeat rate/delay. return a count, most often 0
+    or 1 but might be >1 if repeatrate is small enough that deltatime
+    > repeatrate
+    """
     cdef int res = ccimgui.igGetKeyPressedAmount(key, repeat_delay, rate)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiViewport)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiViewport)
 def get_main_viewport():
-    """Return primary/default viewport. this can never be null."""
+    """
+    Return primary/default viewport. this can never be null.
+    """
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetMainViewport()
     return _ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_mouse_clicked_count(button: int):
-    """Return the number of successive mouse-clicks at the time where a click happen (otherwise 0)."""
+    """
+    Return the number of successive mouse-clicks at the time where
+    a click happen (otherwise 0).
+    """
     cdef int res = ccimgui.igGetMouseClickedCount(button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_mouse_cursor():
-    """Get desired mouse cursor shape. important: reset in imgui::newframe(), this is updated during the frame. valid before render(). if you use software rendering by setting io.mousedrawcursor imgui will render those for you"""
+    """
+    Get desired mouse cursor shape. important: reset in imgui::newframe(),
+    this is updated during the frame. valid before render(). if
+    you use software rendering by setting io.mousedrawcursor imgui
+    will render those for you
+    """
     cdef ccimgui.ImGuiMouseCursor res = ccimgui.igGetMouseCursor()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_mouse_drag_delta(pOut: _ImVec2, button: int=0, lock_threshold: float=-1.0):
-    """Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)"""
+    """
+    Return the delta from the initial clicking position while the
+    mouse button is pressed or was just released. this is locked
+    and return 0.0f until the mouse moves past a distance threshold
+    at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    """
     ccimgui.igGetMouseDragDelta(pOut._ptr, button, lock_threshold)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_mouse_pos(pOut: _ImVec2):
-    """Shortcut to imgui::getio().mousepos provided by user, to be consistent with other calls"""
+    """
+    Shortcut to imgui::getio().mousepos provided by user, to be consistent
+    with other calls
+    """
     ccimgui.igGetMousePos(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_mouse_pos_on_opening_current_popup(pOut: _ImVec2):
-    """Retrieve mouse position at the time of opening popup we have beginpopup() into (helper to avoid user backing that value themselves)"""
+    """
+    Retrieve mouse position at the time of opening popup we have
+    beginpopup() into (helper to avoid user backing that value themselves)
+    """
     ccimgui.igGetMousePosOnOpeningCurrentPopup(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiPlatformIO)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiPlatformIO)
 def get_platform_io():
-    """Platform/renderer functions, for backend to setup + viewports list."""
+    """
+    Platform/renderer functions, for backend to setup + viewports
+    list.
+    """
     cdef ccimgui.ImGuiPlatformIO* res = ccimgui.igGetPlatformIO()
     return _ImGuiPlatformIO.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_scroll_maxx():
-    """Get maximum scrolling amount ~~ contentsize.x - windowsize.x - decorationssize.x"""
+    """
+    Get maximum scrolling amount ~~ contentsize.x - windowsize.x
+    - decorationssize.x
+    """
     cdef float res = ccimgui.igGetScrollMaxX()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_scroll_maxy():
-    """Get maximum scrolling amount ~~ contentsize.y - windowsize.y - decorationssize.y"""
+    """
+    Get maximum scrolling amount ~~ contentsize.y - windowsize.y
+    - decorationssize.y
+    """
     cdef float res = ccimgui.igGetScrollMaxY()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_scrollx():
-    """Get scrolling amount [0 .. getscrollmaxx()]"""
+    """
+    Get scrolling amount [0 .. getscrollmaxx()]
+    """
     cdef float res = ccimgui.igGetScrollX()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_scrolly():
-    """Get scrolling amount [0 .. getscrollmaxy()]"""
+    """
+    Get scrolling amount [0 .. getscrollmaxy()]
+    """
     cdef float res = ccimgui.igGetScrollY()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiStorage)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiStorage)
 def get_state_storage():
-    """"""
     cdef ccimgui.ImGuiStorage* res = ccimgui.igGetStateStorage()
     return _ImGuiStorage.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiStyle)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiStyle)
 def get_style():
-    """Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!"""
+    """
+    Access the style structure (colors, sizes). always use pushstylecol(),
+    pushstylevar() to modify style mid-frame!
+    """
     cdef ccimgui.ImGuiStyle* res = ccimgui.igGetStyle()
     return _ImGuiStyle.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def get_style_color_name(idx: int):
-    """Get a string corresponding to the enum value (for display, saving, etc.)."""
+    """
+    Get a string corresponding to the enum value (for display, saving,
+    etc.).
+    """
     cdef const char* res = ccimgui.igGetStyleColorName(idx)
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImVec4)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImVec4)
 def get_style_color_vec4(idx: int):
-    """Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in."""
+    """
+    Retrieve style color as stored in imguistyle structure. use to
+    feed back into pushstylecolor(), otherwise use getcoloru32()
+    to get style color with style alpha baked in.
+    """
     cdef ccimgui.ImVec4* res = ccimgui.igGetStyleColorVec4(idx)
     return _ImVec4.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_text_line_height():
-    """~ fontsize"""
+    """
+    ~ fontsize
+    """
     cdef float res = ccimgui.igGetTextLineHeight()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_text_line_height_with_spacing():
-    """~ fontsize + style.itemspacing.y (distance in pixels between 2 consecutive lines of text)"""
+    """
+    ~ fontsize + style.itemspacing.y (distance in pixels between
+    2 consecutive lines of text)
+    """
     cdef float res = ccimgui.igGetTextLineHeightWithSpacing()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_time():
-    """Get global imgui time. incremented by io.deltatime every frame."""
+    """
+    Get global imgui time. incremented by io.deltatime every frame.
+    """
     cdef double res = ccimgui.igGetTime()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_tree_node_to_label_spacing():
-    """Horizontal distance preceding label when using treenode*() or bullet() == (g.fontsize + style.framepadding.x*2) for a regular unframed treenode"""
+    """
+    Horizontal distance preceding label when using treenode*() or
+    bullet() == (g.fontsize + style.framepadding.x*2) for a regular
+    unframed treenode
+    """
     cdef float res = ccimgui.igGetTreeNodeToLabelSpacing()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def get_version():
-    """Get the compiled version string e.g. 1.80 wip (essentially the value for imgui_version from the compiled version of imgui.cpp)"""
+    """
+    Get the compiled version string e.g. 1.80 wip (essentially the
+    value for imgui_version from the compiled version of imgui.cpp)
+    """
     cdef const char* res = ccimgui.igGetVersion()
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_window_content_region_max(pOut: _ImVec2):
-    """Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates"""
+    """
+    Content boundaries max for the full window (roughly (0,0)+size-scroll)
+    where size can be overridden with setnextwindowcontentsize(),
+    in window coordinates
+    """
     ccimgui.igGetWindowContentRegionMax(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_window_content_region_min(pOut: _ImVec2):
-    """Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates"""
+    """
+    Content boundaries min for the full window (roughly (0,0)-scroll),
+    in window coordinates
+    """
     ccimgui.igGetWindowContentRegionMin(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def get_window_dock_id():
-    """"""
     cdef ccimgui.ImGuiID res = ccimgui.igGetWindowDockID()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_window_dpi_scale():
-    """Get dpi scale currently associated to the current window's viewport."""
+    """
+    Get dpi scale currently associated to the current window's viewport.
+    """
     cdef float res = ccimgui.igGetWindowDpiScale()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImDrawList)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImDrawList)
 def get_window_draw_list():
-    """Get draw list associated to the current window, to append your own drawing primitives"""
+    """
+    Get draw list associated to the current window, to append your
+    own drawing primitives
+    """
     cdef ccimgui.ImDrawList* res = ccimgui.igGetWindowDrawList()
     return _ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_window_height():
-    """Get current window height (shortcut for getwindowsize().y)"""
+    """
+    Get current window height (shortcut for getwindowsize().y)
+    """
     cdef float res = ccimgui.igGetWindowHeight()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_window_pos(pOut: _ImVec2):
-    """Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)"""
+    """
+    Get current window position in screen space (useful if you want
+    to do your own drawing via the drawlist api)
+    """
     ccimgui.igGetWindowPos(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def get_window_size(pOut: _ImVec2):
-    """Get current window size"""
+    """
+    Get current window size
+    """
     ccimgui.igGetWindowSize(pOut._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiViewport)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiViewport)
 def get_window_viewport():
-    """Get viewport currently associated to the current window."""
+    """
+    Get viewport currently associated to the current window.
+    """
     cdef ccimgui.ImGuiViewport* res = ccimgui.igGetWindowViewport()
     return _ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(float)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(float)
 def get_window_width():
-    """Get current window width (shortcut for getwindowsize().x)"""
+    """
+    Get current window width (shortcut for getwindowsize().x)
+    """
     cdef float res = ccimgui.igGetWindowWidth()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def image(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
-    """"""
     ccimgui.igImage(
         user_texture_id,
         _cast_tuple_ImVec2(size),
@@ -2398,11 +2671,10 @@ def image(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def image_button(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
-    """"""
     cdef ccimgui.bool res = ccimgui.igImageButton(
         _bytes(str_id),
         user_texture_id,
@@ -2416,20 +2688,22 @@ def image_button(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def indent(indent_w: float=0.0):
-    """Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0"""
+    """
+    Move content position toward the right, by indent_w, or style.indentspacing
+    if indent_w <= 0
+    """
     ccimgui.igIndent(indent_w)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_double(label: str, value: Any, step: float=0.0, step_fast: float=0.0, format_: str="%.6", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igInputDouble(
         _bytes(label),
         value,
@@ -2442,11 +2716,10 @@ def input_double(label: str, value: Any, step: float=0.0, step_fast: float=0.0, 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_float(label: str, value: float, step: float=0.0, step_fast: float=0.0, format_: str="%.3", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
         value,
@@ -2459,87 +2732,79 @@ def input_float(label: str, value: float, step: float=0.0, step_fast: float=0.0,
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_float2(label: str, value0: float, value1: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[2] io_float_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_float3(label: str, value0: float, value1: float, value2: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[3] io_float_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_float4(label: str, value0: float, value1: float, value2: float, value3: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[4] io_float_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igInputFloat4(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_int(label: str, value: int, step: int=1, step_fast: int=100, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igInputInt(_bytes(label), value, step, step_fast, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_int2(label: str, value0: int, value1: int, flags: int=0):
-    """"""
     cdef int[2] io_int_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igInputInt2(_bytes(label), <int*>&io_int_value, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_int3(label: str, value0: int, value1: int, value2: int, flags: int=0):
-    """"""
     cdef int[3] io_int_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igInputInt3(_bytes(label), <int*>&io_int_value, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_int4(label: str, value0: int, value1: int, value2: int, value3: int, flags: int=0):
-    """"""
     cdef int[4] io_int_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igInputInt4(_bytes(label), <int*>&io_int_value, flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_scalar(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igInputScalar(
         _bytes(label),
         data_type,
@@ -2553,11 +2818,10 @@ def input_scalar(label: str, data_type: int, p_data: Any, p_step: Any=None, p_st
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def input_scalarn(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igInputScalarN(
         _bytes(label),
         data_type,
@@ -2572,359 +2836,453 @@ def input_scalarn(label: str, data_type: int, p_data: Any, components: int, p_st
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def invisible_button(str_id: str, size: tuple, flags: int=0):
-    """Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)"""
+    """
+    Flexible button behavior without the visuals, frequently useful
+    to build custom behaviors using the public api (along with isitemactive,
+    isitemhovered, etc.)
+    """
     cdef ccimgui.bool res = ccimgui.igInvisibleButton(_bytes(str_id), _cast_tuple_ImVec2(size), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_any_item_active():
-    """Is any item active?"""
+    """
+    Is any item active?
+    """
     cdef ccimgui.bool res = ccimgui.igIsAnyItemActive()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_any_item_focused():
-    """Is any item focused?"""
+    """
+    Is any item focused?
+    """
     cdef ccimgui.bool res = ccimgui.igIsAnyItemFocused()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_any_item_hovered():
-    """Is any item hovered?"""
+    """
+    Is any item hovered?
+    """
     cdef ccimgui.bool res = ccimgui.igIsAnyItemHovered()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_any_mouse_down():
-    """[will obsolete] is any mouse button held? this was designed for backends, but prefer having backend maintain a mask of held mouse buttons, because upcoming input queue system will make this invalid."""
+    """
+    [will obsolete] is any mouse button held? this was designed for
+    backends, but prefer having backend maintain a mask of held
+    mouse buttons, because upcoming input queue system will make
+    this invalid.
+    """
     cdef ccimgui.bool res = ccimgui.igIsAnyMouseDown()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_activated():
-    """Was the last item just made active (item was previously inactive)."""
+    """
+    Was the last item just made active (item was previously inactive).
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemActivated()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_active():
-    """Is the last item active? (e.g. button being held, text field being edited. this will continuously return true while holding mouse button on an item. items that don't interact will always return false)"""
+    """
+    Is the last item active? (e.g. button being held, text field
+    being edited. this will continuously return true while holding
+    mouse button on an item. items that don't interact will always
+    return false)
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemActive()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_clicked(mouse_button: int=0):
-    """Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button) && isitemhovered()important. (**) this is not equivalent to the behavior of e.g. button(). read comments in function definition."""
+    """
+    Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button)
+    && isitemhovered()important. (**) this is not equivalent to
+    the behavior of e.g. button(). read comments in function definition.
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemClicked(mouse_button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_deactivated():
-    """Was the last item just made inactive (item was previously active). useful for undo/redo patterns with widgets that require continuous editing."""
+    """
+    Was the last item just made inactive (item was previously active).
+    useful for undo/redo patterns with widgets that require continuous
+    editing.
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemDeactivated()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_deactivated_after_edit():
-    """Was the last item just made inactive and made a value change when it was active? (e.g. slider/drag moved). useful for undo/redo patterns with widgets that require continuous editing. note that you may get false positives (some widgets such as combo()/listbox()/selectable() will return true even when clicking an already selected item)."""
+    """
+    Was the last item just made inactive and made a value change
+    when it was active? (e.g. slider/drag moved). useful for undo/redo
+    patterns with widgets that require continuous editing. note
+    that you may get false positives (some widgets such as combo()/listbox()/selectable()
+    will return true even when clicking an already selected item).
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemDeactivatedAfterEdit()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_edited():
-    """Did the last item modify its underlying value this frame? or was pressed? this is generally the same as the bool return value of many widgets."""
+    """
+    Did the last item modify its underlying value this frame? or
+    was pressed? this is generally the same as the bool return value
+    of many widgets.
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemEdited()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_focused():
-    """Is the last item focused for keyboard/gamepad navigation?"""
+    """
+    Is the last item focused for keyboard/gamepad navigation?
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemFocused()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_hovered(flags: int=0):
-    """Is the last item hovered? (and usable, aka not blocked by a popup, etc.). see imguihoveredflags for more options."""
+    """
+    Is the last item hovered? (and usable, aka not blocked by a popup,
+    etc.). see imguihoveredflags for more options.
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemHovered(flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_toggled_open():
-    """Was the last item open state toggled? set by treenode()."""
+    """
+    Was the last item open state toggled? set by treenode().
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemToggledOpen()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_item_visible():
-    """Is the last item visible? (items may be out of sight because of clipping/scrolling)"""
+    """
+    Is the last item visible? (items may be out of sight because
+    of clipping/scrolling)
+    """
     cdef ccimgui.bool res = ccimgui.igIsItemVisible()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_key_down(key: Any):
-    """Is key being held."""
+    """
+    Is key being held.
+    """
     cdef ccimgui.bool res = ccimgui.igIsKeyDown(key)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_key_pressed(key: Any, repeat: Any=True):
-    """Was key pressed (went from !down to down)? if repeat=true, uses io.keyrepeatdelay / keyrepeatrate"""
+    """
+    Was key pressed (went from !down to down)? if repeat=true, uses
+    io.keyrepeatdelay / keyrepeatrate
+    """
     cdef ccimgui.bool res = ccimgui.igIsKeyPressed(key, repeat)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_key_released(key: Any):
-    """Was key released (went from down to !down)?"""
+    """
+    Was key released (went from down to !down)?
+    """
     cdef ccimgui.bool res = ccimgui.igIsKeyReleased(key)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_clicked(button: int, repeat: Any=False):
-    """Did mouse button clicked? (went from !down to down). same as getmouseclickedcount() == 1."""
+    """
+    Did mouse button clicked? (went from !down to down). same as
+    getmouseclickedcount() == 1.
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseClicked(button, repeat)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_double_clicked(button: int):
-    """Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)"""
+    """
+    Did mouse button double-clicked? same as getmouseclickedcount()
+    == 2. (note that a double-click will also report ismouseclicked()
+    == true)
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseDoubleClicked(button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_down(button: int):
-    """Is mouse button held?"""
+    """
+    Is mouse button held?
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseDown(button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
-    """Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)"""
+    """
+    Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseDragging(button, lock_threshold)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_hovering_rect(r_min: tuple, r_max: tuple, clip: Any=True):
-    """Is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block."""
+    """
+    Is mouse hovering given bounding rect (in screen space). clipped
+    by current clipping settings, but disregarding of other consideration
+    of focus/window ordering/popup-block.
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseHoveringRect(_cast_tuple_ImVec2(r_min), _cast_tuple_ImVec2(r_max), clip)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_pos_valid(mouse_pos: _ImVec2=None):
-    """By convention we use (-flt_max,-flt_max) to denote that there is no mouse available"""
+    """
+    By convention we use (-flt_max,-flt_max) to denote that there
+    is no mouse available
+    """
     cdef ccimgui.bool res = ccimgui.igIsMousePosValid(mouse_pos._ptr)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_mouse_released(button: int):
-    """Did mouse button released? (went from down to !down)"""
+    """
+    Did mouse button released? (went from down to !down)
+    """
     cdef ccimgui.bool res = ccimgui.igIsMouseReleased(button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_popup_open(str_id: str, flags: int=0):
-    """Return true if the popup is open."""
+    """
+    Return true if the popup is open.
+    """
     cdef ccimgui.bool res = ccimgui.igIsPopupOpen(_bytes(str_id), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_rect_visible_nil(size: tuple):
-    """Test if rectangle (of given size, starting from cursor position) is visible / not clipped."""
+    """
+    Test if rectangle (of given size, starting from cursor position)
+    is visible / not clipped.
+    """
     cdef ccimgui.bool res = ccimgui.igIsRectVisible_Nil(_cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_rect_visible_vec2(rect_min: tuple, rect_max: tuple):
-    """Test if rectangle (in screen space) is visible / not clipped. to perform coarse clipping on user's side."""
+    """
+    Test if rectangle (in screen space) is visible / not clipped.
+    to perform coarse clipping on user's side.
+    """
     cdef ccimgui.bool res = ccimgui.igIsRectVisible_Vec2(_cast_tuple_ImVec2(rect_min), _cast_tuple_ImVec2(rect_max))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_window_appearing():
-    """"""
     cdef ccimgui.bool res = ccimgui.igIsWindowAppearing()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_window_collapsed():
-    """"""
     cdef ccimgui.bool res = ccimgui.igIsWindowCollapsed()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_window_docked():
-    """Is current window docked into another window?"""
+    """
+    Is current window docked into another window?
+    """
     cdef ccimgui.bool res = ccimgui.igIsWindowDocked()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_window_focused(flags: int=0):
-    """Is current window focused? or its root/child, depending on flags. see flags for options."""
+    """
+    Is current window focused? or its root/child, depending on flags.
+    see flags for options.
+    """
     cdef ccimgui.bool res = ccimgui.igIsWindowFocused(flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def is_window_hovered(flags: int=0):
-    """Is current window hovered (and typically: not blocked by a popup/modal)? see flags for options. nb: if you are trying to check whether your mouse should be dispatched to imgui or to your app, you should use the 'io.wantcapturemouse' boolean for that! please read the faq!"""
+    """
+    Is current window hovered (and typically: not blocked by a popup/modal)?
+    see flags for options. nb: if you are trying to check whether
+    your mouse should be dispatched to imgui or to your app, you
+    should use the 'io.wantcapturemouse' boolean for that! please
+    read the faq!
+    """
     cdef ccimgui.bool res = ccimgui.igIsWindowHovered(flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def label_text(label: str, fmt: str):
-    """Display text+label aligned the same way as value+label widgets"""
+    """
+    Display text+label aligned the same way as value+label widgets
+    """
     ccimgui.igLabelText(_bytes(label), _bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def label_textv(label: str, fmt: str, args: str):
-    """"""
     ccimgui.igLabelTextV(_bytes(label), _bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def list_box_fn_bool_ptr(label: str, current_item: int, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1):
-    """"""
     cdef ccimgui.bool res = ccimgui.igListBox_FnBoolPtr(
         _bytes(label),
         current_item,
@@ -2937,195 +3295,230 @@ def list_box_fn_bool_ptr(label: str, current_item: int, items_getter: Callable, 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def list_box_str_arr(label: str, current_item: int, items: Any, items_count: int, height_in_items: int=-1):
-    """"""
     cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(_bytes(label), current_item, items, items_count, height_in_items)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def load_ini_settings_from_disk(ini_filename: str):
-    """Call after createcontext() and before the first call to newframe(). newframe() automatically calls loadinisettingsfromdisk(io.inifilename)."""
+    """
+    Call after createcontext() and before the first call to newframe().
+    newframe() automatically calls loadinisettingsfromdisk(io.inifilename).
+    """
     ccimgui.igLoadIniSettingsFromDisk(_bytes(ini_filename))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def load_ini_settings_from_memory(ini_data: str, ini_size: Any=0):
-    """Call after createcontext() and before the first call to newframe() to provide .ini data from your own data source."""
+    """
+    Call after createcontext() and before the first call to newframe()
+    to provide .ini data from your own data source.
+    """
     ccimgui.igLoadIniSettingsFromMemory(_bytes(ini_data), ini_size)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_buttons():
-    """Helper to display buttons for logging to tty/file/clipboard"""
+    """
+    Helper to display buttons for logging to tty/file/clipboard
+    """
     ccimgui.igLogButtons()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_finish():
-    """Stop logging (close file, etc.)"""
+    """
+    Stop logging (close file, etc.)
+    """
     ccimgui.igLogFinish()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_text(fmt: str):
-    """Pass text data straight to log (without being displayed)"""
+    """
+    Pass text data straight to log (without being displayed)
+    """
     ccimgui.igLogText(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_textv(fmt: str, args: str):
-    """"""
     ccimgui.igLogTextV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_to_clipboard(auto_open_depth: int=-1):
-    """Start logging to os clipboard"""
+    """
+    Start logging to os clipboard
+    """
     ccimgui.igLogToClipboard(auto_open_depth)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_to_file(auto_open_depth: int=-1, filename: str=None):
-    """Start logging to file"""
+    """
+    Start logging to file
+    """
     ccimgui.igLogToFile(auto_open_depth, _bytes(filename))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def log_to_tty(auto_open_depth: int=-1):
-    """Start logging to tty (stdout)"""
+    """
+    Start logging to tty (stdout)
+    """
     ccimgui.igLogToTTY(auto_open_depth)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def mem_alloc(size: Any):
-    """"""
     cdef void* res = ccimgui.igMemAlloc(size)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def mem_free(ptr: Any):
-    """"""
     ccimgui.igMemFree(ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def menu_item_bool(label: str, shortcut: str=None, selected: Any=False, enabled: Any=True):
-    """Return true when activated."""
+    """
+    Return true when activated.
+    """
     cdef ccimgui.bool res = ccimgui.igMenuItem_Bool(_bytes(label), _bytes(shortcut), selected, enabled)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def menu_item_bool_ptr(label: str, shortcut: str, p_selected: Any, enabled: Any=True):
-    """Return true when activated + toggle (*p_selected) if p_selected != null"""
+    """
+    Return true when activated + toggle (*p_selected) if p_selected
+    != null
+    """
     cdef ccimgui.bool res = ccimgui.igMenuItem_BoolPtr(_bytes(label), _bytes(shortcut), p_selected, enabled)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def new_frame():
-    """Start a new dear imgui frame, you can submit any command from this point until render()/endframe()."""
+    """
+    Start a new dear imgui frame, you can submit any command from
+    this point until render()/endframe().
+    """
     ccimgui.igNewFrame()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def new_line():
-    """Undo a sameline() or force a new line when in a horizontal-layout context."""
+    """
+    Undo a sameline() or force a new line when in a horizontal-layout
+    context.
+    """
     ccimgui.igNewLine()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def next_column():
-    """Next column, defaults to current row or next row if the current row is finished"""
+    """
+    Next column, defaults to current row or next row if the current
+    row is finished
+    """
     ccimgui.igNextColumn()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def open_popup_on_item_click(str_id: str=None, popup_flags: int=1):
-    """Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)"""
+    """
+    Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright
+    == 1. (note: actually triggers on the mouse _released_ event
+    to be consistent with popup behaviors)
+    """
     ccimgui.igOpenPopupOnItemClick(_bytes(str_id), popup_flags)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def open_popup_id(id_: int, popup_flags: int=0):
-    """Id overload to facilitate calling from nested stacks"""
+    """
+    Id overload to facilitate calling from nested stacks
+    """
     ccimgui.igOpenPopup_ID(id_, popup_flags)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def open_popup_str(str_id: str, popup_flags: int=0):
-    """Call to mark popup as open (don't call every frame!)."""
+    """
+    Call to mark popup as open (don't call every frame!).
+    """
     ccimgui.igOpenPopup_Str(_bytes(str_id), popup_flags)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def plot_histogram_float_ptr(label: str, values: float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-    """"""
     ccimgui.igPlotHistogram_FloatPtr(
         _bytes(label),
         values,
@@ -3140,11 +3533,10 @@ def plot_histogram_float_ptr(label: str, values: float, values_count: int, value
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def plot_histogram_fn_float_ptr(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
-    """"""
     ccimgui.igPlotHistogram_FnFloatPtr(
         _bytes(label),
         values_getter,
@@ -3159,11 +3551,10 @@ def plot_histogram_fn_float_ptr(label: str, values_getter: Callable, data: Any, 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def plot_lines_float_ptr(label: str, values: float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-    """"""
     ccimgui.igPlotLines_FloatPtr(
         _bytes(label),
         values,
@@ -3178,11 +3569,10 @@ def plot_lines_float_ptr(label: str, values: float, values_count: int, values_of
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def plot_lines_fn_float_ptr(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
-    """"""
     ccimgui.igPlotLines_FnFloatPtr(
         _bytes(label),
         values_getter,
@@ -3197,846 +3587,1078 @@ def plot_lines_fn_float_ptr(label: str, values_getter: Callable, data: Any, valu
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_allow_keyboard_focus():
-    """"""
     ccimgui.igPopAllowKeyboardFocus()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_button_repeat():
-    """"""
     ccimgui.igPopButtonRepeat()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_clip_rect():
-    """"""
     ccimgui.igPopClipRect()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_font():
-    """"""
     ccimgui.igPopFont()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_id():
-    """Pop from the id stack."""
+    """
+    Pop from the id stack.
+    """
     ccimgui.igPopID()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_item_width():
-    """"""
     ccimgui.igPopItemWidth()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_style_color(count: int=1):
-    """"""
     ccimgui.igPopStyleColor(count)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_style_var(count: int=1):
-    """"""
     ccimgui.igPopStyleVar(count)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def pop_text_wrap_pos():
-    """"""
     ccimgui.igPopTextWrapPos()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
-    """"""
     ccimgui.igProgressBar(fraction, _cast_tuple_ImVec2(size_arg), _bytes(overlay))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_allow_keyboard_focus(allow_keyboard_focus: Any):
-    """== tab stop enable. allow focusing using tab/shift-tab, enabled by default but you can disable it for certain widgets"""
+    """
+    == tab stop enable. allow focusing using tab/shift-tab, enabled
+    by default but you can disable it for certain widgets
+    """
     ccimgui.igPushAllowKeyboardFocus(allow_keyboard_focus)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_button_repeat(repeat: Any):
-    """In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame."""
+    """
+    In 'repeat' mode, button*() functions return repeated true in
+    a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate
+    setting). note that you can call isitemactive() after any button()
+    to tell if the button is held in the current frame.
+    """
     ccimgui.igPushButtonRepeat(repeat)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: Any):
-    """"""
     ccimgui.igPushClipRect(_cast_tuple_ImVec2(clip_rect_min), _cast_tuple_ImVec2(clip_rect_max), intersect_with_current_clip_rect)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_font(font: _ImFont):
-    """Use null as a shortcut to push default font"""
+    """
+    Use null as a shortcut to push default font
+    """
     ccimgui.igPushFont(font._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_id_int(int_id: int):
-    """Push integer into the id stack (will hash integer)."""
+    """
+    Push integer into the id stack (will hash integer).
+    """
     ccimgui.igPushID_Int(int_id)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_id_ptr(ptr_id: Any):
-    """Push pointer into the id stack (will hash pointer)."""
+    """
+    Push pointer into the id stack (will hash pointer).
+    """
     ccimgui.igPushID_Ptr(ptr_id)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_id_str(str_id: str):
-    """Push string into the id stack (will hash string)."""
+    """
+    Push string into the id stack (will hash string).
+    """
     ccimgui.igPushID_Str(_bytes(str_id))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_id_str_str(str_id_begin: str, str_id_end: str):
-    """Push string into the id stack (will hash string)."""
+    """
+    Push string into the id stack (will hash string).
+    """
     ccimgui.igPushID_StrStr(_bytes(str_id_begin), _bytes(str_id_end))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_item_width(item_width: float):
-    """Push width of items for common large item+label widgets. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)."""
+    """
+    Push width of items for common large item+label widgets. >0.0f:
+    width in pixels, <0.0f align xx pixels to the right of window
+    (so -flt_min always align width to the right side).
+    """
     ccimgui.igPushItemWidth(item_width)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_style_color_u32(idx: int, col: int):
-    """Modify a style color. always use this if you modify the style after newframe()."""
+    """
+    Modify a style color. always use this if you modify the style
+    after newframe().
+    """
     ccimgui.igPushStyleColor_U32(idx, col)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_style_color_vec4(idx: int, col: tuple):
-    """"""
     ccimgui.igPushStyleColor_Vec4(idx, _cast_tuple_ImVec4(col))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_style_var_float(idx: int, val: float):
-    """Modify a style float variable. always use this if you modify the style after newframe()."""
+    """
+    Modify a style float variable. always use this if you modify
+    the style after newframe().
+    """
     ccimgui.igPushStyleVar_Float(idx, val)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_style_var_vec2(idx: int, val: tuple):
-    """Modify a style imvec2 variable. always use this if you modify the style after newframe()."""
+    """
+    Modify a style imvec2 variable. always use this if you modify
+    the style after newframe().
+    """
     ccimgui.igPushStyleVar_Vec2(idx, _cast_tuple_ImVec2(val))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
-    """Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space"""
+    """
+    Push word-wrapping position for text*() commands. < 0.0f: no
+    wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap
+    at 'wrap_pos_x' position in window local space
+    """
     ccimgui.igPushTextWrapPos(wrap_local_pos_x)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def radio_button_bool(label: str, active: Any):
-    """Use with e.g. if (radiobutton(one, my_value==1)) { my_value = 1; }"""
+    """
+    Use with e.g. if (radiobutton(one, my_value==1)) { my_value =
+    1; }
+    """
     cdef ccimgui.bool res = ccimgui.igRadioButton_Bool(_bytes(label), active)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def radio_button_int_ptr(label: str, value: int, v_button: int):
-    """Shortcut to handle the above pattern when value is an integer"""
+    """
+    Shortcut to handle the above pattern when value is an integer
+    """
     cdef ccimgui.bool res = ccimgui.igRadioButton_IntPtr(_bytes(label), value, v_button)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def render():
-    """Ends the dear imgui frame, finalize the draw data. you can then get call getdrawdata()."""
+    """
+    Ends the dear imgui frame, finalize the draw data. you can then
+    get call getdrawdata().
+    """
     ccimgui.igRender()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None):
-    """Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs."""
+    """
+    Call in main loop. will call renderwindow/swapbuffers platform
+    functions for each secondary viewport which doesn't have the
+    imguiviewportflags_minimized flag set. may be reimplemented
+    by user for custom rendering needs.
+    """
     ccimgui.igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def reset_mouse_drag_delta(button: int=0):
-    """//"""
+    """
+    //
+    """
     ccimgui.igResetMouseDragDelta(button)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
-    """Call between widgets or groups to layout them horizontally. x position given in window coordinates."""
+    """
+    Call between widgets or groups to layout them horizontally. x
+    position given in window coordinates.
+    """
     ccimgui.igSameLine(offset_from_start_x, spacing)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def save_ini_settings_to_disk(ini_filename: str):
-    """This is automatically called (if io.inifilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by destroycontext)."""
+    """
+    This is automatically called (if io.inifilename is not empty)
+    a few seconds after any modification that should be reflected
+    in the .ini file (and also by destroycontext).
+    """
     ccimgui.igSaveIniSettingsToDisk(_bytes(ini_filename))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def save_ini_settings_to_memory(out_ini_size: Any=None):
-    """Return a zero-terminated string with the .ini data which you can save by your own mean. call when io.wantsaveinisettings is set, then save data by your own mean and clear io.wantsaveinisettings."""
+    """
+    Return a zero-terminated string with the .ini data which you
+    can save by your own mean. call when io.wantsaveinisettings
+    is set, then save data by your own mean and clear io.wantsaveinisettings.
+    """
     cdef const char* res = ccimgui.igSaveIniSettingsToMemory(out_ini_size)
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def selectable_bool(label: str, selected: Any=False, flags: int=0, size: tuple=(0, 0)):
-    """Bool selected carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height"""
+    """
+    Bool selected carry the selection state (read-only). selectable()
+    is clicked is returns true so you can modify your selection
+    state. size.x==0.0: use remaining width, size.x>0.0: specify
+    width. size.y==0.0: use label height, size.y>0.0: specify height
+    """
     cdef ccimgui.bool res = ccimgui.igSelectable_Bool(_bytes(label), selected, flags, _cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def selectable_bool_ptr(label: str, p_selected: Any, flags: int=0, size: tuple=(0, 0)):
-    """Bool* p_selected point to the selection state (read-write), as a convenient helper."""
+    """
+    Bool* p_selected point to the selection state (read-write), as
+    a convenient helper.
+    """
     cdef ccimgui.bool res = ccimgui.igSelectable_BoolPtr(_bytes(label), p_selected, flags, _cast_tuple_ImVec2(size))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def separator():
-    """Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator."""
+    """
+    Separator, generally horizontal. inside a menu bar or in horizontal
+    layout mode, this becomes a vertical separator.
+    """
     ccimgui.igSeparator()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def separator_text(label: str):
-    """Currently: formatted text with an horizontal line"""
+    """
+    Currently: formatted text with an horizontal line
+    """
     ccimgui.igSeparatorText(_bytes(label))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_clipboard_text(text: str):
-    """"""
     ccimgui.igSetClipboardText(_bytes(text))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_color_edit_options(flags: int):
-    """Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls."""
+    """
+    Initialize current options (generally on application startup)
+    if you want to select a default format, picker type, etc. user
+    will be able to change many settings, unless you pass the _nooptions
+    flag to your calls.
+    """
     ccimgui.igSetColorEditOptions(flags)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_column_offset(column_index: int, offset_x: float):
-    """Set position of column line (in pixels, from the left side of the contents region). pass -1 to use current column"""
+    """
+    Set position of column line (in pixels, from the left side of
+    the contents region). pass -1 to use current column
+    """
     ccimgui.igSetColumnOffset(column_index, offset_x)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_column_width(column_index: int, width: float):
-    """Set column width (in pixels). pass -1 to use current column"""
+    """
+    Set column width (in pixels). pass -1 to use current column
+    """
     ccimgui.igSetColumnWidth(column_index, width)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_current_context(ctx: _ImGuiContext):
-    """"""
     ccimgui.igSetCurrentContext(ctx._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_cursor_pos(local_pos: tuple):
-    """   are using the main, absolute coordinate system."""
+    """
+       are using the main, absolute coordinate system.
+    """
     ccimgui.igSetCursorPos(_cast_tuple_ImVec2(local_pos))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_cursor_posx(local_x: float):
-    """   getwindowpos() + getcursorpos() == getcursorscreenpos() etc.)"""
+    """
+       getwindowpos() + getcursorpos() == getcursorscreenpos() etc.)
+    """
     ccimgui.igSetCursorPosX(local_x)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_cursor_posy(local_y: float):
-    """//"""
+    """
+    //
+    """
     ccimgui.igSetCursorPosY(local_y)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_cursor_screen_pos(pos: tuple):
-    """Cursor position in absolute coordinates"""
+    """
+    Cursor position in absolute coordinates
+    """
     ccimgui.igSetCursorScreenPos(_cast_tuple_ImVec2(pos))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
-    """Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted."""
+    """
+    Type is a user defined string of maximum 32 characters. strings
+    starting with '_' are reserved for dear imgui internal types.
+    data is copied and held by imgui. return true when payload has
+    been accepted.
+    """
     cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type_), data, sz, cond)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_item_allow_overlap():
-    """Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area."""
+    """
+    Allow last item to be overlapped by a subsequent item. sometimes
+    useful with invisible buttons, selectables, etc. to catch unused
+    area.
+    """
     ccimgui.igSetItemAllowOverlap()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_item_default_focus():
-    """Make last item the default focused item of a window."""
+    """
+    Make last item the default focused item of a window.
+    """
     ccimgui.igSetItemDefaultFocus()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_keyboard_focus_here(offset: int=0):
-    """Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget."""
+    """
+    Focus keyboard on the next widget. use positive 'offset' to access
+    sub components of a multiple component widget. use -1 to access
+    previous widget.
+    """
     ccimgui.igSetKeyboardFocusHere(offset)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_mouse_cursor(cursor_type: int):
-    """Set desired mouse cursor shape"""
+    """
+    Set desired mouse cursor shape
+    """
     ccimgui.igSetMouseCursor(cursor_type)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_frame_want_capture_keyboard(want_capture_keyboard: Any):
-    """Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting io.wantcapturekeyboard = want_capture_keyboard; after the next newframe() call."""
+    """
+    Override io.wantcapturekeyboard flag next frame (said flag is
+    left for your application to handle, typically when true it
+    instructs your app to ignore inputs). e.g. force capture keyboard
+    when your widget is being hovered. this is equivalent to setting
+    io.wantcapturekeyboard = want_capture_keyboard; after the next
+    newframe() call.
+    """
     ccimgui.igSetNextFrameWantCaptureKeyboard(want_capture_keyboard)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_frame_want_capture_mouse(want_capture_mouse: Any):
-    """Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting io.wantcapturemouse = want_capture_mouse; after the next newframe() call."""
+    """
+    Override io.wantcapturemouse flag next frame (said flag is left
+    for your application to handle, typical when true it instucts
+    your app to ignore inputs). this is equivalent to setting io.wantcapturemouse
+    = want_capture_mouse; after the next newframe() call.
+    """
     ccimgui.igSetNextFrameWantCaptureMouse(want_capture_mouse)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_item_open(is_open: Any, cond: int=0):
-    """Set next treenode/collapsingheader open state."""
+    """
+    Set next treenode/collapsingheader open state.
+    """
     ccimgui.igSetNextItemOpen(is_open, cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_item_width(item_width: float):
-    """Set width of the _next_ common large item+label widget. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)"""
+    """
+    Set width of the _next_ common large item+label widget. >0.0f:
+    width in pixels, <0.0f align xx pixels to the right of window
+    (so -flt_min always align width to the right side)
+    """
     ccimgui.igSetNextItemWidth(item_width)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_bg_alpha(alpha: float):
-    """Set next window background color alpha. helper to easily override the alpha component of imguicol_windowbg/childbg/popupbg. you may also use imguiwindowflags_nobackground."""
+    """
+    Set next window background color alpha. helper to easily override
+    the alpha component of imguicol_windowbg/childbg/popupbg. you
+    may also use imguiwindowflags_nobackground.
+    """
     ccimgui.igSetNextWindowBgAlpha(alpha)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_class(window_class: _ImGuiWindowClass):
-    """Set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)"""
+    """
+    Set next window class (control docking compatibility + provide
+    hints to platform backend via custom viewport flags and platform
+    parent/child relationship)
+    """
     ccimgui.igSetNextWindowClass(window_class._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_collapsed(collapsed: Any, cond: int=0):
-    """Set next window collapsed state. call before begin()"""
+    """
+    Set next window collapsed state. call before begin()
+    """
     ccimgui.igSetNextWindowCollapsed(collapsed, cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_content_size(size: tuple):
-    """Set next window content size (~ scrollable client area, which enforce the range of scrollbars). not including window decorations (title bar, menu bar, etc.) nor windowpadding. set an axis to 0.0f to leave it automatic. call before begin()"""
+    """
+    Set next window content size (~ scrollable client area, which
+    enforce the range of scrollbars). not including window decorations
+    (title bar, menu bar, etc.) nor windowpadding. set an axis to
+    0.0f to leave it automatic. call before begin()
+    """
     ccimgui.igSetNextWindowContentSize(_cast_tuple_ImVec2(size))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_dock_id(dock_id: int, cond: int=0):
-    """Set next window dock id"""
+    """
+    Set next window dock id
+    """
     ccimgui.igSetNextWindowDockID(dock_id, cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_focus():
-    """Set next window to be focused / top-most. call before begin()"""
+    """
+    Set next window to be focused / top-most. call before begin()
+    """
     ccimgui.igSetNextWindowFocus()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_pos(pos: tuple, cond: int=0, pivot: tuple=(0, 0)):
-    """Set next window position. call before begin(). use pivot=(0.5f,0.5f) to center on given point, etc."""
+    """
+    Set next window position. call before begin(). use pivot=(0.5f,0.5f)
+    to center on given point, etc.
+    """
     ccimgui.igSetNextWindowPos(_cast_tuple_ImVec2(pos), cond, _cast_tuple_ImVec2(pivot))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_scroll(scroll: tuple):
-    """Set next window scrolling value (use < 0.0f to not affect a given axis)."""
+    """
+    Set next window scrolling value (use < 0.0f to not affect a given
+    axis).
+    """
     ccimgui.igSetNextWindowScroll(_cast_tuple_ImVec2(scroll))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_size(size: tuple, cond: int=0):
-    """Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()"""
+    """
+    Set next window size. set axis to 0.0f to force an auto-fit on
+    this axis. call before begin()
+    """
     ccimgui.igSetNextWindowSize(_cast_tuple_ImVec2(size), cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_next_window_viewport(viewport_id: int):
-    """Set next window viewport"""
+    """
+    Set next window viewport
+    """
     ccimgui.igSetNextWindowViewport(viewport_id)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scroll_from_posx(local_x: float, center_x_ratio: float=0.5):
-    """Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position."""
+    """
+    Adjust scrolling amount to make given position visible. generally
+    getcursorstartpos() + offset to compute a valid position.
+    """
     ccimgui.igSetScrollFromPosX(local_x, center_x_ratio)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scroll_from_posy(local_y: float, center_y_ratio: float=0.5):
-    """Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position."""
+    """
+    Adjust scrolling amount to make given position visible. generally
+    getcursorstartpos() + offset to compute a valid position.
+    """
     ccimgui.igSetScrollFromPosY(local_y, center_y_ratio)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scroll_herex(center_x_ratio: float=0.5):
-    """Adjust scrolling amount to make current cursor position visible. center_x_ratio=0.0: left, 0.5: center, 1.0: right. when using to make a default/current item visible, consider using setitemdefaultfocus() instead."""
+    """
+    Adjust scrolling amount to make current cursor position visible.
+    center_x_ratio=0.0: left, 0.5: center, 1.0: right. when using
+    to make a default/current item visible, consider using setitemdefaultfocus()
+    instead.
+    """
     ccimgui.igSetScrollHereX(center_x_ratio)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scroll_herey(center_y_ratio: float=0.5):
-    """Adjust scrolling amount to make current cursor position visible. center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using to make a default/current item visible, consider using setitemdefaultfocus() instead."""
+    """
+    Adjust scrolling amount to make current cursor position visible.
+    center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using
+    to make a default/current item visible, consider using setitemdefaultfocus()
+    instead.
+    """
     ccimgui.igSetScrollHereY(center_y_ratio)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scrollx(scroll_x: float):
-    """Set scrolling amount [0 .. getscrollmaxx()]"""
+    """
+    Set scrolling amount [0 .. getscrollmaxx()]
+    """
     ccimgui.igSetScrollX(scroll_x)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_scrolly(scroll_y: float):
-    """Set scrolling amount [0 .. getscrollmaxy()]"""
+    """
+    Set scrolling amount [0 .. getscrollmaxy()]
+    """
     ccimgui.igSetScrollY(scroll_y)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_state_storage(storage: _ImGuiStorage):
-    """Replace current window storage with our own (if you want to manipulate it yourself, typically clear subsection of it)"""
+    """
+    Replace current window storage with our own (if you want to manipulate
+    it yourself, typically clear subsection of it)
+    """
     ccimgui.igSetStateStorage(storage._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_tab_item_closed(tab_or_docked_window_label: str):
-    """Notify tabbar or docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). for tab-bar: call after begintabbar() and before tab submissions. otherwise call with a window name."""
+    """
+    Notify tabbar or docking system of a closed tab/window ahead
+    (useful to reduce visual flicker on reorderable tab bars). for
+    tab-bar: call after begintabbar() and before tab submissions.
+    otherwise call with a window name.
+    """
     ccimgui.igSetTabItemClosed(_bytes(tab_or_docked_window_label))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_tooltip(fmt: str):
-    """Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip()."""
+    """
+    Set a text-only tooltip, typically use with imgui::isitemhovered().
+    override any previous call to settooltip().
+    """
     ccimgui.igSetTooltip(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_tooltipv(fmt: str, args: str):
-    """"""
     ccimgui.igSetTooltipV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_collapsed_bool(collapsed: Any, cond: int=0):
-    """(not recommended) set current window collapsed state. prefer using setnextwindowcollapsed()."""
+    """
+    (not recommended) set current window collapsed state. prefer
+    using setnextwindowcollapsed().
+    """
     ccimgui.igSetWindowCollapsed_Bool(collapsed, cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_collapsed_str(name: str, collapsed: Any, cond: int=0):
-    """Set named window collapsed state"""
+    """
+    Set named window collapsed state
+    """
     ccimgui.igSetWindowCollapsed_Str(_bytes(name), collapsed, cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_focus_nil():
-    """(not recommended) set current window to be focused / top-most. prefer using setnextwindowfocus()."""
+    """
+    (not recommended) set current window to be focused / top-most.
+    prefer using setnextwindowfocus().
+    """
     ccimgui.igSetWindowFocus_Nil()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_focus_str(name: str):
-    """Set named window to be focused / top-most. use null to remove focus."""
+    """
+    Set named window to be focused / top-most. use null to remove
+    focus.
+    """
     ccimgui.igSetWindowFocus_Str(_bytes(name))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_font_scale(scale: float):
-    """[obsolete] set font scale. adjust io.fontglobalscale if you want to scale all windows. this is an old api! for correct scaling, prefer to reload font + rebuild imfontatlas + call style.scaleallsizes()."""
+    """
+    [obsolete] set font scale. adjust io.fontglobalscale if you want
+    to scale all windows. this is an old api! for correct scaling,
+    prefer to reload font + rebuild imfontatlas + call style.scaleallsizes().
+    """
     ccimgui.igSetWindowFontScale(scale)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_pos_str(name: str, pos: tuple, cond: int=0):
-    """Set named window position."""
+    """
+    Set named window position.
+    """
     ccimgui.igSetWindowPos_Str(_bytes(name), _cast_tuple_ImVec2(pos), cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_pos_vec2(pos: tuple, cond: int=0):
-    """(not recommended) set current window position - call within begin()/end(). prefer using setnextwindowpos(), as this may incur tearing and side-effects."""
+    """
+    (not recommended) set current window position - call within begin()/end().
+    prefer using setnextwindowpos(), as this may incur tearing and
+    side-effects.
+    """
     ccimgui.igSetWindowPos_Vec2(_cast_tuple_ImVec2(pos), cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_size_str(name: str, size: tuple, cond: int=0):
-    """Set named window size. set axis to 0.0f to force an auto-fit on this axis."""
+    """
+    Set named window size. set axis to 0.0f to force an auto-fit
+    on this axis.
+    """
     ccimgui.igSetWindowSize_Str(_bytes(name), _cast_tuple_ImVec2(size), cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def set_window_size_vec2(size: tuple, cond: int=0):
-    """(not recommended) set current window size - call within begin()/end(). set to imvec2(0, 0) to force an auto-fit. prefer using setnextwindowsize(), as this may incur tearing and minor side-effects."""
+    """
+    (not recommended) set current window size - call within begin()/end().
+    set to imvec2(0, 0) to force an auto-fit. prefer using setnextwindowsize(),
+    as this may incur tearing and minor side-effects.
+    """
     ccimgui.igSetWindowSize_Vec2(_cast_tuple_ImVec2(size), cond)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_about_window(p_open: Any=None):
-    """Create about window. display dear imgui version, credits and build/system information."""
+    """
+    Create about window. display dear imgui version, credits and
+    build/system information.
+    """
     ccimgui.igShowAboutWindow(p_open)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_debug_log_window(p_open: Any=None):
-    """Create debug log window. display a simplified log of important dear imgui events."""
+    """
+    Create debug log window. display a simplified log of important
+    dear imgui events.
+    """
     ccimgui.igShowDebugLogWindow(p_open)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_demo_window(p_open: Any=None):
-    """Create demo window. demonstrate most imgui features. call this to learn about the library! try to make it always available in your application!"""
+    """
+    Create demo window. demonstrate most imgui features. call this
+    to learn about the library! try to make it always available
+    in your application!
+    """
     ccimgui.igShowDemoWindow(p_open)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_font_selector(label: str):
-    """Add font selector block (not a window), essentially a combo listing the loaded fonts."""
+    """
+    Add font selector block (not a window), essentially a combo listing
+    the loaded fonts.
+    """
     ccimgui.igShowFontSelector(_bytes(label))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_metrics_window(p_open: Any=None):
-    """Create metrics/debugger window. display dear imgui internals: windows, draw commands, various internal state, etc."""
+    """
+    Create metrics/debugger window. display dear imgui internals:
+    windows, draw commands, various internal state, etc.
+    """
     ccimgui.igShowMetricsWindow(p_open)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_stack_tool_window(p_open: Any=None):
-    """Create stack tool window. hover items with mouse to query information about the source of their unique id."""
+    """
+    Create stack tool window. hover items with mouse to query information
+    about the source of their unique id.
+    """
     ccimgui.igShowStackToolWindow(p_open)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_style_editor(ref: _ImGuiStyle=None):
-    """Add style editor block (not a window). you can pass in a reference imguistyle structure to compare to, revert to and save to (else it uses the default style)"""
+    """
+    Add style editor block (not a window). you can pass in a reference
+    imguistyle structure to compare to, revert to and save to (else
+    it uses the default style)
+    """
     ccimgui.igShowStyleEditor(ref._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def show_style_selector(label: str):
-    """Add style selector block (not a window), essentially a combo listing the default styles."""
+    """
+    Add style selector block (not a window), essentially a combo
+    listing the default styles.
+    """
     cdef ccimgui.bool res = ccimgui.igShowStyleSelector(_bytes(label))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def show_user_guide():
-    """Add basic help/info block (not a window): how to manipulate imgui as an end-user (mouse/keyboard controls)."""
+    """
+    Add basic help/info block (not a window): how to manipulate imgui
+    as an end-user (mouse/keyboard controls).
+    """
     ccimgui.igShowUserGuide()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0 deg", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igSliderAngle(
         _bytes(label),
         v_rad,
@@ -4049,11 +4671,14 @@ def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degree
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_float(label: str, value: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
-    """Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display."""
+    """
+    Adjust format to decorate the value with a prefix or a suffix
+    for in-slider labels or unit display.
+    """
     cdef ccimgui.bool res = ccimgui.igSliderFloat(
         _bytes(label),
         value,
@@ -4066,11 +4691,10 @@ def slider_float(label: str, value: float, v_min: float, v_max: float, format_: 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_float2(label: str, value0: float, value1: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[2] io_float_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igSliderFloat2(
         _bytes(label),
@@ -4084,11 +4708,10 @@ def slider_float2(label: str, value0: float, value1: float, v_min: float, v_max:
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_float3(label: str, value0: float, value1: float, value2: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[3] io_float_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igSliderFloat3(
         _bytes(label),
@@ -4102,11 +4725,10 @@ def slider_float3(label: str, value0: float, value1: float, value2: float, v_min
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_float4(label: str, value0: float, value1: float, value2: float, value3: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef float[4] io_float_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igSliderFloat4(
         _bytes(label),
@@ -4120,11 +4742,10 @@ def slider_float4(label: str, value0: float, value1: float, value2: float, value
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_int(label: str, value: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igSliderInt(
         _bytes(label),
         value,
@@ -4137,11 +4758,10 @@ def slider_int(label: str, value: int, v_min: int, v_max: int, format_: str="%d"
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_int2(label: str, value0: int, value1: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    """"""
     cdef int[2] io_int_value = [value0, value1]
     cdef ccimgui.bool res = ccimgui.igSliderInt2(
         _bytes(label),
@@ -4155,11 +4775,10 @@ def slider_int2(label: str, value0: int, value1: int, v_min: int, v_max: int, fo
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_int3(label: str, value0: int, value1: int, value2: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    """"""
     cdef int[3] io_int_value = [value0, value1, value2]
     cdef ccimgui.bool res = ccimgui.igSliderInt3(
         _bytes(label),
@@ -4173,11 +4792,10 @@ def slider_int3(label: str, value0: int, value1: int, value2: int, v_min: int, v
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_int4(label: str, value0: int, value1: int, value2: int, value3: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    """"""
     cdef int[4] io_int_value = [value0, value1, value2, value3]
     cdef ccimgui.bool res = ccimgui.igSliderInt4(
         _bytes(label),
@@ -4191,11 +4809,10 @@ def slider_int4(label: str, value0: int, value1: int, value2: int, value3: int, 
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igSliderScalar(
         _bytes(label),
         data_type,
@@ -4209,11 +4826,10 @@ def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: An
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def slider_scalarn(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igSliderScalarN(
         _bytes(label),
         data_type,
@@ -4228,436 +4844,506 @@ def slider_scalarn(label: str, data_type: int, p_data: Any, components: int, p_m
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def small_button(label: str):
-    """Button with framepadding=(0,0) to easily embed within text"""
+    """
+    Button with framepadding=(0,0) to easily embed within text
+    """
     cdef ccimgui.bool res = ccimgui.igSmallButton(_bytes(label))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def spacing():
-    """Add vertical spacing."""
+    """
+    Add vertical spacing.
+    """
     ccimgui.igSpacing()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def style_colors_classic(dst: _ImGuiStyle=None):
-    """Classic imgui style"""
+    """
+    Classic imgui style
+    """
     ccimgui.igStyleColorsClassic(dst._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def style_colors_dark(dst: _ImGuiStyle=None):
-    """New, recommended style (default)"""
+    """
+    New, recommended style (default)
+    """
     ccimgui.igStyleColorsDark(dst._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def style_colors_light(dst: _ImGuiStyle=None):
-    """Best used with borders and a custom, thicker font"""
+    """
+    Best used with borders and a custom, thicker font
+    """
     ccimgui.igStyleColorsLight(dst._ptr)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tab_item_button(label: str, flags: int=0):
-    """Create a tab behaving like a button. return true when clicked. cannot be selected in the tab bar."""
+    """
+    Create a tab behaving like a button. return true when clicked.
+    cannot be selected in the tab bar.
+    """
     cdef ccimgui.bool res = ccimgui.igTabItemButton(_bytes(label), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def table_get_column_count():
-    """Return number of columns (value passed to begintable)"""
+    """
+    Return number of columns (value passed to begintable)
+    """
     cdef int res = ccimgui.igTableGetColumnCount()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def table_get_column_flags(column_n: int=-1):
-    """Return column flags so you can query their enabled/visible/sorted/hovered status flags. pass -1 to use current column."""
+    """
+    Return column flags so you can query their enabled/visible/sorted/hovered
+    status flags. pass -1 to use current column.
+    """
     cdef ccimgui.ImGuiTableColumnFlags res = ccimgui.igTableGetColumnFlags(column_n)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def table_get_column_index():
-    """Return current column index."""
+    """
+    Return current column index.
+    """
     cdef int res = ccimgui.igTableGetColumnIndex()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(str)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(str)
 def table_get_column_name(column_n: int=-1):
-    """Return  if column didn't have a name declared by tablesetupcolumn(). pass -1 to use current column."""
+    """
+    Return  if column didn't have a name declared by tablesetupcolumn().
+    pass -1 to use current column.
+    """
     cdef const char* res = ccimgui.igTableGetColumnName(column_n)
     return _bytes(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(int)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(int)
 def table_get_row_index():
-    """Return current row index."""
+    """
+    Return current row index.
+    """
     cdef int res = ccimgui.igTableGetRowIndex()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(_ImGuiTableSortSpecs)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(_ImGuiTableSortSpecs)
 def table_get_sort_specs():
-    """Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable()."""
+    """
+    Get latest sort specs for the table (null if not sorting).  lifetime:
+    don't hold on this pointer over multiple frames or past any
+    subsequent call to begintable().
+    """
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.igTableGetSortSpecs()
     return _ImGuiTableSortSpecs.from_ptr(res)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_header(label: str):
-    """Submit one header cell manually (rarely used)"""
+    """
+    Submit one header cell manually (rarely used)
+    """
     ccimgui.igTableHeader(_bytes(label))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_headers_row():
-    """Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu"""
+    """
+    Submit all headers cells based on data provided to tablesetupcolumn()
+    + submit context menu
+    """
     ccimgui.igTableHeadersRow()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def table_next_column():
-    """Append into the next column (or first column of next row if currently in last column). return true when column is visible."""
+    """
+    Append into the next column (or first column of next row if currently
+    in last column). return true when column is visible.
+    """
     cdef ccimgui.bool res = ccimgui.igTableNextColumn()
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_next_row(row_flags: int=0, min_row_height: float=0.0):
-    """Append into the first cell of a new row."""
+    """
+    Append into the first cell of a new row.
+    """
     ccimgui.igTableNextRow(row_flags, min_row_height)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_set_bg_color(target: int, color: int, column_n: int=-1):
-    """Change the color of a cell, row, or column. see imguitablebgtarget_ flags for details."""
+    """
+    Change the color of a cell, row, or column. see imguitablebgtarget_
+    flags for details.
+    """
     ccimgui.igTableSetBgColor(target, color, column_n)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_set_column_enabled(column_n: int, value: Any):
-    """Change user accessible enabled/disabled state of a column. set to false to hide the column. user can use the context menu to change this themselves (right-click in headers, or right-click in columns body with imguitableflags_contextmenuinbody)"""
+    """
+    Change user accessible enabled/disabled state of a column. set
+    to false to hide the column. user can use the context menu to
+    change this themselves (right-click in headers, or right-click
+    in columns body with imguitableflags_contextmenuinbody)
+    """
     ccimgui.igTableSetColumnEnabled(column_n, value)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def table_set_column_index(column_n: int):
-    """Append into the specified column. return true when column is visible."""
+    """
+    Append into the specified column. return true when column is
+    visible.
+    """
     cdef ccimgui.bool res = ccimgui.igTableSetColumnIndex(column_n)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_setup_column(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
-    """"""
     ccimgui.igTableSetupColumn(_bytes(label), flags, init_width_or_weight, user_id)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def table_setup_scroll_freeze(cols: int, rows: int):
-    """Lock columns/rows so they stay visible when scrolled."""
+    """
+    Lock columns/rows so they stay visible when scrolled.
+    """
     ccimgui.igTableSetupScrollFreeze(cols, rows)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text(fmt: str):
-    """Formatted text"""
+    """
+    Formatted text
+    """
     ccimgui.igText(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_colored(col: tuple, fmt: str):
-    """Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();"""
+    """
+    Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...);
+    popstylecolor();
+    """
     ccimgui.igTextColored(_cast_tuple_ImVec4(col), _bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_coloredv(col: tuple, fmt: str, args: str):
-    """"""
     ccimgui.igTextColoredV(_cast_tuple_ImVec4(col), _bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_disabled(fmt: str):
-    """Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();"""
+    """
+    Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]);
+    text(fmt, ...); popstylecolor();
+    """
     ccimgui.igTextDisabled(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_disabledv(fmt: str, args: str):
-    """"""
     ccimgui.igTextDisabledV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_unformatted(text: str, text_end: str=None):
-    """Raw text without formatting. roughly equivalent to text(%s, text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text."""
+    """
+    Raw text without formatting. roughly equivalent to text(%s, text)
+    but: a) doesn't require null terminated string if 'text_end'
+    is specified, b) it's faster, no memory copy is done, no buffer
+    size limits, recommended for long chunks of text.
+    """
     ccimgui.igTextUnformatted(_bytes(text), _bytes(text_end))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def textv(fmt: str, args: str):
-    """"""
     ccimgui.igTextV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_wrapped(fmt: str):
-    """Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize()."""
+    """
+    Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();.
+    note that this won't work on an auto-resizing window if there's
+    no other widgets to extend the window width, yoy may need to
+    set a size using setnextwindowsize().
+    """
     ccimgui.igTextWrapped(_bytes(fmt))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def text_wrappedv(fmt: str, args: str):
-    """"""
     ccimgui.igTextWrappedV(_bytes(fmt), _bytes(args))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ex_v_ptr(ptr_id: Any, flags: int, fmt: str, args: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeExV_Ptr(ptr_id, flags, _bytes(fmt), _bytes(args))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ex_v_str(str_id: str, flags: int, fmt: str, args: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeExV_Str(_bytes(str_id), flags, _bytes(fmt), _bytes(args))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeEx_Ptr(ptr_id, flags, _bytes(fmt))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ex_str(label: str, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeEx_Str(_bytes(label), flags)
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ex_str_str(str_id: str, flags: int, fmt: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeEx_StrStr(_bytes(str_id), flags, _bytes(fmt))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_v_ptr(ptr_id: Any, fmt: str, args: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeV_Ptr(ptr_id, _bytes(fmt), _bytes(args))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_v_str(str_id: str, fmt: str, args: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNodeV_Str(_bytes(str_id), _bytes(fmt), _bytes(args))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_ptr(ptr_id: Any, fmt: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNode_Ptr(ptr_id, _bytes(fmt))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_str(label: str):
-    """"""
     cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def tree_node_str_str(str_id: str, fmt: str):
-    """Helper variation to easily decorelate the id from the displayed string. read the faq about why and how to use id. to align arbitrary text at the same level as a treenode() you can use bullet()."""
+    """
+    Helper variation to easily decorelate the id from the displayed
+    string. read the faq about why and how to use id. to align arbitrary
+    text at the same level as a treenode() you can use bullet().
+    """
     cdef ccimgui.bool res = ccimgui.igTreeNode_StrStr(_bytes(str_id), _bytes(fmt))
     return res
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def tree_pop():
-    """~ unindent()+popid()"""
+    """
+    ~ unindent()+popid()
+    """
     ccimgui.igTreePop()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def tree_push_ptr(ptr_id: Any):
-    """"""
     ccimgui.igTreePush_Ptr(ptr_id)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def tree_push_str(str_id: str):
-    """~ indent()+pushid(). already called by treenode() when returning true, but you can call treepush/treepop yourself if desired."""
+    """
+    ~ indent()+pushid(). already called by treenode() when returning
+    true, but you can call treepush/treepop yourself if desired.
+    """
     ccimgui.igTreePush_Str(_bytes(str_id))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def unindent(indent_w: float=0.0):
-    """Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0"""
+    """
+    Move content position back to the left, by indent_w, or style.indentspacing
+    if indent_w <= 0
+    """
     ccimgui.igUnindent(indent_w)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def update_platform_windows():
-    """Call in main loop. will call createwindow/resizewindow/etc. platform functions for each secondary viewport, and destroywindow for each inactive viewport."""
+    """
+    Call in main loop. will call createwindow/resizewindow/etc. platform
+    functions for each secondary viewport, and destroywindow for
+    each inactive viewport.
+    """
     ccimgui.igUpdatePlatformWindows()
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def v_slider_float(label: str, size: tuple, value: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igVSliderFloat(
         _bytes(label),
         _cast_tuple_ImVec2(size),
@@ -4671,11 +5357,10 @@ def v_slider_float(label: str, size: tuple, value: float, v_min: float, v_max: f
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def v_slider_int(label: str, size: tuple, value: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igVSliderInt(
         _bytes(label),
         _cast_tuple_ImVec2(size),
@@ -4689,11 +5374,10 @@ def v_slider_int(label: str, size: tuple, value: int, v_min: int, v_max: int, fo
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(Any)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(Any)
 def v_slider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    """"""
     cdef ccimgui.bool res = ccimgui.igVSliderScalar(
         _bytes(label),
         _cast_tuple_ImVec2(size),
@@ -4708,38 +5392,34 @@ def v_slider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min:
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def value_bool(prefix: str, b: Any):
-    """"""
     ccimgui.igValue_Bool(_bytes(prefix), b)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def value_float(prefix: str, value: float, float_format: str=None):
-    """"""
     ccimgui.igValue_Float(_bytes(prefix), value, _bytes(float_format))
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def value_int(prefix: str, value: int):
-    """"""
     ccimgui.igValue_Int(_bytes(prefix), value)
 # [End Function]
 
 # [Function]
-#? use_template = False
-#? custom_return_type = [Auto]
-# @pyi.returns(None)
+# @use_template(False)
+# @custom_return_type(Auto)
+# @returns(None)
 def value_uint(prefix: str, value: int):
-    """"""
     ccimgui.igValue_Uint(_bytes(prefix), value)
 # [End Function]
 
@@ -4759,9 +5439,9 @@ cdef class _ImVector_ImDrawCmd:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -4772,9 +5452,9 @@ cdef class _ImVector_ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -4785,9 +5465,9 @@ cdef class _ImVector_ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawCmd)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawCmd)
     @property
     def data(self):
         cdef ccimgui.ImDrawCmd res = dereference(self._ptr).Data
@@ -4814,9 +5494,9 @@ cdef class _ImVector_ImDrawIdx:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -4827,9 +5507,9 @@ cdef class _ImVector_ImDrawIdx:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -4840,9 +5520,9 @@ cdef class _ImVector_ImDrawIdx:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data(self):
         cdef Any res = dereference(self._ptr).Data
@@ -4869,9 +5549,9 @@ cdef class _ImVector_ImDrawVert:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -4882,9 +5562,9 @@ cdef class _ImVector_ImDrawVert:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -4895,9 +5575,9 @@ cdef class _ImVector_ImDrawVert:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawVert)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawVert)
     @property
     def data(self):
         cdef ccimgui.ImDrawVert res = dereference(self._ptr).Data
@@ -4924,9 +5604,9 @@ cdef class _ImVector_ImVec4:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -4937,9 +5617,9 @@ cdef class _ImVector_ImVec4:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -4950,9 +5630,9 @@ cdef class _ImVector_ImVec4:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVec4)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVec4)
     @property
     def data(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).Data
@@ -4979,9 +5659,9 @@ cdef class _ImVector_ImTextureID:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -4992,9 +5672,9 @@ cdef class _ImVector_ImTextureID:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5005,9 +5685,9 @@ cdef class _ImVector_ImTextureID:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def data(self):
         cdef Any res = dereference(self._ptr).Data
@@ -5034,9 +5714,9 @@ cdef class _ImVector_ImVec2:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5047,9 +5727,9 @@ cdef class _ImVector_ImVec2:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5060,9 +5740,9 @@ cdef class _ImVector_ImVec2:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVec2)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVec2)
     @property
     def data(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).Data
@@ -5089,9 +5769,9 @@ cdef class _ImVector_ImDrawChannel:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5102,9 +5782,9 @@ cdef class _ImVector_ImDrawChannel:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5115,9 +5795,9 @@ cdef class _ImVector_ImDrawChannel:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawChannel)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawChannel)
     @property
     def data(self):
         cdef ccimgui.ImDrawChannel res = dereference(self._ptr).Data
@@ -5144,9 +5824,9 @@ cdef class _ImVector_float:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5157,9 +5837,9 @@ cdef class _ImVector_float:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5170,9 +5850,9 @@ cdef class _ImVector_float:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def data(self):
         cdef float res = dereference(self._ptr).Data
@@ -5199,9 +5879,9 @@ cdef class _ImVector_ImWchar:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5212,9 +5892,9 @@ cdef class _ImVector_ImWchar:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5225,9 +5905,9 @@ cdef class _ImVector_ImWchar:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data(self):
         cdef Any res = dereference(self._ptr).Data
@@ -5254,9 +5934,9 @@ cdef class _ImVector_ImFontGlyph:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5267,9 +5947,9 @@ cdef class _ImVector_ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5280,9 +5960,9 @@ cdef class _ImVector_ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontGlyph)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontGlyph)
     @property
     def data(self):
         cdef ccimgui.ImFontGlyph res = dereference(self._ptr).Data
@@ -5309,9 +5989,9 @@ cdef class _ImVector_ImFontPtr:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5322,9 +6002,9 @@ cdef class _ImVector_ImFontPtr:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5335,9 +6015,9 @@ cdef class _ImVector_ImFontPtr:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFont)
     @property
     def data(self):
         cdef ccimgui.ImFont res = dereference(self._ptr).Data
@@ -5364,9 +6044,9 @@ cdef class _ImVector_ImFontAtlasCustomRect:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5377,9 +6057,9 @@ cdef class _ImVector_ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5390,9 +6070,9 @@ cdef class _ImVector_ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontAtlasCustomRect)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontAtlasCustomRect)
     @property
     def data(self):
         cdef ccimgui.ImFontAtlasCustomRect res = dereference(self._ptr).Data
@@ -5419,9 +6099,9 @@ cdef class _ImVector_ImFontConfig:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5432,9 +6112,9 @@ cdef class _ImVector_ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5445,9 +6125,9 @@ cdef class _ImVector_ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontConfig)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontConfig)
     @property
     def data(self):
         cdef ccimgui.ImFontConfig res = dereference(self._ptr).Data
@@ -5474,9 +6154,9 @@ cdef class _ImFontGlyph:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def colored(self):
         cdef Any res = dereference(self._ptr).Colored
@@ -5487,9 +6167,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def visible(self):
         cdef Any res = dereference(self._ptr).Visible
@@ -5500,9 +6180,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def codepoint(self):
         cdef Any res = dereference(self._ptr).Codepoint
@@ -5513,9 +6193,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def advancex(self):
         cdef float res = dereference(self._ptr).AdvanceX
@@ -5526,9 +6206,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def x0(self):
         cdef float res = dereference(self._ptr).X0
@@ -5539,9 +6219,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def y0(self):
         cdef float res = dereference(self._ptr).Y0
@@ -5552,9 +6232,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def x1(self):
         cdef float res = dereference(self._ptr).X1
@@ -5565,9 +6245,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def y1(self):
         cdef float res = dereference(self._ptr).Y1
@@ -5578,9 +6258,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def u0(self):
         cdef float res = dereference(self._ptr).U0
@@ -5591,9 +6271,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def v0(self):
         cdef float res = dereference(self._ptr).V0
@@ -5604,9 +6284,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def u1(self):
         cdef float res = dereference(self._ptr).U1
@@ -5617,9 +6297,9 @@ cdef class _ImFontGlyph:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def v1(self):
         cdef float res = dereference(self._ptr).V1
@@ -5646,9 +6326,9 @@ cdef class _ImVector_ImU32:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -5659,9 +6339,9 @@ cdef class _ImVector_ImU32:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -5672,9 +6352,9 @@ cdef class _ImVector_ImU32:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data(self):
         cdef Any res = dereference(self._ptr).Data
@@ -5701,9 +6381,9 @@ cdef class _ImGuiKeyData:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def down(self):
         cdef Any res = dereference(self._ptr).Down
@@ -5714,9 +6394,9 @@ cdef class _ImGuiKeyData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def down_duration(self):
         cdef float res = dereference(self._ptr).DownDuration
@@ -5727,9 +6407,9 @@ cdef class _ImGuiKeyData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def down_duration_prev(self):
         cdef float res = dereference(self._ptr).DownDurationPrev
@@ -5740,9 +6420,9 @@ cdef class _ImGuiKeyData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def analog_value(self):
         cdef float res = dereference(self._ptr).AnalogValue
@@ -5769,9 +6449,9 @@ cdef class _ImGuiListClipper:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def display_start(self):
         cdef int res = dereference(self._ptr).DisplayStart
@@ -5782,9 +6462,9 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def display_end(self):
         cdef int res = dereference(self._ptr).DisplayEnd
@@ -5795,9 +6475,9 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def items_count(self):
         cdef int res = dereference(self._ptr).ItemsCount
@@ -5808,9 +6488,9 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def items_height(self):
         cdef float res = dereference(self._ptr).ItemsHeight
@@ -5821,9 +6501,9 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def start_posy(self):
         cdef float res = dereference(self._ptr).StartPosY
@@ -5834,9 +6514,9 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def temp_data(self):
         cdef Any res = dereference(self._ptr).TempData
@@ -5847,12 +6527,11 @@ cdef class _ImGuiListClipper:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiListClipper)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiListClipper)
     @staticmethod
     def gui_list_clipper():
-        """"""
         cdef ccimgui.ImGuiListClipper* _ptr = ccimgui.ImGuiListClipper_ImGuiListClipper()
         if _ptr is NULL:
             raise MemoryError
@@ -5860,47 +6539,56 @@ cdef class _ImGuiListClipper:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiListClipper):
-        """"""
         ccimgui.ImGuiListClipper_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def begin(self: _ImGuiListClipper, items_count: int, items_height: float=-1.0):
-        """"""
         ccimgui.ImGuiListClipper_Begin(self._ptr, items_count, items_height)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def end(self: _ImGuiListClipper):
-        """Automatically called on the last call of step() that returns false."""
+        """
+        Automatically called on the last call of step() that returns
+        false.
+        """
         ccimgui.ImGuiListClipper_End(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def force_display_range_by_indices(self: _ImGuiListClipper, item_min: int, item_max: int):
-        """Item_max is exclusive e.g. use (42, 42+1) to make item 42 always visible but due to alignment/padding of certain items it is likely that an extra item may be included on either end of the display range."""
+        """
+        Item_max is exclusive e.g. use (42, 42+1) to make item 42
+        always visible but due to alignment/padding of certain items
+        it is likely that an extra item may be included on either
+        end of the display range.
+        """
         ccimgui.ImGuiListClipper_ForceDisplayRangeByIndices(self._ptr, item_min, item_max)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def step(self: _ImGuiListClipper):
-        """Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items."""
+        """
+        Call until it returns false. the displaystart/displayend
+        fields will be set and you can process/draw those items.
+        """
         cdef ccimgui.bool res = ccimgui.ImGuiListClipper_Step(self._ptr)
         return res
     # [End Method]
@@ -5922,9 +6610,9 @@ cdef class _ImGuiOnceUponAFrame:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def ref_frame(self):
         cdef int res = dereference(self._ptr).RefFrame
@@ -5935,12 +6623,11 @@ cdef class _ImGuiOnceUponAFrame:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiOnceUponAFrame)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiOnceUponAFrame)
     @staticmethod
     def gui_once_upon_a_frame():
-        """"""
         cdef ccimgui.ImGuiOnceUponAFrame* _ptr = ccimgui.ImGuiOnceUponAFrame_ImGuiOnceUponAFrame()
         if _ptr is NULL:
             raise MemoryError
@@ -5948,11 +6635,10 @@ cdef class _ImGuiOnceUponAFrame:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiOnceUponAFrame):
-        """"""
         ccimgui.ImGuiOnceUponAFrame_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -5973,9 +6659,9 @@ cdef class _ImGuiPayload:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def data(self):
         cdef Any res = dereference(self._ptr).Data
@@ -5986,9 +6672,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data_size(self):
         cdef int res = dereference(self._ptr).DataSize
@@ -5999,9 +6685,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def source_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceId
@@ -6012,9 +6698,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def source_parent_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceParentId
@@ -6025,9 +6711,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data_frame_count(self):
         cdef int res = dereference(self._ptr).DataFrameCount
@@ -6038,9 +6724,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def data_type(self):
         cdef Any res = dereference(self._ptr).DataType
@@ -6051,9 +6737,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def preview(self):
         cdef Any res = dereference(self._ptr).Preview
@@ -6064,9 +6750,9 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def delivery(self):
         cdef Any res = dereference(self._ptr).Delivery
@@ -6077,12 +6763,11 @@ cdef class _ImGuiPayload:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiPayload)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiPayload)
     @staticmethod
     def gui_payload():
-        """"""
         cdef ccimgui.ImGuiPayload* _ptr = ccimgui.ImGuiPayload_ImGuiPayload()
         if _ptr is NULL:
             raise MemoryError
@@ -6090,49 +6775,44 @@ cdef class _ImGuiPayload:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiPayload):
-        """"""
         ccimgui.ImGuiPayload_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImGuiPayload):
-        """"""
         ccimgui.ImGuiPayload_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_data_type(self: _ImGuiPayload, type_: str):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDataType(self._ptr, _bytes(type_))
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_delivery(self: _ImGuiPayload):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsDelivery(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_preview(self: _ImGuiPayload):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiPayload_IsPreview(self._ptr)
         return res
     # [End Method]
@@ -6154,9 +6834,9 @@ cdef class _ImVector_ImGuiPlatformMonitor:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -6167,9 +6847,9 @@ cdef class _ImVector_ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -6180,9 +6860,9 @@ cdef class _ImVector_ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiPlatformMonitor)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiPlatformMonitor)
     @property
     def data(self):
         cdef ccimgui.ImGuiPlatformMonitor res = dereference(self._ptr).Data
@@ -6209,9 +6889,9 @@ cdef class _ImVector_ImGuiViewportPtr:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -6222,9 +6902,9 @@ cdef class _ImVector_ImGuiViewportPtr:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -6235,9 +6915,9 @@ cdef class _ImVector_ImGuiViewportPtr:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiViewport)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiViewport)
     @property
     def data(self):
         cdef ccimgui.ImGuiViewport res = dereference(self._ptr).Data
@@ -6264,9 +6944,9 @@ cdef class _ImVector_ImGuiStoragePair:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -6277,9 +6957,9 @@ cdef class _ImVector_ImGuiStoragePair:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -6290,9 +6970,9 @@ cdef class _ImVector_ImGuiStoragePair:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiStoragePair)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiStoragePair)
     @property
     def data(self):
         cdef ccimgui.ImGuiStoragePair res = dereference(self._ptr).Data
@@ -6319,9 +6999,9 @@ cdef class _ImGuiStoragePair:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def key(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).key
@@ -6332,9 +7012,9 @@ cdef class _ImGuiStoragePair:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def val_i(self):
         cdef int res = dereference(self._ptr).val_i
@@ -6345,9 +7025,9 @@ cdef class _ImGuiStoragePair:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def val_f(self):
         cdef float res = dereference(self._ptr).val_f
@@ -6358,9 +7038,9 @@ cdef class _ImGuiStoragePair:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def val_p(self):
         cdef Any res = dereference(self._ptr).val_p
@@ -6371,12 +7051,11 @@ cdef class _ImGuiStoragePair:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiStoragePair)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiStoragePair)
     @staticmethod
     def float_(_key: int, _val_f: float):
-        """"""
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Float(_key, _val_f)
         if _ptr is NULL:
             raise MemoryError
@@ -6384,12 +7063,11 @@ cdef class _ImGuiStoragePair:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiStoragePair)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiStoragePair)
     @staticmethod
     def int_(_key: int, _val_i: int):
-        """"""
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Int(_key, _val_i)
         if _ptr is NULL:
             raise MemoryError
@@ -6397,12 +7075,11 @@ cdef class _ImGuiStoragePair:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiStoragePair)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiStoragePair)
     @staticmethod
     def ptr(_key: int, _val_p: Any):
-        """"""
         cdef ccimgui.ImGuiStoragePair* _ptr = ccimgui.ImGuiStoragePair_ImGuiStoragePair_Ptr(_key, _val_p)
         if _ptr is NULL:
             raise MemoryError
@@ -6410,11 +7087,10 @@ cdef class _ImGuiStoragePair:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiStoragePair):
-        """"""
         ccimgui.ImGuiStoragePair_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -6435,9 +7111,9 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def column_user_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
@@ -6448,9 +7124,9 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def column_index(self):
         cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
@@ -6461,9 +7137,9 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def sort_order(self):
         cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
@@ -6474,9 +7150,9 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def sort_direction(self):
         cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
@@ -6487,12 +7163,11 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTableColumnSortSpecs)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTableColumnSortSpecs)
     @staticmethod
     def gui_table_column_sort_specs():
-        """"""
         cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr = ccimgui.ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs()
         if _ptr is NULL:
             raise MemoryError
@@ -6500,11 +7175,10 @@ cdef class _ImGuiTableColumnSortSpecs:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiTableColumnSortSpecs):
-        """"""
         ccimgui.ImGuiTableColumnSortSpecs_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -6525,9 +7199,9 @@ cdef class _ImGuiTableSortSpecs:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiTableColumnSortSpecs)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiTableColumnSortSpecs)
     @property
     def specs(self):
         cdef ccimgui.ImGuiTableColumnSortSpecs res = dereference(self._ptr).Specs
@@ -6538,9 +7212,9 @@ cdef class _ImGuiTableSortSpecs:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def specs_count(self):
         cdef int res = dereference(self._ptr).SpecsCount
@@ -6551,9 +7225,9 @@ cdef class _ImGuiTableSortSpecs:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def specs_dirty(self):
         cdef Any res = dereference(self._ptr).SpecsDirty
@@ -6564,12 +7238,11 @@ cdef class _ImGuiTableSortSpecs:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTableSortSpecs)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTableSortSpecs)
     @staticmethod
     def gui_table_sort_specs():
-        """"""
         cdef ccimgui.ImGuiTableSortSpecs* _ptr = ccimgui.ImGuiTableSortSpecs_ImGuiTableSortSpecs()
         if _ptr is NULL:
             raise MemoryError
@@ -6577,11 +7250,10 @@ cdef class _ImGuiTableSortSpecs:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiTableSortSpecs):
-        """"""
         ccimgui.ImGuiTableSortSpecs_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -6602,9 +7274,9 @@ cdef class _ImVector_char:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -6615,9 +7287,9 @@ cdef class _ImVector_char:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -6628,9 +7300,9 @@ cdef class _ImVector_char:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def data(self):
         cdef str res = dereference(self._ptr).Data
@@ -6657,9 +7329,9 @@ cdef class _ImVector_ImGuiTextRange:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def size(self):
         cdef int res = dereference(self._ptr).Size
@@ -6670,9 +7342,9 @@ cdef class _ImVector_ImGuiTextRange:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def capacity(self):
         cdef int res = dereference(self._ptr).Capacity
@@ -6683,9 +7355,9 @@ cdef class _ImVector_ImGuiTextRange:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiTextRange)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiTextRange)
     @property
     def data(self):
         cdef ccimgui.ImGuiTextRange res = dereference(self._ptr).Data
@@ -6712,9 +7384,9 @@ cdef class _ImGuiTextRange:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def b(self):
         cdef str res = dereference(self._ptr).b
@@ -6725,9 +7397,9 @@ cdef class _ImGuiTextRange:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def e(self):
         cdef str res = dereference(self._ptr).e
@@ -6738,12 +7410,11 @@ cdef class _ImGuiTextRange:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTextRange)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTextRange)
     @staticmethod
     def nil():
-        """"""
         cdef ccimgui.ImGuiTextRange* _ptr = ccimgui.ImGuiTextRange_ImGuiTextRange_Nil()
         if _ptr is NULL:
             raise MemoryError
@@ -6751,12 +7422,11 @@ cdef class _ImGuiTextRange:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTextRange)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTextRange)
     @staticmethod
     def str_(_b: str, _e: str):
-        """"""
         cdef ccimgui.ImGuiTextRange* _ptr = ccimgui.ImGuiTextRange_ImGuiTextRange_Str(_bytes(_b), _bytes(_e))
         if _ptr is NULL:
             raise MemoryError
@@ -6764,30 +7434,27 @@ cdef class _ImGuiTextRange:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiTextRange):
-        """"""
         ccimgui.ImGuiTextRange_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def empty(self: _ImGuiTextRange):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiTextRange_empty(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def split(self: _ImGuiTextRange, separator: int, out: _ImVector_ImGuiTextRange):
-        """"""
         ccimgui.ImGuiTextRange_split(self._ptr, separator, out._ptr)
     # [End Method]
 # [End Class]
@@ -6808,9 +7475,9 @@ cdef class _ImGuiWindowClass:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def class_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ClassId
@@ -6821,9 +7488,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def parent_viewport_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
@@ -6834,9 +7501,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def viewport_flags_override_set(self):
         cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideSet
@@ -6847,9 +7514,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def viewport_flags_override_clear(self):
         cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideClear
@@ -6860,9 +7527,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tab_item_flags_override_set(self):
         cdef ccimgui.ImGuiTabItemFlags res = dereference(self._ptr).TabItemFlagsOverrideSet
@@ -6873,9 +7540,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def dock_node_flags_override_set(self):
         cdef ccimgui.ImGuiDockNodeFlags res = dereference(self._ptr).DockNodeFlagsOverrideSet
@@ -6886,9 +7553,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def docking_always_tab_bar(self):
         cdef Any res = dereference(self._ptr).DockingAlwaysTabBar
@@ -6899,9 +7566,9 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def docking_allow_unclassed(self):
         cdef Any res = dereference(self._ptr).DockingAllowUnclassed
@@ -6912,12 +7579,11 @@ cdef class _ImGuiWindowClass:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiWindowClass)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiWindowClass)
     @staticmethod
     def gui_window_class():
-        """"""
         cdef ccimgui.ImGuiWindowClass* _ptr = ccimgui.ImGuiWindowClass_ImGuiWindowClass()
         if _ptr is NULL:
             raise MemoryError
@@ -6925,11 +7591,10 @@ cdef class _ImGuiWindowClass:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiWindowClass):
-        """"""
         ccimgui.ImGuiWindowClass_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -6950,9 +7615,9 @@ cdef class _ImVec2:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def x(self):
         cdef float res = dereference(self._ptr).x
@@ -6963,9 +7628,9 @@ cdef class _ImVec2:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def y(self):
         cdef float res = dereference(self._ptr).y
@@ -6976,12 +7641,11 @@ cdef class _ImVec2:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImVec2)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImVec2)
     @staticmethod
     def float_(_x: float, _y: float):
-        """"""
         cdef ccimgui.ImVec2* _ptr = ccimgui.ImVec2_ImVec2_Float(_x, _y)
         if _ptr is NULL:
             raise MemoryError
@@ -6989,12 +7653,11 @@ cdef class _ImVec2:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImVec2)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImVec2)
     @staticmethod
     def nil():
-        """"""
         cdef ccimgui.ImVec2* _ptr = ccimgui.ImVec2_ImVec2_Nil()
         if _ptr is NULL:
             raise MemoryError
@@ -7002,11 +7665,10 @@ cdef class _ImVec2:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImVec2):
-        """"""
         ccimgui.ImVec2_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -7027,9 +7689,9 @@ cdef class _ImVec4:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def x(self):
         cdef float res = dereference(self._ptr).x
@@ -7040,9 +7702,9 @@ cdef class _ImVec4:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def y(self):
         cdef float res = dereference(self._ptr).y
@@ -7053,9 +7715,9 @@ cdef class _ImVec4:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def z(self):
         cdef float res = dereference(self._ptr).z
@@ -7066,9 +7728,9 @@ cdef class _ImVec4:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def w(self):
         cdef float res = dereference(self._ptr).w
@@ -7079,12 +7741,11 @@ cdef class _ImVec4:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImVec4)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImVec4)
     @staticmethod
     def float_(_x: float, _y: float, _z: float, _w: float):
-        """"""
         cdef ccimgui.ImVec4* _ptr = ccimgui.ImVec4_ImVec4_Float(_x, _y, _z, _w)
         if _ptr is NULL:
             raise MemoryError
@@ -7092,12 +7753,11 @@ cdef class _ImVec4:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImVec4)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImVec4)
     @staticmethod
     def nil():
-        """"""
         cdef ccimgui.ImVec4* _ptr = ccimgui.ImVec4_ImVec4_Nil()
         if _ptr is NULL:
             raise MemoryError
@@ -7105,11 +7765,10 @@ cdef class _ImVec4:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImVec4):
-        """"""
         ccimgui.ImVec4_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -7130,9 +7789,9 @@ cdef class _ImColor:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def value(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).Value
@@ -7143,12 +7802,11 @@ cdef class _ImColor:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImColor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImColor)
     @staticmethod
     def float_(r: float, g: float, b: float, a: float=1.0):
-        """"""
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Float(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
@@ -7156,12 +7814,11 @@ cdef class _ImColor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImColor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImColor)
     @staticmethod
     def int_(r: int, g: int, b: int, a: int=255):
-        """"""
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Int(r, g, b, a)
         if _ptr is NULL:
             raise MemoryError
@@ -7169,12 +7826,11 @@ cdef class _ImColor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImColor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImColor)
     @staticmethod
     def nil():
-        """"""
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Nil()
         if _ptr is NULL:
             raise MemoryError
@@ -7182,12 +7838,11 @@ cdef class _ImColor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImColor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImColor)
     @staticmethod
     def u32(rgba: int):
-        """"""
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_U32(rgba)
         if _ptr is NULL:
             raise MemoryError
@@ -7195,12 +7850,11 @@ cdef class _ImColor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImColor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImColor)
     @staticmethod
     def vec4(col: tuple):
-        """"""
         cdef ccimgui.ImColor* _ptr = ccimgui.ImColor_ImColor_Vec4(_cast_tuple_ImVec4(col))
         if _ptr is NULL:
             raise MemoryError
@@ -7208,29 +7862,26 @@ cdef class _ImColor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImColor):
-        """"""
         ccimgui.ImColor_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def hsv(pOut: _ImColor, h: float, s: float, value: float, a: float=1.0):
-        """"""
         ccimgui.ImColor_HSV(pOut._ptr, h, s, value, a)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_hsv(self: _ImColor, h: float, s: float, value: float, a: float=1.0):
-        """"""
         ccimgui.ImColor_SetHSV(self._ptr, h, s, value, a)
     # [End Method]
 # [End Class]
@@ -7251,9 +7902,9 @@ cdef class _ImDrawChannel:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawCmd)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawCmd)
     @property
     def _cmd_buffer(self):
         cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr)._CmdBuffer
@@ -7264,9 +7915,9 @@ cdef class _ImDrawChannel:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawIdx)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawIdx)
     @property
     def _idx_buffer(self):
         cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr)._IdxBuffer
@@ -7293,9 +7944,9 @@ cdef class _ImDrawCmd:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def clip_rect(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
@@ -7306,9 +7957,9 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def texture_id(self):
         cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
@@ -7319,9 +7970,9 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def vtx_offset(self):
         cdef Any res = dereference(self._ptr).VtxOffset
@@ -7332,9 +7983,9 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def idx_offset(self):
         cdef Any res = dereference(self._ptr).IdxOffset
@@ -7345,9 +7996,9 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def elem_count(self):
         cdef Any res = dereference(self._ptr).ElemCount
@@ -7358,9 +8009,9 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def user_callback_data(self):
         cdef Any res = dereference(self._ptr).UserCallbackData
@@ -7371,12 +8022,14 @@ cdef class _ImDrawCmd:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImDrawCmd)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImDrawCmd)
     @staticmethod
     def draw_cmd():
-        """Also ensure our padding fields are zeroed"""
+        """
+        Also ensure our padding fields are zeroed
+        """
         cdef ccimgui.ImDrawCmd* _ptr = ccimgui.ImDrawCmd_ImDrawCmd()
         if _ptr is NULL:
             raise MemoryError
@@ -7384,20 +8037,18 @@ cdef class _ImDrawCmd:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImDrawCmd):
-        """"""
         ccimgui.ImDrawCmd_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_tex_id(self: _ImDrawCmd):
-        """"""
         cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(self._ptr)
         return res
     # [End Method]
@@ -7419,9 +8070,9 @@ cdef class _ImDrawCmdHeader:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def clip_rect(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
@@ -7432,9 +8083,9 @@ cdef class _ImDrawCmdHeader:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def texture_id(self):
         cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
@@ -7445,9 +8096,9 @@ cdef class _ImDrawCmdHeader:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def vtx_offset(self):
         cdef Any res = dereference(self._ptr).VtxOffset
@@ -7474,9 +8125,9 @@ cdef class _ImDrawData:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def valid(self):
         cdef Any res = dereference(self._ptr).Valid
@@ -7487,9 +8138,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def cmd_lists_count(self):
         cdef int res = dereference(self._ptr).CmdListsCount
@@ -7500,9 +8151,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def total_idx_count(self):
         cdef int res = dereference(self._ptr).TotalIdxCount
@@ -7513,9 +8164,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def total_vtx_count(self):
         cdef int res = dereference(self._ptr).TotalVtxCount
@@ -7526,9 +8177,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawList)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawList)
     @property
     def cmd_lists(self):
         cdef ccimgui.ImDrawList res = dereference(self._ptr).CmdLists
@@ -7539,9 +8190,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayPos
@@ -7552,9 +8203,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySize
@@ -7565,9 +8216,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def framebuffer_scale(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).FramebufferScale
@@ -7578,9 +8229,9 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiViewport)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiViewport)
     @property
     def owner_viewport(self):
         cdef ccimgui.ImGuiViewport res = dereference(self._ptr).OwnerViewport
@@ -7591,12 +8242,11 @@ cdef class _ImDrawData:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImDrawData)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImDrawData)
     @staticmethod
     def draw_data():
-        """"""
         cdef ccimgui.ImDrawData* _ptr = ccimgui.ImDrawData_ImDrawData()
         if _ptr is NULL:
             raise MemoryError
@@ -7604,38 +8254,49 @@ cdef class _ImDrawData:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImDrawData):
-        """"""
         ccimgui.ImDrawData_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImDrawData):
-        """The imdrawlist are owned by imguicontext!"""
+        """
+        The imdrawlist are owned by imguicontext!
+        """
         ccimgui.ImDrawData_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def de_index_all_buffers(self: _ImDrawData):
-        """Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!"""
+        """
+        Helper to convert all buffers from indexed to non-indexed,
+        in case you cannot render indexed. note: this is slow and
+        most likely a waste of resources. always prefer indexed
+        rendering!
+        """
         ccimgui.ImDrawData_DeIndexAllBuffers(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def scale_clip_rects(self: _ImDrawData, fb_scale: tuple):
-        """Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution."""
+        """
+        Helper to scale the cliprect field of each imdrawcmd. use
+        if your final output buffer is at a different scale than
+        dear imgui expects, or if there is a difference between
+        your window resolution and framebuffer resolution.
+        """
         ccimgui.ImDrawData_ScaleClipRects(self._ptr, _cast_tuple_ImVec2(fb_scale))
     # [End Method]
 # [End Class]
@@ -7656,9 +8317,9 @@ cdef class _ImDrawListSplitter:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def _current(self):
         cdef int res = dereference(self._ptr)._Current
@@ -7669,9 +8330,9 @@ cdef class _ImDrawListSplitter:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def _count(self):
         cdef int res = dereference(self._ptr)._Count
@@ -7682,9 +8343,9 @@ cdef class _ImDrawListSplitter:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawChannel)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawChannel)
     @property
     def _channels(self):
         cdef ccimgui.ImVector_ImDrawChannel res = dereference(self._ptr)._Channels
@@ -7695,12 +8356,11 @@ cdef class _ImDrawListSplitter:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImDrawListSplitter)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImDrawListSplitter)
     @staticmethod
     def draw_list_splitter():
-        """"""
         cdef ccimgui.ImDrawListSplitter* _ptr = ccimgui.ImDrawListSplitter_ImDrawListSplitter()
         if _ptr is NULL:
             raise MemoryError
@@ -7708,56 +8368,54 @@ cdef class _ImDrawListSplitter:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImDrawListSplitter):
-        """"""
         ccimgui.ImDrawListSplitter_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImDrawListSplitter):
-        """Do not clear channels[] so our allocations are reused next frame"""
+        """
+        Do not clear channels[] so our allocations are reused next
+        frame
+        """
         ccimgui.ImDrawListSplitter_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_free_memory(self: _ImDrawListSplitter):
-        """"""
         ccimgui.ImDrawListSplitter_ClearFreeMemory(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def merge(self: _ImDrawListSplitter, draw_list: _ImDrawList):
-        """"""
         ccimgui.ImDrawListSplitter_Merge(self._ptr, draw_list._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_current_channel(self: _ImDrawListSplitter, draw_list: _ImDrawList, channel_idx: int):
-        """"""
         ccimgui.ImDrawListSplitter_SetCurrentChannel(self._ptr, draw_list._ptr, channel_idx)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def split(self: _ImDrawListSplitter, draw_list: _ImDrawList, count: int):
-        """"""
         ccimgui.ImDrawListSplitter_Split(self._ptr, draw_list._ptr, count)
     # [End Method]
 # [End Class]
@@ -7778,9 +8436,9 @@ cdef class _ImDrawVert:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).pos
@@ -7791,9 +8449,9 @@ cdef class _ImDrawVert:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def uv(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).uv
@@ -7804,9 +8462,9 @@ cdef class _ImDrawVert:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def col(self):
         cdef ccimgui.ImU32 res = dereference(self._ptr).col
@@ -7833,9 +8491,9 @@ cdef class _ImFont:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_float)
     @property
     def index_advancex(self):
         cdef ccimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
@@ -7846,9 +8504,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def fallback_advancex(self):
         cdef float res = dereference(self._ptr).FallbackAdvanceX
@@ -7859,9 +8517,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def font_size(self):
         cdef float res = dereference(self._ptr).FontSize
@@ -7872,9 +8530,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImWchar)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImWchar)
     @property
     def index_lookup(self):
         cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).IndexLookup
@@ -7885,9 +8543,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImFontGlyph)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImFontGlyph)
     @property
     def glyphs(self):
         cdef ccimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
@@ -7898,9 +8556,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontGlyph)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontGlyph)
     @property
     def fallback_glyph(self):
         cdef ccimgui.ImFontGlyph res = dereference(self._ptr).FallbackGlyph
@@ -7911,9 +8569,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontAtlas)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontAtlas)
     @property
     def container_atlas(self):
         cdef ccimgui.ImFontAtlas res = dereference(self._ptr).ContainerAtlas
@@ -7924,9 +8582,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontConfig)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontConfig)
     @property
     def config_data(self):
         cdef ccimgui.ImFontConfig res = dereference(self._ptr).ConfigData
@@ -7937,9 +8595,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def config_data_count(self):
         cdef Any res = dereference(self._ptr).ConfigDataCount
@@ -7950,9 +8608,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def fallback_char(self):
         cdef ccimgui.ImWchar res = dereference(self._ptr).FallbackChar
@@ -7963,9 +8621,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def ellipsis_char(self):
         cdef ccimgui.ImWchar res = dereference(self._ptr).EllipsisChar
@@ -7976,9 +8634,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def ellipsis_char_count(self):
         cdef Any res = dereference(self._ptr).EllipsisCharCount
@@ -7989,9 +8647,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def ellipsis_width(self):
         cdef float res = dereference(self._ptr).EllipsisWidth
@@ -8002,9 +8660,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def ellipsis_char_step(self):
         cdef float res = dereference(self._ptr).EllipsisCharStep
@@ -8015,9 +8673,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def dirty_lookup_tables(self):
         cdef Any res = dereference(self._ptr).DirtyLookupTables
@@ -8028,9 +8686,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def scale(self):
         cdef float res = dereference(self._ptr).Scale
@@ -8041,9 +8699,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def ascent(self):
         cdef float res = dereference(self._ptr).Ascent
@@ -8054,9 +8712,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def descent(self):
         cdef float res = dereference(self._ptr).Descent
@@ -8067,9 +8725,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_total_surface(self):
         cdef int res = dereference(self._ptr).MetricsTotalSurface
@@ -8080,9 +8738,9 @@ cdef class _ImFont:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def used_4k_pages_map(self):
         cdef ccimgui.ImU8 res = dereference(self._ptr).Used4kPagesMap
@@ -8093,12 +8751,11 @@ cdef class _ImFont:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     @staticmethod
     def font():
-        """"""
         cdef ccimgui.ImFont* _ptr = ccimgui.ImFont_ImFont()
         if _ptr is NULL:
             raise MemoryError
@@ -8106,20 +8763,18 @@ cdef class _ImFont:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImFont):
-        """"""
         ccimgui.ImFont_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_glyph(self: _ImFont, src_cfg: _ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
-        """"""
         ccimgui.ImFont_AddGlyph(
             self._ptr,
             src_cfg._ptr,
@@ -8137,29 +8792,33 @@ cdef class _ImFont:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_remap_char(self: _ImFont, dst: int, src: int, overwrite_dst: Any=True):
-        """Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built."""
+        """
+        Makes 'dst' character/glyph points to 'src' character/glyph.
+        currently needs to be called after fonts have been built.
+        """
         ccimgui.ImFont_AddRemapChar(self._ptr, dst, src, overwrite_dst)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def build_lookup_table(self: _ImFont):
-        """"""
         ccimgui.ImFont_BuildLookupTable(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def calc_text_sizea(pOut: _ImVec2, self: _ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
-        """Utf8"""
+        """
+        Utf8
+        """
         ccimgui.ImFont_CalcTextSizeA(
             pOut._ptr,
             self._ptr,
@@ -8173,99 +8832,89 @@ cdef class _ImFont:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(str)
     def calc_word_wrap_positiona(self: _ImFont, scale: float, text: str, text_end: str, wrap_width: float):
-        """"""
         cdef const char* res = ccimgui.ImFont_CalcWordWrapPositionA(self._ptr, scale, _bytes(text), _bytes(text_end), wrap_width)
         return _bytes(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_output_data(self: _ImFont):
-        """"""
         ccimgui.ImFont_ClearOutputData(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontGlyph)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontGlyph)
     def find_glyph(self: _ImFont, c: int):
-        """"""
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(self._ptr, c)
         return _ImFontGlyph.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontGlyph)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontGlyph)
     def find_glyph_no_fallback(self: _ImFont, c: int):
-        """"""
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(self._ptr, c)
         return _ImFontGlyph.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(float)
     def get_char_advance(self: _ImFont, c: int):
-        """"""
         cdef float res = ccimgui.ImFont_GetCharAdvance(self._ptr, c)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(str)
     def get_debug_name(self: _ImFont):
-        """"""
         cdef const char* res = ccimgui.ImFont_GetDebugName(self._ptr)
         return _bytes(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def grow_index(self: _ImFont, new_size: int):
-        """"""
         ccimgui.ImFont_GrowIndex(self._ptr, new_size)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_glyph_range_unused(self: _ImFont, c_begin: int, c_last: int):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImFont_IsGlyphRangeUnused(self._ptr, c_begin, c_last)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_loaded(self: _ImFont):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImFont_IsLoaded(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def render_char(self: _ImFont, draw_list: _ImDrawList, size: float, pos: tuple, col: int, c: int):
-        """"""
         ccimgui.ImFont_RenderChar(
             self._ptr,
             draw_list._ptr,
@@ -8277,11 +8926,10 @@ cdef class _ImFont:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def render_text(self: _ImFont, draw_list: _ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: Any=False):
-        """"""
         ccimgui.ImFont_RenderText(
             self._ptr,
             draw_list._ptr,
@@ -8297,11 +8945,10 @@ cdef class _ImFont:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_glyph_visible(self: _ImFont, c: int, visible: Any):
-        """"""
         ccimgui.ImFont_SetGlyphVisible(self._ptr, c, visible)
     # [End Method]
 # [End Class]
@@ -8322,9 +8969,9 @@ cdef class _ImFontAtlas:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def flags(self):
         cdef ccimgui.ImFontAtlasFlags res = dereference(self._ptr).Flags
@@ -8335,9 +8982,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def tex_id(self):
         cdef ccimgui.ImTextureID res = dereference(self._ptr).TexID
@@ -8348,9 +8995,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tex_desired_width(self):
         cdef int res = dereference(self._ptr).TexDesiredWidth
@@ -8361,9 +9008,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tex_glyph_padding(self):
         cdef int res = dereference(self._ptr).TexGlyphPadding
@@ -8374,9 +9021,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def locked(self):
         cdef Any res = dereference(self._ptr).Locked
@@ -8387,9 +9034,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def user_data(self):
         cdef Any res = dereference(self._ptr).UserData
@@ -8400,9 +9047,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def tex_ready(self):
         cdef Any res = dereference(self._ptr).TexReady
@@ -8413,9 +9060,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def tex_pixels_use_colors(self):
         cdef Any res = dereference(self._ptr).TexPixelsUseColors
@@ -8426,9 +9073,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def tex_pixels_alpha8(self):
         cdef Any res = dereference(self._ptr).TexPixelsAlpha8
@@ -8439,9 +9086,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tex_pixels_rgba32(self):
         cdef Any res = dereference(self._ptr).TexPixelsRGBA32
@@ -8452,9 +9099,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tex_width(self):
         cdef int res = dereference(self._ptr).TexWidth
@@ -8465,9 +9112,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def tex_height(self):
         cdef int res = dereference(self._ptr).TexHeight
@@ -8478,9 +9125,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def tex_uv_scale(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).TexUvScale
@@ -8491,9 +9138,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def tex_uv_white_pixel(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).TexUvWhitePixel
@@ -8504,9 +9151,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImFontPtr)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImFontPtr)
     @property
     def fonts(self):
         cdef ccimgui.ImVector_ImFontPtr res = dereference(self._ptr).Fonts
@@ -8517,9 +9164,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImFontAtlasCustomRect)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImFontAtlasCustomRect)
     @property
     def custom_rects(self):
         cdef ccimgui.ImVector_ImFontAtlasCustomRect res = dereference(self._ptr).CustomRects
@@ -8530,9 +9177,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImFontConfig)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImFontConfig)
     @property
     def config_data(self):
         cdef ccimgui.ImVector_ImFontConfig res = dereference(self._ptr).ConfigData
@@ -8543,9 +9190,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def tex_uv_lines(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).TexUvLines
@@ -8556,9 +9203,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontBuilderIO)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontBuilderIO)
     @property
     def font_builder_io(self):
         cdef ccimgui.ImFontBuilderIO res = dereference(self._ptr).FontBuilderIO
@@ -8569,9 +9216,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def font_builder_flags(self):
         cdef Any res = dereference(self._ptr).FontBuilderFlags
@@ -8582,9 +9229,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def pack_id_mouse_cursors(self):
         cdef int res = dereference(self._ptr).PackIdMouseCursors
@@ -8595,9 +9242,9 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def pack_id_lines(self):
         cdef int res = dereference(self._ptr).PackIdLines
@@ -8608,12 +9255,11 @@ cdef class _ImFontAtlas:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontAtlas)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontAtlas)
     @staticmethod
     def font_atlas():
-        """"""
         cdef ccimgui.ImFontAtlas* _ptr = ccimgui.ImFontAtlas_ImFontAtlas()
         if _ptr is NULL:
             raise MemoryError
@@ -8621,20 +9267,18 @@ cdef class _ImFontAtlas:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImFontAtlas):
-        """"""
         ccimgui.ImFontAtlas_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def add_custom_rect_font_glyph(self: _ImFontAtlas, font: _ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)):
-        """"""
         cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
             self._ptr,
             font._ptr,
@@ -8648,61 +9292,63 @@ cdef class _ImFontAtlas:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def add_custom_rect_regular(self: _ImFontAtlas, width: int, height: int):
-        """"""
         cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(self._ptr, width, height)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font(self: _ImFontAtlas, font_cfg: _ImFontConfig):
-        """"""
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(self._ptr, font_cfg._ptr)
         return _ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font_default(self: _ImFontAtlas, font_cfg: _ImFontConfig=None):
-        """"""
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(self._ptr, font_cfg._ptr)
         return _ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font_from_file_ttf(self: _ImFontAtlas, filename: str, size_pixels: float, font_cfg: _ImFontConfig=None, glyph_ranges: int=None):
-        """"""
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(self._ptr, _bytes(filename), size_pixels, font_cfg._ptr, glyph_ranges)
         return _ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font_from_memory_compressed_base_85ttf(self: _ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: _ImFontConfig=None, glyph_ranges: int=None):
-        """'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter."""
+        """
+        'compressed_font_data_base85' still owned by caller. compress
+        with binary_to_compressed_c.cpp with -base85 parameter.
+        """
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(self._ptr, _bytes(compressed_font_data_base85), size_pixels, font_cfg._ptr, glyph_ranges)
         return _ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font_from_memory_compressed_ttf(self: _ImFontAtlas, compressed_font_data: Any, compressed_font_size: int, size_pixels: float, font_cfg: _ImFontConfig=None, glyph_ranges: int=None):
-        """'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp."""
+        """
+        'compressed_font_data' still owned by caller. compress with
+        binary_to_compressed_c.cpp.
+        """
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedTTF(
             self._ptr,
             compressed_font_data,
@@ -8715,11 +9361,15 @@ cdef class _ImFontAtlas:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFont)
     def add_font_from_memory_ttf(self: _ImFontAtlas, font_data: Any, font_size: int, size_pixels: float, font_cfg: _ImFontConfig=None, glyph_ranges: int=None):
-        """Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed."""
+        """
+        Note: transfer ownership of 'ttf_data' to imfontatlas! will
+        be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false
+        to keep ownership of your data and it won't be freed.
+        """
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryTTF(
             self._ptr,
             font_data,
@@ -8732,166 +9382,198 @@ cdef class _ImFontAtlas:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def build(self: _ImFontAtlas):
-        """Build pixels data. this is called automatically for you by the gettexdata*** functions."""
+        """
+        Build pixels data. this is called automatically for you by
+        the gettexdata*** functions.
+        """
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_Build(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def calc_custom_rect_uv(self: _ImFontAtlas, rect: _ImFontAtlasCustomRect, out_uv_min: _ImVec2, out_uv_max: _ImVec2):
-        """"""
         ccimgui.ImFontAtlas_CalcCustomRectUV(self._ptr, rect._ptr, out_uv_min._ptr, out_uv_max._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImFontAtlas):
-        """Clear all input and output."""
+        """
+        Clear all input and output.
+        """
         ccimgui.ImFontAtlas_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_fonts(self: _ImFontAtlas):
-        """Clear output font data (glyphs storage, uv coordinates)."""
+        """
+        Clear output font data (glyphs storage, uv coordinates).
+        """
         ccimgui.ImFontAtlas_ClearFonts(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_input_data(self: _ImFontAtlas):
-        """Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts."""
+        """
+        Clear input data (all imfontconfig structures including sizes,
+        ttf data, glyph ranges, etc.) = all the data used to build
+        the texture and fonts.
+        """
         ccimgui.ImFontAtlas_ClearInputData(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_tex_data(self: _ImFontAtlas):
-        """Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory."""
+        """
+        Clear output texture data (cpu side). saves ram once the
+        texture has been copied to graphics memory.
+        """
         ccimgui.ImFontAtlas_ClearTexData(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontAtlasCustomRect)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontAtlasCustomRect)
     def get_custom_rect_by_index(self: _ImFontAtlas, index: int):
-        """"""
         cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(self._ptr, index)
         return _ImFontAtlasCustomRect.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_chinese_full(self: _ImFontAtlas):
-        """Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs"""
+        """
+        Default + half-width + japanese hiragana/katakana + full
+        set of about 21000 cjk unified ideographs
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_chinese_simplified_common(self: _ImFontAtlas):
-        """Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese"""
+        """
+        Default + half-width + japanese hiragana/katakana + set of
+        2500 cjk unified ideographs for common simplified chinese
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_cyrillic(self: _ImFontAtlas):
-        """Default + about 400 cyrillic characters"""
+        """
+        Default + about 400 cyrillic characters
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesCyrillic(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_default(self: _ImFontAtlas):
-        """Basic latin, extended latin"""
+        """
+        Basic latin, extended latin
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesDefault(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_greek(self: _ImFontAtlas):
-        """Default + greek and coptic"""
+        """
+        Default + greek and coptic
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesGreek(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_japanese(self: _ImFontAtlas):
-        """Default + hiragana, katakana, half-width, selection of 2999 ideographs"""
+        """
+        Default + hiragana, katakana, half-width, selection of 2999
+        ideographs
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesJapanese(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_korean(self: _ImFontAtlas):
-        """Default + korean characters"""
+        """
+        Default + korean characters
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesKorean(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_thai(self: _ImFontAtlas):
-        """Default + thai characters"""
+        """
+        Default + thai characters
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesThai(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_glyph_ranges_vietnamese(self: _ImFontAtlas):
-        """Default + vietnamese characters"""
+        """
+        Default + vietnamese characters
+        """
         cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesVietnamese(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_mouse_cursor_tex_data(self: _ImFontAtlas, cursor: int, out_offset: _ImVec2, out_size: _ImVec2, out_uv_border0: tuple, out_uv_border1: tuple, out_uv_fill0: tuple, out_uv_fill1: tuple):
-        """"""
         cdef ccimgui.ImVec2[2] io_ImVec2_out_uv_border = [out_uv_border0, out_uv_border1]
         cdef ccimgui.ImVec2[2] io_ImVec2_out_uv_fill = [out_uv_fill0, out_uv_fill1]
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
@@ -8906,39 +9588,46 @@ cdef class _ImFontAtlas:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_tex_data_as_alpha8(self: _ImFontAtlas, out_pixels: Any, out_width: int, out_height: int, out_bytes_per_pixel: int=None):
-        """1 byte per-pixel"""
+        """
+        1 byte per-pixel
+        """
         ccimgui.ImFontAtlas_GetTexDataAsAlpha8(self._ptr, out_pixels, out_width, out_height, out_bytes_per_pixel)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_tex_data_as_rgba32(self: _ImFontAtlas, out_pixels: Any, out_width: int, out_height: int, out_bytes_per_pixel: int=None):
-        """4 bytes-per-pixel"""
+        """
+        4 bytes-per-pixel
+        """
         ccimgui.ImFontAtlas_GetTexDataAsRGBA32(self._ptr, out_pixels, out_width, out_height, out_bytes_per_pixel)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_built(self: _ImFontAtlas):
-        """Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent..."""
+        """
+        Bit ambiguous: used to detect when user didn't build texture
+        but effectively we should check texid != 0 except that would
+        be backend dependent...
+        """
         cdef ccimgui.bool res = ccimgui.ImFontAtlas_IsBuilt(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_tex_id(self: _ImFontAtlas, id_: Any):
-        """"""
         ccimgui.ImFontAtlas_SetTexID(self._ptr, id_)
     # [End Method]
 # [End Class]
@@ -8959,9 +9648,9 @@ cdef class _ImFontAtlasCustomRect:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def width(self):
         cdef Any res = dereference(self._ptr).Width
@@ -8972,9 +9661,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def height(self):
         cdef Any res = dereference(self._ptr).Height
@@ -8985,9 +9674,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def x(self):
         cdef Any res = dereference(self._ptr).X
@@ -8998,9 +9687,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def y(self):
         cdef Any res = dereference(self._ptr).Y
@@ -9011,9 +9700,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def glyph_id(self):
         cdef Any res = dereference(self._ptr).GlyphID
@@ -9024,9 +9713,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def glyph_advancex(self):
         cdef float res = dereference(self._ptr).GlyphAdvanceX
@@ -9037,9 +9726,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def glyph_offset(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).GlyphOffset
@@ -9050,9 +9739,9 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFont)
     @property
     def font(self):
         cdef ccimgui.ImFont res = dereference(self._ptr).Font
@@ -9063,12 +9752,11 @@ cdef class _ImFontAtlasCustomRect:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontAtlasCustomRect)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontAtlasCustomRect)
     @staticmethod
     def font_atlas_custom_rect():
-        """"""
         cdef ccimgui.ImFontAtlasCustomRect* _ptr = ccimgui.ImFontAtlasCustomRect_ImFontAtlasCustomRect()
         if _ptr is NULL:
             raise MemoryError
@@ -9076,20 +9764,18 @@ cdef class _ImFontAtlasCustomRect:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImFontAtlasCustomRect):
-        """"""
         ccimgui.ImFontAtlasCustomRect_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_packed(self: _ImFontAtlasCustomRect):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImFontAtlasCustomRect_IsPacked(self._ptr)
         return res
     # [End Method]
@@ -9111,9 +9797,9 @@ cdef class _ImFontConfig:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def font_data(self):
         cdef Any res = dereference(self._ptr).FontData
@@ -9124,9 +9810,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def font_data_size(self):
         cdef int res = dereference(self._ptr).FontDataSize
@@ -9137,9 +9823,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def font_data_owned_by_atlas(self):
         cdef Any res = dereference(self._ptr).FontDataOwnedByAtlas
@@ -9150,9 +9836,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def font_no(self):
         cdef int res = dereference(self._ptr).FontNo
@@ -9163,9 +9849,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def size_pixels(self):
         cdef float res = dereference(self._ptr).SizePixels
@@ -9176,9 +9862,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def oversampleh(self):
         cdef int res = dereference(self._ptr).OversampleH
@@ -9189,9 +9875,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def oversamplev(self):
         cdef int res = dereference(self._ptr).OversampleV
@@ -9202,9 +9888,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def pixel_snaph(self):
         cdef Any res = dereference(self._ptr).PixelSnapH
@@ -9215,9 +9901,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def glyph_extra_spacing(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).GlyphExtraSpacing
@@ -9228,9 +9914,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def glyph_offset(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).GlyphOffset
@@ -9241,9 +9927,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def glyph_ranges(self):
         cdef Any res = dereference(self._ptr).GlyphRanges
@@ -9254,9 +9940,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def glyph_min_advancex(self):
         cdef float res = dereference(self._ptr).GlyphMinAdvanceX
@@ -9267,9 +9953,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def glyph_max_advancex(self):
         cdef float res = dereference(self._ptr).GlyphMaxAdvanceX
@@ -9280,9 +9966,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def merge_mode(self):
         cdef Any res = dereference(self._ptr).MergeMode
@@ -9293,9 +9979,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def font_builder_flags(self):
         cdef Any res = dereference(self._ptr).FontBuilderFlags
@@ -9306,9 +9992,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def rasterizer_multiply(self):
         cdef float res = dereference(self._ptr).RasterizerMultiply
@@ -9319,9 +10005,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def ellipsis_char(self):
         cdef ccimgui.ImWchar res = dereference(self._ptr).EllipsisChar
@@ -9332,9 +10018,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def name(self):
         cdef Any res = dereference(self._ptr).Name
@@ -9345,9 +10031,9 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFont)
     @property
     def dst_font(self):
         cdef ccimgui.ImFont res = dereference(self._ptr).DstFont
@@ -9358,12 +10044,11 @@ cdef class _ImFontConfig:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontConfig)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontConfig)
     @staticmethod
     def font_config():
-        """"""
         cdef ccimgui.ImFontConfig* _ptr = ccimgui.ImFontConfig_ImFontConfig()
         if _ptr is NULL:
             raise MemoryError
@@ -9371,11 +10056,10 @@ cdef class _ImFontConfig:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImFontConfig):
-        """"""
         ccimgui.ImFontConfig_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -9396,9 +10080,9 @@ cdef class _ImFontGlyphRangesBuilder:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImU32)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImU32)
     @property
     def used_chars(self):
         cdef ccimgui.ImVector_ImU32 res = dereference(self._ptr).UsedChars
@@ -9409,12 +10093,11 @@ cdef class _ImFontGlyphRangesBuilder:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImFontGlyphRangesBuilder)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImFontGlyphRangesBuilder)
     @staticmethod
     def font_glyph_ranges_builder():
-        """"""
         cdef ccimgui.ImFontGlyphRangesBuilder* _ptr = ccimgui.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder()
         if _ptr is NULL:
             raise MemoryError
@@ -9422,75 +10105,86 @@ cdef class _ImFontGlyphRangesBuilder:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImFontGlyphRangesBuilder):
-        """"""
         ccimgui.ImFontGlyphRangesBuilder_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_char(self: _ImFontGlyphRangesBuilder, c: int):
-        """Add character"""
+        """
+        Add character
+        """
         ccimgui.ImFontGlyphRangesBuilder_AddChar(self._ptr, c)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_ranges(self: _ImFontGlyphRangesBuilder, ranges: int):
-        """Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext"""
+        """
+        Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault())
+        to force add all of ascii/latin+ext
+        """
         ccimgui.ImFontGlyphRangesBuilder_AddRanges(self._ptr, ranges)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_text(self: _ImFontGlyphRangesBuilder, text: str, text_end: str=None):
-        """Add string (each character of the utf-8 string are added)"""
+        """
+        Add string (each character of the utf-8 string are added)
+        """
         ccimgui.ImFontGlyphRangesBuilder_AddText(self._ptr, _bytes(text), _bytes(text_end))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def build_ranges(self: _ImFontGlyphRangesBuilder, out_ranges: _ImVector_ImWchar):
-        """Output new ranges"""
+        """
+        Output new ranges
+        """
         ccimgui.ImFontGlyphRangesBuilder_BuildRanges(self._ptr, out_ranges._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImFontGlyphRangesBuilder):
-        """"""
         ccimgui.ImFontGlyphRangesBuilder_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_bit(self: _ImFontGlyphRangesBuilder, n: Any):
-        """Get bit n in the array"""
+        """
+        Get bit n in the array
+        """
         cdef ccimgui.bool res = ccimgui.ImFontGlyphRangesBuilder_GetBit(self._ptr, n)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_bit(self: _ImFontGlyphRangesBuilder, n: Any):
-        """Set bit n in the array"""
+        """
+        Set bit n in the array
+        """
         ccimgui.ImFontGlyphRangesBuilder_SetBit(self._ptr, n)
     # [End Method]
 # [End Class]
@@ -9511,9 +10205,9 @@ cdef class _ImGuiIO:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def config_flags(self):
         cdef ccimgui.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
@@ -9524,9 +10218,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def backend_flags(self):
         cdef ccimgui.ImGuiBackendFlags res = dereference(self._ptr).BackendFlags
@@ -9537,9 +10231,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySize
@@ -9550,9 +10244,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def delta_time(self):
         cdef float res = dereference(self._ptr).DeltaTime
@@ -9563,9 +10257,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def ini_saving_rate(self):
         cdef float res = dereference(self._ptr).IniSavingRate
@@ -9576,9 +10270,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def ini_filename(self):
         cdef str res = dereference(self._ptr).IniFilename
@@ -9589,9 +10283,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def log_filename(self):
         cdef str res = dereference(self._ptr).LogFilename
@@ -9602,9 +10296,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_double_click_time(self):
         cdef float res = dereference(self._ptr).MouseDoubleClickTime
@@ -9615,9 +10309,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_double_click_max_dist(self):
         cdef float res = dereference(self._ptr).MouseDoubleClickMaxDist
@@ -9628,9 +10322,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_drag_threshold(self):
         cdef float res = dereference(self._ptr).MouseDragThreshold
@@ -9641,9 +10335,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def key_repeat_delay(self):
         cdef float res = dereference(self._ptr).KeyRepeatDelay
@@ -9654,9 +10348,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def key_repeat_rate(self):
         cdef float res = dereference(self._ptr).KeyRepeatRate
@@ -9667,9 +10361,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def hover_delay_normal(self):
         cdef float res = dereference(self._ptr).HoverDelayNormal
@@ -9680,9 +10374,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def hover_delay_short(self):
         cdef float res = dereference(self._ptr).HoverDelayShort
@@ -9693,9 +10387,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def user_data(self):
         cdef Any res = dereference(self._ptr).UserData
@@ -9706,9 +10400,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFontAtlas)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFontAtlas)
     @property
     def fonts(self):
         cdef ccimgui.ImFontAtlas res = dereference(self._ptr).Fonts
@@ -9719,9 +10413,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def font_global_scale(self):
         cdef float res = dereference(self._ptr).FontGlobalScale
@@ -9732,9 +10426,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def font_allow_user_scaling(self):
         cdef Any res = dereference(self._ptr).FontAllowUserScaling
@@ -9745,9 +10439,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImFont)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImFont)
     @property
     def font_default(self):
         cdef ccimgui.ImFont res = dereference(self._ptr).FontDefault
@@ -9758,9 +10452,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_framebuffer_scale(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayFramebufferScale
@@ -9771,9 +10465,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_docking_no_split(self):
         cdef Any res = dereference(self._ptr).ConfigDockingNoSplit
@@ -9784,9 +10478,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_docking_with_shift(self):
         cdef Any res = dereference(self._ptr).ConfigDockingWithShift
@@ -9797,9 +10491,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_docking_always_tab_bar(self):
         cdef Any res = dereference(self._ptr).ConfigDockingAlwaysTabBar
@@ -9810,9 +10504,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_docking_transparent_payload(self):
         cdef Any res = dereference(self._ptr).ConfigDockingTransparentPayload
@@ -9823,9 +10517,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_viewports_no_auto_merge(self):
         cdef Any res = dereference(self._ptr).ConfigViewportsNoAutoMerge
@@ -9836,9 +10530,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_viewports_no_task_bar_icon(self):
         cdef Any res = dereference(self._ptr).ConfigViewportsNoTaskBarIcon
@@ -9849,9 +10543,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_viewports_no_decoration(self):
         cdef Any res = dereference(self._ptr).ConfigViewportsNoDecoration
@@ -9862,9 +10556,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_viewports_no_default_parent(self):
         cdef Any res = dereference(self._ptr).ConfigViewportsNoDefaultParent
@@ -9875,9 +10569,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_draw_cursor(self):
         cdef Any res = dereference(self._ptr).MouseDrawCursor
@@ -9888,9 +10582,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_mac_osx_behaviors(self):
         cdef Any res = dereference(self._ptr).ConfigMacOSXBehaviors
@@ -9901,9 +10595,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_input_trickle_event_queue(self):
         cdef Any res = dereference(self._ptr).ConfigInputTrickleEventQueue
@@ -9914,9 +10608,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_input_text_cursor_blink(self):
         cdef Any res = dereference(self._ptr).ConfigInputTextCursorBlink
@@ -9927,9 +10621,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_input_text_enter_keep_active(self):
         cdef Any res = dereference(self._ptr).ConfigInputTextEnterKeepActive
@@ -9940,9 +10634,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_drag_click_to_input_text(self):
         cdef Any res = dereference(self._ptr).ConfigDragClickToInputText
@@ -9953,9 +10647,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_windows_resize_from_edges(self):
         cdef Any res = dereference(self._ptr).ConfigWindowsResizeFromEdges
@@ -9966,9 +10660,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def config_windows_move_from_title_bar_only(self):
         cdef Any res = dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly
@@ -9979,9 +10673,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def config_memory_compact_timer(self):
         cdef float res = dereference(self._ptr).ConfigMemoryCompactTimer
@@ -9992,9 +10686,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def backend_platform_name(self):
         cdef str res = dereference(self._ptr).BackendPlatformName
@@ -10005,9 +10699,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def backend_renderer_name(self):
         cdef str res = dereference(self._ptr).BackendRendererName
@@ -10018,9 +10712,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def backend_platform_user_data(self):
         cdef Any res = dereference(self._ptr).BackendPlatformUserData
@@ -10031,9 +10725,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def backend_renderer_user_data(self):
         cdef Any res = dereference(self._ptr).BackendRendererUserData
@@ -10044,9 +10738,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def backend_language_user_data(self):
         cdef Any res = dereference(self._ptr).BackendLanguageUserData
@@ -10057,9 +10751,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def get_clipboard_text_fn(self):
         cdef Callable res = dereference(self._ptr).GetClipboardTextFn
@@ -10070,9 +10764,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def set_clipboard_text_fn(self):
         cdef Callable res = dereference(self._ptr).SetClipboardTextFn
@@ -10083,9 +10777,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def clipboard_user_data(self):
         cdef Any res = dereference(self._ptr).ClipboardUserData
@@ -10096,9 +10790,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def set_platform_ime_data_fn(self):
         cdef Callable res = dereference(self._ptr).SetPlatformImeDataFn
@@ -10109,9 +10803,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def _unused_padding(self):
         cdef Any res = dereference(self._ptr)._UnusedPadding
@@ -10122,9 +10816,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_capture_mouse(self):
         cdef Any res = dereference(self._ptr).WantCaptureMouse
@@ -10135,9 +10829,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_capture_keyboard(self):
         cdef Any res = dereference(self._ptr).WantCaptureKeyboard
@@ -10148,9 +10842,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_text_input(self):
         cdef Any res = dereference(self._ptr).WantTextInput
@@ -10161,9 +10855,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_set_mouse_pos(self):
         cdef Any res = dereference(self._ptr).WantSetMousePos
@@ -10174,9 +10868,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_save_ini_settings(self):
         cdef Any res = dereference(self._ptr).WantSaveIniSettings
@@ -10187,9 +10881,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def nav_active(self):
         cdef Any res = dereference(self._ptr).NavActive
@@ -10200,9 +10894,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def nav_visible(self):
         cdef Any res = dereference(self._ptr).NavVisible
@@ -10213,9 +10907,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def framerate(self):
         cdef float res = dereference(self._ptr).Framerate
@@ -10226,9 +10920,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_render_vertices(self):
         cdef int res = dereference(self._ptr).MetricsRenderVertices
@@ -10239,9 +10933,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_render_indices(self):
         cdef int res = dereference(self._ptr).MetricsRenderIndices
@@ -10252,9 +10946,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_render_windows(self):
         cdef int res = dereference(self._ptr).MetricsRenderWindows
@@ -10265,9 +10959,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_active_windows(self):
         cdef int res = dereference(self._ptr).MetricsActiveWindows
@@ -10278,9 +10972,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def metrics_active_allocations(self):
         cdef int res = dereference(self._ptr).MetricsActiveAllocations
@@ -10291,9 +10985,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def mouse_delta(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MouseDelta
@@ -10304,9 +10998,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def key_map(self):
         cdef int res = dereference(self._ptr).KeyMap
@@ -10317,9 +11011,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def keys_down(self):
         cdef Any res = dereference(self._ptr).KeysDown
@@ -10330,9 +11024,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def nav_inputs(self):
         cdef float res = dereference(self._ptr).NavInputs
@@ -10343,9 +11037,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def mouse_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePos
@@ -10356,9 +11050,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_down(self):
         cdef Any res = dereference(self._ptr).MouseDown
@@ -10369,9 +11063,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_wheel(self):
         cdef float res = dereference(self._ptr).MouseWheel
@@ -10382,9 +11076,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_wheelh(self):
         cdef float res = dereference(self._ptr).MouseWheelH
@@ -10395,9 +11089,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def mouse_hovered_viewport(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).MouseHoveredViewport
@@ -10408,9 +11102,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def key_ctrl(self):
         cdef Any res = dereference(self._ptr).KeyCtrl
@@ -10421,9 +11115,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def key_shift(self):
         cdef Any res = dereference(self._ptr).KeyShift
@@ -10434,9 +11128,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def key_alt(self):
         cdef Any res = dereference(self._ptr).KeyAlt
@@ -10447,9 +11141,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def key_super(self):
         cdef Any res = dereference(self._ptr).KeySuper
@@ -10460,9 +11154,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def key_mods(self):
         cdef ccimgui.ImGuiKeyChord res = dereference(self._ptr).KeyMods
@@ -10473,9 +11167,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImGuiKeyData)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImGuiKeyData)
     @property
     def keys_data(self):
         cdef ccimgui.ImGuiKeyData res = dereference(self._ptr).KeysData
@@ -10486,9 +11180,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_capture_mouse_unless_popup_close(self):
         cdef Any res = dereference(self._ptr).WantCaptureMouseUnlessPopupClose
@@ -10499,9 +11193,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def mouse_pos_prev(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePosPrev
@@ -10512,9 +11206,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def mouse_clicked_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MouseClickedPos
@@ -10525,9 +11219,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_clicked_time(self):
         cdef Any res = dereference(self._ptr).MouseClickedTime
@@ -10538,9 +11232,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_clicked(self):
         cdef Any res = dereference(self._ptr).MouseClicked
@@ -10551,9 +11245,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_double_clicked(self):
         cdef Any res = dereference(self._ptr).MouseDoubleClicked
@@ -10564,9 +11258,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def mouse_clicked_count(self):
         cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedCount
@@ -10577,9 +11271,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def mouse_clicked_last_count(self):
         cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedLastCount
@@ -10590,9 +11284,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_released(self):
         cdef Any res = dereference(self._ptr).MouseReleased
@@ -10603,9 +11297,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_down_owned(self):
         cdef Any res = dereference(self._ptr).MouseDownOwned
@@ -10616,9 +11310,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def mouse_down_owned_unless_popup_close(self):
         cdef Any res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
@@ -10629,9 +11323,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_down_duration(self):
         cdef float res = dereference(self._ptr).MouseDownDuration
@@ -10642,9 +11336,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_down_duration_prev(self):
         cdef float res = dereference(self._ptr).MouseDownDurationPrev
@@ -10655,9 +11349,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def mouse_drag_max_distance_abs(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MouseDragMaxDistanceAbs
@@ -10668,9 +11362,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_drag_max_distance_sqr(self):
         cdef float res = dereference(self._ptr).MouseDragMaxDistanceSqr
@@ -10681,9 +11375,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def pen_pressure(self):
         cdef float res = dereference(self._ptr).PenPressure
@@ -10694,9 +11388,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def app_focus_lost(self):
         cdef Any res = dereference(self._ptr).AppFocusLost
@@ -10707,9 +11401,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def app_accepting_events(self):
         cdef Any res = dereference(self._ptr).AppAcceptingEvents
@@ -10720,9 +11414,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def backend_using_legacy_key_arrays(self):
         cdef ccimgui.ImS8 res = dereference(self._ptr).BackendUsingLegacyKeyArrays
@@ -10733,9 +11427,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def backend_using_legacy_nav_input_array(self):
         cdef Any res = dereference(self._ptr).BackendUsingLegacyNavInputArray
@@ -10746,9 +11440,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def input_queue_surrogate(self):
         cdef ccimgui.ImWchar16 res = dereference(self._ptr).InputQueueSurrogate
@@ -10759,9 +11453,9 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImWchar)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImWchar)
     @property
     def input_queue_characters(self):
         cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).InputQueueCharacters
@@ -10772,12 +11466,11 @@ cdef class _ImGuiIO:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiIO)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiIO)
     @staticmethod
     def gui_io():
-        """"""
         cdef ccimgui.ImGuiIO* _ptr = ccimgui.ImGuiIO_ImGuiIO()
         if _ptr is NULL:
             raise MemoryError
@@ -10785,137 +11478,176 @@ cdef class _ImGuiIO:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiIO):
-        """"""
         ccimgui.ImGuiIO_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_focus_event(self: _ImGuiIO, focused: Any):
-        """Queue a gain/loss of focus for the application (generally based on os/platform focus of your window)"""
+        """
+        Queue a gain/loss of focus for the application (generally
+        based on os/platform focus of your window)
+        """
         ccimgui.ImGuiIO_AddFocusEvent(self._ptr, focused)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_input_character(self: _ImGuiIO, c: int):
-        """Queue a new character input"""
+        """
+        Queue a new character input
+        """
         ccimgui.ImGuiIO_AddInputCharacter(self._ptr, c)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_input_character_utf16(self: _ImGuiIO, c: int):
-        """Queue a new character input from a utf-16 character, it can be a surrogate"""
+        """
+        Queue a new character input from a utf-16 character, it can
+        be a surrogate
+        """
         ccimgui.ImGuiIO_AddInputCharacterUTF16(self._ptr, c)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_input_characters_utf8(self: _ImGuiIO, str_: str):
-        """Queue a new characters input from a utf-8 string"""
+        """
+        Queue a new characters input from a utf-8 string
+        """
         ccimgui.ImGuiIO_AddInputCharactersUTF8(self._ptr, _bytes(str_))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_key_analog_event(self: _ImGuiIO, key: Any, down: Any, value: float):
-        """Queue a new key down/up event for analog values (e.g. imguikey_gamepad_ values). dead-zones should be handled by the backend."""
+        """
+        Queue a new key down/up event for analog values (e.g. imguikey_gamepad_
+        values). dead-zones should be handled by the backend.
+        """
         ccimgui.ImGuiIO_AddKeyAnalogEvent(self._ptr, key, down, value)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_key_event(self: _ImGuiIO, key: Any, down: Any):
-        """Queue a new key down/up event. key should be translated (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)"""
+        """
+        Queue a new key down/up event. key should be translated (as
+        in, generally imguikey_a matches the key end-user would
+        use to emit an 'a' character)
+        """
         ccimgui.ImGuiIO_AddKeyEvent(self._ptr, key, down)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_mouse_button_event(self: _ImGuiIO, button: int, down: Any):
-        """Queue a mouse button change"""
+        """
+        Queue a mouse button change
+        """
         ccimgui.ImGuiIO_AddMouseButtonEvent(self._ptr, button, down)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_mouse_pos_event(self: _ImGuiIO, x: float, y: float):
-        """Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)"""
+        """
+        Queue a mouse position update. use -flt_max,-flt_max to signify
+        no mouse (e.g. app not focused and not hovered)
+        """
         ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_mouse_viewport_event(self: _ImGuiIO, id_: int):
-        """Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport to call this (for multi-viewport support)."""
+        """
+        Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport
+        to call this (for multi-viewport support).
+        """
         ccimgui.ImGuiIO_AddMouseViewportEvent(self._ptr, id_)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_mouse_wheel_event(self: _ImGuiIO, wheel_x: float, wheel_y: float):
-        """Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left."""
+        """
+        Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0:
+        scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
+        """
         ccimgui.ImGuiIO_AddMouseWheelEvent(self._ptr, wheel_x, wheel_y)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_input_characters(self: _ImGuiIO):
-        """[internal] clear the text input buffer manually"""
+        """
+        [internal] clear the text input buffer manually
+        """
         ccimgui.ImGuiIO_ClearInputCharacters(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear_input_keys(self: _ImGuiIO):
-        """[internal] release all keys"""
+        """
+        [internal] release all keys
+        """
         ccimgui.ImGuiIO_ClearInputKeys(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_app_accepting_events(self: _ImGuiIO, accepting_events: Any):
-        """Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen."""
+        """
+        Set master flag for accepting key/mouse/text events (default
+        to true). useful if you have native dialog boxes that are
+        interrupting your application loop/refresh, and you want
+        to disable events being queued while your app is frozen.
+        """
         ccimgui.ImGuiIO_SetAppAcceptingEvents(self._ptr, accepting_events)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_key_event_native_data(self: _ImGuiIO, key: Any, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
-        """[optional] specify index for legacy <1.87 iskeyxxx() functions with native indices + specify native keycode, scancode."""
+        """
+        [optional] specify index for legacy <1.87 iskeyxxx() functions
+        with native indices + specify native keycode, scancode.
+        """
         ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
     # [End Method]
 # [End Class]
@@ -10936,9 +11668,9 @@ cdef class _ImGuiPlatformIO:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_create_window(self):
         cdef Callable res = dereference(self._ptr).Platform_CreateWindow
@@ -10949,9 +11681,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_destroy_window(self):
         cdef Callable res = dereference(self._ptr).Platform_DestroyWindow
@@ -10962,9 +11694,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_show_window(self):
         cdef Callable res = dereference(self._ptr).Platform_ShowWindow
@@ -10975,9 +11707,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_set_window_pos(self):
         cdef Callable res = dereference(self._ptr).Platform_SetWindowPos
@@ -10988,9 +11720,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_get_window_pos(self):
         cdef Callable res = dereference(self._ptr).Platform_GetWindowPos
@@ -11001,9 +11733,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_set_window_size(self):
         cdef Callable res = dereference(self._ptr).Platform_SetWindowSize
@@ -11014,9 +11746,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_get_window_size(self):
         cdef Callable res = dereference(self._ptr).Platform_GetWindowSize
@@ -11027,9 +11759,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_set_window_focus(self):
         cdef Callable res = dereference(self._ptr).Platform_SetWindowFocus
@@ -11040,9 +11772,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_get_window_focus(self):
         cdef Callable res = dereference(self._ptr).Platform_GetWindowFocus
@@ -11053,9 +11785,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_get_window_minimized(self):
         cdef Callable res = dereference(self._ptr).Platform_GetWindowMinimized
@@ -11066,9 +11798,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_set_window_title(self):
         cdef Callable res = dereference(self._ptr).Platform_SetWindowTitle
@@ -11079,9 +11811,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_set_window_alpha(self):
         cdef Callable res = dereference(self._ptr).Platform_SetWindowAlpha
@@ -11092,9 +11824,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_update_window(self):
         cdef Callable res = dereference(self._ptr).Platform_UpdateWindow
@@ -11105,9 +11837,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_render_window(self):
         cdef Callable res = dereference(self._ptr).Platform_RenderWindow
@@ -11118,9 +11850,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_swap_buffers(self):
         cdef Callable res = dereference(self._ptr).Platform_SwapBuffers
@@ -11131,9 +11863,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_get_window_dpi_scale(self):
         cdef Callable res = dereference(self._ptr).Platform_GetWindowDpiScale
@@ -11144,9 +11876,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_on_changed_viewport(self):
         cdef Callable res = dereference(self._ptr).Platform_OnChangedViewport
@@ -11157,9 +11889,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def platform_create_vk_surface(self):
         cdef Callable res = dereference(self._ptr).Platform_CreateVkSurface
@@ -11170,9 +11902,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def renderer_create_window(self):
         cdef Callable res = dereference(self._ptr).Renderer_CreateWindow
@@ -11183,9 +11915,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def renderer_destroy_window(self):
         cdef Callable res = dereference(self._ptr).Renderer_DestroyWindow
@@ -11196,9 +11928,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def renderer_set_window_size(self):
         cdef Callable res = dereference(self._ptr).Renderer_SetWindowSize
@@ -11209,9 +11941,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def renderer_render_window(self):
         cdef Callable res = dereference(self._ptr).Renderer_RenderWindow
@@ -11222,9 +11954,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Callable)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Callable)
     @property
     def renderer_swap_buffers(self):
         cdef Callable res = dereference(self._ptr).Renderer_SwapBuffers
@@ -11235,9 +11967,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImGuiPlatformMonitor)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImGuiPlatformMonitor)
     @property
     def monitors(self):
         cdef ccimgui.ImVector_ImGuiPlatformMonitor res = dereference(self._ptr).Monitors
@@ -11248,9 +11980,9 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImGuiViewportPtr)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImGuiViewportPtr)
     @property
     def viewports(self):
         cdef ccimgui.ImVector_ImGuiViewportPtr res = dereference(self._ptr).Viewports
@@ -11261,12 +11993,14 @@ cdef class _ImGuiPlatformIO:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiPlatformIO)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiPlatformIO)
     @staticmethod
     def gui_platform_io():
-        """Zero clear"""
+        """
+        Zero clear
+        """
         cdef ccimgui.ImGuiPlatformIO* _ptr = ccimgui.ImGuiPlatformIO_ImGuiPlatformIO()
         if _ptr is NULL:
             raise MemoryError
@@ -11274,11 +12008,10 @@ cdef class _ImGuiPlatformIO:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiPlatformIO):
-        """"""
         ccimgui.ImGuiPlatformIO_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -11299,9 +12032,9 @@ cdef class _ImGuiPlatformImeData:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def want_visible(self):
         cdef Any res = dereference(self._ptr).WantVisible
@@ -11312,9 +12045,9 @@ cdef class _ImGuiPlatformImeData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def input_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).InputPos
@@ -11325,9 +12058,9 @@ cdef class _ImGuiPlatformImeData:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def input_line_height(self):
         cdef float res = dereference(self._ptr).InputLineHeight
@@ -11338,12 +12071,11 @@ cdef class _ImGuiPlatformImeData:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiPlatformImeData)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiPlatformImeData)
     @staticmethod
     def gui_platform_ime_data():
-        """"""
         cdef ccimgui.ImGuiPlatformImeData* _ptr = ccimgui.ImGuiPlatformImeData_ImGuiPlatformImeData()
         if _ptr is NULL:
             raise MemoryError
@@ -11351,11 +12083,10 @@ cdef class _ImGuiPlatformImeData:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiPlatformImeData):
-        """"""
         ccimgui.ImGuiPlatformImeData_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -11376,9 +12107,9 @@ cdef class _ImGuiPlatformMonitor:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def main_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MainPos
@@ -11389,9 +12120,9 @@ cdef class _ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def main_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).MainSize
@@ -11402,9 +12133,9 @@ cdef class _ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def work_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WorkPos
@@ -11415,9 +12146,9 @@ cdef class _ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def work_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WorkSize
@@ -11428,9 +12159,9 @@ cdef class _ImGuiPlatformMonitor:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def dpi_scale(self):
         cdef float res = dereference(self._ptr).DpiScale
@@ -11441,12 +12172,11 @@ cdef class _ImGuiPlatformMonitor:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiPlatformMonitor)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiPlatformMonitor)
     @staticmethod
     def gui_platform_monitor():
-        """"""
         cdef ccimgui.ImGuiPlatformMonitor* _ptr = ccimgui.ImGuiPlatformMonitor_ImGuiPlatformMonitor()
         if _ptr is NULL:
             raise MemoryError
@@ -11454,11 +12184,10 @@ cdef class _ImGuiPlatformMonitor:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiPlatformMonitor):
-        """"""
         ccimgui.ImGuiPlatformMonitor_destroy(self._ptr)
     # [End Method]
 # [End Class]
@@ -11479,9 +12208,9 @@ cdef class _ImGuiStorage:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImGuiStoragePair)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImGuiStoragePair)
     @property
     def data(self):
         cdef ccimgui.ImVector_ImGuiStoragePair res = dereference(self._ptr).Data
@@ -11492,145 +12221,133 @@ cdef class _ImGuiStorage:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def build_sort_by_key(self: _ImGuiStorage):
-        """"""
         ccimgui.ImGuiStorage_BuildSortByKey(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImGuiStorage):
-        """"""
         ccimgui.ImGuiStorage_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_bool(self: _ImGuiStorage, key: int, default_val: Any=False):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiStorage_GetBool(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_bool_ref(self: _ImGuiStorage, key: int, default_val: Any=False):
-        """"""
         cdef ccimgui.bool* res = ccimgui.ImGuiStorage_GetBoolRef(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(float)
     def get_float(self: _ImGuiStorage, key: int, default_val: float=0.0):
-        """"""
         cdef float res = ccimgui.ImGuiStorage_GetFloat(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(float)
     def get_float_ref(self: _ImGuiStorage, key: int, default_val: float=0.0):
-        """"""
         cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_int(self: _ImGuiStorage, key: int, default_val: int=0):
-        """"""
         cdef int res = ccimgui.ImGuiStorage_GetInt(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def get_int_ref(self: _ImGuiStorage, key: int, default_val: int=0):
-        """"""
         cdef int* res = ccimgui.ImGuiStorage_GetIntRef(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_void_ptr(self: _ImGuiStorage, key: int):
-        """Default_val is null"""
+        """
+        Default_val is null
+        """
         cdef void* res = ccimgui.ImGuiStorage_GetVoidPtr(self._ptr, key)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def get_void_ptr_ref(self: _ImGuiStorage, key: int, default_val: Any=None):
-        """"""
         cdef void** res = ccimgui.ImGuiStorage_GetVoidPtrRef(self._ptr, key, default_val)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_all_int(self: _ImGuiStorage, val: int):
-        """"""
         ccimgui.ImGuiStorage_SetAllInt(self._ptr, val)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_bool(self: _ImGuiStorage, key: int, val: Any):
-        """"""
         ccimgui.ImGuiStorage_SetBool(self._ptr, key, val)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_float(self: _ImGuiStorage, key: int, val: float):
-        """"""
         ccimgui.ImGuiStorage_SetFloat(self._ptr, key, val)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_int(self: _ImGuiStorage, key: int, val: int):
-        """"""
         ccimgui.ImGuiStorage_SetInt(self._ptr, key, val)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def set_void_ptr(self: _ImGuiStorage, key: int, val: Any):
-        """"""
         ccimgui.ImGuiStorage_SetVoidPtr(self._ptr, key, val)
     # [End Method]
 # [End Class]
@@ -11651,9 +12368,9 @@ cdef class _ImGuiStyle:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def alpha(self):
         cdef float res = dereference(self._ptr).Alpha
@@ -11664,9 +12381,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def disabled_alpha(self):
         cdef float res = dereference(self._ptr).DisabledAlpha
@@ -11677,9 +12394,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def window_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WindowPadding
@@ -11690,9 +12407,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def window_rounding(self):
         cdef float res = dereference(self._ptr).WindowRounding
@@ -11703,9 +12420,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def window_border_size(self):
         cdef float res = dereference(self._ptr).WindowBorderSize
@@ -11716,9 +12433,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def window_min_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WindowMinSize
@@ -11729,9 +12446,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def window_title_align(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WindowTitleAlign
@@ -11742,9 +12459,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def window_menu_button_position(self):
         cdef ccimgui.ImGuiDir res = dereference(self._ptr).WindowMenuButtonPosition
@@ -11755,9 +12472,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def child_rounding(self):
         cdef float res = dereference(self._ptr).ChildRounding
@@ -11768,9 +12485,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def child_border_size(self):
         cdef float res = dereference(self._ptr).ChildBorderSize
@@ -11781,9 +12498,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def popup_rounding(self):
         cdef float res = dereference(self._ptr).PopupRounding
@@ -11794,9 +12511,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def popup_border_size(self):
         cdef float res = dereference(self._ptr).PopupBorderSize
@@ -11807,9 +12524,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def frame_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).FramePadding
@@ -11820,9 +12537,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def frame_rounding(self):
         cdef float res = dereference(self._ptr).FrameRounding
@@ -11833,9 +12550,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def frame_border_size(self):
         cdef float res = dereference(self._ptr).FrameBorderSize
@@ -11846,9 +12563,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def item_spacing(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemSpacing
@@ -11859,9 +12576,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def item_inner_spacing(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemInnerSpacing
@@ -11872,9 +12589,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def cell_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).CellPadding
@@ -11885,9 +12602,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def touch_extra_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).TouchExtraPadding
@@ -11898,9 +12615,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def indent_spacing(self):
         cdef float res = dereference(self._ptr).IndentSpacing
@@ -11911,9 +12628,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def columns_min_spacing(self):
         cdef float res = dereference(self._ptr).ColumnsMinSpacing
@@ -11924,9 +12641,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def scrollbar_size(self):
         cdef float res = dereference(self._ptr).ScrollbarSize
@@ -11937,9 +12654,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def scrollbar_rounding(self):
         cdef float res = dereference(self._ptr).ScrollbarRounding
@@ -11950,9 +12667,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def grab_min_size(self):
         cdef float res = dereference(self._ptr).GrabMinSize
@@ -11963,9 +12680,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def grab_rounding(self):
         cdef float res = dereference(self._ptr).GrabRounding
@@ -11976,9 +12693,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def log_slider_deadzone(self):
         cdef float res = dereference(self._ptr).LogSliderDeadzone
@@ -11989,9 +12706,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def tab_rounding(self):
         cdef float res = dereference(self._ptr).TabRounding
@@ -12002,9 +12719,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def tab_border_size(self):
         cdef float res = dereference(self._ptr).TabBorderSize
@@ -12015,9 +12732,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def tab_min_width_for_close_button(self):
         cdef float res = dereference(self._ptr).TabMinWidthForCloseButton
@@ -12028,9 +12745,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def color_button_position(self):
         cdef ccimgui.ImGuiDir res = dereference(self._ptr).ColorButtonPosition
@@ -12041,9 +12758,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def button_text_align(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).ButtonTextAlign
@@ -12054,9 +12771,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def selectable_text_align(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).SelectableTextAlign
@@ -12067,9 +12784,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def separator_text_border_size(self):
         cdef float res = dereference(self._ptr).SeparatorTextBorderSize
@@ -12080,9 +12797,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def separator_text_align(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).SeparatorTextAlign
@@ -12093,9 +12810,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def separator_text_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).SeparatorTextPadding
@@ -12106,9 +12823,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_window_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayWindowPadding
@@ -12119,9 +12836,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def display_safe_area_padding(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySafeAreaPadding
@@ -12132,9 +12849,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def mouse_cursor_scale(self):
         cdef float res = dereference(self._ptr).MouseCursorScale
@@ -12145,9 +12862,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def anti_aliased_lines(self):
         cdef Any res = dereference(self._ptr).AntiAliasedLines
@@ -12158,9 +12875,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def anti_aliased_lines_use_tex(self):
         cdef Any res = dereference(self._ptr).AntiAliasedLinesUseTex
@@ -12171,9 +12888,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def anti_aliased_fill(self):
         cdef Any res = dereference(self._ptr).AntiAliasedFill
@@ -12184,9 +12901,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def curve_tessellation_tol(self):
         cdef float res = dereference(self._ptr).CurveTessellationTol
@@ -12197,9 +12914,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def circle_tessellation_max_error(self):
         cdef float res = dereference(self._ptr).CircleTessellationMaxError
@@ -12210,9 +12927,9 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def colors(self):
         cdef ccimgui.ImVec4 res = dereference(self._ptr).Colors
@@ -12223,12 +12940,11 @@ cdef class _ImGuiStyle:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiStyle)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiStyle)
     @staticmethod
     def gui_style():
-        """"""
         cdef ccimgui.ImGuiStyle* _ptr = ccimgui.ImGuiStyle_ImGuiStyle()
         if _ptr is NULL:
             raise MemoryError
@@ -12236,20 +12952,18 @@ cdef class _ImGuiStyle:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiStyle):
-        """"""
         ccimgui.ImGuiStyle_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def scale_all_sizes(self: _ImGuiStyle, scale_factor: float):
-        """"""
         ccimgui.ImGuiStyle_ScaleAllSizes(self._ptr, scale_factor)
     # [End Method]
 # [End Class]
@@ -12270,9 +12984,9 @@ cdef class _ImGuiTextBuffer:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_char)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_char)
     @property
     def buf(self):
         cdef ccimgui.ImVector_char res = dereference(self._ptr).Buf
@@ -12283,12 +12997,11 @@ cdef class _ImGuiTextBuffer:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTextBuffer)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTextBuffer)
     @staticmethod
     def gui_text_buffer():
-        """"""
         cdef ccimgui.ImGuiTextBuffer* _ptr = ccimgui.ImGuiTextBuffer_ImGuiTextBuffer()
         if _ptr is NULL:
             raise MemoryError
@@ -12296,105 +13009,97 @@ cdef class _ImGuiTextBuffer:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiTextBuffer):
-        """"""
         ccimgui.ImGuiTextBuffer_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def append(self: _ImGuiTextBuffer, str_: str, str_end: str=None):
-        """"""
         ccimgui.ImGuiTextBuffer_append(self._ptr, _bytes(str_), _bytes(str_end))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def appendf(self: _ImGuiTextBuffer, fmt: str):
-        """"""
         ccimgui.ImGuiTextBuffer_appendf(self._ptr, _bytes(fmt))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def appendfv(self: _ImGuiTextBuffer, fmt: str, args: str):
-        """"""
         ccimgui.ImGuiTextBuffer_appendfv(self._ptr, _bytes(fmt), _bytes(args))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(str)
     def begin(self: _ImGuiTextBuffer):
-        """"""
         cdef const char* res = ccimgui.ImGuiTextBuffer_begin(self._ptr)
         return _bytes(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(str)
     def c_str(self: _ImGuiTextBuffer):
-        """"""
         cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(self._ptr)
         return _bytes(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImGuiTextBuffer):
-        """"""
         ccimgui.ImGuiTextBuffer_clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def empty(self: _ImGuiTextBuffer):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiTextBuffer_empty(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(str)
     def end(self: _ImGuiTextBuffer):
-        """Buf is zero-terminated, so end() will point on the zero-terminator"""
+        """
+        Buf is zero-terminated, so end() will point on the zero-terminator
+        """
         cdef const char* res = ccimgui.ImGuiTextBuffer_end(self._ptr)
         return _bytes(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def reserve(self: _ImGuiTextBuffer, capacity: int):
-        """"""
         ccimgui.ImGuiTextBuffer_reserve(self._ptr, capacity)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def size(self: _ImGuiTextBuffer):
-        """"""
         cdef int res = ccimgui.ImGuiTextBuffer_size(self._ptr)
         return res
     # [End Method]
@@ -12416,9 +13121,9 @@ cdef class _ImGuiTextFilter:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def input_buf(self):
         cdef Any res = dereference(self._ptr).InputBuf
@@ -12429,9 +13134,9 @@ cdef class _ImGuiTextFilter:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImGuiTextRange)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImGuiTextRange)
     @property
     def filters(self):
         cdef ccimgui.ImVector_ImGuiTextRange res = dereference(self._ptr).Filters
@@ -12442,9 +13147,9 @@ cdef class _ImGuiTextFilter:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def count_grep(self):
         cdef int res = dereference(self._ptr).CountGrep
@@ -12455,12 +13160,11 @@ cdef class _ImGuiTextFilter:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiTextFilter)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiTextFilter)
     @staticmethod
     def gui_text_filter(default_filter: str=""):
-        """"""
         cdef ccimgui.ImGuiTextFilter* _ptr = ccimgui.ImGuiTextFilter_ImGuiTextFilter(_bytes(default_filter))
         if _ptr is NULL:
             raise MemoryError
@@ -12468,58 +13172,55 @@ cdef class _ImGuiTextFilter:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiTextFilter):
-        """"""
         ccimgui.ImGuiTextFilter_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def build(self: _ImGuiTextFilter):
-        """"""
         ccimgui.ImGuiTextFilter_Build(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def clear(self: _ImGuiTextFilter):
-        """"""
         ccimgui.ImGuiTextFilter_Clear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def draw(self: _ImGuiTextFilter, label: str="Filter(inc, -exc)", width: float=0.0):
-        """Helper calling inputtext+build"""
+        """
+        Helper calling inputtext+build
+        """
         cdef ccimgui.bool res = ccimgui.ImGuiTextFilter_Draw(self._ptr, _bytes(label), width)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def is_active(self: _ImGuiTextFilter):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiTextFilter_IsActive(self._ptr)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(Any)
     def pass_filter(self: _ImGuiTextFilter, text: str, text_end: str=None):
-        """"""
         cdef ccimgui.bool res = ccimgui.ImGuiTextFilter_PassFilter(self._ptr, _bytes(text), _bytes(text_end))
         return res
     # [End Method]
@@ -12541,9 +13242,9 @@ cdef class _ImGuiViewport:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ID
@@ -12554,9 +13255,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def flags(self):
         cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).Flags
@@ -12567,9 +13268,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).Pos
@@ -12580,9 +13281,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).Size
@@ -12593,9 +13294,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def work_pos(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WorkPos
@@ -12606,9 +13307,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(tuple)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(tuple)
     @property
     def work_size(self):
         cdef ccimgui.ImVec2 res = dereference(self._ptr).WorkSize
@@ -12619,9 +13320,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def dpi_scale(self):
         cdef float res = dereference(self._ptr).DpiScale
@@ -12632,9 +13333,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def parent_viewport_id(self):
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
@@ -12645,9 +13346,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawData)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawData)
     @property
     def draw_data(self):
         cdef ccimgui.ImDrawData res = dereference(self._ptr).DrawData
@@ -12658,9 +13359,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def renderer_user_data(self):
         cdef Any res = dereference(self._ptr).RendererUserData
@@ -12671,9 +13372,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_user_data(self):
         cdef Any res = dereference(self._ptr).PlatformUserData
@@ -12684,9 +13385,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_handle(self):
         cdef Any res = dereference(self._ptr).PlatformHandle
@@ -12697,9 +13398,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_handle_raw(self):
         cdef Any res = dereference(self._ptr).PlatformHandleRaw
@@ -12710,9 +13411,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_window_created(self):
         cdef Any res = dereference(self._ptr).PlatformWindowCreated
@@ -12723,9 +13424,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_request_move(self):
         cdef Any res = dereference(self._ptr).PlatformRequestMove
@@ -12736,9 +13437,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_request_resize(self):
         cdef Any res = dereference(self._ptr).PlatformRequestResize
@@ -12749,9 +13450,9 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(Any)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(Any)
     @property
     def platform_request_close(self):
         cdef Any res = dereference(self._ptr).PlatformRequestClose
@@ -12762,12 +13463,11 @@ cdef class _ImGuiViewport:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImGuiViewport)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImGuiViewport)
     @staticmethod
     def gui_viewport():
-        """"""
         cdef ccimgui.ImGuiViewport* _ptr = ccimgui.ImGuiViewport_ImGuiViewport()
         if _ptr is NULL:
             raise MemoryError
@@ -12775,29 +13475,26 @@ cdef class _ImGuiViewport:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImGuiViewport):
-        """"""
         ccimgui.ImGuiViewport_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_center(pOut: _ImVec2, self: _ImGuiViewport):
-        """"""
         ccimgui.ImGuiViewport_GetCenter(pOut._ptr, self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_work_center(pOut: _ImVec2, self: _ImGuiViewport):
-        """"""
         ccimgui.ImGuiViewport_GetWorkCenter(pOut._ptr, self._ptr)
     # [End Method]
 # [End Class]
@@ -12818,9 +13515,9 @@ cdef class _ImDrawList:
     # [Class Constants]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawCmd)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawCmd)
     @property
     def cmd_buffer(self):
         cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr).CmdBuffer
@@ -12831,9 +13528,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawIdx)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawIdx)
     @property
     def idx_buffer(self):
         cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
@@ -12844,9 +13541,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImDrawVert)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImDrawVert)
     @property
     def vtx_buffer(self):
         cdef ccimgui.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
@@ -12857,9 +13554,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def flags(self):
         cdef ccimgui.ImDrawListFlags res = dereference(self._ptr).Flags
@@ -12870,9 +13567,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def _vtx_current_idx(self):
         cdef Any res = dereference(self._ptr)._VtxCurrentIdx
@@ -12883,9 +13580,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawListSharedData)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawListSharedData)
     @property
     def _data(self):
         cdef ccimgui.ImDrawListSharedData res = dereference(self._ptr)._Data
@@ -12896,9 +13593,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(str)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(str)
     @property
     def _owner_name(self):
         cdef str res = dereference(self._ptr)._OwnerName
@@ -12909,9 +13606,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawVert)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawVert)
     @property
     def _vtx_write_ptr(self):
         cdef ccimgui.ImDrawVert res = dereference(self._ptr)._VtxWritePtr
@@ -12922,9 +13619,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(int)
     @property
     def _idx_write_ptr(self):
         cdef Any res = dereference(self._ptr)._IdxWritePtr
@@ -12935,9 +13632,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImVec4)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImVec4)
     @property
     def _clip_rect_stack(self):
         cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
@@ -12948,9 +13645,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImTextureID)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImTextureID)
     @property
     def _texture_id_stack(self):
         cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
@@ -12961,9 +13658,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImVector_ImVec2)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImVector_ImVec2)
     @property
     def _path(self):
         cdef ccimgui.ImVector_ImVec2 res = dereference(self._ptr)._Path
@@ -12974,9 +13671,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawCmdHeader)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawCmdHeader)
     @property
     def _cmd_header(self):
         cdef ccimgui.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
@@ -12987,9 +13684,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(_ImDrawListSplitter)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(_ImDrawListSplitter)
     @property
     def _splitter(self):
         cdef ccimgui.ImDrawListSplitter res = dereference(self._ptr)._Splitter
@@ -13000,9 +13697,9 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Field]
-    #? use_template = False
-    #? custom_type = [Auto]
-    # @pyi.returns(float)
+    # @use_template(False)
+    # @custom_type(Auto)
+    # @returns(float)
     @property
     def _fringe_scale(self):
         cdef float res = dereference(self._ptr)._FringeScale
@@ -13013,12 +13710,11 @@ cdef class _ImDrawList:
     # [End Field]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImDrawList)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImDrawList)
     @staticmethod
     def draw_list(shared_data: _ImDrawListSharedData):
-        """"""
         cdef ccimgui.ImDrawList* _ptr = ccimgui.ImDrawList_ImDrawList(shared_data._ptr)
         if _ptr is NULL:
             raise MemoryError
@@ -13026,20 +13722,21 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def destroy(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_bezier_cubic(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0):
-        """Cubic bezier (4 control points)"""
+        """
+        Cubic bezier (4 control points)
+        """
         ccimgui.ImDrawList_AddBezierCubic(
             self._ptr,
             _cast_tuple_ImVec2(p1),
@@ -13053,11 +13750,13 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_bezier_quadratic(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0):
-        """Quadratic bezier (3 control points)"""
+        """
+        Quadratic bezier (3 control points)
+        """
         ccimgui.ImDrawList_AddBezierQuadratic(
             self._ptr,
             _cast_tuple_ImVec2(p1),
@@ -13070,11 +13769,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_circle(self: _ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_AddCircle(
             self._ptr,
             _cast_tuple_ImVec2(center),
@@ -13086,38 +13784,40 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_circle_filled(self: _ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0):
-        """"""
         ccimgui.ImDrawList_AddCircleFilled(self._ptr, _cast_tuple_ImVec2(center), radius, col, num_segments)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_convex_poly_filled(self: _ImDrawList, points: _ImVec2, num_points: int, col: int):
-        """"""
         ccimgui.ImDrawList_AddConvexPolyFilled(self._ptr, points._ptr, num_points, col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_draw_cmd(self: _ImDrawList):
-        """This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible"""
+        """
+        This is useful if you need to forcefully create a new draw
+        call (to allow for dependent rendering / blending). otherwise
+        primitives are merged into the same draw-call as much as
+        possible
+        """
         ccimgui.ImDrawList_AddDrawCmd(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_image(self: _ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=4294967295):
-        """"""
         ccimgui.ImDrawList_AddImage(
             self._ptr,
             user_texture_id,
@@ -13130,11 +13830,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_image_quad(self: _ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=4294967295):
-        """"""
         ccimgui.ImDrawList_AddImageQuad(
             self._ptr,
             user_texture_id,
@@ -13151,11 +13850,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_image_rounded(self: _ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
-        """"""
         ccimgui.ImDrawList_AddImageRounded(
             self._ptr,
             user_texture_id,
@@ -13170,20 +13868,18 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_line(self: _ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_AddLine(self._ptr, _cast_tuple_ImVec2(p1), _cast_tuple_ImVec2(p2), col, thickness)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_ngon(self: _ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_AddNgon(
             self._ptr,
             _cast_tuple_ImVec2(center),
@@ -13195,20 +13891,18 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_ngon_filled(self: _ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
-        """"""
         ccimgui.ImDrawList_AddNgonFilled(self._ptr, _cast_tuple_ImVec2(center), radius, col, num_segments)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_polyline(self: _ImDrawList, points: _ImVec2, num_points: int, col: int, flags: int, thickness: float):
-        """"""
         ccimgui.ImDrawList_AddPolyline(
             self._ptr,
             points._ptr,
@@ -13220,11 +13914,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_quad(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_AddQuad(
             self._ptr,
             _cast_tuple_ImVec2(p1),
@@ -13237,11 +13930,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_quad_filled(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
-        """"""
         ccimgui.ImDrawList_AddQuadFilled(
             self._ptr,
             _cast_tuple_ImVec2(p1),
@@ -13253,11 +13945,13 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_rect(self: _ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
-        """A: upper-left, b: lower-right (== upper-left + size)"""
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
         ccimgui.ImDrawList_AddRect(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
@@ -13270,11 +13964,13 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_rect_filled(self: _ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
-        """A: upper-left, b: lower-right (== upper-left + size)"""
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
         ccimgui.ImDrawList_AddRectFilled(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
@@ -13286,11 +13982,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_rect_filled_multi_color(self: _ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
-        """"""
         ccimgui.ImDrawList_AddRectFilledMultiColor(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
@@ -13303,11 +13998,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_text_font_ptr(self: _ImDrawList, font: _ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: _ImVec4=None):
-        """"""
         ccimgui.ImDrawList_AddText_FontPtr(
             self._ptr,
             font._ptr,
@@ -13322,20 +14016,18 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_text_vec2(self: _ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
-        """"""
         ccimgui.ImDrawList_AddText_Vec2(self._ptr, _cast_tuple_ImVec2(pos), col, _bytes(text_begin), _bytes(text_end))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_triangle(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_AddTriangle(
             self._ptr,
             _cast_tuple_ImVec2(p1),
@@ -13347,75 +14039,70 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def add_triangle_filled(self: _ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
-        """"""
         ccimgui.ImDrawList_AddTriangleFilled(self._ptr, _cast_tuple_ImVec2(p1), _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def channels_merge(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_ChannelsMerge(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def channels_set_current(self: _ImDrawList, n: int):
-        """"""
         ccimgui.ImDrawList_ChannelsSetCurrent(self._ptr, n)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def channels_split(self: _ImDrawList, count: int):
-        """"""
         ccimgui.ImDrawList_ChannelsSplit(self._ptr, count)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(_ImDrawList)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(_ImDrawList)
     def clone_output(self: _ImDrawList):
-        """Create a clone of the cmdbuffer/idxbuffer/vtxbuffer."""
+        """
+        Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
+        """
         cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(self._ptr)
         return _ImDrawList.from_ptr(res)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_clip_rect_max(pOut: _ImVec2, self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_GetClipRectMax(pOut._ptr, self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def get_clip_rect_min(pOut: _ImVec2, self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_GetClipRectMin(pOut._ptr, self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_arc_to(self: _ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
-        """"""
         ccimgui.ImDrawList_PathArcTo(
             self._ptr,
             _cast_tuple_ImVec2(center),
@@ -13427,110 +14114,107 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_arc_to_fast(self: _ImDrawList, center: tuple, radius: float, a_min_of_12: int, a_max_of_12: int):
-        """Use precomputed angles for a 12 steps circle"""
+        """
+        Use precomputed angles for a 12 steps circle
+        """
         ccimgui.ImDrawList_PathArcToFast(self._ptr, _cast_tuple_ImVec2(center), radius, a_min_of_12, a_max_of_12)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_bezier_cubic_curve_to(self: _ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0):
-        """Cubic bezier (4 control points)"""
+        """
+        Cubic bezier (4 control points)
+        """
         ccimgui.ImDrawList_PathBezierCubicCurveTo(self._ptr, _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), _cast_tuple_ImVec2(p4), num_segments)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_bezier_quadratic_curve_to(self: _ImDrawList, p2: tuple, p3: tuple, num_segments: int=0):
-        """Quadratic bezier (3 control points)"""
+        """
+        Quadratic bezier (3 control points)
+        """
         ccimgui.ImDrawList_PathBezierQuadraticCurveTo(self._ptr, _cast_tuple_ImVec2(p2), _cast_tuple_ImVec2(p3), num_segments)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_clear(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_PathClear(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_fill_convex(self: _ImDrawList, col: int):
-        """"""
         ccimgui.ImDrawList_PathFillConvex(self._ptr, col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_line_to(self: _ImDrawList, pos: tuple):
-        """"""
         ccimgui.ImDrawList_PathLineTo(self._ptr, _cast_tuple_ImVec2(pos))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_line_to_merge_duplicate(self: _ImDrawList, pos: tuple):
-        """"""
         ccimgui.ImDrawList_PathLineToMergeDuplicate(self._ptr, _cast_tuple_ImVec2(pos))
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_rect(self: _ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0):
-        """"""
         ccimgui.ImDrawList_PathRect(self._ptr, _cast_tuple_ImVec2(rect_min), _cast_tuple_ImVec2(rect_max), rounding, flags)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def path_stroke(self: _ImDrawList, col: int, flags: int=0, thickness: float=1.0):
-        """"""
         ccimgui.ImDrawList_PathStroke(self._ptr, col, flags, thickness)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def pop_clip_rect(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_PopClipRect(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def pop_texture_id(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_PopTextureID(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_quad_uv(self: _ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int):
-        """"""
         ccimgui.ImDrawList_PrimQuadUV(
             self._ptr,
             _cast_tuple_ImVec2(a),
@@ -13546,20 +14230,21 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_rect(self: _ImDrawList, a: tuple, b: tuple, col: int):
-        """Axis aligned rectangle (composed of two triangles)"""
+        """
+        Axis aligned rectangle (composed of two triangles)
+        """
         ccimgui.ImDrawList_PrimRect(self._ptr, _cast_tuple_ImVec2(a), _cast_tuple_ImVec2(b), col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_rect_uv(self: _ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int):
-        """"""
         ccimgui.ImDrawList_PrimRectUV(
             self._ptr,
             _cast_tuple_ImVec2(a),
@@ -13571,129 +14256,124 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_reserve(self: _ImDrawList, idx_count: int, vtx_count: int):
-        """"""
         ccimgui.ImDrawList_PrimReserve(self._ptr, idx_count, vtx_count)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_unreserve(self: _ImDrawList, idx_count: int, vtx_count: int):
-        """"""
         ccimgui.ImDrawList_PrimUnreserve(self._ptr, idx_count, vtx_count)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_vtx(self: _ImDrawList, pos: tuple, uv: tuple, col: int):
-        """Write vertex with unique index"""
+        """
+        Write vertex with unique index
+        """
         ccimgui.ImDrawList_PrimVtx(self._ptr, _cast_tuple_ImVec2(pos), _cast_tuple_ImVec2(uv), col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_write_idx(self: _ImDrawList, idx: int):
-        """"""
         ccimgui.ImDrawList_PrimWriteIdx(self._ptr, idx)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def prim_write_vtx(self: _ImDrawList, pos: tuple, uv: tuple, col: int):
-        """"""
         ccimgui.ImDrawList_PrimWriteVtx(self._ptr, _cast_tuple_ImVec2(pos), _cast_tuple_ImVec2(uv), col)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def push_clip_rect(self: _ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: Any=False):
-        """Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)"""
+        """
+        Render-level scissoring. this is passed down to your render
+        function but not used for cpu-side coarse clipping. prefer
+        using higher-level imgui::pushcliprect() to affect logic
+        (hit-testing and widget culling)
+        """
         ccimgui.ImDrawList_PushClipRect(self._ptr, _cast_tuple_ImVec2(clip_rect_min), _cast_tuple_ImVec2(clip_rect_max), intersect_with_current_clip_rect)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def push_clip_rect_full_screen(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList_PushClipRectFullScreen(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def push_texture_id(self: _ImDrawList, texture_id: Any):
-        """"""
         ccimgui.ImDrawList_PushTextureID(self._ptr, texture_id)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(int)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(int)
     def _calc_circle_auto_segment_count(self: _ImDrawList, radius: float):
-        """"""
         cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(self._ptr, radius)
         return res
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _clear_free_memory(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__ClearFreeMemory(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _on_changed_clip_rect(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__OnChangedClipRect(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _on_changed_texture_id(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__OnChangedTextureID(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _on_changed_vtx_offset(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__OnChangedVtxOffset(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _path_arc_to_fast_ex(self: _ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
-        """"""
         ccimgui.ImDrawList__PathArcToFastEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
@@ -13705,11 +14385,10 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _path_arc_ton(self: _ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
-        """"""
         ccimgui.ImDrawList__PathArcToN(
             self._ptr,
             _cast_tuple_ImVec2(center),
@@ -13721,29 +14400,26 @@ cdef class _ImDrawList:
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _pop_unused_draw_cmd(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__PopUnusedDrawCmd(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _reset_for_new_frame(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__ResetForNewFrame(self._ptr)
     # [End Method]
 
     # [Method]
-    #? use_template = False
-    #? custom_return_type = [Auto]
-    # @pyi.returns(None)
+    # @use_template(False)
+    # @custom_return_type(Auto)
+    # @returns(None)
     def _try_merge_draw_cmds(self: _ImDrawList):
-        """"""
         ccimgui.ImDrawList__TryMergeDrawCmds(self._ptr)
     # [End Method]
 # [End Class]

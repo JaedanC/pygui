@@ -1,8 +1,10 @@
 #if is_constructor
-# @pyi.returns(_{struct_name})
+# @returns(_{struct_name})
 @staticmethod
 def {function_name}({parameters}):
-    """{comment}"""
+    #if has_comment
+{comment}
+    #endif
     #if has_body_lines
 {body_lines}
     #endif
@@ -12,9 +14,11 @@ def {function_name}({parameters}):
     return _{struct_name}.from_ptr(_ptr)
 ##
 #else
-# @pyi.returns({python_return_type})
+# @returns({python_return_type})
 def {function_name}({parameters}):
-    """{comment}"""
+    #if has_comment
+{comment}
+    #endif
     #if has_body_lines
 {body_lines}
     #endif

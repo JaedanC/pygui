@@ -96,6 +96,7 @@ def function_body_template(
     with open("pygui/templates/functions.h") as f:
         template = Template(f.read())
 
+    template.set_condition("has_comment", comment != "")
     template.set_condition("has_return_type", has_return_type)
     template.set_condition("has_return_tuple", False)
     template.set_condition("has_body_lines", len(implementation_lines) > 0)
@@ -115,6 +116,25 @@ def function_body_template(
     )
         
     return template.compile(**kwargs)
+
+
+def pretty_comment(comment_text, indented_by=4, to_size=60) -> str:
+    if comment_text == "":
+        return ""
+    
+    output = ""
+    i = 0
+    for char in comment_text:
+        if i < to_size:
+            output += char
+        elif char == " ":
+            output += "\n"
+            i = 0
+        else:
+            output += char
+
+        i += 1
+    return indent_by('"""\n{}\n"""'.format(output), indented_by)
 
 
 class Template:
@@ -658,7 +678,7 @@ class Function:
             self.return_type,
             re.sub("^ig_", "", snake_caseify(self.name)), 
             self.name,
-            self.comment,
+            pretty_comment(self.comment),
             is_constructor=False,
         )
 
@@ -715,7 +735,7 @@ class Method:
             self.return_type,
             function_name,
             self.cimgui_name,
-            self.comment,
+            pretty_comment(self.comment, 4, 56),
             is_constructor=self.is_constructor,
             struct_name=self.struct_name
         )
@@ -905,8 +925,8 @@ class HeaderSpec:
 
         for function in self.functions:
             output.write("# [Function]\n")
-            output.write("#? use_template = False\n")
-            output.write("#? custom_return_type = [Auto]\n")
+            output.write("# @use_template(False)\n")
+            output.write("# @custom_return_type(Auto)\n")
             output.write(function.in_pyx_format(self) + "\n")
             output.write("# [End Function]\n\n")
         
@@ -924,15 +944,15 @@ class HeaderSpec:
             
             for method in struct.methods:
                 output.write("    # [Method]\n")
-                output.write("    #? use_template = False\n")
-                output.write("    #? custom_return_type = [Auto]\n")
+                output.write("    # @use_template(False)\n")
+                output.write("    # @custom_return_type(Auto)\n")
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
 
             for field in struct.fields:
                 output.write("    # [Field]\n")
-                output.write("    #? use_template = False\n")
-                output.write("    #? custom_type = [Auto]\n")
+                output.write("    # @use_template(False)\n")
+                output.write("    # @custom_type(Auto)\n")
                 output.write(field.in_field_pyx_format(self) + "\n")
                 output.write("    # [End Field]\n\n")
 

@@ -104,7 +104,13 @@ class PyxClass:
             self.name,
             " ..." if not has_body else body.getvalue()
         )
+
     
+class PyxGeneric:
+    def __init__(self, name: str, impl: List[str]):
+        self.name: str = name
+        self.impl: List[str] = impl
+
 
 class PyxCollection:
     def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction],
@@ -161,17 +167,6 @@ class PyxCollection:
                     if class_.name + "." + method.name == name:
                         return ("Method", class_.name + "." + method.name, method.use_template, method.impl, method)
         return None
-    # def get_function_by_name(self, name) -> PyxFunction:
-    #     for function in self.functions:
-    #         if name == function.name:
-    #             return function
-    #     return None
-
-    # def get_generic_by_name(self, name) -> PyxGeneric:
-    #     for extra in self.extras:
-    #         if name == extra.name:
-    #             return extra
-    #     return None
 
     def apply_merge(self, merge: Tuple[str, str, bool, List[str], Any]):
         n_type, n_name, _, n_impl, _ = merge
@@ -188,7 +183,7 @@ class PyxCollection:
         
         imports, constant_functions = self.extras
         output.write("# [Imports]\n")
-        output.write("\n".join(imports.lines) + "\n")
+        output.write("\n".join(imports.impl) + "\n")
         output.write("# [End Imports]\n\n")
 
         output.write("# [Enums]\n")
@@ -197,7 +192,7 @@ class PyxCollection:
         output.write("# [End Enums]\n\n")
 
         output.write("# [Constant Functions]\n")
-        output.write("\n".join(constant_functions.lines) + "\n")
+        output.write("\n".join(constant_functions.impl) + "\n")
         output.write("# [End Constant Functions]\n\n")
 
         for function in self.functions:
@@ -208,7 +203,7 @@ class PyxCollection:
         for class_ in self.classes:
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
-            output.write("\n".join(class_.constant_lines.lines) + "\n")
+            output.write("\n".join(class_.constant_lines.impl) + "\n")
             output.write("    # [Class Constants]\n")
 
             for field in class_.fields:
@@ -238,12 +233,6 @@ class PyxCollection:
         return mergable
 
 
-class PyxGeneric:
-    def __init__(self, name: str, lines: List[str]):
-        self.name: str = name
-        self.lines: List[str] = lines
-
-
 def get_sections(src: str, section_name: str) -> List[str]:
     all_sections = []
     found_section = []
@@ -270,7 +259,7 @@ def parse_function_options(lines):
     options = {}
     for line in lines:
         line = line.strip()
-        found_return_type = re.match(".*@pyi.returns\((.*?)\).*", line)
+        found_return_type = re.match(".*@returns\((.*?)\).*", line)
         if found_return_type is not None and "inferred_type" not in options:
             options["inferred_type"] = found_return_type.group(1) if found_return_type.group(1) != "" else None
         
@@ -279,11 +268,12 @@ def parse_function_options(lines):
             options["name"] = found_name.group(1)
             options["inferred_parameters"] = found_name.group(2)
         
-        if line.startswith("#? "):
-            line = line.replace("#? ", "", 1)
-            assert len(line.split(" = ")) == 2, "Option must be length 2"
-            option, value = line.split(" = ")
-            options[option] = value
+        if line.startswith("# @"):
+            line = line.replace("# @", "", 1)
+            options_found = re.match("(.*?)\((.*)\)", line)
+            if options_found is None:
+                assert False, "Could not parse option {}".format(line)
+            options[options_found.group(1)] = options_found.group(2)
     return options
 
 
@@ -301,8 +291,7 @@ def create_pyx_collection(pyx):
     functions: List[PyxFunction] = []
     for function in get_sections(pyx, "Function"):
         options = parse_function_options(function.split("\n"))
-
-        if options["custom_return_type"] == "[Auto]":
+        if options["custom_return_type"] == "Auto":
             return_type = options["inferred_type"]
         else:
             return_type = options["custom_return_type"]
@@ -332,7 +321,7 @@ def create_pyx_collection(pyx):
         for method_section in get_sections(class_section, "Method"):
             options = parse_function_options(method_section.split("\n"))
 
-            if options["custom_return_type"] == "[Auto]":
+            if options["custom_return_type"] == "Auto":
                 return_type = options["inferred_type"]
             else:
                 return_type = options["custom_return_type"]
@@ -349,7 +338,7 @@ def create_pyx_collection(pyx):
         for field_section in get_sections(class_section, "Field"):
             options = parse_function_options(field_section.split("\n"))
 
-            if options["custom_type"] == "[Auto]":
+            if options["custom_type"] == "Auto":
                 return_type = options["inferred_type"]
             else:
                 return_type = options["custom_type"]

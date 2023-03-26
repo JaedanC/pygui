@@ -1,6 +1,6 @@
 #if is_getter
 ##
-# @pyi.returns({python_type})
+# @returns({python_type})
 @property
 def {field_name}(self):
     cdef {field_type} res = dereference(self._ptr).{cimgui_field_name}
