@@ -4,7 +4,10 @@ import keyword
 import re
 from io import StringIO
 from typing import List, Tuple, Any
+from pyx_parser import *
+from diff_match_patch import diff_match_patch
 import builtins
+import sys
 
 
 def snake_caseify(string: str, make_upper=False) -> str:
@@ -830,13 +833,13 @@ class HeaderSpec:
 
         return output.getvalue()
 
-    def in_pyx_format(self):
+    def _in_raw_pyx_format(self):
         output = StringIO()
-        output.write("# distutils: language = c++\n")
-        output.write("# cython: language_level = 3\n")
-        output.write("# cython: embedsignature=True\n\n")
-
-        output.write("")
+        # output.write("# distutils: language = c++\n")
+        # output.write("# cython: language_level = 3\n")
+        # output.write("# cython: embedsignature=True\n\n")
+        
+        output.write("# [Imports]\n")
         output.write("import cython\n")
         output.write("from cython.operator import dereference\n\n")
         output.write("from collections import namedtuple\n")
@@ -846,13 +849,15 @@ class HeaderSpec:
         output.write("from libc.stdint cimport uintptr_t\n")
         output.write("from libc.float cimport FLT_MAX, FLT_MIN\n")
         output.write("from cython.view cimport array as cvarray\n")
-        output.write("from cpython.version cimport PY_MAJOR_VERSION\n\n\n")
+        output.write("from cpython.version cimport PY_MAJOR_VERSION\n")
+        output.write("# [End Imports]\n\n\n")
 
         output.write("# [Enums]\n")
         for enum in self.enums:
             output.write(enum.in_pyx_format(self.library_name) + "\n")
         output.write("# [End Enums]\n\n")
 
+        output.write("# [Constant Functions]\n")
         output.write("Vec2 = namedtuple('Vec2', ['x', 'y'])\n")
         output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
 
@@ -895,27 +900,27 @@ class HeaderSpec:
         output.write("    return sizeof(ccimgui.ImDrawVert)\n\n")
 
         output.write("def _py_index_buffer_index_size():\n")
-        output.write("    return sizeof(ccimgui.ImDrawIdx)\n\n\n")
+        output.write("    return sizeof(ccimgui.ImDrawIdx)\n")
+        output.write("# [End Constant Functions]\n\n\n")
 
-        output.write("# [Functions]\n")
         for function in self.functions:
             output.write("# [Function]\n")
             output.write("#? use_template = False\n")
             output.write("#? custom_return_type = [Auto]\n")
             output.write(function.in_pyx_format(self) + "\n")
             output.write("# [End Function]\n\n")
-
-        output.write("# [End Functions]\n\n")
         
         for struct in self.structs:
             with open("pygui/templates/classes.h") as f:
                 template = f.read()
             
             output.write("# [Class]\n")
+            output.write("# [Class Constants]\n")
             output.write(template.format(
                 struct_name=struct.name,
                 library_name=self.library_name,
             ))
+            output.write("    # [End Class Constants]\n\n")
             
             for method in struct.methods:
                 output.write("    # [Method]\n")
@@ -923,7 +928,6 @@ class HeaderSpec:
                 output.write("    #? custom_return_type = [Auto]\n")
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
-            
 
             for field in struct.fields:
                 output.write("    # [Field]\n")
@@ -934,6 +938,97 @@ class HeaderSpec:
 
             output.write("# [End Class]\n\n")
         return output.getvalue()
+
+    def get_merged_collection(
+        self, old_collection: PyxCollection,
+        template_collection: PyxCollection) -> Tuple[PyxCollection, PyxCollection, PyxCollection]:
+
+        """
+        Steps:
+        - Read core_generated.pyx -> old_collection
+        - Read core_template.pyx  -> template_collection
+        - Compute new pyx         -> new_collection
+        - Convert each content type to a PyxCollection so that they can be compared.
+        """
+        new_collection: PyxCollection = self.as_pyx_collection()
+
+        dmp = diff_match_patch()
+
+        """
+        - For each function in the new collection, find it's template
+          counterpart.
+           - If it doesn't exist then keep the new function.
+           - If it exists, check to see if use_template is not checked. If so,
+             keep the new function too.
+           - If it exists and use_template is checked. Make note of the old
+             function too. If the old function doesn't exist then keep the
+             template version completely
+              - If it does exist:
+                 - Compute patches between the old and the new. Apply the patches
+                   to the template version and keep the template function.
+        """
+        to_keep = []
+        n_mergables = new_collection.get_all_mergable()
+        merge_failed = False
+        for n_mergable in n_mergables:
+            n_type, n_name, _, n_impl, _ = n_mergable
+            t_mergable = template_collection.get_mergeable_by_name(n_type, n_name)
+
+            # No template found
+            if t_mergable is None:
+                print("Not in template. Keeping new {} - {}.".format(n_type, n_name))
+                to_keep.append(n_mergable)
+                continue
+            
+            _, _, t_use_template, t_impl, _ = t_mergable
+            if not t_use_template:
+                # print("Overwriting existing. Not using template {} - {}.".format(n_type, n_name))
+                to_keep.append(n_mergable)
+                continue
+            
+            o_mergable = old_collection.get_mergeable_by_name(n_type, n_name)
+            if o_mergable is None:
+                print("No history. Keeping template {} - {}.".format(n_type, n_name))
+                to_keep.append(t_mergable)
+                continue
+
+            _, _, _, o_impl, _ = o_mergable
+            o_to_n_patches = dmp.patch_make(
+                "\n".join(o_impl),
+                "\n".join(n_impl)
+            )
+            merged_impl, successes = dmp.patch_apply(o_to_n_patches, "\n".join(t_impl))
+            if False in successes:
+                merge_failed = True
+                print("---------------------------------------------------")
+                print("1. Could not apply patch between old:")
+                print("\n".join(o_impl))
+                print("---------------------------------------------------")
+                print("2. And the new:")
+                print("\n".join(n_impl))
+                print("---------------------------------------------------")
+                print("3. To template:")
+                print("\n".join(t_impl))
+                print("---------------------------------------------------")
+                print("4. We got to:")
+                print(merged_impl)
+                print("---------------------------------------------------")
+                continue
+            
+            print("Patched {} - {} successfully".format(n_type, n_name))
+            to_keep.append((n_type, n_name, t_use_template, merged_impl.split("\n"), None))
+            # old_collection.apply_merge(n_mergable)
+
+        for merged_item in to_keep:
+            new_collection.apply_merge(merged_item)
+
+        if merge_failed:
+            return old_collection, self.as_pyx_collection(), None
+        else:
+            return old_collection, self.as_pyx_collection(), new_collection
+
+    def as_pyx_collection(self) -> PyxCollection:
+        return create_pyx_collection(self._in_raw_pyx_format())
 
     def in_pyi_format(self):
         # TODO:
@@ -1264,26 +1359,152 @@ def header_model(base, library_name):
 
 
 def main():
+    def _help():
+        print("Usage: python model_creator <Option>")
+        print("  --trial      Attempts to merge the old/new/template content but writes the result to")
+        print("                 core_trial.pyx only.")
+        print("  --all        Typical usage. Builds the pxd/pyx/pyi file. The merged file is written")
+        print("                 to core.pyx. The old core_generated.pyx file is renamed to")
+        print("                 core_generated_prev.pyx.")
+        print("  --pxd        Builds the pxd file only.")
+        print("  --pyx        Builds the pyx file only.")
+        print("  --pyi        Builds the pyi file only.")
+        print("  --reset      Creates a new template to manually modify pxy files with. This will not")
+        print("                 complete if a template stil exists. You must delete core_template.pyx")
+        print("                 yourself.")
+        return
+
+
+    def reset(header: HeaderSpec):
+        reset_pyx_content = header.as_pyx_collection().as_pyx_format()
+        try:
+            with open("pygui/core_template.pyx") as f:
+                print("Error: Template core_template.pyx still exists.")
+                print("Please delete the file manually if you are sure.")
+        except FileNotFoundError:
+            with open("pygui/core_template.pyx", "w") as f:
+                f.write(reset_pyx_content)
+            with open("pygui/core.pyx", "w") as f:
+                f.write(reset_pyx_content)
+
+
+    def write_pxd(header: HeaderSpec):
+        with open("pygui/ccimgui.pxd", "w") as f:
+            f.write(header.in_pxd_format())
+        print("Created ccimgui.pxd")
+    
+
+    def write_pyx(header: HeaderSpec):
+        try:
+            with open("pygui/core_template.pyx") as f:
+                template_collection = create_pyx_collection(f.read())
+        except FileNotFoundError:
+            print("No template found. Please run with --reset first.")
+            return
+        
+        try:
+            with open("pygui/core_generated.pyx") as f:
+                old_collection = create_pyx_collection(f.read())
+        except FileNotFoundError:
+            print("No existing generated content found. Treating new generated content as the old.")
+            old_collection = header.as_pyx_collection()
+
+        old_collection, new_collection, merged_collection = \
+            header.get_merged_collection(old_collection, template_collection)
+        
+        # Merge failed
+        if merged_collection is None:
+            print("Error: Merge failed. Not changing any files")
+            return
+        
+        with open("pygui/core.pyx", "w") as f:
+            f.write(merged_collection.as_pyx_format())
+
+        with open("pygui/core_template.pyx", "w") as f:
+            f.write(merged_collection.as_pyx_format())
+
+        with open("pygui/core_generated.pyx", "w") as f:
+            f.write(new_collection.as_pyx_format())
+        
+        with open("pygui/core_generated_prev.pyx", "w") as f:
+            f.write(old_collection.as_pyx_format())
+
+        print("Created core.pyx")
+        print("Created core_template.pyx")
+        print("Created core_generated.pyx")
+        print("Created core_generated_prev.pyx")
+
+
+    def trial_pyx(header: HeaderSpec):
+        with open("pygui/core_template.pyx") as f:
+            template_collection = create_pyx_collection(f.read())
+        
+        with open("pygui/core_generated.pyx") as f:
+            old_collection = create_pyx_collection(f.read())
+
+        _, _, merged_collection = \
+            header.get_merged_collection(old_collection, template_collection)
+        
+        # Merge failed
+        if merged_collection is None:
+            print("Error: Merged failed. Trial was unsuccessful")
+            return
+        
+        with open("pygui/core_trial.pyx", "w") as f:
+            f.write(merged_collection.as_pyx_format())
+        
+        print("Created core_trial.pyx")
+        print("Trial success")
+
+
+    def write_pyi():
+        with open("pygui/core.pyx") as f:
+            current_collection = create_pyx_collection(f.read())
+            pyi, py = current_collection.as_pyi_format()
+
+        with open("pygui/__init__.pyi", "w") as f:
+            f.write(pyi)
+        
+        with open("pygui/__init__.py", "w") as f:
+            f.write(py)
+        
+        print("Created __init__.pyi")
+        print("Created __init__.py")
+    
+
+    if len(sys.argv) != 2:
+        return _help()
+
     header = header_model("cimgui/generator/output", "ccimgui")
 
-    with open("pygui/ccimgui.pxd", "w") as f:
-        f.write(header.in_pxd_format())
+    
+    if "--trial" in sys.argv:
+        trial_pyx(header)
+        return
+    
+    if "--all" in sys.argv:
+        write_pxd(header)
+        write_pyx(header)
+        write_pyi()
+        return
 
-    with open("pygui/core_v2.pyx", "w") as f:
-        pyx = header.in_pyx_format()
-        f.write(pyx)
+    if "--pxd" in sys.argv:
+        write_pxd(header)
+        return
+    
+    if "--pyx" in sys.argv:
+        write_pyx(header)
+        return
 
-    # for function in header.functions:
-    #     print(function)
+    if "--pyi" in sys.argv:
+        write_pyi()
+        return
 
-    # for struct in header.structs:
-    #     print(struct)
+    if "--reset" in sys.argv:
+        reset(header)
+        return
 
-    # for enum in enums:
-    #     print(enum)
-
-    # for typedef in header.typedefs:
-    #     print(typedef)
+    _help()
 
 
 if __name__ == "__main__":

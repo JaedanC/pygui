@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Any
 from io import StringIO
 import re
 
@@ -45,7 +45,7 @@ class PyxFunction:
     
     def as_pyx_format(self):
         return "\n".join(self.impl)
-    
+
 
 class PyxField:
     def __init__(self, name: str, lines: List[str], use_template=False,
@@ -67,14 +67,18 @@ class PyxField:
             self.name,
             self.custom_type
         )
+    
+    def set_impl(self, impl: List[str]):
+        self.impl = impl
 
 
 class PyxClass:
-    def __init__(self, name: str, methods: List[PyxFunction],
-                 fields: List[PyxField]):
-        self.name = name
-        self.methods = methods
-        self.fields = fields
+    def __init__(self,name: str, constant_lines: PyxGeneric,
+                 methods: List[PyxFunction], fields: List[PyxField]):
+        self.name: str = name
+        self.constant_lines: PyxGeneric = constant_lines
+        self.methods: List[PyxFunction] = methods
+        self.fields: List[PyxField] = fields
     
     def __repr__(self):
         return "Class({}):\n    {}\n    {}".format(
@@ -103,10 +107,12 @@ class PyxClass:
     
 
 class PyxCollection:
-    def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction], classes: List[PyxClass]):
-        self.enums = enums
-        self.functions = functions
-        self.classes = classes
+    def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction],
+                 classes: List[PyxClass], extras: List[PyxGeneric]):
+        self.enums: List[PyxEnum] = enums
+        self.functions: List[PyxFunction] = functions
+        self.classes: List[PyxClass] = classes
+        self.extras: List[PyxGeneric] = extras
 
     def as_pyi_format(self) -> Tuple[str, str]:
         pyi_content = StringIO()
@@ -137,11 +143,105 @@ class PyxCollection:
         
         return pyi_content.getvalue(), py_content.getvalue()
 
-    def get_function_by_name(self, name) -> PyxFunction:
-        for function in self.functions:
-            if name == function.name:
-                return function
+    def get_mergeable_by_name(self, type_: str, name: str) -> Tuple[str, str, bool, List[str], Any]:
+        if type_ == "Function":
+            for function in self.functions:
+                if function.name == name:
+                    return ("Function", function.name, function.use_template, function.impl, function)
+        
+        if type_ == "Field":
+            for class_ in self.classes:
+                for field in class_.fields:
+                    if class_.name + "." + field.name == name:
+                        return ("Field", class_.name + "." + field.name, field.use_template, field.impl, field)
+        
+        if type_ == "Method":
+            for class_ in self.classes:
+                for method in class_.methods:
+                    if class_.name + "." + method.name == name:
+                        return ("Method", class_.name + "." + method.name, method.use_template, method.impl, method)
         return None
+    # def get_function_by_name(self, name) -> PyxFunction:
+    #     for function in self.functions:
+    #         if name == function.name:
+    #             return function
+    #     return None
+
+    # def get_generic_by_name(self, name) -> PyxGeneric:
+    #     for extra in self.extras:
+    #         if name == extra.name:
+    #             return extra
+    #     return None
+
+    def apply_merge(self, merge: Tuple[str, str, bool, List[str], Any]):
+        n_type, n_name, _, n_impl, _ = merge
+        _, _, _, _, mergeable = self.get_mergeable_by_name(n_type, n_name)
+        # if mergeable is None:
+        #     print(merge)
+        mergeable.impl = n_impl
+
+    def as_pyx_format(self):
+        output = StringIO()
+        output.write("# distutils: language = c++\n")
+        output.write("# cython: language_level = 3\n")
+        output.write("# cython: embedsignature=True\n\n")
+        
+        imports, constant_functions = self.extras
+        output.write("# [Imports]\n")
+        output.write("\n".join(imports.lines) + "\n")
+        output.write("# [End Imports]\n\n")
+
+        output.write("# [Enums]\n")
+        for enum in self.enums:
+            output.write(enum.enum_string + "\n")
+        output.write("# [End Enums]\n\n")
+
+        output.write("# [Constant Functions]\n")
+        output.write("\n".join(constant_functions.lines) + "\n")
+        output.write("# [End Constant Functions]\n\n")
+
+        for function in self.functions:
+            output.write("# [Function]\n")
+            output.write("\n".join(function.impl) + "\n")
+            output.write("# [End Function]\n\n")
+    
+        for class_ in self.classes:
+            output.write("# [Class]\n")
+            output.write("# [Class Constants]\n")
+            output.write("\n".join(class_.constant_lines.lines) + "\n")
+            output.write("    # [Class Constants]\n")
+
+            for field in class_.fields:
+                output.write("\n    # [Field]\n")
+                output.write("\n".join(field.impl) + "\n")
+                output.write("    # [End Field]\n")
+
+            for method in class_.methods:
+                output.write("\n    # [Method]\n")
+                output.write("\n".join(method.impl) + "\n")
+                output.write("    # [End Method]\n")
+            
+            output.write("# [End Class]\n\n")
+        
+        return output.getvalue()
+
+    def get_all_mergable(self) -> List[Tuple[str, str, bool, List[str]]]:
+        mergable = []
+        for function in self.functions:
+            mergable.append(("Function", function.name, function.use_template, function.impl, function))
+        for class_ in self.classes:
+            for field in class_.fields:
+                mergable.append(("Field", class_.name + "." + field.name, field.use_template, field.impl, field))
+
+            for method in class_.methods:
+                mergable.append(("Method", class_.name + "." + method.name, method.use_template, method.impl, method))
+        return mergable
+
+
+class PyxGeneric:
+    def __init__(self, name: str, lines: List[str]):
+        self.name: str = name
+        self.lines: List[str] = lines
 
 
 def get_sections(src: str, section_name: str) -> List[str]:
@@ -159,7 +259,10 @@ def get_sections(src: str, section_name: str) -> List[str]:
 
         if line.strip().startswith(f"# [{section_name}]"):
             inside_section = True
-        
+    
+    if len(found_section) > 0:
+        all_sections.append("\n".join(found_section))
+    
     return all_sections
 
 
@@ -192,12 +295,11 @@ def create_pyx_collection(pyx):
         if line == "":
             continue
         
-        enum_string = line.split(" = ")[0]
-        enums.append(PyxEnum(enum_string))
+        # enum_string = line.split(" = ")[0]
+        enums.append(PyxEnum(line))
     
     functions: List[PyxFunction] = []
-    function_section = get_sections(pyx, "Functions")[0]
-    for function in get_sections(function_section, "Function"):
+    for function in get_sections(pyx, "Function"):
         options = parse_function_options(function.split("\n"))
 
         if options["custom_return_type"] == "[Auto]":
@@ -209,14 +311,22 @@ def create_pyx_collection(pyx):
             options["name"],
             options["inferred_parameters"],
             function.split("\n"),
-            options["use_template"],
+            options["use_template"] == "True",
             return_type,
         ))
     
     classes: List[PyxClass] = []
     for class_section in get_sections(pyx, "Class"):
-        lines = class_section.split("\n")
-        name = re.findall("cdef class (.*):", lines[0])[0]
+        name = None
+        for line in class_section.split("\n"):
+            name_found = re.match("cdef class (.*?):", line)
+            if name_found is not None:
+                name = name_found.group(1)
+                break
+        assert name is not None, "Could not find name for class"
+
+        class_constants_section = get_sections(class_section, "Class Constants")[0]
+        class_constants = PyxGeneric("Class Contants", class_constants_section.split("\n"))
 
         methods = []
         for method_section in get_sections(class_section, "Method"):
@@ -231,7 +341,7 @@ def create_pyx_collection(pyx):
                 options["name"],
                 options["inferred_parameters"],
                 method_section.split("\n"),
-                options["use_template"],
+                options["use_template"] == "True",
                 return_type,
             ))
         
@@ -247,17 +357,25 @@ def create_pyx_collection(pyx):
             fields.append(PyxField(
                 options["name"],
                 field_section.split("\n"),
-                options["use_template"],
+                options["use_template"] == "True",
                 return_type,
             ))
         
         classes.append(PyxClass(
             name,
+            class_constants,
             methods,
             fields
         ))
     
-    return PyxCollection(enums, functions, classes)
+    import_section = get_sections(pyx, "Imports")[0]
+    constant_functions_section = get_sections(pyx, "Constant Functions")[0]
+    generics = [
+        PyxGeneric("Imports", import_section.split("\n")),
+        PyxGeneric("Constants", constant_functions_section.split("\n")),
+    ]
+    
+    return PyxCollection(enums, functions, classes, generics)
 
 
 def main():
@@ -272,6 +390,10 @@ def main():
     
     with open("pygui/__init__.py", "w") as f:
         f.write(py)
+    
+    with open("pygui/core_v2_trial.pyx", "w") as f:
+        f.write(collection.as_pyx_format())
+
 
 if __name__ == "__main__":
     main()

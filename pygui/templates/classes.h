@@ -9,4 +9,3 @@ cdef class _{struct_name}:
     
     def __init__(self):
         raise TypeError('This class cannot be instantiated directly.')
-
