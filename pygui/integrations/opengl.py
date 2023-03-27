@@ -5,6 +5,7 @@ import OpenGL.GL as gl
 import ctypes
 
 from .base import BaseOpenGLRenderer
+from typing import List
 # from pygui import *
 import pygui
 
@@ -191,11 +192,11 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
 
             gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._vbo_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ARRAY_BUFFER, commands.vtx_buffer_size * pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(gl.GL_ARRAY_BUFFER, commands.vtx_buffer.size * pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer.data), gl.GL_STREAM_DRAW)
 
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._elements_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer_size * pygui.INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer_data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer.size * pygui.INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer.data), gl.GL_STREAM_DRAW)
 
             # todo: allow to iterate over _CmdList
             for command in commands.cmd_buffer:

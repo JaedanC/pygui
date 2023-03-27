@@ -20,6 +20,10 @@ def function_body_template(
     comment: str,
     **kwargs
 ):
+    """
+    Standardises the function generation process for methods and functions. Any
+    additional kwargs are passed onto the template.
+    """
     parameter_tokens = []
     argument_tokens = []
     implementation_lines = []
@@ -151,7 +155,6 @@ class Template:
 
             # If we are in the corresponding block
             show_line = (in_correct_if_block and value) or (in_correct_else_block and not value) or not in_correct_block
-            # print(show_line, include_this_line, "\t", line)
             if show_line and include_this_line:
                 filtered_lines.append(line)
         
@@ -830,6 +833,7 @@ class HeaderSpec:
         output.write("# [End Enums]\n\n")
 
         output.write("# [Constant Functions]\n")
+        
         output.write("Vec2 = namedtuple('Vec2', ['x', 'y'])\n")
         output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
 
@@ -877,8 +881,8 @@ class HeaderSpec:
 
         for function in self.functions:
             output.write("# [Function]\n")
-            output.write("# @use_template(False)\n")
-            output.write("# @active(False)\n")
+            output.write("# ?use_template(False)\n")
+            output.write("# ?active(False)\n")
             output.write(function.in_pyx_format(self) + "\n")
             output.write("# [End Function]\n\n")
         
@@ -888,7 +892,7 @@ class HeaderSpec:
             
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
-            output.write("# @use_template(False)\n")
+            output.write("# ?use_template(False)\n")
             output.write(template.format(
                 struct_name=struct.name,
                 library_name=self.library_name,
@@ -897,15 +901,15 @@ class HeaderSpec:
             
             for method in struct.methods:
                 output.write("    # [Method]\n")
-                output.write("    # @use_template(False)\n")
-                output.write("    # @active(False)\n")
+                output.write("    # ?use_template(False)\n")
+                output.write("    # ?active(False)\n")
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
 
             for field in struct.fields:
                 output.write("    # [Field]\n")
-                output.write("    # @use_template(False)\n")
-                output.write("    # @active(False)\n")
+                output.write("    # ?use_template(False)\n")
+                output.write("    # ?active(False)\n")
                 output.write(field.in_field_pyx_format(self) + "\n")
                 output.write("    # [End Field]\n\n")
 
@@ -916,7 +920,7 @@ class HeaderSpec:
         self,
         old_collection: PyxCollection,
         template_collection: PyxCollection
-    ) -> Tuple[PyxCollection, PyxCollection, PyxCollection, PyxCollection]:
+    ) -> Tuple[PyxCollection, PyxCollection, PyxCollection]:
 
         """
         Steps:

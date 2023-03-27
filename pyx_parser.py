@@ -31,11 +31,12 @@ class PyxFunction:
         self.active: bool = active
     
     def __repr__(self):
-        return "Function({}, parameters({}), template={}, return_type={})".format(
+        return "Function({}, parameters({}), template={}, return_type={}, active={})".format(
             self.name,
             self.parameters,
             self.use_template,
-            self.return_type
+            self.return_type,
+            self.active,
         )
     
     def as_pyi_format(self):
@@ -69,10 +70,11 @@ class PyxField:
         self.active: bool = active
     
     def __repr__(self):
-        return "Field({}, template={}, type={})".format(
+        return "Field({}, template={}, type={}, active={})".format(
             self.name,
             self.use_template,
-            self.custom_type
+            self.custom_type,
+            self.active,
         )
     
     def as_pyi_format(self):
@@ -243,7 +245,6 @@ class PyxCollection:
 
             for field in class_.fields:
                 output.write("\n    # [Field]\n")
-                print(field.name, field.active)
                 if field.active or ignore_active_flag_show_regardless:
                     output.write("\n".join(field.impl) + "\n")
                 else:
@@ -306,7 +307,7 @@ def parse_function_options(lines):
     options = {}
     for line in lines:
         line = line.strip()
-        found_return_type = re.match(".*@returns\((.*?)\).*", line)
+        found_return_type = re.match(".*\?returns\((.*?)\).*", line)
         if found_return_type is not None and "inferred_type" not in options:
             options["inferred_type"] = found_return_type.group(1) if found_return_type.group(1) != "" else None
         
@@ -315,8 +316,8 @@ def parse_function_options(lines):
             options["name"] = found_name.group(1)
             options["inferred_parameters"] = found_name.group(2)
         
-        if "# @" in line:
-            options_found = re.match(".*?# @(.*?)\((.*)\)", line)
+        if "# ?" in line:
+            options_found = re.match(".*?# \?(.*?)\((.*)\)", line)
             if options_found is None:
                 assert False, "Could not parse option {}".format(line)
             options[options_found.group(1)] = options_found.group(2)
@@ -331,7 +332,6 @@ def create_pyx_collection(pyx):
         if line == "":
             continue
         
-        # enum_string = line.split(" = ")[0]
         enums.append(PyxEnum(line))
     
     functions: List[PyxFunction] = []
@@ -396,6 +396,7 @@ def create_pyx_collection(pyx):
                 field_section.split("\n"),
                 options["use_template"] == "True",
                 return_type,
+                options["active"] == "True",
             ))
         
         classes.append(PyxClass(

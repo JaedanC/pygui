@@ -1,5 +1,5 @@
 #if is_constructor
-# @returns(_{struct_name})
+# ?returns(_{struct_name})
 @staticmethod
 def {function_name}({parameters}):
     #if has_comment
@@ -14,7 +14,7 @@ def {function_name}({parameters}):
     return _{struct_name}.from_ptr(_ptr)
 ##
 #else
-# @returns({python_return_type})
+# ?returns({python_return_type})
 def {function_name}({parameters}):
     #if has_comment
 {comment}

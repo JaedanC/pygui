@@ -65,5 +65,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # print(pygui.KEY_Z)
+    for thing, value in pygui.__dict__.items():
+        print(thing, "=", value)
     main()

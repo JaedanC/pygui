@@ -398,10 +398,24 @@ def show_user_guide() -> None: ...
 
 class _ImColor: ...
 class _ImDrawChannel: ...
-class _ImDrawCmd: ...
-class _ImDrawCmdHeader: ...
+class _ImDrawCmd:
+    clip_rect: tuple
+    elem_count: int
+    # idx_offset: int
+    texture_id: object
+    # user_callback_data: Any
+    # vtx_offset: int
+    # def destroy(self: _ImDrawCmd) -> None: ...
+    # def draw_cmd() -> _ImDrawCmd: ...
+    # def get_tex_id(self: _ImDrawCmd) -> Any: ...
+
+class _ImDrawCmdHeader:
+    clip_rect: tuple
+    # texture_id: Any
+    # vtx_offset: int
+
 class _ImDrawData:
-    # cmd_lists: _ImDrawList
+    cmd_lists: List[_ImDrawList]
     # cmd_lists_count: int
     # display_pos: tuple
     # display_size: tuple
@@ -428,10 +442,10 @@ class _ImDrawList:
     # _texture_id_stack: _ImVector_ImTextureID
     # _vtx_current_idx: int
     # _vtx_write_ptr: _ImDrawVert
-    # cmd_buffer: List[_ImDrawCmd]
+    cmd_buffer: List[_ImDrawCmd]
     # flags: int
-    # idx_buffer: _ImVector_ImDrawIdx
-    # vtx_buffer: _ImVector_ImDrawVert
+    idx_buffer: _ImVector_ImDrawIdx
+    vtx_buffer: _ImVector_ImDrawVert
     # def _calc_circle_auto_segment_count(self: _ImDrawList, radius: float) -> int: ...
     # def _clear_free_memory(self: _ImDrawList) -> None: ...
     # def _on_changed_clip_rect(self: _ImDrawList) -> None: ...
@@ -513,7 +527,7 @@ class _ImFontAtlas:
     # tex_desired_width: int
     # tex_glyph_padding: int
     # tex_height: int
-    # tex_id: object
+    tex_id: object
     # tex_pixels_alpha8: str
     # tex_pixels_rgba32: int
     # tex_pixels_use_colors: Any
@@ -591,31 +605,31 @@ class _ImGuiIO:
     # config_viewports_no_task_bar_icon: Any
     # config_windows_move_from_title_bar_only: Any
     # config_windows_resize_from_edges: Any
-    # delta_time: float
-    # display_framebuffer_scale: Tuple[float, float]
-    # display_size: Tuple[float, float]
+    delta_time: float
+    display_framebuffer_scale: tuple
+    display_size: tuple
     # font_allow_user_scaling: Any
     # font_default: _ImFont
     # font_global_scale: float
-    # fonts: _ImFontAtlas
+    fonts: _ImFontAtlas
     # framerate: float
-    # get_clipboard_text_fn: Callable
+    get_clipboard_text_fn: Callable
     # hover_delay_normal: float
     # hover_delay_short: float
     # ini_filename: str
     # ini_saving_rate: float
     # input_queue_characters: _ImVector_ImWchar
     # input_queue_surrogate: int
-    # key_alt: Any
-    # key_ctrl: Any
-    # key_map: int
+    key_alt: Any
+    key_ctrl: Any
+    key_map: int
     # key_mods: int
     # key_repeat_delay: float
     # key_repeat_rate: float
-    # key_shift: Any
-    # key_super: Any
+    key_shift: Any
+    key_super: Any
     # keys_data: _ImGuiKeyData
-    # keys_down: Any
+    keys_down: Any
     # log_filename: str
     # metrics_active_allocations: int
     # metrics_active_windows: int
@@ -631,7 +645,7 @@ class _ImGuiIO:
     # mouse_double_click_max_dist: float
     # mouse_double_click_time: float
     # mouse_double_clicked: Any
-    # mouse_down: Any
+    mouse_down: Any
     # mouse_down_duration: float
     # mouse_down_duration_prev: float
     # mouse_down_owned: Any
@@ -641,16 +655,16 @@ class _ImGuiIO:
     # mouse_drag_threshold: float
     # mouse_draw_cursor: Any
     # mouse_hovered_viewport: int
-    # mouse_pos: Tuple[float, float]
+    mouse_pos: tuple
     # mouse_pos_prev: tuple
     # mouse_released: Any
-    # mouse_wheel: float
-    # mouse_wheelh: float
+    mouse_wheel: float
+    mouse_wheelh: float
     # nav_active: Any
     # nav_inputs: float
     # nav_visible: Any
     # pen_pressure: float
-    # set_clipboard_text_fn: Callable
+    set_clipboard_text_fn: Callable
     # set_platform_ime_data_fn: Callable
     # user_data: Any
     # want_capture_keyboard: Any
@@ -697,8 +711,16 @@ class _ImVec2: ...
 class _ImVec4: ...
 class _ImVector_ImDrawChannel: ...
 class _ImVector_ImDrawCmd: ...
-class _ImVector_ImDrawIdx: ...
-class _ImVector_ImDrawVert: ...
+class _ImVector_ImDrawIdx:
+    # capacity: int
+    data: int
+    size: int
+
+class _ImVector_ImDrawVert:
+    # capacity: int
+    data: int
+    size: int
+
 class _ImVector_ImFontAtlasCustomRect: ...
 class _ImVector_ImFontConfig: ...
 class _ImVector_ImFontGlyph: ...
