@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List, Tuple, Any
 from io import StringIO
+import helpers
 import re
 
 
@@ -21,39 +22,51 @@ class PyxEnum:
 
 class PyxFunction:
     def __init__(self, name: str, parameters: str, lines: List[str],
-                 use_template=False, custom_return_type=None):
+                 use_template=False, return_type=None, active=False):
         self.name: str = name
         self.parameters: str = parameters
         self.impl: List[str] = lines
         self.use_template: bool = use_template
-        self.custom_return_type: str = custom_return_type
+        self.return_type: str = return_type
+        self.active: bool = active
     
     def __repr__(self):
         return "Function({}, parameters({}), template={}, return_type={})".format(
             self.name,
             self.parameters,
             self.use_template,
-            self.custom_return_type
+            self.return_type
         )
     
     def as_pyi_format(self):
-        return "def {}({}) -> {}: ...".format(
-            self.name,
-            self.parameters,
-            self.custom_return_type
-        )
+        output = "def {}({}) -> {}: ...".format(
+                self.name,
+                self.parameters,
+                self.return_type
+            )
+        if self.active:
+            return output
+        return "# " + output
     
     def as_pyx_format(self):
         return "\n".join(self.impl)
 
+    def merge(self, other: PyxFunction):
+        self.parameters = other.parameters
+        self.impl = other.impl
+        self.use_template = other.use_template
+        self.return_type = other.return_type
+        self.active = other.active
+
 
 class PyxField:
     def __init__(self, name: str, lines: List[str], use_template=False,
-                 custom_type=None):
+                 custom_type=None, active=False):
         self.name: str = name
         self.impl: List[str] = lines
         self.use_template: bool = use_template
         self.custom_type: str = custom_type
+        self.active: bool = active
     
     def __repr__(self):
         return "Field({}, template={}, type={})".format(
@@ -63,13 +76,19 @@ class PyxField:
         )
     
     def as_pyi_format(self):
-        return "{}: {}".format(
+        output = "{}: {}".format(
             self.name,
             self.custom_type
         )
-    
-    def set_impl(self, impl: List[str]):
-        self.impl = impl
+        if self.active:
+            return output
+        return "# " + output
+
+    def merge(self, other: PyxField):
+        self.impl = other.impl
+        self.use_template = other.use_template
+        self.custom_type = other.custom_type
+        self.active = other.active
 
 
 class PyxClass:
@@ -100,17 +119,23 @@ class PyxClass:
             body.write("    {}\n".format(method.as_pyi_format()))
 
         has_body = (len(self.methods) + len(self.fields)) > 0
+        has_active = len([a for a in self.fields + self.methods if a.active]) > 0
         return "class {}:{}".format(
             self.name,
-            " ..." if not has_body else body.getvalue()
+            body.getvalue() if has_body and has_active else " ..."
         )
 
     
 class PyxGeneric:
-    def __init__(self, name: str, impl: List[str]):
+    def __init__(self, name: str, impl: List[str], use_template=False):
         self.name: str = name
         self.impl: List[str] = impl
-
+        self.use_template: bool = use_template
+    
+    def merge(self, other: PyxGeneric):
+        self.impl = other.impl
+        self.use_template = other.use_template
+    
 
 class PyxCollection:
     def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction],
@@ -149,33 +174,40 @@ class PyxCollection:
         
         return pyi_content.getvalue(), py_content.getvalue()
 
-    def get_mergeable_by_name(self, type_: str, name: str) -> Tuple[str, str, bool, List[str], Any]:
+    def get_mergeable_by_name(self, type_: str, name: str) -> Tuple[str, str, Any]:
         if type_ == "Function":
             for function in self.functions:
                 if function.name == name:
-                    return ("Function", function.name, function.use_template, function.impl, function)
+                    return ("Function", function.name, function)
         
         if type_ == "Field":
             for class_ in self.classes:
                 for field in class_.fields:
                     if class_.name + "." + field.name == name:
-                        return ("Field", class_.name + "." + field.name, field.use_template, field.impl, field)
+                        return ("Field", class_.name + "." + field.name, field)
         
         if type_ == "Method":
             for class_ in self.classes:
                 for method in class_.methods:
                     if class_.name + "." + method.name == name:
-                        return ("Method", class_.name + "." + method.name, method.use_template, method.impl, method)
+                        return ("Method", class_.name + "." + method.name, method)
+        
+        if type_ == "Class Constants":
+            for class_ in self.classes:
+                if class_.name + "." + class_.constant_lines.name == name:
+                    return (
+                        "Class Constants",
+                        class_.name + "." + class_.constant_lines.name,
+                        class_.constant_lines
+                    )
         return None
 
-    def apply_merge(self, merge: Tuple[str, str, bool, List[str], Any]):
-        n_type, n_name, _, n_impl, _ = merge
-        _, _, _, _, mergeable = self.get_mergeable_by_name(n_type, n_name)
-        # if mergeable is None:
-        #     print(merge)
-        mergeable.impl = n_impl
+    def apply_merge(self, from_: Tuple[str, str, Any]):
+        n_type, n_name, n_mergeable = from_
+        _, _, s_mergeable = self.get_mergeable_by_name(n_type, n_name)
+        s_mergeable.merge(n_mergeable)
 
-    def as_pyx_format(self):
+    def as_pyx_format(self, ignore_active_flag_show_regardless=True):
         output = StringIO()
         output.write("# distutils: language = c++\n")
         output.write("# cython: language_level = 3\n")
@@ -197,39 +229,54 @@ class PyxCollection:
 
         for function in self.functions:
             output.write("# [Function]\n")
-            output.write("\n".join(function.impl) + "\n")
+            if function.active or ignore_active_flag_show_regardless:
+                output.write("\n".join(function.impl) + "\n")
+            else:
+                output.write(helpers.comment_text("\n".join(function.impl)) + "\n")
             output.write("# [End Function]\n\n")
     
         for class_ in self.classes:
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
             output.write("\n".join(class_.constant_lines.impl) + "\n")
-            output.write("    # [Class Constants]\n")
+            output.write("    # [End Class Constants]\n")
 
             for field in class_.fields:
                 output.write("\n    # [Field]\n")
-                output.write("\n".join(field.impl) + "\n")
+                print(field.name, field.active)
+                if field.active or ignore_active_flag_show_regardless:
+                    output.write("\n".join(field.impl) + "\n")
+                else:
+                    output.write(helpers.comment_text("\n".join(field.impl)) + "\n")
                 output.write("    # [End Field]\n")
 
             for method in class_.methods:
                 output.write("\n    # [Method]\n")
-                output.write("\n".join(method.impl) + "\n")
+                if method.active or ignore_active_flag_show_regardless:
+                    output.write("\n".join(method.impl) + "\n")
+                else:
+                    output.write(helpers.comment_text("\n".join(method.impl)) + "\n")
                 output.write("    # [End Method]\n")
             
             output.write("# [End Class]\n\n")
         
         return output.getvalue()
 
-    def get_all_mergable(self) -> List[Tuple[str, str, bool, List[str]]]:
+    def get_all_mergable(self) -> List[Tuple[str, str, Any]]:
         mergable = []
         for function in self.functions:
-            mergable.append(("Function", function.name, function.use_template, function.impl, function))
+            mergable.append(("Function", function.name, function))
         for class_ in self.classes:
+            mergable.append((
+                "Class Constants",
+                class_.name + "." + class_.constant_lines.name,
+                class_.constant_lines
+            ))
             for field in class_.fields:
-                mergable.append(("Field", class_.name + "." + field.name, field.use_template, field.impl, field))
+                mergable.append(("Field", class_.name + "." + field.name, field))
 
             for method in class_.methods:
-                mergable.append(("Method", class_.name + "." + method.name, method.use_template, method.impl, method))
+                mergable.append(("Method", class_.name + "." + method.name, method))
         return mergable
 
 
@@ -263,14 +310,13 @@ def parse_function_options(lines):
         if found_return_type is not None and "inferred_type" not in options:
             options["inferred_type"] = found_return_type.group(1) if found_return_type.group(1) != "" else None
         
-        found_name = re.match("def (.*?)\((.*?)\):", line)
+        found_name = re.match(".*def (.*?)\((.*?)\):", line)
         if found_name is not None and "name" not in options:
             options["name"] = found_name.group(1)
             options["inferred_parameters"] = found_name.group(2)
         
-        if line.startswith("# @"):
-            line = line.replace("# @", "", 1)
-            options_found = re.match("(.*?)\((.*)\)", line)
+        if "# @" in line:
+            options_found = re.match(".*?# @(.*?)\((.*)\)", line)
             if options_found is None:
                 assert False, "Could not parse option {}".format(line)
             options[options_found.group(1)] = options_found.group(2)
@@ -291,10 +337,9 @@ def create_pyx_collection(pyx):
     functions: List[PyxFunction] = []
     for function in get_sections(pyx, "Function"):
         options = parse_function_options(function.split("\n"))
-        if options["custom_return_type"] == "Auto":
-            return_type = options["inferred_type"]
-        else:
-            return_type = options["custom_return_type"]
+        return_type = options["inferred_type"]
+        assert options["use_template"] in ["True", "False"]
+        assert options["active"] in ["True", "False"]
 
         functions.append(PyxFunction(
             options["name"],
@@ -302,6 +347,7 @@ def create_pyx_collection(pyx):
             function.split("\n"),
             options["use_template"] == "True",
             return_type,
+            options["active"] == "True",
         ))
     
     classes: List[PyxClass] = []
@@ -315,16 +361,19 @@ def create_pyx_collection(pyx):
         assert name is not None, "Could not find name for class"
 
         class_constants_section = get_sections(class_section, "Class Constants")[0]
-        class_constants = PyxGeneric("Class Contants", class_constants_section.split("\n"))
+        class_constants_options = parse_function_options(class_constants_section.split("\n"))
+        class_constants = PyxGeneric(
+            "Class Constants",
+            class_constants_section.split("\n"),
+            use_template=class_constants_options["use_template"]
+        )
 
         methods = []
         for method_section in get_sections(class_section, "Method"):
             options = parse_function_options(method_section.split("\n"))
-
-            if options["custom_return_type"] == "Auto":
-                return_type = options["inferred_type"]
-            else:
-                return_type = options["custom_return_type"]
+            return_type = options["inferred_type"]
+            assert options["use_template"] in ["True", "False"]
+            assert options["active"] in ["True", "False"]
 
             methods.append(PyxFunction(
                 options["name"],
@@ -332,16 +381,15 @@ def create_pyx_collection(pyx):
                 method_section.split("\n"),
                 options["use_template"] == "True",
                 return_type,
+                options["active"] == "True",
             ))
         
         fields = []
         for field_section in get_sections(class_section, "Field"):
             options = parse_function_options(field_section.split("\n"))
-
-            if options["custom_type"] == "Auto":
-                return_type = options["inferred_type"]
-            else:
-                return_type = options["custom_type"]
+            return_type = options["inferred_type"]
+            assert options["use_template"] in ["True", "False"]
+            assert options["active"] in ["True", "False"]
 
             fields.append(PyxField(
                 options["name"],

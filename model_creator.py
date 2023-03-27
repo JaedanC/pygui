@@ -1,46 +1,14 @@
 from __future__ import annotations
+import builtins
+import helpers
 import json
 import keyword
 import re
-from io import StringIO
-from typing import List, Tuple, Any
-from pyx_parser import *
-from diff_match_patch import diff_match_patch
-import builtins
 import sys
-
-
-def snake_caseify(string: str, make_upper=False) -> str:
-    """Converts a string to be snake_case or UPPER_CASE depending on the value
-    of make_upper. Returns a new string.
-    """
-    pythonised_string = ""
-    for i, char in enumerate(string):
-        skip_underscore = True
-        if i > 0 and i < len(string) - 1:
-            back = string[i - 1]
-            forw = string[i + 1]
-            skip_underscore = (back.isupper() or back.isnumeric()) \
-                and (forw.isupper() or forw.isnumeric() or forw == "_") or back == "_"
-
-        if char == "_":
-            skip_underscore = True
-
-        if make_upper:
-            if (char.isupper() or char.isnumeric()) and i != 0 and not skip_underscore:
-                pythonised_string += "_" + char.upper()
-                continue
-            pythonised_string += char.upper()
-        else:
-            if (char.isupper() or char.isnumeric()) and i != 0 and not skip_underscore:
-                pythonised_string += "_" + char.lower()
-                continue
-            pythonised_string += char.lower()
-    return pythonised_string
-
-
-def indent_by(string: str, by: int):
-    return "\n".join([by * " " + line for line in string.split("\n")])
+from io import StringIO
+from diff_match_patch import diff_match_patch
+from pyx_parser import *
+from typing import List, Tuple
 
 
 def function_body_template(
@@ -84,12 +52,9 @@ def function_body_template(
             res_name = "_bytes(res)"
         
     parameter_text = ", ".join(parameter_tokens)
-    # if len(parameter_tokens) > 5:
-    #     parameter_text = "\n" + indent_by(",\n".join(parameter_tokens), 4) + "\n"
-    # else:
     
     if len(argument_tokens) > 5:
-        argument_text = "\n" + indent_by(",\n".join(argument_tokens), 8) + "\n    "
+        argument_text = "\n" + helpers.indent_by(",\n".join(argument_tokens), 8) + "\n    "
     else:
         argument_text = ", ".join(argument_tokens)
 
@@ -105,7 +70,7 @@ def function_body_template(
         function_name=function_name,
         comment=comment,
         parameters=parameter_text,
-        body_lines=indent_by("\n".join(implementation_lines), 4),
+        body_lines=helpers.indent_by("\n".join(implementation_lines), 4),
         return_type=return_type_string,
         python_return_type=python_return_type_string,
         library_name=header.library_name,
@@ -118,23 +83,12 @@ def function_body_template(
     return template.compile(**kwargs)
 
 
-def pretty_comment(comment_text, indented_by=4, to_size=60) -> str:
-    if comment_text == "":
+def pretty_comment(comment: str):
+    comment = helpers.wrap_text(comment)
+    if comment == "":
         return ""
-    
-    output = ""
-    i = 0
-    for char in comment_text:
-        if i < to_size:
-            output += char
-        elif char == " ":
-            output += "\n"
-            i = 0
-        else:
-            output += char
 
-        i += 1
-    return indent_by('"""\n{}\n"""'.format(output), indented_by)
+    return helpers.indent_by('"""\n{}\n"""'.format(comment), 4)
 
 
 class Template:
@@ -167,8 +121,6 @@ class Template:
         in_correct_else_block = False
         if_block_stack = 0
         filtered_lines = []
-        # print()
-        # print(condition + " == " + str(value))
         for line in self.base.split("\n"):
             line_stripped = line.strip()
             include_this_line = True
@@ -517,7 +469,7 @@ class Parameter:
             res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
         
         getter.format(
-            field_name = snake_caseify(self.name),
+            field_name = helpers.pythonise_string(self.name),
             cimgui_field_name = self.name,
             field_type = type_string,
             res = res,
@@ -535,7 +487,7 @@ class Parameter:
             value = "_bytes(value)"
 
         setter.format(
-            field_name = snake_caseify(self.name),
+            field_name = helpers.pythonise_string(self.name),
             cimgui_field_name = self.name,
             field_type = type_string,
             res = res,
@@ -551,7 +503,7 @@ class Parameter:
             is_getter=False
         )
 
-        return indent_by(get_func + "\n" + set_func, 4)
+        return helpers.indent_by(get_func + "\n" + set_func, 4)
 
 
 class ParameterList:
@@ -633,7 +585,7 @@ class Enum:
     def in_pyx_format(self, library_name):
         value_output = StringIO()
         for value in self.values:
-            snake_value = snake_caseify(value, make_upper=True) \
+            snake_value = helpers.pythonise_string(value, make_upper=True) \
                 .replace("IM_GUI", "IMGUI")
             value_output.write("{} = {}.{}\n".format(
                 snake_value,
@@ -676,7 +628,7 @@ class Function:
             header,
             self.parameters,
             self.return_type,
-            re.sub("^ig_", "", snake_caseify(self.name)), 
+            re.sub("^ig_", "", helpers.pythonise_string(self.name)), 
             self.name,
             pretty_comment(self.comment),
             is_constructor=False,
@@ -725,7 +677,7 @@ class Method:
         )
     
     def in_pyx_format(self, header: HeaderSpec):
-        function_name = snake_caseify(self.cimgui_name.replace(self.struct_name + "_", ""))
+        function_name = helpers.pythonise_string(self.cimgui_name.replace(self.struct_name + "_", ""))
         function_name = safe_python_name(function_name)
         function_name = re.sub("^im_", "", function_name)
 
@@ -735,11 +687,11 @@ class Method:
             self.return_type,
             function_name,
             self.cimgui_name,
-            pretty_comment(self.comment, 4, 56),
+            pretty_comment(self.comment),
             is_constructor=self.is_constructor,
             struct_name=self.struct_name
         )
-        return indent_by(output, 4)
+        return helpers.indent_by(output, 4)
 
 
 class Struct:
@@ -926,7 +878,7 @@ class HeaderSpec:
         for function in self.functions:
             output.write("# [Function]\n")
             output.write("# @use_template(False)\n")
-            output.write("# @custom_return_type(Auto)\n")
+            output.write("# @active(False)\n")
             output.write(function.in_pyx_format(self) + "\n")
             output.write("# [End Function]\n\n")
         
@@ -936,6 +888,7 @@ class HeaderSpec:
             
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
+            output.write("# @use_template(False)\n")
             output.write(template.format(
                 struct_name=struct.name,
                 library_name=self.library_name,
@@ -945,14 +898,14 @@ class HeaderSpec:
             for method in struct.methods:
                 output.write("    # [Method]\n")
                 output.write("    # @use_template(False)\n")
-                output.write("    # @custom_return_type(Auto)\n")
+                output.write("    # @active(False)\n")
                 output.write(method.in_pyx_format(self) + "\n")
                 output.write("    # [End Method]\n\n")
 
             for field in struct.fields:
                 output.write("    # [Field]\n")
                 output.write("    # @use_template(False)\n")
-                output.write("    # @custom_type(Auto)\n")
+                output.write("    # @active(False)\n")
                 output.write(field.in_field_pyx_format(self) + "\n")
                 output.write("    # [End Field]\n\n")
 
@@ -960,8 +913,10 @@ class HeaderSpec:
         return output.getvalue()
 
     def get_merged_collection(
-        self, old_collection: PyxCollection,
-        template_collection: PyxCollection) -> Tuple[PyxCollection, PyxCollection, PyxCollection]:
+        self,
+        old_collection: PyxCollection,
+        template_collection: PyxCollection
+    ) -> Tuple[PyxCollection, PyxCollection, PyxCollection, PyxCollection]:
 
         """
         Steps:
@@ -975,23 +930,34 @@ class HeaderSpec:
         dmp = diff_match_patch()
 
         """
-        - For each function in the new collection, find it's template
+        - For each mergable in the new collection, find it's template
           counterpart.
-           - If it doesn't exist then keep the new function.
-           - If it exists, check to see if use_template is not checked. If so,
-             keep the new function too.
-           - If it exists and use_template is checked. Make note of the old
-             function too. If the old function doesn't exist then keep the
-             template version completely
-              - If it does exist:
-                 - Compute patches between the old and the new. Apply the patches
-                   to the template version and keep the template function.
+            - If it doesn't exist then keep the new mergable.
+            - If it exists, check to see if use_template is not checked. If so,
+              keep the new mergable too.
+            - If it exists and use_template is checked. Make note of the old
+              mergable too. If the old mergable doesn't exist then keep the
+              template version completely
+                - If it does exist:
+                - Compute patches between the old and the new. Apply the patches
+                  to the template version and keep the template mergable.
+            - Finally, check to see if the mergable is "active". If it's active
+              then the resulting mergable should be commented out.
+            - This should then leave us with 4 files:
+                - core_generated_prev.pyx -> The old_collection as a backup.
+                - core_generated.pyx  ->  The new_collection unchanged.
+                - core_template.pyx   ->  The new_collection merged with the
+                                          template
+                - core.pyx            ->  The new_collection merged with the
+                                          template but also adhering to the
+                                          active flag, commenting out the impl.
+                                          as necessary.
         """
         to_keep = []
         n_mergables = new_collection.get_all_mergable()
         merge_failed = False
         for n_mergable in n_mergables:
-            n_type, n_name, _, n_impl, _ = n_mergable
+            n_type, n_name, n_obj = n_mergable
             t_mergable = template_collection.get_mergeable_by_name(n_type, n_name)
 
             # No template found
@@ -1000,8 +966,8 @@ class HeaderSpec:
                 to_keep.append(n_mergable)
                 continue
             
-            _, _, t_use_template, t_impl, _ = t_mergable
-            if not t_use_template:
+            _, _, t_obj = t_mergable
+            if not t_obj.use_template:
                 # print("Overwriting existing. Not using template {} - {}.".format(n_type, n_name))
                 to_keep.append(n_mergable)
                 continue
@@ -1012,23 +978,23 @@ class HeaderSpec:
                 to_keep.append(t_mergable)
                 continue
 
-            _, _, _, o_impl, _ = o_mergable
+            _, _, o_obj = o_mergable
             o_to_n_patches = dmp.patch_make(
-                "\n".join(o_impl),
-                "\n".join(n_impl)
+                "\n".join(o_obj.impl),
+                "\n".join(n_obj.impl)
             )
-            merged_impl, successes = dmp.patch_apply(o_to_n_patches, "\n".join(t_impl))
+            merged_impl, successes = dmp.patch_apply(o_to_n_patches, "\n".join(t_obj.impl))
             if False in successes:
                 merge_failed = True
                 print("---------------------------------------------------")
                 print("1. Could not apply patch between old:")
-                print("\n".join(o_impl))
+                print("\n".join(o_obj.impl))
                 print("---------------------------------------------------")
                 print("2. And the new:")
-                print("\n".join(n_impl))
+                print("\n".join(n_obj.impl))
                 print("---------------------------------------------------")
                 print("3. To template:")
-                print("\n".join(t_impl))
+                print("\n".join(t_obj.impl))
                 print("---------------------------------------------------")
                 print("4. We got to:")
                 print(merged_impl)
@@ -1036,7 +1002,10 @@ class HeaderSpec:
                 continue
             
             print("Patched {} - {} successfully".format(n_type, n_name))
-            to_keep.append((n_type, n_name, t_use_template, merged_impl.split("\n"), None))
+
+            # Should keep any template specific information too
+            t_obj.impl = merged_impl.split("\n")
+            to_keep.append((n_type, n_name, t_obj))
             # old_collection.apply_merge(n_mergable)
 
         for merged_item in to_keep:
@@ -1438,10 +1407,10 @@ def main():
             return
         
         with open("pygui/core.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format())
+            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
 
         with open("pygui/core_template.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format())
+            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
 
         with open("pygui/core_generated.pyx", "w") as f:
             f.write(new_collection.as_pyx_format())
@@ -1471,7 +1440,10 @@ def main():
             return
         
         with open("pygui/core_trial.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format())
+            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
+        
+        with open("pygui/core_template_trial.pyx", "w") as f:
+            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
         
         print("Created core_trial.pyx")
         print("Trial success")

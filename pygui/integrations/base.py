@@ -8,7 +8,7 @@ class BaseOpenGLRenderer(object):
                 "No valid ImGui context. Use imgui.create_context() first and/or "
                 "imgui.set_current_context()."
             )
-        self.io = pygui.get_io()
+        self.io: pygui._ImGuiIO = pygui.get_io()
 
         self._font_texture = None
 
