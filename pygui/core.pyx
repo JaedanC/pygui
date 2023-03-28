@@ -8346,7 +8346,7 @@ cdef class _ImDrawData:
     # ?use_template(True)
     # ?active(True)
     # ?returns(None)
-    def scale_clip_rects(self: _ImDrawData, fb_scale: tuple):
+    def scale_clip_rects(self: _ImDrawData, fb_scale):
         """
         Helper to scale the cliprect field of each imdrawcmd. use if
         your final output buffer is at a different scale than dear imgui
@@ -13660,8 +13660,8 @@ cdef class _ImDrawList:
     # ?returns(_ImVector_ImDrawIdx)
     @property
     def idx_buffer(self):
-        cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
-        return _ImVector_ImDrawIdx.from_ptr(&res)
+        cdef ccimgui.ImVector_ImDrawIdx* res = &dereference(self._ptr).IdxBuffer
+        return _ImVector_ImDrawIdx.from_ptr(res)
     @idx_buffer.setter
     def idx_buffer(self, value: _ImVector_ImDrawIdx):
         # dereference(self._ptr).IdxBuffer = value._ptr
@@ -13674,8 +13674,8 @@ cdef class _ImDrawList:
     # ?returns(_ImVector_ImDrawVert)
     @property
     def vtx_buffer(self):
-        cdef ccimgui.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
-        return _ImVector_ImDrawVert.from_ptr(&res)
+        cdef ccimgui.ImVector_ImDrawVert* res = &dereference(self._ptr).VtxBuffer
+        return _ImVector_ImDrawVert.from_ptr(res)
     @vtx_buffer.setter
     def vtx_buffer(self, value: _ImVector_ImDrawVert):
         # dereference(self._ptr).VtxBuffer = value._ptr
