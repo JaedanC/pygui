@@ -133,7 +133,7 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, last_array_buffer)
         gl.glBindVertexArray(last_vertex_array)
 
-    def render(self, draw_data):
+    def render(self, draw_data: pygui.ImDrawData):
         # perf: local for faster access
         io = self.io
 
@@ -192,11 +192,21 @@ class ProgrammablePipelineRenderer(BaseOpenGLRenderer):
 
             gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self._vbo_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ARRAY_BUFFER, commands.vtx_buffer.size * pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer.data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(
+                gl.GL_ARRAY_BUFFER,
+                commands.vtx_buffer.size * pygui.VERTEX_SIZE,
+                ctypes.c_void_p(commands.vtx_buffer.data),
+                gl.GL_STREAM_DRAW
+            )
 
             gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self._elements_handle)
             # todo: check this (sizes)
-            gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, commands.idx_buffer.size * pygui.INDEX_SIZE, ctypes.c_void_p(commands.idx_buffer.data), gl.GL_STREAM_DRAW)
+            gl.glBufferData(
+                gl.GL_ELEMENT_ARRAY_BUFFER,
+                commands.idx_buffer.size * pygui.INDEX_SIZE,
+                ctypes.c_void_p(commands.idx_buffer.data),
+                gl.GL_STREAM_DRAW
+            )
 
             # todo: allow to iterate over _CmdList
             for command in commands.cmd_buffer:
@@ -292,7 +302,7 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
     def _create_device_objects(self):
         pass
 
-    def render(self, draw_data):
+    def render(self, draw_data: pygui.ImDrawData):
         # perf: local for faster access
         io = self.io
 
@@ -342,11 +352,11 @@ class FixedPipelineRenderer(BaseOpenGLRenderer):
         gl.glLoadIdentity()
 
         for commands in draw_data.cmd_lists:
-            idx_buffer = commands.idx_buffer_data
+            idx_buffer = commands.idx_buffer.data
 
-            gl.glVertexPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_POS_OFFSET))
-            gl.glTexCoordPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_UV_OFFSET))
-            gl.glColorPointer(4, gl.GL_UNSIGNED_BYTE, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer_data + pygui.VERTEX_BUFFER_COL_OFFSET))
+            gl.glVertexPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer.data + pygui.VERTEX_BUFFER_POS_OFFSET))
+            gl.glTexCoordPointer(2, gl.GL_FLOAT, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer.data + pygui.VERTEX_BUFFER_UV_OFFSET))
+            gl.glColorPointer(4, gl.GL_UNSIGNED_BYTE, pygui.VERTEX_SIZE, ctypes.c_void_p(commands.vtx_buffer.data + pygui.VERTEX_BUFFER_COL_OFFSET))
 
             for command in commands.cmd_buffer:
                 gl.glBindTexture(gl.GL_TEXTURE_2D, command.texture_id)

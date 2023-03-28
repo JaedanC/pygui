@@ -51,7 +51,7 @@ def function_body_template(
             return_type_string = return_type.internal_str
         
         if return_type.is_type_class(header):
-            res_name = "_{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
+            res_name = "{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
         elif return_type.is_string():
             res_name = "_bytes(res)"
         
@@ -259,7 +259,8 @@ class CType:
             return CType.lookup[shortened_type]
         
         if CType(shortened_type).is_type_class(header):
-            return "_" + CType(shortened_type).with_no_const_or_asterisk()
+            return CType(shortened_type).with_no_const_or_asterisk()
+            # return "_" + CType(shortened_type).with_no_const_or_asterisk()
         
         similar_type_lookup = {
             "void*": "Any",
@@ -308,7 +309,8 @@ class CType:
         
         for struct_name in [s.name for s in header.structs]:
             if struct_name == type_string:
-                return "_" + struct_name
+                return struct_name
+                # return "_" + struct_name
 
         return type_string \
             .replace("unsigned ", "")
@@ -377,10 +379,7 @@ class Parameter:
     def in_pyx_parameter_type_name_defaults(self, header: HeaderSpec) -> List[str]:
         output = []
         for local_name in self._get_expanded_names():
-            # type_string = self.type.as_cython_type(header)
             type_string = self.type.as_python_type(header)
-            # if self.type.is_type_class(header) and type_string == "Any":
-            #     type_string = "_" + self.type.with_no_const_or_asterisk()
 
             output.append("{name}: {type}{default}".format(
                 name=local_name,
@@ -469,7 +468,8 @@ class Parameter:
         res = "res"
         if self.type.is_type_class(header):# and type_string == "Any":
             type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
-            res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
+            res = self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
+            # res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
         
         getter.format(
             field_name = helpers.pythonise_string(self.name),
@@ -877,6 +877,17 @@ class HeaderSpec:
 
         output.write("def _py_index_buffer_index_size():\n")
         output.write("    return sizeof(ccimgui.ImDrawIdx)\n")
+
+        output.write("cdef class BoolPtr:\n")
+        output.write("    cdef bool ptr\n")
+        output.write("\n")
+        output.write("    def __init__(self, initial_value: bool):\n")
+        output.write("        self.ptr: bool = initial_value\n")
+        output.write("\n")
+        output.write("    def __bool__(self):\n")
+        output.write("        return self.ptr\n")
+        output.write("\n")
+
         output.write("# [End Constant Functions]\n\n\n")
 
         for function in self.functions:

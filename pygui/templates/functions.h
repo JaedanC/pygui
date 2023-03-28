@@ -1,5 +1,5 @@
 #if is_constructor
-# ?returns(_{struct_name})
+# ?returns({struct_name})
 @staticmethod
 def {function_name}({parameters}):
     #if has_comment
@@ -11,7 +11,7 @@ def {function_name}({parameters}):
     cdef {return_type} _ptr = {library_name}.{function_pxd_name}({arguments})
     if _ptr is NULL:
         raise MemoryError
-    return _{struct_name}.from_ptr(_ptr)
+    return {struct_name}.from_ptr(_ptr)
 ##
 #else
 # ?returns({python_return_type})

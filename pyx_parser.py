@@ -8,6 +8,7 @@ import re
 class PyxEnum:
     def __init__(self, enum_string: str):
         self.enum_string = enum_string
+        self.python_enum_name = enum_string.split(" = ")[0]
     
     def __repr__(self):
         return "Enum({})".format(
@@ -16,7 +17,7 @@ class PyxEnum:
     
     def as_pyi_format(self):
         return "{}: int".format(
-            self.enum_string
+            self.python_enum_name
         )
 
 
@@ -159,6 +160,13 @@ class PyxCollection:
         self.functions.sort(key=lambda f: f.name)
         self.classes.sort(key=lambda c: c.name)
 
+        pyi_content.write("class BoolPtr:\n")
+        pyi_content.write("    def __init__(self, initial_value: bool): ...\n\n")
+
+        for enum in self.enums:
+            pyi_content.write(enum.as_pyi_format() + "\n")
+        pyi_content.write("\n")
+
         for function in self.functions:
             pyi_content.write(function.as_pyi_format() + "\n")
         pyi_content.write("\n")
@@ -185,18 +193,18 @@ class PyxCollection:
         if type_ == "Field":
             for class_ in self.classes:
                 for field in class_.fields:
-                    if class_.name + "." + field.name == name:
+                    if class_.name.strip("_") + "." + field.name == name:
                         return ("Field", class_.name + "." + field.name, field)
         
         if type_ == "Method":
             for class_ in self.classes:
                 for method in class_.methods:
-                    if class_.name + "." + method.name == name:
+                    if class_.name.strip("_") + "." + method.name == name:
                         return ("Method", class_.name + "." + method.name, method)
         
         if type_ == "Class Constants":
             for class_ in self.classes:
-                if class_.name + "." + class_.constant_lines.name == name:
+                if class_.name.strip("_") + "." + class_.constant_lines.name == name:
                     return (
                         "Class Constants",
                         class_.name + "." + class_.constant_lines.name,
