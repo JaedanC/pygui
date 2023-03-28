@@ -3884,8 +3884,8 @@ def render():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None):
     """
@@ -3894,7 +3894,10 @@ def render_platform_windows_default(platform_render_arg: Any=None, renderer_rend
     imguiviewportflags_minimized flag set. may be reimplemented
     by user for custom rendering needs.
     """
-    ccimgui.igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
+    ccimgui.igRenderPlatformWindowsDefault(
+        NULL if platform_render_arg is None else <void*>platform_render_arg,
+        NULL if renderer_render_arg is None else <void*>renderer_render_arg
+    )
 # [End Function]
 
 # [Function]
@@ -5351,8 +5354,8 @@ def unindent(indent_w: float=0.0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def update_platform_windows():
     """
@@ -10296,8 +10299,8 @@ cdef class ImGuiIO:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def config_flags(self):

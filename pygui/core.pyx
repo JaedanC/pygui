@@ -3884,17 +3884,20 @@ def render():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None):
-#     """
-#     Call in main loop. will call renderwindow/swapbuffers platform
-#     functions for each secondary viewport which doesn't have the
-#     imguiviewportflags_minimized flag set. may be reimplemented
-#     by user for custom rendering needs.
-#     """
-#     ccimgui.igRenderPlatformWindowsDefault(platform_render_arg, renderer_render_arg)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None):
+    """
+    Call in main loop. will call renderwindow/swapbuffers platform
+    functions for each secondary viewport which doesn't have the
+    imguiviewportflags_minimized flag set. may be reimplemented
+    by user for custom rendering needs.
+    """
+    ccimgui.igRenderPlatformWindowsDefault(
+        NULL if platform_render_arg is None else <void*>platform_render_arg,
+        NULL if renderer_render_arg is None else <void*>renderer_render_arg
+    )
 # [End Function]
 
 # [Function]
@@ -5351,16 +5354,16 @@ def text(fmt: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def update_platform_windows():
-#     """
-#     Call in main loop. will call createwindow/resizewindow/etc. platform
-#     functions for each secondary viewport, and destroywindow for
-#     each inactive viewport.
-#     """
-#     ccimgui.igUpdatePlatformWindows()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def update_platform_windows():
+    """
+    Call in main loop. will call createwindow/resizewindow/etc. platform
+    functions for each secondary viewport, and destroywindow for
+    each inactive viewport.
+    """
+    ccimgui.igUpdatePlatformWindows()
 # [End Function]
 
 # [Function]
@@ -10296,16 +10299,16 @@ cdef class ImGuiIO:
     # [End Class Constants]
 
     # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(int)
-    # @property
-    # def config_flags(self):
-    #     cdef ccimgui.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
-    #     return res
-    # @config_flags.setter
-    # def config_flags(self, value: int):
-    #     dereference(self._ptr).ConfigFlags = value
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(int)
+    @property
+    def config_flags(self):
+        cdef ccimgui.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
+        return res
+    @config_flags.setter
+    def config_flags(self, value: int):
+        dereference(self._ptr).ConfigFlags = value
     # [End Field]
 
     # [Field]

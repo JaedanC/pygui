@@ -63,6 +63,8 @@ def main():
     ctx = pygui.create_context()
     window = impl_glfw_init()
 
+    pygui.get_io().config_flags |= pygui.IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE
+
     impl = GlfwRenderer(window)
     impl.refresh_font_texture()
 
