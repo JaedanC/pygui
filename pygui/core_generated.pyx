@@ -688,6 +688,7 @@ def _py_vertex_buffer_vertex_size():
 
 def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
+
 cdef class BoolPtr:
     cdef bool ptr
 

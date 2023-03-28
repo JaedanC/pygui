@@ -688,6 +688,7 @@ def _py_vertex_buffer_vertex_size():
 
 def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
+
 cdef class BoolPtr:
     cdef bool ptr
 
@@ -742,11 +743,11 @@ cdef class BoolPtr:
 # ?use_template(True)
 # ?active(True)
 # ?returns(Tuple[bool, bool])
-def begin(name: str, flags: int=0):
-    # p_open: Any=None, 
-    cdef bool p_open = True
-    cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), &p_open, flags)
-    return (res, p_open)
+def begin(name: str, p_open: BoolPtr, flags: int=0):
+    cdef bool is_open = True
+    cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), &is_open, flags)
+    p_open.ptr = is_open
+    return res
 # [End Function]
 
 # [Function]
@@ -3065,28 +3066,28 @@ def get_version():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def is_key_pressed(key: Any, repeat: Any=True):
-#     """
-#     Was key pressed (went from !down to down)? if repeat=true, uses
-#     io.keyrepeatdelay / keyrepeatrate
-#     """
-#     cdef ccimgui.bool res = ccimgui.igIsKeyPressed(key, repeat)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def is_key_pressed(key: int, repeat: Any=True):
+    """
+    Was key pressed (went from !down to down)? if repeat=true, uses
+    io.keyrepeatdelay / keyrepeatrate
+    """
+    cdef ccimgui.bool res = ccimgui.igIsKeyPressed(key, repeat)
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def is_key_released(key: Any):
-#     """
-#     Was key released (went from down to !down)?
-#     """
-#     cdef ccimgui.bool res = ccimgui.igIsKeyReleased(key)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def is_key_released(key: int):
+    """
+    Was key released (went from down to !down)?
+    """
+    cdef ccimgui.bool res = ccimgui.igIsKeyReleased(key)
+    return res
 # [End Function]
 
 # [Function]
@@ -11671,39 +11672,39 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_key_event(self: ImGuiIO, key: Any, down: Any):
-    #     """
-    #     Queue a new key down/up event. key should be translated (as in,
-    #     generally imguikey_a matches the key end-user would use to emit
-    #     an 'a' character)
-    #     """
-    #     ccimgui.ImGuiIO_AddKeyEvent(self._ptr, key, down)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_key_event(self: ImGuiIO, key: int, down: bool):
+        """
+        Queue a new key down/up event. key should be translated (as in,
+        generally imguikey_a matches the key end-user would use to emit
+        an 'a' character)
+        """
+        ccimgui.ImGuiIO_AddKeyEvent(self._ptr, key, down)
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_mouse_button_event(self: ImGuiIO, button: int, down: Any):
-    #     """
-    #     Queue a mouse button change
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseButtonEvent(self._ptr, button, down)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_mouse_button_event(self: ImGuiIO, button: int, down: Any):
+        """
+        Queue a mouse button change
+        """
+        ccimgui.ImGuiIO_AddMouseButtonEvent(self._ptr, button, down)
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
-    #     """
-    #     Queue a mouse position update. use -flt_max,-flt_max to signify
-    #     no mouse (e.g. app not focused and not hovered)
-    #     """
-    #     ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
+        """
+        Queue a mouse position update. use -flt_max,-flt_max to signify
+        no mouse (e.g. app not focused and not hovered)
+        """
+        ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
     # [End Method]
 
     # [Method]
@@ -11719,15 +11720,15 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
-    #     """
-    #     Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0:
-    #     scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseWheelEvent(self._ptr, wheel_x, wheel_y)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
+        """
+        Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0:
+        scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
+        """
+        ccimgui.ImGuiIO_AddMouseWheelEvent(self._ptr, wheel_x, wheel_y)
     # [End Method]
 
     # [Method]

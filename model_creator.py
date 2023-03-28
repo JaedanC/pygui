@@ -876,7 +876,7 @@ class HeaderSpec:
         output.write("    return sizeof(ccimgui.ImDrawVert)\n\n")
 
         output.write("def _py_index_buffer_index_size():\n")
-        output.write("    return sizeof(ccimgui.ImDrawIdx)\n")
+        output.write("    return sizeof(ccimgui.ImDrawIdx)\n\n")
 
         output.write("cdef class BoolPtr:\n")
         output.write("    cdef bool ptr\n")

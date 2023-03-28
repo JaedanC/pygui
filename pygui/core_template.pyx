@@ -688,6 +688,7 @@ def _py_vertex_buffer_vertex_size():
 
 def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
+
 cdef class BoolPtr:
     cdef bool ptr
 
@@ -742,11 +743,11 @@ def arrow_button(str_id: str, dir_: int):
 # ?use_template(True)
 # ?active(True)
 # ?returns(Tuple[bool, bool])
-def begin(name: str, flags: int=0):
-    # p_open: Any=None, 
-    cdef bool p_open = True
-    cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), &p_open, flags)
-    return (res, p_open)
+def begin(name: str, p_open: BoolPtr, flags: int=0):
+    cdef bool is_open = True
+    cdef ccimgui.bool res = ccimgui.igBegin(_bytes(name), &is_open, flags)
+    p_open.ptr = is_open
+    return res
 # [End Function]
 
 # [Function]
@@ -3065,10 +3066,10 @@ def is_key_down(key: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(Any)
-def is_key_pressed(key: Any, repeat: Any=True):
+def is_key_pressed(key: int, repeat: Any=True):
     """
     Was key pressed (went from !down to down)? if repeat=true, uses
     io.keyrepeatdelay / keyrepeatrate
@@ -3078,10 +3079,10 @@ def is_key_pressed(key: Any, repeat: Any=True):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def is_key_released(key: Any):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def is_key_released(key: int):
     """
     Was key released (went from down to !down)?
     """
@@ -11671,10 +11672,10 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_key_event(self: ImGuiIO, key: Any, down: Any):
+    def add_key_event(self: ImGuiIO, key: int, down: bool):
         """
         Queue a new key down/up event. key should be translated (as in,
         generally imguikey_a matches the key end-user would use to emit
@@ -11684,8 +11685,8 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
     def add_mouse_button_event(self: ImGuiIO, button: int, down: Any):
         """
@@ -11695,8 +11696,8 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
     def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
         """
@@ -11719,8 +11720,8 @@ cdef class ImGuiIO:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
     def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
         """

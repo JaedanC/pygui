@@ -19,7 +19,7 @@ def render_frame(impl, window):
     pygui.show_demo_window()
     pygui.show_user_guide()
 
-    io: pygui.ImGuiIO = pygui.get_io()
+    io = pygui.get_io()
     global is_open
     if is_open and pygui.begin("FPS Window", is_open):
         pygui.text("Dear ImGui {}".format(pygui.get_version()))
@@ -46,6 +46,9 @@ def impl_glfw_init():
 
     window = glfw.create_window(int(width), int(height), window_name, None, None)
     glfw.make_context_current(window)
+
+    # 0: Disable V-Sync
+    # 1: Enable V-Sync
     glfw.swap_interval(1)
 
     if not window:
@@ -61,8 +64,6 @@ def main():
     window = impl_glfw_init()
 
     impl = GlfwRenderer(window)
-
-    io: pygui.ImGuiIO = pygui.get_io()
     impl.refresh_font_texture()
 
     while not glfw.window_should_close(window):

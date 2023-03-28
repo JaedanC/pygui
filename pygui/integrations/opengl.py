@@ -5,8 +5,6 @@ import OpenGL.GL as gl
 import ctypes
 
 from .base import BaseOpenGLRenderer
-from typing import List
-# from pygui import *
 import pygui
 
 
