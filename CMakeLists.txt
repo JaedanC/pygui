@@ -21,6 +21,7 @@ set(
     ${IMGUI_FOLDER}imgui.cpp 
     ${IMGUI_FOLDER}imgui_draw.cpp 
     ${IMGUI_FOLDER}imgui_demo.cpp 
+    ${IMGUI_FOLDER}imgui_tables.cpp
     ${IMGUI_FOLDER}imgui_widgets.cpp
     ${BACKENDS_FOLDER}imgui_impl_opengl3.cpp
     ${BACKENDS_FOLDER}imgui_impl_glfw.cpp
@@ -62,6 +63,10 @@ if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/src)
 endif()
     
 file(
+    COPY        ${CMAKE_CURRENT_SOURCE_DIR}/src/cimgui/cimgui.h
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui
+)
+file(
     COPY        ${CMAKE_CURRENT_SOURCE_DIR}/src 
     DESTINATION ${PROJECT_BINARY_DIR}
 )
@@ -74,8 +79,9 @@ file(
 add_custom_target(
     generate_bindings ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/__header.h
-    file(COPY        ${CMAKE_CURRENT_BINARY_DIR}/Debug/
-         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src/pygui)
+    # file(COPY        ${PROJECT_BINARY_DIR}/lib/
+    #      DESTINATION ${PROJECT_BINARY_DIR}/src/pygui)
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cimgui> ${PROJECT_BINARY_DIR}/src/pygui/cimgui.lib
     
     COMMAND python setup.py clean build_ext --build-lib .
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src
