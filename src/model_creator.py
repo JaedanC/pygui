@@ -1016,7 +1016,8 @@ class HeaderSpec:
                 print("---------------------------------------------------")
                 continue
             
-            print("Patched {} - {} successfully".format(n_type, n_name))
+            if len(successes) > 0:
+                print("Patched {} - {} successfully".format(n_type, n_name))
 
             # Should keep any template specific information too
             t_obj.impl = merged_impl.split("\n")

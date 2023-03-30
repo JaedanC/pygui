@@ -2,18 +2,19 @@ __pycache__
 .vscode
 .vs
 
+out/
 build/
 cimgui/
 Include/
 Lib/
 
-pygui/*.dll
-pygui/*.lib
-pygui/*.pyd
-pygui/*.cpp
-pygui/*.c
-pygui/*_prev.pyx
-pygui/*_trial.pyx
+src/pygui/*.dll
+src/pygui/*.lib
+src/pygui/*.pyd
+src/pygui/*.cpp
+src/pygui/*.c
+src/pygui/*_prev.pyx
+src/pygui/*_trial.pyx
 
 Scripts/
 
