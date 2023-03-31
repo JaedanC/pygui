@@ -896,6 +896,7 @@ cdef extern from "cimgui.h":
         float AnalogValue
 
     ctypedef struct ImGuiListClipper:
+        ImGuiContext* Ctx
         int DisplayStart
         int DisplayEnd
         int ItemsCount
@@ -1141,6 +1142,8 @@ cdef extern from "cimgui.h":
         bool ConfigWindowsResizeFromEdges
         bool ConfigWindowsMoveFromTitleBarOnly
         float ConfigMemoryCompactTimer
+        bool ConfigDebugBeginReturnValueOnce
+        bool ConfigDebugBeginReturnValueLoop
         const char* BackendPlatformName
         const char* BackendRendererName
         void* BackendPlatformUserData
@@ -1168,6 +1171,7 @@ cdef extern from "cimgui.h":
         int KeyMap[652]
         bool KeysDown[652]
         float NavInputs[16]
+        ImGuiContext* Ctx
         ImVec2 MousePos
         bool MouseDown[5]
         float MouseWheel
@@ -1367,7 +1371,7 @@ cdef extern from "cimgui.h":
     bool igBeginTabBar(const char* str_id, ImGuiTabBarFlags flags) except +
     bool igBeginTabItem(const char* label, bool* p_open, ImGuiTabItemFlags flags) except +
     bool igBeginTable(const char* str_id, int column, ImGuiTableFlags flags, const ImVec2 outer_size, float inner_width) except +
-    void igBeginTooltip() except +
+    bool igBeginTooltip() except +
     void igBullet() except +
     void igBulletText(const char* fmt) except +
     void igBulletTextV(const char* fmt, char* args) except +
@@ -1577,7 +1581,6 @@ cdef extern from "cimgui.h":
     void igPlotHistogram_FnFloatPtr(const char* label, float(*values_getter)(void* data,int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size) except +
     void igPlotLines_FloatPtr(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size, int stride) except +
     void igPlotLines_FnFloatPtr(const char* label, float(*values_getter)(void* data,int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size) except +
-    void igPopAllowKeyboardFocus() except +
     void igPopButtonRepeat() except +
     void igPopClipRect() except +
     void igPopFont() except +
@@ -1585,9 +1588,9 @@ cdef extern from "cimgui.h":
     void igPopItemWidth() except +
     void igPopStyleColor(int count) except +
     void igPopStyleVar(int count) except +
+    void igPopTabStop() except +
     void igPopTextWrapPos() except +
     void igProgressBar(float fraction, const ImVec2 size_arg, const char* overlay) except +
-    void igPushAllowKeyboardFocus(bool allow_keyboard_focus) except +
     void igPushButtonRepeat(bool repeat) except +
     void igPushClipRect(const ImVec2 clip_rect_min, const ImVec2 clip_rect_max, bool intersect_with_current_clip_rect) except +
     void igPushFont(ImFont* font) except +
@@ -1600,6 +1603,7 @@ cdef extern from "cimgui.h":
     void igPushStyleColor_Vec4(ImGuiCol idx, const ImVec4 col) except +
     void igPushStyleVar_Float(ImGuiStyleVar idx, float val) except +
     void igPushStyleVar_Vec2(ImGuiStyleVar idx, const ImVec2 val) except +
+    void igPushTabStop(bool tab_stop) except +
     void igPushTextWrapPos(float wrap_local_pos_x) except +
     bool igRadioButton_Bool(const char* label, bool active) except +
     bool igRadioButton_IntPtr(const char* label, int* value, int v_button) except +

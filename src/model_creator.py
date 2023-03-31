@@ -62,7 +62,7 @@ def function_body_template(
     else:
         argument_text = ", ".join(argument_tokens)
 
-    with open("pygui/templates/functions.h") as f:
+    with open("core/templates/functions.h") as f:
         template = Template(f.read())
 
     template.set_condition("has_comment", comment != "")
@@ -170,8 +170,12 @@ class Template:
         class IgnoreMissing(dict):
             def __missing__(self, key):
                 return "{" + key + "}"
-            
-        self.base = self.base.format_map(IgnoreMissing(**kwargs))
+        try:
+            self.base = self.base.format_map(IgnoreMissing(**kwargs))
+        except ValueError:
+            print(self.base)
+            print(kwargs)
+            raise ValueError
         return self
 
     def compile(self, **kwargs) -> str:
@@ -459,7 +463,7 @@ class Parameter:
         return self.size > 1
     
     def in_field_pyx_format(self, header: HeaderSpec):
-        with open("pygui/templates/fields.h") as f:
+        with open("core/templates/fields.h") as f:
             text = f.read()
             getter = Template(text)
             setter = Template(text)
@@ -898,7 +902,7 @@ class HeaderSpec:
             output.write("# [End Function]\n\n")
         
         for struct in self.structs:
-            with open("pygui/templates/classes.h") as f:
+            with open("core/templates/classes.h") as f:
                 template = f.read()
             
             output.write("# [Class]\n")
@@ -1253,6 +1257,8 @@ def header_model(base, library_name):
                     function_comment = function_json["comment"] \
                         .replace("// ", "") \
                         .replace('"', "") \
+                        .replace('{', "{{") \
+                        .replace('}', "}}") \
                         .capitalize()
 
                 if function_json["stname"] != "":
@@ -1383,32 +1389,32 @@ def main():
     def reset(header: HeaderSpec):
         reset_pyx_content = header.as_pyx_collection().as_pyx_format()
         try:
-            with open("pygui/core_template.pyx") as f:
+            with open("core/core_template.pyx") as f:
                 print("Error: Template core_template.pyx still exists.")
                 print("Please delete the file manually if you are sure.")
         except FileNotFoundError:
-            with open("pygui/core_template.pyx", "w") as f:
+            with open("core/core_template.pyx", "w") as f:
                 f.write(reset_pyx_content)
-            with open("pygui/core.pyx", "w") as f:
+            with open("core/core.pyx", "w") as f:
                 f.write(reset_pyx_content)
 
 
     def write_pxd(header: HeaderSpec):
-        with open("pygui/ccimgui.pxd", "w") as f:
+        with open("core/ccimgui.pxd", "w") as f:
             f.write(header.in_pxd_format())
         print("Created ccimgui.pxd")
     
 
     def write_pyx(header: HeaderSpec):
         try:
-            with open("pygui/core_template.pyx") as f:
+            with open("core/core_template.pyx") as f:
                 template_collection = create_pyx_collection(f.read())
         except FileNotFoundError:
             print("No template found. Please run with --reset first.")
             return
         
         try:
-            with open("pygui/core_generated.pyx") as f:
+            with open("core/core_generated.pyx") as f:
                 old_collection = create_pyx_collection(f.read())
         except FileNotFoundError:
             print("No existing generated content found. Treating new generated content as the old.")
@@ -1422,16 +1428,16 @@ def main():
             print("Error: Merge failed. Not changing any files")
             return
         
-        with open("pygui/core.pyx", "w") as f:
+        with open("core/core.pyx", "w") as f:
             f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
 
-        with open("pygui/core_template.pyx", "w") as f:
+        with open("core/core_template.pyx", "w") as f:
             f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
 
-        with open("pygui/core_generated.pyx", "w") as f:
+        with open("core/core_generated.pyx", "w") as f:
             f.write(new_collection.as_pyx_format())
         
-        with open("pygui/core_generated_prev.pyx", "w") as f:
+        with open("core/core_generated_prev.pyx", "w") as f:
             f.write(old_collection.as_pyx_format())
 
         print("Created core.pyx")
@@ -1441,10 +1447,10 @@ def main():
 
 
     def trial_pyx(header: HeaderSpec):
-        with open("pygui/core_template.pyx") as f:
+        with open("core/core_template.pyx") as f:
             template_collection = create_pyx_collection(f.read())
         
-        with open("pygui/core_generated.pyx") as f:
+        with open("core/core_generated.pyx") as f:
             old_collection = create_pyx_collection(f.read())
 
         _, _, merged_collection = \
@@ -1455,10 +1461,10 @@ def main():
             print("Error: Merged failed. Trial was unsuccessful")
             return
         
-        with open("pygui/core_trial.pyx", "w") as f:
+        with open("core/core_trial.pyx", "w") as f:
             f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
         
-        with open("pygui/core_template_trial.pyx", "w") as f:
+        with open("core/core_template_trial.pyx", "w") as f:
             f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
         
         print("Created core_trial.pyx")
@@ -1466,7 +1472,7 @@ def main():
 
 
     def write_pyi():
-        with open("pygui/core.pyx") as f:
+        with open("core/core.pyx") as f:
             current_collection = create_pyx_collection(f.read())
             pyi, py = current_collection.as_pyi_format()
 
@@ -1476,8 +1482,8 @@ def main():
         with open("pygui/__init__.py", "w") as f:
             f.write(py)
         
-        print("Created __init__.pyi")
-        print("Created __init__.py")
+        print("Created pygui/__init__.pyi")
+        print("Created pygui/__init__.py")
     
 
     if len(sys.argv) != 2:

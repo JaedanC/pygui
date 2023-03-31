@@ -79,11 +79,12 @@ file(
 add_custom_target(
     generate_bindings ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/__header.h
-    # file(COPY        ${PROJECT_BINARY_DIR}/lib/
-    #      DESTINATION ${PROJECT_BINARY_DIR}/src/pygui)
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cimgui> ${PROJECT_BINARY_DIR}/src/pygui/cimgui.lib
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:cimgui> ${PROJECT_BINARY_DIR}/src/core/cimgui.lib
     
     COMMAND python setup.py clean build_ext --build-lib .
+
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BINARY_DIR}/src/pygui ${CMAKE_CURRENT_SOURCE_DIR}/portable/pygui
+    
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src
 )
 

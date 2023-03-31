@@ -9,7 +9,7 @@ def main():
         print("python setup.py clean build_ext --build-lib .")
         return
     
-    if not os.path.exists("pygui/cimgui.dll") and not os.path.exists("pygui/cimgui.lib"):
+    if not os.path.exists("core/cimgui.dll") and not os.path.exists("core/cimgui.lib"):
         print("No compiled cimgui library could be found in the pygui/ directory")
         return
 
@@ -20,13 +20,13 @@ def main():
             Extension(
                 "pygui.core", 
                 sources=[
-                    "pygui/core.pyx"
+                    "core/core.pyx"
                 ],
                 define_macros=[
                     ("CIMGUI_DEFINE_ENUMS_AND_STRUCTS", None)
                 ],
-                include_dirs=["pygui"],
-                library_dirs=["pygui"],
+                include_dirs=["core"],
+                library_dirs=["core"],
                 libraries=["cimgui"],
             )
         )

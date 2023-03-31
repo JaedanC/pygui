@@ -984,13 +984,14 @@ def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?returns(None)
+# ?returns(Any)
 def begin_tooltip():
     """
     Begin/append a tooltip window. to create full-featured tooltip
     (with any kind of items).
     """
-    ccimgui.igBeginTooltip()
+    cdef ccimgui.bool res = ccimgui.igBeginTooltip()
+    return res
 # [End Function]
 
 # [Function]
@@ -1776,6 +1777,9 @@ def end_table():
 # ?active(False)
 # ?returns(None)
 def end_tooltip():
+    """
+    Only call endtooltip() if begintooltip() returns true!
+    """
     ccimgui.igEndTooltip()
 # [End Function]
 
@@ -3600,14 +3604,6 @@ def plot_lines_fn_float_ptr(label: str, values_getter: Callable, data: Any, valu
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def pop_allow_keyboard_focus():
-    ccimgui.igPopAllowKeyboardFocus()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
 def pop_button_repeat():
     ccimgui.igPopButtonRepeat()
 # [End Function]
@@ -3667,6 +3663,14 @@ def pop_style_var(count: int=1):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
+def pop_tab_stop():
+    ccimgui.igPopTabStop()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
 def pop_text_wrap_pos():
     ccimgui.igPopTextWrapPos()
 # [End Function]
@@ -3677,18 +3681,6 @@ def pop_text_wrap_pos():
 # ?returns(None)
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
     ccimgui.igProgressBar(fraction, _cast_tuple_ImVec2(size_arg), _bytes(overlay))
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def push_allow_keyboard_focus(allow_keyboard_focus: Any):
-    """
-    == tab stop enable. allow focusing using tab/shift-tab, enabled
-    by default but you can disable it for certain widgets
-    """
-    ccimgui.igPushAllowKeyboardFocus(allow_keyboard_focus)
 # [End Function]
 
 # [Function]
@@ -3829,6 +3821,18 @@ def push_style_var_vec2(idx: int, val: tuple):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
+def push_tab_stop(tab_stop: Any):
+    """
+    == tab stop enable. allow focusing using tab/shift-tab, enabled
+    by default but you can disable it for certain widgets
+    """
+    ccimgui.igPushTabStop(tab_stop)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
 def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
     """
     Push word-wrapping position for text*() commands. < 0.0f: no
@@ -3844,8 +3848,8 @@ def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
 # ?returns(Any)
 def radio_button_bool(label: str, active: Any):
     """
-    Use with e.g. if (radiobutton(one, my_value==1)) { my_value =
-    1; }
+    Use with e.g. if (radiobutton(one, my_value==1)) { my_value
+    = 1; }
     """
     cdef ccimgui.bool res = ccimgui.igRadioButton_Bool(_bytes(label), active)
     return res
@@ -6474,6 +6478,19 @@ cdef class ImGuiListClipper:
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImGuiContext)
+    @property
+    def ctx(self):
+        cdef ccimgui.ImGuiContext res = dereference(self._ptr).Ctx
+        return ImGuiContext.from_ptr(res)
+    @ctx.setter
+    def ctx(self, value: ImGuiContext):
+        dereference(self._ptr).Ctx = value._ptr
+    # [End Field]
 
     # [Field]
     # ?use_template(False)
@@ -10738,6 +10755,32 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?returns(Any)
+    @property
+    def config_debug_begin_return_value_once(self):
+        cdef Any res = dereference(self._ptr).ConfigDebugBeginReturnValueOnce
+        return res
+    @config_debug_begin_return_value_once.setter
+    def config_debug_begin_return_value_once(self, value: Any):
+        dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(Any)
+    @property
+    def config_debug_begin_return_value_loop(self):
+        cdef Any res = dereference(self._ptr).ConfigDebugBeginReturnValueLoop
+        return res
+    @config_debug_begin_return_value_loop.setter
+    def config_debug_begin_return_value_loop(self, value: Any):
+        dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
     # ?returns(str)
     @property
     def backend_platform_name(self):
@@ -11084,6 +11127,19 @@ cdef class ImGuiIO:
     @nav_inputs.setter
     def nav_inputs(self, value: float):
         dereference(self._ptr).NavInputs = value
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImGuiContext)
+    @property
+    def ctx(self):
+        cdef ccimgui.ImGuiContext res = dereference(self._ptr).Ctx
+        return ImGuiContext.from_ptr(res)
+    @ctx.setter
+    def ctx(self, value: ImGuiContext):
+        dereference(self._ptr).Ctx = value._ptr
     # [End Field]
 
     # [Field]

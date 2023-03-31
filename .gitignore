@@ -4,7 +4,6 @@ __pycache__
 
 out/
 build/
-cimgui/
 Include/
 Lib/
 

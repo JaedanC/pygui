@@ -425,7 +425,7 @@ def create_pyx_collection(pyx):
 
 
 def main():
-    with open("pygui/core_v2.pyx") as f:
+    with open("core/core_v2.pyx") as f:
         pyx = f.read()
     
     collection = create_pyx_collection(pyx)
@@ -437,7 +437,7 @@ def main():
     with open("pygui/__init__.py", "w") as f:
         f.write(py)
     
-    with open("pygui/core_v2_trial.pyx", "w") as f:
+    with open("core/core_v2_trial.pyx", "w") as f:
         f.write(collection.as_pyx_format())
 
 
