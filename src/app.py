@@ -49,7 +49,7 @@ def impl_glfw_init():
 
     # 0: Disable V-Sync
     # 1: Enable V-Sync
-    glfw.swap_interval(1)
+    glfw.swap_interval(0)
 
     if not window:
         glfw.terminate()

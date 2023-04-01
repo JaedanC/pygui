@@ -9,7 +9,7 @@ from cython.operator import dereference
 from collections import namedtuple
 from typing import Callable, Any
 
-from . cimport ccimgui
+cimport ccimgui
 from libcpp cimport bool
 from libc.stdint cimport uintptr_t
 from libc.float cimport FLT_MAX, FLT_MIN

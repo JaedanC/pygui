@@ -2,20 +2,24 @@ __pycache__
 .vscode
 .vs
 
+/Include/
+/Lib/
+
 out/
 build/
-Include/
-Lib/
 
-src/pygui/*.dll
-src/pygui/*.lib
-src/pygui/*.pyd
-src/pygui/*.cpp
-src/pygui/*.c
-src/pygui/*_prev.pyx
-src/pygui/*_trial.pyx
+cimgui.dll
+cimgui.lib
+cimgui.exp
+
+*.pyd
+*.cpp
+*.c
+*_prev.pyx
+*_trial.pyx
 
 Scripts/
 
+CMakeCache.txt
 imgui.ini
 pyvenv.cfg

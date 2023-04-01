@@ -823,7 +823,7 @@ class HeaderSpec:
         output.write("from cython.operator import dereference\n\n")
         output.write("from collections import namedtuple\n")
         output.write("from typing import Callable, Any\n\n")
-        output.write("from . cimport ccimgui\n")
+        output.write("cimport ccimgui\n")
         output.write("from libcpp cimport bool\n")
         output.write("from libc.stdint cimport uintptr_t\n")
         output.write("from libc.float cimport FLT_MAX, FLT_MIN\n")
@@ -1402,7 +1402,7 @@ def main():
     def write_pxd(header: HeaderSpec):
         with open("core/ccimgui.pxd", "w") as f:
             f.write(header.in_pxd_format())
-        print("Created ccimgui.pxd")
+        print("Created core/ccimgui.pxd")
     
 
     def write_pyx(header: HeaderSpec):
@@ -1440,10 +1440,10 @@ def main():
         with open("core/core_generated_prev.pyx", "w") as f:
             f.write(old_collection.as_pyx_format())
 
-        print("Created core.pyx")
-        print("Created core_template.pyx")
-        print("Created core_generated.pyx")
-        print("Created core_generated_prev.pyx")
+        print("Created core/core.pyx")
+        print("Created core/core_template.pyx")
+        print("Created core/core_generated.pyx")
+        print("Created core/core_generated_prev.pyx")
 
 
     def trial_pyx(header: HeaderSpec):
@@ -1467,7 +1467,7 @@ def main():
         with open("core/core_template_trial.pyx", "w") as f:
             f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
         
-        print("Created core_trial.pyx")
+        print("Created core/core_trial.pyx")
         print("Trial success")
 
 
