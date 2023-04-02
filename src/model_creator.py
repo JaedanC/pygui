@@ -631,11 +631,13 @@ class Function:
         )
     
     def in_pyx_format(self, header: HeaderSpec):
+        python_name = re.sub("^ig_", "", helpers.pythonise_string(self.name))
+        python_name = python_name.replace("im_gui_", "")
         return function_body_template(
             header,
             self.parameters,
             self.return_type,
-            re.sub("^ig_", "", helpers.pythonise_string(self.name)), 
+            python_name, 
             self.name,
             pretty_comment(self.comment),
             is_constructor=False,
@@ -686,7 +688,8 @@ class Method:
     def in_pyx_format(self, header: HeaderSpec):
         function_name = helpers.pythonise_string(self.cimgui_name.replace(self.struct_name + "_", ""))
         function_name = safe_python_name(function_name)
-        function_name = re.sub("^im_", "", function_name)
+        function_name = re.sub("im_gui", "imgui", function_name)
+        function_name = re.sub("^imgui_", "", function_name)
 
         output = function_body_template(
             header,
@@ -1299,6 +1302,12 @@ def header_model(base, library_name):
     typedefs = parse_typedefs(structs, base + "/typedefs_dict.json")
     functions, methods = parse_functions_and_methods(
         base + "/definitions.json")
+
+    impl_functions, impl_methods = parse_functions_and_methods(
+        base + "/impl_definitions.json")
+    
+    functions += impl_functions
+    methods += impl_methods
 
     # Pairs the methods to a struct.
     struct_lookup = {s.name: s for s in structs}
