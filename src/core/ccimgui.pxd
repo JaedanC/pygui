@@ -1736,6 +1736,46 @@ cdef extern from "cimgui.h":
     void igValue_Float(const char* prefix, float value, const char* float_format) except +
     void igValue_Int(const char* prefix, int value) except +
     void igValue_Uint(const char* prefix, unsigned int value) except +
+    void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c) except +
+    void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, int entered) except +
+    void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y) except +
+    bool ImGui_ImplGlfw_InitForOpenGL(GLFWwindow* window, bool install_callbacks) except +
+    bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window, bool install_callbacks) except +
+    bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window, bool install_callbacks) except +
+    void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window) except +
+    void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) except +
+    void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor, int event) except +
+    void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) except +
+    void ImGui_ImplGlfw_NewFrame() except +
+    void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window) except +
+    void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) except +
+    void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows) except +
+    void ImGui_ImplGlfw_Shutdown() except +
+    void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused) except +
+    bool ImGui_ImplOpenGL2_CreateDeviceObjects() except +
+    bool ImGui_ImplOpenGL2_CreateFontsTexture() except +
+    void ImGui_ImplOpenGL2_DestroyDeviceObjects() except +
+    void ImGui_ImplOpenGL2_DestroyFontsTexture() except +
+    bool ImGui_ImplOpenGL2_Init() except +
+    void ImGui_ImplOpenGL2_NewFrame() except +
+    void ImGui_ImplOpenGL2_RenderDrawData(ImDrawData* draw_data) except +
+    void ImGui_ImplOpenGL2_Shutdown() except +
+    bool ImGui_ImplOpenGL3_CreateDeviceObjects() except +
+    bool ImGui_ImplOpenGL3_CreateFontsTexture() except +
+    void ImGui_ImplOpenGL3_DestroyDeviceObjects() except +
+    void ImGui_ImplOpenGL3_DestroyFontsTexture() except +
+    bool ImGui_ImplOpenGL3_Init(const char* glsl_version) except +
+    void ImGui_ImplOpenGL3_NewFrame() except +
+    void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data) except +
+    void ImGui_ImplOpenGL3_Shutdown() except +
+    bool ImGui_ImplSDL2_InitForD3D(SDL_Window* window) except +
+    bool ImGui_ImplSDL2_InitForMetal(SDL_Window* window) except +
+    bool ImGui_ImplSDL2_InitForOpenGL(SDL_Window* window, void* sdl_gl_context) except +
+    bool ImGui_ImplSDL2_InitForSDLRenderer(SDL_Window* window, SDL_Renderer* renderer) except +
+    bool ImGui_ImplSDL2_InitForVulkan(SDL_Window* window) except +
+    void ImGui_ImplSDL2_NewFrame() except +
+    bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event) except +
+    void ImGui_ImplSDL2_Shutdown() except +
 
     ImGuiListClipper* ImGuiListClipper_ImGuiListClipper() except +
     void ImGuiListClipper_destroy(ImGuiListClipper* self) except +

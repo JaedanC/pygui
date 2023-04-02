@@ -688,7 +688,8 @@ class Method:
     def in_pyx_format(self, header: HeaderSpec):
         function_name = helpers.pythonise_string(self.cimgui_name.replace(self.struct_name + "_", ""))
         function_name = safe_python_name(function_name)
-        function_name = re.sub("im_gui", "imgui", function_name)
+        function_name = re.sub("^im_gui_", "", function_name)
+        function_name = re.sub("^im_", "", function_name)
         function_name = re.sub("^imgui_", "", function_name)
 
         output = function_body_template(

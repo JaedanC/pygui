@@ -5454,6 +5454,341 @@ def update_platform_windows():
 #     ccimgui.igValue_Uint(_bytes(prefix), value)
 # [End Function]
 
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_char_callback(window: Any, c: int):
+#     ccimgui.ImGui_ImplGlfw_CharCallback(window, c)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_cursor_enter_callback(window: Any, entered: int):
+#     ccimgui.ImGui_ImplGlfw_CursorEnterCallback(window, entered)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_cursor_pos_callback(window: Any, x: float, y: float):
+#     ccimgui.ImGui_ImplGlfw_CursorPosCallback(window, x, y)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_glfw_init_for_open_gl(window: Any, install_callbacks: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(window, install_callbacks)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_glfw_init_for_other(window: Any, install_callbacks: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOther(window, install_callbacks)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_glfw_init_for_vulkan(window: Any, install_callbacks: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForVulkan(window, install_callbacks)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_install_callbacks(window: Any):
+#     ccimgui.ImGui_ImplGlfw_InstallCallbacks(window)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_key_callback(window: Any, key: int, scancode: int, action: int, mods: int):
+#     ccimgui.ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_monitor_callback(monitor: Any, event: int):
+#     ccimgui.ImGui_ImplGlfw_MonitorCallback(monitor, event)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_mouse_button_callback(window: Any, button: int, action: int, mods: int):
+#     ccimgui.ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_new_frame():
+#     ccimgui.ImGui_ImplGlfw_NewFrame()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_restore_callbacks(window: Any):
+#     ccimgui.ImGui_ImplGlfw_RestoreCallbacks(window)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_scroll_callback(window: Any, xoffset: float, yoffset: float):
+#     ccimgui.ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: Any):
+#     ccimgui.ImGui_ImplGlfw_SetCallbacksChainForAllWindows(chain_for_all_windows)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_shutdown():
+#     ccimgui.ImGui_ImplGlfw_Shutdown()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_glfw_window_focus_callback(window: Any, focused: int):
+#     ccimgui.ImGui_ImplGlfw_WindowFocusCallback(window, focused)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl2_create_device_objects():
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_CreateDeviceObjects()
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl2_create_fonts_texture():
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_CreateFontsTexture()
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl2_destroy_device_objects():
+#     ccimgui.ImGui_ImplOpenGL2_DestroyDeviceObjects()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl2_destroy_fonts_texture():
+#     ccimgui.ImGui_ImplOpenGL2_DestroyFontsTexture()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl2_init():
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_Init()
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl2_new_frame():
+#     ccimgui.ImGui_ImplOpenGL2_NewFrame()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl2_render_draw_data(draw_data: ImDrawData):
+#     ccimgui.ImGui_ImplOpenGL2_RenderDrawData(draw_data._ptr)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl2_shutdown():
+#     ccimgui.ImGui_ImplOpenGL2_Shutdown()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl3_create_device_objects():
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL3_CreateDeviceObjects()
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl3_create_fonts_texture():
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL3_CreateFontsTexture()
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl3_destroy_device_objects():
+#     ccimgui.ImGui_ImplOpenGL3_DestroyDeviceObjects()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl3_destroy_fonts_texture():
+#     ccimgui.ImGui_ImplOpenGL3_DestroyFontsTexture()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_open_gl3_init(glsl_version: str=nullptr):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL3_Init(_bytes(glsl_version))
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl3_new_frame():
+#     ccimgui.ImGui_ImplOpenGL3_NewFrame()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl3_render_draw_data(draw_data: ImDrawData):
+#     ccimgui.ImGui_ImplOpenGL3_RenderDrawData(draw_data._ptr)
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_open_gl3_shutdown():
+#     ccimgui.ImGui_ImplOpenGL3_Shutdown()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_init_for_d3d(window: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForD3D(window)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_init_for_metal(window: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForMetal(window)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_init_for_open_gl(window: Any, sdl_gl_context: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForOpenGL(window, sdl_gl_context)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_init_for_sdl_renderer(window: Any, renderer: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForSDLRenderer(window, renderer)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_init_for_vulkan(window: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForVulkan(window)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_sdl2_new_frame():
+#     ccimgui.ImGui_ImplSDL2_NewFrame()
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(Any)
+# def impl_sdl2_process_event(event: Any):
+#     cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_ProcessEvent(event)
+#     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(False)
+# # ?active(False)
+# # ?returns(None)
+# def impl_sdl2_shutdown():
+#     ccimgui.ImGui_ImplSDL2_Shutdown()
+# [End Function]
+
 # [Class]
 # [Class Constants]
 # ?use_template(False)
@@ -6596,7 +6931,7 @@ cdef class ImGuiListClipper:
     # # ?active(False)
     # # ?returns(ImGuiListClipper)
     # @staticmethod
-    # def gui_list_clipper():
+    # def list_clipper():
     #     cdef ccimgui.ImGuiListClipper* _ptr = ccimgui.ImGuiListClipper_ImGuiListClipper()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -6693,7 +7028,7 @@ cdef class ImGuiOnceUponAFrame:
     # # ?active(False)
     # # ?returns(ImGuiOnceUponAFrame)
     # @staticmethod
-    # def gui_once_upon_a_frame():
+    # def once_upon_a_frame():
     #     cdef ccimgui.ImGuiOnceUponAFrame* _ptr = ccimgui.ImGuiOnceUponAFrame_ImGuiOnceUponAFrame()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -6834,7 +7169,7 @@ cdef class ImGuiPayload:
     # # ?active(False)
     # # ?returns(ImGuiPayload)
     # @staticmethod
-    # def gui_payload():
+    # def payload():
     #     cdef ccimgui.ImGuiPayload* _ptr = ccimgui.ImGuiPayload_ImGuiPayload()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -7239,7 +7574,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # # ?active(False)
     # # ?returns(ImGuiTableColumnSortSpecs)
     # @staticmethod
-    # def gui_table_column_sort_specs():
+    # def table_column_sort_specs():
     #     cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr = ccimgui.ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -7315,7 +7650,7 @@ cdef class ImGuiTableSortSpecs:
     # # ?active(False)
     # # ?returns(ImGuiTableSortSpecs)
     # @staticmethod
-    # def gui_table_sort_specs():
+    # def table_sort_specs():
     #     cdef ccimgui.ImGuiTableSortSpecs* _ptr = ccimgui.ImGuiTableSortSpecs_ImGuiTableSortSpecs()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -7660,7 +7995,7 @@ cdef class ImGuiWindowClass:
     # # ?active(False)
     # # ?returns(ImGuiWindowClass)
     # @staticmethod
-    # def gui_window_class():
+    # def window_class():
     #     cdef ccimgui.ImGuiWindowClass* _ptr = ccimgui.ImGuiWindowClass_ImGuiWindowClass()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -11657,7 +11992,7 @@ cdef class ImGuiIO:
     # # ?active(False)
     # # ?returns(ImGuiIO)
     # @staticmethod
-    # def gui_io():
+    # def io():
     #     cdef ccimgui.ImGuiIO* _ptr = ccimgui.ImGuiIO_ImGuiIO()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -12185,7 +12520,7 @@ cdef class ImGuiPlatformIO:
     # # ?active(False)
     # # ?returns(ImGuiPlatformIO)
     # @staticmethod
-    # def gui_platform_io():
+    # def platform_io():
     #     """
     #     Zero clear
     #     """
@@ -12264,7 +12599,7 @@ cdef class ImGuiPlatformImeData:
     # # ?active(False)
     # # ?returns(ImGuiPlatformImeData)
     # @staticmethod
-    # def gui_platform_ime_data():
+    # def platform_ime_data():
     #     cdef ccimgui.ImGuiPlatformImeData* _ptr = ccimgui.ImGuiPlatformImeData_ImGuiPlatformImeData()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -12366,7 +12701,7 @@ cdef class ImGuiPlatformMonitor:
     # # ?active(False)
     # # ?returns(ImGuiPlatformMonitor)
     # @staticmethod
-    # def gui_platform_monitor():
+    # def platform_monitor():
     #     cdef ccimgui.ImGuiPlatformMonitor* _ptr = ccimgui.ImGuiPlatformMonitor_ImGuiPlatformMonitor()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -13136,7 +13471,7 @@ cdef class ImGuiStyle:
     # # ?active(False)
     # # ?returns(ImGuiStyle)
     # @staticmethod
-    # def gui_style():
+    # def style():
     #     cdef ccimgui.ImGuiStyle* _ptr = ccimgui.ImGuiStyle_ImGuiStyle()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -13194,7 +13529,7 @@ cdef class ImGuiTextBuffer:
     # # ?active(False)
     # # ?returns(ImGuiTextBuffer)
     # @staticmethod
-    # def gui_text_buffer():
+    # def text_buffer():
     #     cdef ccimgui.ImGuiTextBuffer* _ptr = ccimgui.ImGuiTextBuffer_ImGuiTextBuffer()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -13358,7 +13693,7 @@ cdef class ImGuiTextFilter:
     # # ?active(False)
     # # ?returns(ImGuiTextFilter)
     # @staticmethod
-    # def gui_text_filter(default_filter: str=""):
+    # def text_filter(default_filter: str=""):
     #     cdef ccimgui.ImGuiTextFilter* _ptr = ccimgui.ImGuiTextFilter_ImGuiTextFilter(_bytes(default_filter))
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -13662,7 +13997,7 @@ cdef class ImGuiViewport:
     # # ?active(False)
     # # ?returns(ImGuiViewport)
     # @staticmethod
-    # def gui_viewport():
+    # def viewport():
     #     cdef ccimgui.ImGuiViewport* _ptr = ccimgui.ImGuiViewport_ImGuiViewport()
     #     if _ptr is NULL:
     #         raise MemoryError

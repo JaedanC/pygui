@@ -8445,7 +8445,7 @@ cdef class ImDrawCmd:
     # # ?active(False)
     # # ?returns(ImDrawCmd)
     # @staticmethod
-    # def im_draw_cmd():
+    # def draw_cmd():
     #     """
     #     Also ensure our padding fields are zeroed
     #     """
@@ -8670,7 +8670,7 @@ cdef class ImDrawData:
     # # ?active(False)
     # # ?returns(ImDrawData)
     # @staticmethod
-    # def im_draw_data():
+    # def draw_data():
     #     cdef ccimgui.ImDrawData* _ptr = ccimgui.ImDrawData_ImDrawData()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -8784,7 +8784,7 @@ cdef class ImDrawListSplitter:
     # # ?active(False)
     # # ?returns(ImDrawListSplitter)
     # @staticmethod
-    # def im_draw_list_splitter():
+    # def draw_list_splitter():
     #     cdef ccimgui.ImDrawListSplitter* _ptr = ccimgui.ImDrawListSplitter_ImDrawListSplitter()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -9180,7 +9180,7 @@ cdef class ImFont:
     # # ?active(False)
     # # ?returns(ImFont)
     # @staticmethod
-    # def im_font():
+    # def font():
     #     cdef ccimgui.ImFont* _ptr = ccimgui.ImFont_ImFont()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -9685,7 +9685,7 @@ cdef class ImFontAtlas:
     # # ?active(False)
     # # ?returns(ImFontAtlas)
     # @staticmethod
-    # def im_font_atlas():
+    # def font_atlas():
     #     cdef ccimgui.ImFontAtlas* _ptr = ccimgui.ImFontAtlas_ImFontAtlas()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -10193,7 +10193,7 @@ cdef class ImFontAtlasCustomRect:
     # # ?active(False)
     # # ?returns(ImFontAtlasCustomRect)
     # @staticmethod
-    # def im_font_atlas_custom_rect():
+    # def font_atlas_custom_rect():
     #     cdef ccimgui.ImFontAtlasCustomRect* _ptr = ccimgui.ImFontAtlasCustomRect_ImFontAtlasCustomRect()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -10486,7 +10486,7 @@ cdef class ImFontConfig:
     # # ?active(False)
     # # ?returns(ImFontConfig)
     # @staticmethod
-    # def im_font_config():
+    # def font_config():
     #     cdef ccimgui.ImFontConfig* _ptr = ccimgui.ImFontConfig_ImFontConfig()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -10536,7 +10536,7 @@ cdef class ImFontGlyphRangesBuilder:
     # # ?active(False)
     # # ?returns(ImFontGlyphRangesBuilder)
     # @staticmethod
-    # def im_font_glyph_ranges_builder():
+    # def font_glyph_ranges_builder():
     #     cdef ccimgui.ImFontGlyphRangesBuilder* _ptr = ccimgui.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder()
     #     if _ptr is NULL:
     #         raise MemoryError
@@ -14250,7 +14250,7 @@ cdef class ImDrawList:
     # # ?active(False)
     # # ?returns(ImDrawList)
     # @staticmethod
-    # def im_draw_list(shared_data: ImDrawListSharedData):
+    # def draw_list(shared_data: ImDrawListSharedData):
     #     cdef ccimgui.ImDrawList* _ptr = ccimgui.ImDrawList_ImDrawList(shared_data._ptr)
     #     if _ptr is NULL:
     #         raise MemoryError
