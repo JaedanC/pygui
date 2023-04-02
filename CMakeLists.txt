@@ -11,22 +11,25 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/src/pygui)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/src/pygui)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_LIST_DIR}/src/pygui)
 
-add_subdirectory(src/cimgui src/cimgui/out/build)
 
 execute_process(
     COMMAND python model_creator.py --all
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
-file(
-    COPY        ${CMAKE_CURRENT_SOURCE_DIR}/src 
-    DESTINATION ${PROJECT_BINARY_DIR}
-)
+# file(
+#     COPY        ${CMAKE_CURRENT_SOURCE_DIR}/src 
+#     DESTINATION ${PROJECT_BINARY_DIR}
+# )
 
 add_custom_target(
     portable ALL
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/__header.h # Doesn't exist
     COMMAND python setup.py clean build_ext --build-lib pygui
-    
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/src/pygui ${CMAKE_CURRENT_LIST_DIR}/portable/pygui
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/src/app.py ${CMAKE_CURRENT_LIST_DIR}/portable/app.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src
 )
+
+set(CIMGUI_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/cimgui)
+add_subdirectory(${CIMGUI_DIRECTORY} ${CIMGUI_DIRECTORY}/out/build) # Creates the cimgui target
+add_dependencies(portable cimgui)

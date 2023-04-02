@@ -4,8 +4,10 @@ __pycache__
 
 /Include/
 /Lib/
+/out/
+/portable/
+/Scripts/
 
-out/
 build/
 
 cimgui.dll
@@ -18,7 +20,6 @@ cimgui.exp
 *_prev.pyx
 *_trial.pyx
 
-Scripts/
 
 CMakeCache.txt
 imgui.ini
