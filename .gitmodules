@@ -1,3 +1,6 @@
 [submodule "src/cimgui"]
 	path = src/cimgui
 	url = https://github.com/cimgui/cimgui
+[submodule "src/LuaJIT"]
+	path = src/LuaJIT
+	url = https://github.com/LuaJIT/LuaJIT.git
