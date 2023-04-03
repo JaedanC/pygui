@@ -31,5 +31,7 @@ add_custom_target(
 )
 
 set(CIMGUI_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/cimgui)
-add_subdirectory(${CIMGUI_DIRECTORY} ${CIMGUI_DIRECTORY}/out/build) # Creates the cimgui target
-add_dependencies(portable cimgui)
+# add_subdirectory(${CIMGUI_DIRECTORY} ${CIMGUI_DIRECTORY}/out/build) # Creates the cimgui target
+add_subdirectory(${CIMGUI_DIRECTORY}/backend_test/example_glfw_opengl3 ${CIMGUI_DIRECTORY}/out/build) # Creates the cimgui target
+# add_dependencies(portable cimgui cimgui_glfw)
+add_dependencies(portable cimgui_glfw)

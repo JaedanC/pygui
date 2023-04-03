@@ -5441,32 +5441,32 @@ def value_uint(prefix: str, value: int):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_char_callback(window: Any, c: int):
-    ccimgui.ImGui_ImplGlfw_CharCallback(window, c)
+def impl_glfw_char_callback(window: GLFWwindow, c: int):
+    ccimgui.ImGui_ImplGlfw_CharCallback(window._ptr, c)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_cursor_enter_callback(window: Any, entered: int):
-    ccimgui.ImGui_ImplGlfw_CursorEnterCallback(window, entered)
+def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
+    ccimgui.ImGui_ImplGlfw_CursorEnterCallback(window._ptr, entered)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_cursor_pos_callback(window: Any, x: float, y: float):
-    ccimgui.ImGui_ImplGlfw_CursorPosCallback(window, x, y)
+def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
+    ccimgui.ImGui_ImplGlfw_CursorPosCallback(window._ptr, x, y)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(Any)
-def impl_glfw_init_for_open_gl(window: Any, install_callbacks: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(window, install_callbacks)
+def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: Any):
+    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(window._ptr, install_callbacks)
     return res
 # [End Function]
 
@@ -5474,8 +5474,8 @@ def impl_glfw_init_for_open_gl(window: Any, install_callbacks: Any):
 # ?use_template(False)
 # ?active(False)
 # ?returns(Any)
-def impl_glfw_init_for_other(window: Any, install_callbacks: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOther(window, install_callbacks)
+def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: Any):
+    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOther(window._ptr, install_callbacks)
     return res
 # [End Function]
 
@@ -5483,8 +5483,8 @@ def impl_glfw_init_for_other(window: Any, install_callbacks: Any):
 # ?use_template(False)
 # ?active(False)
 # ?returns(Any)
-def impl_glfw_init_for_vulkan(window: Any, install_callbacks: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForVulkan(window, install_callbacks)
+def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: Any):
+    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForVulkan(window._ptr, install_callbacks)
     return res
 # [End Function]
 
@@ -5492,32 +5492,32 @@ def impl_glfw_init_for_vulkan(window: Any, install_callbacks: Any):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_install_callbacks(window: Any):
-    ccimgui.ImGui_ImplGlfw_InstallCallbacks(window)
+def impl_glfw_install_callbacks(window: GLFWwindow):
+    ccimgui.ImGui_ImplGlfw_InstallCallbacks(window._ptr)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_key_callback(window: Any, key: int, scancode: int, action: int, mods: int):
-    ccimgui.ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods)
+def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
+    ccimgui.ImGui_ImplGlfw_KeyCallback(window._ptr, key, scancode, action, mods)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_monitor_callback(monitor: Any, event: int):
-    ccimgui.ImGui_ImplGlfw_MonitorCallback(monitor, event)
+def impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
+    ccimgui.ImGui_ImplGlfw_MonitorCallback(monitor._ptr, event)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_mouse_button_callback(window: Any, button: int, action: int, mods: int):
-    ccimgui.ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods)
+def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
+    ccimgui.ImGui_ImplGlfw_MouseButtonCallback(window._ptr, button, action, mods)
 # [End Function]
 
 # [Function]
@@ -5532,16 +5532,16 @@ def impl_glfw_new_frame():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_restore_callbacks(window: Any):
-    ccimgui.ImGui_ImplGlfw_RestoreCallbacks(window)
+def impl_glfw_restore_callbacks(window: GLFWwindow):
+    ccimgui.ImGui_ImplGlfw_RestoreCallbacks(window._ptr)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_scroll_callback(window: Any, xoffset: float, yoffset: float):
-    ccimgui.ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset)
+def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
+    ccimgui.ImGui_ImplGlfw_ScrollCallback(window._ptr, xoffset, yoffset)
 # [End Function]
 
 # [Function]
@@ -5564,75 +5564,8 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_window_focus_callback(window: Any, focused: int):
-    ccimgui.ImGui_ImplGlfw_WindowFocusCallback(window, focused)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_open_gl2_create_device_objects():
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_CreateDeviceObjects()
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_open_gl2_create_fonts_texture():
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_CreateFontsTexture()
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_open_gl2_destroy_device_objects():
-    ccimgui.ImGui_ImplOpenGL2_DestroyDeviceObjects()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_open_gl2_destroy_fonts_texture():
-    ccimgui.ImGui_ImplOpenGL2_DestroyFontsTexture()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_open_gl2_init():
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplOpenGL2_Init()
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_open_gl2_new_frame():
-    ccimgui.ImGui_ImplOpenGL2_NewFrame()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_open_gl2_render_draw_data(draw_data: ImDrawData):
-    ccimgui.ImGui_ImplOpenGL2_RenderDrawData(draw_data._ptr)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_open_gl2_shutdown():
-    ccimgui.ImGui_ImplOpenGL2_Shutdown()
+def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
+    ccimgui.ImGui_ImplGlfw_WindowFocusCallback(window._ptr, focused)
 # [End Function]
 
 # [Function]
@@ -5700,76 +5633,6 @@ def impl_open_gl3_render_draw_data(draw_data: ImDrawData):
 # ?returns(None)
 def impl_open_gl3_shutdown():
     ccimgui.ImGui_ImplOpenGL3_Shutdown()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_init_for_d3d(window: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForD3D(window)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_init_for_metal(window: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForMetal(window)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_init_for_open_gl(window: Any, sdl_gl_context: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForOpenGL(window, sdl_gl_context)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_init_for_sdl_renderer(window: Any, renderer: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForSDLRenderer(window, renderer)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_init_for_vulkan(window: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_InitForVulkan(window)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_sdl2_new_frame():
-    ccimgui.ImGui_ImplSDL2_NewFrame()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def impl_sdl2_process_event(event: Any):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplSDL2_ProcessEvent(event)
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def impl_sdl2_shutdown():
-    ccimgui.ImGui_ImplSDL2_Shutdown()
 # [End Function]
 
 # [Class]
@@ -14916,6 +14779,40 @@ cdef class ImGuiContext:
     @staticmethod
     cdef ImGuiContext from_ptr(ccimgui.ImGuiContext* _ptr):
         cdef ImGuiContext wrapper = ImGuiContext.__new__(ImGuiContext)
+        wrapper._ptr = _ptr
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+    # [End Class Constants]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+cdef class GLFWwindow:
+    cdef ccimgui.GLFWwindow* _ptr
+    
+    @staticmethod
+    cdef GLFWwindow from_ptr(ccimgui.GLFWwindow* _ptr):
+        cdef GLFWwindow wrapper = GLFWwindow.__new__(GLFWwindow)
+        wrapper._ptr = _ptr
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+    # [End Class Constants]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+cdef class GLFWmonitor:
+    cdef ccimgui.GLFWmonitor* _ptr
+    
+    @staticmethod
+    cdef GLFWmonitor from_ptr(ccimgui.GLFWmonitor* _ptr):
+        cdef GLFWmonitor wrapper = GLFWmonitor.__new__(GLFWmonitor)
         wrapper._ptr = _ptr
         return wrapper
     

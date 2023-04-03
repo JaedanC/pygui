@@ -776,11 +776,19 @@ class HeaderSpec:
     operations. Thus, this class acts as a wrapper of sorts.
     """
 
-    def __init__(self, structs, enums, typedefs, functions, library_name):
-        self.structs: List[Struct] = structs
-        self.enums: List[Enum] = enums
-        self.typedefs: List[Typedef] = typedefs
-        self.functions: List[Function] = functions
+    # def __init__(self, structs, enums, typedefs, functions, library_name):
+    #     self.structs: List[Struct] = structs
+    #     self.enums: List[Enum] = enums
+    #     self.typedefs: List[Typedef] = typedefs
+    #     self.functions: List[Function] = functions
+    #     self.library_name: str = library_name
+    
+    def __init__(self, header_data: List[HeaderData], library_name):
+        self.header_data: List[HeaderData] = header_data
+        self.structs: List[Struct] =     sum([h.structs   for h in header_data], start=[])
+        self.enums: List[Enum] =         sum([h.enums     for h in header_data], start=[])
+        self.typedefs: List[Typedef] =   sum([h.typedefs  for h in header_data], start=[])
+        self.functions: List[Function] = sum([h.functions for h in header_data], start=[])
         self.library_name: str = library_name
 
     def in_pxd_format(self):
@@ -790,30 +798,8 @@ class HeaderSpec:
         output.write("# -*- coding: utf-8 -*-\n")
         output.write("# distutils: language = c++\n\n")
         output.write("from libcpp cimport bool\n\n")
-        output.write('cdef extern from "cimgui.h":\n')
-        for struct in self.structs:
-            output.write(f"{struct.in_pxd_forward_declaration_format()}\n")
-        output.write("\n\n")
-
-        for typedef in self.typedefs:
-            output.write(f"{typedef.in_pxd_format()}\n")
-        output.write("\n\n")
-
-        for enum in self.enums:
-            output.write(f"{enum.in_pxd_format()}\n\n")
-        output.write("\n\n")
-
-        for struct in self.structs:
-            output.write(f"{struct.in_pxd_format()}\n")
-
-        for function in self.functions:
-            output.write(f"{function.in_pxd_format()}\n")
-
-        output.write("\n")
-        for struct in self.structs:
-            for method in struct.methods:
-                output.write(f"{method.in_pxd_format()}\n")
-
+        for header in self.header_data:
+            output.write(header.in_pyd_format() + "\n")
         return output.getvalue()
 
     def _in_raw_pyx_format(self):
@@ -1047,6 +1033,44 @@ class HeaderSpec:
         # TODO:
         pass
 
+
+class HeaderData:
+    def __init__(self, structs, enums, typedefs, functions, header_file_name):
+        self.structs = structs
+        self.enums = enums
+        self.typedefs = typedefs
+        self.functions = functions
+        self.header_file_name = header_file_name
+
+    def in_pyd_format(self):
+        """Returns the Header in fully complete *.pxd format for Cython
+        """
+        output = StringIO()
+        output.write('cdef extern from "{}":\n'.format(self.header_file_name))
+        for struct in self.structs:
+            output.write(f"{struct.in_pxd_forward_declaration_format()}\n")
+        output.write("\n\n")
+
+        for typedef in self.typedefs:
+            output.write(f"{typedef.in_pxd_format()}\n")
+        output.write("\n\n")
+
+        for enum in self.enums:
+            output.write(f"{enum.in_pxd_format()}\n\n")
+        output.write("\n\n")
+
+        for struct in self.structs:
+            output.write(f"{struct.in_pxd_format()}\n")
+
+        for function in self.functions:
+            output.write(f"{function.in_pxd_format()}\n")
+
+        output.write("\n")
+        for struct in self.structs:
+            for method in struct.methods:
+                output.write(f"{method.in_pxd_format()}\n")
+
+        return output.getvalue()
 
 def safe_python_name(name: str, suffix="_") -> str:
     """Modifies a string to not be a keyword or built-in function. Not using
@@ -1304,12 +1328,11 @@ def header_model(base, library_name):
     functions, methods = parse_functions_and_methods(
         base + "/definitions.json")
 
-    impl_functions, impl_methods = parse_functions_and_methods(
+    impl_functions, _ = parse_functions_and_methods(
         base + "/impl_definitions.json")
-    
-    functions += impl_functions
-    methods += impl_methods
 
+    impl_functions = [impl for impl in impl_functions if "OpenGL3" in impl.name or "Glfw" in impl.name]
+    
     # Pairs the methods to a struct.
     struct_lookup = {s.name: s for s in structs}
     for method in methods:
@@ -1376,7 +1399,24 @@ def header_model(base, library_name):
             keep_functions.append(function)
         functions = keep_functions
 
-    return HeaderSpec(structs, enums, typedefs, functions, library_name)
+    cimgui_h = HeaderData(structs, enums, typedefs, functions, "cimgui.h")
+
+    # Implementation Specific
+    cimgui_impl_h = HeaderData(
+        structs=[
+            Struct("GLFWwindow", []),
+            Struct("GLFWmonitor", []),
+            # Struct("SDL_Window", []),
+            # Struct("SDL_Renderer", []),
+            # Struct("SDL_Event", []),
+        ],
+        enums=[],
+        typedefs=[],
+        functions=impl_functions,
+        header_file_name="cimgui_impl.h"
+    )
+
+    return HeaderSpec([cimgui_h, cimgui_impl_h], library_name)
 
 
 def main():
