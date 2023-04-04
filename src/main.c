@@ -21,9 +21,6 @@ GLFWwindow* window;
 
 int main(int argc, char* argv[])
 {
-	printf("Major %d\n", GLFW_VERSION_MAJOR);
-	printf("Minor %d\n", GLFW_VERSION_MINOR);
-
 	if (!glfwInit())
 		return -1;
 

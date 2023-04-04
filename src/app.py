@@ -8,76 +8,77 @@ show_another_window = pygui.BoolPtr(False)
 quit = pygui.BoolPtr(False)
 
 
+def render():
+    global show_demo_window
+    global show_another_window
+
+    if show_demo_window:
+        pygui.show_demo_window()
+    
+    pygui.begin("Hello, World!", None)
+    pygui.text("Some text")
+    pygui.end()
+
+    if show_another_window:
+        pygui.begin("Another window")
+        pygui.text("Some text")
+        pygui.end()
+
+
 def main():
     if not glfw.init():
         return
     
+
     glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
     glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
     glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
     glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2)
-
-
     glfw.window_hint(glfw.RESIZABLE, glfw.TRUE)
 
-    window: glfw._GLFWwindow = glfw.create_window(1024, 768, "Hello World!", None, None)
-
+    window = glfw.create_window(1024, 768, "Hello World!", None, None)
     if window is None:
        print("Failed to create window! Terminating")
        glfw.terminate()
        return
     
-
     glfw.make_context_current(window)
 
-    # Vsync
+    # Vsync:
+    # 1: On
+    # 0: Off
     glfw.swap_interval(0)
-
-    # Check opengl version sdl uses
-    print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION)))
 
     # Setup imgui
     pygui.create_context()
 
-    # Set docking
+    # Setup config flags
     io = pygui.get_io()
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_NAV_ENABLE_KEYBOARD
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_NAV_ENABLE_GAMEPAD
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_DOCKING_ENABLE
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE
 
-    
     pygui.impl_glfw_init_for_open_gl(window, True)
+    pygui.impl_open_gl3_init("#version 130")
 
-    glsl_version = "#version 130"
-    pygui.impl_open_gl3_init(glsl_version)
+    # Check opengl version
+    print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION).decode()))
+    print("glfw version: {}.{}.{}".format(glfw.VERSION_MAJOR, glfw.VERSION_MINOR, glfw.VERSION_REVISION))
 
+    # Not sure why this crashes imgui
     # pygui.style_colors_dark()
     clear_color = (0.45, 0.55, 0.6, 1.0)
 
-    global show_demo_window
-    global show_another_window
-    global quit
     while not glfw.window_should_close(window):
         glfw.poll_events()
         pygui.impl_open_gl3_new_frame()
         pygui.impl_glfw_new_frame()
         pygui.new_frame()
 
-        if show_demo_window:
-           pygui.show_demo_window()
-        
-        pygui.begin("Hello, World!", None)
-        pygui.text("Some text")
-        pygui.end()
-
-        if show_another_window:
-            pygui.begin("Another window")
-            pygui.text("Some text")
-            pygui.end()
+        render()
         
         pygui.render()
-        
         glfw.make_context_current(window)
         
         gl.glViewport(0, 0, int(io.display_size.x), int(io.display_size.y))
@@ -100,6 +101,7 @@ def main():
     pygui.destroy_context()
     glfw.destroy_window(window)
     glfw.terminate()
+
 
 if __name__ == "__main__":
     main()
