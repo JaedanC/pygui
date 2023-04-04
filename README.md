@@ -16,6 +16,13 @@ Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) us
 
 This project uses [cimgui](https://github.com/cimgui/cimgui) as the base, and much of the `core.pyx` code (Cython binding) was written by the developers of [pyimgui](https://github.com/pyimgui/pyimgui).
 
+## Limitations
+
+1. Current build assumes windows as the platform. Some work would be required to enable linux/mac builds.
+2. glfw/cimgui/imgui_impl need to be linked at compile time which may hurt performance slightly.
+3. Not all imgui functions are ported across. These would need to be worked on, but PR's welcome. See [pyimgui's](https://github.com/pyimgui/pyimgui) core.pyx for help.
+4. More work would be required to enable additional backends. Though the modular design of using `dll's` should not make this too hard.
+
 ## How to run
 
 First, download this repository recursively:
