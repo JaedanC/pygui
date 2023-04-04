@@ -52,7 +52,7 @@ On windows, this can simplified to:
 1. Open VS Developer Powershell. [How to?](https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022#start-from-windows-menu>)
 2. Run:
 
-    ```ps
+    ```bash
     cd src/external/luajit/src
     ./msvcbuild.bat
     ```
@@ -77,7 +77,7 @@ On windows:
 
 2. Run `generator.bat`
 
-    ```ps
+    ```bash
     cd src/external/cimgui/generator
     ./generator.bat
     ```
@@ -86,7 +86,7 @@ On windows:
 
 Inside the root folder of the `pygui` project run:
 
-```ps
+```bash
 python -m venv .
 ```
 
@@ -94,19 +94,19 @@ Then on windows:
 
 1. Run:
 
-    ```ps
+    ```bash
     ./Scripts/activate
     ```
 
     You will notice your terminal have a (pygui) prefix.
 
-    ```ps
+    ```bash
     (pygui) c:/pygui>
     ```
 
 2. Then run:
 
-    ```ps
+    ```bash
     pip install -r ./requirements.txt
     ```
 
@@ -130,7 +130,7 @@ Finally we can compile pygui. From a default clone, no further configuration is 
 
 To compile pygui run setup.py like so:
 
-```ps
+```bash
 cd src
 python setup.py clean build_ext --build-lib pygui
 ```
@@ -149,20 +149,20 @@ To develop pygui, it's important that you first compile/install the 3 `dll`'s ab
 
 After that, you can then begin to modify the bindings. More on that in the next section. But for now, let's look at how you would generate the bindings:
 
-```ps
+```bash
 cd src
 python model_creator.py --all
 ```
 
 Then run the cython compiler again:
 
-```ps
+```bash
 python setup.py clean build_ext --build-lib pygui
 ```
 
 You can test the application with:
 
-```ps
+```bash
 cd src
 python app.py
 ```
