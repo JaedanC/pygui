@@ -1,7 +1,10 @@
-import sys
+import glob
 import os
+import sys
+import shutil
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
+
 
 
 def main():
@@ -9,18 +12,12 @@ def main():
         print("python setup.py clean build_ext --build-lib pygui")
         return
     
-    # if not os.path.exists("core/cimgui.dll") and not os.path.exists("core/cimgui.lib"):
-    #     print("No compiled cimgui library could be found in the pygui/ directory")
-    #     return
-
     extensions = [
         Extension(
             "core",
             [ "core/core.pyx" ],
-            include_dirs=["cimgui", "cimgui/generator/output"],
-            # include_dirs=["cimgui", "cimgui/generator/output", "glfw/include"],
-            library_dirs=["pygui"],
-            # libraries=["cimgui_impl", "glfw3"],
+            include_dirs=["external/cimgui", "external/cimgui/generator/output"],
+            library_dirs=["pygui/libs"],
             libraries=["cimgui", "glfw3dll", "imgui_glfw_opengl3"],
             define_macros=[
                 ("CIMGUI_DEFINE_ENUMS_AND_STRUCTS", None),
@@ -37,6 +34,28 @@ def main():
         packages=find_packages("."),
         ext_modules=cythonize(extensions)
     )
+
+
+    if os.path.exists("../portable"):
+        shutil.rmtree("../portable")
+
+    os.makedirs("../portable/pygui")
+
+    to_copy = \
+        glob.glob(r"pygui/*.dll") + \
+        glob.glob(r"pygui/*.pyd") + \
+        glob.glob(r"pygui/*.py") + \
+        glob.glob(r"pygui/*.pyi")
+    to_copy.sort()
+    to_copy = [f.replace("\\", "/") for f in to_copy]
+    
+    for file_to_copy in to_copy:
+        shutil.copy(file_to_copy, "../portable/pygui")
+        print(f"Created ../portable/{file_to_copy}")
+    
+    shutil.copy("app.py", "../portable")
+    print(f"Created ../portable/app.py")
+    
 
 
 if __name__ == "__main__":

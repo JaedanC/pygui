@@ -32,29 +32,32 @@ On windows, this can simplified to:
 2. From inside `pygui` run
 
     ```ps
-    cd src\LuaJIT\src
+    # ./src/external/cimgui/generator
     ./msvcbuild.bat
     ```
 
-    This will create `lua*.dll` and `luajit.exe` inside the `src\LuaJIT\src` directory you ran the script from.
-3. Copy these two files to `src/cimgui/generator`
+    This will create `lua*.dll` and `luajit.exe` inside the `./src/external/luajit/src` directory you ran the script from.
+3. Copy these two files to `src/external/cimgui/generator`
 
 ### Configuring cimgui
 
 On windows:
 
-1. Navigate to `src\cimgui\generator` and open `generator.bat` in a text editor.
-2. Make sure the compiler used is `cl` and the argument string is `"noimstrv comments"`. Line 22 should look something like this:
+1. Edit `./src/external/cimgui/generator/generator.bat` file to contain only:
 
     ```bat
-    luajit ./generator.lua cl "noimstrv comments" glfw opengl3 opengl2 sdl2
+    luajit ./generator.lua cl "comments noimstrv" glfw opengl3
     ```
 
-    All other lines can be commented out.
-3. Run `generator.bat` (Command below shows `cd` for completion):
+    - This will generate the bindings using window's C compiler `cl`.
+    - Internal imgui functions are omitted.
+    - Comments are included.
+    - Only the relevant implementations are included.
+
+2. Run `generator.bat`
 
     ```ps
-    cd src\cimgui\generator
+    # ./src/external/cimgui/generator
     ./generator.bat
     ```
 
@@ -88,91 +91,67 @@ Then on windows:
 
 ### Running CMake
 
-To properly compile pygui it is important that a `x64` Developer PowerShell is used. A regular Visual Studio Developer PowerShell instance will not work. This is because the regular 32 bit `cl` compiler does not correctly compile Cython, and will produce an error when trying to compile.
+This step will compile:
 
-You can open a `x64` developer powershell by searching for "x64 Native Tools" on windows. Run the resulting Command Prompt. Your cmd shouild look something like this:
+- cimgui
+- imgui_glfw_opengl3
+- glfw
 
-```cmd
-**********************************************************************
-** Visual Studio 2022 Developer Command Prompt v17.5.2
-** Copyright (c) 2022 Microsoft Corporation
-**********************************************************************
-[vcvarsall.bat] Environment initialized for: 'x64'
+All as shared `.dll`'s so that you can recompile each module and/or include extra implementations as a dll. It is very important that glfw is NOT compiled statically. If it is compiled statically then python's glfw will refer do a different instance, causing imgui to crash on startup.
 
-C:\Program Files\Microsoft Visual Studio\2022\Community>
-```
+You may use Visual Studio or the command-line (developer console on windows) to run CMake. I will be using Visual Studio.
 
-Then run `powershell`.
+Configure (build) CMake and then CMake "Install". This will build the targets and save them to `./src/pygui`. An additional `./src/pygui/my_program.exe` has been included that compiles from `main.c`. This is to demonstrate the `dll`'s in action. If this program does not run correctly, then the `dll`'s are not ready for python.
 
-You will then need to navigate to wherever you cloned `pygui`. For example:
+### Compiling Pygui
 
-```ps
-cd "c:/pygui"
-```
+Finally we can compile pygui. From a default clone, no further configuration is required. But this is the step where we can update the cython bindings or generally perform any python-specific changes.
 
-Then, start the python venv with:
+To compile pygui run setup.py like so:
 
 ```ps
-./Scripts/activate
+# ./src
+python setup.py clean build_ext --build-lib pygui
 ```
 
-Then run:
+This will compile to `./src/pygui`:
 
-```ps
-cmake -S . -B out/build
-cmake --build out/build --config RELEASE
-```
+- The `core*.pyd` file. This contains the cython binding.
+- The `__init__.py` file. This allows the `pygui` directory to be imported as `import pygui`
+- The `__init__.pyi` file. This gives the `pygui` module correct intellisense in editors as cython does not export symbols.
 
-After running the second command, a new directory called "portable" will be created in the repo. This folder contains everything you need to start your new `pygui` project and can be safely copied away to your project of choice.
+It will also copy the entire `pygui` python module to directory called `portable`. This new directory will contains everythign required for a new `pygui` project to be portable. It will not include the `src/pygui/libs` directory or the `my_program.exe`.
 
 ## Developing pygui
 
-CMake is a shortcut to installing a portable installation of pygui, but for developers this wish to implement more imgui-cython functions, these are the steps you need to do. First, complete Steps 1-4 above.
+To develop pygui, it's important that you first compile/install the 3 `dll`'s above using CMake.
 
-Compile `cimgui` with:
-
-1. Option 1. Use `pygui` CMake
-
-    ```ps
-    cmake -S . -B out/build
-    cmake --build out/build --config RELEASE
-    ```
-
-2. Option 2. Use `cimgui` CMake
-
-    ```ps
-    cd src/cimgui
-    cmake -S . -B out/build
-    cmake --build out/build --config RELEASE
-    ```
-
-    Copy:
-
-    - `src/cimgui/out/build/Release/cimgui.dll`
-    - `src/cimgui/out/build/Release/cimgui.lib`
-
-    ...to `src/pygui`
-
-To generate the Cython-imgui bindings run:
+After that, you can then begin to modify the bindings. More on that in the next section. But for now, let's look at how you would generate the bindings:
 
 ```ps
-cd src
+# ./src
 python model_creator.py --all
+```
+
+Then run the cython compiler again:
+
+```ps
+# ./src
 python setup.py clean build_ext --build-lib pygui
 ```
 
 You can test the application with:
 
 ```ps
-cd src
+# ./src
 python app.py
 ```
 
 ## How are bindings created?
 
-Bindings are creating by first reading the output of cimgui's generator. These can be found inside `src/cimgui/generator/output`. The definitions are then parsed and exported into three types of files:
+Bindings are creating by first reading the output of cimgui's generator. These can be found inside `./src/external/cimgui/generator/output`. The definitions are then parsed and exported into three types of files:
 
-1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/cimgui/cimgui.h`). This file does not need to be touched if the API changes.
+1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/external/cimgui/cimgui.h`). This file does not need to be touched if the API changes.
 2. `pyx`: (Located at `src/core/core.pyx`) This file contains the cython that is compiled. This file can be editted if you want, but new additions should instead be put inside `src/core/core_template.pyx`. More on this later.
 3. `pyi`: (Located at `src/pygui/__init__.pyi`) This file contains the cython function definitions so that intellisense on editors work correctly with pygui. Cython does not export any symbols so this file is required if you don't want squiggly lines everywhere in your editor.
 
@@ -207,6 +186,6 @@ When activated, the function can be editted however you like, including the name
 4. Instances of classes returned cannot store any information on them because they simply serve as wrappers for a pointer to the real instance in c. Any information required to be stored on a class should instead be written to a dictionary. See `get_clipboard_text_fn` and `set_clipboard_text_fn`.
 5. Converting to and from lists is much harder. Consider looking at `ImDrawData.cmd_lists` and `ImGuiIO.key_map`.
 
-Running `src/model_creator.py` with no options will give you a better look into the options provided. Importantly, whenever the pyx is generated, this will read `core_template.pyx` and merge it with `core_generated` to create `core.pyx`. **If a function inside `core_template.pyx` is not marked as `use_template`, it will be reset to whatever is inside `core_generated.pyx` and `core_template.pyx` will be modified!**. This is by design.
+Running `./src/model_creator.py` with no options will give you a better look into the options provided. Importantly, whenever the pyx is generated, this will read `core_template.pyx` and merge it with `core_generated` to create `core.pyx`. **If a function inside `core_template.pyx` is not marked as `use_template`, it will be reset to whatever is inside `core_generated.pyx` and `core_template.pyx` will be modified!**. This is by design.
 
-If you are unsure about the output, run `model_creator.py --trial`. This will generate `_trial.pyx` versions of `core.pyx` and `core_template.pyx` so you can see what each file *would* look like if you ran `model_creator.py --pyx`.
+If you are unsure about the output, run `python model_creator.py --trial`. This will generate `*_trial.pyx` versions of `core.pyx` and `core_template.pyx` so you can see what each file *would* look like if you ran `model_creator.py --pyx`.

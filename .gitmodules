@@ -1,6 +1,9 @@
-[submodule "src/cimgui"]
-	path = src/cimgui
+[submodule "src/external/cimgui"]
+	path = src/external/cimgui
 	url = https://github.com/cimgui/cimgui
-[submodule "src/LuaJIT"]
-	path = src/LuaJIT
-	url = https://github.com/LuaJIT/LuaJIT.git
+[submodule "src/external/glfw"]
+	path = src/external/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "src/external/luajit"]
+	path = src/external/luajit
+	url = https://luajit.org/git/luajit.git

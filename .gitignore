@@ -10,13 +10,14 @@ __pycache__
 
 build/
 
-cimgui.dll
-cimgui.lib
-cimgui.exp
+*.dll
+*.lib
+*.exe
+
+core.c
+core.cpp
 
 *.pyd
-*.cpp
-*.c
 *_prev.pyx
 *_trial.pyx
 

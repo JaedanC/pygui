@@ -1331,8 +1331,6 @@ def header_model(base, library_name):
     impl_functions, _ = parse_functions_and_methods(
         base + "/impl_definitions.json")
 
-    impl_functions = [impl for impl in impl_functions if "OpenGL3" in impl.name or "Glfw" in impl.name]
-    
     # Pairs the methods to a struct.
     struct_lookup = {s.name: s for s in structs}
     for method in methods:
@@ -1406,9 +1404,6 @@ def header_model(base, library_name):
         structs=[
             Struct("GLFWwindow", []),
             Struct("GLFWmonitor", []),
-            # Struct("SDL_Window", []),
-            # Struct("SDL_Renderer", []),
-            # Struct("SDL_Event", []),
         ],
         enums=[],
         typedefs=[],
