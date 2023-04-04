@@ -1,20 +1,20 @@
-# Pygui
+# pygui
 
-Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) using cython.
+Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) using Cython.
 
-![Hello From Pygui](./docs/img/hello_from_pygui.png)
+![Hello From pygui](./docs/img/hello_from_pygui.png)
 
 ## Features
 
-1. Includes an auto-generated `__init__.pyi` file. Intellisense works in editors while using pygui.
-2. Uses Imgui's already made glfw_opengl3 backends. This means that very little understanding of OpenGL is needed. It also means...
-3. ImGui Docking Support.
-4. Imgui Multi-Viewport Support.
+1. Imgui Docking Support.
+2. Imgui Multi-Viewport Support.
+3. Intellisense Support. (`__init__.pyi` file)
+4. Uses Imgui's `glfw_opengl3` backend. Minimal understanding of OpenGL is needed.
 5. Includes a minimal c example.
 
 ![Intellisense](./docs/img/intellisense.png)
 
-This project uses [cimgui](https://github.com/cimgui/cimgui) as the base, and much of the `core.pyx` code (cython binding) was written by the developers of [pyimgui](https://github.com/pyimgui/pyimgui).
+This project uses [cimgui](https://github.com/cimgui/cimgui) as the base, and much of the `core.pyx` code (Cython binding) was written by the developers of [pyimgui](https://github.com/pyimgui/pyimgui).
 
 ## How to run
 
