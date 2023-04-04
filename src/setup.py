@@ -17,9 +17,11 @@ def main():
         Extension(
             "core",
             [ "core/core.pyx" ],
-            include_dirs=["cimgui", "cimgui/generator/output", "glfw/include"],
+            include_dirs=["cimgui", "cimgui/generator/output"],
+            # include_dirs=["cimgui", "cimgui/generator/output", "glfw/include"],
             library_dirs=["pygui"],
-            libraries=["cimgui", "glfw3"],
+            # libraries=["cimgui_impl", "glfw3"],
+            libraries=["cimgui", "glfw3dll", "imgui_glfw_opengl3"],
             define_macros=[
                 ("CIMGUI_DEFINE_ENUMS_AND_STRUCTS", None),
                 ("CIMGUI_USE_GLFW", None),

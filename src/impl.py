@@ -11,30 +11,33 @@ quit = pygui.BoolPtr(False)
 def main():
     if not glfw.init():
         return
-
+    
     glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
     glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3);
-    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2);
+    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
+    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2)
 
 
     glfw.window_hint(glfw.RESIZABLE, glfw.TRUE)
-    window = glfw.create_window(1024, 768, "Hello World!", None, None)
+
+    window: glfw._GLFWwindow = glfw.create_window(1024, 768, "Hello World!", None, None)
+
     if window is None:
        print("Failed to create window! Terminating")
        glfw.terminate()
        return
+    
 
     glfw.make_context_current(window)
 
     # Vsync
-    glfw.swap_interval(1)
+    glfw.swap_interval(0)
 
     # Check opengl version sdl uses
-    print("Opengl version: {}".format(gl.glGetString()))
+    print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION)))
 
     # Setup imgui
-    context = pygui.create_context()
+    pygui.create_context()
 
     # Set docking
     io = pygui.get_io()
@@ -43,11 +46,13 @@ def main():
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_DOCKING_ENABLE
     io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE
 
+    
     pygui.impl_glfw_init_for_open_gl(window, True)
+
     glsl_version = "#version 130"
     pygui.impl_open_gl3_init(glsl_version)
 
-    pygui.style_colors_dark()
+    # pygui.style_colors_dark()
     clear_color = (0.45, 0.55, 0.6, 1.0)
 
     global show_demo_window
@@ -88,7 +93,7 @@ def main():
            pygui.render_platform_windows_default()
            glfw.make_context_current(backup_current_window)
         
-        glfw.swap_buffers()
+        glfw.swap_buffers(window)
     
     pygui.impl_open_gl3_shutdown()
     pygui.impl_glfw_shutdown()
