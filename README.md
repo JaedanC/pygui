@@ -50,10 +50,10 @@ Comprehensive instructions for compiling LuaJIT can be found at <https://luajit.
 On windows, this can simplified to:
 
 1. Open VS Developer Powershell. [How to?](https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022#start-from-windows-menu>)
-2. From inside `pygui` run
+2. Run:
 
     ```ps
-    cd src/external/cimgui/generator
+    cd src/external/luajit/src
     ./msvcbuild.bat
     ```
 
@@ -78,7 +78,7 @@ On windows:
 2. Run `generator.bat`
 
     ```ps
-    # ./src/external/cimgui/generator
+    cd src/external/cimgui/generator
     ./generator.bat
     ```
 

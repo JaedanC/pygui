@@ -1,6 +1,5 @@
-Cython
 glfw
-numpy
 PyOpenGL
-PyOpenGL-accelerate
+Cython
 diff_match_patch
+numpy

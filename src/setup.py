@@ -53,6 +53,8 @@ def main():
         shutil.copy(file_to_copy, "../portable/pygui")
         print(f"Created ../portable/{file_to_copy}")
     
+    shutil.copy("requirements.txt", "../portable")
+    print(f"Created ../portable/requirements.txt")
     shutil.copy("app.py", "../portable")
     print(f"Created ../portable/app.py")
     
