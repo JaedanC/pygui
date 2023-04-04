@@ -4,6 +4,7 @@
 
 # [Imports]
 import cython
+import ctypes
 from cython.operator import dereference
 
 from collections import namedtuple

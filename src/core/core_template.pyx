@@ -4,6 +4,7 @@
 
 # [Imports]
 import cython
+import ctypes
 from cython.operator import dereference
 
 from collections import namedtuple
@@ -751,6 +752,7 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
     else:
         res = ccimgui.igBegin(_bytes(name), &is_open, flags)
         p_open.ptr = is_open
+    return res
 # [End Function]
 
 # [Function]
@@ -1032,8 +1034,8 @@ def bullet_textv(fmt: str, args: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(Any)
 def button(label: str, size: tuple=(0, 0)):
     """
@@ -1065,11 +1067,13 @@ def calc_text_size(pOut: ImVec2, text: str, text_end: str=None, hide_text_after_
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def checkbox(label: str, value: Any):
-    cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), value)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def checkbox(label: str, value: BoolPtr):
+    cdef bool value_ptr = value.ptr
+    cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), &value_ptr)
+    value.ptr = value_ptr
     return res
 # [End Function]
 
@@ -1103,18 +1107,24 @@ def close_current_popup():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(Any)
-def collapsing_header_bool_ptr(label: str, p_visible: Any, flags: int=0):
+def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr=None, flags: int=0):
     """
     When 'p_visible != null': if '*p_visible==true' display an additional
     small close button on upper right of the header which will set
     the bool to false when clicked, if '*p_visible==false' don't
     display the header.
     """
-    cdef ccimgui.bool res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), p_visible, flags)
-    return res
+    cdef bool p_visible_ptr = p_visible.ptr
+    if p_visible is not None:
+        res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), &p_visible_ptr, flags)
+        p_visible.ptr = p_visible_ptr
+        return res
+    else:
+        res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), NULL, flags)
+        return res
 # [End Function]
 
 # [Function]
@@ -3921,8 +3931,8 @@ def reset_mouse_drag_delta(button: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
     """
@@ -4000,8 +4010,8 @@ def separator():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def separator_text(label: str):
     """
@@ -5297,9 +5307,9 @@ def tree_node_ptr(ptr_id: Any, fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def tree_node_str(label: str):
     cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
     return res
@@ -5320,8 +5330,8 @@ def tree_node_str_str(str_id: str, fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def tree_pop():
     """
@@ -5487,8 +5497,9 @@ def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(window._ptr, install_callbacks)
+def impl_glfw_init_for_open_gl(window, install_callbacks: bool):
+    cdef uintptr_t adr = <uintptr_t>ctypes.addressof(window.contents)
+    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(<ccimgui.GLFWwindow*>adr, install_callbacks)
     return res
 # [End Function]
 

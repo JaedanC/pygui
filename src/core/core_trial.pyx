@@ -4,6 +4,7 @@
 
 # [Imports]
 import cython
+import ctypes
 from cython.operator import dereference
 
 from collections import namedtuple
@@ -5487,8 +5488,9 @@ def update_platform_windows():
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
-    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(window._ptr, install_callbacks)
+def impl_glfw_init_for_open_gl(window, install_callbacks: bool):
+    cdef uintptr_t adr = <uintptr_t>ctypes.addressof(window.contents)
+    cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(<ccimgui.GLFWwindow*>adr, install_callbacks)
     return res
 # [End Function]
 

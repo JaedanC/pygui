@@ -810,6 +810,7 @@ class HeaderSpec:
         
         output.write("# [Imports]\n")
         output.write("import cython\n")
+        output.write("import ctypes\n")
         output.write("from cython.operator import dereference\n\n")
         output.write("from collections import namedtuple\n")
         output.write("from typing import Callable, Any\n\n")
@@ -1534,7 +1535,7 @@ def main():
     if len(sys.argv) != 2:
         return _help()
 
-    header = header_model("cimgui/generator/output", "ccimgui")
+    header = header_model("external/cimgui/generator/output", "ccimgui")
 
     
     if "--trial" in sys.argv:

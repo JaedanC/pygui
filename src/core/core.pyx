@@ -752,6 +752,7 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
     else:
         res = ccimgui.igBegin(_bytes(name), &is_open, flags)
         p_open.ptr = is_open
+    return res
 # [End Function]
 
 # [Function]
@@ -1033,15 +1034,15 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def button(label: str, size: tuple=(0, 0)):
-#     """
-#     Button
-#     """
-#     cdef ccimgui.bool res = ccimgui.igButton(_bytes(label), _cast_tuple_ImVec2(size))
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def button(label: str, size: tuple=(0, 0)):
+    """
+    Button
+    """
+    cdef ccimgui.bool res = ccimgui.igButton(_bytes(label), _cast_tuple_ImVec2(size))
+    return res
 # [End Function]
 
 # [Function]
@@ -1066,12 +1067,14 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def checkbox(label: str, value: Any):
-#     cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), value)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def checkbox(label: str, value: BoolPtr):
+    cdef bool value_ptr = value.ptr
+    cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), &value_ptr)
+    value.ptr = value_ptr
+    return res
 # [End Function]
 
 # [Function]
@@ -1104,18 +1107,24 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def collapsing_header_bool_ptr(label: str, p_visible: Any, flags: int=0):
-#     """
-#     When 'p_visible != null': if '*p_visible==true' display an additional
-#     small close button on upper right of the header which will set
-#     the bool to false when clicked, if '*p_visible==false' don't
-#     display the header.
-#     """
-#     cdef ccimgui.bool res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), p_visible, flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr=None, flags: int=0):
+    """
+    When 'p_visible != null': if '*p_visible==true' display an additional
+    small close button on upper right of the header which will set
+    the bool to false when clicked, if '*p_visible==false' don't
+    display the header.
+    """
+    cdef bool p_visible_ptr = p_visible.ptr
+    if p_visible is not None:
+        res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), &p_visible_ptr, flags)
+        p_visible.ptr = p_visible_ptr
+        return res
+    else:
+        res = ccimgui.igCollapsingHeader_BoolPtr(_bytes(label), NULL, flags)
+        return res
 # [End Function]
 
 # [Function]
@@ -3922,15 +3931,15 @@ def render_platform_windows_default(platform_render_arg: Any=None, renderer_rend
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
-#     """
-#     Call between widgets or groups to layout them horizontally. x
-#     position given in window coordinates.
-#     """
-#     ccimgui.igSameLine(offset_from_start_x, spacing)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
+    """
+    Call between widgets or groups to layout them horizontally. x
+    position given in window coordinates.
+    """
+    ccimgui.igSameLine(offset_from_start_x, spacing)
 # [End Function]
 
 # [Function]
@@ -4001,14 +4010,14 @@ def render_platform_windows_default(platform_render_arg: Any=None, renderer_rend
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def separator_text(label: str):
-#     """
-#     Currently: formatted text with an horizontal line
-#     """
-#     ccimgui.igSeparatorText(_bytes(label))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def separator_text(label: str):
+    """
+    Currently: formatted text with an horizontal line
+    """
+    ccimgui.igSeparatorText(_bytes(label))
 # [End Function]
 
 # [Function]
@@ -5298,12 +5307,12 @@ def text(fmt: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def tree_node_str(label: str):
-#     cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def tree_node_str(label: str):
+    cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
+    return res
 # [End Function]
 
 # [Function]
@@ -5321,14 +5330,14 @@ def text(fmt: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def tree_pop():
-#     """
-#     ~ unindent()+popid()
-#     """
-#     ccimgui.igTreePop()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def tree_pop():
+    """
+    ~ unindent()+popid()
+    """
+    ccimgui.igTreePop()
 # [End Function]
 
 # [Function]
@@ -5488,7 +5497,7 @@ def update_platform_windows():
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def impl_glfw_init_for_open_gl(window: Any, install_callbacks: bool):
+def impl_glfw_init_for_open_gl(window, install_callbacks: bool):
     cdef uintptr_t adr = <uintptr_t>ctypes.addressof(window.contents)
     cdef ccimgui.bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(<ccimgui.GLFWwindow*>adr, install_callbacks)
     return res
