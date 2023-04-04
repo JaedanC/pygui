@@ -1,8 +1,20 @@
 # Pygui
 
-This repo is designed to help generate python bindings for [Dear ImGui](https://github.com/ocornut/imgui). This project binds on top of [cimgui](https://github.com/cimgui/cimgui) and is heavily inspired by [pyimgui](https://github.com/pyimgui/pyimgui).
+Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) using cython.
 
-Much of the code in `core.pyx` was written by or inspired by the `pyimgui` developers.
+![Hello From Pygui](./docs/img/hello_from_pygui.png)
+
+## Features
+
+1. Includes an auto-generated `__init__.pyi` file. Intellisense works in editors while using pygui.
+2. Uses Imgui's already made glfw_opengl3 backends. This means that very little understanding of OpenGL is needed. It also means...
+3. ImGui Docking Support.
+4. Imgui Multi-Viewport Support.
+5. Includes a minimal c example.
+
+![Intellisense](./docs/img/intellisense.png)
+
+This project uses [cimgui](https://github.com/cimgui/cimgui) as the base, and much of the `core.pyx` code (cython binding) was written by the developers of [pyimgui](https://github.com/pyimgui/pyimgui).
 
 ## How to run
 
@@ -11,6 +23,8 @@ First, download this repository recursively:
 ```bash
 git clone https://github.com/JaedanC/pygui.git --recursive
 ```
+
+You may use different versions of glfw, luajit or cimgui if you wish. Just checkout the version you want.
 
 ## Running ImGui
 
@@ -32,7 +46,7 @@ On windows, this can simplified to:
 2. From inside `pygui` run
 
     ```ps
-    # ./src/external/cimgui/generator
+    cd src/external/cimgui/generator
     ./msvcbuild.bat
     ```
 
@@ -110,7 +124,7 @@ Finally we can compile pygui. From a default clone, no further configuration is 
 To compile pygui run setup.py like so:
 
 ```ps
-# ./src
+cd src
 python setup.py clean build_ext --build-lib pygui
 ```
 
@@ -129,21 +143,20 @@ To develop pygui, it's important that you first compile/install the 3 `dll`'s ab
 After that, you can then begin to modify the bindings. More on that in the next section. But for now, let's look at how you would generate the bindings:
 
 ```ps
-# ./src
+cd src
 python model_creator.py --all
 ```
 
 Then run the cython compiler again:
 
 ```ps
-# ./src
 python setup.py clean build_ext --build-lib pygui
 ```
 
 You can test the application with:
 
 ```ps
-# ./src
+cd src
 python app.py
 ```
 
