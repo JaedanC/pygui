@@ -100,7 +100,7 @@ Then on windows:
 
     You will notice your terminal have a (pygui) prefix.
 
-    ```bash
+    ```ps
     (pygui) c:/pygui>
     ```
 
