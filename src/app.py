@@ -3,6 +3,9 @@ import glfw
 import OpenGL.GL as gl
 import inspect
 
+# For imgui
+import math
+import time
 
 show_demo_window = pygui.BoolPtr(True)
 show_another_window = pygui.BoolPtr(False)
@@ -11,7 +14,7 @@ clicked = 0
 
 
 
-class StaticVarCls(object):
+class StaticVarHeavy(object):
     def __init__(self):
         super().__setattr__("__static_vars_lookup", {})
 
@@ -37,29 +40,132 @@ class StaticVarCls(object):
             super().__getattribute__("__static_vars_lookup")[__name] = __value
             print(f"Creating static: {__name}: {__value}")
 
+static = StaticVarHeavy()
 
-static = StaticVarCls()
+class StaticVarSimple:
+    widgets_clicked = 0
+    widgets_check = pygui.BoolPtr(True)
+    widgets_e = pygui.IntPtr(0)
+    widgets_counter = 0
+    widgets_str0 = pygui.StrPtr("Hello, World!", 128)
+    widgets_str1 = pygui.StrPtr("", 128)
+    widgets_i0 = pygui.IntPtr(123)
+    widgets_f0 = pygui.FloatPtr(0.001)
+    widgets_d0 = pygui.FloatPtr(999999.00000001)
+
+
+
+
+def help_marker(desc: str):
+    pygui.text_disabled("(?)")
+    if pygui.is_item_hovered(pygui.IMGUI_HOVERED_FLAGS_DELAY_SHORT) and pygui.begin_tooltip():
+        pygui.push_text_wrap_pos(pygui.get_font_size() * 35)
+        pygui.text_unformatted(desc)
+        pygui.pop_text_wrap_pos()
+        pygui.end_tooltip()
+
 
 def show_demo_window_widgets():
     global static
 
-    if not pygui.collapsing_header_bool_ptr("Widgets"):
+    if not pygui.collapsing_header("Widgets"):
         return
     
-    if pygui.tree_node_str("Basic"):
+    if pygui.tree_node("Basic"):
         pygui.separator_text("General")
 
-        # static.new("clicked", 0)
-        # if pygui.button("Button"):
-        #     static.clicked += 1
+        if pygui.button("Button"):
+            StaticVarSimple.widgets_clicked += 1
         
-        # if static.clicked & 1:
-        #     pygui.same_line()
-        #     pygui.text("Thanks for clicking me!")
+        if StaticVarSimple.widgets_clicked & 1:
+            pygui.same_line()
+            pygui.text("Thanks for clicking me!")
         
-        # static.new("check", pygui.BoolPtr(True))
-        # pygui.checkbox("checkbox", static.check)
+        pygui.checkbox("checkbox", StaticVarSimple.widgets_check)
 
+        pygui.radio_button("radio a", StaticVarSimple.widgets_e, 0)
+        pygui.same_line()
+        pygui.radio_button("radio b", StaticVarSimple.widgets_e, 1)
+        pygui.same_line()
+        pygui.radio_button("radio c", StaticVarSimple.widgets_e, 2)
+
+        # Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
+        for i in range(6):
+            if i > 0:
+                pygui.same_line()
+            
+            pygui.push_id_int(i)
+            pygui.push_style_color_vec4(pygui.IMGUI_COL_BUTTON,         pygui.ImColor.hsv(i / 7, 0.6, 0.6))
+            pygui.push_style_color_vec4(pygui.IMGUI_COL_BUTTON_HOVERED, pygui.ImColor.hsv(i / 7, 0.7, 0.7))
+            pygui.push_style_color_vec4(pygui.IMGUI_COL_BUTTON_ACTIVE,  pygui.ImColor.hsv(i / 7, 0.8, 0.8))
+            pygui.button("Click")
+            pygui.pop_style_color(3)
+            pygui.pop_id()
+        
+        # Use AlignTextToFramePadding() to align text baseline to the baseline of framed widgets elements
+        # (otherwise a Text+SameLine+Button sequence will have the text a little too high by default!)
+        # See 'Demo->Layout->Text Baseline Alignment' for details.
+        pygui.align_text_to_frame_padding()
+        pygui.text("Hold to repeat:")
+        pygui.same_line()
+
+        spacing: float = pygui.get_style().item_inner_spacing.x
+        pygui.push_button_repeat(True)
+        if pygui.arrow_button("##left", pygui.IMGUI_DIR_LEFT):
+            StaticVarSimple.widgets_counter -= 1
+        pygui.same_line(0, spacing)
+        if pygui.arrow_button("##right", pygui.IMGUI_DIR_RIGHT):
+            StaticVarSimple.widgets_counter += 1
+        pygui.pop_button_repeat()
+        pygui.same_line()
+        pygui.text(str(StaticVarSimple.widgets_counter))
+
+        # Tooltips
+
+        pygui.text("Tooltips:")
+        pygui.same_line()
+        pygui.small_button("Button")
+        if pygui.is_item_hovered():
+            pygui.set_tooltip("I am a tooltip")
+        
+        pygui.same_line()
+        pygui.small_button("Fancy")
+        if pygui.is_item_hovered() and pygui.begin_tooltip():
+            pygui.text("I am a fancy tooltip")
+            arr = [0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2]
+            pygui.plot_lines("Curve", arr)
+            pygui.text("Sin(time) = {}".format(math.sin(time.time())))
+            pygui.end_tooltip()
+        
+        pygui.same_line()
+        pygui.small_button("Delayed")
+        if pygui.is_item_hovered(pygui.IMGUI_HOVERED_FLAGS_DELAY_NORMAL):
+            pygui.set_tooltip("I am a tooltip with a delay")
+        
+        pygui.same_line()
+        help_marker("Tooltip are created by using the IsItemHovered() function over any kind of item.")
+
+        pygui.label_text("label", "Value")
+
+        pygui.separator_text("Inputs")
+
+        pygui.input_text("input text", StaticVarSimple.widgets_str0)
+        pygui.same_line()
+        help_marker("USER:\n"
+            "Hold SHIFT or use mouse to select text.\n"
+            "CTRL+Left/Right to word jump.\n"
+            "CTRL+A or Double-Click to select all.\n"
+            "CTRL+X,CTRL+C,CTRL+V clipboard.\n"
+            "CTRL+Z,CTRL+Y undo/redo.\n"
+            "ESCAPE to revert.\n\n"
+            "PROGRAMMER:\n"
+            "You can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputText() "
+            "to a dynamic string type. See misc/cpp/imgui_stdlib.h for an example (this is not demonstrated "
+            "in imgui_demo.cpp)."
+        )
+
+        pygui.input_text_with_hint("input text (w/ hint)", "enter text here", StaticVarSimple.widgets_str1)
+        pygui.input_int("input int", StaticVarSimple.widgets_i0)
         pygui.tree_pop()
 
 

@@ -19,6 +19,7 @@ cdef extern from "cimgui.h":
     ctypedef struct ImVector_ImFontConfig
     ctypedef struct ImFontGlyph
     ctypedef struct ImVector_ImU32
+    ctypedef struct ImGuiInputTextCallbackData
     ctypedef struct ImGuiKeyData
     ctypedef struct ImGuiListClipper
     ctypedef struct ImGuiOnceUponAFrame
@@ -96,6 +97,7 @@ cdef extern from "cimgui.h":
     ctypedef int ImGuiTreeNodeFlags
     ctypedef int ImGuiViewportFlags
     ctypedef int ImGuiWindowFlags
+    ctypedef int (*ImGuiInputTextCallback)(ImGuiInputTextCallbackData* data)
     ctypedef unsigned char ImU8
     ctypedef unsigned int ImGuiID
     ctypedef unsigned int ImU32
@@ -550,6 +552,12 @@ cdef extern from "cimgui.h":
         ImGuiMouseCursor_NotAllowed
         ImGuiMouseCursor_COUNT
 
+    ctypedef enum ImGuiMouseSource:
+        ImGuiMouseSource_Mouse
+        ImGuiMouseSource_TouchScreen
+        ImGuiMouseSource_Pen
+        ImGuiMouseSource_COUNT
+
     ctypedef enum ImGuiNavInput:
         ImGuiNavInput_Activate
         ImGuiNavInput_Cancel
@@ -889,6 +897,21 @@ cdef extern from "cimgui.h":
         int Capacity
         ImU32* Data
 
+    ctypedef struct ImGuiInputTextCallbackData:
+        ImGuiContext* Ctx
+        ImGuiInputTextFlags EventFlag
+        ImGuiInputTextFlags Flags
+        void* UserData
+        ImWchar EventChar
+        ImGuiKey EventKey
+        char* Buf
+        int BufTextLen
+        int BufSize
+        bool BufDirty
+        int CursorPos
+        int SelectionStart
+        int SelectionEnd
+
     ctypedef struct ImGuiKeyData:
         bool Down
         float DownDuration
@@ -1176,6 +1199,7 @@ cdef extern from "cimgui.h":
         bool MouseDown[5]
         float MouseWheel
         float MouseWheelH
+        ImGuiMouseSource MouseSource
         ImGuiID MouseHoveredViewport
         bool KeyCtrl
         bool KeyShift
@@ -1194,6 +1218,7 @@ cdef extern from "cimgui.h":
         bool MouseReleased[5]
         bool MouseDownOwned[5]
         bool MouseDownOwnedUnlessPopupClose[5]
+        bool MouseWheelRequestAxisSwap
         float MouseDownDuration[5]
         float MouseDownDurationPrev[5]
         ImVec2 MouseDragMaxDistanceAbs[5]
@@ -1521,6 +1546,9 @@ cdef extern from "cimgui.h":
     bool igInputInt4(const char* label, int value[4], ImGuiInputTextFlags flags) except +
     bool igInputScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step, const void* p_step_fast, const char* format_, ImGuiInputTextFlags flags) except +
     bool igInputScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_step, const void* p_step_fast, const char* format_, ImGuiInputTextFlags flags) except +
+    bool igInputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data) except +
+    bool igInputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2 size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data) except +
+    bool igInputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data) except +
     bool igInvisibleButton(const char* str_id, const ImVec2 size, ImGuiButtonFlags flags) except +
     bool igIsAnyItemActive() except +
     bool igIsAnyItemFocused() except +
@@ -1737,6 +1765,13 @@ cdef extern from "cimgui.h":
     void igValue_Int(const char* prefix, int value) except +
     void igValue_Uint(const char* prefix, unsigned int value) except +
 
+    ImGuiInputTextCallbackData* ImGuiInputTextCallbackData_ImGuiInputTextCallbackData() except +
+    void ImGuiInputTextCallbackData_destroy(ImGuiInputTextCallbackData* self) except +
+    void ImGuiInputTextCallbackData_ClearSelection(ImGuiInputTextCallbackData* self) except +
+    void ImGuiInputTextCallbackData_DeleteChars(ImGuiInputTextCallbackData* self, int pos, int bytes_count) except +
+    bool ImGuiInputTextCallbackData_HasSelection(ImGuiInputTextCallbackData* self) except +
+    void ImGuiInputTextCallbackData_InsertChars(ImGuiInputTextCallbackData* self, int pos, const char* text, const char* text_end) except +
+    void ImGuiInputTextCallbackData_SelectAll(ImGuiInputTextCallbackData* self) except +
     ImGuiListClipper* ImGuiListClipper_ImGuiListClipper() except +
     void ImGuiListClipper_destroy(ImGuiListClipper* self) except +
     void ImGuiListClipper_Begin(ImGuiListClipper* self, int items_count, float items_height) except +
@@ -1868,6 +1903,7 @@ cdef extern from "cimgui.h":
     void ImGuiIO_AddKeyEvent(ImGuiIO* self, ImGuiKey key, bool down) except +
     void ImGuiIO_AddMouseButtonEvent(ImGuiIO* self, int button, bool down) except +
     void ImGuiIO_AddMousePosEvent(ImGuiIO* self, float x, float y) except +
+    void ImGuiIO_AddMouseSourceEvent(ImGuiIO* self, ImGuiMouseSource source) except +
     void ImGuiIO_AddMouseViewportEvent(ImGuiIO* self, ImGuiID id_) except +
     void ImGuiIO_AddMouseWheelEvent(ImGuiIO* self, float wheel_x, float wheel_y) except +
     void ImGuiIO_ClearInputCharacters(ImGuiIO* self) except +

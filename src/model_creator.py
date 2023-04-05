@@ -551,6 +551,12 @@ class Typedef:
         )
 
     def in_pxd_format(self) -> str:
+        if self.base.is_function_pointer():
+            return "    ctypedef {}".format(
+                self.base.internal_str \
+                    .replace(";", "") \
+                    .replace("(*)", " (*" + self.definition.internal_str + ")")
+            )
         """Return the Typedef in *.pxd format
         """
         return "    ctypedef {} {}".format(
@@ -813,11 +819,13 @@ class HeaderSpec:
         output.write("import ctypes\n")
         output.write("from cython.operator import dereference\n\n")
         output.write("from collections import namedtuple\n")
-        output.write("from typing import Callable, Any\n\n")
+        output.write("from typing import Callable, Any, List\n\n")
         output.write("cimport ccimgui\n")
         output.write("from libcpp cimport bool\n")
         output.write("from libc.stdint cimport uintptr_t\n")
         output.write("from libc.float cimport FLT_MAX, FLT_MIN\n")
+        output.write("from libc.string cimport strdup\n")
+        output.write("from libc.string cimport strncpy\n")
         output.write("from cython.view cimport array as cvarray\n")
         output.write("from cpython.version cimport PY_MAJOR_VERSION\n")
         output.write("# [End Imports]\n\n\n")
@@ -833,6 +841,8 @@ class HeaderSpec:
         output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
 
         output.write("cdef bytes _bytes(str text):\n")
+        # output.write("    if text is None:\n")
+        # output.write('        return b""\n')
         output.write("    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))\n\n")
 
         output.write("cdef str _from_bytes(bytes text):\n")
@@ -881,6 +891,43 @@ class HeaderSpec:
         output.write("\n")
         output.write("    def __bool__(self):\n")
         output.write("        return self.ptr\n")
+        output.write("\n")
+
+        output.write("cdef class IntPtr:\n")
+        output.write("    cdef int value\n")
+        output.write("\n")
+        output.write("    def __init__(self, initial_value: int):\n")
+        output.write("        self.value: int = initial_value\n")
+        output.write("\n")
+
+        output.write("cdef class FloatPtr:\n")
+        output.write("    cdef float value\n")
+        output.write("\n")
+        output.write("    def __init__(self, initial_value: float):\n")
+        output.write("        self.value: float = initial_value\n")
+        output.write("\n")
+
+        output.write("cdef class StrPtr:\n")
+        output.write("    cdef char* buffer\n")
+        output.write("    cdef int buffer_size\n")
+        output.write("\n")
+        output.write("    def __init__(self, initial_value: str, buffer_size=256):\n")
+        output.write("        self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)\n")
+        output.write("        self.buffer_size: int = buffer_size\n")
+        output.write("        self.buffer[min((buffer_size - 1), len(initial_value))] = 0\n")
+        output.write("        # Need to check if I need to add the null character after.\n")
+        output.write("        strncpy(self.buffer, _bytes(initial_value), buffer_size - 1)\n")
+        output.write("    \n")
+        output.write("    def __dealloc__(self):\n")
+        output.write("        ccimgui.igMemFree(self.buffer)\n")
+        output.write("\n")
+        output.write("    @property\n")
+        output.write("    def value(self):\n")
+        output.write("        return _from_bytes(self.buffer)\n")
+        output.write("    @value.setter\n")
+        output.write("    def value(self, value: str):\n")
+        output.write("        strncpy(self.buffer, _bytes(value), self.buffer_size - 1)\n")
+        output.write("        self.buffer[min((self.buffer_size - 1), len(value))] = 0\n")
         output.write("\n")
 
         output.write("# [End Constant Functions]\n\n\n")
@@ -966,6 +1013,7 @@ class HeaderSpec:
         to_keep = []
         n_mergables = new_collection.get_all_mergable()
         merge_failed = False
+        template_mergables_found = set()
         for n_mergable in n_mergables:
             n_type, n_name, n_obj = n_mergable
             t_mergable = template_collection.get_mergeable_by_name(n_type, n_name)
@@ -976,7 +1024,11 @@ class HeaderSpec:
                 to_keep.append(n_mergable)
                 continue
             
+            template_mergables_found.add(t_mergable)
+            
             _, _, t_obj = t_mergable
+            # If the corresponding template function has not been set to
+            # use_template then ignore the template.
             if not t_obj.use_template:
                 # print("Overwriting existing. Not using template {} - {}.".format(n_type, n_name))
                 to_keep.append(n_mergable)
@@ -1018,6 +1070,13 @@ class HeaderSpec:
             t_obj.impl = merged_impl.split("\n")
             to_keep.append((n_type, n_name, t_obj))
             # old_collection.apply_merge(n_mergable)
+
+        for t_mergable in template_collection.get_all_mergable():
+            if t_mergable in template_mergables_found:
+                continue
+            _, t_name, _ = t_mergable
+            print(f"Adding standalone template mergable: {t_name}")
+            to_keep.append(t_mergable)
 
         for merged_item in to_keep:
             new_collection.apply_merge(merged_item)
@@ -1351,7 +1410,7 @@ def header_model(base, library_name):
     # typedef void    (*ImGuiMemFreeFunc)(void* ptr, void* user_data);                // Function signature for ImGui::SetAllocatorFunctions()
     to_remove = [
         "ImDrawCallback",
-        "ImGuiInputTextCallback",
+        # "ImGuiInputTextCallback",
         "ImGuiSizeCallback",
         "ImGuiMemAllocFunc",
         "ImGuiMemFreeFunc",

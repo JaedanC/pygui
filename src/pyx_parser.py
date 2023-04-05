@@ -161,7 +161,20 @@ class PyxCollection:
         self.classes.sort(key=lambda c: c.name)
 
         pyi_content.write("class BoolPtr:\n")
-        pyi_content.write("    def __init__(self, initial_value: bool): ...\n\n")
+        pyi_content.write("    def __init__(self, initial_value: bool): ...\n")
+        pyi_content.write("    def __bool__(self) -> bool: ...\n\n")
+
+        pyi_content.write("class IntPtr:\n")
+        pyi_content.write("    value: int\n")
+        pyi_content.write("    def __init__(self, initial_value: int): ...\n\n")
+
+        pyi_content.write("class FloatPtr:\n")
+        pyi_content.write("    value: float\n")
+        pyi_content.write("    def __init__(self, initial_value: float): ...\n\n")
+
+        pyi_content.write("class StrPtr:\n")
+        pyi_content.write("    value: str\n")
+        pyi_content.write("    def __init__(self, initial_value: str, buffer_size=256): ...\n\n")
 
         for enum in self.enums:
             pyi_content.write(enum.as_pyi_format() + "\n")
@@ -212,12 +225,47 @@ class PyxCollection:
                     )
         return None
 
-    def apply_merge(self, from_: Tuple[str, str, Any]):
-        n_type, n_name, n_mergeable = from_
-        _, _, s_mergeable = self.get_mergeable_by_name(n_type, n_name)
-        s_mergeable.merge(n_mergeable)
+    def add_mergeable(self, new_mergeable):
+        n_type, n_name, n_obj = new_mergeable
+        if n_type == "Function":
+            self.functions.append(n_obj)
+            return
+        
+        if n_type == "Field":
+            n_class_name = n_name.split(".")[0]
+            for class_ in self.classes:
+                if class_.name.strip("_") == n_class_name:
+                    class_.fields.append(n_obj)
+                    return
+        
+        if n_type == "Method":
+            n_class_name = n_name.split(".")[0]
+            for class_ in self.classes:
+                if class_.name.strip("_") == n_class_name:
+                    class_.methods.append(n_obj)
+                    return
+        
+        if n_type == "Class Constants":
+            raise ValueError("Cannot add a custom Class Constant for now")
+
+        return None
+
+    def apply_merge(self, from_new_mergable: Tuple[str, str, Any]):
+        n_type, n_name, n_obj = from_new_mergable
+        existing_mergeable = self.get_mergeable_by_name(n_type, n_name)
+        if existing_mergeable is not None:
+            _, _, existing_obj = existing_mergeable
+            existing_obj.merge(n_obj)
+            return
+        
+        # If the mergable doesn't exist, let's just assume we probably want
+        # to add the mergable.
+        self.add_mergeable(from_new_mergable)
 
     def as_pyx_format(self, ignore_active_flag_show_regardless=True):
+        self.functions.sort(key=lambda f: f.name)
+        self.classes.sort(key=lambda c: c.name)
+
         output = StringIO()
         output.write("# distutils: language = c++\n")
         output.write("# cython: language_level = 3\n")
