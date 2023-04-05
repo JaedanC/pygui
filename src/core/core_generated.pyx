@@ -716,6 +716,13 @@ cdef class FloatPtr:
 
     def __init__(self, initial_value: float):
         self.value: float = initial_value
+        print(self.value)
+
+cdef class DoublePtr:
+    cdef double value
+
+    def __init__(self, initial_value: float):
+        self.value = initial_value
 
 cdef class StrPtr:
     cdef char* buffer

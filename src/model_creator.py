@@ -905,6 +905,14 @@ class HeaderSpec:
         output.write("\n")
         output.write("    def __init__(self, initial_value: float):\n")
         output.write("        self.value: float = initial_value\n")
+        output.write("        print(self.value)\n")
+        output.write("\n")
+
+        output.write("cdef class DoublePtr:\n")
+        output.write("    cdef double value\n")
+        output.write("\n")
+        output.write("    def __init__(self, initial_value: float):\n")
+        output.write("        self.value = initial_value\n")
         output.write("\n")
 
         output.write("cdef class StrPtr:\n")

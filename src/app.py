@@ -7,42 +7,11 @@ import inspect
 import math
 import time
 
-show_demo_window = pygui.BoolPtr(True)
-show_another_window = pygui.BoolPtr(False)
-quit = pygui.BoolPtr(False)
-clicked = 0
 
+class static:
+    render_show_demo_window = pygui.BoolPtr(True)
+    render_show_another_window = pygui.BoolPtr(False)
 
-
-class StaticVarHeavy(object):
-    def __init__(self):
-        super().__setattr__("__static_vars_lookup", {})
-
-    def __getattribute__(self, __name):
-        try:
-            return super().__getattribute__(__name)
-        except AttributeError:
-            pass
-        
-        __name = __name + "." + inspect.stack(1)[1].function
-        if __name not in super().__getattribute__("__static_vars_lookup"):
-            raise AttributeError
-        
-        return super().__getattribute__("__static_vars_lookup")[__name]
-    
-    def __setattr__(self, __name: str, __value):
-        __name = __name + "." + inspect.stack(1)[1].function
-        super().__getattribute__("__static_vars_lookup")[__name] = __value
-        
-    def new(self, __name, __value):
-        __name = __name + "." + inspect.stack(1)[1].function
-        if __name not in super().__getattribute__("__static_vars_lookup"):
-            super().__getattribute__("__static_vars_lookup")[__name] = __value
-            print(f"Creating static: {__name}: {__value}")
-
-static = StaticVarHeavy()
-
-class StaticVarSimple:
     widgets_clicked = 0
     widgets_check = pygui.BoolPtr(True)
     widgets_e = pygui.IntPtr(0)
@@ -51,8 +20,14 @@ class StaticVarSimple:
     widgets_str1 = pygui.StrPtr("", 128)
     widgets_i0 = pygui.IntPtr(123)
     widgets_f0 = pygui.FloatPtr(0.001)
-    widgets_d0 = pygui.FloatPtr(999999.00000001)
-
+    widgets_d0 = pygui.DoublePtr(999999.00000001)
+    widgets_f1 = pygui.FloatPtr(1.e10)
+    widgets_vec4a = [
+        pygui.FloatPtr(0.1),
+        pygui.FloatPtr(0.2),
+        pygui.FloatPtr(0.3),
+        pygui.FloatPtr(0.44)
+    ]
 
 
 
@@ -66,8 +41,6 @@ def help_marker(desc: str):
 
 
 def show_demo_window_widgets():
-    global static
-
     if not pygui.collapsing_header("Widgets"):
         return
     
@@ -75,20 +48,20 @@ def show_demo_window_widgets():
         pygui.separator_text("General")
 
         if pygui.button("Button"):
-            StaticVarSimple.widgets_clicked += 1
+            static.widgets_clicked += 1
         
-        if StaticVarSimple.widgets_clicked & 1:
+        if static.widgets_clicked & 1:
             pygui.same_line()
             pygui.text("Thanks for clicking me!")
         
-        pygui.checkbox("checkbox", StaticVarSimple.widgets_check)
+        pygui.checkbox("checkbox", static.widgets_check)
 
-        pygui.radio_button("radio a", StaticVarSimple.widgets_e, 0)
+        pygui.radio_button("radio a", static.widgets_e, 0)
         pygui.same_line()
-        pygui.radio_button("radio b", StaticVarSimple.widgets_e, 1)
+        pygui.radio_button("radio b", static.widgets_e, 1)
         pygui.same_line()
-        pygui.radio_button("radio c", StaticVarSimple.widgets_e, 2)
-
+        pygui.radio_button("radio c", static.widgets_e, 2)
+        
         # Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
         for i in range(6):
             if i > 0:
@@ -112,13 +85,13 @@ def show_demo_window_widgets():
         spacing: float = pygui.get_style().item_inner_spacing.x
         pygui.push_button_repeat(True)
         if pygui.arrow_button("##left", pygui.IMGUI_DIR_LEFT):
-            StaticVarSimple.widgets_counter -= 1
+            static.widgets_counter -= 1
         pygui.same_line(0, spacing)
         if pygui.arrow_button("##right", pygui.IMGUI_DIR_RIGHT):
-            StaticVarSimple.widgets_counter += 1
+            static.widgets_counter += 1
         pygui.pop_button_repeat()
         pygui.same_line()
-        pygui.text(str(StaticVarSimple.widgets_counter))
+        pygui.text(str(static.widgets_counter))
 
         # Tooltips
 
@@ -149,7 +122,7 @@ def show_demo_window_widgets():
 
         pygui.separator_text("Inputs")
 
-        pygui.input_text("input text", StaticVarSimple.widgets_str0)
+        pygui.input_text("input text", static.widgets_str0)
         pygui.same_line()
         help_marker("USER:\n"
             "Hold SHIFT or use mouse to select text.\n"
@@ -164,23 +137,26 @@ def show_demo_window_widgets():
             "in imgui_demo.cpp)."
         )
 
-        pygui.input_text_with_hint("input text (w/ hint)", "enter text here", StaticVarSimple.widgets_str1)
-        pygui.input_int("input int", StaticVarSimple.widgets_i0)
+        pygui.input_text_with_hint("input text (w/ hint)", "enter text here", static.widgets_str1)
+        pygui.input_int("input int", static.widgets_i0)
+        pygui.input_float("input float", static.widgets_f0, 0.01, 1.0, "%.3f")
+        pygui.input_double("input double", static.widgets_d0, 0.01, 1.0, "%.8f")
+        pygui.input_float("input scientific", static.widgets_f1, 0, 0, "%e")
+        print(static.widgets_vec4a)
+        pygui.input_float3("input float3", static.widgets_vec4a)
+
         pygui.tree_pop()
 
 
 def render():
-    global show_demo_window
-    global show_another_window
-
-    if show_demo_window:
+    if static.render_show_demo_window:
         pygui.show_demo_window()
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
     pygui.end()
 
-    if show_another_window:
+    if static.render_show_another_window:
         pygui.begin("Another window")
         pygui.text("Some text")
         pygui.end()
@@ -189,10 +165,10 @@ def render():
     show_demo_window_widgets()
     pygui.end()
 
+
 def main():
     if not glfw.init():
         return
-    
 
     glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
     glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)

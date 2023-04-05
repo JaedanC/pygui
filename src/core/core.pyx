@@ -716,6 +716,13 @@ cdef class FloatPtr:
 
     def __init__(self, initial_value: float):
         self.value: float = initial_value
+        print(self.value)
+
+cdef class DoublePtr:
+    cdef double value
+
+    def __init__(self, initial_value: float):
+        self.value = initial_value
 
 cdef class StrPtr:
     cdef char* buffer
@@ -2995,35 +3002,39 @@ def impl_open_gl3_shutdown():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def input_double(label: str, value: Any, step: float=0.0, step_fast: float=0.0, format_: str="%.6", flags: int=0):
-#     cdef ccimgui.bool res = ccimgui.igInputDouble(
-#         _bytes(label),
-#         value,
-#         step,
-#         step_fast,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def input_double(label: str, value: DoublePtr, step: double=0.0, step_fast: double=0.0, format_: str="%.6", flags: int=0):
+    cdef double value_ptr = value.value
+    cdef ccimgui.bool res = ccimgui.igInputDouble(
+        _bytes(label),
+        &value_ptr,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
+    )
+    value.value = value_ptr
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def input_float(label: str, value: float, step: float=0.0, step_fast: float=0.0, format_: str="%.3", flags: int=0):
-#     cdef ccimgui.bool res = ccimgui.igInputFloat(
-#         _bytes(label),
-#         value,
-#         step,
-#         step_fast,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3", flags: int=0):
+    cdef float value_ptr = value.value
+    cdef ccimgui.bool res = ccimgui.igInputFloat(
+        _bytes(label),
+        &value_ptr,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
+    )
+    value.value = value_ptr
+    return res
 # [End Function]
 
 # [Function]
@@ -3037,12 +3048,18 @@ def impl_open_gl3_shutdown():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
+# # ?use_template(True)
 # # ?active(False)
 # # ?returns(Any)
-# def input_float3(label: str, value0: float, value1: float, value2: float, format_: str="%.3", flags: int=0):
-#     cdef float[3] io_float_value = [value0, value1, value2]
+# def input_float3(label: str, values: List[FloatPtr], format_: str="%.3", flags: int=0):
+#     cdef float[3] io_float_value = [0, 0, 0]
+# 
+#     for i in range(3):
+#         io_float_value[i] = values[i].value
+# 
 #     cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
+#     for i in range(3):
+#         values[i].value = io_float_value[i]
 #     return res
 # [End Function]
 

@@ -171,6 +171,10 @@ class PyxCollection:
         pyi_content.write("class FloatPtr:\n")
         pyi_content.write("    value: float\n")
         pyi_content.write("    def __init__(self, initial_value: float): ...\n\n")
+        
+        pyi_content.write("class DoublePtr:\n")
+        pyi_content.write("    value: float\n")
+        pyi_content.write("    def __init__(self, initial_value: float): ...\n\n")
 
         pyi_content.write("class StrPtr:\n")
         pyi_content.write("    value: str\n")
