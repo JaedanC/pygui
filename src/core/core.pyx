@@ -5,19 +5,18 @@
 # [Imports]
 import cython
 import ctypes
-from cython.operator import dereference
-
+import array
 from collections import namedtuple
+from cython.operator import dereference
 from typing import Callable, Any, List
 
 cimport ccimgui
-from libcpp cimport bool
-from libc.stdint cimport uintptr_t
-from libc.float cimport FLT_MAX, FLT_MIN
-from libc.string cimport strdup
-from libc.string cimport strncpy
-from cython.view cimport array as cvarray
 from cpython.version cimport PY_MAJOR_VERSION
+from cython.view cimport array as cvarray
+from libcpp cimport bool
+from libc.float cimport FLT_MAX, FLT_MIN
+from libc.stdint cimport uintptr_t
+from libc.string cimport strdup, strncpy
 # [End Imports]
 
 # [Enums]
@@ -419,10 +418,6 @@ IMGUI_MOUSE_CURSOR_RESIZE_NWSE = ccimgui.ImGuiMouseCursor_ResizeNWSE
 IMGUI_MOUSE_CURSOR_HAND = ccimgui.ImGuiMouseCursor_Hand
 IMGUI_MOUSE_CURSOR_NOT_ALLOWED = ccimgui.ImGuiMouseCursor_NotAllowed
 IMGUI_MOUSE_CURSOR_COUNT = ccimgui.ImGuiMouseCursor_COUNT
-IMGUI_MOUSE_SOURCE_MOUSE = ccimgui.ImGuiMouseSource_Mouse
-IMGUI_MOUSE_SOURCE_TOUCH_SCREEN = ccimgui.ImGuiMouseSource_TouchScreen
-IMGUI_MOUSE_SOURCE_PEN = ccimgui.ImGuiMouseSource_Pen
-IMGUI_MOUSE_SOURCE_COUNT = ccimgui.ImGuiMouseSource_COUNT
 IMGUI_NAV_INPUT_ACTIVATE = ccimgui.ImGuiNavInput_Activate
 IMGUI_NAV_INPUT_CANCEL = ccimgui.ImGuiNavInput_Cancel
 IMGUI_NAV_INPUT_INPUT = ccimgui.ImGuiNavInput_Input
@@ -697,7 +692,7 @@ def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
 
 cdef class BoolPtr:
-    cdef bool ptr
+    cdef public bool ptr
 
     def __init__(self, initial_value: bool):
         self.ptr: bool = initial_value
@@ -706,20 +701,19 @@ cdef class BoolPtr:
         return self.ptr
 
 cdef class IntPtr:
-    cdef int value
+    cdef public int value
 
     def __init__(self, initial_value: int):
         self.value: int = initial_value
 
 cdef class FloatPtr:
-    cdef float value
+    cdef public float value
 
     def __init__(self, initial_value: float):
-        self.value: float = initial_value
-        print(self.value)
+        self.value = initial_value
 
 cdef class DoublePtr:
-    cdef double value
+    cdef public double value
 
     def __init__(self, initial_value: float):
         self.value = initial_value
@@ -1436,23 +1430,25 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def drag_float(label: str, value: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     cdef ccimgui.bool res = ccimgui.igDragFloat(
-#         _bytes(label),
-#         value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def drag_float(label: str, value: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    """
+    If v_min >= v_max we have no bound
+    """
+    cdef float float_ptr = value.value
+    cdef ccimgui.bool res = ccimgui.igDragFloat(
+        _bytes(label),
+        &float_ptr,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    value.value = float_ptr
+    return res
 # [End Function]
 
 # [Function]
@@ -1529,23 +1525,25 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def drag_int(label: str, value: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     cdef ccimgui.bool res = ccimgui.igDragInt(
-#         _bytes(label),
-#         value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    """
+    If v_min >= v_max we have no bound
+    """
+    cdef int value_ptr = value.value
+    cdef ccimgui.bool res = ccimgui.igDragInt(
+        _bytes(label),
+        &value_ptr,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    value.value = value_ptr
+    return res
 # [End Function]
 
 # [Function]
@@ -3005,7 +3003,7 @@ def impl_open_gl3_shutdown():
 # ?use_template(True)
 # ?active(True)
 # ?returns(Any)
-def input_double(label: str, value: DoublePtr, step: double=0.0, step_fast: double=0.0, format_: str="%.6", flags: int=0):
+def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
     cdef double value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputDouble(
         _bytes(label),
@@ -3023,7 +3021,7 @@ def input_double(label: str, value: DoublePtr, step: double=0.0, step_fast: doub
 # ?use_template(True)
 # ?active(True)
 # ?returns(Any)
-def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3", flags: int=0):
+def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef float value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
@@ -3038,39 +3036,66 @@ def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def input_float2(label: str, value0: float, value1: float, format_: str="%.3", flags: int=0):
-#     cdef float[2] io_float_value = [value0, value1]
-#     cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 2)
+    
+    # Update array
+    for i in range(2):
+        c_floats[i] = float_ptrs[i].value
+
+    cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), c_floats, _bytes(format_), flags)
+
+    # Update FloatPtrs in List
+    for i in range(2):
+        float_ptrs[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(True)
-# # ?active(False)
-# # ?returns(Any)
-# def input_float3(label: str, values: List[FloatPtr], format_: str="%.3", flags: int=0):
-#     cdef float[3] io_float_value = [0, 0, 0]
-# 
-#     for i in range(3):
-#         io_float_value[i] = values[i].value
-# 
-#     cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
-#     for i in range(3):
-#         values[i].value = io_float_value[i]
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+cdef float* c_floats_3 = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
+def input_float3(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
+    
+    # Update array
+    for i in range(3):
+        c_floats_3[i] = float_ptrs[i].value
+
+    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats_3, _bytes(format_), flags)
+
+    # Update FloatPtrs in List
+    for i in range(3):
+        float_ptrs[i].value = float(c_floats_3[i])
+
+    # ccimgui.igMemFree(c_floats)
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def input_float4(label: str, value0: float, value1: float, value2: float, value3: float, format_: str="%.3", flags: int=0):
-#     cdef float[4] io_float_value = [value0, value1, value2, value3]
-#     cdef ccimgui.bool res = ccimgui.igInputFloat4(_bytes(label), <float*>&io_float_value, _bytes(format_), flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 4)
+    
+    # Update array
+    for i in range(4):
+        c_floats[i] = float_ptrs[i].value
+
+    cdef ccimgui.bool res = ccimgui.igInputFloat4(_bytes(label), c_floats, _bytes(format_), flags)
+
+    # Update FloatPtrs in List
+    for i in range(4):
+        float_ptrs[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
+    return res
 # [End Function]
 
 # [Function]
@@ -10473,19 +10498,6 @@ cdef class ImGuiIO:
     # [Field]
     # # ?use_template(False)
     # # ?active(False)
-    # # ?returns(Any)
-    # @property
-    # def mouse_source(self):
-    #     cdef Any res = dereference(self._ptr).MouseSource
-    #     return res
-    # @mouse_source.setter
-    # def mouse_source(self, value: Any):
-    #     dereference(self._ptr).MouseSource = value
-    # [End Field]
-
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
     # # ?returns(int)
     # @property
     # def mouse_hovered_viewport(self):
@@ -10720,19 +10732,6 @@ cdef class ImGuiIO:
     # [Field]
     # # ?use_template(False)
     # # ?active(False)
-    # # ?returns(Any)
-    # @property
-    # def mouse_wheel_request_axis_swap(self):
-    #     cdef Any res = dereference(self._ptr).MouseWheelRequestAxisSwap
-    #     return res
-    # @mouse_wheel_request_axis_swap.setter
-    # def mouse_wheel_request_axis_swap(self, value: Any):
-    #     dereference(self._ptr).MouseWheelRequestAxisSwap = value
-    # [End Field]
-
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
     # # ?returns(float)
     # @property
     # def mouse_down_duration(self):
@@ -10873,6 +10872,32 @@ cdef class ImGuiIO:
     #     dereference(self._ptr).InputQueueCharacters = value._ptr
     # [End Field]
 
+    # [Field]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(Any)
+    # @property
+    # def mouse_source(self):
+    #     cdef Any res = dereference(self._ptr).MouseSource
+    #     return res
+    # @mouse_source.setter
+    # def mouse_source(self, value: Any):
+    #     dereference(self._ptr).MouseSource = value
+    # [End Field]
+
+    # [Field]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(Any)
+    # @property
+    # def mouse_wheel_request_axis_swap(self):
+    #     cdef Any res = dereference(self._ptr).MouseWheelRequestAxisSwap
+    #     return res
+    # @mouse_wheel_request_axis_swap.setter
+    # def mouse_wheel_request_axis_swap(self, value: Any):
+    #     dereference(self._ptr).MouseWheelRequestAxisSwap = value
+    # [End Field]
+
     # [Method]
     # # ?use_template(False)
     # # ?active(False)
@@ -10991,17 +11016,6 @@ cdef class ImGuiIO:
     # # ?use_template(False)
     # # ?active(False)
     # # ?returns(None)
-    # def add_mouse_source_event(self: ImGuiIO, source: Any):
-    #     """
-    #     Queue a mouse source change (mouse/touchscreen/pen)
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
-    # [End Method]
-
-    # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
     # def add_mouse_viewport_event(self: ImGuiIO, id_: int):
     #     """
     #     Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport
@@ -11068,6 +11082,17 @@ cdef class ImGuiIO:
     #     with native indices + specify native keycode, scancode.
     #     """
     #     ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
+    # [End Method]
+
+    # [Method]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(None)
+    # def add_mouse_source_event(self: ImGuiIO, source: Any):
+    #     """
+    #     Queue a mouse source change (mouse/touchscreen/pen)
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
     # [End Method]
 # [End Class]
 

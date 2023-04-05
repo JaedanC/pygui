@@ -28,6 +28,10 @@ class static:
         pygui.FloatPtr(0.3),
         pygui.FloatPtr(0.44)
     ]
+    widgets_drag_i1 = pygui.IntPtr(50)
+    widgets_drag_i2 = pygui.IntPtr(42)
+    widgets_drag_f1 = pygui.FloatPtr(1.00)
+    widgets_drag_f2 = pygui.FloatPtr(0.0067)
 
 
 
@@ -142,8 +146,22 @@ def show_demo_window_widgets():
         pygui.input_float("input float", static.widgets_f0, 0.01, 1.0, "%.3f")
         pygui.input_double("input double", static.widgets_d0, 0.01, 1.0, "%.8f")
         pygui.input_float("input scientific", static.widgets_f1, 0, 0, "%e")
-        print(static.widgets_vec4a)
+        pygui.input_float2("input float2", static.widgets_vec4a)
         pygui.input_float3("input float3", static.widgets_vec4a)
+        pygui.input_float4("input float4", static.widgets_vec4a)
+
+        pygui.separator_text("Drags")
+
+        pygui.drag_int("drag int", static.widgets_drag_i1, 1)
+        pygui.same_line()
+        help_marker(
+            "Click and drag to edit value.\n"
+            "Hold SHIFT/ALT for faster/slower edit.\n"
+            "Double-click or CTRL+click to input value."
+        )
+        pygui.drag_int("drag int 0..100", static.widgets_drag_i2, 1, 0, 100, "%d%%", pygui.IMGUI_SLIDER_FLAGS_ALWAYS_CLAMP)
+        pygui.drag_float("drag float", static.widgets_drag_f1, 0.005)
+        pygui.drag_float("drag small float", static.widgets_drag_f2, 0.0001, 0, 0, "%.06f ns")
 
         pygui.tree_pop()
 
@@ -161,7 +179,7 @@ def render():
         pygui.text("Some text")
         pygui.end()
 
-    pygui.begin("Python Widgets")
+    pygui.begin("Python Widgets", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
     show_demo_window_widgets()
     pygui.end()
 
@@ -187,7 +205,7 @@ def main():
     # Vsync:
     # 1: On
     # 0: Off
-    glfw.swap_interval(0)
+    glfw.swap_interval(1)
 
     # Setup imgui
     pygui.create_context()

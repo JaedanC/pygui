@@ -5,19 +5,18 @@
 # [Imports]
 import cython
 import ctypes
-from cython.operator import dereference
-
+import array
 from collections import namedtuple
+from cython.operator import dereference
 from typing import Callable, Any, List
 
 cimport ccimgui
-from libcpp cimport bool
-from libc.stdint cimport uintptr_t
-from libc.float cimport FLT_MAX, FLT_MIN
-from libc.string cimport strdup
-from libc.string cimport strncpy
-from cython.view cimport array as cvarray
 from cpython.version cimport PY_MAJOR_VERSION
+from cython.view cimport array as cvarray
+from libcpp cimport bool
+from libc.float cimport FLT_MAX, FLT_MIN
+from libc.stdint cimport uintptr_t
+from libc.string cimport strdup, strncpy
 # [End Imports]
 
 # [Enums]
@@ -419,10 +418,6 @@ IMGUI_MOUSE_CURSOR_RESIZE_NWSE = ccimgui.ImGuiMouseCursor_ResizeNWSE
 IMGUI_MOUSE_CURSOR_HAND = ccimgui.ImGuiMouseCursor_Hand
 IMGUI_MOUSE_CURSOR_NOT_ALLOWED = ccimgui.ImGuiMouseCursor_NotAllowed
 IMGUI_MOUSE_CURSOR_COUNT = ccimgui.ImGuiMouseCursor_COUNT
-IMGUI_MOUSE_SOURCE_MOUSE = ccimgui.ImGuiMouseSource_Mouse
-IMGUI_MOUSE_SOURCE_TOUCH_SCREEN = ccimgui.ImGuiMouseSource_TouchScreen
-IMGUI_MOUSE_SOURCE_PEN = ccimgui.ImGuiMouseSource_Pen
-IMGUI_MOUSE_SOURCE_COUNT = ccimgui.ImGuiMouseSource_COUNT
 IMGUI_NAV_INPUT_ACTIVATE = ccimgui.ImGuiNavInput_Activate
 IMGUI_NAV_INPUT_CANCEL = ccimgui.ImGuiNavInput_Cancel
 IMGUI_NAV_INPUT_INPUT = ccimgui.ImGuiNavInput_Input
@@ -697,7 +692,7 @@ def _py_index_buffer_index_size():
     return sizeof(ccimgui.ImDrawIdx)
 
 cdef class BoolPtr:
-    cdef bool ptr
+    cdef public bool ptr
 
     def __init__(self, initial_value: bool):
         self.ptr: bool = initial_value
@@ -706,20 +701,19 @@ cdef class BoolPtr:
         return self.ptr
 
 cdef class IntPtr:
-    cdef int value
+    cdef public int value
 
     def __init__(self, initial_value: int):
         self.value: int = initial_value
 
 cdef class FloatPtr:
-    cdef float value
+    cdef public float value
 
     def __init__(self, initial_value: float):
-        self.value: float = initial_value
-        print(self.value)
+        self.value = initial_value
 
 cdef class DoublePtr:
-    cdef double value
+    cdef public double value
 
     def __init__(self, initial_value: float):
         self.value = initial_value
@@ -10282,19 +10276,6 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(Any)
-    @property
-    def mouse_source(self):
-        cdef Any res = dereference(self._ptr).MouseSource
-        return res
-    @mouse_source.setter
-    def mouse_source(self, value: Any):
-        dereference(self._ptr).MouseSource = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
     # ?returns(int)
     @property
     def mouse_hovered_viewport(self):
@@ -10524,19 +10505,6 @@ cdef class ImGuiIO:
     @mouse_down_owned_unless_popup_close.setter
     def mouse_down_owned_unless_popup_close(self, value: Any):
         dereference(self._ptr).MouseDownOwnedUnlessPopupClose = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(Any)
-    @property
-    def mouse_wheel_request_axis_swap(self):
-        cdef Any res = dereference(self._ptr).MouseWheelRequestAxisSwap
-        return res
-    @mouse_wheel_request_axis_swap.setter
-    def mouse_wheel_request_axis_swap(self, value: Any):
-        dereference(self._ptr).MouseWheelRequestAxisSwap = value
     # [End Field]
 
     # [Field]
@@ -10794,17 +10762,6 @@ cdef class ImGuiIO:
         no mouse (e.g. app not focused and not hovered)
         """
         ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def add_mouse_source_event(self: ImGuiIO, source: Any):
-        """
-        Queue a mouse source change (mouse/touchscreen/pen)
-        """
-        ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
     # [End Method]
 
     # [Method]

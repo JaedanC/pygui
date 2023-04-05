@@ -552,12 +552,6 @@ cdef extern from "cimgui.h":
         ImGuiMouseCursor_NotAllowed
         ImGuiMouseCursor_COUNT
 
-    ctypedef enum ImGuiMouseSource:
-        ImGuiMouseSource_Mouse
-        ImGuiMouseSource_TouchScreen
-        ImGuiMouseSource_Pen
-        ImGuiMouseSource_COUNT
-
     ctypedef enum ImGuiNavInput:
         ImGuiNavInput_Activate
         ImGuiNavInput_Cancel
@@ -1199,7 +1193,6 @@ cdef extern from "cimgui.h":
         bool MouseDown[5]
         float MouseWheel
         float MouseWheelH
-        ImGuiMouseSource MouseSource
         ImGuiID MouseHoveredViewport
         bool KeyCtrl
         bool KeyShift
@@ -1218,7 +1211,6 @@ cdef extern from "cimgui.h":
         bool MouseReleased[5]
         bool MouseDownOwned[5]
         bool MouseDownOwnedUnlessPopupClose[5]
-        bool MouseWheelRequestAxisSwap
         float MouseDownDuration[5]
         float MouseDownDurationPrev[5]
         ImVec2 MouseDragMaxDistanceAbs[5]
@@ -1903,7 +1895,6 @@ cdef extern from "cimgui.h":
     void ImGuiIO_AddKeyEvent(ImGuiIO* self, ImGuiKey key, bool down) except +
     void ImGuiIO_AddMouseButtonEvent(ImGuiIO* self, int button, bool down) except +
     void ImGuiIO_AddMousePosEvent(ImGuiIO* self, float x, float y) except +
-    void ImGuiIO_AddMouseSourceEvent(ImGuiIO* self, ImGuiMouseSource source) except +
     void ImGuiIO_AddMouseViewportEvent(ImGuiIO* self, ImGuiID id_) except +
     void ImGuiIO_AddMouseWheelEvent(ImGuiIO* self, float wheel_x, float wheel_y) except +
     void ImGuiIO_ClearInputCharacters(ImGuiIO* self) except +
