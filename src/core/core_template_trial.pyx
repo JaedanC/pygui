@@ -648,11 +648,10 @@ Vec2 = namedtuple('Vec2', ['x', 'y'])
 Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
 cdef bytes _bytes(str text):
-    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))
+    return <bytes>(text.encode('utf-8') + b'\0')
 
 cdef str _from_bytes(bytes text):
-    return <str>(text if PY_MAJOR_VERSION < 3 else text.decode('utf-8', errors='ignore'))
-
+    return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
     return Vec2(vec.x, vec.y)
@@ -720,14 +719,12 @@ cdef class DoublePtr:
 
 cdef class StrPtr:
     cdef char* buffer
-    cdef int buffer_size
+    cdef public int buffer_size
 
     def __init__(self, initial_value: str, buffer_size=256):
         self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)
         self.buffer_size: int = buffer_size
-        self.buffer[min((buffer_size - 1), len(initial_value))] = 0
-        # Need to check if I need to add the null character after.
-        strncpy(self.buffer, _bytes(initial_value), buffer_size - 1)
+        self.value = initial_value
     
     def __dealloc__(self):
         ccimgui.igMemFree(self.buffer)
@@ -739,7 +736,6 @@ cdef class StrPtr:
     def value(self, value: str):
         strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
         self.buffer[min((self.buffer_size - 1), len(value))] = 0
-
 # [End Constant Functions]
 
 # [Function]
@@ -1257,22 +1253,44 @@ def color_convert_u32_to_float4(pOut: ImVec4, in_: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def color_edit3(label: str, col0: float, col1: float, col2: float, flags: int=0):
-    cdef float[3] io_float_col = [col0, col1, col2]
-    cdef ccimgui.bool res = ccimgui.igColorEdit3(_bytes(label), <float*>&io_float_col, flags)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_edit3(label: str, colours: List[FloatPtr], flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
+    
+    # Update array
+    for i in range(3):
+        c_floats[i] = colours[i].value
+
+    cdef ccimgui.bool res = ccimgui.igColorEdit3(_bytes(label), c_floats, flags)
+
+    # Update FloatPtrs in List
+    for i in range(3):
+        colours[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def color_edit4(label: str, col0: float, col1: float, col2: float, col3: float, flags: int=0):
-    cdef float[4] io_float_col = [col0, col1, col2, col3]
-    cdef ccimgui.bool res = ccimgui.igColorEdit4(_bytes(label), <float*>&io_float_col, flags)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_edit4(label: str, colours: List[FloatPtr], flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 4)
+    
+    # Update array
+    for i in range(4):
+        c_floats[i] = colours[i].value
+
+    cdef ccimgui.bool res = ccimgui.igColorEdit4(_bytes(label), c_floats, flags)
+
+    # Update FloatPtrs in List
+    for i in range(4):
+        colours[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
@@ -1302,6 +1320,41 @@ def color_picker4(label: str, col0: float, col1: float, col2: float, col3: float
 # ?returns(None)
 def columns(count: int=1, id_: str=None, border: Any=True):
     ccimgui.igColumns(count, _bytes(id_), border)
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(False)
+# ?returns(bool)
+def combo(label: str, current_item: IntPtr, items: List[str], popup_max_height_in_items: int=-1):
+    """
+    Pass in a list of strings. This will do the rest. Converts the list to a
+    null terminated contiguous array of bytes.
+    
+    Each string is followed by \0.
+    The final string is followed by \0\0
+    """
+    cdef char* c_strings = <char*>ccimgui.igMemAlloc(sum(len(s) + 1 for s in items) + 1)
+    
+    # Store items in array
+    cdef int counter = 0
+    for p_str in items:
+        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        # Null terminated string
+        c_strings[counter + len(p_str)] = 0
+        counter += len(p_str) + 1
+    
+    # Null terminated list
+    c_strings[counter] = 0
+
+    cdef ccimgui.bool res = ccimgui.igCombo_Str(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        popup_max_height_in_items
+    )
+    ccimgui.igMemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -1430,16 +1483,16 @@ def dock_space_over_viewport(viewport: ImGuiViewport=None, flags: int=0, window_
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def drag_float(label: str, value: float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def drag_float(label: str, value: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     """
     If v_min >= v_max we have no bound
     """
     cdef ccimgui.bool res = ccimgui.igDragFloat(
         _bytes(label),
-        value,
+        &value.value,
         v_speed,
         v_min,
         v_max,
@@ -1523,16 +1576,16 @@ def drag_float_range2(label: str, v_current_min: float, v_current_max: float, v_
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def drag_int(label: str, value: int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     """
     If v_min >= v_max we have no bound
     """
     cdef ccimgui.bool res = ccimgui.igDragInt(
         _bytes(label),
-        value,
+        &value.value,
         v_speed,
         v_min,
         v_max,
@@ -2999,7 +3052,7 @@ def indent(indent_w: float=0.0):
 # ?use_template(True)
 # ?active(True)
 # ?returns(Any)
-def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6", flags: int=0):
+def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
     cdef double value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputDouble(
         _bytes(label),
@@ -3017,17 +3070,15 @@ def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float
 # ?use_template(True)
 # ?active(True)
 # ?returns(Any)
-def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3", flags: int=0):
-    cdef float value_ptr = value.value
+def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
-        &value_ptr,
+        &value.value,
         step,
         step_fast,
         _bytes(format_),
         flags
     )
-    value.value = value_ptr
     return res
 # [End Function]
 
@@ -3041,7 +3092,6 @@ def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
     # Update array
     for i in range(2):
         c_floats[i] = float_ptrs[i].value
-        print(label, i, float_ptrs[i].value)
 
     cdef ccimgui.bool res = ccimgui.igInputFloat2(_bytes(label), c_floats, _bytes(format_), flags)
 
@@ -3063,14 +3113,12 @@ def input_float3(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
     # Update array
     for i in range(3):
         c_floats_3[i] = float_ptrs[i].value
-        print(label, i, float_ptrs[i].value, int(<uintptr_t>&c_floats_3[i]))
 
     cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats_3, _bytes(format_), flags)
 
     # Update FloatPtrs in List
     for i in range(3):
         float_ptrs[i].value = float(c_floats_3[i])
-        print("Saving:", i, c_floats_3[i])
 
     # ccimgui.igMemFree(c_floats)
     return res
@@ -3102,9 +3150,13 @@ def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # ?active(True)
 # ?returns(Any)
 def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
-    cdef int value_ptr = value.value
-    cdef ccimgui.bool res = ccimgui.igInputInt(_bytes(label), &value_ptr, step, step_fast, flags)
-    value.value = value_ptr
+    cdef ccimgui.bool res = ccimgui.igInputInt(
+        _bytes(label),
+        &value.value,
+        step,
+        step_fast,
+        flags
+    )
     return res
 # [End Function]
 
@@ -3665,6 +3717,32 @@ def label_text(label: str, fmt: str):
 # ?returns(None)
 def label_textv(label: str, fmt: str, args: str):
     ccimgui.igLabelTextV(_bytes(label), _bytes(fmt), _bytes(args))
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def list_box(label: str, current_item: IntPtr, items: List[str], height_in_items: int=-1):
+    cdef void* void_ptr
+    cdef char** c_strings = <char**>ccimgui.igMemAlloc(sizeof(void_ptr) * len(items))
+
+    for item, i in enumerate(items):
+        c_strings[i] == ccimgui.igMemAlloc(sizeof(char) * len(item) + 1)
+        strncpy(c_strings[i], _bytes(item), len(item))
+        c_strings[i][len(item)] = 0
+    
+    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        len(items),
+        height_in_items
+    )
+    for i in range(len(items)):
+        ccimgui.igMemFree(c_strings[i])
+    ccimgui.igMemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -4255,9 +4333,11 @@ def radio_button(label: str, value: IntPtr, v_button: int):
     """
     Shortcut to handle the above pattern when value is an integer
     """
-    cdef int value_ptr = value.value
-    cdef ccimgui.bool res = ccimgui.igRadioButton_IntPtr(_bytes(label), &value_ptr, v_button)
-    value.value = value_ptr
+    cdef ccimgui.bool res = ccimgui.igRadioButton_IntPtr(
+        _bytes(label),
+        &value.value,
+        v_button
+    )
     return res
 # [End Function]
 
@@ -5097,13 +5177,13 @@ def show_user_guide():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0 deg", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_angle(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igSliderAngle(
         _bytes(label),
-        v_rad,
+        &v_rad.value,
         v_degrees_min,
         v_degrees_max,
         _bytes(format_),
@@ -5113,17 +5193,17 @@ def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degree
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_float(label: str, value: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_float(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     """
     Adjust format to decorate the value with a prefix or a suffix
     for in-slider labels or unit display.
     """
     cdef ccimgui.bool res = ccimgui.igSliderFloat(
         _bytes(label),
-        value,
+        &value.value,
         v_min,
         v_max,
         _bytes(format_),
@@ -5184,13 +5264,13 @@ def slider_float4(label: str, value0: float, value1: float, value2: float, value
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_int(label: str, value: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_int(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igSliderInt(
         _bytes(label),
-        value,
+        &value.value,
         v_min,
         v_max,
         _bytes(format_),

@@ -648,11 +648,10 @@ Vec2 = namedtuple('Vec2', ['x', 'y'])
 Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
 cdef bytes _bytes(str text):
-    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))
+    return <bytes>(text.encode('utf-8') + b'\0')
 
 cdef str _from_bytes(bytes text):
-    return <str>(text if PY_MAJOR_VERSION < 3 else text.decode('utf-8', errors='ignore'))
-
+    return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
     return Vec2(vec.x, vec.y)
@@ -720,14 +719,12 @@ cdef class DoublePtr:
 
 cdef class StrPtr:
     cdef char* buffer
-    cdef int buffer_size
+    cdef public int buffer_size
 
     def __init__(self, initial_value: str, buffer_size=256):
         self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)
         self.buffer_size: int = buffer_size
-        self.buffer[min((buffer_size - 1), len(initial_value))] = 0
-        # Need to check if I need to add the null character after.
-        strncpy(self.buffer, _bytes(initial_value), buffer_size - 1)
+        self.value = initial_value
     
     def __dealloc__(self):
         ccimgui.igMemFree(self.buffer)
@@ -739,6 +736,40 @@ cdef class StrPtr:
     def value(self, value: str):
         strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
         self.buffer[min((self.buffer_size - 1), len(value))] = 0
+
+cdef class Vec2Ptr:
+    cdef public float x
+    cdef public float y
+
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def vec(self):
+        return (self.x, self.y)
+
+cdef class Vec4Ptr:
+    cdef public float x
+    cdef public float y
+    cdef public float z
+    cdef public float w
+
+    def __init__(self, x: float, y: float, z: float, w: float):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+
+    def vec(self):
+        return (self.x, self.y, self.z, self.z)
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned int output = 0
+    output |= a << 24
+    output |= b << 16
+    output |= g << 8
+    output |= r << 0
+    return output
 
 # [End Constant Functions]
 
@@ -845,9 +876,9 @@ def begin_disabled(disabled: Any=True):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def begin_drag_drop_source(flags: int=0):
     """
     Call after submitting an item which may be dragged. when this
@@ -1043,8 +1074,8 @@ def begin_tooltip():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def bullet():
     """
@@ -1056,8 +1087,8 @@ def bullet():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def bullet_text(fmt: str):
     """
@@ -1115,6 +1146,19 @@ def checkbox(label: str, value: BoolPtr):
     cdef bool value_ptr = value.ptr
     cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), &value_ptr)
     value.ptr = value_ptr
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def checkbox_flags(label: str, flags: IntPtr, flags_value: int):
+    cdef ccimgui.bool res = ccimgui.igCheckboxFlags_IntPtr(
+        _bytes(label),
+        &flags.value,
+        flags_value
+    )
     return res
 # [End Function]
 
@@ -1257,22 +1301,44 @@ def color_convert_u32_to_float4(pOut: ImVec4, in_: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def color_edit3(label: str, col0: float, col1: float, col2: float, flags: int=0):
-    cdef float[3] io_float_col = [col0, col1, col2]
-    cdef ccimgui.bool res = ccimgui.igColorEdit3(_bytes(label), <float*>&io_float_col, flags)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_edit3(label: str, colours: List[FloatPtr], flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
+    
+    # Update array
+    for i in range(3):
+        c_floats[i] = colours[i].value
+
+    cdef ccimgui.bool res = ccimgui.igColorEdit3(_bytes(label), c_floats, flags)
+
+    # Update FloatPtrs in List
+    for i in range(3):
+        colours[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def color_edit4(label: str, col0: float, col1: float, col2: float, col3: float, flags: int=0):
-    cdef float[4] io_float_col = [col0, col1, col2, col3]
-    cdef ccimgui.bool res = ccimgui.igColorEdit4(_bytes(label), <float*>&io_float_col, flags)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_edit4(label: str, colours: List[FloatPtr], flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 4)
+    
+    # Update array
+    for i in range(4):
+        c_floats[i] = colours[i].value
+
+    cdef ccimgui.bool res = ccimgui.igColorEdit4(_bytes(label), c_floats, flags)
+
+    # Update FloatPtrs in List
+    for i in range(4):
+        colours[i].value = c_floats[i]
+
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
@@ -1302,6 +1368,41 @@ def color_picker4(label: str, col0: float, col1: float, col2: float, col3: float
 # ?returns(None)
 def columns(count: int=1, id_: str=None, border: Any=True):
     ccimgui.igColumns(count, _bytes(id_), border)
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def combo(label: str, current_item: IntPtr, items: List[str], popup_max_height_in_items: int=-1):
+    """
+    Pass in a list of strings. This will do the rest. Converts the list to a
+    null terminated contiguous array of bytes.
+    
+    Each string is followed by \0.
+    The final string is followed by \0\0
+    """
+    cdef char* c_strings = <char*>ccimgui.igMemAlloc(sum(len(s) + 1 for s in items) + 1)
+    
+    # Store items in array
+    cdef int counter = 0
+    for p_str in items:
+        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        # Null terminated string
+        c_strings[counter + len(p_str)] = 0
+        counter += len(p_str) + 1
+    
+    # Null terminated list
+    c_strings[counter] = 0
+
+    cdef ccimgui.bool res = ccimgui.igCombo_Str(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        popup_max_height_in_items
+    )
+    ccimgui.igMemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -1437,17 +1538,15 @@ def drag_float(label: str, value: FloatPtr, v_speed: float=1.0, v_min: float=0.0
     """
     If v_min >= v_max we have no bound
     """
-    cdef float float_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igDragFloat(
         _bytes(label),
-        &float_ptr,
+        &value.value,
         v_speed,
         v_min,
         v_max,
         _bytes(format_),
         flags
     )
-    value.value = float_ptr
     return res
 # [End Function]
 
@@ -1532,17 +1631,15 @@ def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max:
     """
     If v_min >= v_max we have no bound
     """
-    cdef int value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igDragInt(
         _bytes(label),
-        &value_ptr,
+        &value.value,
         v_speed,
         v_min,
         v_max,
         _bytes(format_),
         flags
     )
-    value.value = value_ptr
     return res
 # [End Function]
 
@@ -1716,15 +1813,17 @@ def end_disabled():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
+_drag_drop_payload = None
 def end_drag_drop_source():
     """
     Only call enddragdropsource() if begindragdropsource() returns
     true!
     """
     ccimgui.igEndDragDropSource()
+    _drag_drop_payload = None
 # [End Function]
 
 # [Function]
@@ -2048,14 +2147,16 @@ def get_current_context():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def get_cursor_pos(pOut: ImVec2):
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_cursor_pos():
     """
     Cursor position in window coordinates (relative to window position)
     """
-    ccimgui.igGetCursorPos(pOut._ptr)
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetCursorPos(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2086,17 +2187,20 @@ def get_cursor_posy():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def get_cursor_screen_pos(pOut: ImVec2):
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_cursor_screen_pos():
     """
     Cursor position in absolute coordinates (useful to work with
     imdrawlist api). generally top-left == getmainviewport()->pos
     == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size
     == io.displaysize in single-viewport mode.
     """
-    ccimgui.igGetCursorScreenPos(pOut._ptr)
+    # Not sure why cimgui would change the API :(
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetCursorScreenPos(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2111,17 +2215,23 @@ def get_cursor_start_pos(pOut: ImVec2):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(ImGuiPayload)
+# ?use_template(True)
+# ?active(True)
+# ?returns(Tuple[str, Any])
 def get_drag_drop_payload():
     """
     Peek directly into the current payload from anywhere. may return
     null. use imguipayload::isdatatype() to test for the payload
     type.
     """
-    cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
-    return ImGuiPayload.from_ptr(res)
+    if _drag_drop_payload is None:
+        return None
+    
+    cdef const ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
+    if res is NULL:
+        raise ValueError("We shouldn't get here")
+    
+    return _drag_drop_payload
 # [End Function]
 
 # [Function]
@@ -2308,36 +2418,42 @@ def get_item_id():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def get_item_rect_max(pOut: ImVec2):
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_max():
     """
     Get lower-right bounding rectangle of the last item (screen space)
     """
-    ccimgui.igGetItemRectMax(pOut._ptr)
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectMax(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def get_item_rect_min(pOut: ImVec2):
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_min():
     """
     Get upper-left bounding rectangle of the last item (screen space)
     """
-    ccimgui.igGetItemRectMin(pOut._ptr)
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectMin(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def get_item_rect_size(pOut: ImVec2):
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_size():
     """
     Get size of last item
     """
-    ccimgui.igGetItemRectSize(pOut._ptr)
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectSize(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2571,8 +2687,8 @@ def get_style_color_vec4(idx: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(float)
 def get_text_line_height():
     """
@@ -2608,8 +2724,8 @@ def get_time():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(float)
 def get_tree_node_to_label_spacing():
     """
@@ -2681,8 +2797,8 @@ def get_window_dpi_scale():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(ImDrawList)
 def get_window_draw_list():
     """
@@ -2988,8 +3104,8 @@ def impl_open_gl3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def indent(indent_w: float=0.0):
     """
@@ -3022,16 +3138,14 @@ def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float
 # ?active(True)
 # ?returns(Any)
 def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
-    cdef float value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
-        &value_ptr,
+        &value.value,
         step,
         step_fast,
         _bytes(format_),
         flags
     )
-    value.value = value_ptr
     return res
 # [End Function]
 
@@ -3103,9 +3217,13 @@ def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # ?active(True)
 # ?returns(Any)
 def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
-    cdef int value_ptr = value.value
-    cdef ccimgui.bool res = ccimgui.igInputInt(_bytes(label), &value_ptr, step, step_fast, flags)
-    value.value = value_ptr
+    cdef ccimgui.bool res = ccimgui.igInputInt(
+        _bytes(label),
+        &value.value,
+        step,
+        step_fast,
+        flags
+    )
     return res
 # [End Function]
 
@@ -3318,9 +3436,9 @@ def is_item_active():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def is_item_clicked(mouse_button: int=0):
     """
     Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button)
@@ -3401,9 +3519,9 @@ def is_item_hovered(flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def is_item_toggled_open():
     """
     Was the last item open state toggled? set by treenode().
@@ -3666,6 +3784,34 @@ def label_text(label: str, fmt: str):
 # ?returns(None)
 def label_textv(label: str, fmt: str, args: str):
     ccimgui.igLabelTextV(_bytes(label), _bytes(fmt), _bytes(args))
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def list_box(label: str, current_item: IntPtr, items: List[str], height_in_items: int=-1):
+    cdef void* void_ptr
+    cdef char** c_strings = <char**>ccimgui.igMemAlloc(sizeof(void_ptr) * len(items))
+
+    # Creates a secondary array for each element
+    cdef char* array
+    for i, item in enumerate(items):
+        array = <char*>ccimgui.igMemAlloc(sizeof(char) * len(item) + 1)
+        strncpy(array, _bytes(item), len(item) + 1)
+        c_strings[i] = array
+    
+    cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        len(items),
+        height_in_items
+    )
+    for i in range(len(items)):
+        ccimgui.igMemFree(c_strings[i])
+    ccimgui.igMemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -4256,9 +4402,11 @@ def radio_button(label: str, value: IntPtr, v_button: int):
     """
     Shortcut to handle the above pattern when value is an integer
     """
-    cdef int value_ptr = value.value
-    cdef ccimgui.bool res = ccimgui.igRadioButton_IntPtr(_bytes(label), &value_ptr, v_button)
-    value.value = value_ptr
+    cdef ccimgui.bool res = ccimgui.igRadioButton_IntPtr(
+        _bytes(label),
+        &value.value,
+        v_button
+    )
     return res
 # [End Function]
 
@@ -4515,17 +4663,26 @@ def set_cursor_screen_pos(pos: tuple):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
     """
     Type is a user defined string of maximum 32 characters. strings
     starting with '_' are reserved for dear imgui internal types.
     data is copied and held by imgui. return true when payload has
     been accepted.
+
+    This does not use ImGui so that you can send arbitrary python objects.
     """
-    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type_), data, sz, cond)
+    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(
+        _bytes(type_),
+        NULL,
+        0,
+        cond
+    )
+    if res:
+        _drag_drop_payload = (type_, data)
     return res
 # [End Function]
 
@@ -4608,10 +4765,10 @@ def set_next_frame_want_capture_mouse(want_capture_mouse: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def set_next_item_open(is_open: Any, cond: int=0):
+def set_next_item_open(is_open: bool, cond: int=0):
     """
     Set next treenode/collapsingheader open state.
     """
@@ -5098,13 +5255,13 @@ def show_user_guide():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0 deg", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_angle(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igSliderAngle(
         _bytes(label),
-        v_rad,
+        &v_rad.value,
         v_degrees_min,
         v_degrees_max,
         _bytes(format_),
@@ -5114,17 +5271,17 @@ def slider_angle(label: str, v_rad: float, v_degrees_min: float=-360.0, v_degree
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_float(label: str, value: float, v_min: float, v_max: float, format_: str="%.3", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_float(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     """
     Adjust format to decorate the value with a prefix or a suffix
     for in-slider labels or unit display.
     """
     cdef ccimgui.bool res = ccimgui.igSliderFloat(
         _bytes(label),
-        value,
+        &value.value,
         v_min,
         v_max,
         _bytes(format_),
@@ -5185,13 +5342,13 @@ def slider_float4(label: str, value0: float, value1: float, value2: float, value
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def slider_int(label: str, value: int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_int(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igSliderInt(
         _bytes(label),
-        value,
+        &value.value,
         v_min,
         v_max,
         _bytes(format_),
@@ -5299,8 +5456,8 @@ def small_button(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def spacing():
     """
@@ -5548,8 +5705,8 @@ def text(fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def text_colored(col: tuple, fmt: str):
     """
@@ -5603,8 +5760,8 @@ def text_unformatted(text: str, text_end: str=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def text_wrapped(fmt: str):
     """
@@ -5636,11 +5793,11 @@ def textv(fmt: str, args: str):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def tree_node(label: str):
+def tree_node(label: str, flags: int=0):
     """
-    tree_node_str
+    tree_node_ex_str
     """
-    cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
+    cdef ccimgui.bool res = ccimgui.igTreeNodeEx_Str(_bytes(label), flags)
     return res
 # [End Function]
 
@@ -5771,8 +5928,8 @@ def tree_push_str(str_id: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def unindent(indent_w: float=0.0):
     """
@@ -6906,10 +7063,10 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
+    def add_rect(self: ImDrawList, p_min, p_max, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
@@ -6925,10 +7082,10 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
+    def add_rect_filled(self: ImDrawList, p_min, p_max, col: int, rounding: float=0.0, flags: int=0):
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """

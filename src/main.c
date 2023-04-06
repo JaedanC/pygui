@@ -115,6 +115,9 @@ int main(int argc, char* argv[])
 			igSliderFloat("Float", &f, 0.0f, 1.0f, "%.3f", 0);
 			igColorEdit3("clear color", (float*)&clearColor, 0);
 
+			static int current_item = 0;const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange" };
+			igListBox_Str_arr("List box", &current_item, items, 6, 4);
+
 			ImVec2 buttonSize;
 			buttonSize.x = 0;
 			buttonSize.y = 0;

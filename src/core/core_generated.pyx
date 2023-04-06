@@ -648,11 +648,10 @@ Vec2 = namedtuple('Vec2', ['x', 'y'])
 Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
 cdef bytes _bytes(str text):
-    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))
+    return <bytes>(text.encode('utf-8') + b'\0')
 
 cdef str _from_bytes(bytes text):
-    return <str>(text if PY_MAJOR_VERSION < 3 else text.decode('utf-8', errors='ignore'))
-
+    return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
     return Vec2(vec.x, vec.y)
@@ -720,14 +719,12 @@ cdef class DoublePtr:
 
 cdef class StrPtr:
     cdef char* buffer
-    cdef int buffer_size
+    cdef public int buffer_size
 
     def __init__(self, initial_value: str, buffer_size=256):
         self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)
         self.buffer_size: int = buffer_size
-        self.buffer[min((buffer_size - 1), len(initial_value))] = 0
-        # Need to check if I need to add the null character after.
-        strncpy(self.buffer, _bytes(initial_value), buffer_size - 1)
+        self.value = initial_value
     
     def __dealloc__(self):
         ccimgui.igMemFree(self.buffer)
@@ -739,6 +736,40 @@ cdef class StrPtr:
     def value(self, value: str):
         strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
         self.buffer[min((self.buffer_size - 1), len(value))] = 0
+
+cdef class Vec2Ptr:
+    cdef public float x
+    cdef public float y
+
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def vec(self):
+        return (self.x, self.y)
+
+cdef class Vec4Ptr:
+    cdef public float x
+    cdef public float y
+    cdef public float z
+    cdef public float w
+
+    def __init__(self, x: float, y: float, z: float, w: float):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+
+    def vec(self):
+        return (self.x, self.y, self.z, self.z)
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned int output = 0
+    output |= a << 24
+    output |= b << 16
+    output |= g << 8
+    output |= r << 0
+    return output
 
 # [End Constant Functions]
 

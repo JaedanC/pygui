@@ -812,131 +812,167 @@ class HeaderSpec:
         # output.write("# distutils: language = c++\n")
         # output.write("# cython: language_level = 3\n")
         # output.write("# cython: embedsignature=True\n\n")
-        
-        output.write("# [Imports]\n")
-        output.write("import cython\n")
-        output.write("import ctypes\n")
-        output.write("import array\n")
-        output.write("from collections import namedtuple\n")
-        output.write("from cython.operator import dereference\n")
-        output.write("from typing import Callable, Any, List\n\n")
-        output.write("cimport ccimgui\n")
-        output.write("from cpython.version cimport PY_MAJOR_VERSION\n")
-        output.write("from cython.view cimport array as cvarray\n")
-        output.write("from libcpp cimport bool\n")
-        output.write("from libc.float cimport FLT_MAX, FLT_MIN\n")
-        output.write("from libc.stdint cimport uintptr_t\n")
-        output.write("from libc.string cimport strdup, strncpy\n")
-        output.write("# [End Imports]\n\n\n")
+
+        output.write(
+            "# [Imports]\n"
+            "import cython\n"
+            "import ctypes\n"
+            "import array\n"
+            "from collections import namedtuple\n"
+            "from cython.operator import dereference\n"
+            "from typing import Callable, Any, List\n"
+            "\n"
+            "cimport ccimgui\n"
+            "from cpython.version cimport PY_MAJOR_VERSION\n"
+            "from cython.view cimport array as cvarray\n"
+            "from libcpp cimport bool\n"
+            "from libc.float cimport FLT_MAX, FLT_MIN\n"
+            "from libc.stdint cimport uintptr_t\n"
+            "from libc.string cimport strdup, strncpy\n"
+            "# [End Imports]\n"
+            "\n"
+            "\n"
+        )
 
         output.write("# [Enums]\n")
         for enum in self.enums:
             output.write(enum.in_pyx_format(self.library_name) + "\n")
         output.write("# [End Enums]\n\n")
 
-        output.write("# [Constant Functions]\n")
-        
-        output.write("Vec2 = namedtuple('Vec2', ['x', 'y'])\n")
-        output.write("Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])\n\n")
-
-        output.write("cdef bytes _bytes(str text):\n")
-        # output.write("    if text is None:\n")
-        # output.write('        return b""\n')
-        output.write("    return <bytes>(text if PY_MAJOR_VERSION < 3 else text.encode('utf-8'))\n\n")
-
-        output.write("cdef str _from_bytes(bytes text):\n")
-        output.write("    return <str>(text if PY_MAJOR_VERSION < 3 else text.decode('utf-8', errors='ignore'))\n\n\n")
-        
-        output.write(f"cdef _cast_ImVec2_tuple({self.library_name}.ImVec2 vec):\n")
-        output.write("    return Vec2(vec.x, vec.y)\n\n")
-
-        output.write(f"cdef {self.library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:\n")
-        output.write(f"    cdef {self.library_name}.ImVec2 vec\n")
-        output.write("    if len(pair) != 2:\n")
-        output.write("        raise ValueError('pair param must be length of 2')\n")
-        output.write("    vec.x, vec.y = pair\n")
-        output.write("    return vec\n\n")
-
-        output.write(f"cdef _cast_ImVec4_tuple({self.library_name}.ImVec4 vec):\n")
-        output.write("    return Vec4(vec.x, vec.y, vec.z, vec.w)\n\n")
-
-        output.write(f"cdef {self.library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):\n")
-        output.write(f"    cdef {self.library_name}.ImVec4 vec\n")
-        output.write("    if len(quadruple) != 4:\n")
-        output.write("        raise ValueError('quadruple param must be length of 4')\n\n")
-        output.write("    vec.x, vec.y, vec.z, vec.w = quadruple\n")
-        output.write("    return vec\n\n\n")
-
-        output.write("def _py_vertex_buffer_vertex_pos_offset():\n")
-        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos\n\n")
-
-        output.write("def _py_vertex_buffer_vertex_uv_offset():\n")
-        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv\n\n")
-
-        output.write("def _py_vertex_buffer_vertex_col_offset():\n")
-        output.write("    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col\n\n")
-
-        output.write("def _py_vertex_buffer_vertex_size():\n")
-        output.write("    return sizeof(ccimgui.ImDrawVert)\n\n")
-
-        output.write("def _py_index_buffer_index_size():\n")
-        output.write("    return sizeof(ccimgui.ImDrawIdx)\n\n")
-
-        output.write("cdef class BoolPtr:\n")
-        output.write("    cdef public bool ptr\n")
-        output.write("\n")
-        output.write("    def __init__(self, initial_value: bool):\n")
-        output.write("        self.ptr: bool = initial_value\n")
-        output.write("\n")
-        output.write("    def __bool__(self):\n")
-        output.write("        return self.ptr\n")
-        output.write("\n")
-
-        output.write("cdef class IntPtr:\n")
-        output.write("    cdef public int value\n")
-        output.write("\n")
-        output.write("    def __init__(self, initial_value: int):\n")
-        output.write("        self.value: int = initial_value\n")
-        output.write("\n")
-
-        output.write("cdef class FloatPtr:\n")
-        output.write("    cdef public float value\n")
-        output.write("\n")
-        output.write("    def __init__(self, initial_value: float):\n")
-        output.write("        self.value = initial_value\n")
-        output.write("\n")
-
-        output.write("cdef class DoublePtr:\n")
-        output.write("    cdef public double value\n")
-        output.write("\n")
-        output.write("    def __init__(self, initial_value: float):\n")
-        output.write("        self.value = initial_value\n")
-        output.write("\n")
-
-        output.write("cdef class StrPtr:\n")
-        output.write("    cdef char* buffer\n")
-        output.write("    cdef int buffer_size\n")
-        output.write("\n")
-        output.write("    def __init__(self, initial_value: str, buffer_size=256):\n")
-        output.write("        self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)\n")
-        output.write("        self.buffer_size: int = buffer_size\n")
-        output.write("        self.buffer[min((buffer_size - 1), len(initial_value))] = 0\n")
-        output.write("        # Need to check if I need to add the null character after.\n")
-        output.write("        strncpy(self.buffer, _bytes(initial_value), buffer_size - 1)\n")
-        output.write("    \n")
-        output.write("    def __dealloc__(self):\n")
-        output.write("        ccimgui.igMemFree(self.buffer)\n")
-        output.write("\n")
-        output.write("    @property\n")
-        output.write("    def value(self):\n")
-        output.write("        return _from_bytes(self.buffer)\n")
-        output.write("    @value.setter\n")
-        output.write("    def value(self, value: str):\n")
-        output.write("        strncpy(self.buffer, _bytes(value), self.buffer_size - 1)\n")
-        output.write("        self.buffer[min((self.buffer_size - 1), len(value))] = 0\n")
-        output.write("\n")
-
-        output.write("# [End Constant Functions]\n\n\n")
+        output.write("\n".join([
+            "# [Constant Functions]",
+            "Vec2 = namedtuple('Vec2', ['x', 'y'])",
+            "Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])",
+            "",
+            "cdef bytes _bytes(str text):",
+            "    return <bytes>(text.encode('utf-8') + b'\\0')",
+            "",
+            "cdef str _from_bytes(bytes text):",
+            "    return <str>(text.decode('utf-8', errors='ignore'))",
+            "",
+            f"cdef _cast_ImVec2_tuple({self.library_name}.ImVec2 vec):",
+            "    return Vec2(vec.x, vec.y)",
+            "",
+            f"cdef {self.library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:",
+            f"    cdef {self.library_name}.ImVec2 vec",
+            "    if len(pair) != 2:",
+            "        raise ValueError('pair param must be length of 2')",
+            "    vec.x, vec.y = pair",
+            "    return vec",
+            "",
+            f"cdef _cast_ImVec4_tuple({self.library_name}.ImVec4 vec):",
+            "    return Vec4(vec.x, vec.y, vec.z, vec.w)",
+            "",
+            f"cdef {self.library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):",
+            f"    cdef {self.library_name}.ImVec4 vec",
+            "    if len(quadruple) != 4:",
+            "        raise ValueError('quadruple param must be length of 4')",
+            "",
+            "    vec.x, vec.y, vec.z, vec.w = quadruple",
+            "    return vec",
+            "",
+            "",
+            "def _py_vertex_buffer_vertex_pos_offset():",
+            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos",
+            "",
+            "def _py_vertex_buffer_vertex_uv_offset():",
+            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv",
+            "",
+            "def _py_vertex_buffer_vertex_col_offset():",
+            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col",
+            "",
+            "def _py_vertex_buffer_vertex_size():",
+            "    return sizeof(ccimgui.ImDrawVert)",
+            "",
+            "def _py_index_buffer_index_size():",
+            "    return sizeof(ccimgui.ImDrawIdx)",
+            "",
+            "cdef class BoolPtr:",
+            "    cdef public bool ptr",
+            "",
+            "    def __init__(self, initial_value: bool):",
+            "        self.ptr: bool = initial_value",
+            "",
+            "    def __bool__(self):",
+            "        return self.ptr",
+            "",
+            "cdef class IntPtr:",
+            "    cdef public int value",
+            "",
+            "    def __init__(self, initial_value: int):",
+            "        self.value: int = initial_value",
+            "",
+            "cdef class FloatPtr:",
+            "    cdef public float value",
+            "",
+            "    def __init__(self, initial_value: float):",
+            "        self.value = initial_value",
+            "",
+            "cdef class DoublePtr:",
+            "    cdef public double value",
+            "",
+            "    def __init__(self, initial_value: float):",
+            "        self.value = initial_value",
+            "",
+            "cdef class StrPtr:",
+            "    cdef char* buffer",
+            "    cdef public int buffer_size",
+            "",
+            "    def __init__(self, initial_value: str, buffer_size=256):",
+            "        self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)",
+            "        self.buffer_size: int = buffer_size",
+            "        self.value = initial_value",
+            "    ",
+            "    def __dealloc__(self):",
+            "        ccimgui.igMemFree(self.buffer)",
+            "",
+            "    @property",
+            "    def value(self):",
+            "        return _from_bytes(self.buffer)",
+            "    @value.setter",
+            "    def value(self, value: str):",
+            "        strncpy(self.buffer, _bytes(value), self.buffer_size - 1)",
+            "        self.buffer[min((self.buffer_size - 1), len(value))] = 0",
+            "",
+            "cdef class Vec2Ptr:",
+            "    cdef public float x",
+            "    cdef public float y",
+            "",
+            "    def __init__(self, x: float, y: float):",
+            "        self.x = x",
+            "        self.y = y",
+            "",
+            "    def vec(self):",
+            "        return (self.x, self.y)",
+            "",
+            "cdef class Vec4Ptr:",
+            "    cdef public float x",
+            "    cdef public float y",
+            "    cdef public float z",
+            "    cdef public float w",
+            "",
+            "    def __init__(self, x: float, y: float, z: float, w: float):",
+            "        self.x = x",
+            "        self.y = y",
+            "        self.z = z",
+            "        self.w = w",
+            "",
+            "    def vec(self):",
+            "        return (self.x, self.y, self.z, self.z)",
+            "",
+            "def IM_COL32(int r, int g, int b, int a) -> int:",
+            "    cdef unsigned int output = 0",
+            "    output |= a << 24",
+            "    output |= b << 16",
+            "    output |= g << 8",
+            "    output |= r << 0",
+            "    return output",
+            "",
+            "# [End Constant Functions]",
+            "",
+            "",
+            "",
+        ]))
 
         for function in self.functions:
             output.write("# [Function]\n")

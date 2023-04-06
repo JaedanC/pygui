@@ -149,36 +149,58 @@ class PyxCollection:
         self.extras: List[PyxGeneric] = extras
 
     def as_pyi_format(self) -> Tuple[str, str]:
-        pyi_content = StringIO()
-        pyi_content.write("from typing import Any, Callable, Tuple, List\n\n")
-        pyi_content.write("VERTEX_BUFFER_POS_OFFSET: int\n")
-        pyi_content.write("VERTEX_BUFFER_UV_OFFSET: int\n")
-        pyi_content.write("VERTEX_BUFFER_COL_OFFSET: int\n")
-        pyi_content.write("VERTEX_SIZE: int\n")
-        pyi_content.write("INDEX_SIZE: int\n\n")
-
         self.functions.sort(key=lambda f: f.name)
         self.classes.sort(key=lambda c: c.name)
 
-        pyi_content.write("class BoolPtr:\n")
-        pyi_content.write("    def __init__(self, initial_value: bool): ...\n")
-        pyi_content.write("    def __bool__(self) -> bool: ...\n\n")
+        pyi_content = StringIO()
 
-        pyi_content.write("class IntPtr:\n")
-        pyi_content.write("    value: int\n")
-        pyi_content.write("    def __init__(self, initial_value: int): ...\n\n")
-
-        pyi_content.write("class FloatPtr:\n")
-        pyi_content.write("    def __init__(self, initial_value: float): ...\n")
-        pyi_content.write("    def __float__(self) -> float: ...\n\n")
-        
-        pyi_content.write("class DoublePtr:\n")
-        pyi_content.write("    value: float\n")
-        pyi_content.write("    def __init__(self, initial_value: float): ...\n\n")
-
-        pyi_content.write("class StrPtr:\n")
-        pyi_content.write("    value: str\n")
-        pyi_content.write("    def __init__(self, initial_value: str, buffer_size=256): ...\n\n")
+        pyi_content.write("\n".join([
+            "from typing import Any, Callable, Tuple, List",
+            "",
+            "",
+            "VERTEX_BUFFER_POS_OFFSET: int",
+            "VERTEX_BUFFER_UV_OFFSET: int",
+            "VERTEX_BUFFER_COL_OFFSET: int",
+            "VERTEX_SIZE: int",
+            "INDEX_SIZE: int",
+            "",
+            "class BoolPtr:",
+            "    def __init__(self, initial_value: bool): ...",
+            "    def __bool__(self) -> bool: ...",
+            "",
+            "class IntPtr:",
+            "    value: int",
+            "    def __init__(self, initial_value: int): ...",
+            "",
+            "class FloatPtr:",
+            "    value: float",
+            "    def __float__(self) -> float: ...",
+            "",
+            "class DoublePtr:",
+            "    value: float",
+            "    def __init__(self, initial_value: float): ...",
+            "",
+            "class StrPtr:",
+            "    value: str",
+            "    def __init__(self, initial_value: str, buffer_size=256): ...",
+            "",
+            "class Vec4Ptr:",
+            "    x: float",
+            "    y: float",
+            "    z: float",
+            "    w: float",
+            "    def __init__(self, x: float, y: float, z: float, w: float): ...",
+            "    def vec(self) -> Tuple[float, float, float, float]",
+            "",
+            "class Vec2Ptr:",
+            "    x: float",
+            "    y: float",
+            "    def __init__(self, x: float, y: float): ...",
+            "    def vec(self) -> Tuple[float, float]",
+            "",
+            "def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...",
+            "",
+        ]))
 
         for enum in self.enums:
             pyi_content.write(enum.as_pyi_format() + "\n")
