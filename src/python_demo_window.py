@@ -53,6 +53,12 @@ class static:
     widgets_header_closable_group = pygui.BoolPtr(True)
 
     widgets_text_wrap_width = pygui.FloatPtr(200)
+    widgets_text_utf8_buf = pygui.StrPtr("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
+    widgets_combo_flags = pygui.IntPtr(0)
+    widgets_combo_item_current_idx = pygui.IntPtr(0)
+    widgets_combo_item_current_2 = pygui.IntPtr(0)
+    widgets_combo_item_current_3 = pygui.IntPtr(0)
+    widgets_combo_item_current_4 = pygui.IntPtr(0)
 
 
 def help_marker(desc: str):
@@ -371,4 +377,67 @@ def show_demo_window_widgets():
                 pygui.pop_text_wrap_pos()
             pygui.tree_pop()
 
+        if pygui.tree_node("UTF-8 Text"):
+            pygui.text_wrapped(
+                "CJK text will only appear if the font was loaded with the appropriate CJK character ranges. "
+                "Call io.Fonts->AddFontFromFileTTF() manually to load extra character ranges. "
+                "Read docs/FONTS.md for details.")
+            # Normally we would use u8"blah blah" with the proper characters directly in the string.
+            pygui.text("Hiragana: \xe3\x81\x8b\xe3\x81\x8d\xe3\x81\x8f\xe3\x81\x91\xe3\x81\x93 (kakikukeko)")
+            pygui.text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)")
+            # static char buf[32] = u8"NIHONGO"; // <- this is how you would write it with C++11, using real kanjis
+            # TODO: This crashes. Not sure why.
+            pygui.text("The call below crashes so it has been omitted in this demo.")
+            pygui.text('pygui.input_text("UTF-8 input", static.widgets_text_utf8_buf)')
+            pygui.tree_pop()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("Images"):
+        pygui.text("# TODO: Looking to incorporate pillow or another raw format")
+        pygui.tree_pop()
+    
+    if pygui.tree_node("Combo"):
+        # Combo Boxes are also called "Dropdown" in other systems
+        # Expose flags as checkbox for the demo
+        pygui.checkbox_flags("ImGuiComboFlags_PopupAlignLeft", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_POPUP_ALIGN_LEFT)
+        pygui.same_line()
+        help_marker("Only makes a difference if the popup is larger than the combo")
+        if pygui.checkbox_flags("ImGuiComboFlags_NoArrowButton", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON):
+            static.widgets_combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW
+        if pygui.checkbox_flags("ImGuiComboFlags_NoPreview", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW):
+            static.widgets_combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON
+        
+        # Using the generic BeginCombo() API, you have full control over how to display the combo contents.
+        # (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
+        # stored in the object itself, etc.)
+        items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"]
+        combo_preview_value = items[static.widgets_combo_item_current_idx.value]
+        if pygui.begin_combo("combo 1", combo_preview_value, static.widgets_combo_flags.value):
+            for n in range(len(items)):
+                is_selected = static.widgets_combo_item_current_idx.value == n
+                if pygui.selectable(items[n], is_selected):
+                    static.widgets_combo_item_current_idx.value = n
+                
+                # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if is_selected:
+                    pygui.set_item_default_focus()
+            
+            pygui.end_combo()
+        
+        # Simplified one-liner Combo() API, using values packed in a single constant string
+        # This is a convenience for when the selection set is small and known at compile-time.
+        # Pygui note: Obviously this doesn't really make sense in pygui. Just use a list.
+        pygui.combo("combo 2 (one-liner)", static.widgets_combo_item_current_2, ["aaaa", "bbbb", "cccc", "dddd", "eeee"])
+
+        # Simplified one-liner Combo() using an array of const char*
+        # This is not very useful (may obsolete): prefer using BeginCombo()/EndCombo() for full control.
+        # If the selection isn't within 0..count, Combo won't display a preview
+        pygui.combo("combo 3 (array)", static.widgets_combo_item_current_3, items)
+
+        # Simplified one-liner Combo() using an accessor function
+        # TODO: This one is yet to be added.
+        # struct Funcs { static bool ItemGetter(void* data, int n, const char** out_str) { *out_str = ((const char**)data)[n]; return true; } };
+        # static int item_current_4 = 0;
+        # ImGui::Combo("combo 4 (function)", &item_current_4, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items));
         pygui.tree_pop()

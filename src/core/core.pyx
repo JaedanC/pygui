@@ -859,12 +859,12 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def begin_combo(label: str, preview_value: str, flags: int=0):
-#     cdef ccimgui.bool res = ccimgui.igBeginCombo(_bytes(label), _bytes(preview_value), flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def begin_combo(label: str, preview_value: str, flags: int=0):
+    cdef ccimgui.bool res = ccimgui.igBeginCombo(_bytes(label), _bytes(preview_value), flags)
+    return res
 # [End Function]
 
 # [Function]
@@ -1794,14 +1794,14 @@ def end():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def end_combo():
-#     """
-#     Only call endcombo() if begincombo() returns true!
-#     """
-#     ccimgui.igEndCombo()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def end_combo():
+    """
+    Only call endcombo() if begincombo() returns true!
+    """
+    ccimgui.igEndCombo()
 # [End Function]
 
 # [Function]
@@ -3118,25 +3118,23 @@ def indent(indent_w: float=0.0):
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
-    cdef double value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputDouble(
         _bytes(label),
-        &value_ptr,
+        &value.value,
         step,
         step_fast,
         _bytes(format_),
         flags
     )
-    value.value = value_ptr
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
@@ -3152,7 +3150,7 @@ def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 2)
     
@@ -3173,28 +3171,28 @@ def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
-cdef float* c_floats_3 = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
+# ?returns(bool)
 def input_float3(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
     
     # Update array
     for i in range(3):
-        c_floats_3[i] = float_ptrs[i].value
+        c_floats[i] = float_ptrs[i].value
 
-    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats_3, _bytes(format_), flags)
+    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats, _bytes(format_), flags)
 
     # Update FloatPtrs in List
     for i in range(3):
-        float_ptrs[i].value = float(c_floats_3[i])
+        float_ptrs[i].value = float(c_floats[i])
 
-    # ccimgui.igMemFree(c_floats)
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 4)
     
@@ -3215,7 +3213,7 @@ def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
     cdef ccimgui.bool res = ccimgui.igInputInt(
         _bytes(label),
@@ -3295,7 +3293,7 @@ def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags:
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_text(label: str, str_ptr: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
     # TODO: Look into using the callback data.
     cdef ccimgui.bool res = ccimgui.igInputText(
@@ -4515,6 +4513,21 @@ def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # [End Function]
 
 # [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def selectable(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
+    """
+    Bool selected carry the selection state (read-only). selectable()
+    is clicked is returns true so you can modify your selection
+    state. size.x==0.0: use remaining width, size.x>0.0: specify
+    width. size.y==0.0: use label height, size.y>0.0: specify height
+    """
+    cdef ccimgui.bool res = ccimgui.igSelectable_Bool(_bytes(label), selected, flags, _cast_tuple_ImVec2(size))
+    return res
+# [End Function]
+
+# [Function]
 # # ?use_template(False)
 # # ?active(False)
 # # ?returns(Any)
@@ -4700,14 +4713,14 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def set_item_default_focus():
-#     """
-#     Make last item the default focused item of a window.
-#     """
-#     ccimgui.igSetItemDefaultFocus()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def set_item_default_focus():
+    """
+    Make last item the default focused item of a window.
+    """
+    ccimgui.igSetItemDefaultFocus()
 # [End Function]
 
 # [Function]
