@@ -86,14 +86,43 @@ class static:
     widgets_plotting_display_count = pygui.IntPtr(70)
     widgets_plotting_progress = 0
     widgets_plotting_progress_dir = 1
-    widgets_colour_color = pygui.Vec4Ptr(114 / 255, 144 / 255, 154 / 255, 200 / 255)
+    widgets_colour_color = [
+        pygui.FloatPtr(114 / 255),
+        pygui.FloatPtr(144 / 255),
+        pygui.FloatPtr(154 / 255),
+        pygui.FloatPtr(200 / 255),
+    ]
+    widgets_colour_flags = pygui.IntPtr(0)
     widgets_colour_alpha_preview = pygui.BoolPtr(True)
     widgets_colour_alpha_half_preview = pygui.BoolPtr(False)
     widgets_colour_drag_and_drop = pygui.BoolPtr(True)
     widgets_colour_options_menu = pygui.BoolPtr(True)
     widgets_colour_hdr = pygui.BoolPtr(False)
     widgets_colour_saved_palette_init = pygui.BoolPtr(True)
-    widgets_colour_saved_palette = []
+    widgets_colour_saved_palette = [
+        (pygui.FloatPtr(0),
+         pygui.FloatPtr(0),
+         pygui.FloatPtr(0),
+         pygui.FloatPtr(0)) for _ in range(32)]
+    widgets_colour_backup_color = [
+        pygui.FloatPtr(0),
+        pygui.FloatPtr(0),
+        pygui.FloatPtr(0),
+        pygui.FloatPtr(0)
+    ]
+    widgets_colour_no_border = pygui.BoolPtr(False)
+    widgets_colour_alpha = pygui.BoolPtr(True)
+    widgets_colour_alpha_bar = pygui.BoolPtr(True)
+    widgets_colour_side_preview = pygui.BoolPtr(True)
+    widgets_colour_ref_color = pygui.BoolPtr(False)
+    widgets_colour_ref_color_v = [
+        pygui.FloatPtr(1),
+        pygui.FloatPtr(0),
+        pygui.FloatPtr(1),
+        pygui.FloatPtr(0.5),
+    ]
+    widgets_colour_display_mode = pygui.IntPtr(False)
+    widgets_colour_picker_mode = pygui.IntPtr(False)
 
 
 
@@ -668,5 +697,187 @@ def show_demo_window_widgets():
         pygui.tree_pop()
 
     if pygui.tree_node("Color/Picker Widgets"):
+        pygui.separator_text("Options")
+        pygui.checkbox_flags("With Alpha Preview", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW)
+        pygui.checkbox_flags("With Half Alpha Preview", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
+        pygui.checkbox_flags("No Drag and Drop", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_DRAG_DROP)
+        pygui.checkbox_flags("No Options Menu", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_OPTIONS)
+        pygui.same_line()
+        help_marker("Right-click on the individual color widget to show options.")
+        pygui.checkbox_flags("With HDR", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_HDR)
+        pygui.same_line()
+        help_marker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
+        misc_flags = static.widgets_colour_flags.value
+        
+        pygui.separator_text("Inline color editor")
+        pygui.text("Color widget:")
+        pygui.same_line()
+        help_marker(
+            "Click on the color square to open a color picker.\n"
+            "CTRL+click on individual component to input value.\n")
+        pygui.color_edit3("MyColor##1", static.widgets_colour_color, misc_flags)
+
+        pygui.text("Color widget HSV with Alpha:")
+        pygui.color_edit4("MyColor##2", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | misc_flags)
+
+        pygui.text("Color widget with Float Display:")
+        pygui.color_edit4("MyColor##2f", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT | misc_flags)
+        
+        pygui.text("Color button with Picker:")
+        pygui.same_line()
+        help_marker(
+            "With the ImGuiColorEditFlags_NoInputs flag you can hide all the slider/text inputs.\n"
+            "With the ImGuiColorEditFlags_NoLabel flag you can pass a non-empty label which will only "
+            "be used for the tooltip and picker popup.")
+        pygui.color_edit4("MyColor##3", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_LABEL | misc_flags)
+
+        pygui.text("Color button with Custom Picker Popup:")
+
+        # Generate a default palette. The palette will persist and can be edited.
+        if static.widgets_colour_saved_palette_init:
+            for n in range(len(static.widgets_colour_saved_palette)):
+                pygui.color_convert_hsv_to_rgb(
+                    n / 31,
+                    0.8,
+                    0.8,
+                    static.widgets_colour_saved_palette[n][0],
+                    static.widgets_colour_saved_palette[n][1],
+                    static.widgets_colour_saved_palette[n][2],
+                )
+                static.widgets_colour_saved_palette[n][3].value = 1 # Alpha
+            static.widgets_colour_saved_palette_init.ptr = False
+        
+        open_popup = pygui.color_button("MyColor##3b", tuple(f_ptr.value for f_ptr in static.widgets_colour_color), misc_flags)
+        pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+        open_popup |= pygui.button("Palette")
+        if open_popup:
+            pygui.open_popup("mypicker")
+            static.widgets_colour_backup_color = (
+                pygui.FloatPtr(static.widgets_colour_color[0].value),
+                pygui.FloatPtr(static.widgets_colour_color[1].value),
+                pygui.FloatPtr(static.widgets_colour_color[2].value),
+                pygui.FloatPtr(static.widgets_colour_color[3].value),
+            )
+        if pygui.begin_popup("mypicker"):
+            pygui.text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
+            pygui.separator()
+            pygui.color_picker4("##picker", static.widgets_colour_color, misc_flags | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW)
+            pygui.same_line()
+
+            pygui.begin_group()
+            pygui.text("Current")
+            pygui.color_button(
+                "##current",
+                tuple(f_ptr.value for f_ptr in static.widgets_colour_color),
+                pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF,
+                (60, 40))
+            pygui.text("Previous")
+            if pygui.color_button("##previous", tuple(f_ptr.value for f_ptr in static.widgets_colour_backup_color), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF,
+                (60, 40)):
+                static.widgets_colour_color = (
+                    pygui.FloatPtr(static.widgets_colour_backup_color[0].value),
+                    pygui.FloatPtr(static.widgets_colour_backup_color[1].value),
+                    pygui.FloatPtr(static.widgets_colour_backup_color[2].value),
+                    pygui.FloatPtr(static.widgets_colour_backup_color[3].value),
+                )
+            pygui.separator()
+            pygui.text("Palette")
+            for n in range(len(static.widgets_colour_saved_palette)):
+                pygui.push_id_int(n)
+                if n % 8 != 0:
+                    pygui.same_line(0, pygui.get_style().item_spacing[0])
+                
+                palette_button_flags = \
+                    pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA | \
+                    pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | \
+                    pygui.IMGUI_COLOR_EDIT_FLAGS_NO_TOOLTIP
+                if pygui.color_button("##palette", tuple(f_ptr.value for f_ptr in static.widgets_colour_saved_palette[n]), palette_button_flags, (20, 20)):
+                    static.widgets_colour_color = (
+                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][0].value),
+                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][1].value),
+                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][2].value),
+                        pygui.FloatPtr(static.widgets_colour_color[3].value), # Preserve alpha!
+                    )
+
+                # Allow user to drop colors into each palette entry. Note that ColorButton() is already a
+                # drag source by default, unless specifying the ImGuiColorEditFlags_NoDragDrop flag.
+                # Pygui note. In the pyx file the accept drap drop payload for
+                # the color 3f and 4f types will return hardcoded tuples with
+                # the format tuple[FloatPtr, ...] containing the color that is
+                # being dragged.
+                if pygui.begin_drag_drop_target():
+                    payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_3F)
+                    if payload is not None:
+                        static.widgets_colour_saved_palette[n] = (
+                            pygui.FloatPtr(payload[0].value),
+                            pygui.FloatPtr(payload[1].value),
+                            pygui.FloatPtr(payload[2].value),
+                            pygui.FloatPtr(static.widgets_colour_saved_palette[n][3].value),
+                        )
+                    
+                    payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_4F)
+                    if payload is not None:
+                        static.widgets_colour_saved_palette[n] = (
+                            pygui.FloatPtr(payload[0].value),
+                            pygui.FloatPtr(payload[1].value),
+                            pygui.FloatPtr(payload[2].value),
+                            pygui.FloatPtr(payload[3].value)
+                        )
+                    pygui.end_drag_drop_target()
+                
+                pygui.pop_id()
+            pygui.end_group()
+            pygui.end_popup()
+
+        pygui.text("Color button only:")
+        pygui.checkbox("ImGuiColorEditFlags_NoBorder", static.widgets_colour_no_border)
+        pygui.color_button(
+            "MyColor##3c",
+            tuple(f_ptr.value for f_ptr in static.widgets_colour_color),
+            misc_flags | (pygui.IMGUI_COLOR_EDIT_FLAGS_NO_BORDER if static.widgets_colour_no_border else 0),
+            (80, 80))
+        
+        pygui.separator_text("Color picker")
+        pygui.checkbox("With Alpha", static.widgets_colour_alpha)
+        pygui.checkbox("With Alpha Bar", static.widgets_colour_alpha_bar)
+        pygui.checkbox("With Side Preview Bar", static.widgets_colour_side_preview)
+        if static.widgets_colour_side_preview:
+            pygui.same_line()
+            pygui.checkbox("With Ref Color", static.widgets_colour_ref_color)
+            if static.widgets_colour_ref_color:
+                pygui.same_line()
+                pygui.color_edit4("##RefColor", static.widgets_colour_ref_color_v, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | misc_flags)
+        pygui.combo("Display Mode", static.widgets_colour_display_mode, ["Auto/Current", "None", "RGB Only", "HSV Only", "Hex Only"])
+        pygui.same_line()
+        help_marker(
+            "ColorEdit defaults to displaying RGB inputs if you don't specify a display mode, "
+            "but the user can change it with a right-click on those inputs.\n\nColorPicker defaults to displaying RGB+HSV+Hex "
+            "if you don't specify a display mode.\n\nYou can change the defaults using SetColorEditOptions().")
+        pygui.same_line()
+        help_marker("When not specified explicitly (Auto/Current mode), user can right-click the picker to change mode.")
+        flags = misc_flags
+        if not static.widgets_colour_alpha: # This is by default if you call ColorPicker3() instead of ColorPicker4()
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA
+        if static.widgets_colour_alpha_bar:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_BAR
+        if not static.widgets_colour_side_preview:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW
+        if static.widgets_colour_picker_mode.value == 1:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR
+        if static.widgets_colour_picker_mode.value == 2:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL
+        if static.widgets_colour_display_mode.value == 1:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS # Disable all RGB/HSV/Hex displays
+        if static.widgets_colour_display_mode.value == 2:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_RGB # Override display mode
+        if static.widgets_colour_display_mode.value == 3:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV
+        if static.widgets_colour_display_mode.value == 4:
+            flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HEX
+
+        pygui.color_picker4("MyColor4##4", static.widgets_colour_color, flags, static.widgets_colour_ref_color_v if static.widgets_colour_ref_color else None)
+
+
+
         pygui.tree_pop()
     

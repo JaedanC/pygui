@@ -17,7 +17,7 @@ from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
 from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
-from libc.string cimport strdup, strncpy
+from libc.string cimport strncpy, strncmp
 # [End Imports]
 
 # [Enums]
@@ -648,8 +648,12 @@ IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 # Vec2 = namedtuple('Vec2', ['x', 'y'])
 # Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
-cdef bytes _bytes(str text):
-    return <bytes>(text.encode('utf-8') + b'\0')
+cdef char* _bytes(str text):
+    if text is None:
+        return NULL
+    cdef bytes encoded_text = text.encode()
+    cdef char* c_text = <char*>encoded_text
+    return c_text
 
 cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
@@ -776,21 +780,50 @@ def IM_COL32(int r, int g, int b, int a) -> int:
 
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
+IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 
 # [End Constant Functions]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(ImGuiPayload)
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+_drag_drop_payload = None
 def accept_drag_drop_payload(type_: str, flags: int=0):
     """
     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery
     is set you can peek into the payload before the mouse button
     is released.
     """
-    cdef ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type_), flags)
-    return ImGuiPayload.from_ptr(res)
+    cdef const ccimgui.ImGuiPayload* res = ccimgui.igAcceptDragDropPayload(_bytes(type_), flags)
+    if res == NULL:
+        return None
+    
+    cdef float* colour
+    if _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_3F:
+        colour = <float*>res.Data
+        return [
+            FloatPtr(colour[0]),
+            FloatPtr(colour[1]),
+            FloatPtr(colour[2]),
+        ]
+    elif _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_4F:
+        colour = <float*>res.Data
+        return [
+            FloatPtr(colour[0]),
+            FloatPtr(colour[1]),
+            FloatPtr(colour[2]),
+            FloatPtr(colour[3]),
+        ]
+    
+    if _drag_drop_payload is None:
+        return None
+    
+    payload_type, data = _drag_drop_payload
+    if payload_type == type_:
+        return data
+    return None
 # [End Function]
 
 # [Function]
@@ -895,9 +928,9 @@ def begin_drag_drop_source(flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def begin_drag_drop_target():
     """
     Call after submitting an item that may receive a payload. if
@@ -908,8 +941,8 @@ def begin_drag_drop_target():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def begin_group():
     """
@@ -969,9 +1002,9 @@ def begin_menu_bar():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
 def begin_popup(str_id: str, flags: int=0):
     """
     Return true if the popup is open, and you can start outputting
@@ -1288,6 +1321,21 @@ def color_convert_hs_vto_rgb(h: float, s: float, value: float, out_r: float, out
 # [End Function]
 
 # [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def color_convert_hsv_to_rgb(h: float, s: float, value: float, out_r: FloatPtr, out_g: FloatPtr, out_b: FloatPtr):
+    ccimgui.igColorConvertHSVtoRGB(
+        h,
+        s,
+        value,
+        &out_r.value,
+        &out_g.value,
+        &out_b.value
+    )
+# [End Function]
+
+# [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
@@ -1363,12 +1411,29 @@ def color_picker3(label: str, col0: float, col1: float, col2: float, flags: int=
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(Any)
-def color_picker4(label: str, col0: float, col1: float, col2: float, col3: float, flags: int=0, ref_col: float=None):
-    cdef float[4] io_float_col = [col0, col1, col2, col3]
-    cdef ccimgui.bool res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, ref_col)
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_picker4(label: str, color: List[FloatPtr], flags: int=0, ref_col: List[FloatPtr]=None):
+    cdef float[4] io_float_col = [0.0, 0.0, 0.0, 0.0]
+    for i in range(4):
+        io_float_col[i] = color[i].value
+
+    cdef float[4] ref_col_c
+    
+    if ref_col is not None:
+        for i in range(4):
+            ref_col_c[i] = ref_col[i].value
+
+    cdef ccimgui.bool res
+    if ref_col is None:
+        res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, NULL)
+    else:
+        res = ccimgui.igColorPicker4(_bytes(label), <float*>&io_float_col, flags, &ref_col_c[0])
+
+    for i in range(4):
+        color[i].value = io_float_col[i]
+    
     return res
 # [End Function]
 
@@ -1851,7 +1916,6 @@ def end_disabled():
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
-_drag_drop_payload = None
 def end_drag_drop_source():
     """
     Only call enddragdropsource() if begindragdropsource() returns
@@ -1862,8 +1926,8 @@ def end_drag_drop_source():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def end_drag_drop_target():
     """
@@ -1889,8 +1953,8 @@ def end_frame():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def end_group():
     """
@@ -1946,8 +2010,8 @@ def end_menu_bar():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def end_popup():
     """
@@ -4049,6 +4113,17 @@ def next_column():
 # [End Function]
 
 # [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def open_popup(str_id: str, popup_flags: int=0):
+    """
+    Call to mark popup as open (don't call every frame!).
+    """
+    ccimgui.igOpenPopup_Str(_bytes(str_id), popup_flags)
+# [End Function]
+
+# [Function]
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
@@ -4295,7 +4370,8 @@ def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=No
     ccimgui.igProgressBar(
         fraction,
         _cast_tuple_ImVec2(size_arg),
-        _bytes(overlay if overlay is not None else ""))
+        _bytes(overlay)
+    )
 # [End Function]
 
 # [Function]
@@ -13037,13 +13113,12 @@ cdef class ImGuiStyle:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(tuple)
     @property
     def item_spacing(self):
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemSpacing
-        return ImVec2.from_ptr(res)
+        return _cast_ImVec2_tuple(dereference(self._ptr).ItemSpacing)
     @item_spacing.setter
     def item_spacing(self, value: tuple):
         dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)

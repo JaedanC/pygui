@@ -829,7 +829,7 @@ class HeaderSpec:
             "from libc.float cimport FLT_MIN as LIBC_FLT_MIN\n"
             "from libc.float cimport FLT_MAX as LIBC_FLT_MAX\n"
             "from libc.stdint cimport uintptr_t\n"
-            "from libc.string cimport strdup, strncpy\n"
+            "from libc.string cimport strncpy, strncmp\n"
             "# [End Imports]\n"
             "\n"
             "\n"
@@ -845,8 +845,12 @@ class HeaderSpec:
             "# Vec2 = namedtuple('Vec2', ['x', 'y'])",
             "# Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])",
             "",
-            "cdef bytes _bytes(str text):",
-            "    return <bytes>(text.encode('utf-8') + b'\\0')",
+            "cdef char* _bytes(str text):",
+            "    if text is None:",
+            "        return NULL",
+            "    cdef bytes encoded_text = text.encode()",
+            "    cdef char* c_text = <char*>encoded_text",
+            "    return c_text",
             "",
             "cdef str _from_bytes(bytes text):",
             "    return <str>(text.decode('utf-8', errors='ignore'))",
@@ -973,6 +977,8 @@ class HeaderSpec:
             "",
             "FLT_MIN = LIBC_FLT_MIN",
             "FLT_MAX = LIBC_FLT_MAX",
+            "IMGUI_PAYLOAD_TYPE_COLOR_3F = \"_COL3F\"",
+            "IMGUI_PAYLOAD_TYPE_COLOR_4F = \"_COL4F\"",
             "",
             "# [End Constant Functions]",
             "",

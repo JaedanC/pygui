@@ -17,7 +17,7 @@ from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
 from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
-from libc.string cimport strdup, strncpy
+from libc.string cimport strncpy, strncmp
 # [End Imports]
 
 # [Enums]
@@ -648,8 +648,12 @@ IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 # Vec2 = namedtuple('Vec2', ['x', 'y'])
 # Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
-cdef bytes _bytes(str text):
-    return <bytes>(text.encode('utf-8') + b'\0')
+cdef char* _bytes(str text):
+    if text is None:
+        return NULL
+    cdef bytes encoded_text = text.encode()
+    cdef char* c_text = <char*>encoded_text
+    return c_text
 
 cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
@@ -776,6 +780,8 @@ def IM_COL32(int r, int g, int b, int a) -> int:
 
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
+IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 
 # [End Constant Functions]
 

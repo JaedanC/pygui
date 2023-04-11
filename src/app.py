@@ -48,7 +48,7 @@ def main():
     # Vsync:
     # 1: On
     # 0: Off
-    glfw.swap_interval(0)
+    glfw.swap_interval(1)
 
     # Setup imgui
     pygui.create_context()
