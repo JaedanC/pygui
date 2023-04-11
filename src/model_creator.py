@@ -826,7 +826,8 @@ class HeaderSpec:
             "from cpython.version cimport PY_MAJOR_VERSION\n"
             "from cython.view cimport array as cvarray\n"
             "from libcpp cimport bool\n"
-            "from libc.float cimport FLT_MAX, FLT_MIN\n"
+            "from libc.float cimport FLT_MIN as LIBC_FLT_MIN\n"
+            "from libc.float cimport FLT_MAX as LIBC_FLT_MAX\n"
             "from libc.stdint cimport uintptr_t\n"
             "from libc.string cimport strdup, strncpy\n"
             "# [End Imports]\n"
@@ -841,8 +842,8 @@ class HeaderSpec:
 
         output.write("\n".join([
             "# [Constant Functions]",
-            "Vec2 = namedtuple('Vec2', ['x', 'y'])",
-            "Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])",
+            "# Vec2 = namedtuple('Vec2', ['x', 'y'])",
+            "# Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])",
             "",
             "cdef bytes _bytes(str text):",
             "    return <bytes>(text.encode('utf-8') + b'\\0')",
@@ -851,7 +852,8 @@ class HeaderSpec:
             "    return <str>(text.decode('utf-8', errors='ignore'))",
             "",
             f"cdef _cast_ImVec2_tuple({self.library_name}.ImVec2 vec):",
-            "    return Vec2(vec.x, vec.y)",
+            "    # return Vec2(vec.x, vec.y)",
+            "    return (vec.x, vec.y)",
             "",
             f"cdef {self.library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:",
             f"    cdef {self.library_name}.ImVec2 vec",
@@ -861,7 +863,8 @@ class HeaderSpec:
             "    return vec",
             "",
             f"cdef _cast_ImVec4_tuple({self.library_name}.ImVec4 vec):",
-            "    return Vec4(vec.x, vec.y, vec.z, vec.w)",
+            "    # return Vec4(vec.x, vec.y, vec.z, vec.w)",
+            "    return (vec.x, vec.y, vec.z, vec.w)",
             "",
             f"cdef {self.library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):",
             f"    cdef {self.library_name}.ImVec4 vec",
@@ -967,6 +970,9 @@ class HeaderSpec:
             "    output |= g << 8",
             "    output |= r << 0",
             "    return output",
+            "",
+            "FLT_MIN = LIBC_FLT_MIN",
+            "FLT_MAX = LIBC_FLT_MAX",
             "",
             "# [End Constant Functions]",
             "",

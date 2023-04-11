@@ -14,7 +14,8 @@ cimport ccimgui
 from cpython.version cimport PY_MAJOR_VERSION
 from cython.view cimport array as cvarray
 from libcpp cimport bool
-from libc.float cimport FLT_MAX, FLT_MIN
+from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
 from libc.string cimport strdup, strncpy
 # [End Imports]
@@ -644,8 +645,8 @@ IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 # [End Enums]
 
 # [Constant Functions]
-Vec2 = namedtuple('Vec2', ['x', 'y'])
-Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
+# Vec2 = namedtuple('Vec2', ['x', 'y'])
+# Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
 cdef bytes _bytes(str text):
     return <bytes>(text.encode('utf-8') + b'\0')
@@ -654,7 +655,8 @@ cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
-    return Vec2(vec.x, vec.y)
+    # return Vec2(vec.x, vec.y)
+    return (vec.x, vec.y)
 
 cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     cdef ccimgui.ImVec2 vec
@@ -664,7 +666,8 @@ cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     return vec
 
 cdef _cast_ImVec4_tuple(ccimgui.ImVec4 vec):
-    return Vec4(vec.x, vec.y, vec.z, vec.w)
+    # return Vec4(vec.x, vec.y, vec.z, vec.w)
+    return (vec.x, vec.y, vec.z, vec.w)
 
 cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     cdef ccimgui.ImVec4 vec
@@ -736,6 +739,44 @@ cdef class StrPtr:
     def value(self, value: str):
         strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
         self.buffer[min((self.buffer_size - 1), len(value))] = 0
+
+cdef class Vec2Ptr:
+    cdef public float x
+    cdef public float y
+
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def vec(self):
+        return (self.x, self.y)
+
+cdef class Vec4Ptr:
+    cdef public float x
+    cdef public float y
+    cdef public float z
+    cdef public float w
+
+    def __init__(self, x: float, y: float, z: float, w: float):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+
+    def vec(self):
+        return (self.x, self.y, self.z, self.z)
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned int output = 0
+    output |= a << 24
+    output |= b << 16
+    output |= g << 8
+    output |= r << 0
+    return output
+
+FLT_MIN = LIBC_FLT_MIN
+FLT_MAX = LIBC_FLT_MAX
+
 # [End Constant Functions]
 
 # [Function]
@@ -824,12 +865,12 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def begin_combo(label: str, preview_value: str, flags: int=0):
-#     cdef ccimgui.bool res = ccimgui.igBeginCombo(_bytes(label), _bytes(preview_value), flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def begin_combo(label: str, preview_value: str, flags: int=0):
+    cdef ccimgui.bool res = ccimgui.igBeginCombo(_bytes(label), _bytes(preview_value), flags)
+    return res
 # [End Function]
 
 # [Function]
@@ -841,16 +882,16 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def begin_drag_drop_source(flags: int=0):
-#     """
-#     Call after submitting an item which may be dragged. when this
-#     return true, you can call setdragdroppayload() + enddragdropsource()
-#     """
-#     cdef ccimgui.bool res = ccimgui.igBeginDragDropSource(flags)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def begin_drag_drop_source(flags: int=0):
+    """
+    Call after submitting an item which may be dragged. when this
+    return true, you can call setdragdroppayload() + enddragdropsource()
+    """
+    cdef ccimgui.bool res = ccimgui.igBeginDragDropSource(flags)
+    return res
 # [End Function]
 
 # [Function]
@@ -878,15 +919,15 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def begin_list_box(label: str, size: tuple=(0, 0)):
-#     """
-#     Open a framed scrolling region
-#     """
-#     cdef ccimgui.bool res = ccimgui.igBeginListBox(_bytes(label), _cast_tuple_ImVec2(size))
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def begin_list_box(label: str, size: tuple=(0, 0)):
+    """
+    Open a framed scrolling region
+    """
+    cdef ccimgui.bool res = ccimgui.igBeginListBox(_bytes(label), _cast_tuple_ImVec2(size))
+    return res
 # [End Function]
 
 # [Function]
@@ -1039,27 +1080,27 @@ def begin_tooltip():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def bullet():
-#     """
-#     Draw a small circle + keep the cursor on the same line. advance
-#     cursor x position by gettreenodetolabelspacing(), same distance
-#     that treenode() uses
-#     """
-#     ccimgui.igBullet()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def bullet():
+    """
+    Draw a small circle + keep the cursor on the same line. advance
+    cursor x position by gettreenodetolabelspacing(), same distance
+    that treenode() uses
+    """
+    ccimgui.igBullet()
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def bullet_text(fmt: str):
-#     """
-#     Shortcut for bullet()+text()
-#     """
-#     ccimgui.igBulletText(_bytes(fmt))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def bullet_text(fmt: str):
+    """
+    Shortcut for bullet()+text()
+    """
+    ccimgui.igBulletText(_bytes(fmt))
 # [End Function]
 
 # [Function]
@@ -1111,6 +1152,19 @@ def checkbox(label: str, value: BoolPtr):
     cdef bool value_ptr = value.ptr
     cdef ccimgui.bool res = ccimgui.igCheckbox(_bytes(label), &value_ptr)
     value.ptr = value_ptr
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def checkbox_flags(label: str, flags: IntPtr, flags_value: int):
+    cdef ccimgui.bool res = ccimgui.igCheckboxFlags_IntPtr(
+        _bytes(label),
+        &flags.value,
+        flags_value
+    )
     return res
 # [End Function]
 
@@ -1193,16 +1247,20 @@ def collapsing_header(label: str, p_visible: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
-#     """
-#     Display a color square/button, hover for details, return true
-#     when pressed.
-#     """
-#     cdef ccimgui.bool res = ccimgui.igColorButton(_bytes(desc_id), _cast_tuple_ImVec4(col), flags, _cast_tuple_ImVec2(size))
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
+    """
+    Display a color square/button, hover for details, return true
+    when pressed.
+    """
+    cdef ccimgui.bool res = ccimgui.igColorButton(
+        _bytes(desc_id),
+        _cast_tuple_ImVec4(col),
+        flags,
+        _cast_tuple_ImVec2(size))
+    return res
 # [End Function]
 
 # [Function]
@@ -1323,38 +1381,38 @@ def color_edit4(label: str, colours: List[FloatPtr], flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(True)
-# # ?active(False)
-# # ?returns(bool)
-# def combo(label: str, current_item: IntPtr, items: List[str], popup_max_height_in_items: int=-1):
-#     """
-#     Pass in a list of strings. This will do the rest. Converts the list to a
-#     null terminated contiguous array of bytes.
-#     
-#     Each string is followed by \0.
-#     The final string is followed by \0\0
-#     """
-#     cdef char* c_strings = <char*>ccimgui.igMemAlloc(sum(len(s) + 1 for s in items) + 1)
-#     
-#     # Store items in array
-#     cdef int counter = 0
-#     for p_str in items:
-#         strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
-#         # Null terminated string
-#         c_strings[counter + len(p_str)] = 0
-#         counter += len(p_str) + 1
-#     
-#     # Null terminated list
-#     c_strings[counter] = 0
-# 
-#     cdef ccimgui.bool res = ccimgui.igCombo_Str(
-#         _bytes(label),
-#         &current_item.value,
-#         c_strings,
-#         popup_max_height_in_items
-#     )
-#     ccimgui.igMemFree(c_strings)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def combo(label: str, current_item: IntPtr, items: List[str], popup_max_height_in_items: int=-1):
+    """
+    Pass in a list of strings. This will do the rest. Converts the list to a
+    null terminated contiguous array of bytes.
+    
+    Each string is followed by \0.
+    The final string is followed by \0\0
+    """
+    cdef char* c_strings = <char*>ccimgui.igMemAlloc(sum(len(s) + 1 for s in items) + 1)
+    
+    # Store items in array
+    cdef int counter = 0
+    for p_str in items:
+        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        # Null terminated string
+        c_strings[counter + len(p_str)] = 0
+        counter += len(p_str) + 1
+    
+    # Null terminated list
+    c_strings[counter] = 0
+
+    cdef ccimgui.bool res = ccimgui.igCombo_Str(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        popup_max_height_in_items
+    )
+    ccimgui.igMemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -1371,6 +1429,31 @@ def color_edit4(label: str, colours: List[FloatPtr], flags: int=0):
 #         popup_max_height_in_items
 #     )
 #     return res
+# [End Function]
+
+# [Function]
+# # ?use_template(True)
+# # ?active(False)
+# # ?returns(bool)
+# combo_func_python = None
+# combo_func_python_data = None
+# def combo_func_deprecated(label: str, current_item: int, items_getter: Callable[[int, Any], str], data: Any, items_count: int, popup_max_height_in_items: int=-1):
+#     combo_func_python = items_getter
+#     combo_func_python_data = data
+#     cdef ccimgui.bool res = ccimgui.igCombo_FnBoolPtr(
+#         _bytes(label),
+#         current_item,
+#         combo_func_ptr,
+#         NULL,
+#         items_count,
+#         popup_max_height_in_items
+#     )
+#     return res
+# 
+# cdef bool combo_func_ptr(void* _, int idx, const char** out_text):
+#     string = _bytes(combo_func_python(idx, combo_func_python_data))
+#     out_text[0] = _bytes(string)
+#     return True
 # [End Function]
 
 # [Function]
@@ -1746,14 +1829,14 @@ def end():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def end_combo():
-#     """
-#     Only call endcombo() if begincombo() returns true!
-#     """
-#     ccimgui.igEndCombo()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def end_combo():
+    """
+    Only call endcombo() if begincombo() returns true!
+    """
+    ccimgui.igEndCombo()
 # [End Function]
 
 # [Function]
@@ -1765,15 +1848,17 @@ def end():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def end_drag_drop_source():
-#     """
-#     Only call enddragdropsource() if begindragdropsource() returns
-#     true!
-#     """
-#     ccimgui.igEndDragDropSource()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+_drag_drop_payload = None
+def end_drag_drop_source():
+    """
+    Only call enddragdropsource() if begindragdropsource() returns
+    true!
+    """
+    ccimgui.igEndDragDropSource()
+    _drag_drop_payload = None
 # [End Function]
 
 # [Function]
@@ -1817,14 +1902,14 @@ def end():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def end_list_box():
-#     """
-#     Only call endlistbox() if beginlistbox() returned true!
-#     """
-#     ccimgui.igEndListBox()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def end_list_box():
+    """
+    Only call endlistbox() if beginlistbox() returned true!
+    """
+    ccimgui.igEndListBox()
 # [End Function]
 
 # [Function]
@@ -2097,14 +2182,16 @@ def get_current_context():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def get_cursor_pos(pOut: ImVec2):
-#     """
-#     Cursor position in window coordinates (relative to window position)
-#     """
-#     ccimgui.igGetCursorPos(pOut._ptr)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_cursor_pos():
+    """
+    Cursor position in window coordinates (relative to window position)
+    """
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetCursorPos(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2135,17 +2222,20 @@ def get_current_context():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def get_cursor_screen_pos(pOut: ImVec2):
-#     """
-#     Cursor position in absolute coordinates (useful to work with
-#     imdrawlist api). generally top-left == getmainviewport()->pos
-#     == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size
-#     == io.displaysize in single-viewport mode.
-#     """
-#     ccimgui.igGetCursorScreenPos(pOut._ptr)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_cursor_screen_pos():
+    """
+    Cursor position in absolute coordinates (useful to work with
+    imdrawlist api). generally top-left == getmainviewport()->pos
+    == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size
+    == io.displaysize in single-viewport mode.
+    """
+    # Not sure why cimgui would change the API :(
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetCursorScreenPos(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2160,17 +2250,23 @@ def get_current_context():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(ImGuiPayload)
-# def get_drag_drop_payload():
-#     """
-#     Peek directly into the current payload from anywhere. may return
-#     null. use imguipayload::isdatatype() to test for the payload
-#     type.
-#     """
-#     cdef ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
-#     return ImGuiPayload.from_ptr(res)
+# ?use_template(True)
+# ?active(True)
+# ?returns(Tuple[str, Any])
+def get_drag_drop_payload():
+    """
+    Peek directly into the current payload from anywhere. may return
+    null. use imguipayload::isdatatype() to test for the payload
+    type.
+    """
+    if _drag_drop_payload is None:
+        return None
+    
+    cdef const ccimgui.ImGuiPayload* res = ccimgui.igGetDragDropPayload()
+    if res is NULL:
+        raise ValueError("We shouldn't get here")
+    
+    return _drag_drop_payload
 # [End Function]
 
 # [Function]
@@ -2357,36 +2453,42 @@ def get_io():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def get_item_rect_max(pOut: ImVec2):
-#     """
-#     Get lower-right bounding rectangle of the last item (screen space)
-#     """
-#     ccimgui.igGetItemRectMax(pOut._ptr)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_max():
+    """
+    Get lower-right bounding rectangle of the last item (screen space)
+    """
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectMax(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def get_item_rect_min(pOut: ImVec2):
-#     """
-#     Get upper-left bounding rectangle of the last item (screen space)
-#     """
-#     ccimgui.igGetItemRectMin(pOut._ptr)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_min():
+    """
+    Get upper-left bounding rectangle of the last item (screen space)
+    """
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectMin(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def get_item_rect_size(pOut: ImVec2):
-#     """
-#     Get size of last item
-#     """
-#     ccimgui.igGetItemRectSize(pOut._ptr)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def get_item_rect_size():
+    """
+    Get size of last item
+    """
+    cdef ccimgui.ImVec2 vec2
+    ccimgui.igGetItemRectSize(&vec2)
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -2606,68 +2708,68 @@ def get_style():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(ImVec4)
-# def get_style_color_vec4(idx: int):
-#     """
-#     Retrieve style color as stored in imguistyle structure. use to
-#     feed back into pushstylecolor(), otherwise use getcoloru32()
-#     to get style color with style alpha baked in.
-#     """
-#     cdef ccimgui.ImVec4* res = ccimgui.igGetStyleColorVec4(idx)
-#     return ImVec4.from_ptr(res)
+# ?use_template(True)
+# ?active(True)
+# ?returns(ImVec4)
+def get_style_color_vec4(idx: int):
+    """
+    Retrieve style color as stored in imguistyle structure. use to
+    feed back into pushstylecolor(), otherwise use getcoloru32()
+    to get style color with style alpha baked in.
+    """
+    cdef ccimgui.ImVec4 res = dereference(ccimgui.igGetStyleColorVec4(idx))
+    return _cast_ImVec4_tuple(res)
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(float)
-# def get_text_line_height():
-#     """
-#     ~ fontsize
-#     """
-#     cdef float res = ccimgui.igGetTextLineHeight()
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(float)
+def get_text_line_height():
+    """
+    ~ fontsize
+    """
+    cdef float res = ccimgui.igGetTextLineHeight()
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(float)
-# def get_text_line_height_with_spacing():
-#     """
-#     ~ fontsize + style.itemspacing.y (distance in pixels between
-#     2 consecutive lines of text)
-#     """
-#     cdef float res = ccimgui.igGetTextLineHeightWithSpacing()
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(float)
+def get_text_line_height_with_spacing():
+    """
+    ~ fontsize + style.itemspacing.y (distance in pixels between
+    2 consecutive lines of text)
+    """
+    cdef float res = ccimgui.igGetTextLineHeightWithSpacing()
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(float)
-# def get_time():
-#     """
-#     Get global imgui time. incremented by io.deltatime every frame.
-#     """
-#     cdef double res = ccimgui.igGetTime()
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(float)
+def get_time():
+    """
+    Get global imgui time. incremented by io.deltatime every frame.
+    """
+    cdef double res = ccimgui.igGetTime()
+    return res
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(float)
-# def get_tree_node_to_label_spacing():
-#     """
-#     Horizontal distance preceding label when using treenode*() or
-#     bullet() == (g.fontsize + style.framepadding.x*2) for a regular
-#     unframed treenode
-#     """
-#     cdef float res = ccimgui.igGetTreeNodeToLabelSpacing()
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(float)
+def get_tree_node_to_label_spacing():
+    """
+    Horizontal distance preceding label when using treenode*() or
+    bullet() == (g.fontsize + style.framepadding.x*2) for a regular
+    unframed treenode
+    """
+    cdef float res = ccimgui.igGetTreeNodeToLabelSpacing()
+    return res
 # [End Function]
 
 # [Function]
@@ -2730,16 +2832,16 @@ def get_version():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(ImDrawList)
-# def get_window_draw_list():
-#     """
-#     Get draw list associated to the current window, to append your
-#     own drawing primitives
-#     """
-#     cdef ccimgui.ImDrawList* res = ccimgui.igGetWindowDrawList()
-#     return ImDrawList.from_ptr(res)
+# ?use_template(True)
+# ?active(True)
+# ?returns(ImDrawList)
+def get_window_draw_list():
+    """
+    Get draw list associated to the current window, to append your
+    own drawing primitives
+    """
+    cdef ccimgui.ImDrawList* res = ccimgui.igGetWindowDrawList()
+    return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -2802,35 +2904,35 @@ def get_version():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def image(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
-#     ccimgui.igImage(
-#         user_texture_id,
-#         _cast_tuple_ImVec2(size),
-#         _cast_tuple_ImVec2(uv0),
-#         _cast_tuple_ImVec2(uv1),
-#         _cast_tuple_ImVec4(tint_col),
-#         _cast_tuple_ImVec4(border_col)
-#     )
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
+    ccimgui.igImage(
+        <void*><uintptr_t>user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(tint_col),
+        _cast_tuple_ImVec4(border_col)
+    )
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def image_button(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
-#     cdef ccimgui.bool res = ccimgui.igImageButton(
-#         _bytes(str_id),
-#         user_texture_id,
-#         _cast_tuple_ImVec2(size),
-#         _cast_tuple_ImVec2(uv0),
-#         _cast_tuple_ImVec2(uv1),
-#         _cast_tuple_ImVec4(bg_col),
-#         _cast_tuple_ImVec4(tint_col)
-#     )
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+    cdef ccimgui.bool res = ccimgui.igImageButton(
+        _bytes(str_id),
+        <void*><uintptr_t>user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(bg_col),
+        _cast_tuple_ImVec4(tint_col)
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -3037,39 +3139,37 @@ def impl_open_gl3_shutdown():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def indent(indent_w: float=0.0):
-#     """
-#     Move content position toward the right, by indent_w, or style.indentspacing
-#     if indent_w <= 0
-#     """
-#     ccimgui.igIndent(indent_w)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def indent(indent_w: float=0.0):
+    """
+    Move content position toward the right, by indent_w, or style.indentspacing
+    if indent_w <= 0
+    """
+    ccimgui.igIndent(indent_w)
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_double(label: str, value: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
-    cdef double value_ptr = value.value
     cdef ccimgui.bool res = ccimgui.igInputDouble(
         _bytes(label),
-        &value_ptr,
+        &value.value,
         step,
         step_fast,
         _bytes(format_),
         flags
     )
-    value.value = value_ptr
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef ccimgui.bool res = ccimgui.igInputFloat(
         _bytes(label),
@@ -3085,7 +3185,7 @@ def input_float(label: str, value: FloatPtr, step: float=0.0, step_fast: float=0
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 2)
     
@@ -3106,28 +3206,28 @@ def input_float2(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
-cdef float* c_floats_3 = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
+# ?returns(bool)
 def input_float3(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 3)
     
     # Update array
     for i in range(3):
-        c_floats_3[i] = float_ptrs[i].value
+        c_floats[i] = float_ptrs[i].value
 
-    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats_3, _bytes(format_), flags)
+    cdef ccimgui.bool res = ccimgui.igInputFloat3(_bytes(label), c_floats, _bytes(format_), flags)
 
     # Update FloatPtrs in List
     for i in range(3):
-        float_ptrs[i].value = float(c_floats_3[i])
+        float_ptrs[i].value = float(c_floats[i])
 
-    # ccimgui.igMemFree(c_floats)
+    ccimgui.igMemFree(c_floats)
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float* c_floats = <float*>ccimgui.igMemAlloc(sizeof(float) * 4)
     
@@ -3148,7 +3248,7 @@ def input_float4(label: str, float_ptrs: List[FloatPtr], format_: str="%.3f", fl
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
     cdef ccimgui.bool res = ccimgui.igInputInt(
         _bytes(label),
@@ -3228,7 +3328,7 @@ def input_int(label: str, value: IntPtr, step: int=1, step_fast: int=100, flags:
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def input_text(label: str, str_ptr: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
     # TODO: Look into using the callback data.
     cdef ccimgui.bool res = ccimgui.igInputText(
@@ -3369,17 +3469,17 @@ def input_text_with_hint(label: str, hint: str, str_ptr: StrPtr, flags: int=0, c
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def is_item_clicked(mouse_button: int=0):
-#     """
-#     Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button)
-#     && isitemhovered()important. (**) this is not equivalent to
-#     the behavior of e.g. button(). read comments in function definition.
-#     """
-#     cdef ccimgui.bool res = ccimgui.igIsItemClicked(mouse_button)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def is_item_clicked(mouse_button: int=0):
+    """
+    Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button)
+    && isitemhovered()important. (**) this is not equivalent to
+    the behavior of e.g. button(). read comments in function definition.
+    """
+    cdef ccimgui.bool res = ccimgui.igIsItemClicked(mouse_button)
+    return res
 # [End Function]
 
 # [Function]
@@ -3452,15 +3552,15 @@ def is_item_hovered(flags: int=0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def is_item_toggled_open():
-#     """
-#     Was the last item open state toggled? set by treenode().
-#     """
-#     cdef ccimgui.bool res = ccimgui.igIsItemToggledOpen()
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def is_item_toggled_open():
+    """
+    Was the last item open state toggled? set by treenode().
+    """
+    cdef ccimgui.bool res = ccimgui.igIsItemToggledOpen()
+    return res
 # [End Function]
 
 # [Function]
@@ -3727,10 +3827,12 @@ def list_box(label: str, current_item: IntPtr, items: List[str], height_in_items
     cdef void* void_ptr
     cdef char** c_strings = <char**>ccimgui.igMemAlloc(sizeof(void_ptr) * len(items))
 
-    for item, i in enumerate(items):
-        c_strings[i] == ccimgui.igMemAlloc(sizeof(char) * len(item) + 1)
-        strncpy(c_strings[i], _bytes(item), len(item))
-        c_strings[i][len(item)] = 0
+    # Creates a secondary array for each element
+    cdef char* array
+    for i, item in enumerate(items):
+        array = <char*>ccimgui.igMemAlloc(sizeof(char) * len(item) + 1)
+        strncpy(array, _bytes(item), len(item) + 1)
+        c_strings[i] = array
     
     cdef ccimgui.bool res = ccimgui.igListBox_Str_arr(
         _bytes(label),
@@ -3923,15 +4025,15 @@ def new_frame():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def new_line():
-#     """
-#     Undo a sameline() or force a new line when in a horizontal-layout
-#     context.
-#     """
-#     ccimgui.igNewLine()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def new_line():
+    """
+    Undo a sameline() or force a new line when in a horizontal-layout
+    context.
+    """
+    ccimgui.igNewLine()
 # [End Function]
 
 # [Function]
@@ -3982,6 +4084,33 @@ def new_frame():
 # [End Function]
 
 # [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def plot_histogram(label: str, values: List[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+    cdef float* array = <float*>ccimgui.igMemAlloc(sizeof(float) * len(values))
+    if array is NULL:
+        raise MemoryError()
+    
+    for i in range(len(values)):
+        array[i] = values[i]
+    
+    ccimgui.igPlotHistogram_FloatPtr(
+        _bytes(label),
+        array,
+        len(values),
+        values_offset,
+        _bytes(overlay_text if overlay_text is not None else ""),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size),
+        stride
+    )
+
+    ccimgui.igMemFree(array)
+# [End Function]
+
+# [Function]
 # # ?use_template(False)
 # # ?active(False)
 # # ?returns(None)
@@ -4021,7 +4150,7 @@ def new_frame():
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def plot_lines(label: str, values: List[float], values_offset: int=0, overlay_text: str="", scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+def plot_lines(label: str, values: List[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     """
     plot_lines_float_ptr
     """
@@ -4037,7 +4166,7 @@ def plot_lines(label: str, values: List[float], values_offset: int=0, overlay_te
         array,
         len(values),
         values_offset,
-        _bytes(overlay_text),
+        _bytes(overlay_text if overlay_text is not None else ""),
         scale_min,
         scale_max,
         _cast_tuple_ImVec2(graph_size),
@@ -4135,11 +4264,11 @@ def pop_style_color(count: int=1):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def pop_style_var(count: int=1):
-#     ccimgui.igPopStyleVar(count)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def pop_style_var(count: int=1):
+    ccimgui.igPopStyleVar(count)
 # [End Function]
 
 # [Function]
@@ -4159,11 +4288,14 @@ def pop_text_wrap_pos():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
-#     ccimgui.igProgressBar(fraction, _cast_tuple_ImVec2(size_arg), _bytes(overlay))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
+    ccimgui.igProgressBar(
+        fraction,
+        _cast_tuple_ImVec2(size_arg),
+        _bytes(overlay if overlay is not None else ""))
 # [End Function]
 
 # [Function]
@@ -4277,27 +4409,27 @@ def push_style_color_vec4(idx: int, col):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def push_style_var_float(idx: int, val: float):
-#     """
-#     Modify a style float variable. always use this if you modify
-#     the style after newframe().
-#     """
-#     ccimgui.igPushStyleVar_Float(idx, val)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def push_style_var_float(idx: int, val: float):
+    """
+    Modify a style float variable. always use this if you modify
+    the style after newframe().
+    """
+    ccimgui.igPushStyleVar_Float(idx, val)
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def push_style_var_vec2(idx: int, val: tuple):
-#     """
-#     Modify a style imvec2 variable. always use this if you modify
-#     the style after newframe().
-#     """
-#     ccimgui.igPushStyleVar_Vec2(idx, _cast_tuple_ImVec2(val))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def push_style_var_vec2(idx: int, val: tuple):
+    """
+    Modify a style imvec2 variable. always use this if you modify
+    the style after newframe().
+    """
+    ccimgui.igPushStyleVar_Vec2(idx, _cast_tuple_ImVec2(val))
 # [End Function]
 
 # [Function]
@@ -4446,6 +4578,21 @@ def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # [End Function]
 
 # [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def selectable(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
+    """
+    Bool selected carry the selection state (read-only). selectable()
+    is clicked is returns true so you can modify your selection
+    state. size.x==0.0: use remaining width, size.x>0.0: specify
+    width. size.y==0.0: use label height, size.y>0.0: specify height
+    """
+    cdef ccimgui.bool res = ccimgui.igSelectable_Bool(_bytes(label), selected, flags, _cast_tuple_ImVec2(size))
+    return res
+# [End Function]
+
+# [Function]
 # # ?use_template(False)
 # # ?active(False)
 # # ?returns(Any)
@@ -4474,15 +4621,15 @@ def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def separator():
-#     """
-#     Separator, generally horizontal. inside a menu bar or in horizontal
-#     layout mode, this becomes a vertical separator.
-#     """
-#     ccimgui.igSeparator()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def separator():
+    """
+    Separator, generally horizontal. inside a menu bar or in horizontal
+    layout mode, this becomes a vertical separator.
+    """
+    ccimgui.igSeparator()
 # [End Function]
 
 # [Function]
@@ -4594,18 +4741,27 @@ def separator_text(label: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(Any)
-# def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
-#     """
-#     Type is a user defined string of maximum 32 characters. strings
-#     starting with '_' are reserved for dear imgui internal types.
-#     data is copied and held by imgui. return true when payload has
-#     been accepted.
-#     """
-#     cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(_bytes(type_), data, sz, cond)
-#     return res
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
+    """
+    Type is a user defined string of maximum 32 characters. strings
+    starting with '_' are reserved for dear imgui internal types.
+    data is copied and held by imgui. return true when payload has
+    been accepted.
+
+    This does not use ImGui so that you can send arbitrary python objects.
+    """
+    cdef ccimgui.bool res = ccimgui.igSetDragDropPayload(
+        _bytes(type_),
+        NULL,
+        0,
+        cond
+    )
+    if res:
+        _drag_drop_payload = (type_, data)
+    return res
 # [End Function]
 
 # [Function]
@@ -4622,14 +4778,14 @@ def separator_text(label: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def set_item_default_focus():
-#     """
-#     Make last item the default focused item of a window.
-#     """
-#     ccimgui.igSetItemDefaultFocus()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def set_item_default_focus():
+    """
+    Make last item the default focused item of a window.
+    """
+    ccimgui.igSetItemDefaultFocus()
 # [End Function]
 
 # [Function]
@@ -4687,27 +4843,27 @@ def separator_text(label: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def set_next_item_open(is_open: Any, cond: int=0):
-#     """
-#     Set next treenode/collapsingheader open state.
-#     """
-#     ccimgui.igSetNextItemOpen(is_open, cond)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def set_next_item_open(is_open: bool, cond: int=0):
+    """
+    Set next treenode/collapsingheader open state.
+    """
+    ccimgui.igSetNextItemOpen(is_open, cond)
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def set_next_item_width(item_width: float):
-#     """
-#     Set width of the _next_ common large item+label widget. >0.0f:
-#     width in pixels, <0.0f align xx pixels to the right of window
-#     (so -flt_min always align width to the right side)
-#     """
-#     ccimgui.igSetNextItemWidth(item_width)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def set_next_item_width(item_width: float):
+    """
+    Set width of the _next_ common large item+label widget. >0.0f:
+    width in pixels, <0.0f align xx pixels to the right of window
+    (so -flt_min always align width to the right side)
+    """
+    ccimgui.igSetNextItemWidth(item_width)
 # [End Function]
 
 # [Function]
@@ -5060,15 +5216,15 @@ def set_tooltip(fmt: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def show_about_window(p_open: Any=None):
-#     """
-#     Create about window. display dear imgui version, credits and
-#     build/system information.
-#     """
-#     ccimgui.igShowAboutWindow(p_open)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def show_about_window(p_open: Any=None):
+    """
+    Create about window. display dear imgui version, credits and
+    build/system information.
+    """
+    ccimgui.igShowAboutWindow(NULL)
 # [End Function]
 
 # [Function]
@@ -5378,14 +5534,14 @@ def small_button(label: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def spacing():
-#     """
-#     Add vertical spacing.
-#     """
-#     ccimgui.igSpacing()
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def spacing():
+    """
+    Add vertical spacing.
+    """
+    ccimgui.igSpacing()
 # [End Function]
 
 # [Function]
@@ -5627,15 +5783,15 @@ def text(fmt: str):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def text_colored(col: tuple, fmt: str):
-#     """
-#     Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...);
-#     popstylecolor();
-#     """
-#     ccimgui.igTextColored(_cast_tuple_ImVec4(col), _bytes(fmt))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def text_colored(col: tuple, fmt: str):
+    """
+    Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...);
+    popstylecolor();
+    """
+    ccimgui.igTextColored(_cast_tuple_ImVec4(col), _bytes(fmt))
 # [End Function]
 
 # [Function]
@@ -5682,17 +5838,17 @@ def text_unformatted(text: str, text_end: str=None):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def text_wrapped(fmt: str):
-#     """
-#     Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();.
-#     note that this won't work on an auto-resizing window if there's
-#     no other widgets to extend the window width, yoy may need to
-#     set a size using setnextwindowsize().
-#     """
-#     ccimgui.igTextWrapped(_bytes(fmt))
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def text_wrapped(fmt: str):
+    """
+    Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();.
+    note that this won't work on an auto-resizing window if there's
+    no other widgets to extend the window width, yoy may need to
+    set a size using setnextwindowsize().
+    """
+    ccimgui.igTextWrapped(_bytes(fmt))
 # [End Function]
 
 # [Function]
@@ -5715,11 +5871,11 @@ def text_unformatted(text: str, text_end: str=None):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def tree_node(label: str):
+def tree_node(label: str, flags: int=0):
     """
-    tree_node_str
+    tree_node_ex_str
     """
-    cdef ccimgui.bool res = ccimgui.igTreeNode_Str(_bytes(label))
+    cdef ccimgui.bool res = ccimgui.igTreeNodeEx_Str(_bytes(label), flags)
     return res
 # [End Function]
 
@@ -5850,15 +6006,15 @@ def tree_pop():
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def unindent(indent_w: float=0.0):
-#     """
-#     Move content position back to the left, by indent_w, or style.indentspacing
-#     if indent_w <= 0
-#     """
-#     ccimgui.igUnindent(indent_w)
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def unindent(indent_w: float=0.0):
+    """
+    Move content position back to the left, by indent_w, or style.indentspacing
+    if indent_w <= 0
+    """
+    ccimgui.igUnindent(indent_w)
 # [End Function]
 
 # [Function]
@@ -6985,40 +7141,40 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
-    #     """
-    #     A: upper-left, b: lower-right (== upper-left + size)
-    #     """
-    #     ccimgui.ImDrawList_AddRect(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(p_min),
-    #         _cast_tuple_ImVec2(p_max),
-    #         col,
-    #         rounding,
-    #         flags,
-    #         thickness
-    #     )
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_rect(self: ImDrawList, p_min, p_max, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
+        ccimgui.ImDrawList_AddRect(
+            self._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
+            col,
+            rounding,
+            flags,
+            thickness
+        )
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
-    #     """
-    #     A: upper-left, b: lower-right (== upper-left + size)
-    #     """
-    #     ccimgui.ImDrawList_AddRectFilled(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(p_min),
-    #         _cast_tuple_ImVec2(p_max),
-    #         col,
-    #         rounding,
-    #         flags
-    #     )
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def add_rect_filled(self: ImDrawList, p_min, p_max, col: int, rounding: float=0.0, flags: int=0):
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
+        ccimgui.ImDrawList_AddRectFilled(
+            self._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
+            col,
+            rounding,
+            flags
+        )
     # [End Method]
 
     # [Method]
@@ -8167,10 +8323,10 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(True)
     # ?active(True)
-    # ?returns(object)
+    # ?returns(int)
     @property
     def tex_id(self):
-        cdef object res = <object>dereference(self._ptr).TexID
+        cdef int res = <uintptr_t>dereference(self._ptr).TexID
         return res
     @tex_id.setter
     def tex_id(self, value: Any):
@@ -8282,29 +8438,29 @@ cdef class ImFontAtlas:
     # [End Field]
 
     # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(int)
-    # @property
-    # def tex_width(self):
-    #     cdef int res = dereference(self._ptr).TexWidth
-    #     return res
-    # @tex_width.setter
-    # def tex_width(self, value: int):
-    #     dereference(self._ptr).TexWidth = value
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(int)
+    @property
+    def tex_width(self):
+        cdef int res = dereference(self._ptr).TexWidth
+        return res
+    @tex_width.setter
+    def tex_width(self, value: int):
+        dereference(self._ptr).TexWidth = value
     # [End Field]
 
     # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(int)
-    # @property
-    # def tex_height(self):
-    #     cdef int res = dereference(self._ptr).TexHeight
-    #     return res
-    # @tex_height.setter
-    # def tex_height(self, value: int):
-    #     dereference(self._ptr).TexHeight = value
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(int)
+    @property
+    def tex_height(self):
+        cdef int res = dereference(self._ptr).TexHeight
+        return res
+    @tex_height.setter
+    def tex_height(self, value: int):
+        dereference(self._ptr).TexHeight = value
     # [End Field]
 
     # [Field]
@@ -10951,32 +11107,6 @@ cdef class ImGuiIO:
     #     dereference(self._ptr).InputQueueCharacters = value._ptr
     # [End Field]
 
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(Any)
-    # @property
-    # def mouse_source(self):
-    #     cdef Any res = dereference(self._ptr).MouseSource
-    #     return res
-    # @mouse_source.setter
-    # def mouse_source(self, value: Any):
-    #     dereference(self._ptr).MouseSource = value
-    # [End Field]
-
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(Any)
-    # @property
-    # def mouse_wheel_request_axis_swap(self):
-    #     cdef Any res = dereference(self._ptr).MouseWheelRequestAxisSwap
-    #     return res
-    # @mouse_wheel_request_axis_swap.setter
-    # def mouse_wheel_request_axis_swap(self, value: Any):
-    #     dereference(self._ptr).MouseWheelRequestAxisSwap = value
-    # [End Field]
-
     # [Method]
     # # ?use_template(False)
     # # ?active(False)
@@ -11161,17 +11291,6 @@ cdef class ImGuiIO:
     #     with native indices + specify native keycode, scancode.
     #     """
     #     ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
-    # [End Method]
-
-    # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def add_mouse_source_event(self: ImGuiIO, source: Any):
-    #     """
-    #     Queue a mouse source change (mouse/touchscreen/pen)
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
     # [End Method]
 # [End Class]
 

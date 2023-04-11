@@ -1,9 +1,23 @@
+from __future__ import annotations
 import pygui
 import math
 import time
+from PIL import Image
 
 
 class static:
+    _singleton_instance = None
+
+    @staticmethod
+    def instance() -> static:
+        if static._singleton_instance is None:
+            static._singleton_instance = static()
+        return static._singleton_instance
+    
+    def __init__(self):
+        self.widgets_image = Image.open("pygui/img/code.png")
+        self.widgets_image_texture = pygui.load_image(self.widgets_image)
+
     widgets_general_clicked = 0
     widgets_general_check = pygui.BoolPtr(True)
     widgets_general_e = pygui.IntPtr(0)
@@ -42,7 +56,6 @@ class static:
     ]
     widgets_combo_item_current = pygui.IntPtr(0)
     widgets_list_item_current = pygui.IntPtr(0)
-
     widgets_tree_base_flags = pygui.IntPtr(
         pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_ARROW | \
         pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK | \
@@ -51,7 +64,6 @@ class static:
     widgets_tree_test_drag_and_drop = pygui.BoolPtr(False)
     widgets_tree_selection_mask = pygui.IntPtr(1 << 2)
     widgets_header_closable_group = pygui.BoolPtr(True)
-
     widgets_text_wrap_width = pygui.FloatPtr(200)
     widgets_text_utf8_buf = pygui.StrPtr("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
     widgets_combo_flags = pygui.IntPtr(0)
@@ -59,6 +71,35 @@ class static:
     widgets_combo_item_current_2 = pygui.IntPtr(0)
     widgets_combo_item_current_3 = pygui.IntPtr(0)
     widgets_combo_item_current_4 = pygui.IntPtr(0)
+    widgets_image_use_text_color_for_tint = pygui.BoolPtr(False)
+    widgets_image_pressed_count = 0
+    widgets_list_box_item_current_idx = 0
+    widgets_plotting_animate = pygui.BoolPtr(True)
+    widgets_plotting_arr = [
+        0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
+    ]
+    widgets_plotting_values = [0] * 90
+    widgets_plotting_values_offset = 0
+    widgets_plotting_refresh_time = 0
+    widgets_plotting_phase = 0
+    widgets_plotting_func_type = pygui.IntPtr(0)
+    widgets_plotting_display_count = pygui.IntPtr(70)
+    widgets_plotting_progress = 0
+    widgets_plotting_progress_dir = 1
+    widgets_colour_color = pygui.Vec4Ptr(114 / 255, 144 / 255, 154 / 255, 200 / 255)
+    widgets_colour_alpha_preview = pygui.BoolPtr(True)
+    widgets_colour_alpha_half_preview = pygui.BoolPtr(False)
+    widgets_colour_drag_and_drop = pygui.BoolPtr(True)
+    widgets_colour_options_menu = pygui.BoolPtr(True)
+    widgets_colour_hdr = pygui.BoolPtr(False)
+    widgets_colour_saved_palette_init = pygui.BoolPtr(True)
+    widgets_colour_saved_palette = []
+
+
+
+# From: https://stackoverflow.com/questions/4092528/how-can-i-clamp-clip-restrict-a-number-to-some-range#comment53230306_4092550
+def clamp(n, smallest, largest):
+    return max(smallest, min(n, largest))
 
 
 def help_marker(desc: str):
@@ -112,7 +153,7 @@ def show_demo_window_widgets():
         pygui.text("Hold to repeat:")
         pygui.same_line()
 
-        spacing: float = pygui.get_style().item_inner_spacing.x
+        spacing: float = pygui.get_style().item_inner_spacing[0]
         pygui.push_button_repeat(True)
         if pygui.arrow_button("##left", pygui.IMGUI_DIR_LEFT):
             static.widgets_general_counter -= 1
@@ -394,7 +435,82 @@ def show_demo_window_widgets():
         pygui.tree_pop()
 
     if pygui.tree_node("Images"):
-        pygui.text("# TODO: Looking to incorporate pillow or another raw format")
+        if pygui.tree_node("Custom Pygui Image"):
+            pygui.image(
+                static.instance().widgets_image_texture,
+                (static.instance().widgets_image.width / 2,
+                static.instance().widgets_image.height / 2))
+            pygui.tree_pop()
+        
+        if pygui.tree_node("ImGui Demo"):
+            io = pygui.get_io()
+            pygui.text_wrapped(
+                "Below we are displaying the font texture (which is the only texture we have access to in this demo). "
+                "Use the 'ImTextureID' type as storage to pass pointers or identifier to your own texture data. "
+                "Hover the texture for a zoomed view!")
+            
+            my_tex_id: int = io.fonts.tex_id
+            my_tex_w = io.fonts.tex_width
+            my_tex_h = io.fonts.tex_height
+
+            pygui.checkbox("Use Text Color for Tint", static.widgets_image_use_text_color_for_tint)
+            pygui.text("{}x{}".format(my_tex_w, my_tex_h))
+            pos = pygui.get_cursor_screen_pos()
+            uv_min = (0, 0) # Top-left
+            uv_max = (1, 1) # Lower-right
+            if static.widgets_image_use_text_color_for_tint:
+                tint_col = pygui.get_style_color_vec4(pygui.IMGUI_COL_TEXT)
+            else:
+                tint_col = (1, 1, 1, 1)
+            border_col = pygui.get_style_color_vec4(pygui.IMGUI_COL_BORDER)
+            pygui.image(my_tex_id, (my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col)
+
+            if pygui.is_item_hovered() and pygui.begin_tooltip():
+                region_sz = 32
+                region_x = io.mouse_pos[0] - pos[0] - region_sz * 0.5
+                region_y = io.mouse_pos[1] - pos[1] - region_sz * 0.5
+                zoom = 4
+                if region_x < 0:
+                    region_x = 0
+                elif region_x > my_tex_w - region_sz:
+                    region_x = my_tex_w - region_sz
+                
+                if region_y < 0:
+                    region_y = 0
+                elif region_y > my_tex_h - region_sz:
+                    region_y = my_tex_h - region_sz
+                
+                pygui.text("Min: ({:.2f}, {:.2f})".format(region_x, region_y))
+                pygui.text("Max: ({:.2f}, {:.2f})".format(region_x + region_sz, region_y + region_sz))
+                uv0 = (region_x) / my_tex_w, (region_y) / my_tex_h
+                uv1 = (region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h
+                pygui.image(my_tex_id, (region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col)
+                pygui.end_tooltip()
+            
+            pygui.text_wrapped("And now some textured buttons..")
+            for i in range(8):
+                # UV coordinates are often (0.0f, 0.0f) and (1.0f, 1.0f) to display an entire textures.
+                # Here are trying to display only a 32x32 pixels area of the texture, hence the UV computation.
+                # Read about UV coordinates here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+                pygui.push_id_int(i)
+                if i > 0:
+                    pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_FRAME_PADDING, (i - 1, i - 1))
+                size = (32, 32)
+                uv0 = (0, 0)
+                uv1 = (32 / my_tex_w, 32 / my_tex_h)
+                bg_col = (0, 0, 0, 1)
+                tint_col = (1, 1, 1, 1)
+                if pygui.image_button("", my_tex_id, size, uv0, uv1, bg_col, tint_col):
+                    static.widgets_image_pressed_count += 1
+                if i > 0:
+                    pygui.pop_style_var()
+                pygui.pop_id()
+                pygui.same_line()
+            
+            pygui.new_line()
+            pygui.text("Pressed {} times.".format(static.widgets_image_pressed_count))
+            pygui.tree_pop()
+
         pygui.tree_pop()
     
     if pygui.tree_node("Combo"):
@@ -436,8 +552,121 @@ def show_demo_window_widgets():
         pygui.combo("combo 3 (array)", static.widgets_combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
-        # TODO: This one is yet to be added.
+        # This one is yet to be added, but still I question if this is required
+        # in python. We're already inside a very high-level language. I'm yet to
+        # see a benefit of using a callback function.
         # struct Funcs { static bool ItemGetter(void* data, int n, const char** out_str) { *out_str = ((const char**)data)[n]; return true; } };
         # static int item_current_4 = 0;
         # ImGui::Combo("combo 4 (function)", &item_current_4, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items));
         pygui.tree_pop()
+
+    if pygui.tree_node("List boxes"):
+        # Using the generic BeginListBox() API, you have full control over how to display the combo contents.
+        # (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
+        # stored in the object itself, etc.)
+        items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"]
+        if pygui.begin_list_box("listbox 1"):
+            for n in range(len(items)):
+                is_selected = static.widgets_list_box_item_current_idx == n
+                if pygui.selectable(items[n], is_selected):
+                    static.widgets_list_box_item_current_idx = n
+                
+                # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if is_selected:
+                    pygui.set_item_default_focus()
+                
+            pygui.end_list_box()
+
+        pygui.text("Full-width:")
+        if pygui.begin_list_box("##listbox 2", (-pygui.FLT_MIN, 5 * pygui.get_text_line_height_with_spacing())):
+            for n in range(len(items)):
+                is_selected = static.widgets_list_box_item_current_idx == n
+                if pygui.selectable(items[n], is_selected):
+                    static.widgets_list_box_item_current_idx = n
+                
+                # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if is_selected:
+                    pygui.set_item_default_focus()
+            pygui.end_list_box()
+        
+        pygui.tree_pop()
+    
+    if pygui.tree_node("Plotting"):
+        pygui.checkbox("Animate", static.widgets_plotting_animate)
+
+        # Plot as lines and plot as histogram
+        pygui.plot_lines("Frame Times", static.widgets_plotting_arr)
+        pygui.plot_histogram("Histogram", static.widgets_plotting_arr, 0, None, 0, 1, (0, 80))
+
+        # Fill an array of contiguous float values to plot
+        # Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float
+        # and the sizeof() of your structure in the "stride" parameter.
+        if not static.widgets_plotting_animate or static.widgets_plotting_refresh_time == 0:
+            static.widgets_plotting_refresh_time = time.time()
+        
+        while static.widgets_plotting_refresh_time < time.time():
+            static.widgets_plotting_values[static.widgets_plotting_values_offset] = math.cos(
+                static.widgets_plotting_phase
+            )
+            static.widgets_plotting_values_offset = (static.widgets_plotting_values_offset + 1) % len(static.widgets_plotting_values)
+            static.widgets_plotting_phase += 0.1 * static.widgets_plotting_values_offset
+            static.widgets_plotting_refresh_time += 1 / 60
+
+        average = 0
+        for n in range(len(static.widgets_plotting_values)):
+            average += static.widgets_plotting_values[n]
+        average /= len(static.widgets_plotting_values)
+        pygui.plot_lines(
+            "Lines",
+            static.widgets_plotting_values,
+            static.widgets_plotting_values_offset,
+            "avg {:.6f}".format(average),
+            -1,
+            1,
+            (0, 80)
+        )
+
+        # This section has been modified to use pythonic functions and methods
+        # rather than the values_getter moethod in the demo.
+        pygui.separator_text("Functions")
+        pygui.set_next_item_width(pygui.get_font_size() * 8)
+        pygui.combo("func", static.widgets_plotting_func_type, ["Sin", "Saw"])
+        pygui.same_line()
+        pygui.slider_int("Sample count", static.widgets_plotting_display_count, 1, 400)
+
+        def saw(value: int):
+            return 1 if value & 1 == 0 else -1
+
+        if static.widgets_plotting_func_type.value == 0:
+            values = [math.sin(i / 10) for i in range(static.widgets_plotting_display_count.value)]
+        else:
+            values = [saw(i) for i in range(static.widgets_plotting_display_count.value)]
+        
+        pygui.plot_lines("Lines", values, 0, None, -1, 1, (0, 80))
+        pygui.plot_histogram("Histogram", values, 0, None, -1, 1, (0, 80))
+        pygui.separator()
+
+        if static.widgets_plotting_animate:
+            static.widgets_plotting_progress += static.widgets_plotting_progress_dir * 0.4 * pygui.get_io().delta_time
+            if static.widgets_plotting_progress >= 1.1:
+                static.widgets_plotting_progress = 1.1
+                static.widgets_plotting_progress_dir *= -1
+            if static.widgets_plotting_progress <= -0.1:
+                static.widgets_plotting_progress = -0.1
+                static.widgets_plotting_progress_dir *= -1
+
+        # Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
+        # or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
+        pygui.progress_bar(static.widgets_plotting_progress, (0, 0))
+        pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+        pygui.text("Progress Bar")
+        
+        progress_saturated = clamp(static.widgets_plotting_progress, 0, 1)
+        pygui.progress_bar(static.widgets_plotting_progress, (0, 0), "{}/{}".format(
+            int(progress_saturated * 1753), 1753
+        ))
+        pygui.tree_pop()
+
+    if pygui.tree_node("Color/Picker Widgets"):
+        pygui.tree_pop()
+    

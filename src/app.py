@@ -4,15 +4,13 @@ import OpenGL.GL as gl
 
 from python_demo_window import show_demo_window_widgets
 
-show_demo_window = True
 show_another_window = False
 
+
 def render():
-    global show_demo_window
     global show_another_window
 
-    if show_demo_window:
-        pygui.show_demo_window()
+    pygui.show_demo_window()
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
@@ -23,7 +21,8 @@ def render():
         pygui.text("Some text")
         pygui.end()
 
-    pygui.begin("Python Widgets", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
+    pygui.begin("Python Widgets", None)
+    # pygui.begin("Python Widgets", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
     show_demo_window_widgets()
     pygui.end()
 
@@ -84,7 +83,7 @@ def main():
             pygui.render()
             glfw.make_context_current(window)
             
-            gl.glViewport(0, 0, int(io.display_size.x), int(io.display_size.y))
+            gl.glViewport(0, 0, int(io.display_size[0]), int(io.display_size[1]))
             gl.glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3])
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 

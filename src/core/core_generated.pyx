@@ -14,7 +14,8 @@ cimport ccimgui
 from cpython.version cimport PY_MAJOR_VERSION
 from cython.view cimport array as cvarray
 from libcpp cimport bool
-from libc.float cimport FLT_MAX, FLT_MIN
+from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
 from libc.string cimport strdup, strncpy
 # [End Imports]
@@ -644,8 +645,8 @@ IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 # [End Enums]
 
 # [Constant Functions]
-Vec2 = namedtuple('Vec2', ['x', 'y'])
-Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
+# Vec2 = namedtuple('Vec2', ['x', 'y'])
+# Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
 cdef bytes _bytes(str text):
     return <bytes>(text.encode('utf-8') + b'\0')
@@ -654,7 +655,8 @@ cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
-    return Vec2(vec.x, vec.y)
+    # return Vec2(vec.x, vec.y)
+    return (vec.x, vec.y)
 
 cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     cdef ccimgui.ImVec2 vec
@@ -664,7 +666,8 @@ cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     return vec
 
 cdef _cast_ImVec4_tuple(ccimgui.ImVec4 vec):
-    return Vec4(vec.x, vec.y, vec.z, vec.w)
+    # return Vec4(vec.x, vec.y, vec.z, vec.w)
+    return (vec.x, vec.y, vec.z, vec.w)
 
 cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     cdef ccimgui.ImVec4 vec
@@ -770,6 +773,9 @@ def IM_COL32(int r, int g, int b, int a) -> int:
     output |= g << 8
     output |= r << 0
     return output
+
+FLT_MIN = LIBC_FLT_MIN
+FLT_MAX = LIBC_FLT_MAX
 
 # [End Constant Functions]
 

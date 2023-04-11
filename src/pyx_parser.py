@@ -156,6 +156,7 @@ class PyxCollection:
 
         pyi_content.write("\n".join([
             "from typing import Any, Callable, Tuple, List",
+            "from PIL import Image",
             "",
             "",
             "VERTEX_BUFFER_POS_OFFSET: int",
@@ -163,6 +164,8 @@ class PyxCollection:
             "VERTEX_BUFFER_COL_OFFSET: int",
             "VERTEX_SIZE: int",
             "INDEX_SIZE: int",
+            "FLT_MIN: float",
+            "FLT_MAX: float",
             "",
             "class BoolPtr:",
             "    def __init__(self, initial_value: bool): ...",
@@ -190,15 +193,18 @@ class PyxCollection:
             "    z: float",
             "    w: float",
             "    def __init__(self, x: float, y: float, z: float, w: float): ...",
-            "    def vec(self) -> Tuple[float, float, float, float]",
+            "    def vec(self) -> Tuple[float, float, float, float]: ...",
             "",
             "class Vec2Ptr:",
             "    x: float",
             "    y: float",
             "    def __init__(self, x: float, y: float): ...",
-            "    def vec(self) -> Tuple[float, float]",
+            "    def vec(self) -> Tuple[float, float]: ...",
             "",
             "def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...",
+            "",
+            "def load_image(image: Image) -> int: ...",
+            "",
             "",
         ]))
 
@@ -214,12 +220,8 @@ class PyxCollection:
             pyi_content.write(class_.as_pyi_format() + "\n")
         
         py_content = StringIO()
-        py_content.write("from .core import *\n\n")
-        py_content.write("VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()\n")
-        py_content.write("VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()\n")
-        py_content.write("VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()\n")
-        py_content.write("VERTEX_SIZE = core._py_vertex_buffer_vertex_size()\n")
-        py_content.write("INDEX_SIZE = core._py_index_buffer_index_size()\n")
+        with open("core/templates/init.py") as f:
+            py_content.write(f.read())
         
         return pyi_content.getvalue(), py_content.getvalue()
 
