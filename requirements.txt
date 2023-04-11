@@ -1,4 +1,5 @@
 glfw
+Pillow
 PyOpenGL
 Cython
 diff_match_patch

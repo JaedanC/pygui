@@ -648,12 +648,8 @@ IMGUI_WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 # Vec2 = namedtuple('Vec2', ['x', 'y'])
 # Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])
 
-cdef char* _bytes(str text):
-    if text is None:
-        return NULL
-    cdef bytes encoded_text = text.encode()
-    cdef char* c_text = <char*>encoded_text
-    return c_text
+cdef bytes _bytes(str text):
+    return text.encode()
 
 cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
@@ -842,7 +838,7 @@ def align_text_to_frame_padding():
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(Any)
+# ?returns(bool)
 def arrow_button(str_id: str, dir_: int):
     """
     Square button with an arrow shape
