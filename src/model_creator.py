@@ -206,6 +206,8 @@ class CType:
         "const ImVec2": "tuple",
         "ImVec4": "tuple",
         "const ImVec4": "tuple",
+        "bool": "bool",
+        "bool*": "BoolPtr",
     }
     """
     Represents a type without a name. Can also be a function pointer. Requires
@@ -293,8 +295,8 @@ class CType:
         if type_string in [t.definition.internal_str for t in header.typedefs]:
             return True
         
-        if type_string == "bool":
-            return True
+        # if type_string == "bool":
+        #     return False
         
         return False
     
@@ -781,13 +783,6 @@ class HeaderSpec:
     operations. Thus, this class acts as a wrapper of sorts.
     """
 
-    # def __init__(self, structs, enums, typedefs, functions, library_name):
-    #     self.structs: List[Struct] = structs
-    #     self.enums: List[Enum] = enums
-    #     self.typedefs: List[Typedef] = typedefs
-    #     self.functions: List[Function] = functions
-    #     self.library_name: str = library_name
-    
     def __init__(self, header_data: List[HeaderData], library_name):
         self.header_data: List[HeaderData] = header_data
         self.structs: List[Struct] =     sum([h.structs   for h in header_data], start=[])
@@ -820,16 +815,15 @@ class HeaderSpec:
             "import array\n"
             "from collections import namedtuple\n"
             "from cython.operator import dereference\n"
-            "from typing import Callable, Any, List\n"
+            "from typing import Callable, Any, List, Sequence\n"
             "\n"
             "cimport ccimgui\n"
-            "from cpython.version cimport PY_MAJOR_VERSION\n"
             "from cython.view cimport array as cvarray\n"
             "from libcpp cimport bool\n"
             "from libc.float cimport FLT_MIN as LIBC_FLT_MIN\n"
             "from libc.float cimport FLT_MAX as LIBC_FLT_MAX\n"
             "from libc.stdint cimport uintptr_t\n"
-            "from libc.string cimport strncpy, strncmp\n"
+            "from libc.string cimport strncpy\n"
             "# [End Imports]\n"
             "\n"
             "\n"
@@ -952,20 +946,91 @@ class HeaderSpec:
             "    def vec(self):",
             "        return (self.x, self.y)",
             "",
+            "    def copy(self) -> Vec2Ptr:",
+            "        return Vec2Ptr(*self.vec())",
+            "",
+            "    cdef void from_array(self, float* array):",
+            "        self.x = array[0]",
+            "        self.y = array[1]",
+            "",
+            "    cdef void to_array(self, float* array):",
+            "        array[0] = self.x",
+            "        array[1] = self.y",
+            "",
             "cdef class Vec4Ptr:",
-            "    cdef public float x",
-            "    cdef public float y",
-            "    cdef public float z",
-            "    cdef public float w",
+            "    cdef public FloatPtr _x",
+            "    cdef public FloatPtr _y",
+            "    cdef public FloatPtr _z",
+            "    cdef public FloatPtr _w",
             "",
             "    def __init__(self, x: float, y: float, z: float, w: float):",
-            "        self.x = x",
-            "        self.y = y",
-            "        self.z = z",
-            "        self.w = w",
+            "        self._x = FloatPtr(x)",
+            "        self._y = FloatPtr(y)",
+            "        self._z = FloatPtr(z)",
+            "        self._w = FloatPtr(w)",
             "",
-            "    def vec(self):",
-            "        return (self.x, self.y, self.z, self.z)",
+            "    @property",
+            "    def x(self):",
+            "        return self._x.value",
+            "    @x.setter",
+            "    def x(self, x):",
+            "        self._x.value = x",
+            "    @property",
+            "    def y(self):",
+            "        return self._y.value",
+            "    @y.setter",
+            "    def y(self, y):",
+            "        self._y.value = y",
+            "    @property",
+            "    def z(self):",
+            "        return self._z.value",
+            "    @z.setter",
+            "    def z(self, z):",
+            "        self._z.value = z",
+            "    @property",
+            "    def w(self):",
+            "        return self._w.value",
+            "    @w.setter",
+            "    def w(self, w):",
+            "        self._w.value = w",
+            "",
+            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):",
+            "        assert len(float_ptrs) >= 4",
+            "        self._x = float_ptrs[0]",
+            "        self._y = float_ptrs[1]",
+            "        self._z = float_ptrs[2]",
+            "        self._w = float_ptrs[3]",
+            "",
+            "    def as_floatptrs(self) -> Sequence[FloatPtr]:",
+            "        return [",
+            "            self._x,",
+            "            self._y,",
+            "            self._z,",
+            "            self._w,",
+            "        ]",
+            "",
+            "    def vec(self) -> Sequence[float]:",
+            "        return (",
+            "            self.x,",
+            "            self.y,",
+            "            self.z,",
+            "            self.w,",
+            "        )",
+            "",
+            "    def copy(self) -> Vec4Ptr:",
+            "        return Vec4Ptr(*self.vec())",
+            "",
+            "    cdef void from_array(self, float* array):",
+            "        self._x.value = array[0]",
+            "        self._y.value = array[1]",
+            "        self._z.value = array[2]",
+            "        self._w.value = array[3]",
+            "",
+            "    cdef void to_array(self, float* array):",
+            "        array[0] = self.x",
+            "        array[1] = self.y",
+            "        array[2] = self.z",
+            "        array[3] = self.w",
             "",
             "def IM_COL32(int r, int g, int b, int a) -> int:",
             "    cdef unsigned int output = 0",
@@ -1185,6 +1250,7 @@ class HeaderData:
                 output.write(f"{method.in_pxd_format()}\n")
 
         return output.getvalue()
+
 
 def safe_python_name(name: str, suffix="_") -> str:
     """Modifies a string to not be a keyword or built-in function. Not using

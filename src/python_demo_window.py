@@ -43,17 +43,8 @@ class static:
     widgets_sliders_f2 = pygui.FloatPtr(0)
     widgets_sliders_angle = pygui.FloatPtr(0)
     widgets_sliders_elem = pygui.IntPtr(0)
-    widgets_picker_col1 = [
-        pygui.FloatPtr(1),
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(0.2),
-    ]
-    widgets_picker_col2 = [
-        pygui.FloatPtr(0.4),
-        pygui.FloatPtr(0.7),
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(0.5),
-    ]
+    widgets_picker_col1 = pygui.Vec4Ptr(1, 0, 0.2, 1)
+    widgets_picker_col2 = pygui.Vec4Ptr(0.4, 0.7, 0, 0.5)
     widgets_combo_item_current = pygui.IntPtr(0)
     widgets_list_item_current = pygui.IntPtr(0)
     widgets_tree_base_flags = pygui.IntPtr(
@@ -74,6 +65,45 @@ class static:
     widgets_image_use_text_color_for_tint = pygui.BoolPtr(False)
     widgets_image_pressed_count = 0
     widgets_list_box_item_current_idx = 0
+    widgets_select_selection = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    widgets_select_selected = -1
+    widgets_select_single_state_selected = -1
+    widgets_select_multi_state_selection = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    widgets_select_render_selected = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    widgets_select_column_selected = [pygui.BoolPtr(False) for _ in range(10)]
+    widgets_select_grid_selected = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]
+    widgets_select_allign_selected = [
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+    ]
     widgets_plotting_animate = pygui.BoolPtr(True)
     widgets_plotting_arr = [
         0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
@@ -86,12 +116,7 @@ class static:
     widgets_plotting_display_count = pygui.IntPtr(70)
     widgets_plotting_progress = 0
     widgets_plotting_progress_dir = 1
-    widgets_colour_color = [
-        pygui.FloatPtr(114 / 255),
-        pygui.FloatPtr(144 / 255),
-        pygui.FloatPtr(154 / 255),
-        pygui.FloatPtr(200 / 255),
-    ]
+    widgets_colour_color = pygui.Vec4Ptr(114 / 255, 144 / 255, 154 / 255, 200 / 255)
     widgets_colour_flags = pygui.IntPtr(0)
     widgets_colour_alpha_preview = pygui.BoolPtr(True)
     widgets_colour_alpha_half_preview = pygui.BoolPtr(False)
@@ -99,30 +124,19 @@ class static:
     widgets_colour_options_menu = pygui.BoolPtr(True)
     widgets_colour_hdr = pygui.BoolPtr(False)
     widgets_colour_saved_palette_init = pygui.BoolPtr(True)
-    widgets_colour_saved_palette = [
-        (pygui.FloatPtr(0),
-         pygui.FloatPtr(0),
-         pygui.FloatPtr(0),
-         pygui.FloatPtr(0)) for _ in range(32)]
-    widgets_colour_backup_color = [
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(0)
-    ]
+    widgets_colour_saved_palette = [pygui.Vec4Ptr(0, 0, 0, 0) for _ in range(32)]
+    widgets_colour_backup_color = pygui.Vec4Ptr(0, 0, 0, 0)
     widgets_colour_no_border = pygui.BoolPtr(False)
     widgets_colour_alpha = pygui.BoolPtr(True)
     widgets_colour_alpha_bar = pygui.BoolPtr(True)
     widgets_colour_side_preview = pygui.BoolPtr(True)
     widgets_colour_ref_color = pygui.BoolPtr(False)
-    widgets_colour_ref_color_v = [
-        pygui.FloatPtr(1),
-        pygui.FloatPtr(0),
-        pygui.FloatPtr(1),
-        pygui.FloatPtr(0.5),
-    ]
+    widgets_colour_ref_color_v = pygui.Vec4Ptr(1, 0, 1, 0.5)
     widgets_colour_display_mode = pygui.IntPtr(False)
     widgets_colour_picker_mode = pygui.IntPtr(False)
+    widgets_colour_color_hsv = pygui.Vec4Ptr(0.23, 1, 1, 1)
+    widgets_multi_vec4f = pygui.Vec4Ptr(0.10, 0.2, 0.3, 0.44)
+    widgets_multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
 
 
 
@@ -620,6 +634,116 @@ def show_demo_window_widgets():
         
         pygui.tree_pop()
     
+    if pygui.tree_node("Selectables"):
+        if pygui.tree_node("Basic"):
+            pygui.selectable_bool_ptr("1. I am selectable", static.widgets_select_selection[0])
+            pygui.selectable_bool_ptr("2. I am selectable", static.widgets_select_selection[1])
+            pygui.text("(I am not selectable)")
+            pygui.selectable_bool_ptr("4. I am selectable", static.widgets_select_selection[3])
+            if pygui.selectable("5. I am double clickable", static.widgets_select_selection[4], pygui.IMGUI_SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK):
+                if pygui.is_mouse_double_clicked(pygui.IMGUI_MOUSE_BUTTON_LEFT):
+                    static.widgets_select_selection[4].ptr = not static.widgets_select_selection[4].ptr
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Selection State: Single Selection"):
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", static.widgets_select_single_state_selected == n):
+                    static.widgets_select_single_state_selected = n
+            pygui.tree_pop()
+
+        if pygui.tree_node("Selection State: Multiple Selection"):
+            help_marker("Hold CTRL and click to select multiple items.")
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", static.widgets_select_multi_state_selection[n]):
+                    if not pygui.get_io().key_ctrl:
+                        static.widgets_select_multi_state_selection = [pygui.BoolPtr(False) for _ in range(len(static.widgets_select_multi_state_selection))]
+                    static.widgets_select_multi_state_selection[n].ptr = not static.widgets_select_multi_state_selection[n].ptr
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Rendering more text into the same line"):
+            pygui.selectable_bool_ptr("main.c", static.widgets_select_render_selected[0])
+            pygui.same_line(300)
+            pygui.text(" 2,345 bytes")
+
+            pygui.selectable_bool_ptr("Hello.cpp", static.widgets_select_render_selected[1])
+            pygui.same_line(300)
+            pygui.text("12,245 bytes")
+            
+            pygui.selectable_bool_ptr("Hello.h", static.widgets_select_render_selected[2])
+            pygui.same_line(300)
+            pygui.text(" 2,345 bytes")
+            pygui.tree_pop()
+        
+        if pygui.tree_node("In columns"):
+            if pygui.begin_table("split1", 3, pygui.IMGUI_TABLE_FLAGS_RESIZABLE | pygui.IMGUI_TABLE_FLAGS_NO_SAVED_SETTINGS | pygui.IMGUI_TABLE_FLAGS_BORDERS):
+                for i in range(10):
+                    pygui.table_next_column()
+                    pygui.selectable_bool_ptr(f"Item {i}", static.widgets_select_column_selected[i])
+                pygui.end_table()
+            pygui.spacing()
+            if pygui.begin_table("split2", 3, pygui.IMGUI_TABLE_FLAGS_RESIZABLE | pygui.IMGUI_TABLE_FLAGS_NO_SAVED_SETTINGS | pygui.IMGUI_TABLE_FLAGS_BORDERS):
+                for i in range(10):
+                    pygui.table_next_row()
+                    pygui.table_next_column()
+                    pygui.selectable_bool_ptr(f"Item {i}", static.widgets_select_column_selected[i], pygui.IMGUI_SELECTABLE_FLAGS_SPAN_ALL_COLUMNS)
+                    pygui.table_next_column()
+                    pygui.text("Some other contents")
+                    pygui.table_next_column()
+                    pygui.text("123456")
+                pygui.end_table()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Grid"):
+            # Add in a bit of silly fun...
+            current_time = pygui.get_time()
+            winning_state = not any(0 in inner for inner in static.widgets_select_grid_selected)
+            if winning_state:
+                pygui.push_style_var_vec2(
+                    pygui.IMGUI_STYLE_VAR_SELECTABLE_TEXT_ALIGN,
+                    (0.5 + 0.5 * math.cos(current_time * 2), 0.5 + 0.5 * math.sin(current_time * 3))
+                )
+            for y in range(4):
+                for x in range(4):
+                    if x > 0:
+                        pygui.same_line()
+                    pygui.push_id_int(y * 4 + x)
+                    if pygui.selectable("Sailor", bool(static.widgets_select_grid_selected[y][x]), 0, (50, 50)):
+                        static.widgets_select_grid_selected[y][x] ^= 1
+                        if x > 0:
+                            static.widgets_select_grid_selected[y][x - 1] ^= 1
+                        if x < 3:
+                            static.widgets_select_grid_selected[y][x + 1] ^= 1
+                        if y > 0:
+                            static.widgets_select_grid_selected[y - 1][x] ^= 1
+                        if y < 3:
+                            static.widgets_select_grid_selected[y + 1][x] ^= 1
+                    pygui.pop_id()
+                
+            if winning_state:
+                pygui.pop_style_var()
+            pygui.tree_pop()
+
+        if pygui.tree_node("Alignment"):
+            help_marker(
+                "By default, Selectables uses style.SelectableTextAlign but it can be overridden on a per-item "
+                "basis using PushStyleVar(). You'll probably want to always keep your default situation to "
+                "left-align otherwise it becomes difficult to layout multiple items on a same line")
+            for y in range(3):
+                for x in range(3):
+                    alignment = (x / 2, y / 2)
+                    if x > 0:
+                        pygui.same_line()
+                    pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
+                    pygui.selectable_bool_ptr(
+                        "({:.1f}, {:.1f})".format(alignment[0], alignment[1]),
+                        static.widgets_select_allign_selected[3 * y + x],
+                        pygui.IMGUI_SELECTABLE_FLAGS_NONE,
+                        (80, 80)
+                    )
+                    pygui.pop_style_var()
+            pygui.tree_pop()
+        pygui.tree_pop()
+
     if pygui.tree_node("Plotting"):
         pygui.checkbox("Animate", static.widgets_plotting_animate)
 
@@ -740,24 +864,17 @@ def show_demo_window_widgets():
                     n / 31,
                     0.8,
                     0.8,
-                    static.widgets_colour_saved_palette[n][0],
-                    static.widgets_colour_saved_palette[n][1],
-                    static.widgets_colour_saved_palette[n][2],
+                    static.widgets_colour_saved_palette[n],
                 )
-                static.widgets_colour_saved_palette[n][3].value = 1 # Alpha
+                static.widgets_colour_saved_palette[n].w = 1 # Alpha
             static.widgets_colour_saved_palette_init.ptr = False
         
-        open_popup = pygui.color_button("MyColor##3b", tuple(f_ptr.value for f_ptr in static.widgets_colour_color), misc_flags)
+        open_popup = pygui.color_button("MyColor##3b", static.widgets_colour_color.vec(), misc_flags)
         pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
         open_popup |= pygui.button("Palette")
         if open_popup:
             pygui.open_popup("mypicker")
-            static.widgets_colour_backup_color = (
-                pygui.FloatPtr(static.widgets_colour_color[0].value),
-                pygui.FloatPtr(static.widgets_colour_color[1].value),
-                pygui.FloatPtr(static.widgets_colour_color[2].value),
-                pygui.FloatPtr(static.widgets_colour_color[3].value),
-            )
+            static.widgets_colour_backup_color = static.widgets_colour_color.copy()
         if pygui.begin_popup("mypicker"):
             pygui.text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
             pygui.separator()
@@ -766,20 +883,10 @@ def show_demo_window_widgets():
 
             pygui.begin_group()
             pygui.text("Current")
-            pygui.color_button(
-                "##current",
-                tuple(f_ptr.value for f_ptr in static.widgets_colour_color),
-                pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF,
-                (60, 40))
+            pygui.color_button("##current", static.widgets_colour_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40))
             pygui.text("Previous")
-            if pygui.color_button("##previous", tuple(f_ptr.value for f_ptr in static.widgets_colour_backup_color), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF,
-                (60, 40)):
-                static.widgets_colour_color = (
-                    pygui.FloatPtr(static.widgets_colour_backup_color[0].value),
-                    pygui.FloatPtr(static.widgets_colour_backup_color[1].value),
-                    pygui.FloatPtr(static.widgets_colour_backup_color[2].value),
-                    pygui.FloatPtr(static.widgets_colour_backup_color[3].value),
-                )
+            if pygui.color_button("##previous", static.widgets_colour_backup_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40)):
+                static.widgets_colour_color = static.widgets_colour_backup_color.copy()
             pygui.separator()
             pygui.text("Palette")
             for n in range(len(static.widgets_colour_saved_palette)):
@@ -791,38 +898,30 @@ def show_demo_window_widgets():
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA | \
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | \
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_TOOLTIP
-                if pygui.color_button("##palette", tuple(f_ptr.value for f_ptr in static.widgets_colour_saved_palette[n]), palette_button_flags, (20, 20)):
-                    static.widgets_colour_color = (
-                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][0].value),
-                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][1].value),
-                        pygui.FloatPtr(static.widgets_colour_saved_palette[n][2].value),
-                        pygui.FloatPtr(static.widgets_colour_color[3].value), # Preserve alpha!
-                    )
+                if pygui.color_button("##palette", static.widgets_colour_saved_palette[n].vec(), palette_button_flags, (20, 20)):
+                    preserved_alpha = static.widgets_colour_color.w
+                    static.widgets_colour_color = static.widgets_colour_saved_palette[n].copy()
+                    static.widgets_colour_color.w = preserved_alpha
 
                 # Allow user to drop colors into each palette entry. Note that ColorButton() is already a
                 # drag source by default, unless specifying the ImGuiColorEditFlags_NoDragDrop flag.
                 # Pygui note. In the pyx file the accept drap drop payload for
-                # the color 3f and 4f types will return hardcoded tuples with
-                # the format tuple[FloatPtr, ...] containing the color that is
-                # being dragged.
+                # the color 3f and 4f types will return Vec4Ptr containing the
+                # color that is being dragged.
                 if pygui.begin_drag_drop_target():
                     payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_3F)
+                    payload: pygui.Vec4Ptr
                     if payload is not None:
-                        static.widgets_colour_saved_palette[n] = (
-                            pygui.FloatPtr(payload[0].value),
-                            pygui.FloatPtr(payload[1].value),
-                            pygui.FloatPtr(payload[2].value),
-                            pygui.FloatPtr(static.widgets_colour_saved_palette[n][3].value),
-                        )
+                        preserved_alpha = static.widgets_colour_saved_palette[n].w
+                        static.widgets_colour_saved_palette[n] = payload.copy()
+                        static.widgets_colour_saved_palette[n].w = preserved_alpha
                     
                     payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_4F)
+                    payload: pygui.Vec4Ptr
                     if payload is not None:
-                        static.widgets_colour_saved_palette[n] = (
-                            pygui.FloatPtr(payload[0].value),
-                            pygui.FloatPtr(payload[1].value),
-                            pygui.FloatPtr(payload[2].value),
-                            pygui.FloatPtr(payload[3].value)
-                        )
+                        preserved_alpha = static.widgets_colour_saved_palette[n].w
+                        static.widgets_colour_saved_palette[n] = payload.copy()
+                        static.widgets_colour_saved_palette[n].w = preserved_alpha
                     pygui.end_drag_drop_target()
                 
                 pygui.pop_id()
@@ -833,7 +932,7 @@ def show_demo_window_widgets():
         pygui.checkbox("ImGuiColorEditFlags_NoBorder", static.widgets_colour_no_border)
         pygui.color_button(
             "MyColor##3c",
-            tuple(f_ptr.value for f_ptr in static.widgets_colour_color),
+            static.widgets_colour_color.vec(),
             misc_flags | (pygui.IMGUI_COLOR_EDIT_FLAGS_NO_BORDER if static.widgets_colour_no_border else 0),
             (80, 80))
         
@@ -875,9 +974,68 @@ def show_demo_window_widgets():
         if static.widgets_colour_display_mode.value == 4:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HEX
 
-        pygui.color_picker4("MyColor4##4", static.widgets_colour_color, flags, static.widgets_colour_ref_color_v if static.widgets_colour_ref_color else None)
+        pygui.color_picker4("MyColor##4", static.widgets_colour_color, flags, static.widgets_colour_ref_color_v if static.widgets_colour_ref_color else None)
 
+        pygui.text("Set defaults in code:")
+        pygui.same_line()
+        help_marker("SetColorEditOptions() is designed to allow you to set boot-time default.\n"
+            "We don't have Push/Pop functions because you can force options on a per-widget basis if needed,"
+            "and the user can change non-forced ones with the options menu.\nWe don't have a getter to avoid"
+            "encouraging you to persistently save values that aren't forward-compatible.")
+        if pygui.button("Default: Uint8 + HSV + Hue Bar"):
+            pygui.set_color_edit_options(pygui.IMGUI_COLOR_EDIT_FLAGS_UINT8 | pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR)
+        if pygui.button("Default: Float + HDR + Hue Wheel"):
+            pygui.set_color_edit_options(pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT | pygui.IMGUI_COLOR_EDIT_FLAGS_HDR | pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL)
 
+        # Always both a small version of both types of pickers (to make it more visible in the demo to people who are skimming quickly through it)
+        pygui.text("Both types:")
+        w = (pygui.get_content_region_avail()[0] - pygui.get_style().item_spacing[1]) * 0.4
+        pygui.set_next_item_width(w)
+        pygui.color_picker3("##MyColor##5", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
+        pygui.same_line()
+        pygui.set_next_item_width(w)
+        pygui.color_picker3("##MyColor##6", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
+
+        # HSV encoded support (to avoid RGB<>HSV round trips and singularities when S==0 or V==0)
+        pygui.spacing()
+        pygui.text("HSV encoded colors")
+        pygui.same_line()
+        help_marker(
+            "By default, colors are given to ColorEdit and ColorPicker in RGB, but ImGuiColorEditFlags_InputHSV"
+            "allows you to store colors as HSV and pass them to ColorEdit and ColorPicker as HSV. This comes with the"
+            "added benefit that you can manipulate hue values with the picker even when saturation or value are zero.")
+        pygui.text("Color widget with InputHSV:")
+        pygui.color_edit4("HSV shown as RGB##1", static.widgets_colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_RGB | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
+        pygui.color_edit4("HSV shown as HSV##1", static.widgets_colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
+        drag_floats = [pygui.FloatPtr(v) for v in static.widgets_colour_color_hsv.vec()]
+        pygui.drag_float4("Raw HSV values", drag_floats, 0.01, 0, 1)
+        static.widgets_colour_color_hsv = pygui.Vec4Ptr(*(f.value for f in drag_floats))
 
         pygui.tree_pop()
-    
+
+    if pygui.tree_node("Multi-component Widgets"):
+        pygui.separator_text("2-wide")
+        pygui.input_float2("input float2", static.widgets_multi_vec4f.as_floatptrs())
+        pygui.drag_float2("drag float2", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float2("slider float2", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int2("input int2", static.widgets_multi_vec4i.as_floatptrs())
+        pygui.drag_int2("drag int2", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int2("slider int2", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+
+        pygui.separator_text("3-wide")
+        pygui.input_float3("input float3", static.widgets_multi_vec4f.as_floatptrs())
+        pygui.drag_float3("drag float3", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float3("slider float3", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int3("input int3", static.widgets_multi_vec4i.as_floatptrs())
+        pygui.drag_int3("drag int3", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int3("slider int3", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+
+        pygui.separator_text("4-wide")
+        pygui.input_float4("input float4", static.widgets_multi_vec4f.as_floatptrs())
+        pygui.drag_float4("drag float4", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float4("slider float4", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int4("input int4", static.widgets_multi_vec4i.as_floatptrs())
+        pygui.drag_int4("drag int4", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int4("slider int4", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+
+        pygui.tree_pop()

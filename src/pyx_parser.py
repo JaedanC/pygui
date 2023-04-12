@@ -155,7 +155,7 @@ class PyxCollection:
         pyi_content = StringIO()
 
         pyi_content.write("\n".join([
-            "from typing import Any, Callable, Tuple, List",
+            "from typing import Any, Callable, Tuple, List, Sequence",
             "from PIL import Image",
             "",
             "",
@@ -198,12 +198,17 @@ class PyxCollection:
             "    w: float",
             "    def __init__(self, x: float, y: float, z: float, w: float): ...",
             "    def vec(self) -> Tuple[float, float, float, float]: ...",
+            "    def as_floatptrs(self) -> Sequence[FloatPtr]: ...",
+            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...",
+            "    def to_floatptrs(self) -> Sequence[FloatPtr]: ...",
+            "    def copy(self) -> Vec4Ptr: ...",
             "",
             "class Vec2Ptr:",
             "    x: float",
             "    y: float",
             "    def __init__(self, x: float, y: float): ...",
             "    def vec(self) -> Tuple[float, float]: ...",
+            "    def copy(self) -> Vec2Ptr: ...",
             "",
             "def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...",
             "",

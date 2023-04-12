@@ -33,15 +33,16 @@ def load_image(image: Image) -> int:
 
     # load texture onto the GPU
     gl.glTexImage2D(
-            gl.GL_TEXTURE_2D,    # where to load texture data
-            0,                   # mipmap level
-            gl.GL_RGBA8,         # format to store data in
-            w,                   # image dimensions
-            h,                   #
-            0,                   # border thickness
-            gl.GL_RGBA,          # format data is provided in
-            gl.GL_UNSIGNED_BYTE, # type to read data as
-            image_data)          # data to load as texture
+        gl.GL_TEXTURE_2D,    # where to load texture data
+        0,                   # mipmap level
+        gl.GL_RGBA8,         # format to store data in
+        w,                   # image dimensions
+        h,                   #
+        0,                   # border thickness
+        gl.GL_RGBA,          # format data is provided in
+        gl.GL_UNSIGNED_BYTE, # type to read data as
+        image_data
+    )          # data to load as texture
     # gl.debug.check_gl_error()
 
     # generate smaller versions of the texture to save time when its zoomed out
