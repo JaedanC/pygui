@@ -418,10 +418,6 @@ IMGUI_MOUSE_CURSOR_RESIZE_NWSE = ccimgui.ImGuiMouseCursor_ResizeNWSE
 IMGUI_MOUSE_CURSOR_HAND = ccimgui.ImGuiMouseCursor_Hand
 IMGUI_MOUSE_CURSOR_NOT_ALLOWED = ccimgui.ImGuiMouseCursor_NotAllowed
 IMGUI_MOUSE_CURSOR_COUNT = ccimgui.ImGuiMouseCursor_COUNT
-IMGUI_MOUSE_SOURCE_MOUSE = ccimgui.ImGuiMouseSource_Mouse
-IMGUI_MOUSE_SOURCE_TOUCH_SCREEN = ccimgui.ImGuiMouseSource_TouchScreen
-IMGUI_MOUSE_SOURCE_PEN = ccimgui.ImGuiMouseSource_Pen
-IMGUI_MOUSE_SOURCE_COUNT = ccimgui.ImGuiMouseSource_COUNT
 IMGUI_NAV_INPUT_ACTIVATE = ccimgui.ImGuiNavInput_Activate
 IMGUI_NAV_INPUT_CANCEL = ccimgui.ImGuiNavInput_Cancel
 IMGUI_NAV_INPUT_INPUT = ccimgui.ImGuiNavInput_Input
@@ -609,11 +605,10 @@ IMGUI_VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING = ccimgui.ImGuiViewportFlags_NoFocusO
 IMGUI_VIEWPORT_FLAGS_NO_FOCUS_ON_CLICK = ccimgui.ImGuiViewportFlags_NoFocusOnClick
 IMGUI_VIEWPORT_FLAGS_NO_INPUTS = ccimgui.ImGuiViewportFlags_NoInputs
 IMGUI_VIEWPORT_FLAGS_NO_RENDERER_CLEAR = ccimgui.ImGuiViewportFlags_NoRendererClear
-IMGUI_VIEWPORT_FLAGS_NO_AUTO_MERGE = ccimgui.ImGuiViewportFlags_NoAutoMerge
 IMGUI_VIEWPORT_FLAGS_TOP_MOST = ccimgui.ImGuiViewportFlags_TopMost
+IMGUI_VIEWPORT_FLAGS_MINIMIZED = ccimgui.ImGuiViewportFlags_Minimized
+IMGUI_VIEWPORT_FLAGS_NO_AUTO_MERGE = ccimgui.ImGuiViewportFlags_NoAutoMerge
 IMGUI_VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS = ccimgui.ImGuiViewportFlags_CanHostOtherWindows
-IMGUI_VIEWPORT_FLAGS_IS_MINIMIZED = ccimgui.ImGuiViewportFlags_IsMinimized
-IMGUI_VIEWPORT_FLAGS_IS_FOCUSED = ccimgui.ImGuiViewportFlags_IsFocused
 IMGUI_WINDOW_FLAGS_NONE = ccimgui.ImGuiWindowFlags_None
 IMGUI_WINDOW_FLAGS_NO_TITLE_BAR = ccimgui.ImGuiWindowFlags_NoTitleBar
 IMGUI_WINDOW_FLAGS_NO_RESIZE = ccimgui.ImGuiWindowFlags_NoResize
@@ -1256,11 +1251,28 @@ def button(label: str, size: tuple=(0, 0)):
 # [End Function]
 
 # [Function]
-# # ?use_template(False)
-# # ?active(False)
-# # ?returns(None)
-# def calc_text_size(pOut: ImVec2, text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
-#     ccimgui.igCalcTextSize(pOut._ptr, _bytes(text), _bytes(text_end), hide_text_after_double_hash, wrap_width)
+# ?use_template(True)
+# ?active(True)
+# ?returns(tuple)
+def calc_text_size(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
+    cdef ccimgui.ImVec2 vec2
+    if text_end is None:
+        ccimgui.igCalcTextSize(
+            &vec2,
+            _bytes(text),
+            NULL,
+            hide_text_after_double_hash,
+            wrap_width
+        )
+    else:
+        ccimgui.igCalcTextSize(
+            &vec2,
+            _bytes(text),
+            _bytes(text_end),
+            hide_text_after_double_hash,
+            wrap_width
+        )
+    return _cast_ImVec2_tuple(vec2)
 # [End Function]
 
 # [Function]
@@ -4563,6 +4575,17 @@ def push_button_repeat(repeat: bool):
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
+def push_id(str_id: str):
+    """
+    Push string into the id stack (will hash string).
+    """
+    ccimgui.igPushID_Str(_bytes(str_id))
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
 def push_id_int(int_id: int):
     """
     Push integer into the id stack (will hash integer).
@@ -7513,27 +7536,27 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def channels_merge(self: ImDrawList):
-    #     ccimgui.ImDrawList_ChannelsMerge(self._ptr)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def channels_merge(self: ImDrawList):
+        ccimgui.ImDrawList_ChannelsMerge(self._ptr)
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def channels_set_current(self: ImDrawList, n: int):
-    #     ccimgui.ImDrawList_ChannelsSetCurrent(self._ptr, n)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def channels_set_current(self: ImDrawList, n: int):
+        ccimgui.ImDrawList_ChannelsSetCurrent(self._ptr, n)
     # [End Method]
 
     # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
-    # def channels_split(self: ImDrawList, count: int):
-    #     ccimgui.ImDrawList_ChannelsSplit(self._ptr, count)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    def channels_split(self: ImDrawList, count: int):
+        ccimgui.ImDrawList_ChannelsSplit(self._ptr, count)
     # [End Method]
 
     # [Method]
@@ -11003,19 +11026,6 @@ cdef class ImGuiIO:
     # [Field]
     # # ?use_template(False)
     # # ?active(False)
-    # # ?returns(Any)
-    # @property
-    # def mouse_source(self):
-    #     cdef Any res = dereference(self._ptr).MouseSource
-    #     return res
-    # @mouse_source.setter
-    # def mouse_source(self, value: Any):
-    #     dereference(self._ptr).MouseSource = value
-    # [End Field]
-
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
     # # ?returns(int)
     # @property
     # def mouse_hovered_viewport(self):
@@ -11250,19 +11260,6 @@ cdef class ImGuiIO:
     # [Field]
     # # ?use_template(False)
     # # ?active(False)
-    # # ?returns(bool)
-    # @property
-    # def mouse_wheel_request_axis_swap(self):
-    #     cdef bool res = dereference(self._ptr).MouseWheelRequestAxisSwap
-    #     return res
-    # @mouse_wheel_request_axis_swap.setter
-    # def mouse_wheel_request_axis_swap(self, value: bool):
-    #     dereference(self._ptr).MouseWheelRequestAxisSwap = value
-    # [End Field]
-
-    # [Field]
-    # # ?use_template(False)
-    # # ?active(False)
     # # ?returns(float)
     # @property
     # def mouse_down_duration(self):
@@ -11403,6 +11400,32 @@ cdef class ImGuiIO:
     #     dereference(self._ptr).InputQueueCharacters = value._ptr
     # [End Field]
 
+    # [Field]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(Any)
+    # @property
+    # def mouse_source(self):
+    #     cdef Any res = dereference(self._ptr).MouseSource
+    #     return res
+    # @mouse_source.setter
+    # def mouse_source(self, value: Any):
+    #     dereference(self._ptr).MouseSource = value
+    # [End Field]
+
+    # [Field]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(bool)
+    # @property
+    # def mouse_wheel_request_axis_swap(self):
+    #     cdef bool res = dereference(self._ptr).MouseWheelRequestAxisSwap
+    #     return res
+    # @mouse_wheel_request_axis_swap.setter
+    # def mouse_wheel_request_axis_swap(self, value: bool):
+    #     dereference(self._ptr).MouseWheelRequestAxisSwap = value
+    # [End Field]
+
     # [Method]
     # # ?use_template(False)
     # # ?active(False)
@@ -11521,17 +11544,6 @@ cdef class ImGuiIO:
     # # ?use_template(False)
     # # ?active(False)
     # # ?returns(None)
-    # def add_mouse_source_event(self: ImGuiIO, source: Any):
-    #     """
-    #     Queue a mouse source change (mouse/touchscreen/pen)
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
-    # [End Method]
-
-    # [Method]
-    # # ?use_template(False)
-    # # ?active(False)
-    # # ?returns(None)
     # def add_mouse_viewport_event(self: ImGuiIO, id_: int):
     #     """
     #     Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport
@@ -11598,6 +11610,17 @@ cdef class ImGuiIO:
     #     with native indices + specify native keycode, scancode.
     #     """
     #     ccimgui.ImGuiIO_SetKeyEventNativeData(self._ptr, key, native_keycode, native_scancode, native_legacy_index)
+    # [End Method]
+
+    # [Method]
+    # # ?use_template(False)
+    # # ?active(False)
+    # # ?returns(None)
+    # def add_mouse_source_event(self: ImGuiIO, source: Any):
+    #     """
+    #     Queue a mouse source change (mouse/touchscreen/pen)
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
     # [End Method]
 # [End Class]
 

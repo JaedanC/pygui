@@ -4,142 +4,6 @@ import math
 import time
 from PIL import Image
 
-
-class static:
-    _singleton_instance = None
-
-    @staticmethod
-    def instance() -> static:
-        if static._singleton_instance is None:
-            static._singleton_instance = static()
-        return static._singleton_instance
-    
-    def __init__(self):
-        self.widgets_image = Image.open("pygui/img/code.png")
-        self.widgets_image_texture = pygui.load_image(self.widgets_image)
-
-    widgets_general_clicked = 0
-    widgets_general_check = pygui.BoolPtr(True)
-    widgets_general_e = pygui.IntPtr(0)
-    widgets_general_counter = 0
-    widgets_inputs_str0 = pygui.StrPtr("Hello, World!", 128)
-    widgets_inputs_str1 = pygui.StrPtr("", 128)
-    widgets_inputs_i0 = pygui.IntPtr(123)
-    widgets_inputs_f0 = pygui.FloatPtr(0.001)
-    widgets_inputs_d0 = pygui.DoublePtr(999999.00000001)
-    widgets_inputs_f1 = pygui.FloatPtr(1.e10)
-    widgets_inputs_vec4a = [
-        pygui.FloatPtr(0.1),
-        pygui.FloatPtr(0.2),
-        pygui.FloatPtr(0.3),
-        pygui.FloatPtr(0.44),
-    ]
-    widgets_drag_i1 = pygui.IntPtr(50)
-    widgets_drag_i2 = pygui.IntPtr(42)
-    widgets_drag_f1 = pygui.FloatPtr(1)
-    widgets_drag_f2 = pygui.FloatPtr(0.0067)
-    widgets_sliders_i1 = pygui.IntPtr(0)
-    widgets_sliders_f1 = pygui.FloatPtr(0.123)
-    widgets_sliders_f2 = pygui.FloatPtr(0)
-    widgets_sliders_angle = pygui.FloatPtr(0)
-    widgets_sliders_elem = pygui.IntPtr(0)
-    widgets_picker_col1 = pygui.Vec4Ptr(1, 0, 0.2, 1)
-    widgets_picker_col2 = pygui.Vec4Ptr(0.4, 0.7, 0, 0.5)
-    widgets_combo_item_current = pygui.IntPtr(0)
-    widgets_list_item_current = pygui.IntPtr(0)
-    widgets_tree_base_flags = pygui.IntPtr(
-        pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_ARROW | \
-        pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK | \
-        pygui.IMGUI_TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH)
-    widgets_tree_align_label_with_current_x_position = pygui.BoolPtr(False)
-    widgets_tree_test_drag_and_drop = pygui.BoolPtr(False)
-    widgets_tree_selection_mask = pygui.IntPtr(1 << 2)
-    widgets_header_closable_group = pygui.BoolPtr(True)
-    widgets_text_wrap_width = pygui.FloatPtr(200)
-    widgets_text_utf8_buf = pygui.StrPtr("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
-    widgets_combo_flags = pygui.IntPtr(0)
-    widgets_combo_item_current_idx = pygui.IntPtr(0)
-    widgets_combo_item_current_2 = pygui.IntPtr(0)
-    widgets_combo_item_current_3 = pygui.IntPtr(0)
-    widgets_combo_item_current_4 = pygui.IntPtr(0)
-    widgets_image_use_text_color_for_tint = pygui.BoolPtr(False)
-    widgets_image_pressed_count = 0
-    widgets_list_box_item_current_idx = 0
-    widgets_select_selection = [
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(True),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-    ]
-    widgets_select_selected = -1
-    widgets_select_single_state_selected = -1
-    widgets_select_multi_state_selection = [
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-    ]
-    widgets_select_render_selected = [
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(False),
-    ]
-    widgets_select_column_selected = [pygui.BoolPtr(False) for _ in range(10)]
-    widgets_select_grid_selected = [
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1],
-    ]
-    widgets_select_allign_selected = [
-        pygui.BoolPtr(True),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(True),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(True),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(True),
-        pygui.BoolPtr(False),
-        pygui.BoolPtr(True),
-    ]
-    widgets_plotting_animate = pygui.BoolPtr(True)
-    widgets_plotting_arr = [
-        0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
-    ]
-    widgets_plotting_values = [0] * 90
-    widgets_plotting_values_offset = 0
-    widgets_plotting_refresh_time = 0
-    widgets_plotting_phase = 0
-    widgets_plotting_func_type = pygui.IntPtr(0)
-    widgets_plotting_display_count = pygui.IntPtr(70)
-    widgets_plotting_progress = 0
-    widgets_plotting_progress_dir = 1
-    widgets_colour_color = pygui.Vec4Ptr(114 / 255, 144 / 255, 154 / 255, 200 / 255)
-    widgets_colour_flags = pygui.IntPtr(0)
-    widgets_colour_alpha_preview = pygui.BoolPtr(True)
-    widgets_colour_alpha_half_preview = pygui.BoolPtr(False)
-    widgets_colour_drag_and_drop = pygui.BoolPtr(True)
-    widgets_colour_options_menu = pygui.BoolPtr(True)
-    widgets_colour_hdr = pygui.BoolPtr(False)
-    widgets_colour_saved_palette_init = pygui.BoolPtr(True)
-    widgets_colour_saved_palette = [pygui.Vec4Ptr(0, 0, 0, 0) for _ in range(32)]
-    widgets_colour_backup_color = pygui.Vec4Ptr(0, 0, 0, 0)
-    widgets_colour_no_border = pygui.BoolPtr(False)
-    widgets_colour_alpha = pygui.BoolPtr(True)
-    widgets_colour_alpha_bar = pygui.BoolPtr(True)
-    widgets_colour_side_preview = pygui.BoolPtr(True)
-    widgets_colour_ref_color = pygui.BoolPtr(False)
-    widgets_colour_ref_color_v = pygui.Vec4Ptr(1, 0, 1, 0.5)
-    widgets_colour_display_mode = pygui.IntPtr(False)
-    widgets_colour_picker_mode = pygui.IntPtr(False)
-    widgets_colour_color_hsv = pygui.Vec4Ptr(0.23, 1, 1, 1)
-    widgets_multi_vec4f = pygui.Vec4Ptr(0.10, 0.2, 0.3, 0.44)
-    widgets_multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
-
-
-
 # From: https://stackoverflow.com/questions/4092528/how-can-i-clamp-clip-restrict-a-number-to-some-range#comment53230306_4092550
 def clamp(n, smallest, largest):
     return max(smallest, min(n, largest))
@@ -154,7 +18,146 @@ def help_marker(desc: str):
         pygui.end_tooltip()
 
 
-def show_demo_window_widgets():
+def show_demo_window():
+    show_demo_widgets()
+    show_demo_tables()
+
+
+class widget:
+    _singleton_instance = None
+
+    @staticmethod
+    def instance() -> widget:
+        if widget._singleton_instance is None:
+            widget._singleton_instance = widget()
+        return widget._singleton_instance
+    
+    def __init__(self):
+        self.widgets_image = Image.open("pygui/img/code.png")
+        self.widgets_image_texture = pygui.load_image(self.widgets_image)
+
+    general_clicked = 0
+    general_check = pygui.BoolPtr(True)
+    general_e = pygui.IntPtr(0)
+    general_counter = 0
+    inputs_str0 = pygui.StrPtr("Hello, World!", 128)
+    inputs_str1 = pygui.StrPtr("", 128)
+    inputs_i0 = pygui.IntPtr(123)
+    inputs_f0 = pygui.FloatPtr(0.001)
+    inputs_d0 = pygui.DoublePtr(999999.00000001)
+    inputs_f1 = pygui.FloatPtr(1.e10)
+    inputs_vec4a = [
+        pygui.FloatPtr(0.1),
+        pygui.FloatPtr(0.2),
+        pygui.FloatPtr(0.3),
+        pygui.FloatPtr(0.44),
+    ]
+    drag_i1 = pygui.IntPtr(50)
+    drag_i2 = pygui.IntPtr(42)
+    drag_f1 = pygui.FloatPtr(1)
+    drag_f2 = pygui.FloatPtr(0.0067)
+    sliders_i1 = pygui.IntPtr(0)
+    sliders_f1 = pygui.FloatPtr(0.123)
+    sliders_f2 = pygui.FloatPtr(0)
+    sliders_angle = pygui.FloatPtr(0)
+    sliders_elem = pygui.IntPtr(0)
+    picker_col1 = pygui.Vec4Ptr(1, 0, 0.2, 1)
+    picker_col2 = pygui.Vec4Ptr(0.4, 0.7, 0, 0.5)
+    combo_item_current = pygui.IntPtr(0)
+    list_item_current = pygui.IntPtr(0)
+    tree_base_flags = pygui.IntPtr(
+        pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_ARROW | \
+        pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK | \
+        pygui.IMGUI_TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH)
+    tree_align_label_with_current_x_position = pygui.BoolPtr(False)
+    tree_test_drag_and_drop = pygui.BoolPtr(False)
+    tree_selection_mask = pygui.IntPtr(1 << 2)
+    header_closable_group = pygui.BoolPtr(True)
+    text_wrap_width = pygui.FloatPtr(200)
+    text_utf8_buf = pygui.StrPtr("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
+    combo_flags = pygui.IntPtr(0)
+    combo_item_current_idx = pygui.IntPtr(0)
+    combo_item_current_2 = pygui.IntPtr(0)
+    combo_item_current_3 = pygui.IntPtr(0)
+    combo_item_current_4 = pygui.IntPtr(0)
+    image_use_text_color_for_tint = pygui.BoolPtr(False)
+    image_pressed_count = 0
+    list_box_item_current_idx = 0
+    select_selection = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    select_selected = -1
+    select_single_state_selected = -1
+    select_multi_state_selection = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    select_render_selected = [
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(False),
+    ]
+    select_column_selected = [pygui.BoolPtr(False) for _ in range(10)]
+    select_grid_selected = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]
+    select_allign_selected = [
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+        pygui.BoolPtr(False),
+        pygui.BoolPtr(True),
+    ]
+    plotting_animate = pygui.BoolPtr(True)
+    plotting_arr = [
+        0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
+    ]
+    plotting_values = [0] * 90
+    plotting_values_offset = 0
+    plotting_refresh_time = 0
+    plotting_phase = 0
+    plotting_func_type = pygui.IntPtr(0)
+    plotting_display_count = pygui.IntPtr(70)
+    plotting_progress = 0
+    plotting_progress_dir = 1
+    colour_color = pygui.Vec4Ptr(114 / 255, 144 / 255, 154 / 255, 200 / 255)
+    colour_flags = pygui.IntPtr(0)
+    colour_alpha_preview = pygui.BoolPtr(True)
+    colour_alpha_half_preview = pygui.BoolPtr(False)
+    colour_drag_and_drop = pygui.BoolPtr(True)
+    colour_options_menu = pygui.BoolPtr(True)
+    colour_hdr = pygui.BoolPtr(False)
+    colour_saved_palette_init = pygui.BoolPtr(True)
+    colour_saved_palette = [pygui.Vec4Ptr(0, 0, 0, 0) for _ in range(32)]
+    colour_backup_color = pygui.Vec4Ptr(0, 0, 0, 0)
+    colour_no_border = pygui.BoolPtr(False)
+    colour_alpha = pygui.BoolPtr(True)
+    colour_alpha_bar = pygui.BoolPtr(True)
+    colour_side_preview = pygui.BoolPtr(True)
+    colour_ref_color = pygui.BoolPtr(False)
+    colour_ref_color_v = pygui.Vec4Ptr(1, 0, 1, 0.5)
+    colour_display_mode = pygui.IntPtr(False)
+    colour_picker_mode = pygui.IntPtr(False)
+    colour_color_hsv = pygui.Vec4Ptr(0.23, 1, 1, 1)
+    multi_vec4f = pygui.Vec4Ptr(0.10, 0.2, 0.3, 0.44)
+    multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
+
+
+def show_demo_widgets():
     if not pygui.collapsing_header("Widgets"):
         return
     
@@ -162,19 +165,19 @@ def show_demo_window_widgets():
         pygui.separator_text("General")
 
         if pygui.button("Button"):
-            static.widgets_general_clicked += 1
+            widget.general_clicked += 1
         
-        if static.widgets_general_clicked & 1:
+        if widget.general_clicked & 1:
             pygui.same_line()
             pygui.text("Thanks for clicking me!")
         
-        pygui.checkbox("checkbox", static.widgets_general_check)
+        pygui.checkbox("checkbox", widget.general_check)
 
-        pygui.radio_button("radio a", static.widgets_general_e, 0)
+        pygui.radio_button("radio a", widget.general_e, 0)
         pygui.same_line()
-        pygui.radio_button("radio b", static.widgets_general_e, 1)
+        pygui.radio_button("radio b", widget.general_e, 1)
         pygui.same_line()
-        pygui.radio_button("radio c", static.widgets_general_e, 2)
+        pygui.radio_button("radio c", widget.general_e, 2)
         
         # Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
         for i in range(6):
@@ -199,13 +202,13 @@ def show_demo_window_widgets():
         spacing: float = pygui.get_style().item_inner_spacing[0]
         pygui.push_button_repeat(True)
         if pygui.arrow_button("##left", pygui.IMGUI_DIR_LEFT):
-            static.widgets_general_counter -= 1
+            widget.general_counter -= 1
         pygui.same_line(0, spacing)
         if pygui.arrow_button("##right", pygui.IMGUI_DIR_RIGHT):
-            static.widgets_general_counter += 1
+            widget.general_counter += 1
         pygui.pop_button_repeat()
         pygui.same_line()
-        pygui.text(str(static.widgets_general_counter))
+        pygui.text(str(widget.general_counter))
 
         # Tooltips
 
@@ -236,7 +239,7 @@ def show_demo_window_widgets():
 
         pygui.separator_text("Inputs")
 
-        pygui.input_text("input text", static.widgets_inputs_str0)
+        pygui.input_text("input text", widget.inputs_str0)
         pygui.same_line()
         help_marker("USER:\n"
             "Hold SHIFT or use mouse to select text.\n"
@@ -251,49 +254,49 @@ def show_demo_window_widgets():
             "in imgui_demo.cpp)."
         )
 
-        pygui.input_text_with_hint("input text (w/ hint)", "enter text here", static.widgets_inputs_str1)
-        pygui.input_int("input int", static.widgets_inputs_i0)
-        pygui.input_float("input float", static.widgets_inputs_f0, 0.01, 1.0, "%.3f")
-        pygui.input_double("input double", static.widgets_inputs_d0, 0.01, 1.0, "%.8f")
-        pygui.input_float("input scientific", static.widgets_inputs_f1, 0, 0, "%e")
-        pygui.input_float2("input float2", static.widgets_inputs_vec4a)
-        pygui.input_float3("input float3", static.widgets_inputs_vec4a)
-        pygui.input_float4("input float4", static.widgets_inputs_vec4a)
+        pygui.input_text_with_hint("input text (w/ hint)", "enter text here", widget.inputs_str1)
+        pygui.input_int("input int", widget.inputs_i0)
+        pygui.input_float("input float", widget.inputs_f0, 0.01, 1.0, "%.3f")
+        pygui.input_double("input double", widget.inputs_d0, 0.01, 1.0, "%.8f")
+        pygui.input_float("input scientific", widget.inputs_f1, 0, 0, "%e")
+        pygui.input_float2("input float2", widget.inputs_vec4a)
+        pygui.input_float3("input float3", widget.inputs_vec4a)
+        pygui.input_float4("input float4", widget.inputs_vec4a)
 
         pygui.separator_text("Drags")
 
-        pygui.drag_int("drag int", static.widgets_drag_i1, 1)
+        pygui.drag_int("drag int", widget.drag_i1, 1)
         pygui.same_line()
         help_marker(
             "Click and drag to edit value.\n"
             "Hold SHIFT/ALT for faster/slower edit.\n"
             "Double-click or CTRL+click to input value."
         )
-        pygui.drag_int("drag int 0..100", static.widgets_drag_i2, 1, 0, 100, "%d%%", pygui.IMGUI_SLIDER_FLAGS_ALWAYS_CLAMP)
-        pygui.drag_float("drag float", static.widgets_drag_f1, 0.005)
-        pygui.drag_float("drag small float", static.widgets_drag_f2, 0.0001, 0, 0, "%.06f ns")
+        pygui.drag_int("drag int 0..100", widget.drag_i2, 1, 0, 100, "%d%%", pygui.IMGUI_SLIDER_FLAGS_ALWAYS_CLAMP)
+        pygui.drag_float("drag float", widget.drag_f1, 0.005)
+        pygui.drag_float("drag small float", widget.drag_f2, 0.0001, 0, 0, "%.06f ns")
 
         pygui.separator_text("Sliders")
 
-        pygui.slider_int("slider int", static.widgets_sliders_i1, -1, 3)
+        pygui.slider_int("slider int", widget.sliders_i1, -1, 3)
         pygui.same_line()
         help_marker("CTRL+click to input value.")
-        pygui.slider_float("slider float", static.widgets_sliders_f1, 0, 1, "ratio = %.3f")
-        pygui.slider_float("slider float (log)", static.widgets_sliders_f2, -10, 10, "%.4f", pygui.IMGUI_SLIDER_FLAGS_LOGARITHMIC)
-        pygui.slider_angle("slider angle", static.widgets_sliders_angle)
+        pygui.slider_float("slider float", widget.sliders_f1, 0, 1, "ratio = %.3f")
+        pygui.slider_float("slider float (log)", widget.sliders_f2, -10, 10, "%.4f", pygui.IMGUI_SLIDER_FLAGS_LOGARITHMIC)
+        pygui.slider_angle("slider angle", widget.sliders_angle)
 
         # Using the format string to display a name instead of an integer.
         # Here we completely omit '%d' from the format string, so it'll only display a name.
         # This technique can also be used with DragInt().
         elements = ["Fire", "Earth", "Air", "Water"]
-        elem_name = elements[static.widgets_sliders_elem.value] if 0 <= static.widgets_sliders_elem.value < len(elements) else "Unknown"
-        pygui.slider_int("slider enum", static.widgets_sliders_elem, 0, len(elements) - 1, elem_name)
+        elem_name = elements[widget.sliders_elem.value] if 0 <= widget.sliders_elem.value < len(elements) else "Unknown"
+        pygui.slider_int("slider enum", widget.sliders_elem, 0, len(elements) - 1, elem_name)
         pygui.same_line()
         help_marker("Using the format string parameter to display a name instead of the underlying integer.")
         
         pygui.separator_text("Selectors/Pickers")
 
-        pygui.color_edit3("color 1", static.widgets_picker_col1)
+        pygui.color_edit3("color 1", widget.picker_col1)
         pygui.same_line()
         help_marker(
             "Click on the color square to open a color picker.\n"
@@ -301,18 +304,18 @@ def show_demo_window_widgets():
             "Right-click on the color square to show options.\n"
             "CTRL+click on individual component to input value.\n"
         )
-        pygui.color_edit4("color 2", static.widgets_picker_col2)
+        pygui.color_edit4("color 2", widget.picker_col2)
 
         # Using the _simplified_ one-liner Combo() api here
         # See "Combo" section for examples of how to use the more flexible BeginCombo()/EndCombo() api.
         # I dunno man, it's pretty clean here in python...
         items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK"]
-        pygui.combo("combo", static.widgets_combo_item_current, items)
+        pygui.combo("combo", widget.combo_item_current, items)
         pygui.same_line()
         help_marker("Using the simplified one-liner Combo API here.\nRefer to the \"Combo\" section below for an explanation of how to use the more flexible and general BeginCombo/EndCombo API.")
         
         items_list = ["Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon"]
-        pygui.list_box("listbox", static.widgets_list_item_current, items_list, 4)
+        pygui.list_box("listbox", widget.list_item_current, items_list, 4)
         pygui.same_line()
         help_marker(
             "Using the simplified one-liner ListBox API here.\nRefer to the \"List boxes\" section below for an explanation of how to use the more flexible and general BeginListBox/EndListBox API."
@@ -339,16 +342,16 @@ def show_demo_window_widgets():
                 "This is a more typical looking tree with selectable nodes.\n"
                 "Click to select, CTRL+Click to toggle, click on arrows or double-click to open."
             )
-            pygui.checkbox_flags("ImGuiTreeNodeFlags_OpenOnArrow",       static.widgets_tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_ARROW)
-            pygui.checkbox_flags("ImGuiTreeNodeFlags_OpenOnDoubleClick", static.widgets_tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK)
-            pygui.checkbox_flags("ImGuiTreeNodeFlags_SpanAvailWidth",    static.widgets_tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH)
+            pygui.checkbox_flags("ImGuiTreeNodeFlags_OpenOnArrow",       widget.tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_ARROW)
+            pygui.checkbox_flags("ImGuiTreeNodeFlags_OpenOnDoubleClick", widget.tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK)
+            pygui.checkbox_flags("ImGuiTreeNodeFlags_SpanAvailWidth",    widget.tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH)
             pygui.same_line()
             help_marker("Extend hit area to all available width instead of allowing more items to be laid out after the node.")
-            pygui.checkbox_flags("ImGuiTreeNodeFlags_SpanFullWidth",     static.widgets_tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_SPAN_FULL_WIDTH)
-            pygui.checkbox("Align label with current X position", static.widgets_tree_align_label_with_current_x_position)
-            pygui.checkbox("Test tree node as drag source", static.widgets_tree_test_drag_and_drop)
+            pygui.checkbox_flags("ImGuiTreeNodeFlags_SpanFullWidth",     widget.tree_base_flags, pygui.IMGUI_TREE_NODE_FLAGS_SPAN_FULL_WIDTH)
+            pygui.checkbox("Align label with current X position", widget.tree_align_label_with_current_x_position)
+            pygui.checkbox("Test tree node as drag source", widget.tree_test_drag_and_drop)
             pygui.text("Hello!")
-            if static.widgets_tree_align_label_with_current_x_position:
+            if widget.tree_align_label_with_current_x_position:
                 pygui.unindent(pygui.get_tree_node_to_label_spacing())
             
             # 'selection_mask' is dumb representation of what may be user-side selection state.
@@ -357,8 +360,8 @@ def show_demo_window_widgets():
             #  of the loop. May be a pointer to your own node type, etc.
             node_clicked = -1
             for i in range(6):
-                node_flags = static.widgets_tree_base_flags.value
-                is_selected = (static.widgets_tree_selection_mask.value & (1 << i)) != 0
+                node_flags = widget.tree_base_flags.value
+                is_selected = (widget.tree_selection_mask.value & (1 << i)) != 0
                 if is_selected:
                     node_flags |= pygui.IMGUI_TREE_NODE_FLAGS_SELECTED
                 if i < 3:
@@ -366,7 +369,7 @@ def show_demo_window_widgets():
                     node_open = pygui.tree_node(f"Selectable Node {i}", node_flags)
                     if pygui.is_item_clicked() and not pygui.is_item_toggled_open():
                         node_clicked = i
-                    if static.widgets_tree_test_drag_and_drop and pygui.begin_drag_drop_source():
+                    if widget.tree_test_drag_and_drop and pygui.begin_drag_drop_source():
                         pygui.set_drag_drop_payload("_TREENODE", None, 0)
                         pygui.text("This is a drag and drop source")
                         pygui.end_drag_drop_source()
@@ -381,7 +384,7 @@ def show_demo_window_widgets():
                     pygui.tree_node(f"Selectable Leaf {i}", node_flags)
                     if pygui.is_item_clicked() and not pygui.is_item_toggled_open():
                         node_clicked = i
-                    if static.widgets_tree_test_drag_and_drop and pygui.begin_drag_drop_source():
+                    if widget.tree_test_drag_and_drop and pygui.begin_drag_drop_source():
                         pygui.set_drag_drop_payload("_TREENODE", None, 0)
                         pygui.text("This is a drag and drop source")
                         pygui.end_drag_drop_source()
@@ -390,23 +393,23 @@ def show_demo_window_widgets():
                 # Update selection state
                 # (process outside of tree loop to avoid visual inconsistencies during the clicking frame)
                 if pygui.get_io().key_ctrl:
-                    static.widgets_tree_selection_mask.value ^= (1 << node_clicked)              # CTRL+click to toggle
+                    widget.tree_selection_mask.value ^= (1 << node_clicked)              # CTRL+click to toggle
                 else: #elif not (static.widgets_tree_selection_mask & (1 << node_clicked)) # Depending on selection behavior you want, may want to preserve selection when clicking on item that is part of the selection
-                    static.widgets_tree_selection_mask.value = (1 << node_clicked)               # Click to single-select
+                    widget.tree_selection_mask.value = (1 << node_clicked)               # Click to single-select
 
-            if static.widgets_tree_align_label_with_current_x_position:
+            if widget.tree_align_label_with_current_x_position:
                 pygui.indent(pygui.get_tree_node_to_label_spacing())
             pygui.tree_pop()
         pygui.tree_pop()
     
     if pygui.tree_node("Collapsing Headers"):
-        pygui.checkbox("Show 2nd header", static.widgets_header_closable_group)
+        pygui.checkbox("Show 2nd header", widget.header_closable_group)
         if pygui.collapsing_header("Header", None, pygui.IMGUI_TREE_NODE_FLAGS_NONE):
             pygui.text("IsItemHovered: {}".format(pygui.is_item_hovered()))
             for i in range(5):
                 pygui.text(f"Some content {i}")
         
-        if pygui.collapsing_header("Header with a close button", static.widgets_header_closable_group):
+        if pygui.collapsing_header("Header with a close button", widget.header_closable_group):
             pygui.text("IsItemHovered: {}".format(pygui.is_item_hovered()))
             for i in range(5):
                 pygui.text(f"more content {i}")
@@ -440,18 +443,18 @@ def show_demo_window_widgets():
                 "for text wrapping follows simple rules suitable for English and possibly other languages.")
             pygui.spacing()
 
-            pygui.slider_float("Wrap width", static.widgets_text_wrap_width, -20, 600, "%.0f")
+            pygui.slider_float("Wrap width", widget.text_wrap_width, -20, 600, "%.0f")
 
             draw_list = pygui.get_window_draw_list()
             for n in range(2):
                 pygui.text(f"Test paragraph {n}")
                 pos = pygui.get_cursor_screen_pos()
-                marker_min = (pos[0] + static.widgets_text_wrap_width.value, pos[1])
-                marker_max = (pos[0] + static.widgets_text_wrap_width.value + 10, pos[1] + pygui.get_text_line_height())
-                pygui.push_text_wrap_pos(pygui.get_cursor_pos()[0] + static.widgets_text_wrap_width.value)
+                marker_min = (pos[0] + widget.text_wrap_width.value, pos[1])
+                marker_max = (pos[0] + widget.text_wrap_width.value + 10, pos[1] + pygui.get_text_line_height())
+                pygui.push_text_wrap_pos(pygui.get_cursor_pos()[0] + widget.text_wrap_width.value)
                 if n == 0:
                     pygui.text("The lazy dog is a good dog. This paragraph should fit within {} pixels. Testing a 1 character word. The quick brown fox jumps over the lazy dog.".format(
-                        static.widgets_text_wrap_width.value
+                        widget.text_wrap_width.value
                     ))
                 else:
                     pygui.text("aaaaaaaa bbbbbbbb, c cccccccc,dddddddd. d eeeeeeee   ffffffff. gggggggg!hhhhhhhh")
@@ -480,9 +483,9 @@ def show_demo_window_widgets():
     if pygui.tree_node("Images"):
         if pygui.tree_node("Custom Pygui Image"):
             pygui.image(
-                static.instance().widgets_image_texture,
-                (static.instance().widgets_image.width / 2,
-                static.instance().widgets_image.height / 2))
+                widget.instance().widgets_image_texture,
+                (widget.instance().widgets_image.width / 2,
+                widget.instance().widgets_image.height / 2))
             pygui.tree_pop()
         
         if pygui.tree_node("ImGui Demo"):
@@ -496,12 +499,12 @@ def show_demo_window_widgets():
             my_tex_w = io.fonts.tex_width
             my_tex_h = io.fonts.tex_height
 
-            pygui.checkbox("Use Text Color for Tint", static.widgets_image_use_text_color_for_tint)
+            pygui.checkbox("Use Text Color for Tint", widget.image_use_text_color_for_tint)
             pygui.text("{}x{}".format(my_tex_w, my_tex_h))
             pos = pygui.get_cursor_screen_pos()
             uv_min = (0, 0) # Top-left
             uv_max = (1, 1) # Lower-right
-            if static.widgets_image_use_text_color_for_tint:
+            if widget.image_use_text_color_for_tint:
                 tint_col = pygui.get_style_color_vec4(pygui.IMGUI_COL_TEXT)
             else:
                 tint_col = (1, 1, 1, 1)
@@ -544,14 +547,14 @@ def show_demo_window_widgets():
                 bg_col = (0, 0, 0, 1)
                 tint_col = (1, 1, 1, 1)
                 if pygui.image_button("", my_tex_id, size, uv0, uv1, bg_col, tint_col):
-                    static.widgets_image_pressed_count += 1
+                    widget.image_pressed_count += 1
                 if i > 0:
                     pygui.pop_style_var()
                 pygui.pop_id()
                 pygui.same_line()
             
             pygui.new_line()
-            pygui.text("Pressed {} times.".format(static.widgets_image_pressed_count))
+            pygui.text("Pressed {} times.".format(widget.image_pressed_count))
             pygui.tree_pop()
 
         pygui.tree_pop()
@@ -559,24 +562,24 @@ def show_demo_window_widgets():
     if pygui.tree_node("Combo"):
         # Combo Boxes are also called "Dropdown" in other systems
         # Expose flags as checkbox for the demo
-        pygui.checkbox_flags("ImGuiComboFlags_PopupAlignLeft", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_POPUP_ALIGN_LEFT)
+        pygui.checkbox_flags("ImGuiComboFlags_PopupAlignLeft", widget.combo_flags, pygui.IMGUI_COMBO_FLAGS_POPUP_ALIGN_LEFT)
         pygui.same_line()
         help_marker("Only makes a difference if the popup is larger than the combo")
-        if pygui.checkbox_flags("ImGuiComboFlags_NoArrowButton", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON):
-            static.widgets_combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW
-        if pygui.checkbox_flags("ImGuiComboFlags_NoPreview", static.widgets_combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW):
-            static.widgets_combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON
+        if pygui.checkbox_flags("ImGuiComboFlags_NoArrowButton", widget.combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON):
+            widget.combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW
+        if pygui.checkbox_flags("ImGuiComboFlags_NoPreview", widget.combo_flags, pygui.IMGUI_COMBO_FLAGS_NO_PREVIEW):
+            widget.combo_flags.value &= ~pygui.IMGUI_COMBO_FLAGS_NO_ARROW_BUTTON
         
         # Using the generic BeginCombo() API, you have full control over how to display the combo contents.
         # (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
         # stored in the object itself, etc.)
         items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"]
-        combo_preview_value = items[static.widgets_combo_item_current_idx.value]
-        if pygui.begin_combo("combo 1", combo_preview_value, static.widgets_combo_flags.value):
+        combo_preview_value = items[widget.combo_item_current_idx.value]
+        if pygui.begin_combo("combo 1", combo_preview_value, widget.combo_flags.value):
             for n in range(len(items)):
-                is_selected = static.widgets_combo_item_current_idx.value == n
+                is_selected = widget.combo_item_current_idx.value == n
                 if pygui.selectable(items[n], is_selected):
-                    static.widgets_combo_item_current_idx.value = n
+                    widget.combo_item_current_idx.value = n
                 
                 # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
                 if is_selected:
@@ -587,12 +590,12 @@ def show_demo_window_widgets():
         # Simplified one-liner Combo() API, using values packed in a single constant string
         # This is a convenience for when the selection set is small and known at compile-time.
         # Pygui note: Obviously this doesn't really make sense in pygui. Just use a list.
-        pygui.combo("combo 2 (one-liner)", static.widgets_combo_item_current_2, ["aaaa", "bbbb", "cccc", "dddd", "eeee"])
+        pygui.combo("combo 2 (one-liner)", widget.combo_item_current_2, ["aaaa", "bbbb", "cccc", "dddd", "eeee"])
 
         # Simplified one-liner Combo() using an array of const char*
         # This is not very useful (may obsolete): prefer using BeginCombo()/EndCombo() for full control.
         # If the selection isn't within 0..count, Combo won't display a preview
-        pygui.combo("combo 3 (array)", static.widgets_combo_item_current_3, items)
+        pygui.combo("combo 3 (array)", widget.combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
         # This one is yet to be added, but still I question if this is required
@@ -610,9 +613,9 @@ def show_demo_window_widgets():
         items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"]
         if pygui.begin_list_box("listbox 1"):
             for n in range(len(items)):
-                is_selected = static.widgets_list_box_item_current_idx == n
+                is_selected = widget.list_box_item_current_idx == n
                 if pygui.selectable(items[n], is_selected):
-                    static.widgets_list_box_item_current_idx = n
+                    widget.list_box_item_current_idx = n
                 
                 # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
                 if is_selected:
@@ -623,9 +626,9 @@ def show_demo_window_widgets():
         pygui.text("Full-width:")
         if pygui.begin_list_box("##listbox 2", (-pygui.FLT_MIN, 5 * pygui.get_text_line_height_with_spacing())):
             for n in range(len(items)):
-                is_selected = static.widgets_list_box_item_current_idx == n
+                is_selected = widget.list_box_item_current_idx == n
                 if pygui.selectable(items[n], is_selected):
-                    static.widgets_list_box_item_current_idx = n
+                    widget.list_box_item_current_idx = n
                 
                 # Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
                 if is_selected:
@@ -636,40 +639,40 @@ def show_demo_window_widgets():
     
     if pygui.tree_node("Selectables"):
         if pygui.tree_node("Basic"):
-            pygui.selectable_bool_ptr("1. I am selectable", static.widgets_select_selection[0])
-            pygui.selectable_bool_ptr("2. I am selectable", static.widgets_select_selection[1])
+            pygui.selectable_bool_ptr("1. I am selectable", widget.select_selection[0])
+            pygui.selectable_bool_ptr("2. I am selectable", widget.select_selection[1])
             pygui.text("(I am not selectable)")
-            pygui.selectable_bool_ptr("4. I am selectable", static.widgets_select_selection[3])
-            if pygui.selectable("5. I am double clickable", static.widgets_select_selection[4], pygui.IMGUI_SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK):
+            pygui.selectable_bool_ptr("4. I am selectable", widget.select_selection[3])
+            if pygui.selectable("5. I am double clickable", widget.select_selection[4], pygui.IMGUI_SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK):
                 if pygui.is_mouse_double_clicked(pygui.IMGUI_MOUSE_BUTTON_LEFT):
-                    static.widgets_select_selection[4].ptr = not static.widgets_select_selection[4].ptr
+                    widget.select_selection[4].ptr = not widget.select_selection[4].ptr
             pygui.tree_pop()
         
         if pygui.tree_node("Selection State: Single Selection"):
             for n in range(5):
-                if pygui.selectable(f"Object {n}", static.widgets_select_single_state_selected == n):
-                    static.widgets_select_single_state_selected = n
+                if pygui.selectable(f"Object {n}", widget.select_single_state_selected == n):
+                    widget.select_single_state_selected = n
             pygui.tree_pop()
 
         if pygui.tree_node("Selection State: Multiple Selection"):
             help_marker("Hold CTRL and click to select multiple items.")
             for n in range(5):
-                if pygui.selectable(f"Object {n}", static.widgets_select_multi_state_selection[n]):
+                if pygui.selectable(f"Object {n}", widget.select_multi_state_selection[n]):
                     if not pygui.get_io().key_ctrl:
-                        static.widgets_select_multi_state_selection = [pygui.BoolPtr(False) for _ in range(len(static.widgets_select_multi_state_selection))]
-                    static.widgets_select_multi_state_selection[n].ptr = not static.widgets_select_multi_state_selection[n].ptr
+                        widget.select_multi_state_selection = [pygui.BoolPtr(False) for _ in range(len(widget.select_multi_state_selection))]
+                    widget.select_multi_state_selection[n].ptr = not widget.select_multi_state_selection[n].ptr
             pygui.tree_pop()
         
         if pygui.tree_node("Rendering more text into the same line"):
-            pygui.selectable_bool_ptr("main.c", static.widgets_select_render_selected[0])
+            pygui.selectable_bool_ptr("main.c", widget.select_render_selected[0])
             pygui.same_line(300)
             pygui.text(" 2,345 bytes")
 
-            pygui.selectable_bool_ptr("Hello.cpp", static.widgets_select_render_selected[1])
+            pygui.selectable_bool_ptr("Hello.cpp", widget.select_render_selected[1])
             pygui.same_line(300)
             pygui.text("12,245 bytes")
             
-            pygui.selectable_bool_ptr("Hello.h", static.widgets_select_render_selected[2])
+            pygui.selectable_bool_ptr("Hello.h", widget.select_render_selected[2])
             pygui.same_line(300)
             pygui.text(" 2,345 bytes")
             pygui.tree_pop()
@@ -678,14 +681,14 @@ def show_demo_window_widgets():
             if pygui.begin_table("split1", 3, pygui.IMGUI_TABLE_FLAGS_RESIZABLE | pygui.IMGUI_TABLE_FLAGS_NO_SAVED_SETTINGS | pygui.IMGUI_TABLE_FLAGS_BORDERS):
                 for i in range(10):
                     pygui.table_next_column()
-                    pygui.selectable_bool_ptr(f"Item {i}", static.widgets_select_column_selected[i])
+                    pygui.selectable_bool_ptr(f"Item {i}", widget.select_column_selected[i])
                 pygui.end_table()
             pygui.spacing()
             if pygui.begin_table("split2", 3, pygui.IMGUI_TABLE_FLAGS_RESIZABLE | pygui.IMGUI_TABLE_FLAGS_NO_SAVED_SETTINGS | pygui.IMGUI_TABLE_FLAGS_BORDERS):
                 for i in range(10):
                     pygui.table_next_row()
                     pygui.table_next_column()
-                    pygui.selectable_bool_ptr(f"Item {i}", static.widgets_select_column_selected[i], pygui.IMGUI_SELECTABLE_FLAGS_SPAN_ALL_COLUMNS)
+                    pygui.selectable_bool_ptr(f"Item {i}", widget.select_column_selected[i], pygui.IMGUI_SELECTABLE_FLAGS_SPAN_ALL_COLUMNS)
                     pygui.table_next_column()
                     pygui.text("Some other contents")
                     pygui.table_next_column()
@@ -696,7 +699,7 @@ def show_demo_window_widgets():
         if pygui.tree_node("Grid"):
             # Add in a bit of silly fun...
             current_time = pygui.get_time()
-            winning_state = not any(0 in inner for inner in static.widgets_select_grid_selected)
+            winning_state = not any(0 in inner for inner in widget.select_grid_selected)
             if winning_state:
                 pygui.push_style_var_vec2(
                     pygui.IMGUI_STYLE_VAR_SELECTABLE_TEXT_ALIGN,
@@ -707,16 +710,16 @@ def show_demo_window_widgets():
                     if x > 0:
                         pygui.same_line()
                     pygui.push_id_int(y * 4 + x)
-                    if pygui.selectable("Sailor", bool(static.widgets_select_grid_selected[y][x]), 0, (50, 50)):
-                        static.widgets_select_grid_selected[y][x] ^= 1
+                    if pygui.selectable("Sailor", bool(widget.select_grid_selected[y][x]), 0, (50, 50)):
+                        widget.select_grid_selected[y][x] ^= 1
                         if x > 0:
-                            static.widgets_select_grid_selected[y][x - 1] ^= 1
+                            widget.select_grid_selected[y][x - 1] ^= 1
                         if x < 3:
-                            static.widgets_select_grid_selected[y][x + 1] ^= 1
+                            widget.select_grid_selected[y][x + 1] ^= 1
                         if y > 0:
-                            static.widgets_select_grid_selected[y - 1][x] ^= 1
+                            widget.select_grid_selected[y - 1][x] ^= 1
                         if y < 3:
-                            static.widgets_select_grid_selected[y + 1][x] ^= 1
+                            widget.select_grid_selected[y + 1][x] ^= 1
                     pygui.pop_id()
                 
             if winning_state:
@@ -736,7 +739,7 @@ def show_demo_window_widgets():
                     pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
                     pygui.selectable_bool_ptr(
                         "({:.1f}, {:.1f})".format(alignment[0], alignment[1]),
-                        static.widgets_select_allign_selected[3 * y + x],
+                        widget.select_allign_selected[3 * y + x],
                         pygui.IMGUI_SELECTABLE_FLAGS_NONE,
                         (80, 80)
                     )
@@ -745,34 +748,34 @@ def show_demo_window_widgets():
         pygui.tree_pop()
 
     if pygui.tree_node("Plotting"):
-        pygui.checkbox("Animate", static.widgets_plotting_animate)
+        pygui.checkbox("Animate", widget.plotting_animate)
 
         # Plot as lines and plot as histogram
-        pygui.plot_lines("Frame Times", static.widgets_plotting_arr)
-        pygui.plot_histogram("Histogram", static.widgets_plotting_arr, 0, None, 0, 1, (0, 80))
+        pygui.plot_lines("Frame Times", widget.plotting_arr)
+        pygui.plot_histogram("Histogram", widget.plotting_arr, 0, None, 0, 1, (0, 80))
 
         # Fill an array of contiguous float values to plot
         # Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float
         # and the sizeof() of your structure in the "stride" parameter.
-        if not static.widgets_plotting_animate or static.widgets_plotting_refresh_time == 0:
-            static.widgets_plotting_refresh_time = time.time()
+        if not widget.plotting_animate or widget.plotting_refresh_time == 0:
+            widget.plotting_refresh_time = time.time()
         
-        while static.widgets_plotting_refresh_time < time.time():
-            static.widgets_plotting_values[static.widgets_plotting_values_offset] = math.cos(
-                static.widgets_plotting_phase
+        while widget.plotting_refresh_time < time.time():
+            widget.plotting_values[widget.plotting_values_offset] = math.cos(
+                widget.plotting_phase
             )
-            static.widgets_plotting_values_offset = (static.widgets_plotting_values_offset + 1) % len(static.widgets_plotting_values)
-            static.widgets_plotting_phase += 0.1 * static.widgets_plotting_values_offset
-            static.widgets_plotting_refresh_time += 1 / 60
+            widget.plotting_values_offset = (widget.plotting_values_offset + 1) % len(widget.plotting_values)
+            widget.plotting_phase += 0.1 * widget.plotting_values_offset
+            widget.plotting_refresh_time += 1 / 60
 
         average = 0
-        for n in range(len(static.widgets_plotting_values)):
-            average += static.widgets_plotting_values[n]
-        average /= len(static.widgets_plotting_values)
+        for n in range(len(widget.plotting_values)):
+            average += widget.plotting_values[n]
+        average /= len(widget.plotting_values)
         pygui.plot_lines(
             "Lines",
-            static.widgets_plotting_values,
-            static.widgets_plotting_values_offset,
+            widget.plotting_values,
+            widget.plotting_values_offset,
             "avg {:.6f}".format(average),
             -1,
             1,
@@ -783,55 +786,55 @@ def show_demo_window_widgets():
         # rather than the values_getter moethod in the demo.
         pygui.separator_text("Functions")
         pygui.set_next_item_width(pygui.get_font_size() * 8)
-        pygui.combo("func", static.widgets_plotting_func_type, ["Sin", "Saw"])
+        pygui.combo("func", widget.plotting_func_type, ["Sin", "Saw"])
         pygui.same_line()
-        pygui.slider_int("Sample count", static.widgets_plotting_display_count, 1, 400)
+        pygui.slider_int("Sample count", widget.plotting_display_count, 1, 400)
 
         def saw(value: int):
             return 1 if value & 1 == 0 else -1
 
-        if static.widgets_plotting_func_type.value == 0:
-            values = [math.sin(i / 10) for i in range(static.widgets_plotting_display_count.value)]
+        if widget.plotting_func_type.value == 0:
+            values = [math.sin(i / 10) for i in range(widget.plotting_display_count.value)]
         else:
-            values = [saw(i) for i in range(static.widgets_plotting_display_count.value)]
+            values = [saw(i) for i in range(widget.plotting_display_count.value)]
         
         pygui.plot_lines("Lines", values, 0, None, -1, 1, (0, 80))
         pygui.plot_histogram("Histogram", values, 0, None, -1, 1, (0, 80))
         pygui.separator()
 
-        if static.widgets_plotting_animate:
-            static.widgets_plotting_progress += static.widgets_plotting_progress_dir * 0.4 * pygui.get_io().delta_time
-            if static.widgets_plotting_progress >= 1.1:
-                static.widgets_plotting_progress = 1.1
-                static.widgets_plotting_progress_dir *= -1
-            if static.widgets_plotting_progress <= -0.1:
-                static.widgets_plotting_progress = -0.1
-                static.widgets_plotting_progress_dir *= -1
+        if widget.plotting_animate:
+            widget.plotting_progress += widget.plotting_progress_dir * 0.4 * pygui.get_io().delta_time
+            if widget.plotting_progress >= 1.1:
+                widget.plotting_progress = 1.1
+                widget.plotting_progress_dir *= -1
+            if widget.plotting_progress <= -0.1:
+                widget.plotting_progress = -0.1
+                widget.plotting_progress_dir *= -1
 
         # Typically we would use ImVec2(-1.0f,0.0f) or ImVec2(-FLT_MIN,0.0f) to use all available width,
         # or ImVec2(width,0.0f) for a specified width. ImVec2(0.0f,0.0f) uses ItemWidth.
-        pygui.progress_bar(static.widgets_plotting_progress, (0, 0))
+        pygui.progress_bar(widget.plotting_progress, (0, 0))
         pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
         pygui.text("Progress Bar")
         
-        progress_saturated = clamp(static.widgets_plotting_progress, 0, 1)
-        pygui.progress_bar(static.widgets_plotting_progress, (0, 0), "{}/{}".format(
+        progress_saturated = clamp(widget.plotting_progress, 0, 1)
+        pygui.progress_bar(widget.plotting_progress, (0, 0), "{}/{}".format(
             int(progress_saturated * 1753), 1753
         ))
         pygui.tree_pop()
 
     if pygui.tree_node("Color/Picker Widgets"):
         pygui.separator_text("Options")
-        pygui.checkbox_flags("With Alpha Preview", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW)
-        pygui.checkbox_flags("With Half Alpha Preview", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
-        pygui.checkbox_flags("No Drag and Drop", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_DRAG_DROP)
-        pygui.checkbox_flags("No Options Menu", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_OPTIONS)
+        pygui.checkbox_flags("With Alpha Preview", widget.colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW)
+        pygui.checkbox_flags("With Half Alpha Preview", widget.colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
+        pygui.checkbox_flags("No Drag and Drop", widget.colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_DRAG_DROP)
+        pygui.checkbox_flags("No Options Menu", widget.colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_OPTIONS)
         pygui.same_line()
         help_marker("Right-click on the individual color widget to show options.")
-        pygui.checkbox_flags("With HDR", static.widgets_colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_HDR)
+        pygui.checkbox_flags("With HDR", widget.colour_flags, pygui.IMGUI_COLOR_EDIT_FLAGS_HDR)
         pygui.same_line()
         help_marker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
-        misc_flags = static.widgets_colour_flags.value
+        misc_flags = widget.colour_flags.value
         
         pygui.separator_text("Inline color editor")
         pygui.text("Color widget:")
@@ -839,13 +842,13 @@ def show_demo_window_widgets():
         help_marker(
             "Click on the color square to open a color picker.\n"
             "CTRL+click on individual component to input value.\n")
-        pygui.color_edit3("MyColor##1", static.widgets_colour_color, misc_flags)
+        pygui.color_edit3("MyColor##1", widget.colour_color, misc_flags)
 
         pygui.text("Color widget HSV with Alpha:")
-        pygui.color_edit4("MyColor##2", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | misc_flags)
+        pygui.color_edit4("MyColor##2", widget.colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | misc_flags)
 
         pygui.text("Color widget with Float Display:")
-        pygui.color_edit4("MyColor##2f", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT | misc_flags)
+        pygui.color_edit4("MyColor##2f", widget.colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT | misc_flags)
         
         pygui.text("Color button with Picker:")
         pygui.same_line()
@@ -853,43 +856,43 @@ def show_demo_window_widgets():
             "With the ImGuiColorEditFlags_NoInputs flag you can hide all the slider/text inputs.\n"
             "With the ImGuiColorEditFlags_NoLabel flag you can pass a non-empty label which will only "
             "be used for the tooltip and picker popup.")
-        pygui.color_edit4("MyColor##3", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_LABEL | misc_flags)
+        pygui.color_edit4("MyColor##3", widget.colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_LABEL | misc_flags)
 
         pygui.text("Color button with Custom Picker Popup:")
 
         # Generate a default palette. The palette will persist and can be edited.
-        if static.widgets_colour_saved_palette_init:
-            for n in range(len(static.widgets_colour_saved_palette)):
+        if widget.colour_saved_palette_init:
+            for n in range(len(widget.colour_saved_palette)):
                 pygui.color_convert_hsv_to_rgb(
                     n / 31,
                     0.8,
                     0.8,
-                    static.widgets_colour_saved_palette[n],
+                    widget.colour_saved_palette[n],
                 )
-                static.widgets_colour_saved_palette[n].w = 1 # Alpha
-            static.widgets_colour_saved_palette_init.ptr = False
+                widget.colour_saved_palette[n].w = 1 # Alpha
+            widget.colour_saved_palette_init.ptr = False
         
-        open_popup = pygui.color_button("MyColor##3b", static.widgets_colour_color.vec(), misc_flags)
+        open_popup = pygui.color_button("MyColor##3b", widget.colour_color.vec(), misc_flags)
         pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
         open_popup |= pygui.button("Palette")
         if open_popup:
             pygui.open_popup("mypicker")
-            static.widgets_colour_backup_color = static.widgets_colour_color.copy()
+            widget.colour_backup_color = widget.colour_color.copy()
         if pygui.begin_popup("mypicker"):
             pygui.text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
             pygui.separator()
-            pygui.color_picker4("##picker", static.widgets_colour_color, misc_flags | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW)
+            pygui.color_picker4("##picker", widget.colour_color, misc_flags | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW)
             pygui.same_line()
 
             pygui.begin_group()
             pygui.text("Current")
-            pygui.color_button("##current", static.widgets_colour_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40))
+            pygui.color_button("##current", widget.colour_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40))
             pygui.text("Previous")
-            if pygui.color_button("##previous", static.widgets_colour_backup_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40)):
-                static.widgets_colour_color = static.widgets_colour_backup_color.copy()
+            if pygui.color_button("##previous", widget.colour_backup_color.vec(), pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF, (60, 40)):
+                widget.colour_color = widget.colour_backup_color.copy()
             pygui.separator()
             pygui.text("Palette")
-            for n in range(len(static.widgets_colour_saved_palette)):
+            for n in range(len(widget.colour_saved_palette)):
                 pygui.push_id_int(n)
                 if n % 8 != 0:
                     pygui.same_line(0, pygui.get_style().item_spacing[0])
@@ -898,10 +901,10 @@ def show_demo_window_widgets():
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA | \
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_PICKER | \
                     pygui.IMGUI_COLOR_EDIT_FLAGS_NO_TOOLTIP
-                if pygui.color_button("##palette", static.widgets_colour_saved_palette[n].vec(), palette_button_flags, (20, 20)):
-                    preserved_alpha = static.widgets_colour_color.w
-                    static.widgets_colour_color = static.widgets_colour_saved_palette[n].copy()
-                    static.widgets_colour_color.w = preserved_alpha
+                if pygui.color_button("##palette", widget.colour_saved_palette[n].vec(), palette_button_flags, (20, 20)):
+                    preserved_alpha = widget.colour_color.w
+                    widget.colour_color = widget.colour_saved_palette[n].copy()
+                    widget.colour_color.w = preserved_alpha
 
                 # Allow user to drop colors into each palette entry. Note that ColorButton() is already a
                 # drag source by default, unless specifying the ImGuiColorEditFlags_NoDragDrop flag.
@@ -912,16 +915,16 @@ def show_demo_window_widgets():
                     payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_3F)
                     payload: pygui.Vec4Ptr
                     if payload is not None:
-                        preserved_alpha = static.widgets_colour_saved_palette[n].w
-                        static.widgets_colour_saved_palette[n] = payload.copy()
-                        static.widgets_colour_saved_palette[n].w = preserved_alpha
+                        preserved_alpha = widget.colour_saved_palette[n].w
+                        widget.colour_saved_palette[n] = payload.copy()
+                        widget.colour_saved_palette[n].w = preserved_alpha
                     
                     payload = pygui.accept_drag_drop_payload(pygui.IMGUI_PAYLOAD_TYPE_COLOR_4F)
                     payload: pygui.Vec4Ptr
                     if payload is not None:
-                        preserved_alpha = static.widgets_colour_saved_palette[n].w
-                        static.widgets_colour_saved_palette[n] = payload.copy()
-                        static.widgets_colour_saved_palette[n].w = preserved_alpha
+                        preserved_alpha = widget.colour_saved_palette[n].w
+                        widget.colour_saved_palette[n] = payload.copy()
+                        widget.colour_saved_palette[n].w = preserved_alpha
                     pygui.end_drag_drop_target()
                 
                 pygui.pop_id()
@@ -929,24 +932,24 @@ def show_demo_window_widgets():
             pygui.end_popup()
 
         pygui.text("Color button only:")
-        pygui.checkbox("ImGuiColorEditFlags_NoBorder", static.widgets_colour_no_border)
+        pygui.checkbox("ImGuiColorEditFlags_NoBorder", widget.colour_no_border)
         pygui.color_button(
             "MyColor##3c",
-            static.widgets_colour_color.vec(),
-            misc_flags | (pygui.IMGUI_COLOR_EDIT_FLAGS_NO_BORDER if static.widgets_colour_no_border else 0),
+            widget.colour_color.vec(),
+            misc_flags | (pygui.IMGUI_COLOR_EDIT_FLAGS_NO_BORDER if widget.colour_no_border else 0),
             (80, 80))
         
         pygui.separator_text("Color picker")
-        pygui.checkbox("With Alpha", static.widgets_colour_alpha)
-        pygui.checkbox("With Alpha Bar", static.widgets_colour_alpha_bar)
-        pygui.checkbox("With Side Preview Bar", static.widgets_colour_side_preview)
-        if static.widgets_colour_side_preview:
+        pygui.checkbox("With Alpha", widget.colour_alpha)
+        pygui.checkbox("With Alpha Bar", widget.colour_alpha_bar)
+        pygui.checkbox("With Side Preview Bar", widget.colour_side_preview)
+        if widget.colour_side_preview:
             pygui.same_line()
-            pygui.checkbox("With Ref Color", static.widgets_colour_ref_color)
-            if static.widgets_colour_ref_color:
+            pygui.checkbox("With Ref Color", widget.colour_ref_color)
+            if widget.colour_ref_color:
                 pygui.same_line()
-                pygui.color_edit4("##RefColor", static.widgets_colour_ref_color_v, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | misc_flags)
-        pygui.combo("Display Mode", static.widgets_colour_display_mode, ["Auto/Current", "None", "RGB Only", "HSV Only", "Hex Only"])
+                pygui.color_edit4("##RefColor", widget.colour_ref_color_v, pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | misc_flags)
+        pygui.combo("Display Mode", widget.colour_display_mode, ["Auto/Current", "None", "RGB Only", "HSV Only", "Hex Only"])
         pygui.same_line()
         help_marker(
             "ColorEdit defaults to displaying RGB inputs if you don't specify a display mode, "
@@ -955,26 +958,26 @@ def show_demo_window_widgets():
         pygui.same_line()
         help_marker("When not specified explicitly (Auto/Current mode), user can right-click the picker to change mode.")
         flags = misc_flags
-        if not static.widgets_colour_alpha: # This is by default if you call ColorPicker3() instead of ColorPicker4()
+        if not widget.colour_alpha: # This is by default if you call ColorPicker3() instead of ColorPicker4()
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA
-        if static.widgets_colour_alpha_bar:
+        if widget.colour_alpha_bar:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_ALPHA_BAR
-        if not static.widgets_colour_side_preview:
+        if not widget.colour_side_preview:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW
-        if static.widgets_colour_picker_mode.value == 1:
+        if widget.colour_picker_mode.value == 1:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR
-        if static.widgets_colour_picker_mode.value == 2:
+        if widget.colour_picker_mode.value == 2:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL
-        if static.widgets_colour_display_mode.value == 1:
+        if widget.colour_display_mode.value == 1:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS # Disable all RGB/HSV/Hex displays
-        if static.widgets_colour_display_mode.value == 2:
+        if widget.colour_display_mode.value == 2:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_RGB # Override display mode
-        if static.widgets_colour_display_mode.value == 3:
+        if widget.colour_display_mode.value == 3:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV
-        if static.widgets_colour_display_mode.value == 4:
+        if widget.colour_display_mode.value == 4:
             flags |= pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HEX
 
-        pygui.color_picker4("MyColor##4", static.widgets_colour_color, flags, static.widgets_colour_ref_color_v if static.widgets_colour_ref_color else None)
+        pygui.color_picker4("MyColor##4", widget.colour_color, flags, widget.colour_ref_color_v if widget.colour_ref_color else None)
 
         pygui.text("Set defaults in code:")
         pygui.same_line()
@@ -991,10 +994,10 @@ def show_demo_window_widgets():
         pygui.text("Both types:")
         w = (pygui.get_content_region_avail()[0] - pygui.get_style().item_spacing[1]) * 0.4
         pygui.set_next_item_width(w)
-        pygui.color_picker3("##MyColor##5", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
+        pygui.color_picker3("##MyColor##5", widget.colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_BAR | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
         pygui.same_line()
         pygui.set_next_item_width(w)
-        pygui.color_picker3("##MyColor##6", static.widgets_colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
+        pygui.color_picker3("##MyColor##6", widget.colour_color, pygui.IMGUI_COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_INPUTS | pygui.IMGUI_COLOR_EDIT_FLAGS_NO_ALPHA)
 
         # HSV encoded support (to avoid RGB<>HSV round trips and singularities when S==0 or V==0)
         pygui.spacing()
@@ -1005,37 +1008,83 @@ def show_demo_window_widgets():
             "allows you to store colors as HSV and pass them to ColorEdit and ColorPicker as HSV. This comes with the"
             "added benefit that you can manipulate hue values with the picker even when saturation or value are zero.")
         pygui.text("Color widget with InputHSV:")
-        pygui.color_edit4("HSV shown as RGB##1", static.widgets_colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_RGB | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
-        pygui.color_edit4("HSV shown as HSV##1", static.widgets_colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
-        drag_floats = [pygui.FloatPtr(v) for v in static.widgets_colour_color_hsv.vec()]
+        pygui.color_edit4("HSV shown as RGB##1", widget.colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_RGB | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
+        pygui.color_edit4("HSV shown as HSV##1", widget.colour_color_hsv, pygui.IMGUI_COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_INPUT_HSV | pygui.IMGUI_COLOR_EDIT_FLAGS_FLOAT)
+        drag_floats = [pygui.FloatPtr(v) for v in widget.colour_color_hsv.vec()]
         pygui.drag_float4("Raw HSV values", drag_floats, 0.01, 0, 1)
-        static.widgets_colour_color_hsv = pygui.Vec4Ptr(*(f.value for f in drag_floats))
+        widget.colour_color_hsv = pygui.Vec4Ptr(*(f.value for f in drag_floats))
 
         pygui.tree_pop()
 
     if pygui.tree_node("Multi-component Widgets"):
         pygui.separator_text("2-wide")
-        pygui.input_float2("input float2", static.widgets_multi_vec4f.as_floatptrs())
-        pygui.drag_float2("drag float2", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
-        pygui.slider_float2("slider float2", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
-        pygui.input_int2("input int2", static.widgets_multi_vec4i.as_floatptrs())
-        pygui.drag_int2("drag int2", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
-        pygui.slider_int2("slider int2", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+        pygui.input_float2("input float2", widget.multi_vec4f.as_floatptrs())
+        pygui.drag_float2("drag float2", widget.multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float2("slider float2", widget.multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int2("input int2", widget.multi_vec4i.as_floatptrs())
+        pygui.drag_int2("drag int2", widget.multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int2("slider int2", widget.multi_vec4i.as_floatptrs(), 0, 255)
 
         pygui.separator_text("3-wide")
-        pygui.input_float3("input float3", static.widgets_multi_vec4f.as_floatptrs())
-        pygui.drag_float3("drag float3", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
-        pygui.slider_float3("slider float3", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
-        pygui.input_int3("input int3", static.widgets_multi_vec4i.as_floatptrs())
-        pygui.drag_int3("drag int3", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
-        pygui.slider_int3("slider int3", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+        pygui.input_float3("input float3", widget.multi_vec4f.as_floatptrs())
+        pygui.drag_float3("drag float3", widget.multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float3("slider float3", widget.multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int3("input int3", widget.multi_vec4i.as_floatptrs())
+        pygui.drag_int3("drag int3", widget.multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int3("slider int3", widget.multi_vec4i.as_floatptrs(), 0, 255)
 
         pygui.separator_text("4-wide")
-        pygui.input_float4("input float4", static.widgets_multi_vec4f.as_floatptrs())
-        pygui.drag_float4("drag float4", static.widgets_multi_vec4f.as_floatptrs(), 0.01, 0, 1)
-        pygui.slider_float4("slider float4", static.widgets_multi_vec4f.as_floatptrs(), 0, 1)
-        pygui.input_int4("input int4", static.widgets_multi_vec4i.as_floatptrs())
-        pygui.drag_int4("drag int4", static.widgets_multi_vec4i.as_floatptrs(), 1, 0, 255)
-        pygui.slider_int4("slider int4", static.widgets_multi_vec4i.as_floatptrs(), 0, 255)
+        pygui.input_float4("input float4", widget.multi_vec4f.as_floatptrs())
+        pygui.drag_float4("drag float4", widget.multi_vec4f.as_floatptrs(), 0.01, 0, 1)
+        pygui.slider_float4("slider float4", widget.multi_vec4f.as_floatptrs(), 0, 1)
+        pygui.input_int4("input int4", widget.multi_vec4i.as_floatptrs())
+        pygui.drag_int4("drag int4", widget.multi_vec4i.as_floatptrs(), 1, 0, 255)
+        pygui.slider_int4("slider int4", widget.multi_vec4i.as_floatptrs(), 0, 255)
 
         pygui.tree_pop()
+
+
+class table:
+    disable_indent = pygui.BoolPtr(False)
+
+def show_demo_tables():
+    if not pygui.collapsing_header("Tables & Columns"):
+        return
+    
+    TEXT_BASE_WIDTH = pygui.calc_text_size("A")[0]
+    TEXT_BASE_HEIGHT = pygui.get_text_line_height_with_spacing()
+
+    pygui.push_id("Tables")
+
+    open_action = -1
+    if pygui.button("Open all"):
+        open_action = 1
+    pygui.same_line()
+    if pygui.button("Close all"):
+        open_action = 0
+    pygui.same_line()
+
+    # Options
+    pygui.checkbox("Disable tree indentation", table.disable_indent)
+    pygui.same_line()
+    help_marker("Disable the indenting of tree nodes so demo tables can use the full window width.")
+    pygui.separator()
+    if table.disable_indent:
+        pygui.push_style_var_float(pygui.IMGUI_STYLE_VAR_INDENT_SPACING, 0)
+    
+    # About Styling of tables
+    # Most settings are configured on a per-table basis via the flags passed to BeginTable() and TableSetupColumns APIs.
+    # There are however a few settings that a shared and part of the ImGuiStyle structure:
+    #   style.CellPadding                          // Padding within each cell
+    #   style.Colors[ImGuiCol_TableHeaderBg]       // Table header background
+    #   style.Colors[ImGuiCol_TableBorderStrong]   // Table outer and header borders
+    #   style.Colors[ImGuiCol_TableBorderLight]    // Table inner borders
+    #   style.Colors[ImGuiCol_TableRowBg]          // Table row background when ImGuiTableFlags_RowBg is enabled (even rows)
+    #   style.Colors[ImGuiCol_TableRowBgAlt]       // Table row background when ImGuiTableFlags_RowBg is enabled (odds rows)
+
+
+
+    pygui.pop_id()
+
+    if table.disable_indent:
+        pygui.pop_style_var()

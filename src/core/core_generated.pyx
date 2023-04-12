@@ -418,10 +418,6 @@ IMGUI_MOUSE_CURSOR_RESIZE_NWSE = ccimgui.ImGuiMouseCursor_ResizeNWSE
 IMGUI_MOUSE_CURSOR_HAND = ccimgui.ImGuiMouseCursor_Hand
 IMGUI_MOUSE_CURSOR_NOT_ALLOWED = ccimgui.ImGuiMouseCursor_NotAllowed
 IMGUI_MOUSE_CURSOR_COUNT = ccimgui.ImGuiMouseCursor_COUNT
-IMGUI_MOUSE_SOURCE_MOUSE = ccimgui.ImGuiMouseSource_Mouse
-IMGUI_MOUSE_SOURCE_TOUCH_SCREEN = ccimgui.ImGuiMouseSource_TouchScreen
-IMGUI_MOUSE_SOURCE_PEN = ccimgui.ImGuiMouseSource_Pen
-IMGUI_MOUSE_SOURCE_COUNT = ccimgui.ImGuiMouseSource_COUNT
 IMGUI_NAV_INPUT_ACTIVATE = ccimgui.ImGuiNavInput_Activate
 IMGUI_NAV_INPUT_CANCEL = ccimgui.ImGuiNavInput_Cancel
 IMGUI_NAV_INPUT_INPUT = ccimgui.ImGuiNavInput_Input
@@ -609,11 +605,10 @@ IMGUI_VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING = ccimgui.ImGuiViewportFlags_NoFocusO
 IMGUI_VIEWPORT_FLAGS_NO_FOCUS_ON_CLICK = ccimgui.ImGuiViewportFlags_NoFocusOnClick
 IMGUI_VIEWPORT_FLAGS_NO_INPUTS = ccimgui.ImGuiViewportFlags_NoInputs
 IMGUI_VIEWPORT_FLAGS_NO_RENDERER_CLEAR = ccimgui.ImGuiViewportFlags_NoRendererClear
-IMGUI_VIEWPORT_FLAGS_NO_AUTO_MERGE = ccimgui.ImGuiViewportFlags_NoAutoMerge
 IMGUI_VIEWPORT_FLAGS_TOP_MOST = ccimgui.ImGuiViewportFlags_TopMost
+IMGUI_VIEWPORT_FLAGS_MINIMIZED = ccimgui.ImGuiViewportFlags_Minimized
+IMGUI_VIEWPORT_FLAGS_NO_AUTO_MERGE = ccimgui.ImGuiViewportFlags_NoAutoMerge
 IMGUI_VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS = ccimgui.ImGuiViewportFlags_CanHostOtherWindows
-IMGUI_VIEWPORT_FLAGS_IS_MINIMIZED = ccimgui.ImGuiViewportFlags_IsMinimized
-IMGUI_VIEWPORT_FLAGS_IS_FOCUSED = ccimgui.ImGuiViewportFlags_IsFocused
 IMGUI_WINDOW_FLAGS_NONE = ccimgui.ImGuiWindowFlags_None
 IMGUI_WINDOW_FLAGS_NO_TITLE_BAR = ccimgui.ImGuiWindowFlags_NoTitleBar
 IMGUI_WINDOW_FLAGS_NO_RESIZE = ccimgui.ImGuiWindowFlags_NoResize
@@ -10390,19 +10385,6 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(Any)
-    @property
-    def mouse_source(self):
-        cdef Any res = dereference(self._ptr).MouseSource
-        return res
-    @mouse_source.setter
-    def mouse_source(self, value: Any):
-        dereference(self._ptr).MouseSource = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
     # ?returns(int)
     @property
     def mouse_hovered_viewport(self):
@@ -10632,19 +10614,6 @@ cdef class ImGuiIO:
     @mouse_down_owned_unless_popup_close.setter
     def mouse_down_owned_unless_popup_close(self, value: bool):
         dereference(self._ptr).MouseDownOwnedUnlessPopupClose = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(bool)
-    @property
-    def mouse_wheel_request_axis_swap(self):
-        cdef bool res = dereference(self._ptr).MouseWheelRequestAxisSwap
-        return res
-    @mouse_wheel_request_axis_swap.setter
-    def mouse_wheel_request_axis_swap(self, value: bool):
-        dereference(self._ptr).MouseWheelRequestAxisSwap = value
     # [End Field]
 
     # [Field]
@@ -10902,17 +10871,6 @@ cdef class ImGuiIO:
         no mouse (e.g. app not focused and not hovered)
         """
         ccimgui.ImGuiIO_AddMousePosEvent(self._ptr, x, y)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def add_mouse_source_event(self: ImGuiIO, source: Any):
-        """
-        Queue a mouse source change (mouse/touchscreen/pen)
-        """
-        ccimgui.ImGuiIO_AddMouseSourceEvent(self._ptr, source)
     # [End Method]
 
     # [Method]
