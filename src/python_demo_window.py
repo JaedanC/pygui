@@ -3,6 +3,8 @@ import pygui
 import math
 import time
 from PIL import Image
+from enum import Enum, auto
+
 
 # From: https://stackoverflow.com/questions/4092528/how-can-i-clamp-clip-restrict-a-number-to-some-range#comment53230306_4092550
 def clamp(n, smallest, largest):
@@ -16,6 +18,16 @@ def help_marker(desc: str):
         pygui.text_unformatted(desc)
         pygui.pop_text_wrap_pos()
         pygui.end_tooltip()
+
+
+def push_style_compact():
+    style = pygui.get_style()
+    pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_FRAME_PADDING, (style.frame_padding[0], style.frame_padding[1] * 0.6))
+    pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_ITEM_SPACING, (style.item_spacing[0], style.item_spacing[1] * 0.6))
+
+
+def pop_style_compact():
+    pygui.pop_style_var(2)
 
 
 def show_demo_window():
@@ -1046,6 +1058,99 @@ def show_demo_widgets():
 
 class table:
     disable_indent = pygui.BoolPtr(False)
+    border_flags = pygui.IntPtr(pygui.IMGUI_TABLE_FLAGS_BORDERS | pygui.IMGUI_TABLE_FLAGS_ROW_BG)
+    class ContentsType(Enum):
+        CT_TEXT = auto()
+        CT_FILL_BUTTON = auto()
+    border_display_headers = pygui.BoolPtr(False)
+    border_contents_type = pygui.IntPtr(ContentsType.CT_TEXT.value)
+    resize_flags = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_SIZING_STRETCH_SAME | \
+        pygui.IMGUI_TABLE_FLAGS_RESIZABLE | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERSV | \
+        pygui.IMGUI_TABLE_FLAGS_CONTEXT_MENU_IN_BODY)
+    fixed_flags = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_SIZING_FIXED_FIT | \
+        pygui.IMGUI_TABLE_FLAGS_RESIZABLE | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERSV | \
+        pygui.IMGUI_TABLE_FLAGS_CONTEXT_MENU_IN_BODY)
+    mixed_flags = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_SIZING_FIXED_FIT | \
+        pygui.IMGUI_TABLE_FLAGS_ROW_BG | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERS | \
+        pygui.IMGUI_TABLE_FLAGS_RESIZABLE | \
+        pygui.IMGUI_TABLE_FLAGS_REORDERABLE | \
+        pygui.IMGUI_TABLE_FLAGS_HIDEABLE)
+    hidable_flags = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_RESIZABLE | \
+        pygui.IMGUI_TABLE_FLAGS_REORDERABLE | \
+        pygui.IMGUI_TABLE_FLAGS_HIDEABLE | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER | \
+        pygui.IMGUI_TABLE_FLAGS_BORDERSV)
+    padding_flags = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_BORDERSV)
+    padding_show_headers = pygui.BoolPtr(False)
+    padding_flags2 = pygui.IntPtr( \
+        pygui.IMGUI_TABLE_FLAGS_BORDERS | \
+        pygui.IMGUI_TABLE_FLAGS_ROW_BG)
+    padding_cell_padding = pygui.Vec2Ptr(0, 0)
+    padding_show_widget_frame_bg = pygui.BoolPtr(True)
+    padding_text_bufs = [pygui.StrPtr("edit me", 16) for _ in range(3 * 15)]
+    sort_items = []
+    sort_flags = pygui.IntPtr( \
+       pygui.IMGUI_TABLE_FLAGS_RESIZABLE | \
+       pygui.IMGUI_TABLE_FLAGS_REORDERABLE | \
+       pygui.IMGUI_TABLE_FLAGS_HIDEABLE | \
+       pygui.IMGUI_TABLE_FLAGS_SORTABLE | \
+       pygui.IMGUI_TABLE_FLAGS_SORT_MULTI | \
+       pygui.IMGUI_TABLE_FLAGS_ROW_BG | \
+       pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER | \
+       pygui.IMGUI_TABLE_FLAGS_BORDERSV | \
+       pygui.IMGUI_TABLE_FLAGS_NO_BORDERS_IN_BODY | \
+       pygui.IMGUI_TABLE_FLAGS_SCROLLY)
+    
+    # We are passing our own identifier to TableSetupColumn() to facilitate identifying columns in the sorting code.
+    # This identifier will be passed down into ImGuiTableSortSpec::ColumnUserID.
+    # But it is possible to omit the user id parameter of TableSetupColumn() and just use the column index instead! (ImGuiTableSortSpec::ColumnIndex)
+    # If you don't use sorting, you will generally never care about giving column an ID!
+    class MyItemColumnID(Enum):
+        ID = auto()
+        Name = auto()
+        Action = auto()
+        Quantity = auto()
+        Description = auto()
+    
+    class MyItem:
+        def __init__(self, _id: int, name: str, quantity: int):
+            self._id = _id
+            self.name = name
+            self.quantity = quantity
+        
+        def get_column_field(self, column: int):
+            """
+            If you want to use this approach for sorting, then you need to make
+            sure this matches the column order that is to be used in the table.
+            """
+            return [
+                self._id,
+                self.name,
+                None,
+                self.quantity
+            ][column]
+    
+    # From: https://stackoverflow.com/a/75123782
+    class negated: # name changed; otherwise the same
+        def __init__(self, obj):
+            self.obj = obj
+
+        def __eq__(self, other):
+            return other.obj == self.obj
+
+        def __lt__(self, other):
+            return other.obj < self.obj
+
 
 def show_demo_tables():
     if not pygui.collapsing_header("Tables & Columns"):
@@ -1081,8 +1186,424 @@ def show_demo_tables():
     #   style.Colors[ImGuiCol_TableBorderLight]    // Table inner borders
     #   style.Colors[ImGuiCol_TableRowBg]          // Table row background when ImGuiTableFlags_RowBg is enabled (even rows)
     #   style.Colors[ImGuiCol_TableRowBgAlt]       // Table row background when ImGuiTableFlags_RowBg is enabled (odds rows)
+    
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Basic"):
+        # Here we will showcase three different ways to output a table.
+        # They are very simple variations of a same thing!
+
+        # [Method 1] Using TableNextRow() to create a new row, and TableSetColumnIndex() to select the column.
+        # In many situations, this is the most flexible and easy to use pattern.
+        help_marker("Using TableNextRow() + calling TableSetColumnIndex() _before_ each cell, in a loop.")
+        if pygui.begin_table("table1", 3):
+            for row in range(4):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("Row {} Column {}".format(row, column))
+            pygui.end_table()
+        
+        # [Method 2] Using TableNextColumn() called multiple times, instead of using a for loop + TableSetColumnIndex().
+        # This is generally more convenient when you have code manually submitting the contents of each column.
+        help_marker("Using TableNextRow() + calling TableNextColumn() _before_ each cell, manually.")
+        if pygui.begin_table("table2", 3, 0):
+            for row in range(4):
+                pygui.table_next_row()
+                pygui.table_next_column()
+                pygui.text("Row {}".format(row))
+                pygui.table_next_column()
+                pygui.text("Some contents")
+                pygui.table_next_column()
+                pygui.text("123.456")
+            pygui.end_table()
+        
+        # [Method 3] We call TableNextColumn() _before_ each cell. We never call TableNextRow(),
+        # as TableNextColumn() will automatically wrap around and create new rows as needed.
+        # This is generally more convenient when your cells all contains the same type of data.
+        help_marker(
+            "Only using TableNextColumn(), which tends to be convenient for tables where every cell contains the same type of contents.\n"
+            "This is also more similar to the old NextColumn() function of the Columns API, and provided to facilitate the Columns->Tables API transition.")
+        if pygui.begin_table("table3", 3):
+            for item in range(14):
+                pygui.table_next_column()
+                pygui.text("Item {}".format(item))
+            pygui.end_table()
+        pygui.tree_pop()
+    
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Borders, background"):
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_RowBg", table.border_flags, pygui.IMGUI_TABLE_FLAGS_ROW_BG)
+        pygui.checkbox_flags("ImGuiTableFlags_Borders", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS)
+        pygui.same_line()
+        help_marker(
+            "ImGuiTableFlags_Borders\n = ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterV\n | ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterH")
+        pygui.indent()
+
+        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERSH)
+        pygui.indent()
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterH", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTERH)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerH", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_INNERH)
+        pygui.unindent()
+
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERSV)
+        pygui.indent()
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTERV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_INNERV)
+        pygui.unindent()
+
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuter", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInner", table.border_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_INNER)
+        pygui.unindent()
+
+        pygui.align_text_to_frame_padding()
+        pygui.text("Cell contents:")
+        pygui.same_line()
+        pygui.radio_button("Text", table.border_contents_type, table.ContentsType.CT_TEXT.value)
+        pygui.same_line()
+        pygui.radio_button("FillButton", table.border_contents_type, table.ContentsType.CT_FILL_BUTTON.value)
+        pygui.checkbox("Display headers", table.border_display_headers)
+        pygui.checkbox_flags("ImGuiTableFlags_NoBordersInBody", table.border_flags, pygui.IMGUI_TABLE_FLAGS_NO_BORDERS_IN_BODY)
+        pygui.same_line()
+        help_marker("Disable vertical borders in columns Body (borders will always appear in Headers")
+        pop_style_compact()
+
+        if pygui.begin_table("table1", 3, table.border_flags.value):
+            # Display headers so we can inspect their interaction with borders.
+            # (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
+            if table.border_display_headers:
+                pygui.table_setup_column("One")
+                pygui.table_setup_column("Two")
+                pygui.table_setup_column("Three")
+                pygui.table_headers_row()
+            
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    buf_text = "Hello {},{}".format(column, row)
+                    if table.border_contents_type.value == table.ContentsType.CT_TEXT.value:
+                        pygui.text_unformatted(buf_text)
+                    elif table.border_contents_type.value == table.ContentsType.CT_FILL_BUTTON.value:
+                        pygui.button(buf_text, (-pygui.FLT_MIN, 0))
+            pygui.end_table()
 
 
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Resizable, stretch"):
+        # By default, if we don't enable ScrollX the sizing policy for each column is "Stretch"
+        # All columns maintain a sizing weight, and they will occupy all available width.
+        
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.resize_flags, pygui.IMGUI_TABLE_FLAGS_RESIZABLE)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.resize_flags, pygui.IMGUI_TABLE_FLAGS_BORDERSV)
+        pygui.same_line()
+        help_marker("Using the _Resizable flag automatically enables the _BordersInnerV flag as well, this is why the resize borders are still showing when unchecking this.")
+        pop_style_compact()
+
+        if pygui.begin_table("table1", 3, table.resize_flags.value):
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("Hello {},{}".format(column, row))
+            pygui.end_table()
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Resizable, fixed"):
+        help_marker(
+            "Using _Resizable + _SizingFixedFit flags.\n"
+            "Fixed-width columns generally makes more sense if you want to use horizontal scrolling.\n\n"
+            "Double-click a column border to auto-fit the column to its contents.")
+
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_NoHostExtendX", table.resize_flags, pygui.IMGUI_TABLE_FLAGS_NO_HOST_EXTENDX)
+        pop_style_compact()
+
+        if pygui.begin_table("table1", 3, table.resize_flags.value):
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("Hello {},{}".format(column, row))
+            pygui.end_table()
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Resizable, mixed"):
+        help_marker(
+            "Using TableSetupColumn() to alter resizing policy on a per-column basis.\n\n"
+            "When combining Fixed and Stretch columns, generally you only want one, maybe two trailing columns to use _WidthStretch.")
+
+        if pygui.begin_table("table1", 3, table.mixed_flags.value):
+            pygui.table_setup_column("AAA", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED)
+            pygui.table_setup_column("BBB", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED)
+            pygui.table_setup_column("CCC", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_STRETCH)
+            pygui.table_headers_row()
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("{} {},{}".format('Stretch' if column == 2 else 'Fixed', column , row))
+            pygui.end_table()
+
+        if pygui.begin_table("table2", 6, table.mixed_flags.value):
+            pygui.table_setup_column("AAA", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED)
+            pygui.table_setup_column("BBB", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED)
+            pygui.table_setup_column("CCC", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED | pygui.IMGUI_TABLE_COLUMN_FLAGS_DEFAULT_HIDE)
+            pygui.table_setup_column("DDD", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_STRETCH)
+            pygui.table_setup_column("EEE", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_STRETCH)
+            pygui.table_setup_column("FFF", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_STRETCH | pygui.IMGUI_TABLE_COLUMN_FLAGS_DEFAULT_HIDE)
+            pygui.table_headers_row()
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(6):
+                    pygui.table_set_column_index(column)
+                    pygui.text("{} {},{}".format('Stretch' if column == 2 else 'Fixed', column , row))
+            pygui.end_table()
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Reorderable, hideable, with headers"):
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.hidable_flags, pygui.IMGUI_TABLE_FLAGS_RESIZABLE)
+        pygui.checkbox_flags("ImGuiTableFlags_Reorderable", table.hidable_flags, pygui.IMGUI_TABLE_FLAGS_REORDERABLE)
+        pygui.checkbox_flags("ImGuiTableFlags_Hideable", table.hidable_flags, pygui.IMGUI_TABLE_FLAGS_HIDEABLE)
+        pygui.checkbox_flags("ImGuiTableFlags_NoBordersInBody", table.hidable_flags, pygui.IMGUI_TABLE_FLAGS_NO_BORDERS_IN_BODY)
+        pygui.checkbox_flags("ImGuiTableFlags_NoBordersInBodyUntilResize", table.hidable_flags, pygui.IMGUI_TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE)
+        pygui.same_line()
+        help_marker("Disable vertical borders in columns Body until hovered for resize (borders will always appear in Headers)")
+        pop_style_compact()
+
+        if pygui.begin_table("table1", 3, table.hidable_flags.value):
+            # Submit column names with table_setup_column() and call table_headers_row() to create a row with a header in each column.
+            # (Later we will show how table_setup_column() has other uses, optional flags, sizing weight etc.)
+            pygui.table_setup_column("One")
+            pygui.table_setup_column("Two")
+            pygui.table_setup_column("Three")
+            pygui.table_headers_row()
+            for row in range(6):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("Hello {},{}".format(column, row))
+            pygui.end_table()
+
+        # Use outer_size.x == 0.0f instead of default to make the table as tight as possible (only valid when no scrolling and no stretch column)
+        if pygui.begin_table("table2", 3, table.hidable_flags.value | pygui.IMGUI_TABLE_FLAGS_SIZING_FIXED_FIT, (0.0, 0.0)):
+            pygui.table_setup_column("One")
+            pygui.table_setup_column("Two")
+            pygui.table_setup_column("Three")
+            pygui.table_headers_row()
+            for row in range(6):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_set_column_index(column)
+                    pygui.text("Fixed {},{}".format(column, row))
+            pygui.end_table()
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Padding"):
+        # First example: showcase use of padding flags and effect of BorderOuterV/BorderInnerV on X padding.
+        # We don't expose BorderOuterH/BorderInnerH here because they have no effect on X padding.
+        help_marker(
+            "We often want outer padding activated when any using features which makes the edges of a column visible:\n"
+            "e.g.:\n"
+            "- BorderOuterV\n"
+            "- any form of row selection\n"
+            "Because of this, activating BorderOuterV sets the default to PadOuterX. Using PadOuterX or NoPadOuterX you can override the default.\n\n"
+            "Actual padding values are using style.CellPadding.\n\n"
+            "In this demo we don't show horizontal borders to emphasize how they don't affect default horizontal padding."
+        )
+
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_PadOuterX", table.padding_flags, pygui.IMGUI_TABLE_FLAGS_PAD_OUTERX)
+        pygui.same_line()
+        help_marker("Enable outer-most padding (default if ImGuiTableFlags_BordersOuterV is set)")
+        pygui.checkbox_flags("ImGuiTableFlags_NoPadOuterX", table.padding_flags, pygui.IMGUI_TABLE_FLAGS_NO_PAD_OUTERX)
+        pygui.same_line()
+        help_marker("Disable outer-most padding (default if ImGuiTableFlags_BordersOuterV is not set)")
+        pygui.checkbox_flags("ImGuiTableFlags_NoPadInnerX", table.padding_flags, pygui.IMGUI_TABLE_FLAGS_NO_PAD_INNERX)
+        pygui.same_line()
+        help_marker("Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off)")
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.padding_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTERV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.padding_flags, pygui.IMGUI_TABLE_FLAGS_BORDERS_INNERV)
+        pygui.checkbox("show_headers", table.padding_show_headers)
+        pop_style_compact()
+
+        if pygui.begin_table("table_padding", 3, table.padding_flags.value):
+            if table.padding_show_headers:
+                pygui.table_setup_column("One")
+                pygui.table_setup_column("Two")
+                pygui.table_setup_column("Three")
+                pygui.table_headers_row()
+
+            for row in range(5):
+                pygui.table_next_row()
+                for column in range(3):
+                    pygui.table_next_column()
+                    if row == 0:
+                        pygui.text("Avail {:.2f}".format(pygui.get_content_region_avail()[0]))
+                    else:
+                        pygui.button("Hello {}.{}".format(column, row), (-pygui.FLT_MIN, 0))
+            pygui.end_table()
+
+        # Second example: set style.CellPadding to (0.0) or a custom value.
+        # FIXME-TABLE: Vertical border effectively not displayed the same way as horizontal one...
+        help_marker("Setting style.CellPadding to (0,0) or a custom value.")
+
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_Borders", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_BORDERS)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_BORDERSH)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_BORDERSV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInner", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_BORDERS_INNER)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuter", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_BORDERS_OUTER)
+        pygui.checkbox_flags("ImGuiTableFlags_RowBg", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_ROW_BG)
+        pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.padding_flags2, pygui.IMGUI_TABLE_FLAGS_RESIZABLE)
+        pygui.checkbox("show_widget_frame_bg", table.padding_show_widget_frame_bg)
+        pygui.slider_float2("CellPadding", table.padding_cell_padding.as_floatptrs(), 0, 10, "%.0f")
+        pop_style_compact()
+
+        pygui.push_style_var_vec2(pygui.IMGUI_STYLE_VAR_CELL_PADDING, table.padding_cell_padding.vec());
+        if pygui.begin_table("table_padding_2", 3, table.padding_flags2.value):
+            if not table.padding_show_widget_frame_bg:
+                pygui.push_style_color_u32(pygui.IMGUI_COL_FRAME_BG, 0)
+            
+            for cell in range(3 * 5):
+                pygui.table_next_column()
+                pygui.set_next_item_width(-pygui.FLT_MIN)
+
+                pygui.push_id_int(cell)
+                pygui.input_text("##cell", table.padding_text_bufs[cell])
+                pygui.pop_id()
+
+            if not table.padding_show_widget_frame_bg:
+                pygui.pop_style_color()
+            pygui.end_table()
+        
+        pygui.pop_style_var()
+        pygui.tree_pop()
+
+    if open_action != -1:
+        pygui.set_next_item_open(open_action != 0)
+    if pygui.tree_node("Sorting"):
+        template_item_names = [
+            "Banana", "Apple", "Cherry", "Watermelon", "Grapefruit", "Strawberry", "Mango",
+            "Kiwi", "Orange", "Pineapple", "Blueberry", "Plum", "Coconut", "Pear", "Apricot"
+        ]
+        if len(table.sort_items) == 0:
+            for n in range(50):
+                table.sort_items.append(table.MyItem(
+                    n,
+                    template_item_names[n % len(template_item_names)],
+                    (n * n - n) % 20
+                ))
+        
+        push_style_compact()
+        pygui.checkbox_flags("ImGuiTableFlags_SortMulti", table.sort_flags, pygui.IMGUI_TABLE_FLAGS_SORT_MULTI)
+        pygui.same_line()
+        help_marker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).")
+        pygui.checkbox_flags("ImGuiTableFlags_SortTristate", table.sort_flags, pygui.IMGUI_TABLE_FLAGS_SORT_TRISTATE)
+        pygui.same_line()
+        help_marker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).")
+        pop_style_compact()
+
+        if pygui.begin_table("table_sorting", 4, table.sort_flags.value, (0, TEXT_BASE_HEIGHT * 15), 0):
+            # Declare columns
+            # We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
+            # This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
+            # Demonstrate using a mixture of flags among available sort-related flags:
+            # - ImGuiTableColumnFlags_DefaultSort
+            # - ImGuiTableColumnFlags_NoSort / ImGuiTableColumnFlags_NoSortAscending / ImGuiTableColumnFlags_NoSortDescending
+            # - ImGuiTableColumnFlags_PreferSortAscending / ImGuiTableColumnFlags_PreferSortDescending
+            pygui.table_setup_column("ID", pygui.IMGUI_TABLE_COLUMN_FLAGS_DEFAULT_SORT | pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED,                   0, table.MyItemColumnID.ID.value)
+            pygui.table_setup_column("Name", pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED,                                                               0, table.MyItemColumnID.Name.value)
+            pygui.table_setup_column("Action", pygui.IMGUI_TABLE_COLUMN_FLAGS_NO_SORT | pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_FIXED,                    0, table.MyItemColumnID.Action.value)
+            pygui.table_setup_column("Quantity", pygui.IMGUI_TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING | pygui.IMGUI_TABLE_COLUMN_FLAGS_WIDTH_STRETCH, 0, table.MyItemColumnID.Quantity.value)
+            pygui.table_setup_scroll_freeze(0, 1) # Make row always visible
+            pygui.table_headers_row()
+
+            def custom_key(element: table.MyItem):
+                sort_specs = pygui.table_get_sort_specs()
+                sort_with = []
+                for sort_spec in sort_specs.specs:
+                    compare_obj = None
+                    compare_obj = element.get_column_field(sort_spec.column_index)
+                    # Or instead of using column_index you could directly check the value of
+                    # column_user_id, (passed into pygui.table_setup_column()) to then add
+                    # the corresponding field to the tuple. That setup is commented out below.
+
+                    # if sort_spec.column_user_id == table.MyItemColumnID.ID.value:
+                    #     compare_obj = element._id
+                    # elif sort_spec.column_user_id == table.MyItemColumnID.Name.value:
+                    #     compare_obj = element.name
+                    # elif sort_spec.column_user_id == table.MyItemColumnID.Quantity.value:
+                    #     compare_obj = element.quantity
+                    # elif sort_spec.column_user_id == table.MyItemColumnID.Description.value:
+                    #     compare_obj = element.name
+                    
+                    if sort_spec.sort_direction == pygui.IMGUI_SORT_DIRECTION_ASCENDING:
+                        compare_obj = table.negated(compare_obj)
+                    sort_with.append(compare_obj)
+                # Add a default sorting method
+                sort_with.append(element._id)
+                return tuple(sort_with)
+
+            # Sort our data if sort specs have been changed!
+            """
+            Python note: This sorting process is much easier as we can use the sort function
+            to sort our list. But we still need to pass a suitable key function to ensure
+            that it is sorted based on the information provided to us from ImGui. This is
+            where ImGuiTableSortSpecs comes in. This class provides information about the
+            sort itself. Here we use it to determine if we need to resort the list. This is
+            to prevent us from needing to sort the list every frame.
+
+            Secondly, the custom_key function above uses the information inside
+            ImGuiTableSortSpecs.specs to retreive a List of ImGuiTableColumnSortSpecs. These
+            contain information about the columns we are to sort on:
+             - Which column?
+             - Descending (def) of Ascending?
+            The custom_key function returns a tuple containing the elements that will be
+            used inside the sort function to compare each element.
+            """
+            if (sort_specs := pygui.table_get_sort_specs()):
+                if sort_specs.specs_dirty:
+                    table.sort_items.sort(key=custom_key)
+                sort_specs.specs_dirty = False
+            
+            # Demonstrate using clipper for large vertical lists
+            clipper = pygui.ImGuiListClipper.list_clipper()
+            clipper.begin(len(table.sort_items))
+            while clipper.step():
+                for row_n in range(clipper.display_start, clipper.display_end):
+                    # Display a data item
+                    item: table.MyItem = table.sort_items[row_n]
+                    pygui.push_id_int(item._id)
+                    pygui.table_next_row()
+                    pygui.table_next_column()
+                    pygui.text("{:.4f}".format(item._id))
+                    pygui.table_next_column()
+                    pygui.text_unformatted(item.name)
+                    pygui.table_next_column()
+                    pygui.small_button("None")
+                    pygui.table_next_column()
+                    pygui.text("{}".format(item.quantity))
+                    pygui.pop_id()
+            clipper.destroy()
+
+            pygui.end_table()
+        pygui.tree_pop()
 
     pygui.pop_id()
 

@@ -740,22 +740,49 @@ cdef class StrPtr:
         self.buffer[min((self.buffer_size - 1), len(value))] = 0
 
 cdef class Vec2Ptr:
-    cdef public float x
-    cdef public float y
+    cdef public FloatPtr _x
+    cdef public FloatPtr _y
 
     def __init__(self, x: float, y: float):
-        self.x = x
-        self.y = y
+        self._x = FloatPtr(x)
+        self._y = FloatPtr(y)
 
-    def vec(self):
-        return (self.x, self.y)
+    @property
+    def x(self):
+        return self._x.value
+    @x.setter
+    def x(self, x):
+        self._x.value = x
+    @property
+    def y(self):
+        return self._y.value
+    @y.setter
+    def y(self, y):
+        self._y.value = y
+
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
+        assert len(float_ptrs) >= 2
+        self._x = float_ptrs[0]
+        self._y = float_ptrs[1]
+
+    def as_floatptrs(self) -> Sequence[FloatPtr]:
+        return [
+            self._x,
+            self._y,
+        ]
+
+    def vec(self) -> Sequence[float]:
+        return (
+            self.x,
+            self.y,
+        )
 
     def copy(self) -> Vec2Ptr:
         return Vec2Ptr(*self.vec())
 
     cdef void from_array(self, float* array):
-        self.x = array[0]
-        self.y = array[1]
+        self._x.value = array[0]
+        self._y.value = array[1]
 
     cdef void to_array(self, float* array):
         array[0] = self.x
@@ -923,13 +950,10 @@ def arrow_button(str_id: str, dir_: int):
 # ?active(True)
 # ?returns(bool)
 def begin(name: str, p_open: BoolPtr=None, flags: int=0):
-    cdef bool is_open = True
-    cdef bool res
     if p_open is None:
         res = ccimgui.igBegin(_bytes(name), NULL, flags)
     else:
-        res = ccimgui.igBegin(_bytes(name), &is_open, flags)
-        p_open.ptr = is_open
+        res = ccimgui.igBegin(_bytes(name), &p_open.ptr, flags)
     return res
 # [End Function]
 
@@ -4640,8 +4664,8 @@ def push_item_width(item_width: float):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def push_style_color_u32(idx: int, col: int):
     """
@@ -5946,8 +5970,8 @@ def table_get_row_index():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(ImGuiTableSortSpecs)
 def table_get_sort_specs():
     """
@@ -5956,6 +5980,8 @@ def table_get_sort_specs():
     subsequent call to begintable().
     """
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.igTableGetSortSpecs()
+    if res == NULL:
+        return None
     return ImGuiTableSortSpecs.from_ptr(res)
 # [End Function]
 
@@ -5971,8 +5997,8 @@ def table_header(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def table_headers_row():
     """
@@ -6033,8 +6059,8 @@ def table_set_column_enabled(column_n: int, value: bool):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
 def table_set_column_index(column_n: int):
     """
@@ -6046,16 +6072,21 @@ def table_set_column_index(column_n: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def table_setup_column(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
-    ccimgui.igTableSetupColumn(_bytes(label), flags, init_width_or_weight, user_id)
+    ccimgui.igTableSetupColumn(
+        _bytes(label),
+        flags,
+        init_width_or_weight,
+        user_id
+    )
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
 def table_setup_scroll_freeze(cols: int, rows: int):
     """
@@ -11970,8 +12001,8 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def display_start(self):
@@ -11983,8 +12014,8 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def display_end(self):
@@ -12048,8 +12079,8 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(ImGuiListClipper)
     @staticmethod
     def list_clipper():
@@ -12060,16 +12091,16 @@ cdef class ImGuiListClipper:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
     def destroy(self: ImGuiListClipper):
         ccimgui.ImGuiListClipper_destroy(self._ptr)
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
         ccimgui.ImGuiListClipper_Begin(self._ptr, items_count, items_height)
@@ -12102,8 +12133,8 @@ cdef class ImGuiListClipper:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(bool)
     def step(self: ImGuiListClipper):
         """
@@ -13331,13 +13362,12 @@ cdef class ImGuiStyle:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(tuple)
     @property
     def frame_padding(self):
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).FramePadding
-        return ImVec2.from_ptr(res)
+        return _cast_ImVec2_tuple(dereference(self._ptr).FramePadding)
     @frame_padding.setter
     def frame_padding(self, value: tuple):
         dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
@@ -13775,12 +13805,12 @@ cdef class ImGuiStyle:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 cdef class ImGuiTableColumnSortSpecs:
-    cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr
+    cdef const ccimgui.ImGuiTableColumnSortSpecs* _ptr
     
     @staticmethod
-    cdef ImGuiTableColumnSortSpecs from_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
+    cdef ImGuiTableColumnSortSpecs from_ptr(const ccimgui.ImGuiTableColumnSortSpecs* _ptr):
         cdef ImGuiTableColumnSortSpecs wrapper = ImGuiTableColumnSortSpecs.__new__(ImGuiTableColumnSortSpecs)
         wrapper._ptr = _ptr
         return wrapper
@@ -13790,8 +13820,8 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def column_user_id(self):
@@ -13799,12 +13829,13 @@ cdef class ImGuiTableColumnSortSpecs:
         return res
     @column_user_id.setter
     def column_user_id(self, value: int):
-        dereference(self._ptr).ColumnUserID = value
+        # dereference(self._ptr).ColumnUserID = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def column_index(self):
@@ -13812,7 +13843,8 @@ cdef class ImGuiTableColumnSortSpecs:
         return res
     @column_index.setter
     def column_index(self, value: int):
-        dereference(self._ptr).ColumnIndex = value
+        # dereference(self._ptr).ColumnIndex = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13829,8 +13861,8 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def sort_direction(self):
@@ -13838,7 +13870,8 @@ cdef class ImGuiTableColumnSortSpecs:
         return res
     @sort_direction.setter
     def sort_direction(self, value: int):
-        dereference(self._ptr).SortDirection = value
+        # dereference(self._ptr).SortDirection = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -13879,21 +13912,24 @@ cdef class ImGuiTableSortSpecs:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImGuiTableColumnSortSpecs)
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(List[ImGuiTableColumnSortSpecs])
     @property
     def specs(self):
-        cdef ccimgui.ImGuiTableColumnSortSpecs res = dereference(self._ptr).Specs
-        return ImGuiTableColumnSortSpecs.from_ptr(res)
+        return [
+            ImGuiTableColumnSortSpecs.from_ptr(&dereference(self._ptr).Specs[idx])
+            for idx in range(dereference(self._ptr).SpecsCount)
+        ]
     @specs.setter
     def specs(self, value: ImGuiTableColumnSortSpecs):
-        dereference(self._ptr).Specs = value._ptr
+        # dereference(self._ptr).Specs = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
     @property
     def specs_count(self):
@@ -13905,8 +13941,8 @@ cdef class ImGuiTableSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(bool)
     @property
     def specs_dirty(self):
