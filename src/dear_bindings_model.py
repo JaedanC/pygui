@@ -26,7 +26,37 @@ class Comments:
     def __init__(self, comment_preceeding: List[str], comment_attached: str):
         self.comment_proceeding: List[str] = comment_preceeding
         self.comment_attached: str         = comment_attached
+    
+    def to_python_comment(self):
+        if len(self.comment_proceeding) == 0 and self.comment_attached is None:
+            return None
+        
+        comment_attached_no_none = self.comment_attached
+        if self.comment_attached is None:
+            comment_attached_no_none = ""
+        
+        no_c_comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
+        no_c_comment_attached = comment_attached_no_none.lstrip("// ")
 
+        comment = textwrap.dedent(
+        '''
+        """
+        {}
+        """
+        ''')
+
+        if len(self.comment_proceeding) == 0 or comment_attached_no_none == "":
+            comment = comment.format(
+                "\n".join(no_c_comment_proceeding) + no_c_comment_attached)
+        else:
+            comment = comment.format(
+                "\n".join(no_c_comment_proceeding) + "\n" + no_c_comment_attached)
+        return comment
+
+    def attached_only(self):
+        if self.comment_attached is None:
+            return None
+        return "# " + self.comment_attached.lstrip("// ")
 
 class DearEnum:
     class Value:
@@ -383,6 +413,10 @@ def to_pxd(header: DearBinding) -> str:
     dynamic_content.write("\n")
 
     for typedef in header.typedefs:
+        comment_text = typedef.comments.to_python_comment()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    "))
+        
         typedef_pxd = "    ctypedef {} {}\n".format(
             typedef.base.raw_type,
             typedef.definition.raw_type
@@ -391,30 +425,60 @@ def to_pxd(header: DearBinding) -> str:
     dynamic_content.write("\n")
 
     for enum in header.enums:
+        longest_enum = 0
+        for enum_element in enum.elements:
+            longest_enum = max(len(enum_element.name), longest_enum)
+
+        comment_text = enum.comments.to_python_comment()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    "))
+        
         enum_pxd = "    ctypedef enum {}:\n".format(enum.name)
         dynamic_content.write(enum_pxd)
         for enum_element in enum.elements:
-            enum_element_pxd = "        {}\n".format(enum_element.name)
+            comment_text = enum_element.comments.attached_only()
+            padding_required = (5 + longest_enum - len(enum_element.name)) * " "
+
+            enum_element_pxd = "        {}{}\n".format(
+                enum_element.name,
+                padding_required + comment_text if comment_text is not None else ""
+            )
             dynamic_content.write(enum_element_pxd)
         dynamic_content.write("\n")
     dynamic_content.write("\n")
     
     for struct in header.structs:
+        longest_field = 0
+        for field in struct.fields:
+            longest_field = max(len(field.name) + len(field.type.raw_type), longest_field)
+        
+        comment_text = struct.comments.to_python_comment()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    "))
+        
         struct_pxd = "    ctypedef struct {}:\n".format(struct.name)
         dynamic_content.write(struct_pxd)
         if len(struct.fields) == 0:
             dynamic_content.write("        pass\n")
 
         for struct_field in struct.fields:
-            struct_field_pxd = "        {}{}\n".format(
+            comment_text = struct_field.comments.attached_only()
+            padding_required = (5 + longest_field - len(struct_field.name) - len(struct_field.type.raw_type)) * " "
+            
+            struct_field_pxd = "        {}{}{}\n".format(
                 struct_field.type.raw_type,
-                " " + struct_field.name if not struct_field.type.is_function_type() else ""
+                " " + struct_field.name if not struct_field.type.is_function_type() else "",
+                padding_required + comment_text if comment_text is not None else ""
             )
             dynamic_content.write(struct_field_pxd)
         dynamic_content.write("\n")
     dynamic_content.write("\n")
     
     for function in header.functions:
+        comment_text = function.comments.to_python_comment()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    "))
+
         function_argument_strings = []
         for function_argument in function.arguments:
             function_argument_strings.append("{}{}".format(
