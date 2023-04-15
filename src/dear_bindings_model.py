@@ -100,6 +100,9 @@ class DearBinding:
         }
         _type = self.follow_type(_type)
         
+        if _type.is_array() and _type.ptr_version() is not None:
+            return "Sequence[" + _type.ptr_version() + "]"
+        
         if _type.with_no_const_or_sign() in python_type_lookup:
             return python_type_lookup[_type.with_no_const_or_sign()]
         
@@ -109,6 +112,7 @@ class DearBinding:
         
         if _type.is_function_type():
             return "Callable"
+        
 
         return "Any"
 
@@ -123,6 +127,9 @@ class DearBinding:
         
         if _type.is_vec4():
             return "_cast_ImVec4_tuple({})"
+
+        if _type.ptr_version() is not None:
+            return _type.ptr_version() + "(dereference({}))"
 
         if self.is_cimgui_type(_type):
             return _type.with_no_const_or_asterisk() + ".from_ptr({})"
@@ -301,8 +308,9 @@ class DearEnum:
 
 
 class DearType:
-    def __init__(self, raw_type: str):
-        self.raw_type = raw_type
+    def __init__(self, raw_type: str, is_array_size=None):
+        self.raw_type: str = raw_type
+        self.array_size: int = is_array_size
     
     def __repr__(self):
         return "Type({})".format(self.raw_type)
@@ -310,6 +318,9 @@ class DearType:
     def is_function_type(self) -> bool:
         return "(*" in self.raw_type
     
+    def is_array(self):
+        return self.array_size is not None
+
     def with_no_const(self):
         return self.raw_type \
             .replace("const ", "")
@@ -342,6 +353,9 @@ class DearType:
             "float*": "FloatPtr",
             "double*": "DoublePtr",
         }
+        if self.is_array() and self.with_no_const() + "*" in ptr_version_mappings:
+                return ptr_version_mappings[self.with_no_const() + "*"]
+
         if self.with_no_const() in ptr_version_mappings:
             return ptr_version_mappings[self.with_no_const()]
         return None
@@ -644,9 +658,8 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             if not passes_conditional(function_argument_obj, definitions):
                 continue
 
-            function_argument_is_varargs = function_argument_obj["is_varargs"]
             # Ignore any vargs stuff since Cython cannot handle this.
-            if function_argument_is_varargs:
+            if function_argument_obj["is_varargs"]:
                 continue
 
             function_argument_name = safe_python_name(function_argument_obj["name"])
@@ -666,7 +679,11 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             if function_argument_type == "va_list":
                 continue
 
+            function_argument_array_bounds = None
             function_argument_is_array = function_argument_obj["is_array"]
+            if function_argument_is_array:
+                function_argument_array_bounds = function_argument_obj["array_bounds"]
+
             if "default_value" in function_argument_obj:
                 function_argument_default_value = function_argument_obj["default_value"]
             else:
@@ -674,7 +691,7 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             function_argument_comments = parse_comment(function_argument_obj)
             function_arguments.append(DearFunction.Argument(
                 function_argument_name,
-                DearType(function_argument_type),
+                DearType(function_argument_type, is_array_size=function_argument_array_bounds),
                 function_argument_is_array,
                 function_argument_default_value,
                 function_argument_comments,
@@ -846,7 +863,8 @@ def to_pxd(header: DearBinding) -> str:
     return textwrap.dedent(pxd_base).format(dynamic_content.getvalue())
 
 
-def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
+def to_pyx(header: DearBinding, pxd_library_name: str,
+           include_constant_functions=True) -> str:
     base = \
     """
     # distutils: language = c++
@@ -858,7 +876,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
     import ctypes
     import array
     from cython.operator import dereference
-    from typing import Callable, Any, List, Sequence
+    from typing import Callable, Any, Sequence
 
     cimport {pxd_library_name}
     from cython.view cimport array as cvarray
@@ -868,11 +886,10 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
     from libc.stdint cimport uintptr_t
     from libc.string cimport strncpy
     # [End Imports]
+    """
 
-    # [Enums]
-    {enums_section}
-    # [End Enums]
-
+    constant_functions = \
+    """
     # [Constant Functions]
     cdef bytes _bytes(str text):
         return text.encode()
@@ -1103,30 +1120,30 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
         output |= r << 0
         return output
 
-
     FLT_MIN = LIBC_FLT_MIN
     FLT_MAX = LIBC_FLT_MAX
     IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
     IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 
+
     """
 
+    pyx = StringIO()
+    pyx.write(textwrap.dedent(base).format(pxd_library_name=pxd_library_name))
+
+    if include_constant_functions:
+        pyx.write(textwrap.dedent(constant_functions).format(pxd_library_name=pxd_library_name))
+
     # Add enums
-    enums_text = StringIO()
+    pyx.write("# [Enums]\n")
     for enum in header.enums:
         for enum_element in enum.elements:
-            enums_text.write("{} = {}.{}\n".format(
+            pyx.write("{} = {}.{}\n".format(
                 pythonise_string(enum_element.name_omitted_imgui_prefix(), make_upper=True),
                 pxd_library_name,
                 enum_element.name
             ))
-
-    pyx = StringIO()
-    pyx.write(textwrap.dedent(base).format(
-        pxd_library_name=pxd_library_name,
-        enums_section=enums_text.getvalue()
-    ))
-
+    pyx.write("# [End Enums]\n\n")
 
     def function_to_pyx(header: DearBinding, function_template: Template, function: DearFunction) -> str:
         # Python return type
@@ -1145,7 +1162,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
             function_template.format(comment=textwrap.indent(function_comments, "    "))
 
         # Return type
-        
         function_template.set_condition("has_return_type", not function.return_type.is_void_type())
         if function.return_type.is_function_type():
             return_type = "Callable"
@@ -1156,7 +1172,14 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
 
         # Function arguments
         if len(function.arguments) > 0:
-            function_arguments = "\n" + ",\n".join([header.marshall_python_to_c(a.type).format(a.name) for a in function.arguments]) + "\n    "
+            function_argument_list = []
+            for argument in function.arguments:
+                marshalled_type = header.marshall_python_to_c(argument.type).format(argument.name)
+                if argument.name == "self":
+                    marshalled_type = "self._ptr"
+                function_argument_list.append(marshalled_type)
+
+            function_arguments = "\n" + ",\n".join(function_argument_list) + "\n    "
             function_arguments = textwrap.indent(function_arguments, "        ")
         else:
             function_arguments = ""
@@ -1176,7 +1199,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
             res=res,
         ).compile()
 
-
     # Add Functions
     with open("core/templates/function_db.h") as f:
         function_base = f.read()
@@ -1185,8 +1207,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str) -> str:
         function_template = Template(function_base)
         pyx.write("# [Function]\n")
         function_pyx = function_to_pyx(header, function_template, function)
-        pyx.write("# [End Function]\n\n")
         pyx.write(function_pyx)
+        pyx.write("# [End Function]\n\n")
 
 
     # Add Classes/Methods
@@ -1275,6 +1297,50 @@ def main():
     pyx = to_pyx(header, "ccimgui_dear_bindings")
     with open("core/core_generated_dear_bindings.pyx", "w") as f:
         f.write(pyx)
+    
+    impl_function = [
+        DearFunction("ImGui_ImplGlfw_InitForVulkan", "ImGui_ImplGlfw_InitForVulkan",
+                     DearType("bool"), [
+                        DearFunction.Argument("window",            DearType("GLFWwindow*"), False, None, Comments([], None)),
+                        DearFunction.Argument("install_callbacks", DearType("bool"),        False, None, Comments([], None)),
+                     ], False, False, False, False, Comments([], None)),
+    ]
+    impl_structs = [
+        DearStruct("GLFWwindow", "GLFWwindow", False, [], Comments([], None)),
+    ]
+    # CIMGUI_API bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window,bool install_callbacks);
+    # CIMGUI_API bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window,bool install_callbacks);
+    # CIMGUI_API void ImGui_ImplGlfw_Shutdown(void);
+    # CIMGUI_API void ImGui_ImplGlfw_NewFrame(void);
+    # CIMGUI_API void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window);
+    # CIMGUI_API void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window);
+    # CIMGUI_API void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows);
+    # CIMGUI_API void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window,int focused);
+    # CIMGUI_API void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window,int entered);
+    # CIMGUI_API void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window,double x,double y);
+    # CIMGUI_API void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,int button,int action,int mods);
+    # CIMGUI_API void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,double xoffset,double yoffset);
+    # CIMGUI_API void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window,int key,int scancode,int action,int mods);
+    # CIMGUI_API void ImGui_ImplGlfw_CharCallback(GLFWwindow* window,unsigned int c);
+    # CIMGUI_API void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor,int event);
+
+    # CIMGUI_API bool ImGui_ImplOpenGL3_Init(const char* glsl_version);
+    # CIMGUI_API void ImGui_ImplOpenGL3_Shutdown(void);
+    # CIMGUI_API void ImGui_ImplOpenGL3_NewFrame(void);
+    # CIMGUI_API void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
+    # CIMGUI_API bool ImGui_ImplOpenGL3_CreateFontsTexture(void);
+    # CIMGUI_API void ImGui_ImplOpenGL3_DestroyFontsTexture(void);
+    # CIMGUI_API bool ImGui_ImplOpenGL3_CreateDeviceObjects(void);
+    # CIMGUI_API void ImGui_ImplOpenGL3_DestroyDeviceObjects(void);
+
+    impl_header = DearBinding([], [], impl_structs, impl_function)
+    pxd_impl = to_pxd(impl_header)
+    with open("core/ccimgui_dear_bindings_impl.pxd", "w") as f:
+        f.write(pxd_impl)
+    
+    pyx_impl = to_pyx(impl_header, "ccimgui_dear_bindings_impl", include_constant_functions=False)
+    with open("core/core_generated_dear_bindings_impl.pyx", "w") as f:
+        f.write(pyx_impl)
 
 
 if __name__ == "__main__":
