@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
 import textwrap
+import json
 from typing import List, Tuple, Any
 from diff_match_patch import diff_match_patch
 from io import StringIO
@@ -28,8 +29,9 @@ def comment_text(text: str):
     return "\n".join(output)
 
 
-def comparable_pyx_options(comparable: Any):
+def comparable_options_to_pyx_string(comparable: Any):
     return "\n".join([f"# ?{k}({v})" for k, v in comparable.options.items()])
+
 
 class PyxHeader:
     def __init__(self, functions: List[PyxFunction], classes: List[PyxClass]):
@@ -88,14 +90,14 @@ class PyxHeader:
         self._rebuild_comparable()
         self.sort()
     
-    def as_pyx(self) -> str:
+    def as_pyx(self, ignore_active_flag=False) -> str:
         output = StringIO()
 
         for function in self.functions:
             output.write("# [Function]\n")
             output.write("{}\n{}\n".format(
-                comparable_pyx_options(function),
-                function.impl if comparable_is_active(function) else comment_text(function.impl)
+                comparable_options_to_pyx_string(function),
+                function.impl if comparable_is_active(function) or ignore_active_flag else comment_text(function.impl)
             ))
             output.write("# [End Function]\n\n")
     
@@ -103,24 +105,24 @@ class PyxHeader:
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
             output.write("{}\n{}\n".format(
-                comparable_pyx_options(class_),
-                class_.impl if comparable_is_active(class_) else comment_text(class_.impl)
+                comparable_options_to_pyx_string(class_),
+                class_.impl if comparable_is_active(class_) or ignore_active_flag else comment_text(class_.impl)
             ))
             output.write("    # [End Class Constants]\n")
 
             for field in class_.fields:
                 output.write("\n    # [Field]\n")
                 output.write("{}\n{}\n".format(
-                    textwrap.indent(comparable_pyx_options(field), "    "),
-                    field.impl if comparable_is_active(field) else comment_text(field.impl)
+                    textwrap.indent(comparable_options_to_pyx_string(field), "    "),
+                    field.impl if comparable_is_active(field) or ignore_active_flag else comment_text(field.impl)
                 ))
                 output.write("    # [End Field]\n")
 
             for method in class_.methods:
                 output.write("\n    # [Method]\n")
                 output.write("{}\n{}\n".format(
-                    textwrap.indent(comparable_pyx_options(method), "    "),
-                    method.impl if comparable_is_active(method) else comment_text(method.impl)
+                    textwrap.indent(comparable_options_to_pyx_string(method), "    "),
+                    method.impl if comparable_is_active(method) or ignore_active_flag else comment_text(method.impl)
                 ))
                 output.write("    # [End Method]\n")
             
@@ -142,7 +144,7 @@ class PyxFunction:
             self.options.copy(),
             self.impl,
         )
-
+    
 
 class PyxClass:
     class Field:
@@ -180,6 +182,13 @@ class PyxClass:
         self.impl: str = impl
         self.fields: List[PyxClass.Field] = fields
         self.methods: List[PyxClass.Method] = methods
+    
+    def has_one_active_member(self):
+        for comparable in self.fields + self.methods:
+            if comparable_is_active(comparable):
+                return True
+        return False
+
 
     def copy(self):
         return PyxClass(
@@ -221,24 +230,77 @@ class HeaderComparison:
             new_obj = new.get_comparable(both_c)
             assert old_obj is not None
             assert new_obj is not None
-
-            patches = self.dmp.patch_make(old_obj.impl, new_obj.impl)
-            self.patches_for_old_to_new[both_c] = patches
+            self.create_patch_for(old_obj, new_obj, both_c)
     
+    def create_patch_for(self, old_comparable, new_comparable, comparable_lookup):
+        option_patches = self.dmp.patch_make(
+            json.dumps(old_comparable.options),
+            json.dumps(new_comparable.options)
+        )
+        impl_patches = self.dmp.patch_make(old_comparable.impl, new_comparable.impl)
+        self.patches_for_old_to_new[comparable_lookup] = (option_patches, impl_patches)
+    
+    def apply_patch_to(self, comparable_lookup: str, write_to_comparable):
+        assert comparable_lookup in self.patches_for_old_to_new
+        option_patches, impl_patches = self.patches_for_old_to_new[comparable_lookup]
+        old_obj = self.old.get_comparable(comparable_lookup)
+        new_obj = self.new.get_comparable(comparable_lookup)
+
+        if len(impl_patches) > 0:
+            print(f"Merging: Patching {comparable_lookup}")
+        if len(option_patches) > 0:
+            print(f"Merging: Patching options for {comparable_lookup}")
+        
+        success = True
+        applied_template_impl, results = self.dmp.patch_apply(impl_patches, write_to_comparable.impl)
+        if not all(results):
+            print("Failed to apply patch to body:")
+            print("Old implementation ---------------------------")
+            print(old_obj.impl)
+            print("New implementation ---------------------------")
+            print(new_obj.impl)
+            print("Template implementation ----------------------")
+            print(write_to_comparable.impl)
+            print("We got to ------------------------------------")
+            print(applied_template_impl)
+            success = False
+        else:
+            write_to_comparable.impl = applied_template_impl
+
+        applied_template_options, results = self.dmp.patch_apply(
+            option_patches, json.dumps(write_to_comparable.options))
+        
+        if not all(results):
+            print(f"Failed to apply patch to options in {comparable_lookup}:")
+            print("Old options ---------------------------")
+            print(old_obj.options)
+            print("New implementation ---------------------------")
+            print(new_obj.options)
+            print("Template implementation ----------------------")
+            print(write_to_comparable.options)
+            print("We got to ------------------------------------")
+            print(applied_template_options)
+            success = False
+        else:
+            # It should still create valid json but we will see
+            write_to_comparable.options = json.loads(applied_template_options)
+
+        return success
+
     def n_patches(self):
         return len(list(filter(lambda x: len(x) > 0, self.patches_for_old_to_new.values())))
     
     def create_new_header_based_on_comparison(self, template: PyxHeader):
         merged_template = template.copy()
 
-        failed = False
+        success = True
         for new_c in self.new.get_all_comparable_lookups():
             new_obj = self.new.get_comparable(new_c)
             assert new_obj is not None
 
             tem_obj = template.get_comparable(new_c)
             if tem_obj is None:
-                print(f"Could not find '{new_c}' in template. Adding it to the template")
+                print(f"Merging: New comparable '{new_c}' not found in template. Adding it to the template")
                 # Add the new_obj directly to the template here.
                 merged_template.add_new_comparable(new_obj, new_c)
                 # Sanity check to make sure the new comparable has been added
@@ -252,9 +314,13 @@ class HeaderComparison:
             merged_obj = merged_template.get_comparable(new_c)
             assert merged_obj is not None
             
+            # If the comparable is not using the template, then reset it back to
+            # the implementation in the new. Since we're not changing the options
+            # as well then it is possible to activate a function without using
+            # the template.
             if not comparable_is_using_template(tem_obj):
-                # Here we override the template's implementation with the new
                 merged_obj.impl = new_obj.impl
+                merged_obj.options = new_obj.options
                 continue
             
             old_obj = self.old.get_comparable(new_c)
@@ -262,42 +328,23 @@ class HeaderComparison:
                 # This means that we should just use the template implementation
                 # because no patches were created. In this case we can just do
                 # nothing.
-                print(f"No patch found for '{new_c}'. Keeping template")
+                print(f"Merging: No patches found for '{new_c}'. Keeping template.")
                 continue
 
             assert old_obj is not None
             
             # Here we have an old implementation, a new implementation and a
-            # template that is expecting us to use the template. This is where
-            # we use the patches generated between the old and the new and apply
-            # it to the template.
-            print("Attempting to apply patch to '{}'".format(new_c))    
-            old_new_patch = self.patches_for_old_to_new[new_c]
-
-            # No patches to apply. This is probably not required, but while
-            # debugging it makes a good entry point for print statements.
-            if len(old_new_patch) == 0:
-                print("No patches to apply")
-                continue
-
-            applied_template_impl, results = self.dmp.patch_apply(old_new_patch, tem_obj.impl)
-            if not all(results):
-                print("Failed to apply patch:")
-                print("Old implementation ---------------------------")
-                print(old_obj.impl)
-                print("New implementation ---------------------------")
-                print(new_obj.impl)
-                print("Template implementation ----------------------")
-                print(tem_obj.impl)
-                print("We got to ------------------------------------")
-                print(applied_template_impl)
-                failed = True
-                continue
+            # template with use_template == True. This is where we use the
+            # patches generated between the old and the new and apply it to the
+            # template.
+            # print("Attempting to apply patch to '{}'".format(new_c))    
+            # old_new_patch = self.patches_for_old_to_new[new_c]
+            
+            # Applies the patch to merged_obj. Returns true on success.
+            if not self.apply_patch_to(new_c, merged_obj):
+                success = False
         
-            merged_obj.impl = applied_template_impl
-            print(merged_obj.impl)
-        
-        if not failed:
+        if success:
             return merged_template
         else:
             return None
@@ -337,12 +384,6 @@ def get_sections(src: str, section_name: str) -> List[str]:
         all_sections.append("\n".join(found_section))
     
     return all_sections
-
-
-def replace_after(src: str, marker_substring: str, new_impl: str) -> str:
-    ms_len = len(marker_substring)
-    src = src[:src.index(marker_substring) + ms_len] + new_impl
-    return src
 
 
 def create_pyx_model(pyx_src: str) -> PyxHeader:

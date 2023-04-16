@@ -5,10 +5,42 @@ from dear_parser import *
 import builtins
 import json
 import keyword
+import sys
 import textwrap
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
+
+
+class MergeFailed(Exception):
+    pass
+
+
+class MergeResult:
+    def __init__(self, old_pyx: str, new_pyx: str, template_pyx: str):
+        self.old_pyx: str      = old_pyx
+        self.new_pyx: str      = new_pyx
+        self.template_pyx: str = template_pyx
+
+        self.old_model: PyxHeader = create_pyx_model(old_pyx)
+        self.new_model: PyxHeader = create_pyx_model(new_pyx)
+        self.template_model: PyxHeader = create_pyx_model(template_pyx)
+
+        comparison = HeaderComparison(self.old_model, self.new_model)
+        self.merged_model: PyxHeader = comparison.create_new_header_based_on_comparison(self.template_model)
+        if self.merged_model is None:
+            raise MergeFailed
+        
+        self.merged_pyx: str = replace_after(
+            new_pyx,
+            PYX_TEMPLATE_MARKER,
+            self.merged_model.as_pyx()
+        )
+        self.merged_pyx_all_active: str = replace_after(
+            new_pyx,
+            PYX_TEMPLATE_MARKER,
+            self.merged_model.as_pyx(ignore_active_flag=True)
+        )
 
 
 class DearBinding:
@@ -270,43 +302,71 @@ class Comments:
 
         if self.comment_attached is not None:
             self.comment_attached = self.comment_attached.replace('"', "'")
-    
-    def to_python_comment(self):
+            self.comment_attached = self.comment_attached.lstrip("// ").capitalize()
+        
+        self.comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
+        
+    def three_quote_all_comments(self):
         if len(self.comment_proceeding) == 0 and self.comment_attached is None:
             return None
         
-        comment_attached_no_none = self.comment_attached
-        if self.comment_attached is None:
-            comment_attached_no_none = ""
+        comment_attached_no_none = self.comment_attached if self.comment_attached is not None else ""
         
-        no_c_comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
-        no_c_comment_attached = comment_attached_no_none.lstrip("// ")
+        comment = textwrap.dedent(
+        '''
+        """
+        {}
+        """
+        ''')
 
-        comment = '''"""\n{}\n"""\n'''
-
-        if len(self.comment_proceeding) == 0 or comment_attached_no_none == "":
+        if len(self.comment_proceeding) == 0 or self.comment_attached is None:
             comment = comment.format(
-                "\n".join(no_c_comment_proceeding) + no_c_comment_attached.capitalize())
+                "\n".join(self.comment_proceeding) + comment_attached_no_none.capitalize())
         else:
             comment = comment.format(
-                "\n".join(no_c_comment_proceeding) + "\n" + no_c_comment_attached.capitalize())
+                "\n".join(self.comment_proceeding) + "\n" + comment_attached_no_none.capitalize())
         return comment.strip()
 
-    def attached_only(self):
-        if self.comment_attached is None:
-            return None
-        return "# " + self.comment_attached.lstrip("// ").capitalize()
-
-    def proceeding_only(self):
+    def three_quote_proceeding_only(self):
         if len(self.comment_proceeding) == 0:
             return None
         
-        no_c_comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
-
-        comment = '''"""\n{}\n"""\n'''.format(
-            "\n".join(no_c_comment_proceeding))
-        
+        return textwrap.dedent(
+        '''
+        """
+        {}
+        """
+        '''.format("\n".join(self.comment_proceeding)))
         return comment
+
+    def hash_all_comments(self):
+        if len(self.comment_proceeding) == 0 and self.comment_attached is None:
+            return None
+        
+        if len(self.comment_proceeding) > 0 and self.comment_attached is not None:
+            return textwrap.dedent(
+                """
+                {}
+                # {}
+                """).format(
+                    "\n".join(["# " + line for line in self.comment_proceeding]),
+                    self.comment_attached
+                ).strip("\n")
+        
+        if len(self.comment_proceeding) > 0:
+            return "\n".join(["# " + line for line in self.comment_proceeding])
+        return "# " + self.comment_attached
+
+    def hash_proceeding_only(self):
+        if len(self.comment_proceeding) == 0:
+            return None
+
+        return "\n".join(["# " + line for line in self.comment_proceeding])
+
+    def hash_attached_only(self):
+        if self.comment_attached is None:
+            return None
+        return "# " + self.comment_attached
 
 
 class DearEnum:
@@ -515,6 +575,12 @@ def safe_python_name(name: str, edit_format="{}_") -> str:
     if name in keyword.kwlist or name in dir(builtins) or name == "format":
         name = edit_format.format(name)
     return name
+
+
+def replace_after(src: str, marker_substring: str, new_impl: str) -> str:
+    ms_len = len(marker_substring)
+    src = src[:src.index(marker_substring) + ms_len] + new_impl
+    return src
 
 
 def parse_binding_json(cimgui_json, definitions) -> DearBinding:
@@ -771,16 +837,20 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
     dynamic_content.write("\n")
 
     # Typedefs
-    typedef_format_test = "    ctypedef {} {}"
+    typedef_format_test = "    ctypedef {}"
 
     # Used for pretty printing the comments for each typdef
     longest_typedef = 0
     longest_function_ptr_typedef = 0
     for typedef in header.typedefs:
-        typedef_pxd = typedef_format_test.format(
-            typedef.base.raw_type,
-            typedef.definition.raw_type
-        )
+        if typedef.base.is_function_type():
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type
+            )
+        else:
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type + " " + typedef.definition.raw_type
+            )
         if typedef.base.is_function_type():
             longest_function_ptr_typedef = max(len(typedef_pxd), longest_function_ptr_typedef)
         else:
@@ -789,21 +859,25 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
 
     for typedef in header.typedefs:
         # Typedef comments
-        comment_text = typedef.comments.proceeding_only()
+        comment_text = typedef.comments.hash_proceeding_only()
         if comment_text is not None:
-            dynamic_content.write("\n" + textwrap.indent(comment_text, "    "))
+            dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
         
-        typedef_pxd = typedef_format_test.format(
-            typedef.base.raw_type,
-            typedef.definition.raw_type
-        )
+        if typedef.base.is_function_type():
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type
+            )
+        else:
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type + " " + typedef.definition.raw_type
+            )
         if typedef.base.is_function_type():
             padding_required = (5 + longest_function_ptr_typedef - len(typedef_pxd)) * " "
         else:
             padding_required = (5 + longest_typedef - len(typedef_pxd)) * " "
 
 
-        comment_text = typedef.comments.attached_only()
+        comment_text = typedef.comments.hash_attached_only()
         dynamic_content.write("{}{}\n".format(
             typedef_pxd,
             padding_required + comment_text if comment_text is not None else ""
@@ -818,7 +892,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
             longest_enum = max(len(enum_element.name), longest_enum)
 
         # Enum comments
-        comment_text = enum.comments.to_python_comment()
+        comment_text = enum.comments.hash_all_comments()
         if comment_text is not None:
             dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
         
@@ -826,7 +900,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
         dynamic_content.write(enum_pxd)
         for enum_element in enum.elements:
             # Show attached comments only.
-            comment_text = enum_element.comments.attached_only()
+            comment_text = enum_element.comments.hash_attached_only()
             padding_required = (5 + longest_enum - len(enum_element.name)) * " "
 
             enum_element_pxd = "        {}{}\n".format(
@@ -845,7 +919,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
             longest_field = max(len(field.name) + len(field.type.raw_type), longest_field)
         
         # Struct comments
-        comment_text = struct.comments.to_python_comment()
+        comment_text = struct.comments.hash_all_comments()
         if comment_text is not None:
             dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
         
@@ -856,7 +930,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
 
         for struct_field in struct.fields:
             # Show attached comments only.
-            comment_text = struct_field.comments.attached_only()
+            comment_text = struct_field.comments.hash_attached_only()
             padding_required = (5 + longest_field - len(struct_field.name) - len(struct_field.type.raw_type)) * " "
             
             struct_field_pxd = "        {}{}{}\n".format(
@@ -869,7 +943,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
         
         for struct_method in struct.methods:
             # Struct comments
-            comment_text = struct_method.comments.to_python_comment()
+            comment_text = struct_method.comments.hash_all_comments()
             if comment_text is not None:
                 dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
             
@@ -892,7 +966,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
     # Functions
     for function in header.functions:
         # Functions comments
-        comment_text = function.comments.to_python_comment()
+        comment_text = function.comments.hash_all_comments()
         if comment_text is not None:
             dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
 
@@ -912,21 +986,15 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
     return textwrap.dedent(pxd_base).format(dynamic_content.getvalue())
 
 
-def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
-           include_constant_functions=True) -> str:
+def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
     header.sort()
-    base = \
-    """
+    base = """
     # distutils: language = c++
     # cython: language_level = 3
     # cython: embedsignature=True
 
     {imports}
 
-    """
-
-    constant_functions = \
-    """
     cdef bytes _bytes(str text):
         return text.encode()
 
@@ -1006,12 +1074,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
         cdef public int buffer_size
 
         def __init__(self, initial_value: str, buffer_size=256):
-            self.buffer = <char*>{pxd_library_name}.igMemAlloc(buffer_size)
+            self.buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(buffer_size)
             self.buffer_size: int = buffer_size
             self.value = initial_value
         
         def __dealloc__(self):
-            {pxd_library_name}.igMemFree(self.buffer)
+            {pxd_library_name}.ImGui_MemFree(self.buffer)
 
         @property
         def value(self):
@@ -1160,18 +1228,18 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
     FLT_MAX = LIBC_FLT_MAX
     IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
     IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+    IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
+    IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
+    IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
 
 
     """
 
     pyx = StringIO()
-    pyx.write(textwrap.dedent(base).format(
+    pyx.write(textwrap.dedent(base.lstrip("\n")).format(
         pxd_library_name=pxd_library_name,
         imports=imports,
     ))
-
-    if include_constant_functions:
-        pyx.write(textwrap.dedent(constant_functions).format(pxd_library_name=pxd_library_name))
 
     # Add enums
     for enum in header.enums:
@@ -1193,7 +1261,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
         python_function_arguments = ", ".join([header.as_name_type_default_parameter(a) for a in function.arguments])
 
         # Comments
-        function_comments = function.comments.to_python_comment()
+        function_comments = function.comments.three_quote_all_comments()
         function_template.set_condition("has_comment", function_comments is not None)
         if function_comments is not None:
             function_template.format(comment=textwrap.indent(function_comments, "    "))
@@ -1259,7 +1327,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
     for struct in header.structs:
         class_template = Template(class_base)
 
-        struct_comments = struct.comments.to_python_comment()
+        struct_comments = struct.comments.three_quote_all_comments()
         class_template.set_condition("has_comment", struct_comments is not None)
         if struct_comments is not None:
             class_template.format(comment=textwrap.indent(struct_comments, "    "))
@@ -1277,7 +1345,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
             field_template = Template(field_base)
             
              # Comments
-            field_comments = field.comments.to_python_comment()
+            field_comments = field.comments.three_quote_all_comments()
             field_template.set_condition("has_comment", field_comments is not None)
             if field_comments is not None:
                 field_template.format(comment=textwrap.indent(field_comments, "    "))
@@ -1328,9 +1396,150 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
     return pyx.getvalue()
 
 
+def generate_new_pyx(from_header: DearBinding, pxd_library_name: str):
+    imports = textwrap.dedent("""
+        import cython
+        import array
+        from cython.operator import dereference
+        from typing import Callable, Any, Sequence
+
+        cimport {}
+        from cython.view cimport array as cvarray
+        from libcpp cimport bool
+        from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+        from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+        from libc.stdint cimport uintptr_t
+        from libc.string cimport strncpy
+        """
+    ).format(pxd_library_name)
+    return to_pyx(from_header, pxd_library_name, imports.strip())
+
+
+def to_pyi(header: DearBinding, model: PyxHeader):
+    base = textwrap.dedent("""
+    from typing import Any, Callable, Tuple, List, Sequence
+    from PIL import Image
+
+
+    VERTEX_BUFFER_POS_OFFSET: int
+    VERTEX_BUFFER_UV_OFFSET: int
+    VERTEX_BUFFER_COL_OFFSET: int
+    VERTEX_SIZE: int
+    INDEX_SIZE: int
+    FLT_MIN: float
+    FLT_MAX: float
+
+    IMGUI_PAYLOAD_TYPE_COLOR_3F: int
+    IMGUI_PAYLOAD_TYPE_COLOR_4F: int
+
+    class BoolPtr:
+        ptr: bool
+        def __init__(self, initial_value: bool): ...
+        def __bool__(self) -> bool: ...
+
+    class IntPtr:
+        value: int
+        def __init__(self, initial_value: int): ...
+
+    class FloatPtr:
+        value: float
+        def __float__(self) -> float: ...
+
+    class DoublePtr:
+        value: float
+        def __init__(self, initial_value: float): ...
+
+    class StrPtr:
+        value: str
+        def __init__(self, initial_value: str, buffer_size=256): ...
+
+    class Vec4Ptr:
+        x: float
+        y: float
+        z: float
+        w: float
+        def __init__(self, x: float, y: float, z: float, w: float): ...
+        def vec(self) -> Tuple[float, float, float, float]: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def copy(self) -> Vec4Ptr: ...
+
+    class Vec2Ptr:
+        x: float
+        y: float
+        def __init__(self, x: float, y: float): ...
+        def vec(self) -> Tuple[float, float]: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def copy(self) -> Vec2Ptr: ...
+
+    def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
+
+    def load_image(image: Image) -> int: ...
+
+    """)
+
+    pyi_output = StringIO()
+    pyi_output.write(base)
+
+    for enum in header.enums:
+        for enum_value in enum.elements:
+            pyi_output.write("{}: int\n".format(pythonise_string(enum_value.name_omitted_imgui_prefix(), make_upper=True)))
+    pyi_output.write("\n")
+
+    for function in model.functions:
+        pyi_output.write("{}def {}({}) -> {}: ...\n".format(
+            "# " if not comparable_is_active(function) else "",
+            function.name,
+            function.parameters,
+            function.options["returns"]
+        ))
+    pyi_output.write("\n")
+
+    for class_ in model.classes:
+        pyi_output.write("class {}:{}".format(
+            class_.name,
+            "\n" if class_.has_one_active_member() else " ...\n"
+        ))
+        for field in class_.fields:
+            pyi_output.write("    {}{}: {}\n".format(
+                "# " if not comparable_is_active(field) else "",
+                field.name,
+                field.options["returns"]
+            ))
+        for method in class_.methods:
+            pyi_output.write("    {}def {}({}) -> {}: ...\n".format(
+                "# " if not comparable_is_active(method) else "",
+                method.name,
+                method.parameters,
+                method.options["returns"]
+            ))
+        pyi_output.write("\n")
+    
+    return pyi_output.getvalue(), ""
+
+
 def main():
-    cimgui_json_path = "external/dear_bindings/cimgui.json"
-    with open(cimgui_json_path) as f:
+    CIMGUI_JSON_PATH        = "external/dear_bindings/cimgui.json"
+
+    CIMGUI_PXD              = "core/ccimgui_db.pxd"
+    CIMGUI_PXD_HEADER_FILE  = "cimgui.h"
+    CIMGUI_LIBRARY_NAME     = "ccimgui_db"
+
+    CORE_PYX                = "core/core_db.pyx"
+    CORE_GENERATED_PYX      = "core/core_generated_db.pyx"
+    CORE_TEMPLATE_PYX       = "core/core_template_db.pyx"
+
+    CORE_PYX_TRIAL          = "core/core_db_trial.pyx"
+    CORE_TEMPLATE_PYX_TRIAL = "core/core_template_db_trial.pyx"
+
+    CORE_INIT_PYI           = "pygui/__init__db.pyi"
+    CORE_INIT_PY            = "pygui/__init__db.py"
+
+
+    with open(CIMGUI_JSON_PATH) as f:
         cimgui_json = json.load(f)
     
     defines = [
@@ -1339,61 +1548,167 @@ def main():
         ("IMGUI_HAS_IMSTR", False),
     ]
     header = parse_binding_json(cimgui_json, defines)
-    # print(header)
 
-    pxd = to_pxd(header, "ccimgui.h")
-    with open("core/ccimgui_dear_bindings.pxd", "w") as f:
-        f.write(pxd)
-    
-    imports = textwrap.dedent("""
-    import cython
-    import array
-    from cython.operator import dereference
-    from typing import Callable, Any, Sequence
+    def _help():
+        print(textwrap.dedent("""
+        Usage: python model_creator.py <Option>
+          --help       Prints this
+          --trial      Attempts to merge the old/new/template content but writes the result to
+                         core_trial.pyx only.
+          --all        Typical usage. Builds the pxd/pyx/pyi file. The merged file is written
+                         to core.pyx. The old core_generated.pyx file is renamed to
+                         core_generated_prev.pyx.
+          --pxd        Builds the pxd file only.
+          --pyx        Builds the pyx file only.
+          --pyi        Builds the pyi file only.
+          --reset      Creates a new template to manually modify pxy files with. This will not
+                         complete if a template stil exists. You must delete core_template.pyx
+                         yourself.
+        """))
+        return
 
-    cimport ccimgui_dear_bindings
-    from cython.view cimport array as cvarray
-    from libcpp cimport bool
-    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
-    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
-    from libc.stdint cimport uintptr_t
-    from libc.string cimport strncpy
-    """)
-    pyx = to_pyx(header, "ccimgui_dear_bindings", imports.strip())
-    with open("core/core_generated_dear_bindings.pyx", "w") as f:
-        f.write(pyx)
-    
-    with open("core/core_generated_dear_bindings.pyx") as f:
-        old_pyx = f.read()
-    
-    with open("core/core_generated_dear_bindings_new.pyx") as f:
-        new_pyx = f.read()
-    
-    with open("core/core_generated_dear_bindings_template.pyx") as f:
-        template_pyx = f.read()
-    
-    old_model = create_pyx_model(old_pyx)
-    new_model = create_pyx_model(new_pyx)
-    comparison = HeaderComparison(old_model, new_model)
+    def trial_pyx(header: DearBinding):
+        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
 
-    template_model = create_pyx_model(template_pyx)
-    merged = comparison.create_new_header_based_on_comparison(template_model)
+        try:
+            with open(CORE_GENERATED_PYX) as f:
+                old_pyx = f.read()
+        except FileNotFoundError:
+            print(f"Trial: '{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            old_pyx = new_pyx
 
-    pyx = replace_after(pyx, PYX_TEMPLATE_MARKER, merged.as_pyx())
-    with open("core/core_generated_dear_bindings_trial.pyx", "w") as f:
-        f.write(pyx)
-    # with open("core/core_generated_dear_bindings.pyx") as f:
-    #     current_collection = create_pyx_collection(f.read())
-    #     pyi, py = current_collection.as_pyi_format()
+        try:
+            with open(CORE_TEMPLATE_PYX) as f:
+                template_pyx = f.read()
+        except FileNotFoundError:
+            print(f"Trial: '{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            return
+        
+        try:
+            merge_result = MergeResult(old_pyx, new_pyx, template_pyx)
+        except MergeFailed:
+            print("Trial: Merge failed. Aborting.")
+            return
 
-    # with open("pygui/__init__db.pyi", "w") as f:
-    #     f.write(pyi)
+        with open(CORE_PYX_TRIAL, "w") as f:
+            f.write(merge_result.merged_pyx)
+        with open(CORE_TEMPLATE_PYX_TRIAL, "w") as f:
+            f.write(merge_result.merged_pyx_all_active)
+        print(f"Created {CORE_PYX_TRIAL}")
+        print(f"Created {CORE_TEMPLATE_PYX_TRIAL}")
+
+    def reset(header: DearBinding):
+        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
+        new_model = create_pyx_model(new_pyx)
+        try:
+            with open(CORE_TEMPLATE_PYX) as f:
+                print(f"Error: Template '{CORE_TEMPLATE_PYX}' still exists.")
+                print("Please delete the file manually if you are sure.")
+                return
+        except FileNotFoundError:
+            with open(CORE_PYX, "w") as f:
+                f.write(replace_after(
+                    new_pyx,
+                    PYX_TEMPLATE_MARKER,
+                    new_model.as_pyx()
+                ))
+            with open(CORE_TEMPLATE_PYX, "w") as f:
+                f.write(replace_after(
+                    new_pyx,
+                    PYX_TEMPLATE_MARKER,
+                    new_model.as_pyx(ignore_active_flag=True)
+                ))
+            print(f"Created {CORE_PYX}")
+            print(f"Created {CORE_TEMPLATE_PYX}")
+
+    def write_pxd(header: DearBinding):
+        pxd = to_pxd(header, CIMGUI_PXD_HEADER_FILE)
+        with open(CIMGUI_PXD, "w") as f:
+            f.write(pxd)
+        print(f"Created {CIMGUI_PXD}")
     
-    # with open("pygui/__init__db.py", "w") as f:
-    #     f.write(py)
+    def write_pyx(header: DearBinding):
+        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
+
+        try:
+            with open(CORE_GENERATED_PYX) as f:
+                old_pyx = f.read()
+        except FileNotFoundError:
+            print(f"'{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            old_pyx = new_pyx
+
+        try:
+            with open(CORE_TEMPLATE_PYX) as f:
+                template_pyx = f.read()
+        except FileNotFoundError:
+            print(f"'{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            return
+        
+        try:
+            merge_result = MergeResult(old_pyx, new_pyx, template_pyx)
+        except MergeFailed:
+            print("Merge failed. Aborting.")
+            return
+
+        with open(CORE_GENERATED_PYX, "w") as f:
+            f.write(merge_result.new_pyx)
+        with open(CORE_PYX, "w") as f:
+            f.write(merge_result.merged_pyx)
+        with open(CORE_TEMPLATE_PYX, "w") as f:
+            f.write(merge_result.merged_pyx_all_active)
+        print(f"Created {CORE_GENERATED_PYX}")
+        print(f"Created {CORE_PYX}")
+        print(f"Created {CORE_TEMPLATE_PYX}")
     
-    # print("Created pygui/__init__db.pyi")
-    # print("Created pygui/__init__db.py")
+    def write_pyi(header: DearBinding):
+        try:
+            with open(CORE_TEMPLATE_PYX) as f:
+                model = create_pyx_model(f.read())
+        except FileNotFoundError:
+            print(f"'{CORE_TEMPLATE_PYX}' not found. This is required to create the pyi file")
+            return
+        
+        pyi, py = to_pyi(header, model)
+        with open(CORE_INIT_PYI, "w") as f:
+            f.write(pyi)
+        with open(CORE_INIT_PY, "w") as f:
+            f.write(py)
+        print(f"Created {CORE_INIT_PYI}")
+        print(f"Created {CORE_INIT_PY}")
+
+
+    if len(sys.argv) < 2:
+        _help()
+        return
+
+    if "--help" in sys.argv:
+        _help()
+        return
+    
+    if "--trial" in sys.argv:
+        trial_pyx(header)
+    
+    if "--reset" in sys.argv:
+        reset(header)
+        return
+
+    if "--pxd" in sys.argv:
+        write_pxd(header)
+        return
+    
+    if "--pyx" in sys.argv:
+        write_pyx(header)
+        return
+
+    if "--pyi" in sys.argv:
+        write_pyi(header)
+        return
+    
+    if "--all" in sys.argv:
+        write_pxd(header)
+        write_pyx(header)
+        write_pyi(header)
+        return
 
 
 if __name__ == "__main__":
