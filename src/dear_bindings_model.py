@@ -279,12 +279,23 @@ class Comments:
         else:
             comment = comment.format(
                 "\n".join(no_c_comment_proceeding) + "\n" + no_c_comment_attached.capitalize())
-        return comment
+        return comment.strip()
 
     def attached_only(self):
         if self.comment_attached is None:
             return None
         return "# " + self.comment_attached.lstrip("// ").capitalize()
+
+    def proceeding_only(self):
+        if len(self.comment_proceeding) == 0:
+            return None
+        
+        no_c_comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
+
+        comment = '''"""\n{}\n"""\n'''.format(
+            "\n".join(no_c_comment_proceeding))
+        
+        return comment
 
 
 class DearEnum:
@@ -723,7 +734,7 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
     )
 
 
-def to_pxd(header: DearBinding) -> str:
+def to_pxd(header: DearBinding, header_file: str) -> str:
     pxd_base = """
     # -*- coding: utf-8 -*-
     # distutils: language = c++
@@ -734,7 +745,7 @@ def to_pxd(header: DearBinding) -> str:
     """
 
     dynamic_content = StringIO("")
-    dynamic_content.write('cdef extern from "cimgui.h":\n')
+    dynamic_content.write('cdef extern from "{}":\n'.format(header_file))
     
     # Struct forward declaration
     for struct in header.structs:
@@ -749,17 +760,43 @@ def to_pxd(header: DearBinding) -> str:
     dynamic_content.write("\n")
 
     # Typedefs
+    typedef_format_test = "    ctypedef {} {}"
+
+    # Used for pretty printing the comments for each typdef
+    longest_typedef = 0
+    longest_function_ptr_typedef = 0
     for typedef in header.typedefs:
-        # Typedef comments
-        comment_text = typedef.comments.to_python_comment()
-        if comment_text is not None:
-            dynamic_content.write(textwrap.indent(comment_text, "    "))
-        
-        typedef_pxd = "    ctypedef {} {}\n".format(
+        typedef_pxd = typedef_format_test.format(
             typedef.base.raw_type,
             typedef.definition.raw_type
         )
-        dynamic_content.write(typedef_pxd)
+        if typedef.base.is_function_type():
+            longest_function_ptr_typedef = max(len(typedef_pxd), longest_function_ptr_typedef)
+        else:
+            longest_typedef = max(len(typedef_pxd), longest_typedef)
+
+
+    for typedef in header.typedefs:
+        # Typedef comments
+        comment_text = typedef.comments.proceeding_only()
+        if comment_text is not None:
+            dynamic_content.write("\n" + textwrap.indent(comment_text, "    "))
+        
+        typedef_pxd = typedef_format_test.format(
+            typedef.base.raw_type,
+            typedef.definition.raw_type
+        )
+        if typedef.base.is_function_type():
+            padding_required = (5 + longest_function_ptr_typedef - len(typedef_pxd)) * " "
+        else:
+            padding_required = (5 + longest_typedef - len(typedef_pxd)) * " "
+
+
+        comment_text = typedef.comments.attached_only()
+        dynamic_content.write("{}{}\n".format(
+            typedef_pxd,
+            padding_required + comment_text if comment_text is not None else ""
+        ))
     dynamic_content.write("\n")
 
     # Enums
@@ -772,7 +809,7 @@ def to_pxd(header: DearBinding) -> str:
         # Enum comments
         comment_text = enum.comments.to_python_comment()
         if comment_text is not None:
-            dynamic_content.write(textwrap.indent(comment_text, "    "))
+            dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
         
         enum_pxd = "    ctypedef enum {}:\n".format(enum.name)
         dynamic_content.write(enum_pxd)
@@ -799,7 +836,7 @@ def to_pxd(header: DearBinding) -> str:
         # Struct comments
         comment_text = struct.comments.to_python_comment()
         if comment_text is not None:
-            dynamic_content.write(textwrap.indent(comment_text, "    "))
+            dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
         
         struct_pxd = "    ctypedef struct {}:\n".format(struct.name)
         dynamic_content.write(struct_pxd)
@@ -817,12 +854,13 @@ def to_pxd(header: DearBinding) -> str:
                 padding_required + comment_text if comment_text is not None else ""
             )
             dynamic_content.write(struct_field_pxd)
+        dynamic_content.write("\n")
         
         for struct_method in struct.methods:
             # Struct comments
             comment_text = struct_method.comments.to_python_comment()
             if comment_text is not None:
-                dynamic_content.write(textwrap.indent(comment_text, "    "))
+                dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
             
             method_argument_strings = []
             for method_argument in struct_method.arguments:
@@ -845,7 +883,7 @@ def to_pxd(header: DearBinding) -> str:
         # Functions comments
         comment_text = function.comments.to_python_comment()
         if comment_text is not None:
-            dynamic_content.write(textwrap.indent(comment_text, "    "))
+            dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
 
         function_argument_strings = []
         for function_argument in function.arguments:
@@ -863,7 +901,7 @@ def to_pxd(header: DearBinding) -> str:
     return textwrap.dedent(pxd_base).format(dynamic_content.getvalue())
 
 
-def to_pyx(header: DearBinding, pxd_library_name: str,
+def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
            include_constant_functions=True) -> str:
     base = \
     """
@@ -872,20 +910,9 @@ def to_pyx(header: DearBinding, pxd_library_name: str,
     # cython: embedsignature=True
 
     # [Imports]
-    import cython
-    import ctypes
-    import array
-    from cython.operator import dereference
-    from typing import Callable, Any, Sequence
-
-    cimport {pxd_library_name}
-    from cython.view cimport array as cvarray
-    from libcpp cimport bool
-    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
-    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
-    from libc.stdint cimport uintptr_t
-    from libc.string cimport strncpy
+    {imports}
     # [End Imports]
+
     """
 
     constant_functions = \
@@ -1129,7 +1156,10 @@ def to_pyx(header: DearBinding, pxd_library_name: str,
     """
 
     pyx = StringIO()
-    pyx.write(textwrap.dedent(base).format(pxd_library_name=pxd_library_name))
+    pyx.write(textwrap.dedent(base).format(
+        pxd_library_name=pxd_library_name,
+        imports=imports,
+    ))
 
     if include_constant_functions:
         pyx.write(textwrap.dedent(constant_functions).format(pxd_library_name=pxd_library_name))
@@ -1219,6 +1249,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str,
     
     for struct in header.structs:
         class_template = Template(class_base)
+
+        struct_comments = struct.comments.to_python_comment()
+        class_template.set_condition("has_comment", struct_comments is not None)
+        if struct_comments is not None:
+            class_template.format(comment=textwrap.indent(struct_comments, "    "))
+
         class_template.format(
             class_name=struct.name,
             pxd_library_name=pxd_library_name,
@@ -1231,6 +1267,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str,
         for field in struct.fields:
             field_template = Template(field_base)
             
+             # Comments
+            field_comments = field.comments.to_python_comment()
+            field_template.set_condition("has_comment", field_comments is not None)
+            if field_comments is not None:
+                field_template.format(comment=textwrap.indent(field_comments, "    "))
+
             # Python type
             python_type = header.as_python_type(field.type)
 
@@ -1290,57 +1332,28 @@ def main():
     header = parse_binding_json(cimgui_json, defines)
     print(header)
 
-    pxd = to_pxd(header)
+    pxd = to_pxd(header, "ccimgui.h")
     with open("core/ccimgui_dear_bindings.pxd", "w") as f:
         f.write(pxd)
     
-    pyx = to_pyx(header, "ccimgui_dear_bindings")
+    imports = textwrap.dedent("""
+    import cython
+    import ctypes
+    import array
+    from cython.operator import dereference
+    from typing import Callable, Any, Sequence
+
+    cimport ccimgui_dear_bindings
+    from cython.view cimport array as cvarray
+    from libcpp cimport bool
+    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+    from libc.stdint cimport uintptr_t
+    from libc.string cimport strncpy
+    """)
+    pyx = to_pyx(header, "ccimgui_dear_bindings", imports.strip())
     with open("core/core_generated_dear_bindings.pyx", "w") as f:
         f.write(pyx)
-    
-    impl_function = [
-        DearFunction("ImGui_ImplGlfw_InitForVulkan", "ImGui_ImplGlfw_InitForVulkan",
-                     DearType("bool"), [
-                        DearFunction.Argument("window",            DearType("GLFWwindow*"), False, None, Comments([], None)),
-                        DearFunction.Argument("install_callbacks", DearType("bool"),        False, None, Comments([], None)),
-                     ], False, False, False, False, Comments([], None)),
-    ]
-    impl_structs = [
-        DearStruct("GLFWwindow", "GLFWwindow", False, [], Comments([], None)),
-    ]
-    # CIMGUI_API bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window,bool install_callbacks);
-    # CIMGUI_API bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window,bool install_callbacks);
-    # CIMGUI_API void ImGui_ImplGlfw_Shutdown(void);
-    # CIMGUI_API void ImGui_ImplGlfw_NewFrame(void);
-    # CIMGUI_API void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window);
-    # CIMGUI_API void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window);
-    # CIMGUI_API void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows);
-    # CIMGUI_API void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window,int focused);
-    # CIMGUI_API void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window,int entered);
-    # CIMGUI_API void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window,double x,double y);
-    # CIMGUI_API void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,int button,int action,int mods);
-    # CIMGUI_API void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,double xoffset,double yoffset);
-    # CIMGUI_API void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window,int key,int scancode,int action,int mods);
-    # CIMGUI_API void ImGui_ImplGlfw_CharCallback(GLFWwindow* window,unsigned int c);
-    # CIMGUI_API void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor,int event);
-
-    # CIMGUI_API bool ImGui_ImplOpenGL3_Init(const char* glsl_version);
-    # CIMGUI_API void ImGui_ImplOpenGL3_Shutdown(void);
-    # CIMGUI_API void ImGui_ImplOpenGL3_NewFrame(void);
-    # CIMGUI_API void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
-    # CIMGUI_API bool ImGui_ImplOpenGL3_CreateFontsTexture(void);
-    # CIMGUI_API void ImGui_ImplOpenGL3_DestroyFontsTexture(void);
-    # CIMGUI_API bool ImGui_ImplOpenGL3_CreateDeviceObjects(void);
-    # CIMGUI_API void ImGui_ImplOpenGL3_DestroyDeviceObjects(void);
-
-    impl_header = DearBinding([], [], impl_structs, impl_function)
-    pxd_impl = to_pxd(impl_header)
-    with open("core/ccimgui_dear_bindings_impl.pxd", "w") as f:
-        f.write(pxd_impl)
-    
-    pyx_impl = to_pyx(impl_header, "ccimgui_dear_bindings_impl", include_constant_functions=False)
-    with open("core/core_generated_dear_bindings_impl.pyx", "w") as f:
-        f.write(pyx_impl)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
 #pragma message ( "Preprocessor: PYGUI_COMPILING_CIMGUI" )
 #define IMGUI_API __declspec(dllexport)
 // cimgui.h will automatically define CIMGUI_API to be the below
-// #define CIMGUI_API extern "C" __declspec(dllexport)
+#define CIMGUI_API extern "C" __declspec(dllexport)
 #endif
 
 #ifdef PYGUI_COMPILING_GLFW

@@ -1,5 +1,8 @@
 # ?use_template(False)
 cdef class {class_name}:
+    #if has_comment
+{comment}
+    #endif
     cdef {pxd_library_name}.{class_name}* _ptr
     
     @staticmethod

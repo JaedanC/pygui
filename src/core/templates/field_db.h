@@ -3,6 +3,9 @@
 # ?returns({python_type})
 @property
 def {field_name}(self):
+    #if has_comment
+{comment}
+    #endif
     cdef {field_type} res = dereference(self._ptr).{cimgui_field_name}
     return {res}
 @{field_name}.setter
