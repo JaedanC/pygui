@@ -3,6 +3,7 @@ from typing import List, Tuple, Any
 from io import StringIO
 import helpers
 import re
+import textwrap
 
 
 class PyxEnum:
@@ -153,72 +154,72 @@ class PyxCollection:
         self.classes.sort(key=lambda c: c.name)
 
         pyi_content = StringIO()
+        pyi_content.write(textwrap.dedent(
+        """
+        from typing import Any, Callable, Tuple, List, Sequence
+        from PIL import Image
+        
+        
+        VERTEX_BUFFER_POS_OFFSET: int
+        VERTEX_BUFFER_UV_OFFSET: int
+        VERTEX_BUFFER_COL_OFFSET: int
+        VERTEX_SIZE: int
+        INDEX_SIZE: int
+        FLT_MIN: float
+        FLT_MAX: float
+        
+        IMGUI_PAYLOAD_TYPE_COLOR_3F: int
+        IMGUI_PAYLOAD_TYPE_COLOR_4F: int
+        
+        class BoolPtr:
+            ptr: bool
+            def __init__(self, initial_value: bool): ...
+            def __bool__(self) -> bool: ...
+        
+        class IntPtr:
+            value: int
+            def __init__(self, initial_value: int): ...
+        
+        class FloatPtr:
+            value: float
+            def __float__(self) -> float: ...
+        
+        class DoublePtr:
+            value: float
+            def __init__(self, initial_value: float): ...
+        
+        class StrPtr:
+            value: str
+            def __init__(self, initial_value: str, buffer_size=256): ...
+        
+        class Vec4Ptr:
+            x: float
+            y: float
+            z: float
+            w: float
+            def __init__(self, x: float, y: float, z: float, w: float): ...
+            def vec(self) -> Tuple[float, float, float, float]: ...
+            def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+            def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+            def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+            def copy(self) -> Vec4Ptr: ...
+        
+        class Vec2Ptr:
+            x: float
+            y: float
+            def __init__(self, x: float, y: float): ...
+            def vec(self) -> Tuple[float, float]: ...
+            def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+            def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+            def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+            def copy(self) -> Vec2Ptr: ...
+        
+        def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
+        
+        def load_image(image: Image) -> int: ...
 
-        pyi_content.write("\n".join([
-            "from typing import Any, Callable, Tuple, List, Sequence",
-            "from PIL import Image",
-            "",
-            "",
-            "VERTEX_BUFFER_POS_OFFSET: int",
-            "VERTEX_BUFFER_UV_OFFSET: int",
-            "VERTEX_BUFFER_COL_OFFSET: int",
-            "VERTEX_SIZE: int",
-            "INDEX_SIZE: int",
-            "FLT_MIN: float",
-            "FLT_MAX: float",
-            "",
-            "IMGUI_PAYLOAD_TYPE_COLOR_3F: int",
-            "IMGUI_PAYLOAD_TYPE_COLOR_4F: int",
-            "",
-            "class BoolPtr:",
-            "    ptr: bool",
-            "    def __init__(self, initial_value: bool): ...",
-            "    def __bool__(self) -> bool: ...",
-            "",
-            "class IntPtr:",
-            "    value: int",
-            "    def __init__(self, initial_value: int): ...",
-            "",
-            "class FloatPtr:",
-            "    value: float",
-            "    def __float__(self) -> float: ...",
-            "",
-            "class DoublePtr:",
-            "    value: float",
-            "    def __init__(self, initial_value: float): ...",
-            "",
-            "class StrPtr:",
-            "    value: str",
-            "    def __init__(self, initial_value: str, buffer_size=256): ...",
-            "",
-            "class Vec4Ptr:",
-            "    x: float",
-            "    y: float",
-            "    z: float",
-            "    w: float",
-            "    def __init__(self, x: float, y: float, z: float, w: float): ...",
-            "    def vec(self) -> Tuple[float, float, float, float]: ...",
-            "    def as_floatptrs(self) -> Sequence[FloatPtr]: ...",
-            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...",
-            "    def to_floatptrs(self) -> Sequence[FloatPtr]: ...",
-            "    def copy(self) -> Vec4Ptr: ...",
-            "",
-            "class Vec2Ptr:",
-            "    x: float",
-            "    y: float",
-            "    def __init__(self, x: float, y: float): ...",
-            "    def vec(self) -> Tuple[float, float]: ...",
-            "    def as_floatptrs(self) -> Sequence[FloatPtr]: ...",
-            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...",
-            "    def to_floatptrs(self) -> Sequence[FloatPtr]: ...",
-            "    def copy(self) -> Vec2Ptr: ...",
-            "",
-            "def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...",
-            "",
-            "def load_image(image: Image) -> int: ...",
-            "",
-            "",
-        ]))
+        
+        """))
 
         for enum in self.enums:
             pyi_content.write(enum.as_pyi_format() + "\n")

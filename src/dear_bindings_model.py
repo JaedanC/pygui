@@ -1,10 +1,14 @@
 from __future__ import annotations
 from typing import List, Any
 from io import StringIO
+from dear_parser import *
 import builtins
 import json
 import keyword
 import textwrap
+
+
+PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
 
 
 class DearBinding:
@@ -37,6 +41,13 @@ class DearBinding:
             "Typedefs:\n{}\n\n".format("\n".join([str(e) for e in self.typedefs])) + \
             "Structs:\n{}\n\n".format("\n".join([str(e) for e in self.structs])) + \
             "Functions:\n{}\n".format("\n".join([str(e) for e in self.functions]))
+
+    def sort(self):
+        self.functions.sort(key=lambda x: x.name_omitted_imgui_prefix())
+        self.structs.sort(key=lambda x: x.name)
+        for struct in self.structs:
+            struct.fields.sort(key=lambda x: x.name)
+            struct.methods.sort(key=lambda x: x.name)
 
     def is_cimgui_type(self, _type: DearType):
         for enum in self.enums:
@@ -482,7 +493,7 @@ def pythonise_string(string: str, make_upper=False) -> str:
             if isupper_count == 0 and i > 0:
                 new_string += "_"
             isupper_count += 1
-        elif isupper_count > 1:
+        elif isupper_count > 1 and i > 2: # i condition because of vslider_float
             isupper_count = 0
             new_string += "_"
         else:
@@ -903,21 +914,19 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
 
 def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
            include_constant_functions=True) -> str:
+    header.sort()
     base = \
     """
     # distutils: language = c++
     # cython: language_level = 3
     # cython: embedsignature=True
 
-    # [Imports]
     {imports}
-    # [End Imports]
 
     """
 
     constant_functions = \
     """
-    # [Constant Functions]
     cdef bytes _bytes(str text):
         return text.encode()
 
@@ -1165,7 +1174,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
         pyx.write(textwrap.dedent(constant_functions).format(pxd_library_name=pxd_library_name))
 
     # Add enums
-    pyx.write("# [Enums]\n")
     for enum in header.enums:
         for enum_element in enum.elements:
             pyx.write("{} = {}.{}\n".format(
@@ -1173,7 +1181,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
                 pxd_library_name,
                 enum_element.name
             ))
-    pyx.write("# [End Enums]\n\n")
 
     def function_to_pyx(header: DearBinding, function_template: Template, function: DearFunction) -> str:
         # Python return type
@@ -1233,6 +1240,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
     with open("core/templates/function_db.h") as f:
         function_base = f.read()
     
+    pyx.write("\n\n")
+    pyx.write(PYX_TEMPLATE_MARKER)
     for function in header.functions:
         function_template = Template(function_base)
         pyx.write("# [Function]\n")
@@ -1314,7 +1323,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str,
             pyx.write("    # [Method]\n")
             pyx.write(textwrap.indent(method_pyx, "    "))
             pyx.write("    # [End Method]\n\n")
-        pyx.write("# [End Class]\n\n\n")
+        pyx.write("# [End Class]\n\n")
 
     return pyx.getvalue()
 
@@ -1330,7 +1339,7 @@ def main():
         ("IMGUI_HAS_IMSTR", False),
     ]
     header = parse_binding_json(cimgui_json, defines)
-    print(header)
+    # print(header)
 
     pxd = to_pxd(header, "ccimgui.h")
     with open("core/ccimgui_dear_bindings.pxd", "w") as f:
@@ -1338,7 +1347,6 @@ def main():
     
     imports = textwrap.dedent("""
     import cython
-    import ctypes
     import array
     from cython.operator import dereference
     from typing import Callable, Any, Sequence
@@ -1354,6 +1362,38 @@ def main():
     pyx = to_pyx(header, "ccimgui_dear_bindings", imports.strip())
     with open("core/core_generated_dear_bindings.pyx", "w") as f:
         f.write(pyx)
+    
+    with open("core/core_generated_dear_bindings.pyx") as f:
+        old_pyx = f.read()
+    
+    with open("core/core_generated_dear_bindings_new.pyx") as f:
+        new_pyx = f.read()
+    
+    with open("core/core_generated_dear_bindings_template.pyx") as f:
+        template_pyx = f.read()
+    
+    old_model = create_pyx_model(old_pyx)
+    new_model = create_pyx_model(new_pyx)
+    comparison = HeaderComparison(old_model, new_model)
+
+    template_model = create_pyx_model(template_pyx)
+    merged = comparison.create_new_header_based_on_comparison(template_model)
+
+    pyx = replace_after(pyx, PYX_TEMPLATE_MARKER, merged.as_pyx())
+    with open("core/core_generated_dear_bindings_trial.pyx", "w") as f:
+        f.write(pyx)
+    # with open("core/core_generated_dear_bindings.pyx") as f:
+    #     current_collection = create_pyx_collection(f.read())
+    #     pyi, py = current_collection.as_pyi_format()
+
+    # with open("pygui/__init__db.pyi", "w") as f:
+    #     f.write(pyi)
+    
+    # with open("pygui/__init__db.py", "w") as f:
+    #     f.write(py)
+    
+    # print("Created pygui/__init__db.pyi")
+    # print("Created pygui/__init__db.py")
 
 
 if __name__ == "__main__":

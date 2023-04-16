@@ -132,11 +132,18 @@ def main():
         f.write(pxd_impl)
     
     imports = textwrap.dedent("""
+    import ctypes
+    from typing import Callable, Any, Sequence
+
     cimport ccimgui_dear_bindings_impl
     from libcpp cimport bool
+    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+    from libc.stdint cimport uintptr_t
+    from libc.string cimport strncpy
     """)
     pyx_impl = to_pyx(impl_header, "ccimgui_dear_bindings_impl",
-                      imports.strip(), include_constant_functions=False)
+                      imports.strip())
     with open("core/core_generated_dear_bindings_impl.pyx", "w") as f:
         f.write(pyx_impl)
 

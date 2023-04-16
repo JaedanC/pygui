@@ -4,9 +4,253 @@
 # cython: embedsignature=True
 
 # [Imports]
+import ctypes
+from typing import Callable, Any, Sequence
+
 cimport ccimgui_dear_bindings_impl
 from libcpp cimport bool
+from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+from libc.stdint cimport uintptr_t
+from libc.string cimport strncpy
 # [End Imports]
+
+
+# [Constant Functions]
+cdef bytes _bytes(str text):
+    return text.encode()
+
+cdef str _from_bytes(bytes text):
+    return <str>(text.decode('utf-8', errors='ignore'))
+
+cdef _cast_ImVec2_tuple(ccimgui_dear_bindings_impl.ImVec2 vec):
+    return (vec.x, vec.y)
+
+cdef ccimgui_dear_bindings_impl.ImVec2 _cast_tuple_ImVec2(pair) except +:
+    cdef ccimgui_dear_bindings_impl.ImVec2 vec
+    if len(pair) != 2:
+        raise ValueError('pair param must be length of 2')
+    vec.x, vec.y = pair
+    return vec
+
+cdef _cast_ImVec4_tuple(ccimgui_dear_bindings_impl.ImVec4 vec):
+    return (vec.x, vec.y, vec.z, vec.w)
+
+cdef ccimgui_dear_bindings_impl.ImVec4 _cast_tuple_ImVec4(quadruple):
+    cdef ccimgui_dear_bindings_impl.ImVec4 vec
+    if len(quadruple) != 4:
+        raise ValueError('quadruple param must be length of 4')
+
+    vec.x, vec.y, vec.z, vec.w = quadruple
+    return vec
+
+
+def _py_vertex_buffer_vertex_pos_offset():
+    return <uintptr_t><size_t>&(<ccimgui_dear_bindings_impl.ImDrawVert*>NULL).pos
+
+def _py_vertex_buffer_vertex_uv_offset():
+    return <uintptr_t><size_t>&(<ccimgui_dear_bindings_impl.ImDrawVert*>NULL).uv
+
+def _py_vertex_buffer_vertex_col_offset():
+    return <uintptr_t><size_t>&(<ccimgui_dear_bindings_impl.ImDrawVert*>NULL).col
+
+def _py_vertex_buffer_vertex_size():
+    return sizeof(ccimgui_dear_bindings_impl.ImDrawVert)
+
+def _py_index_buffer_index_size():
+    return sizeof(ccimgui_dear_bindings_impl.ImDrawIdx)
+
+
+cdef class BoolPtr:
+    cdef public bool value
+
+    def __init__(self, initial_value: bool):
+        self.ptr: bool = initial_value
+
+    def __bool__(self):
+        return self.ptr
+
+cdef class IntPtr:
+    cdef public int value
+
+    def __init__(self, initial_value: int):
+        self.value: int = initial_value
+
+
+cdef class FloatPtr:
+    cdef public float value
+
+    def __init__(self, initial_value: float):
+        self.value = initial_value
+
+
+cdef class DoublePtr:
+    cdef public double value
+
+    def __init__(self, initial_value: float):
+        self.value = initial_value
+
+
+cdef class StrPtr:
+    cdef char* buffer
+    cdef public int buffer_size
+
+    def __init__(self, initial_value: str, buffer_size=256):
+        self.buffer = <char*>ccimgui_dear_bindings_impl.igMemAlloc(buffer_size)
+        self.buffer_size: int = buffer_size
+        self.value = initial_value
+
+    def __dealloc__(self):
+        ccimgui_dear_bindings_impl.igMemFree(self.buffer)
+
+    @property
+    def value(self):
+        return _from_bytes(self.buffer)
+    @value.setter
+    def value(self, value: str):
+        strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
+        self.buffer[min((self.buffer_size - 1), len(value))] = 0
+
+
+cdef class Vec2Ptr:
+    cdef public FloatPtr _x
+    cdef public FloatPtr _y
+
+    def __init__(self, x: float, y: float):
+        self._x = FloatPtr(x)
+        self._y = FloatPtr(y)
+
+    @property
+    def x(self):
+        return self._x.value
+    @x.setter
+    def x(self, x):
+        self._x.value = x
+    @property
+    def y(self):
+        return self._y.value
+    @y.setter
+    def y(self, y):
+        self._y.value = y
+
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
+        assert len(float_ptrs) >= 2
+        self._x = float_ptrs[0]
+        self._y = float_ptrs[1]
+
+    def as_floatptrs(self) -> Sequence[FloatPtr]:
+        return [
+            self._x,
+            self._y,
+        ]
+
+    def vec(self) -> Sequence[float]:
+        return (
+            self.x,
+            self.y,
+        )
+
+    def copy(self) -> Vec2Ptr:
+        return Vec2Ptr(*self.vec())
+
+    cdef void from_array(self, float* array):
+        self._x.value = array[0]
+        self._y.value = array[1]
+
+    cdef void to_array(self, float* array):
+        array[0] = self.x
+        array[1] = self.y
+
+
+cdef class Vec4Ptr:
+    cdef public FloatPtr _x
+    cdef public FloatPtr _y
+    cdef public FloatPtr _z
+    cdef public FloatPtr _w
+
+    def __init__(self, x: float, y: float, z: float, w: float):
+        self._x = FloatPtr(x)
+        self._y = FloatPtr(y)
+        self._z = FloatPtr(z)
+        self._w = FloatPtr(w)
+
+    @property
+    def x(self):
+        return self._x.value
+    @x.setter
+    def x(self, x):
+        self._x.value = x
+    @property
+    def y(self):
+        return self._y.value
+    @y.setter
+    def y(self, y):
+        self._y.value = y
+    @property
+    def z(self):
+        return self._z.value
+    @z.setter
+    def z(self, z):
+        self._z.value = z
+    @property
+    def w(self):
+        return self._w.value
+    @w.setter
+    def w(self, w):
+        self._w.value = w
+
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
+        assert len(float_ptrs) >= 4
+        self._x = float_ptrs[0]
+        self._y = float_ptrs[1]
+        self._z = float_ptrs[2]
+        self._w = float_ptrs[3]
+
+    def as_floatptrs(self) -> Sequence[FloatPtr]:
+        return [
+            self._x,
+            self._y,
+            self._z,
+            self._w,
+        ]
+
+    def vec(self) -> Sequence[float]:
+        return (
+            self.x,
+            self.y,
+            self.z,
+            self.w,
+        )
+
+    def copy(self) -> Vec4Ptr:
+        return Vec4Ptr(*self.vec())
+
+    cdef void from_array(self, float* array):
+        self._x.value = array[0]
+        self._y.value = array[1]
+        self._z.value = array[2]
+        self._w.value = array[3]
+
+    cdef void to_array(self, float* array):
+        array[0] = self.x
+        array[1] = self.y
+        array[2] = self.z
+        array[3] = self.w
+
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned int output = 0
+    output |= a << 24
+    output |= b << 16
+    output |= g << 8
+    output |= r << 0
+    return output
+
+FLT_MIN = LIBC_FLT_MIN
+FLT_MAX = LIBC_FLT_MAX
+IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+
 
 # [Enums]
 # [End Enums]

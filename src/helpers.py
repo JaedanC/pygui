@@ -31,7 +31,6 @@ def comment_text(text: str):
     for line in text.split("\n"):
         output.append(line[:min_spaces] + "# " + line[min_spaces:])
     return "\n".join(output)
-    # return "\n".join(["# " + line for line in text.split("\n")])
 
 
 def indent_by(text: str, by: int):

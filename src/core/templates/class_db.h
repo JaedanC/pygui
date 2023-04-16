@@ -1,4 +1,5 @@
 # ?use_template(False)
+# ?active(True)
 cdef class {class_name}:
     #if has_comment
 {comment}
