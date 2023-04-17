@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Any
+from typing import List, Any, Dict
 from io import StringIO
 from dear_parser import *
 import builtins
@@ -193,6 +193,9 @@ class DearBinding:
         
         if _type.ptr_version() is not None:
             return "&{}.value"
+
+        if self.is_cimgui_type(_type):
+            return "{}._ptr"
         
         return "{}"
 
@@ -986,7 +989,7 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
     return textwrap.dedent(pxd_base).format(dynamic_content.getvalue())
 
 
-def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
+def to_pyx(header: DearBinding, library_name: str, core_library_name: str, imports: str) -> str:
     header.sort()
     base = """
     # distutils: language = c++
@@ -1001,21 +1004,21 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
     cdef str _from_bytes(bytes text):
         return <str>(text.decode('utf-8', errors='ignore'))
 
-    cdef _cast_ImVec2_tuple({pxd_library_name}.ImVec2 vec):
+    cdef _cast_ImVec2_tuple({core_library_name}.ImVec2 vec):
         return (vec.x, vec.y)
 
-    cdef {pxd_library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:
-        cdef {pxd_library_name}.ImVec2 vec
+    cdef {core_library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:
+        cdef {core_library_name}.ImVec2 vec
         if len(pair) != 2:
             raise ValueError('pair param must be length of 2')
         vec.x, vec.y = pair
         return vec
 
-    cdef _cast_ImVec4_tuple({pxd_library_name}.ImVec4 vec):
+    cdef _cast_ImVec4_tuple({core_library_name}.ImVec4 vec):
         return (vec.x, vec.y, vec.z, vec.w)
 
-    cdef {pxd_library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):
-        cdef {pxd_library_name}.ImVec4 vec
+    cdef {core_library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):
+        cdef {core_library_name}.ImVec4 vec
         if len(quadruple) != 4:
             raise ValueError('quadruple param must be length of 4')
 
@@ -1024,19 +1027,19 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
 
 
     def _py_vertex_buffer_vertex_pos_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).pos
+        return <uintptr_t><size_t>&(<{core_library_name}.ImDrawVert*>NULL).pos
 
     def _py_vertex_buffer_vertex_uv_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).uv
+        return <uintptr_t><size_t>&(<{core_library_name}.ImDrawVert*>NULL).uv
 
     def _py_vertex_buffer_vertex_col_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).col
+        return <uintptr_t><size_t>&(<{core_library_name}.ImDrawVert*>NULL).col
 
     def _py_vertex_buffer_vertex_size():
-        return sizeof({pxd_library_name}.ImDrawVert)
+        return sizeof({core_library_name}.ImDrawVert)
 
     def _py_index_buffer_index_size():
-        return sizeof({pxd_library_name}.ImDrawIdx)
+        return sizeof({core_library_name}.ImDrawIdx)
 
 
     cdef class BoolPtr:
@@ -1074,12 +1077,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
         cdef public int buffer_size
 
         def __init__(self, initial_value: str, buffer_size=256):
-            self.buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(buffer_size)
+            self.buffer = <char*>{core_library_name}.ImGui_MemAlloc(buffer_size)
             self.buffer_size: int = buffer_size
             self.value = initial_value
         
         def __dealloc__(self):
-            {pxd_library_name}.ImGui_MemFree(self.buffer)
+            {core_library_name}.ImGui_MemFree(self.buffer)
 
         @property
         def value(self):
@@ -1237,7 +1240,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
 
     pyx = StringIO()
     pyx.write(textwrap.dedent(base.lstrip("\n")).format(
-        pxd_library_name=pxd_library_name,
+        core_library_name=core_library_name,
         imports=imports,
     ))
 
@@ -1246,7 +1249,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
         for enum_element in enum.elements:
             pyx.write("{} = {}.{}\n".format(
                 pythonise_string(enum_element.name_omitted_imgui_prefix(), make_upper=True),
-                pxd_library_name,
+                library_name,
                 enum_element.name
             ))
 
@@ -1271,7 +1274,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
         if function.return_type.is_function_type():
             return_type = "Callable"
         elif header.is_cimgui_type(function.return_type):
-            return_type = "{}.{}".format(pxd_library_name, function.return_type.with_no_const())
+            return_type = "{}.{}".format(library_name, function.return_type.with_no_const())
         else:
             return_type = function.return_type.raw_type
 
@@ -1298,7 +1301,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
             python_function_name=python_function_name,
             python_function_arguments=python_function_arguments,
             return_type=return_type,
-            pxd_library_name=pxd_library_name,
+            pxd_library_name=library_name,
             function_name=function.name,
             function_arguments=function_arguments,
             res=res,
@@ -1334,7 +1337,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
 
         class_template.format(
             class_name=struct.name,
-            pxd_library_name=pxd_library_name,
+            pxd_library_name=library_name,
         )
         pyx.write("# [Class]\n")
         pyx.write("# [Class Constants]\n")
@@ -1357,7 +1360,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
             if field.type.is_function_type():
                 field_type = "Callable"
             elif header.is_cimgui_type(field.type):
-                field_type = "{}.{}".format(pxd_library_name, field.type.with_no_const())
+                field_type = "{}.{}".format(library_name, field.type.with_no_const())
             else:
                 field_type = field.type.raw_type
 
@@ -1396,14 +1399,16 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str) -> str:
     return pyx.getvalue()
 
 
-def generate_new_pyx(from_header: DearBinding, pxd_library_name: str):
+def generate_new_pyx(from_header: DearBinding, library_name: str, core_library_name: str):
     imports = textwrap.dedent("""
+        import ctypes
         import cython
         import array
         from cython.operator import dereference
         from typing import Callable, Any, Sequence
 
         cimport {}
+        {}
         from cython.view cimport array as cvarray
         from libcpp cimport bool
         from libc.float cimport FLT_MIN as LIBC_FLT_MIN
@@ -1411,11 +1416,14 @@ def generate_new_pyx(from_header: DearBinding, pxd_library_name: str):
         from libc.stdint cimport uintptr_t
         from libc.string cimport strncpy
         """
-    ).format(pxd_library_name)
-    return to_pyx(from_header, pxd_library_name, imports.strip())
+    ).format(
+        core_library_name,
+        "cimport " + library_name if library_name != core_library_name else ""
+        )
+    return to_pyx(from_header, library_name, core_library_name, imports.strip())
 
 
-def to_pyi(header: DearBinding, model: PyxHeader):
+def to_pyi(header: DearBinding, model: PyxHeader, include_base=True):
     base = textwrap.dedent("""
     from typing import Any, Callable, Tuple, List, Sequence
     from PIL import Image
@@ -1481,8 +1489,12 @@ def to_pyi(header: DearBinding, model: PyxHeader):
 
     """)
 
+    # __init__.pyi ------------------------------------
+
     pyi_output = StringIO()
-    pyi_output.write(base)
+
+    if include_base:
+        pyi_output.write(base)
 
     for enum in header.enums:
         for enum_value in enum.elements:
@@ -1518,36 +1530,150 @@ def to_pyi(header: DearBinding, model: PyxHeader):
             ))
         pyi_output.write("\n")
     
-    return pyi_output.getvalue(), ""
+
+    # __init__.py ------------------------------------
+    py = textwrap.dedent("""
+    from .core import *
+
+    VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()
+    VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()
+    VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()
+    VERTEX_SIZE = core._py_vertex_buffer_vertex_size()
+    INDEX_SIZE = core._py_index_buffer_index_size()
+
+
+
+    import OpenGL.GL as gl
+    from PIL import Image
+
+    # From https://stackoverflow.com/questions/72325672/opengl-doesnt-draw-anything-if-i-use-pil-or-pypng-to-load-textures
+    def load_image(image: Image) -> int:
+        convert = image.convert("RGBA")
+        image_data = convert.tobytes()
+        # image_data = convert.transpose(Image.Transpose.FLIP_TOP_BOTTOM).tobytes()
+        w = image.width
+        h = image.height
+
+        # create the texture in VRAM
+        texture: int = gl.glGenTextures(1)
+        gl.glBindTexture(gl.GL_TEXTURE_2D, texture)
+
+        # configure some texture settings
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_S, gl.GL_REPEAT) # when you try to reference points beyond the edge of the texture, how should it behave?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_REPEAT) # in this case, repeat the texture data
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR) # when you zoom in, how should the new pixels be calculated?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR_MIPMAP_LINEAR) # when you zoom out, how should the existing pixels be combined?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_BASE_LEVEL, 0)
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAX_LEVEL, 0)
+
+        # load texture onto the GPU
+        gl.glTexImage2D(
+            gl.GL_TEXTURE_2D,    # where to load texture data
+            0,                   # mipmap level
+            gl.GL_RGBA8,         # format to store data in
+            w,                   # image dimensions
+            h,                   #
+            0,                   # border thickness
+            gl.GL_RGBA,          # format data is provided in
+            gl.GL_UNSIGNED_BYTE, # type to read data as
+            image_data
+        )          # data to load as texture
+        # gl.debug.check_gl_error()
+
+        # generate smaller versions of the texture to save time when its zoomed out
+        gl.glGenerateMipmap(gl.GL_TEXTURE_2D)
+
+        # clean up afterwards
+        gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
+        return texture
+    """)
+
+    return pyi_output.getvalue(), py if include_base else ""
+
+
+class CompilationUnit:
+    def __init__(self, unit_name: str, output_directory: str, config: dict):
+        self.unit_name: str = unit_name
+        self.directory_prefix: str = output_directory
+        self.config: dict = config
+    
+    @property
+    def BINDING_JSON(self):
+        return self.directory_prefix + self.config["BINDING_JSON"]
+    
+    @property
+    def CIMGUI_PXD(self):
+        return self.directory_prefix + self.config["CIMGUI_PXD"]
+
+    @property
+    def CIMGUI_PXD_HEADER_FILE(self):
+        return self.config["CIMGUI_PXD_HEADER_FILE"]
+    
+    @property
+    def CIMGUI_LIBRARY_NAME(self):
+        return self.config["CIMGUI_LIBRARY_NAME"]
+    
+    @property
+    def CORE_GENERATED_PYX(self):
+        return self.directory_prefix + self.config["CORE_GENERATED_PYX"]
+    
+    @property
+    def CORE_PYX(self):
+        return self.directory_prefix + self.config["CORE_PYX"]
+    
+    @property
+    def CORE_PYX_TRIAL(self):
+        return self.directory_prefix + self.config["CORE_PYX_TRIAL"]
+    
+    @property
+    def CORE_TEMPLATE_PYX(self):
+        return self.directory_prefix + self.config["CORE_TEMPLATE_PYX"]
+    
+    @property
+    def CORE_TEMPLATE_PYX_TRIAL(self):
+        return self.directory_prefix + self.config["CORE_TEMPLATE_PYX_TRIAL"]
 
 
 def main():
-    CIMGUI_JSON_PATH        = "external/dear_bindings/cimgui.json"
-
-    CIMGUI_PXD              = "core/ccimgui_db.pxd"
-    CIMGUI_PXD_HEADER_FILE  = "cimgui.h"
-    CIMGUI_LIBRARY_NAME     = "ccimgui_db"
-
-    CORE_PYX                = "core/core_db.pyx"
-    CORE_GENERATED_PYX      = "core/core_generated_db.pyx"
-    CORE_TEMPLATE_PYX       = "core/core_template_db.pyx"
-
-    CORE_PYX_TRIAL          = "core/core_db_trial.pyx"
-    CORE_TEMPLATE_PYX_TRIAL = "core/core_template_db_trial.pyx"
-
     CORE_INIT_PYI           = "pygui/__init__db.pyi"
     CORE_INIT_PY            = "pygui/__init__db.py"
 
+    with open("core/backends/core/config.json") as f:
+        core_unit = CompilationUnit(
+            "core",
+            "core/backends/core/",
+            json.load(f)
+        )
 
-    with open(CIMGUI_JSON_PATH) as f:
-        cimgui_json = json.load(f)
+    # python model.py --all --backends=glfw,opengl3
+    backends: List[str] = []
+    for arg in sys.argv:
+        if "--backends=" in arg:
+            backends = arg.replace("--backends=", "", 1).split(",")
+    backends = list(filter(lambda x: x != "core", backends))
     
-    defines = [
-        ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
-        ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
-        ("IMGUI_HAS_IMSTR", False),
-    ]
-    header = parse_binding_json(cimgui_json, defines)
+    backend_units: List[CompilationUnit] = []
+    for backend in backends:
+        backend_base_directory = "core/backends/" + backend + "/"
+        with open(backend_base_directory + "config.json") as f:
+            backend_units.append(CompilationUnit(
+                backend,
+                backend_base_directory,
+                json.load(f)
+            ))
+
+    headers: Dict[str, Tuple[DearBinding, CompilationUnit]] = {}
+    for unit in [core_unit] + backend_units:
+        unit: CompilationUnit
+        with open(unit.BINDING_JSON) as f:
+            binding_json = json.load(f)
+        
+        defines = [
+            ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
+            ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
+            ("IMGUI_HAS_IMSTR", False),
+        ]
+        headers[unit.unit_name] = (parse_binding_json(binding_json, defines), unit)
 
     def _help():
         print(textwrap.dedent("""
@@ -1567,21 +1693,21 @@ def main():
         """))
         return
 
-    def trial_pyx(header: DearBinding):
-        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
+    def trial_pyx(header: DearBinding, compilation_unit: CompilationUnit, core_library_name: str):
+        new_pyx = generate_new_pyx(header, compilation_unit.CIMGUI_LIBRARY_NAME, core_library_name)
 
         try:
-            with open(CORE_GENERATED_PYX) as f:
+            with open(compilation_unit.CORE_GENERATED_PYX) as f:
                 old_pyx = f.read()
         except FileNotFoundError:
-            print(f"Trial: '{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            print(f"Trial: '{compilation_unit.CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
             old_pyx = new_pyx
 
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
+            with open(compilation_unit.CORE_TEMPLATE_PYX) as f:
                 template_pyx = f.read()
         except FileNotFoundError:
-            print(f"Trial: '{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            print(f"Trial: '{compilation_unit.CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
             return
         
         try:
@@ -1590,58 +1716,58 @@ def main():
             print("Trial: Merge failed. Aborting.")
             return
 
-        with open(CORE_PYX_TRIAL, "w") as f:
+        with open(compilation_unit.CORE_PYX_TRIAL, "w") as f:
             f.write(merge_result.merged_pyx)
-        with open(CORE_TEMPLATE_PYX_TRIAL, "w") as f:
+        with open(compilation_unit.CORE_TEMPLATE_PYX_TRIAL, "w") as f:
             f.write(merge_result.merged_pyx_all_active)
-        print(f"Created {CORE_PYX_TRIAL}")
-        print(f"Created {CORE_TEMPLATE_PYX_TRIAL}")
+        print(f"Created {compilation_unit.CORE_PYX_TRIAL}")
+        print(f"Created {compilation_unit.CORE_TEMPLATE_PYX_TRIAL}")
 
-    def reset(header: DearBinding):
-        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
+    def reset(header: DearBinding, compilation_unit: CompilationUnit, core_library_name: str):
+        new_pyx = generate_new_pyx(header, compilation_unit.CIMGUI_LIBRARY_NAME, core_library_name)
         new_model = create_pyx_model(new_pyx)
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
-                print(f"Error: Template '{CORE_TEMPLATE_PYX}' still exists.")
+            with open(compilation_unit.CORE_TEMPLATE_PYX) as f:
+                print(f"Error: Template '{compilation_unit.CORE_TEMPLATE_PYX}' still exists.")
                 print("Please delete the file manually if you are sure.")
                 return
         except FileNotFoundError:
-            with open(CORE_PYX, "w") as f:
+            with open(compilation_unit.CORE_PYX, "w") as f:
                 f.write(replace_after(
                     new_pyx,
                     PYX_TEMPLATE_MARKER,
                     new_model.as_pyx()
                 ))
-            with open(CORE_TEMPLATE_PYX, "w") as f:
+            with open(compilation_unit.CORE_TEMPLATE_PYX, "w") as f:
                 f.write(replace_after(
                     new_pyx,
                     PYX_TEMPLATE_MARKER,
                     new_model.as_pyx(ignore_active_flag=True)
                 ))
-            print(f"Created {CORE_PYX}")
-            print(f"Created {CORE_TEMPLATE_PYX}")
+            print(f"Created {compilation_unit.CORE_PYX}")
+            print(f"Created {compilation_unit.CORE_TEMPLATE_PYX}")
 
-    def write_pxd(header: DearBinding):
-        pxd = to_pxd(header, CIMGUI_PXD_HEADER_FILE)
-        with open(CIMGUI_PXD, "w") as f:
+    def write_pxd(header: DearBinding, compilation_unit: CompilationUnit):
+        pxd = to_pxd(header, compilation_unit.CIMGUI_PXD_HEADER_FILE)
+        with open(compilation_unit.CIMGUI_PXD, "w") as f:
             f.write(pxd)
-        print(f"Created {CIMGUI_PXD}")
+        print(f"Created {compilation_unit.CIMGUI_PXD}")
     
-    def write_pyx(header: DearBinding):
-        new_pyx = generate_new_pyx(header, CIMGUI_LIBRARY_NAME)
+    def write_pyx(header: DearBinding, compilation_unit: CompilationUnit, core_library_name: str):
+        new_pyx = generate_new_pyx(header, compilation_unit.CIMGUI_LIBRARY_NAME, core_library_name)
 
         try:
-            with open(CORE_GENERATED_PYX) as f:
+            with open(compilation_unit.CORE_GENERATED_PYX) as f:
                 old_pyx = f.read()
         except FileNotFoundError:
-            print(f"'{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            print(f"'{compilation_unit.CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
             old_pyx = new_pyx
 
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
+            with open(compilation_unit.CORE_TEMPLATE_PYX) as f:
                 template_pyx = f.read()
         except FileNotFoundError:
-            print(f"'{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            print(f"'{compilation_unit.CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
             return
         
         try:
@@ -1650,25 +1776,31 @@ def main():
             print("Merge failed. Aborting.")
             return
 
-        with open(CORE_GENERATED_PYX, "w") as f:
+        with open(compilation_unit.CORE_GENERATED_PYX, "w") as f:
             f.write(merge_result.new_pyx)
-        with open(CORE_PYX, "w") as f:
+        with open(compilation_unit.CORE_PYX, "w") as f:
             f.write(merge_result.merged_pyx)
-        with open(CORE_TEMPLATE_PYX, "w") as f:
+        with open(compilation_unit.CORE_TEMPLATE_PYX, "w") as f:
             f.write(merge_result.merged_pyx_all_active)
-        print(f"Created {CORE_GENERATED_PYX}")
-        print(f"Created {CORE_PYX}")
-        print(f"Created {CORE_TEMPLATE_PYX}")
+        print(f"Created {compilation_unit.CORE_GENERATED_PYX}")
+        print(f"Created {compilation_unit.CORE_PYX}")
+        print(f"Created {compilation_unit.CORE_TEMPLATE_PYX}")
     
-    def write_pyi(header: DearBinding):
-        try:
-            with open(CORE_TEMPLATE_PYX) as f:
-                model = create_pyx_model(f.read())
-        except FileNotFoundError:
-            print(f"'{CORE_TEMPLATE_PYX}' not found. This is required to create the pyi file")
-            return
+    def write_pyi(headers: Dict[str, Tuple[DearBinding, CompilationUnit]]):
+        pyi = ""
+        py = ""
+        for unit_name, (header, unit) in headers.items():
+            try:
+                with open(unit.CORE_TEMPLATE_PYX) as f:
+                    model = create_pyx_model(f.read())
+            except FileNotFoundError:
+                print(f"'{unit.CORE_TEMPLATE_PYX}' not found. This is required to create the pyi file")
+                return
         
-        pyi, py = to_pyi(header, model)
+            model_pyi, model_py = to_pyi(header, model, include_base=unit_name=="core")
+            pyi += model_pyi
+            py += model_py
+
         with open(CORE_INIT_PYI, "w") as f:
             f.write(pyi)
         with open(CORE_INIT_PY, "w") as f:
@@ -1686,28 +1818,38 @@ def main():
         return
     
     if "--trial" in sys.argv:
-        trial_pyx(header)
+        core_library_name = headers["core"][1].CIMGUI_LIBRARY_NAME
+        for _, (header, unit) in headers.items():
+            trial_pyx(header, unit, core_library_name)
+        return
     
     if "--reset" in sys.argv:
-        reset(header)
+        core_library_name = headers["core"][1].CIMGUI_LIBRARY_NAME
+        for _, (header, unit) in headers.items():
+            reset(header, unit, core_library_name)
         return
 
     if "--pxd" in sys.argv:
-        write_pxd(header)
+        for _, (header, unit) in headers.items():
+            write_pxd(header, unit)
         return
     
     if "--pyx" in sys.argv:
-        write_pyx(header)
+        core_library_name = headers["core"][1].CIMGUI_LIBRARY_NAME
+        for _, (header, unit) in headers.items():
+            write_pyx(header, unit, core_library_name)
         return
 
     if "--pyi" in sys.argv:
-        write_pyi(header)
+        write_pyi(headers)
         return
     
     if "--all" in sys.argv:
-        write_pxd(header)
-        write_pyx(header)
-        write_pyi(header)
+        core_library_name = headers["core"][1].CIMGUI_LIBRARY_NAME
+        for _, (header, unit) in headers.items():
+            write_pxd(header, unit)
+            write_pyx(header, unit, core_library_name)
+        write_pyi(headers)
         return
 
 

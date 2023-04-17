@@ -320,7 +320,6 @@ class HeaderComparison:
             # the template.
             if not comparable_is_using_template(tem_obj):
                 merged_obj.impl = new_obj.impl
-                merged_obj.options = new_obj.options
                 continue
             
             old_obj = self.old.get_comparable(new_c)
@@ -344,6 +343,10 @@ class HeaderComparison:
             if not self.apply_patch_to(new_c, merged_obj):
                 success = False
         
+        for temp_c in merged_template.get_all_comparable_lookups():
+            if self.new.get_comparable(temp_c) is None:
+                print(f"Merging: Noting standalone comparable in template: '{temp_c}'")
+
         if success:
             return merged_template
         else:

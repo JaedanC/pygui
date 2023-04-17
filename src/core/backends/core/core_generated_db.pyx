@@ -2,12 +2,14 @@
 # cython: language_level = 3
 # cython: embedsignature=True
 
+import ctypes
 import cython
 import array
 from cython.operator import dereference
 from typing import Callable, Any, Sequence
 
 cimport ccimgui_db
+
 from cython.view cimport array as cvarray
 from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
@@ -1828,7 +1830,7 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
     for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for details.
     """
     cdef ccimgui_db.ImGuiContext* res = ccimgui_db.ImGui_CreateContext(
-        shared_font_atlas
+        shared_font_atlas._ptr
     )
     return ImGuiContext.from_ptr(res)
 # [End Function]
@@ -1875,7 +1877,7 @@ def destroy_context(ctx: ImGuiContext=None):
     Null = destroy current context
     """
     ccimgui_db.ImGui_DestroyContext(
-        ctx
+        ctx._ptr
     )
 # [End Function]
 
@@ -1926,7 +1928,7 @@ def dock_space_ex(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGu
         id_,
         _cast_tuple_ImVec2(size),
         flags,
-        window_class
+        window_class._ptr
     )
     return res
 # [End Function]
@@ -1949,9 +1951,9 @@ def dock_space_over_viewport():
 # ?returns(int)
 def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
     cdef ccimgui_db.ImGuiID res = ccimgui_db.ImGui_DockSpaceOverViewportEx(
-        viewport,
+        viewport._ptr,
         flags,
-        window_class
+        window_class._ptr
     )
     return res
 # [End Function]
@@ -2634,7 +2636,7 @@ def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
     Get background draw list for the given viewport. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
     """
     cdef ccimgui_db.ImDrawList* res = ccimgui_db.ImGui_GetBackgroundDrawListImGuiViewportPtr(
-        viewport
+        viewport._ptr
     )
     return ImDrawList.from_ptr(res)
 # [End Function]
@@ -2949,7 +2951,7 @@ def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
     Get foreground draw list for the given viewport. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
     """
     cdef ccimgui_db.ImDrawList* res = ccimgui_db.ImGui_GetForegroundDrawListImGuiViewportPtr(
-        viewport
+        viewport._ptr
     )
     return ImDrawList.from_ptr(res)
 # [End Function]
@@ -4387,7 +4389,7 @@ def is_mouse_pos_valid(mouse_pos: ImVec2=None):
     By convention we use (-flt_max,-flt_max) to denote that there is no mouse available
     """
     cdef bool res = ccimgui_db.ImGui_IsMousePosValid(
-        mouse_pos
+        mouse_pos._ptr
     )
     return res
 # [End Function]
@@ -5149,7 +5151,7 @@ def push_font(font: ImFont):
     Use null as a shortcut to push default font
     """
     ccimgui_db.ImGui_PushFont(
-        font
+        font._ptr
     )
 # [End Function]
 
@@ -5626,7 +5628,7 @@ def set_column_width(column_index: int, width: float):
 # ?returns(None)
 def set_current_context(ctx: ImGuiContext):
     ccimgui_db.ImGui_SetCurrentContext(
-        ctx
+        ctx._ptr
     )
 # [End Function]
 
@@ -5835,7 +5837,7 @@ def set_next_window_class(window_class: ImGuiWindowClass):
     Set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)
     """
     ccimgui_db.ImGui_SetNextWindowClass(
-        window_class
+        window_class._ptr
     )
 # [End Function]
 
@@ -6067,7 +6069,7 @@ def set_state_storage(storage: ImGuiStorage):
     Replace current window storage with our own (if you want to manipulate it yourself, typically clear subsection of it)
     """
     ccimgui_db.ImGui_SetStateStorage(
-        storage
+        storage._ptr
     )
 # [End Function]
 
@@ -6319,7 +6321,7 @@ def show_style_editor(ref: ImGuiStyle=None):
     Add style editor block (not a window). you can pass in a reference imguistyle structure to compare to, revert to and save to (else it uses the default style)
     """
     ccimgui_db.ImGui_ShowStyleEditor(
-        ref
+        ref._ptr
     )
 # [End Function]
 
@@ -6758,7 +6760,7 @@ def style_colors_classic(dst: ImGuiStyle=None):
     Classic imgui style
     """
     ccimgui_db.ImGui_StyleColorsClassic(
-        dst
+        dst._ptr
     )
 # [End Function]
 
@@ -6772,7 +6774,7 @@ def style_colors_dark(dst: ImGuiStyle=None):
     New, recommended style (default)
     """
     ccimgui_db.ImGui_StyleColorsDark(
-        dst
+        dst._ptr
     )
 # [End Function]
 
@@ -6785,7 +6787,7 @@ def style_colors_light(dst: ImGuiStyle=None):
     Best used with borders and a custom, thicker font
     """
     ccimgui_db.ImGui_StyleColorsLight(
-        dst
+        dst._ptr
     )
 # [End Function]
 
@@ -7540,6 +7542,7 @@ cdef class ImColor:
             a
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -7572,7 +7575,7 @@ cdef class ImDrawChannel:
         return ImVector_ImDrawCmd.from_ptr(res)
     @cmd_buffer.setter
     def cmd_buffer(self, value: ImVector_ImDrawCmd):
-        dereference(self._ptr)._CmdBuffer = value
+        dereference(self._ptr)._CmdBuffer = value._ptr
     # [End Field]
 
     # [Field]
@@ -7585,8 +7588,9 @@ cdef class ImDrawChannel:
         return ImVector_ImDrawIdx.from_ptr(res)
     @idx_buffer.setter
     def idx_buffer(self, value: ImVector_ImDrawIdx):
-        dereference(self._ptr)._IdxBuffer = value
+        dereference(self._ptr)._IdxBuffer = value._ptr
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -7738,6 +7742,7 @@ cdef class ImDrawCmd:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -7798,6 +7803,7 @@ cdef class ImDrawCmdHeader:
     def vtx_offset(self, value: int):
         dereference(self._ptr).VtxOffset = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -7835,7 +7841,7 @@ cdef class ImDrawData:
         return ImDrawList.from_ptr(res)
     @cmd_lists.setter
     def cmd_lists(self, value: ImDrawList):
-        dereference(self._ptr).CmdLists = value
+        dereference(self._ptr).CmdLists = value._ptr
     # [End Field]
 
     # [Field]
@@ -7915,7 +7921,7 @@ cdef class ImDrawData:
         return ImGuiViewport.from_ptr(res)
     @owner_viewport.setter
     def owner_viewport(self, value: ImGuiViewport):
-        dereference(self._ptr).OwnerViewport = value
+        dereference(self._ptr).OwnerViewport = value._ptr
     # [End Field]
 
     # [Field]
@@ -8005,6 +8011,7 @@ cdef class ImDrawData:
             _cast_tuple_ImVec2(fb_scale)
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -8038,22 +8045,6 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(ImVector_ImVec4)
-    @property
-    def clip_rect_stack(self):
-        """
-        [internal]
-        """
-        cdef ccimgui_db.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
-        return ImVector_ImVec4.from_ptr(res)
-    @clip_rect_stack.setter
-    def clip_rect_stack(self, value: ImVector_ImVec4):
-        dereference(self._ptr)._ClipRectStack = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
     # ?returns(ImVector_ImDrawCmd)
     @property
     def cmd_buffer(self):
@@ -8065,39 +8056,7 @@ cdef class ImDrawList:
         return ImVector_ImDrawCmd.from_ptr(res)
     @cmd_buffer.setter
     def cmd_buffer(self, value: ImVector_ImDrawCmd):
-        dereference(self._ptr).CmdBuffer = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImDrawCmdHeader)
-    @property
-    def cmd_header(self):
-        """
-        [internal] template of active commands. fields should match those of cmdbuffer.back().
-        """
-        cdef ccimgui_db.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
-        return ImDrawCmdHeader.from_ptr(res)
-    @cmd_header.setter
-    def cmd_header(self, value: ImDrawCmdHeader):
-        dereference(self._ptr)._CmdHeader = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImDrawListSharedData)
-    @property
-    def data(self):
-        """
-        Pointer to shared draw data (you can use imgui::getdrawlistshareddata() to get the one from current imgui context)
-        """
-        cdef ccimgui_db.ImDrawListSharedData* res = dereference(self._ptr)._Data
-        return ImDrawListSharedData.from_ptr(res)
-    @data.setter
-    def data(self, value: ImDrawListSharedData):
-        dereference(self._ptr)._Data = value
+        dereference(self._ptr).CmdBuffer = value._ptr
     # [End Field]
 
     # [Field]
@@ -8119,6 +8078,86 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?returns(ImVector_ImDrawIdx)
+    @property
+    def idx_buffer(self):
+        """
+        Index buffer. each command consume imdrawcmd::elemcount of those
+        """
+        cdef ccimgui_db.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
+        return ImVector_ImDrawIdx.from_ptr(res)
+    @idx_buffer.setter
+    def idx_buffer(self, value: ImVector_ImDrawIdx):
+        dereference(self._ptr).IdxBuffer = value._ptr
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImVector_ImDrawVert)
+    @property
+    def vtx_buffer(self):
+        """
+        Vertex buffer.
+        """
+        cdef ccimgui_db.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
+        return ImVector_ImDrawVert.from_ptr(res)
+    @vtx_buffer.setter
+    def vtx_buffer(self, value: ImVector_ImDrawVert):
+        dereference(self._ptr).VtxBuffer = value._ptr
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImVector_ImVec4)
+    @property
+    def clip_rect_stack(self):
+        """
+        [internal]
+        """
+        cdef ccimgui_db.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
+        return ImVector_ImVec4.from_ptr(res)
+    @clip_rect_stack.setter
+    def clip_rect_stack(self, value: ImVector_ImVec4):
+        dereference(self._ptr)._ClipRectStack = value._ptr
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImDrawCmdHeader)
+    @property
+    def cmd_header(self):
+        """
+        [internal] template of active commands. fields should match those of cmdbuffer.back().
+        """
+        cdef ccimgui_db.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
+        return ImDrawCmdHeader.from_ptr(res)
+    @cmd_header.setter
+    def cmd_header(self, value: ImDrawCmdHeader):
+        dereference(self._ptr)._CmdHeader = value._ptr
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(ImDrawListSharedData)
+    @property
+    def data(self):
+        """
+        Pointer to shared draw data (you can use imgui::getdrawlistshareddata() to get the one from current imgui context)
+        """
+        cdef ccimgui_db.ImDrawListSharedData* res = dereference(self._ptr)._Data
+        return ImDrawListSharedData.from_ptr(res)
+    @data.setter
+    def data(self, value: ImDrawListSharedData):
+        dereference(self._ptr)._Data = value._ptr
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
     # ?returns(float)
     @property
     def fringe_scale(self):
@@ -8130,22 +8169,6 @@ cdef class ImDrawList:
     @fringe_scale.setter
     def fringe_scale(self, value: float):
         dereference(self._ptr)._FringeScale = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImVector_ImDrawIdx)
-    @property
-    def idx_buffer(self):
-        """
-        Index buffer. each command consume imdrawcmd::elemcount of those
-        """
-        cdef ccimgui_db.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
-        return ImVector_ImDrawIdx.from_ptr(res)
-    @idx_buffer.setter
-    def idx_buffer(self, value: ImVector_ImDrawIdx):
-        dereference(self._ptr).IdxBuffer = value
     # [End Field]
 
     # [Field]
@@ -8193,7 +8216,7 @@ cdef class ImDrawList:
         return ImVector_ImVec2.from_ptr(res)
     @path.setter
     def path(self, value: ImVector_ImVec2):
-        dereference(self._ptr)._Path = value
+        dereference(self._ptr)._Path = value._ptr
     # [End Field]
 
     # [Field]
@@ -8209,7 +8232,7 @@ cdef class ImDrawList:
         return ImDrawListSplitter.from_ptr(res)
     @splitter.setter
     def splitter(self, value: ImDrawListSplitter):
-        dereference(self._ptr)._Splitter = value
+        dereference(self._ptr)._Splitter = value._ptr
     # [End Field]
 
     # [Field]
@@ -8225,23 +8248,7 @@ cdef class ImDrawList:
         return ImVector_ImTextureID.from_ptr(res)
     @texture_id_stack.setter
     def texture_id_stack(self, value: ImVector_ImTextureID):
-        dereference(self._ptr)._TextureIdStack = value
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImVector_ImDrawVert)
-    @property
-    def vtx_buffer(self):
-        """
-        Vertex buffer.
-        """
-        cdef ccimgui_db.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
-        return ImVector_ImDrawVert.from_ptr(res)
-    @vtx_buffer.setter
-    def vtx_buffer(self, value: ImVector_ImDrawVert):
-        dereference(self._ptr).VtxBuffer = value
+        dereference(self._ptr)._TextureIdStack = value._ptr
     # [End Field]
 
     # [Field]
@@ -8274,7 +8281,7 @@ cdef class ImDrawList:
         return ImDrawVert.from_ptr(res)
     @vtx_write_ptr.setter
     def vtx_write_ptr(self, value: ImDrawVert):
-        dereference(self._ptr)._VtxWritePtr = value
+        dereference(self._ptr)._VtxWritePtr = value._ptr
     # [End Field]
 
     # [Method]
@@ -8384,7 +8391,7 @@ cdef class ImDrawList:
     def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
         ccimgui_db.ImDrawList_AddConvexPolyFilled(
             self._ptr,
-            points,
+            points._ptr,
             num_points,
             col
         )
@@ -8585,7 +8592,7 @@ cdef class ImDrawList:
     def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
         ccimgui_db.ImDrawList_AddPolyline(
             self._ptr,
-            points,
+            points._ptr,
             num_points,
             col,
             flags,
@@ -8767,7 +8774,7 @@ cdef class ImDrawList:
         """
         ccimgui_db.ImDrawList_AddTextImFontPtr(
             self._ptr,
-            font,
+            font._ptr,
             font_size,
             _cast_tuple_ImVec2(pos),
             col,
@@ -8782,14 +8789,14 @@ cdef class ImDrawList:
     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
         ccimgui_db.ImDrawList_AddTextImFontPtrEx(
             self._ptr,
-            font,
+            font._ptr,
             font_size,
             _cast_tuple_ImVec2(pos),
             col,
             _bytes(text_begin),
             _bytes(text_end),
             wrap_width,
-            cpu_fine_clip_rect
+            cpu_fine_clip_rect._ptr
         )
     # [End Method]
 
@@ -8842,18 +8849,6 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(int)
-    def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
-        cdef int res = ccimgui_db.ImDrawList__CalcCircleAutoSegmentCount(
-            self._ptr,
-            radius
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
     # ?returns(None)
     def channels_merge(self: ImDrawList):
         ccimgui_db.ImDrawList_ChannelsMerge(
@@ -8888,16 +8883,6 @@ cdef class ImDrawList:
         ccimgui_db.ImDrawList_ChannelsSplit(
             self._ptr,
             count
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def clear_free_memory(self: ImDrawList):
-        ccimgui_db.ImDrawList__ClearFreeMemory(
-            self._ptr
         )
     # [End Method]
 
@@ -8941,36 +8926,6 @@ cdef class ImDrawList:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    def on_changed_clip_rect(self: ImDrawList):
-        ccimgui_db.ImDrawList__OnChangedClipRect(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def on_changed_texture_id(self: ImDrawList):
-        ccimgui_db.ImDrawList__OnChangedTextureID(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def on_changed_vtx_offset(self: ImDrawList):
-        ccimgui_db.ImDrawList__OnChangedVtxOffset(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
     def path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
         ccimgui_db.ImDrawList_PathArcTo(
             self._ptr,
@@ -8996,36 +8951,6 @@ cdef class ImDrawList:
             radius,
             a_min_of_12,
             a_max_of_12
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
-        ccimgui_db.ImDrawList__PathArcToFastEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            a_min_sample,
-            a_max_sample,
-            a_step
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
-        ccimgui_db.ImDrawList__PathArcToN(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            a_min,
-            a_max,
-            num_segments
         )
     # [End Method]
 
@@ -9152,16 +9077,6 @@ cdef class ImDrawList:
     # ?returns(None)
     def pop_texture_id(self: ImDrawList):
         ccimgui_db.ImDrawList_PopTextureID(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    def pop_unused_draw_cmd(self: ImDrawList):
-        ccimgui_db.ImDrawList__PopUnusedDrawCmd(
             self._ptr
         )
     # [End Method]
@@ -9325,6 +9240,98 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?returns(int)
+    def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
+        cdef int res = ccimgui_db.ImDrawList__CalcCircleAutoSegmentCount(
+            self._ptr,
+            radius
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def clear_free_memory(self: ImDrawList):
+        ccimgui_db.ImDrawList__ClearFreeMemory(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def on_changed_clip_rect(self: ImDrawList):
+        ccimgui_db.ImDrawList__OnChangedClipRect(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def on_changed_texture_id(self: ImDrawList):
+        ccimgui_db.ImDrawList__OnChangedTextureID(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def on_changed_vtx_offset(self: ImDrawList):
+        ccimgui_db.ImDrawList__OnChangedVtxOffset(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
+        ccimgui_db.ImDrawList__PathArcToFastEx(
+            self._ptr,
+            _cast_tuple_ImVec2(center),
+            radius,
+            a_min_sample,
+            a_max_sample,
+            a_step
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
+        ccimgui_db.ImDrawList__PathArcToN(
+            self._ptr,
+            _cast_tuple_ImVec2(center),
+            radius,
+            a_min,
+            a_max,
+            num_segments
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def pop_unused_draw_cmd(self: ImDrawList):
+        ccimgui_db.ImDrawList__PopUnusedDrawCmd(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
     # ?returns(None)
     def reset_for_new_frame(self: ImDrawList):
         """
@@ -9344,6 +9351,7 @@ cdef class ImDrawList:
             self._ptr
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -9365,6 +9373,7 @@ cdef class ImDrawListSharedData:
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
+
 # [End Class]
 
 # [Class]
@@ -9401,7 +9410,7 @@ cdef class ImDrawListSplitter:
         return ImVector_ImDrawChannel.from_ptr(res)
     @channels.setter
     def channels(self, value: ImVector_ImDrawChannel):
-        dereference(self._ptr)._Channels = value
+        dereference(self._ptr)._Channels = value._ptr
     # [End Field]
 
     # [Field]
@@ -9466,7 +9475,7 @@ cdef class ImDrawListSplitter:
     def merge(self: ImDrawListSplitter, draw_list: ImDrawList):
         ccimgui_db.ImDrawListSplitter_Merge(
             self._ptr,
-            draw_list
+            draw_list._ptr
         )
     # [End Method]
 
@@ -9477,7 +9486,7 @@ cdef class ImDrawListSplitter:
     def set_current_channel(self: ImDrawListSplitter, draw_list: ImDrawList, channel_idx: int):
         ccimgui_db.ImDrawListSplitter_SetCurrentChannel(
             self._ptr,
-            draw_list,
+            draw_list._ptr,
             channel_idx
         )
     # [End Method]
@@ -9489,10 +9498,11 @@ cdef class ImDrawListSplitter:
     def split(self: ImDrawListSplitter, draw_list: ImDrawList, count: int):
         ccimgui_db.ImDrawListSplitter_Split(
             self._ptr,
-            draw_list,
+            draw_list._ptr,
             count
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -9550,6 +9560,7 @@ cdef class ImDrawVert:
     def uv(self, value: tuple):
         dereference(self._ptr).uv = _cast_tuple_ImVec2(value)
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -9602,7 +9613,7 @@ cdef class ImFont:
         return ImFontConfig.from_ptr(res)
     @config_data.setter
     def config_data(self, value: ImFontConfig):
-        dereference(self._ptr).ConfigData = value
+        dereference(self._ptr).ConfigData = value._ptr
     # [End Field]
 
     # [Field]
@@ -9635,7 +9646,7 @@ cdef class ImFont:
         return ImFontAtlas.from_ptr(res)
     @container_atlas.setter
     def container_atlas(self, value: ImFontAtlas):
-        dereference(self._ptr).ContainerAtlas = value
+        dereference(self._ptr).ContainerAtlas = value._ptr
     # [End Field]
 
     # [Field]
@@ -9779,7 +9790,7 @@ cdef class ImFont:
         return ImFontGlyph.from_ptr(res)
     @fallback_glyph.setter
     def fallback_glyph(self, value: ImFontGlyph):
-        dereference(self._ptr).FallbackGlyph = value
+        dereference(self._ptr).FallbackGlyph = value._ptr
     # [End Field]
 
     # [Field]
@@ -9811,7 +9822,7 @@ cdef class ImFont:
         return ImVector_ImFontGlyph.from_ptr(res)
     @glyphs.setter
     def glyphs(self, value: ImVector_ImFontGlyph):
-        dereference(self._ptr).Glyphs = value
+        dereference(self._ptr).Glyphs = value._ptr
     # [End Field]
 
     # [Field]
@@ -9828,7 +9839,7 @@ cdef class ImFont:
         return ImVector_float.from_ptr(res)
     @index_advance_x.setter
     def index_advance_x(self, value: ImVector_float):
-        dereference(self._ptr).IndexAdvanceX = value
+        dereference(self._ptr).IndexAdvanceX = value._ptr
     # [End Field]
 
     # [Field]
@@ -9845,7 +9856,7 @@ cdef class ImFont:
         return ImVector_ImWchar.from_ptr(res)
     @index_lookup.setter
     def index_lookup(self, value: ImVector_ImWchar):
-        dereference(self._ptr).IndexLookup = value
+        dereference(self._ptr).IndexLookup = value._ptr
     # [End Field]
 
     # [Field]
@@ -9903,7 +9914,7 @@ cdef class ImFont:
     def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
         ccimgui_db.ImFont_AddGlyph(
             self._ptr,
-            src_cfg,
+            src_cfg._ptr,
             c,
             x0,
             y0,
@@ -10100,7 +10111,7 @@ cdef class ImFont:
     def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int):
         ccimgui_db.ImFont_RenderChar(
             self._ptr,
-            draw_list,
+            draw_list._ptr,
             size,
             _cast_tuple_ImVec2(pos),
             col,
@@ -10115,7 +10126,7 @@ cdef class ImFont:
     def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
         ccimgui_db.ImFont_RenderText(
             self._ptr,
-            draw_list,
+            draw_list._ptr,
             size,
             _cast_tuple_ImVec2(pos),
             col,
@@ -10138,6 +10149,7 @@ cdef class ImFont:
             visible
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -10189,7 +10201,7 @@ cdef class ImFontAtlas:
         return ImVector_ImFontConfig.from_ptr(res)
     @config_data.setter
     def config_data(self, value: ImVector_ImFontConfig):
-        dereference(self._ptr).ConfigData = value
+        dereference(self._ptr).ConfigData = value._ptr
     # [End Field]
 
     # [Field]
@@ -10205,7 +10217,7 @@ cdef class ImFontAtlas:
         return ImVector_ImFontAtlasCustomRect.from_ptr(res)
     @custom_rects.setter
     def custom_rects(self, value: ImVector_ImFontAtlasCustomRect):
-        dereference(self._ptr).CustomRects = value
+        dereference(self._ptr).CustomRects = value._ptr
     # [End Field]
 
     # [Field]
@@ -10254,7 +10266,7 @@ cdef class ImFontAtlas:
         return ImFontBuilderIO.from_ptr(res)
     @font_builder_io.setter
     def font_builder_io(self, value: ImFontBuilderIO):
-        dereference(self._ptr).FontBuilderIO = value
+        dereference(self._ptr).FontBuilderIO = value._ptr
     # [End Field]
 
     # [Field]
@@ -10270,7 +10282,7 @@ cdef class ImFontAtlas:
         return ImVector_ImFontPtr.from_ptr(res)
     @fonts.setter
     def fonts(self, value: ImVector_ImFontPtr):
-        dereference(self._ptr).Fonts = value
+        dereference(self._ptr).Fonts = value._ptr
     # [End Field]
 
     # [Field]
@@ -10539,7 +10551,7 @@ cdef class ImFontAtlas:
     def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)):
         cdef int res = ccimgui_db.ImFontAtlas_AddCustomRectFontGlyph(
             self._ptr,
-            font,
+            font._ptr,
             id_,
             width,
             height,
@@ -10578,7 +10590,7 @@ cdef class ImFontAtlas:
     def add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
         cdef ccimgui_db.ImFont* res = ccimgui_db.ImFontAtlas_AddFont(
             self._ptr,
-            font_cfg
+            font_cfg._ptr
         )
         return ImFont.from_ptr(res)
     # [End Method]
@@ -10590,7 +10602,7 @@ cdef class ImFontAtlas:
     def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
         cdef ccimgui_db.ImFont* res = ccimgui_db.ImFontAtlas_AddFontDefault(
             self._ptr,
-            font_cfg
+            font_cfg._ptr
         )
         return ImFont.from_ptr(res)
     # [End Method]
@@ -10604,7 +10616,7 @@ cdef class ImFontAtlas:
             self._ptr,
             _bytes(filename),
             size_pixels,
-            font_cfg,
+            font_cfg._ptr,
             glyph_ranges
         )
         return ImFont.from_ptr(res)
@@ -10622,7 +10634,7 @@ cdef class ImFontAtlas:
             self._ptr,
             _bytes(compressed_font_data_base85),
             size_pixels,
-            font_cfg,
+            font_cfg._ptr,
             glyph_ranges
         )
         return ImFont.from_ptr(res)
@@ -10641,7 +10653,7 @@ cdef class ImFontAtlas:
             compressed_font_data,
             compressed_font_size,
             size_pixels,
-            font_cfg,
+            font_cfg._ptr,
             glyph_ranges
         )
         return ImFont.from_ptr(res)
@@ -10660,7 +10672,7 @@ cdef class ImFontAtlas:
             font_data,
             font_size,
             size_pixels,
-            font_cfg,
+            font_cfg._ptr,
             glyph_ranges
         )
         return ImFont.from_ptr(res)
@@ -10695,9 +10707,9 @@ cdef class ImFontAtlas:
         """
         ccimgui_db.ImFontAtlas_CalcCustomRectUV(
             self._ptr,
-            rect,
-            out_uv_min,
-            out_uv_max
+            rect._ptr,
+            out_uv_min._ptr,
+            out_uv_max._ptr
         )
     # [End Method]
 
@@ -10902,8 +10914,8 @@ cdef class ImFontAtlas:
         cdef bool res = ccimgui_db.ImFontAtlas_GetMouseCursorTexData(
             self._ptr,
             cursor,
-            out_offset,
-            out_size,
+            out_offset._ptr,
+            out_size._ptr,
             _cast_tuple_ImVec2(out_uv_border),
             _cast_tuple_ImVec2(out_uv_fill)
         )
@@ -10968,6 +10980,7 @@ cdef class ImFontAtlas:
             id_
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -11003,7 +11016,7 @@ cdef class ImFontAtlasCustomRect:
         return ImFont.from_ptr(res)
     @font.setter
     def font(self, value: ImFont):
-        dereference(self._ptr).Font = value
+        dereference(self._ptr).Font = value._ptr
     # [End Field]
 
     # [Field]
@@ -11128,6 +11141,7 @@ cdef class ImFontAtlasCustomRect:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -11149,6 +11163,7 @@ cdef class ImFontBuilderIO:
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
+
 # [End Class]
 
 # [Class]
@@ -11178,7 +11193,7 @@ cdef class ImFontConfig:
         return ImFont.from_ptr(res)
     @dst_font.setter
     def dst_font(self, value: ImFont):
-        dereference(self._ptr).DstFont = value
+        dereference(self._ptr).DstFont = value._ptr
     # [End Field]
 
     # [Field]
@@ -11469,6 +11484,7 @@ cdef class ImFontConfig:
     def size_pixels(self, value: float):
         dereference(self._ptr).SizePixels = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -11683,6 +11699,7 @@ cdef class ImFontGlyph:
     def y1(self, value: float):
         dereference(self._ptr).Y1 = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -11719,7 +11736,7 @@ cdef class ImFontGlyphRangesBuilder:
         return ImVector_ImU32.from_ptr(res)
     @used_chars.setter
     def used_chars(self, value: ImVector_ImU32):
-        dereference(self._ptr).UsedChars = value
+        dereference(self._ptr).UsedChars = value._ptr
     # [End Field]
 
     # [Method]
@@ -11775,7 +11792,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         ccimgui_db.ImFontGlyphRangesBuilder_BuildRanges(
             self._ptr,
-            out_ranges
+            out_ranges._ptr
         )
     # [End Method]
 
@@ -11817,6 +11834,7 @@ cdef class ImFontGlyphRangesBuilder:
             n
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -11838,6 +11856,7 @@ cdef class ImGuiContext:
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
+
 # [End Class]
 
 # [Class]
@@ -12355,7 +12374,7 @@ cdef class ImGuiIO:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value
+        dereference(self._ptr).Ctx = value._ptr
     # [End Field]
 
     # [Field]
@@ -12435,7 +12454,7 @@ cdef class ImGuiIO:
         return ImFont.from_ptr(res)
     @font_default.setter
     def font_default(self, value: ImFont):
-        dereference(self._ptr).FontDefault = value
+        dereference(self._ptr).FontDefault = value._ptr
     # [End Field]
 
     # [Field]
@@ -12467,7 +12486,7 @@ cdef class ImGuiIO:
         return ImFontAtlas.from_ptr(res)
     @fonts.setter
     def fonts(self, value: ImFontAtlas):
-        dereference(self._ptr).Fonts = value
+        dereference(self._ptr).Fonts = value._ptr
     # [End Field]
 
     # [Field]
@@ -12580,7 +12599,7 @@ cdef class ImGuiIO:
         return ImVector_ImWchar.from_ptr(res)
     @input_queue_characters.setter
     def input_queue_characters(self, value: ImVector_ImWchar):
-        dereference(self._ptr).InputQueueCharacters = value
+        dereference(self._ptr).InputQueueCharacters = value._ptr
     # [End Field]
 
     # [Field]
@@ -12725,7 +12744,7 @@ cdef class ImGuiIO:
         return ImGuiKeyData.from_ptr(res)
     @keys_data.setter
     def keys_data(self, value: ImGuiKeyData):
-        dereference(self._ptr).KeysData = value
+        dereference(self._ptr).KeysData = value._ptr
     # [End Field]
 
     # [Field]
@@ -13621,6 +13640,7 @@ cdef class ImGuiIO:
             native_legacy_index
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -13728,7 +13748,7 @@ cdef class ImGuiInputTextCallbackData:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value
+        dereference(self._ptr).Ctx = value._ptr
     # [End Field]
 
     # [Field]
@@ -13917,6 +13937,7 @@ cdef class ImGuiInputTextCallbackData:
             self._ptr
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -14003,6 +14024,7 @@ cdef class ImGuiKeyData:
     def down_duration_prev(self, value: float):
         dereference(self._ptr).DownDurationPrev = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -14057,7 +14079,7 @@ cdef class ImGuiListClipper:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value
+        dereference(self._ptr).Ctx = value._ptr
     # [End Field]
 
     # [Field]
@@ -14210,6 +14232,7 @@ cdef class ImGuiListClipper:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -14405,6 +14428,7 @@ cdef class ImGuiPayload:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -14442,7 +14466,7 @@ cdef class ImGuiPlatformIO:
         return ImVector_ImGuiPlatformMonitor.from_ptr(res)
     @monitors.setter
     def monitors(self, value: ImVector_ImGuiPlatformMonitor):
-        dereference(self._ptr).Monitors = value
+        dereference(self._ptr).Monitors = value._ptr
     # [End Field]
 
     # [Field]
@@ -14830,8 +14854,9 @@ cdef class ImGuiPlatformIO:
         return ImVector_ImGuiViewportPtr.from_ptr(res)
     @viewports.setter
     def viewports(self, value: ImVector_ImGuiViewportPtr):
-        dereference(self._ptr).Viewports = value
+        dereference(self._ptr).Viewports = value._ptr
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -14901,6 +14926,7 @@ cdef class ImGuiPlatformImeData:
     def want_visible(self, value: bool):
         dereference(self._ptr).WantVisible = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -15003,6 +15029,7 @@ cdef class ImGuiPlatformMonitor:
     def work_size(self, value: tuple):
         dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -15089,6 +15116,7 @@ cdef class ImGuiSizeCallbackData:
     def user_data(self, value: Any):
         dereference(self._ptr).UserData = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -15128,7 +15156,7 @@ cdef class ImGuiStorage:
         return ImVector_ImGuiStorage_ImGuiStoragePair.from_ptr(res)
     @data.setter
     def data(self, value: ImVector_ImGuiStorage_ImGuiStoragePair):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Method]
@@ -15332,6 +15360,7 @@ cdef class ImGuiStorage:
             val
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -15366,6 +15395,7 @@ cdef class ImGuiStorage_ImGuiStoragePair:
     def key(self, value: int):
         dereference(self._ptr).key = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -16096,6 +16126,7 @@ cdef class ImGuiStyle:
             scale_factor
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -16181,6 +16212,7 @@ cdef class ImGuiTableColumnSortSpecs:
     def sort_order(self, value: int):
         dereference(self._ptr).SortOrder = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -16219,7 +16251,7 @@ cdef class ImGuiTableSortSpecs:
         return ImGuiTableColumnSortSpecs.from_ptr(res)
     @specs.setter
     def specs(self, value: ImGuiTableColumnSortSpecs):
-        dereference(self._ptr).Specs = value
+        dereference(self._ptr).Specs = value._ptr
     # [End Field]
 
     # [Field]
@@ -16253,6 +16285,7 @@ cdef class ImGuiTableSortSpecs:
     def specs_dirty(self, value: bool):
         dereference(self._ptr).SpecsDirty = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -16286,7 +16319,7 @@ cdef class ImGuiTextBuffer:
         return ImVector_char.from_ptr(res)
     @buf.setter
     def buf(self, value: ImVector_char):
-        dereference(self._ptr).Buf = value
+        dereference(self._ptr).Buf = value._ptr
     # [End Field]
 
     # [Method]
@@ -16337,22 +16370,22 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(None)
-    def clear(self: ImGuiTextBuffer):
-        ccimgui_db.ImGuiTextBuffer_clear(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
     # ?returns(str)
     def cstr(self: ImGuiTextBuffer):
         cdef const char* res = ccimgui_db.ImGuiTextBuffer_c_str(
             self._ptr
         )
         return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?returns(None)
+    def clear(self: ImGuiTextBuffer):
+        ccimgui_db.ImGuiTextBuffer_clear(
+            self._ptr
+        )
     # [End Method]
 
     # [Method]
@@ -16401,6 +16434,7 @@ cdef class ImGuiTextBuffer:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -16446,7 +16480,7 @@ cdef class ImGuiTextFilter:
         return ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
     @filters.setter
     def filters(self, value: ImVector_ImGuiTextFilter_ImGuiTextRange):
-        dereference(self._ptr).Filters = value
+        dereference(self._ptr).Filters = value._ptr
     # [End Field]
 
     # [Field]
@@ -16521,6 +16555,7 @@ cdef class ImGuiTextFilter:
         )
         return res
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -16588,9 +16623,10 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
         ccimgui_db.ImGuiTextFilter_ImGuiTextRange_split(
             self._ptr,
             separator,
-            out
+            out._ptr
         )
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -16648,7 +16684,7 @@ cdef class ImGuiViewport:
         return ImDrawData.from_ptr(res)
     @draw_data.setter
     def draw_data(self, value: ImDrawData):
-        dereference(self._ptr).DrawData = value
+        dereference(self._ptr).DrawData = value._ptr
     # [End Field]
 
     # [Field]
@@ -16920,6 +16956,7 @@ cdef class ImGuiViewport:
         )
         return _cast_ImVec2_tuple(res)
     # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -17075,6 +17112,7 @@ cdef class ImGuiWindowClass:
     def viewport_flags_override_set(self, value: int):
         dereference(self._ptr).ViewportFlagsOverrideSet = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17119,6 +17157,7 @@ cdef class ImVec2:
     def y(self, value: float):
         dereference(self._ptr).y = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17192,6 +17231,7 @@ cdef class ImVec4:
     def z(self, value: float):
         dereference(self._ptr).z = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17234,7 +17274,7 @@ cdef class ImVector_ImDrawChannel:
         return ImDrawChannel.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawChannel):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17249,6 +17289,7 @@ cdef class ImVector_ImDrawChannel:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17291,7 +17332,7 @@ cdef class ImVector_ImDrawCmd:
         return ImDrawCmd.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawCmd):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17306,6 +17347,7 @@ cdef class ImVector_ImDrawCmd:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17363,6 +17405,7 @@ cdef class ImVector_ImDrawIdx:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17405,7 +17448,7 @@ cdef class ImVector_ImDrawVert:
         return ImDrawVert.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawVert):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17420,6 +17463,7 @@ cdef class ImVector_ImDrawVert:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17462,7 +17506,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
         return ImFontAtlasCustomRect.from_ptr(res)
     @data.setter
     def data(self, value: ImFontAtlasCustomRect):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17477,6 +17521,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17519,7 +17564,7 @@ cdef class ImVector_ImFontConfig:
         return ImFontConfig.from_ptr(res)
     @data.setter
     def data(self, value: ImFontConfig):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17534,6 +17579,7 @@ cdef class ImVector_ImFontConfig:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17576,7 +17622,7 @@ cdef class ImVector_ImFontGlyph:
         return ImFontGlyph.from_ptr(res)
     @data.setter
     def data(self, value: ImFontGlyph):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17591,6 +17637,7 @@ cdef class ImVector_ImFontGlyph:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17633,7 +17680,7 @@ cdef class ImVector_ImFontPtr:
         return ImFont.from_ptr(res)
     @data.setter
     def data(self, value: ImFont):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17648,6 +17695,7 @@ cdef class ImVector_ImFontPtr:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17690,7 +17738,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
         return ImGuiPlatformMonitor.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiPlatformMonitor):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17705,6 +17753,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17747,7 +17796,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
         return ImGuiStorage_ImGuiStoragePair.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiStorage_ImGuiStoragePair):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17762,6 +17811,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17804,7 +17854,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         return ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiTextFilter_ImGuiTextRange):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17819,6 +17869,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17861,7 +17912,7 @@ cdef class ImVector_ImGuiViewportPtr:
         return ImGuiViewport.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiViewport):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -17876,6 +17927,7 @@ cdef class ImVector_ImGuiViewportPtr:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17933,6 +17985,7 @@ cdef class ImVector_ImTextureID:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -17990,6 +18043,7 @@ cdef class ImVector_ImU32:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -18032,7 +18086,7 @@ cdef class ImVector_ImVec2:
         return ImVec2.from_ptr(res)
     @data.setter
     def data(self, value: ImVec2):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -18047,6 +18101,7 @@ cdef class ImVector_ImVec2:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -18089,7 +18144,7 @@ cdef class ImVector_ImVec4:
         return ImVec4.from_ptr(res)
     @data.setter
     def data(self, value: ImVec4):
-        dereference(self._ptr).Data = value
+        dereference(self._ptr).Data = value._ptr
     # [End Field]
 
     # [Field]
@@ -18104,6 +18159,7 @@ cdef class ImVector_ImVec4:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -18161,6 +18217,7 @@ cdef class ImVector_ImWchar:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -18218,6 +18275,7 @@ cdef class ImVector_char:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 
 # [Class]
@@ -18275,5 +18333,6 @@ cdef class ImVector_float:
     def size(self, value: int):
         dereference(self._ptr).Size = value
     # [End Field]
+
 # [End Class]
 

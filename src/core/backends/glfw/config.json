@@ -1,0 +1,11 @@
+{
+    "BINDING_JSON":             "glfw_impl.json",
+    "CIMGUI_PXD_HEADER_FILE":   "imgui_impl_glfw.h",
+    "CIMGUI_PXD":               "../../ccimgui_glfw.pxd",
+    "CIMGUI_LIBRARY_NAME":      "ccimgui_glfw",
+    "CORE_GENERATED_PYX":       "glfw_impl_generated.pyx",
+    "CORE_PYX":                 "../../glfw_impl.pyx",
+    "CORE_PYX_TRIAL":           "glfw_impl_trial.pyx",
+    "CORE_TEMPLATE_PYX":        "glfw_impl_template.pyx",
+    "CORE_TEMPLATE_PYX_TRIAL":  "glfw_impl_template_trial.pyx"
+}

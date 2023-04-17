@@ -1,0 +1,132 @@
+{
+    "defines": [],
+    "enums": [],
+    "typedefs": [],
+    "structs": [
+        {
+            "name": "ImDrawData",
+            "original_fully_qualified_name": "GLFWwindow",
+            "forward_declaration": false,
+            "is_anonymous": false,
+            "fields": []
+        }
+    ],
+    "functions": [
+        {
+            "name": "ImGui_ImplOpenGL3_Init",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_Init",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [
+                {
+                    "name": "glsl_version",
+                    "type": {
+                        "declaration": "const char*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_Shutdown",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_Shutdown",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_NewFrame",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_NewFrame",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_RenderDrawData",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_RenderDrawData",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "draw_data",
+                    "type": {
+                        "declaration": "ImDrawData*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_CreateFontsTexture",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_CreateFontsTexture",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_DestroyFontsTexture",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_DestroyFontsTexture",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_CreateDeviceObjects",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_CreateDeviceObjects",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
+            "original_fully_qualified_name": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        }
+    ]
+}

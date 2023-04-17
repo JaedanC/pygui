@@ -125,26 +125,27 @@ def main():
         DearStruct("ImDrawData",  "ImDrawData",  False, [], Comments([], None)),
     ]
 
+    PXD_HEADER_FILE = "ccimgui_dear_bindings_impl.h"
+    PXD_LIBRARY_NAME = "ccimgui_glfw_opengl3"
 
     impl_header = DearBinding([], [], impl_structs, impl_function)
-    pxd_impl = to_pxd(impl_header, "ccimgui_dear_bindings_impl.h")
-    with open("core/ccimgui_dear_bindings_impl.pxd", "w") as f:
+    pxd_impl = to_pxd(impl_header, PXD_HEADER_FILE)
+    with open(f"core/backends/glfw_opengl3/{PXD_LIBRARY_NAME}.pxd", "w") as f:
         f.write(pxd_impl)
     
-    imports = textwrap.dedent("""
+    imports = textwrap.dedent(f"""
     import ctypes
     from typing import Callable, Any, Sequence
 
-    cimport ccimgui_dear_bindings_impl
+    cimport {PXD_LIBRARY_NAME}
     from libcpp cimport bool
     from libc.float cimport FLT_MIN as LIBC_FLT_MIN
     from libc.float cimport FLT_MAX as LIBC_FLT_MAX
     from libc.stdint cimport uintptr_t
     from libc.string cimport strncpy
     """)
-    pyx_impl = to_pyx(impl_header, "ccimgui_dear_bindings_impl",
-                      imports.strip())
-    with open("core/core_generated_dear_bindings_impl.pyx", "w") as f:
+    pyx_impl = to_pyx(impl_header, PXD_LIBRARY_NAME, imports.strip())
+    with open("core/backends/glfw_opengl3/glfw_opengl3_generated.pyx", "w") as f:
         f.write(pyx_impl)
 
 

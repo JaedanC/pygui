@@ -14,12 +14,17 @@ def main():
     
     extensions = [
         Extension(
-            "core",
-            [ "core/core_db.pyx" ],
+            "core_db",
+            sources=[
+                "core/core_db.pyx",
+                "core/glfw_impl.pyx",
+                "core/opengl3_impl.pyx",
+            ],
             include_dirs=[
-                "external",
+                "external", # My imconfig.h
                 "external/dear_bindings",
-                "external/cimgui/generator/output",
+                "external/cimgui/imgui",
+                "external/cimgui/imgui/backends",
             ],
             library_dirs=["pygui/libs"],
             libraries=["db_cimgui", "glfw3dll", "db_imgui_glfw_opengl3"],

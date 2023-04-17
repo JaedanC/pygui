@@ -7,3 +7,6 @@
 [submodule "src/external/luajit"]
 	path = src/external/luajit
 	url = https://luajit.org/git/luajit.git
+[submodule "src/external/dear_bindings"]
+	path = src/external/dear_bindings
+	url = https://github.com/dearimgui/dear_bindings.git

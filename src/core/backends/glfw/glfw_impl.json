@@ -1,0 +1,517 @@
+{
+    "defines": [],
+    "enums": [],
+    "typedefs": [],
+    "structs": [
+        {
+            "name": "GLFWwindow",
+            "original_fully_qualified_name": "GLFWwindow",
+            "forward_declaration": false,
+            "is_anonymous": false,
+            "fields": []
+        },
+        {
+            "name": "GLFWmonitor",
+            "original_fully_qualified_name": "GLFWmonitor",
+            "forward_declaration": false,
+            "is_anonymous": false,
+            "fields": []
+        }
+    ],
+    "functions": [
+        {
+            "name": "ImGui_ImplGlfw_InitForOpenGL",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_InitForOpenGL",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "install_callbacks",
+                    "type": {
+                        "declaration": "bool"
+                    },
+                    "is_varargs": false,
+                    "is_array": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_InitForVulkan",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_InitForVulkan",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "install_callbacks",
+                    "type": {
+                        "declaration": "bool"
+                    },
+                    "is_varargs": false,
+                    "is_array": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_InitForOther",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_InitForOther",
+            "return_type": {
+                "declaration": "bool"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "install_callbacks",
+                    "type": {
+                        "declaration": "bool"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_Shutdown",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_Shutdown",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_NewFrame",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_NewFrame",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_InstallCallbacks",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_InstallCallbacks",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_RestoreCallbacks",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_RestoreCallbacks",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "chain_for_all_windows",
+                    "type": {
+                        "declaration": "bool"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_WindowFocusCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_WindowFocusCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "focused",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_CursorEnterCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_CursorEnterCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "entered",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_CursorPosCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_CursorPosCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "x",
+                    "type": {
+                        "declaration": "double"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "y",
+                    "type": {
+                        "declaration": "double"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_MouseButtonCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_MouseButtonCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "button",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "action",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "mods",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_ScrollCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_ScrollCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "xoffset",
+                    "type": {
+                        "declaration": "double"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "yoffset",
+                    "type": {
+                        "declaration": "double"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_KeyCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_KeyCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "key",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "scancode",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "action",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "mods",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_CharCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_CharCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "window",
+                    "type": {
+                        "declaration": "GLFWwindow*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "c",
+                    "type": {
+                        "declaration": "unsigned int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        },
+        {
+            "name": "ImGui_ImplGlfw_MonitorCallback",
+            "original_fully_qualified_name": "ImGui_ImplGlfw_MonitorCallback",
+            "return_type": {
+                "declaration": "void"
+            },
+            "arguments": [
+                {
+                    "name": "monitor",
+                    "type": {
+                        "declaration": "GLFWmonitor*"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                },
+                {
+                    "name": "event",
+                    "type": {
+                        "declaration": "int"
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL"
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false
+        }
+    ]
+}
