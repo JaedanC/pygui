@@ -905,8 +905,8 @@ def arrow_button(str_id: str, dir_: int):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
 def begin(name: str, p_open: BoolPtr=None, flags: int=0):
     """
@@ -923,19 +923,11 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
     returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     - Note that the bottom of window stack always contains a window called "Debug".
     """
-    cdef bool res
-    if p_open is None:
-        res = ccimgui_db.ImGui_Begin(
-            _bytes(name),
-            NULL,
-            flags
-        )   
-    else:
-        res = ccimgui_db.ImGui_Begin(
-            _bytes(name),
-            &p_open.value,
-            flags
-        )
+    cdef bool res = ccimgui_db.ImGui_Begin(
+        _bytes(name),
+        &p_open.value,
+        flags
+    )
     return res
 # [End Function]
 
@@ -1827,8 +1819,8 @@ def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, po
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(ImGuiContext)
 def create_context(shared_font_atlas: ImFontAtlas=None):
     """
@@ -1837,13 +1829,9 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
     - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
     for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for details.
     """
-    cdef ccimgui_db.ImGuiContext* res
-    if shared_font_atlas is None:
-        res = ccimgui_db.ImGui_CreateContext(NULL)
-    else:
-        res = ccimgui_db.ImGui_CreateContext(
-            shared_font_atlas._ptr
-        )
+    cdef ccimgui_db.ImGuiContext* res = ccimgui_db.ImGui_CreateContext(
+        shared_font_atlas._ptr
+    )
     return ImGuiContext.from_ptr(res)
 # [End Function]
 
@@ -1881,17 +1869,16 @@ def debug_text_encoding(text: str):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(None)
 def destroy_context(ctx: ImGuiContext=None):
     """
     Null = destroy current context
-    """._ptr
-    if ctx is None:
-        ccimgui_db.ImGui_DestroyContext(NULL)
-    else:
-        ccimgui_db.ImGui_DestroyContext(ctx._ptr)
+    """
+    ccimgui_db.ImGui_DestroyContext(
+        ctx._ptr
+    )
 # [End Function]
 
 # [Function]
@@ -2400,7 +2387,7 @@ def dummy(size: tuple):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def end():
     ccimgui_db.ImGui_End()
@@ -2883,7 +2870,7 @@ def get_drag_drop_payload():
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(ImDrawData)
 def get_draw_data():
     """
@@ -3044,7 +3031,7 @@ def get_ids_tr(str_id_begin: str, str_id_end: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(ImGuiIO)
 def get_io():
     """
@@ -3605,6 +3592,254 @@ def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1
         _cast_tuple_ImVec4(tint_col),
         _cast_tuple_ImVec4(border_col)
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_char_callback(window: GLFWwindow=None, c: int=None):
+    ccimgui_db.ImGui_ImplGlfw_CharCallback(
+        window._ptr,
+        c
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_cursor_enter_callback(window: GLFWwindow=None, entered: int=None):
+    ccimgui_db.ImGui_ImplGlfw_CursorEnterCallback(
+        window._ptr,
+        entered
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_cursor_pos_callback(window: GLFWwindow=None, x: float=None, y: float=None):
+    ccimgui_db.ImGui_ImplGlfw_CursorPosCallback(
+        window._ptr,
+        x,
+        y
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_glfw_init_for_open_gl(window: GLFWwindow=None, install_callbacks: bool=None):
+    cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForOpenGL(
+        window._ptr,
+        install_callbacks
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_glfw_init_for_other(window: GLFWwindow=None, install_callbacks: bool=None):
+    cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForOther(
+        window._ptr,
+        install_callbacks
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_glfw_init_for_vulkan(window: GLFWwindow=None, install_callbacks: bool=None):
+    cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForVulkan(
+        window._ptr,
+        install_callbacks
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_install_callbacks(window: GLFWwindow=None):
+    ccimgui_db.ImGui_ImplGlfw_InstallCallbacks(
+        window._ptr
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_key_callback(window: GLFWwindow=None, key: int=None, scancode: int=None, action: int=None, mods: int=None):
+    ccimgui_db.ImGui_ImplGlfw_KeyCallback(
+        window._ptr,
+        key,
+        scancode,
+        action,
+        mods
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_monitor_callback(monitor: GLFWmonitor=None, event: int=None):
+    ccimgui_db.ImGui_ImplGlfw_MonitorCallback(
+        monitor._ptr,
+        event
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_mouse_button_callback(window: GLFWwindow=None, button: int=None, action: int=None, mods: int=None):
+    ccimgui_db.ImGui_ImplGlfw_MouseButtonCallback(
+        window._ptr,
+        button,
+        action,
+        mods
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_new_frame():
+    ccimgui_db.ImGui_ImplGlfw_NewFrame()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_restore_callbacks(window: GLFWwindow=None):
+    ccimgui_db.ImGui_ImplGlfw_RestoreCallbacks(
+        window._ptr
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_scroll_callback(window: GLFWwindow=None, xoffset: float=None, yoffset: float=None):
+    ccimgui_db.ImGui_ImplGlfw_ScrollCallback(
+        window._ptr,
+        xoffset,
+        yoffset
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool=None):
+    ccimgui_db.ImGui_ImplGlfw_SetCallbacksChainForAllWindows(
+        chain_for_all_windows
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_shutdown():
+    ccimgui_db.ImGui_ImplGlfw_Shutdown()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_glfw_window_focus_callback(window: GLFWwindow=None, focused: int=None):
+    ccimgui_db.ImGui_ImplGlfw_WindowFocusCallback(
+        window._ptr,
+        focused
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_open_gl_3_create_device_objects():
+    cdef bool res = ccimgui_db.ImGui_ImplOpenGL3_CreateDeviceObjects()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_open_gl_3_create_fonts_texture():
+    cdef bool res = ccimgui_db.ImGui_ImplOpenGL3_CreateFontsTexture()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_open_gl_3_destroy_device_objects():
+    ccimgui_db.ImGui_ImplOpenGL3_DestroyDeviceObjects()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_open_gl_3_destroy_fonts_texture():
+    ccimgui_db.ImGui_ImplOpenGL3_DestroyFontsTexture()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def impl_open_gl_3_init(glsl_version: str=None):
+    cdef bool res = ccimgui_db.ImGui_ImplOpenGL3_Init(
+        _bytes(glsl_version)
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_open_gl_3_new_frame():
+    ccimgui_db.ImGui_ImplOpenGL3_NewFrame()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_open_gl_3_render_draw_data(draw_data: ImDrawData=None):
+    ccimgui_db.ImGui_ImplOpenGL3_RenderDrawData(
+        draw_data._ptr
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+def impl_open_gl_3_shutdown():
+    ccimgui_db.ImGui_ImplOpenGL3_Shutdown()
 # [End Function]
 
 # [Function]
@@ -4795,7 +5030,7 @@ def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: 
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def new_frame():
     """
@@ -5358,7 +5593,7 @@ def radio_button_int_ptr(label: str, v: IntPtr, v_button: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def render():
     """
@@ -5369,7 +5604,7 @@ def render():
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def render_platform_windows_default():
     """
@@ -6273,20 +6508,17 @@ def show_debug_log_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):
     """
     Demo, Debug, Information
     Create demo window. demonstrate most imgui features. call this to learn about the library! try to make it always available in your application!
     """
-    if p_open is None:
-        ccimgui_db.ImGui_ShowDemoWindow(NULL)
-    else:
-        ccimgui_db.ImGui_ShowDemoWindow(
-            &p_open.value
-        )
+    ccimgui_db.ImGui_ShowDemoWindow(
+        &p_open.value
+    )
 # [End Function]
 
 # [Function]
@@ -7059,7 +7291,7 @@ def table_setup_scroll_freeze(cols: int, rows: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def text(fmt: str):
     """
@@ -7375,7 +7607,7 @@ def unindent_ex(indent_w: float=0.0):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def update_platform_windows():
     """
@@ -7490,6 +7722,42 @@ def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_mi
     )
     return res
 # [End Function]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+cdef class GLFWmonitor:
+    cdef ccimgui_db.GLFWmonitor* _ptr
+    
+    @staticmethod
+    cdef GLFWmonitor from_ptr(ccimgui_db.GLFWmonitor* _ptr):
+        cdef GLFWmonitor wrapper = GLFWmonitor.__new__(GLFWmonitor)
+        wrapper._ptr = _ptr
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+    # [End Class Constants]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+cdef class GLFWwindow:
+    cdef ccimgui_db.GLFWwindow* _ptr
+    
+    @staticmethod
+    cdef GLFWwindow from_ptr(ccimgui_db.GLFWwindow* _ptr):
+        cdef GLFWwindow wrapper = GLFWwindow.__new__(GLFWwindow)
+        wrapper._ptr = _ptr
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+    # [End Class Constants]
+# [End Class]
 
 # [Class]
 # [Class Constants]
@@ -8023,6 +8291,24 @@ cdef class ImDrawData:
             _cast_tuple_ImVec2(fb_scale)
         )
     # [End Method]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+cdef class ImDrawData:
+    cdef ccimgui_db.ImDrawData* _ptr
+    
+    @staticmethod
+    cdef ImDrawData from_ptr(ccimgui_db.ImDrawData* _ptr):
+        cdef ImDrawData wrapper = ImDrawData.__new__(ImDrawData)
+        wrapper._ptr = _ptr
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+    # [End Class Constants]
 # [End Class]
 
 # [Class]
@@ -12169,7 +12455,7 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?returns(int)
     @property
     def config_flags(self):
@@ -12410,7 +12696,7 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?returns(tuple)
     @property
     def display_size(self):
