@@ -21,6 +21,6 @@ cdef extern from "imgui_impl_opengl3.h":
     bool ImGui_ImplOpenGL3_Init(const char* glsl_version) except +
     void ImGui_ImplOpenGL3_NewFrame() except +
     void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data) except +
-    void ImGui_ImplOpenGL3_ShutdownHello() except +
+    void ImGui_ImplOpenGL3_Shutdown() except +
 
 

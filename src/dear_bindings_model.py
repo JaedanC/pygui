@@ -1533,13 +1533,13 @@ def to_pyi(header: DearBinding, model: PyxHeader, include_base=True):
 
     # __init__.py ------------------------------------
     py = textwrap.dedent("""
-    from .core import *
+    from .core_db import *
 
-    VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()
-    VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()
-    VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()
-    VERTEX_SIZE = core._py_vertex_buffer_vertex_size()
-    INDEX_SIZE = core._py_index_buffer_index_size()
+    VERTEX_BUFFER_POS_OFFSET = core_db._py_vertex_buffer_vertex_pos_offset()
+    VERTEX_BUFFER_UV_OFFSET = core_db._py_vertex_buffer_vertex_uv_offset()
+    VERTEX_BUFFER_COL_OFFSET = core_db._py_vertex_buffer_vertex_col_offset()
+    VERTEX_SIZE = core_db._py_vertex_buffer_vertex_size()
+    INDEX_SIZE = core_db._py_index_buffer_index_size()
 
 
 
@@ -1635,8 +1635,8 @@ class CompilationUnit:
 
 
 def main():
-    CORE_INIT_PYI           = "pygui/__init__db.pyi"
-    CORE_INIT_PY            = "pygui/__init__db.py"
+    CORE_INIT_PYI           = "pygui/__init__.pyi"
+    CORE_INIT_PY            = "pygui/__init__.py"
 
     with open("core/backends/core/config.json") as f:
         core_unit = CompilationUnit(

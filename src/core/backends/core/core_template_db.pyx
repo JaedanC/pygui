@@ -3044,7 +3044,7 @@ def get_ids_tr(str_id_begin: str, str_id_end: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImGuiIO)
 def get_io():
     """
@@ -12169,7 +12169,7 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
     @property
     def config_flags(self):
@@ -12410,7 +12410,7 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
     @property
     def display_size(self):

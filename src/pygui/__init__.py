@@ -1,10 +1,13 @@
-from .core import *
 
-VERTEX_BUFFER_POS_OFFSET = core._py_vertex_buffer_vertex_pos_offset()
-VERTEX_BUFFER_UV_OFFSET = core._py_vertex_buffer_vertex_uv_offset()
-VERTEX_BUFFER_COL_OFFSET = core._py_vertex_buffer_vertex_col_offset()
-VERTEX_SIZE = core._py_vertex_buffer_vertex_size()
-INDEX_SIZE = core._py_index_buffer_index_size()
+from .core_db import *
+# from .glfw_impl import *
+# from .opengl3_impl import *
+
+# VERTEX_BUFFER_POS_OFFSET = core_db._py_vertex_buffer_vertex_pos_offset()
+# VERTEX_BUFFER_UV_OFFSET = core_db._py_vertex_buffer_vertex_uv_offset()
+# VERTEX_BUFFER_COL_OFFSET = core_db._py_vertex_buffer_vertex_col_offset()
+# VERTEX_SIZE = core_db._py_vertex_buffer_vertex_size()
+# INDEX_SIZE = core_db._py_index_buffer_index_size()
 
 
 
@@ -28,8 +31,8 @@ def load_image(image: Image) -> int:
     gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_REPEAT) # in this case, repeat the texture data
     gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR) # when you zoom in, how should the new pixels be calculated?
     gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR_MIPMAP_LINEAR) # when you zoom out, how should the existing pixels be combined?
-    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_BASE_LEVEL, 0);
-    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAX_LEVEL, 0);
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_BASE_LEVEL, 0)
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAX_LEVEL, 0)
 
     # load texture onto the GPU
     gl.glTexImage2D(

@@ -2,7 +2,7 @@ import pygui
 import glfw
 import OpenGL.GL as gl
 
-from python_demo_window import show_demo_window
+# from python_demo_window import show_demo_window
 
 show_another_window = False
 
@@ -55,10 +55,10 @@ def main():
 
     # Setup config flags
     io = pygui.get_io()
-    io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_NAV_ENABLE_KEYBOARD
-    io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_NAV_ENABLE_GAMEPAD
-    io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_DOCKING_ENABLE
-    io.config_flags |= pygui.IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE
+    io.config_flags |= pygui.CONFIG_FLAGS_NAV_ENABLE_KEYBOARD
+    io.config_flags |= pygui.CONFIG_FLAGS_NAV_ENABLE_GAMEPAD
+    io.config_flags |= pygui.CONFIG_FLAGS_DOCKING_ENABLE
+    io.config_flags |= pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE
 
     pygui.impl_glfw_init_for_open_gl(window, True)
     pygui.impl_open_gl_3_init("#version 130")
@@ -90,7 +90,7 @@ def main():
             draw_data = pygui.get_draw_data()
             pygui.impl_open_gl_3_render_draw_data(draw_data)
 
-            if io.config_flags & pygui.IMGUI_CONFIG_FLAGS_VIEWPORTS_ENABLE:
+            if io.config_flags & pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE:
                 backup_current_window = glfw.get_current_context()
                 pygui.update_platform_windows()
                 pygui.render_platform_windows_default()

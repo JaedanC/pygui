@@ -3044,15 +3044,15 @@ def get_draw_data():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImGuiIO)
-# def get_io():
-#     """
-#     Main
-#     Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
-#     """
-#     cdef ccimgui_db.ImGuiIO* res = ccimgui_db.ImGui_GetIO()
-#     return ImGuiIO.from_ptr(res)
+def get_io():
+    """
+    Main
+    Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
+    """
+    cdef ccimgui_db.ImGuiIO* res = ccimgui_db.ImGui_GetIO()
+    return ImGuiIO.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -12169,18 +12169,18 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def config_flags(self):
-    #     """
-    #     = 0              // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
-    #     """
-    #     cdef ccimgui_db.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
-    #     return res
-    # @config_flags.setter
-    # def config_flags(self, value: int):
-    #     dereference(self._ptr).ConfigFlags = value
+    @property
+    def config_flags(self):
+        """
+        = 0              // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
+        """
+        cdef ccimgui_db.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
+        return res
+    @config_flags.setter
+    def config_flags(self, value: int):
+        dereference(self._ptr).ConfigFlags = value
     # [End Field]
 
     # [Field]
@@ -12410,18 +12410,18 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def display_size(self):
-    #     """
-    #     <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
-    #     """
-    #     cdef ccimgui_db.ImVec2 res = dereference(self._ptr).DisplaySize
-    #     return _cast_ImVec2_tuple(res)
-    # @display_size.setter
-    # def display_size(self, value: tuple):
-    #     dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+    @property
+    def display_size(self):
+        """
+        <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+        """
+        cdef ccimgui_db.ImVec2 res = dereference(self._ptr).DisplaySize
+        return _cast_ImVec2_tuple(res)
+    @display_size.setter
+    def display_size(self, value: tuple):
+        dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
