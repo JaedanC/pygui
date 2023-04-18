@@ -19,8 +19,21 @@
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 #pragma once
-// #include "imgui.h"      // IMGUI_IMPL_API
-#define IMGUI_IMPL_API extern "C" __declspec(dllexport)
+
+#ifndef IMGUI_IMPL_API
+#define IMGUI_IMPL_API
+#endif
+
+#ifndef __cplusplus
+typedef struct GLFWwindow GLFWwindow;
+typedef struct GLFWmonitor GLFWmonitor;
+#endif
+
+// When compiling this in cython, we need to make sure this is defined. Cython is
+// compiled assuming everything is c++, so it's important that it is marked as
+// extern C since it was compiled as a C module too. This is so that the minimal
+// C example works with this header file as well.
+// #define IMGUI_IMPL_API extern "C" __declspec(dllimport)
 
 struct GLFWwindow;
 struct GLFWmonitor;

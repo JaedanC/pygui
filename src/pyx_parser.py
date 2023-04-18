@@ -1,381 +1,380 @@
 from __future__ import annotations
-from typing import List, Tuple, Any
-from io import StringIO
-import helpers
 import re
 import textwrap
+import json
+from typing import List, Tuple, Any
+from diff_match_patch import diff_match_patch
+from io import StringIO
 
 
-class PyxEnum:
-    def __init__(self, enum_string: str):
-        self.enum_string = enum_string
-        self.python_enum_name = enum_string.split(" = ")[0]
+def comment_text(text: str):
+    """
+    Adds a python comment to each line of the string. It tries to insert the
+    comment as far to the right as possible in a line, such that no content is
+    missed. Blank lines are not commented.
+    """
+    min_spaces = len(text)
+    for line in text.split("\n"):
+        spaces = 0
+        for char in line:
+            if char == " ":
+                spaces += 1
+            else:
+                break
+        min_spaces = min(spaces, min_spaces)
     
-    def __repr__(self):
-        return "Enum({})".format(
-            self.enum_string
-        )
-    
-    def as_pyi_format(self):
-        return "{}: int".format(
-            self.python_enum_name
-        )
+    output = []
+    for line in text.split("\n"):
+        if line.strip() == "":
+            output.append("")
+        else:
+            output.append(line[:min_spaces] + "# " + line[min_spaces:])
+    return "\n".join(output)
 
 
-class PyxFunction:
-    def __init__(self, name: str, parameters: str, lines: List[str],
-                 use_template=False, return_type=None, active=False):
-        self.name: str = name
-        self.parameters: str = parameters
-        self.impl: List[str] = lines
-        self.use_template: bool = use_template
-        self.return_type: str = return_type
-        self.active: bool = active
-    
-    def __repr__(self):
-        return "Function({}, parameters({}), template={}, return_type={}, active={})".format(
-            self.name,
-            self.parameters,
-            self.use_template,
-            self.return_type,
-            self.active,
-        )
-    
-    def as_pyi_format(self):
-        output = "def {}({}) -> {}: ...".format(
-                self.name,
-                self.parameters,
-                self.return_type
-            )
-        if self.active:
-            return output
-        return "# " + output
-    
-    def as_pyx_format(self):
-        return "\n".join(self.impl)
-
-    def merge(self, other: PyxFunction):
-        self.parameters = other.parameters
-        self.impl = other.impl
-        self.use_template = other.use_template
-        self.return_type = other.return_type
-        self.active = other.active
+def comparable_options_to_pyx_string(comparable: Any):
+    return "\n".join([f"# ?{k}({v})" for k, v in comparable.options.items()])
 
 
-class PyxField:
-    def __init__(self, name: str, lines: List[str], use_template=False,
-                 custom_type=None, active=False):
-        self.name: str = name
-        self.impl: List[str] = lines
-        self.use_template: bool = use_template
-        self.custom_type: str = custom_type
-        self.active: bool = active
-    
-    def __repr__(self):
-        return "Field({}, template={}, type={}, active={})".format(
-            self.name,
-            self.use_template,
-            self.custom_type,
-            self.active,
-        )
-    
-    def as_pyi_format(self):
-        output = "{}: {}".format(
-            self.name,
-            self.custom_type
-        )
-        if self.active:
-            return output
-        return "# " + output
-
-    def merge(self, other: PyxField):
-        self.impl = other.impl
-        self.use_template = other.use_template
-        self.custom_type = other.custom_type
-        self.active = other.active
-
-
-class PyxClass:
-    def __init__(self,name: str, constant_lines: PyxGeneric,
-                 methods: List[PyxFunction], fields: List[PyxField]):
-        self.name: str = name
-        self.constant_lines: PyxGeneric = constant_lines
-        self.methods: List[PyxFunction] = methods
-        self.fields: List[PyxField] = fields
-    
-    def __repr__(self):
-        return "Class({}):\n    {}\n    {}".format(
-            self.name,
-            "\n    ".join([str(f) for f in self.fields]),
-            "\n    ".join([str(m) for m in self.methods]),
-        )
-    
-    def as_pyi_format(self):
-        self.fields.sort(key=lambda f: f.name)
-        self.methods.sort(key=lambda m: m.name)
-
-        body = StringIO()
-        body.write("\n")
-        for field in self.fields:
-            body.write("    {}\n".format(field.as_pyi_format()))
-        
-        for method in self.methods:
-            body.write("    {}\n".format(method.as_pyi_format()))
-
-        has_body = (len(self.methods) + len(self.fields)) > 0
-        has_active = len([a for a in self.fields + self.methods if a.active]) > 0
-        return "class {}:{}".format(
-            self.name,
-            body.getvalue() if has_body and has_active else " ..."
-        )
-
-    
-class PyxGeneric:
-    def __init__(self, name: str, impl: List[str], use_template=False):
-        self.name: str = name
-        self.impl: List[str] = impl
-        self.use_template: bool = use_template
-    
-    def merge(self, other: PyxGeneric):
-        self.impl = other.impl
-        self.use_template = other.use_template
-    
-
-class PyxCollection:
-    def __init__(self, enums: List[PyxEnum], functions: List[PyxFunction],
-                 classes: List[PyxClass], extras: List[PyxGeneric]):
-        self.enums: List[PyxEnum] = enums
+class PyxHeader:
+    def __init__(self, functions: List[PyxFunction], classes: List[PyxClass]):
         self.functions: List[PyxFunction] = functions
         self.classes: List[PyxClass] = classes
-        self.extras: List[PyxGeneric] = extras
-
-    def as_pyi_format(self) -> Tuple[str, str]:
-        self.functions.sort(key=lambda f: f.name)
-        self.classes.sort(key=lambda c: c.name)
-
-        pyi_content = StringIO()
-        pyi_content.write(textwrap.dedent(
-        """
-        from typing import Any, Callable, Tuple, List, Sequence
-        from PIL import Image
-        
-        
-        VERTEX_BUFFER_POS_OFFSET: int
-        VERTEX_BUFFER_UV_OFFSET: int
-        VERTEX_BUFFER_COL_OFFSET: int
-        VERTEX_SIZE: int
-        INDEX_SIZE: int
-        FLT_MIN: float
-        FLT_MAX: float
-        
-        IMGUI_PAYLOAD_TYPE_COLOR_3F: int
-        IMGUI_PAYLOAD_TYPE_COLOR_4F: int
-        
-        class BoolPtr:
-            ptr: bool
-            def __init__(self, initial_value: bool): ...
-            def __bool__(self) -> bool: ...
-        
-        class IntPtr:
-            value: int
-            def __init__(self, initial_value: int): ...
-        
-        class FloatPtr:
-            value: float
-            def __float__(self) -> float: ...
-        
-        class DoublePtr:
-            value: float
-            def __init__(self, initial_value: float): ...
-        
-        class StrPtr:
-            value: str
-            def __init__(self, initial_value: str, buffer_size=256): ...
-        
-        class Vec4Ptr:
-            x: float
-            y: float
-            z: float
-            w: float
-            def __init__(self, x: float, y: float, z: float, w: float): ...
-            def vec(self) -> Tuple[float, float, float, float]: ...
-            def as_floatptrs(self) -> Sequence[FloatPtr]: ...
-            def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
-            def to_floatptrs(self) -> Sequence[FloatPtr]: ...
-            def copy(self) -> Vec4Ptr: ...
-        
-        class Vec2Ptr:
-            x: float
-            y: float
-            def __init__(self, x: float, y: float): ...
-            def vec(self) -> Tuple[float, float]: ...
-            def as_floatptrs(self) -> Sequence[FloatPtr]: ...
-            def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
-            def to_floatptrs(self) -> Sequence[FloatPtr]: ...
-            def copy(self) -> Vec2Ptr: ...
-        
-        def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
-        
-        def load_image(image: Image) -> int: ...
-
-        
-        """))
-
-        for enum in self.enums:
-            pyi_content.write(enum.as_pyi_format() + "\n")
-        pyi_content.write("\n")
-
+        self.sort()
+        self._rebuild_comparable()
+    
+    def _rebuild_comparable(self):
+        self.comparable_lookup = {}
         for function in self.functions:
-            pyi_content.write(function.as_pyi_format() + "\n")
-        pyi_content.write("\n")
-
+            self.comparable_lookup[function.name] = function
         for class_ in self.classes:
-            pyi_content.write(class_.as_pyi_format() + "\n")
-        
-        py_content = StringIO()
-        with open("core/templates/init.py") as f:
-            py_content.write(f.read())
-        
-        return pyi_content.getvalue(), py_content.getvalue()
+            self.comparable_lookup[class_.name] = class_
+            for field in class_.fields:
+                self.comparable_lookup[class_.name + "." + field.name] = field
+            for method in class_.methods:
+                self.comparable_lookup[class_.name + "." + method.name] = method
 
-    def get_mergeable_by_name(self, type_: str, name: str) -> Tuple[str, str, Any]:
-        if type_ == "Function":
-            for function in self.functions:
-                if function.name == name:
-                    return ("Function", function.name, function)
-        
-        if type_ == "Field":
-            for class_ in self.classes:
-                for field in class_.fields:
-                    if class_.name.strip("_") + "." + field.name == name:
-                        return ("Field", class_.name + "." + field.name, field)
-        
-        if type_ == "Method":
-            for class_ in self.classes:
-                for method in class_.methods:
-                    if class_.name.strip("_") + "." + method.name == name:
-                        return ("Method", class_.name + "." + method.name, method)
-        
-        if type_ == "Class Constants":
-            for class_ in self.classes:
-                if class_.name.strip("_") + "." + class_.constant_lines.name == name:
-                    return (
-                        "Class Constants",
-                        class_.name + "." + class_.constant_lines.name,
-                        class_.constant_lines
-                    )
-        return None
+    def get_all_comparable_lookups(self) -> List[str]:
+        return list(self.comparable_lookup.keys())
 
-    def add_mergeable(self, new_mergeable):
-        n_type, n_name, n_obj = new_mergeable
-        if n_type == "Function":
-            self.functions.append(n_obj)
-            return
-        
-        if n_type == "Field":
-            n_class_name = n_name.split(".")[0]
-            for class_ in self.classes:
-                if class_.name.strip("_") == n_class_name:
-                    class_.fields.append(n_obj)
-                    return
-        
-        if n_type == "Method":
-            n_class_name = n_name.split(".")[0]
-            for class_ in self.classes:
-                if class_.name.strip("_") == n_class_name:
-                    class_.methods.append(n_obj)
-                    return
-        
-        if n_type == "Class Constants":
-            raise ValueError("Cannot add a custom Class Constant for now")
+    def get_comparable(self, lookup_text):
+        if lookup_text in self.comparable_lookup:
+            return self.comparable_lookup[lookup_text]
+    
+    def copy(self):
+        return PyxHeader(
+            [f.copy() for f in self.functions],
+            [c.copy() for c in self.classes],
+        )
+    
+    def sort(self):
+        self.functions.sort(key=lambda x: x.name)
+        self.classes.sort(key=lambda x: x.name)
+        for class_ in self.classes:
+            class_.fields.sort(key=lambda x: x.name)
+            class_.methods.sort(key=lambda x: x.name)
 
-        return None
-
-    def apply_merge(self, from_new_mergable: Tuple[str, str, Any]):
-        n_type, n_name, n_obj = from_new_mergable
-        existing_mergeable = self.get_mergeable_by_name(n_type, n_name)
-        if existing_mergeable is not None:
-            _, _, existing_obj = existing_mergeable
-            existing_obj.merge(n_obj)
-            return
+    def add_new_comparable(self, comparable, expected_comparable_string: str):
+        if isinstance(comparable, PyxFunction):
+            self.functions.append(comparable)
+        elif isinstance(comparable, PyxClass):
+            self.classes.append(comparable)
+        elif isinstance(comparable, PyxClass.Field) or isinstance(comparable, PyxClass.Method):
+            # Need to add the comparable to the correct class so we're first
+            # going to find the class to add the new field to.
+            search_for_class = expected_comparable_string.split(".")[0]
+            found_class: PyxClass = self.get_comparable(search_for_class)
+            assert found_class is not None, "Can't just add a field/method to a non-existing class"
+            if isinstance(comparable, PyxClass.Field):
+                found_class.fields.append(comparable)
+            elif isinstance(comparable, PyxClass.Method):
+                found_class.methods.append(comparable)
         
-        # If the mergable doesn't exist, let's just assume we probably want
-        # to add the mergable.
-        self.add_mergeable(from_new_mergable)
-
-    def as_pyx_format(self, ignore_active_flag_show_regardless=True):
-        self.functions.sort(key=lambda f: f.name)
-        self.classes.sort(key=lambda c: c.name)
-
+        self._rebuild_comparable()
+        self.sort()
+    
+    def as_pyx(self, ignore_active_flag=False) -> str:
         output = StringIO()
-        output.write("# distutils: language = c++\n")
-        output.write("# cython: language_level = 3\n")
-        output.write("# cython: embedsignature=True\n\n")
-        
-        imports, constant_functions = self.extras
-        output.write("# [Imports]\n")
-        output.write("\n".join(imports.impl) + "\n")
-        output.write("# [End Imports]\n\n")
-
-        output.write("# [Enums]\n")
-        for enum in self.enums:
-            output.write(enum.enum_string + "\n")
-        output.write("# [End Enums]\n\n")
-
-        output.write("# [Constant Functions]\n")
-        output.write("\n".join(constant_functions.impl) + "\n")
-        output.write("# [End Constant Functions]\n\n")
 
         for function in self.functions:
             output.write("# [Function]\n")
-            if function.active or ignore_active_flag_show_regardless:
-                output.write("\n".join(function.impl) + "\n")
-            else:
-                output.write(helpers.comment_text("\n".join(function.impl)) + "\n")
+            output.write("{}\n{}\n".format(
+                comparable_options_to_pyx_string(function),
+                function.impl if comparable_is_active(function) or ignore_active_flag else comment_text(function.impl)
+            ))
             output.write("# [End Function]\n\n")
     
         for class_ in self.classes:
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
-            output.write("\n".join(class_.constant_lines.impl) + "\n")
+            output.write("{}\n{}\n".format(
+                comparable_options_to_pyx_string(class_),
+                class_.impl if comparable_is_active(class_) or ignore_active_flag else comment_text(class_.impl)
+            ))
             output.write("    # [End Class Constants]\n")
 
             for field in class_.fields:
                 output.write("\n    # [Field]\n")
-                if field.active or ignore_active_flag_show_regardless:
-                    output.write("\n".join(field.impl) + "\n")
-                else:
-                    output.write(helpers.comment_text("\n".join(field.impl)) + "\n")
+                output.write("{}\n{}\n".format(
+                    textwrap.indent(comparable_options_to_pyx_string(field), "    "),
+                    field.impl if comparable_is_active(field) or ignore_active_flag else comment_text(field.impl)
+                ))
                 output.write("    # [End Field]\n")
 
             for method in class_.methods:
                 output.write("\n    # [Method]\n")
-                if method.active or ignore_active_flag_show_regardless:
-                    output.write("\n".join(method.impl) + "\n")
-                else:
-                    output.write(helpers.comment_text("\n".join(method.impl)) + "\n")
+                output.write("{}\n{}\n".format(
+                    textwrap.indent(comparable_options_to_pyx_string(method), "    "),
+                    method.impl if comparable_is_active(method) or ignore_active_flag else comment_text(method.impl)
+                ))
                 output.write("    # [End Method]\n")
             
             output.write("# [End Class]\n\n")
-        
         return output.getvalue()
 
-    def get_all_mergable(self) -> List[Tuple[str, str, Any]]:
-        mergable = []
-        for function in self.functions:
-            mergable.append(("Function", function.name, function))
-        for class_ in self.classes:
-            mergable.append((
-                "Class Constants",
-                class_.name + "." + class_.constant_lines.name,
-                class_.constant_lines
-            ))
-            for field in class_.fields:
-                mergable.append(("Field", class_.name + "." + field.name, field))
 
-            for method in class_.methods:
-                mergable.append(("Method", class_.name + "." + method.name, method))
-        return mergable
+class PyxFunction:
+    def __init__(self, name: str, parameters: str, options: dict, impl: str, comment: str):
+        self.name: str = name
+        self.parameters: str = parameters
+        self.options: dict = options
+        self.impl: str = impl
+        self.comment: str = comment
+    
+    def copy(self):
+        return PyxFunction(
+            self.name,
+            self.parameters,
+            self.options.copy(),
+            self.impl,
+            self.comment,
+        )
+    
+
+class PyxClass:
+    class Field:
+        def __init__(self, name, options: dict, impl: str, comment: str):
+            self.name: str = name
+            self.options: dict = options
+            self.impl: str = impl
+            self.comment: str = comment
+        
+        def copy(self):
+            return PyxClass.Field(
+                self.name,
+                self.options.copy(),
+                self.impl,
+                self.comment,
+            )
+    
+    class Method:
+        def __init__(self, name, parameters: str, options: dict, impl: str, comment: str):
+            self.name: str = name
+            self.parameters: str = parameters
+            self.options: dict = options
+            self.impl: str = impl
+            self.comment: str = comment
+        
+        def copy(self):
+            return PyxClass.Method(
+                self.name,
+                self.parameters,
+                self.options.copy(),
+                self.impl,
+                self.comment,
+            )
+
+    def __init__(self, name, options: dict, impl: str,
+                 fields: List[Field], methods: List[Method], comment: str):
+        self.name: str = name
+        self.options: dict = options
+        self.impl: str = impl
+        self.fields: List[PyxClass.Field] = fields
+        self.methods: List[PyxClass.Method] = methods
+        self.comment: str = comment
+    
+    def has_one_active_member(self):
+        for comparable in self.fields + self.methods:
+            if comparable_is_active(comparable):
+                return True
+        return False
+
+    def copy(self):
+        return PyxClass(
+            self.name,
+            self.options.copy(),
+            self.impl,
+            [f.copy() for f in self.fields],
+            [m.copy() for m in self.methods],
+            self.comment,
+        )
+
+
+class HeaderComparison:
+    def __init__(self, old: PyxHeader, new: PyxHeader):
+        self.in_old_missing_in_new = []
+        self.in_new_missing_in_old = []
+        self.in_both = []
+        self.patches_for_old_to_new = {}
+        self.old = old
+        self.new = new
+        self.dmp = diff_match_patch()
+
+
+        for old_c in self.old.get_all_comparable_lookups():
+            new_c = new.get_comparable(old_c)
+            if new_c is None:
+                print(f"Could not find {old_c} in the new. Perhaps the API removed a function")
+                self.in_old_missing_in_new.append(old_c)
+            else:
+                self.in_both.append(old_c)
+        
+        for new_c in self.new.get_all_comparable_lookups():
+            old_c = old.get_comparable(new_c)
+            if old_c is None:
+                print(f"Could not find {new_c} in the old. Perhaps the API added a function")
+                self.in_new_missing_in_old.append(new_c)
+        
+        for both_c in self.in_both:
+            old_obj = old.get_comparable(both_c)
+            new_obj = new.get_comparable(both_c)
+            assert old_obj is not None
+            assert new_obj is not None
+            self.create_patch_for(old_obj, new_obj, both_c)
+    
+    def create_patch_for(self, old_comparable, new_comparable, comparable_lookup):
+        option_patches = self.dmp.patch_make(
+            json.dumps(old_comparable.options),
+            json.dumps(new_comparable.options)
+        )
+        impl_patches = self.dmp.patch_make(old_comparable.impl, new_comparable.impl)
+        self.patches_for_old_to_new[comparable_lookup] = (option_patches, impl_patches)
+    
+    def apply_patch_to(self, comparable_lookup: str, write_to_comparable):
+        assert comparable_lookup in self.patches_for_old_to_new
+        option_patches, impl_patches = self.patches_for_old_to_new[comparable_lookup]
+        old_obj = self.old.get_comparable(comparable_lookup)
+        new_obj = self.new.get_comparable(comparable_lookup)
+
+        if len(impl_patches) > 0:
+            print(f"Merging: Patching {comparable_lookup}")
+        if len(option_patches) > 0:
+            print(f"Merging: Patching options for {comparable_lookup}")
+        
+        success = True
+        applied_template_impl, results = self.dmp.patch_apply(impl_patches, write_to_comparable.impl)
+        if not all(results):
+            print("Failed to apply patch to body:")
+            print("Old implementation ---------------------------")
+            print(old_obj.impl)
+            print("New implementation ---------------------------")
+            print(new_obj.impl)
+            print("Template implementation ----------------------")
+            print(write_to_comparable.impl)
+            print("We got to ------------------------------------")
+            print(applied_template_impl)
+            success = False
+        else:
+            write_to_comparable.impl = applied_template_impl
+
+        applied_template_options, results = self.dmp.patch_apply(
+            option_patches, json.dumps(write_to_comparable.options))
+        
+        if not all(results):
+            print(f"Failed to apply patch to options in {comparable_lookup}:")
+            print("Old options ---------------------------")
+            print(old_obj.options)
+            print("New implementation ---------------------------")
+            print(new_obj.options)
+            print("Template implementation ----------------------")
+            print(write_to_comparable.options)
+            print("We got to ------------------------------------")
+            print(applied_template_options)
+            success = False
+        else:
+            # It should still create valid json but we will see
+            write_to_comparable.options = json.loads(applied_template_options)
+
+        return success
+
+    def n_patches(self):
+        return len(list(filter(lambda x: len(x) > 0, self.patches_for_old_to_new.values())))
+    
+    def create_new_header_based_on_comparison(self, template: PyxHeader):
+        merged_template = template.copy()
+
+        success = True
+        for new_c in self.new.get_all_comparable_lookups():
+            new_obj = self.new.get_comparable(new_c)
+            assert new_obj is not None
+
+            tem_obj = template.get_comparable(new_c)
+            if tem_obj is None:
+                print(f"Merging: New comparable '{new_c}' not found in template. Adding it to the template")
+                # Add the new_obj directly to the template here.
+                merged_template.add_new_comparable(new_obj, new_c)
+                # Sanity check to make sure the new comparable has been added
+                assert merged_template.get_comparable(new_c) is not None
+                continue
+            
+            # This is a copy of the template that we will write to to preserve
+            # the original contents in case something goes wrong during patching.
+            # If we get to here there should also be a matching merge_obj
+            # otherwise something has gone wrong with the copy process.
+            merged_obj = merged_template.get_comparable(new_c)
+            assert merged_obj is not None
+            
+            # If the comparable is not using the template, then reset it back to
+            # the implementation in the new. Since we're not changing the options
+            # as well then it is possible to activate a function without using
+            # the template.
+            if not comparable_is_using_template(tem_obj):
+                merged_obj.impl = new_obj.impl
+                continue
+            
+            old_obj = self.old.get_comparable(new_c)
+            if old_obj is None:
+                # This means that we should just use the template implementation
+                # because no patches were created. In this case we can just do
+                # nothing.
+                print(f"Merging: No patches found for '{new_c}'. Keeping template.")
+                continue
+
+            assert old_obj is not None
+            
+            # Here we have an old implementation, a new implementation and a
+            # template with use_template == True. This is where we use the
+            # patches generated between the old and the new and apply it to the
+            # template.
+            # print("Attempting to apply patch to '{}'".format(new_c))    
+            # old_new_patch = self.patches_for_old_to_new[new_c]
+            
+            # Applies the patch to merged_obj. Returns true on success.
+            if not self.apply_patch_to(new_c, merged_obj):
+                success = False
+        
+        for temp_c in merged_template.get_all_comparable_lookups():
+            if self.new.get_comparable(temp_c) is None:
+                print(f"Merging: Noting standalone comparable in template: '{temp_c}'")
+
+        if success:
+            return merged_template
+        else:
+            return None
+
+
+def comparable_is_active(comparable: Any):
+    options: dict = comparable.options
+    if "active" in options:
+        return options["active"] == "True"
+    return True
+
+
+def comparable_is_using_template(comparable: Any):
+    options: dict = comparable.options
+    if "use_template" in options:
+        return options["use_template"] == "True"
+    return True
 
 
 def get_sections(src: str, section_name: str) -> List[str]:
@@ -400,134 +399,135 @@ def get_sections(src: str, section_name: str) -> List[str]:
     return all_sections
 
 
-def parse_function_options(lines):
-    options = {}
-    for line in lines:
-        line = line.strip()
-        found_return_type = re.match(".*\?returns\((.*?)\).*", line)
-        if found_return_type is not None and "inferred_type" not in options:
-            options["inferred_type"] = found_return_type.group(1) if found_return_type.group(1) != "" else None
-        
-        found_name = re.match(".*def (.*?)\((.*?)\):", line)
-        if found_name is not None and "name" not in options:
-            options["name"] = found_name.group(1)
-            options["inferred_parameters"] = found_name.group(2)
-        
-        if "# ?" in line:
+def create_pyx_model(pyx_src: str) -> PyxHeader:
+    def parse_options(src_containing_options: str) -> dict:
+        options = {}
+        for line in src_containing_options.split("\n"):
+            if not line.strip().startswith("# ?"):
+                return options
+            
             options_found = re.match(".*?# \?(.*?)\((.*)\)", line)
             if options_found is None:
-                assert False, "Could not parse option {}".format(line)
+                return options
+            
             options[options_found.group(1)] = options_found.group(2)
-    return options
-
-
-def create_pyx_collection(pyx):
-    enum_section = get_sections(pyx, "Enums")[0]
-    enum_lines = enum_section.split("\n")
-    enums = []
-    for line in enum_lines:
-        if line == "":
-            continue
-        
-        enums.append(PyxEnum(line))
+        return options
     
-    functions: List[PyxFunction] = []
-    for function in get_sections(pyx, "Function"):
-        options = parse_function_options(function.split("\n"))
-        return_type = options["inferred_type"]
-        assert options["use_template"] in ["True", "False"]
-        assert options["active"] in ["True", "False"]
-
-        functions.append(PyxFunction(
-            options["name"],
-            options["inferred_parameters"],
-            function.split("\n"),
-            options["use_template"] == "True",
-            return_type,
-            options["active"] == "True",
-        ))
-    
-    classes: List[PyxClass] = []
-    for class_section in get_sections(pyx, "Class"):
-        name = None
-        for line in class_section.split("\n"):
-            name_found = re.match("cdef class (.*?):", line)
-            if name_found is not None:
-                name = name_found.group(1)
+    def parse_other_than_options(src: str) -> str:
+        for i, line in enumerate(src.split("\n")):
+            if not line.strip().startswith("# ?"):
                 break
-        assert name is not None, "Could not find name for class"
-
-        class_constants_section = get_sections(class_section, "Class Constants")[0]
-        class_constants_options = parse_function_options(class_constants_section.split("\n"))
-        class_constants = PyxGeneric(
-            "Class Constants",
-            class_constants_section.split("\n"),
-            use_template=class_constants_options["use_template"]
-        )
-
-        methods = []
-        for method_section in get_sections(class_section, "Method"):
-            options = parse_function_options(method_section.split("\n"))
-            return_type = options["inferred_type"]
-            assert options["use_template"] in ["True", "False"]
-            assert options["active"] in ["True", "False"]
-
-            methods.append(PyxFunction(
-                options["name"],
-                options["inferred_parameters"],
-                method_section.split("\n"),
-                options["use_template"] == "True",
-                return_type,
-                options["active"] == "True",
-            ))
         
-        fields = []
-        for field_section in get_sections(class_section, "Field"):
-            options = parse_function_options(field_section.split("\n"))
-            return_type = options["inferred_type"]
-            assert options["use_template"] in ["True", "False"]
-            assert options["active"] in ["True", "False"]
+        return "\n".join(src.split("\n")[i:])
+    
+    def parse_function(src_containing_name: str) -> Tuple[str, str]:
+        for line in src_containing_name.split("\n"):
+            found_name = re.match(".*def (.*?)\((.*?)\):", line.strip())
 
-            fields.append(PyxField(
-                options["name"],
-                field_section.split("\n"),
-                options["use_template"] == "True",
-                return_type,
-                options["active"] == "True",
-            ))
+            if found_name is not None:
+                # Name, Inferred Parameters
+                return found_name.group(1), found_name.group(2)
+        assert False
+
+    def parse_class(src_containing_class: str) -> str:
+        for line in src_containing_class.split("\n"):
+            class_name_found = re.match("cdef class (.*?):", line)
+
+            if class_name_found is not None:
+                return class_name_found.group(1)
+        assert False
+
+    def parse_multiline_comment(src_containing_comment: str) -> str:
+        src_containing_comment = src_containing_comment.replace("    ", "")
+        try:
+            start_index = src_containing_comment.index('"""')
+            end_index = src_containing_comment.index('"""', start_index + 1)
+        except ValueError:
+            return None
         
-        classes.append(PyxClass(
-            name,
-            class_constants,
-            methods,
-            fields
+        return src_containing_comment[start_index + 3:end_index].strip()
+
+
+    parsed_functions: List[PyxFunction] = []
+    for function_src in get_sections(pyx_src, "Function"):
+        function_options = parse_options(function_src)
+        function_body = parse_other_than_options(function_src)
+        function_name, function_parameters = parse_function(function_src)
+        function_comment = parse_multiline_comment(function_src)
+        parsed_functions.append(PyxFunction(
+            function_name,
+            function_parameters,
+            function_options,
+            function_body,
+            function_comment,
         ))
     
-    import_section = get_sections(pyx, "Imports")[0]
-    constant_functions_section = get_sections(pyx, "Constant Functions")[0]
-    generics = [
-        PyxGeneric("Imports", import_section.split("\n")),
-        PyxGeneric("Constants", constant_functions_section.split("\n")),
-    ]
+    parsed_classes: List[PyxClass] = []
+    for class_src in get_sections(pyx_src, "Class"):
+        class_constants_section = get_sections(class_src, "Class Constants")[0]
+        class_constants_options = parse_options(class_constants_section)
+        class_constants_body = parse_other_than_options(class_constants_section)
+        class_name = parse_class(class_constants_section)
+        class_comment = parse_multiline_comment(class_src)
+
+        parsed_fields = []
+        for class_field in get_sections(class_src, "Field"):
+            field_options = parse_options(class_field)
+            field_name, _ = parse_function(class_field)
+            field_body = parse_other_than_options(class_field)
+            field_comment = parse_multiline_comment(class_field)
+            parsed_fields.append(PyxClass.Field(
+                field_name,
+                field_options,
+                field_body,
+                field_comment,
+            ))
+        
+        parsed_methods = []
+        for class_method in get_sections(class_src, "Method"):
+            method_options = parse_options(class_method)
+            method_name, method_parameters = parse_function(class_method)
+            method_body = parse_other_than_options(class_method)
+            method_comment = parse_multiline_comment(class_method)
+            parsed_methods.append(PyxClass.Method(
+                method_name,
+                method_parameters,
+                method_options,
+                method_body,
+                method_comment,
+            ))
+        
+        parsed_classes.append(PyxClass(
+            class_name,
+            class_constants_options,
+            class_constants_body,
+            parsed_fields,
+            parsed_methods,
+            class_comment,
+        ))
     
-    return PyxCollection(enums, functions, classes, generics)
+    return PyxHeader(parsed_functions, parsed_classes)
 
 
 def main():
-    with open("core/core_v2.pyx") as f:
-        pyx = f.read()
+    with open("core/core_generated_dear_bindings.pyx") as f:
+        old_pyx = f.read()
     
-    collection = create_pyx_collection(pyx)
-    pyi, py = collection.as_pyi_format()
+    with open("core/core_generated_dear_bindings_new.pyx") as f:
+        new_pyx = f.read()
+    
+    with open("core/core_generated_dear_bindings_template.pyx") as f:
+        template_pyx = f.read()
+    
+    old_model = create_pyx_model(old_pyx)
+    new_model = create_pyx_model(new_pyx)
+    comparison = HeaderComparison(old_model, new_model)
 
-    with open("pygui/__init__.pyi", "w") as f:
-        f.write(pyi)
-    
-    with open("pygui/__init__.py", "w") as f:
-        f.write(py)
-    
-    with open("core/core_v2_trial.pyx", "w") as f:
-        f.write(collection.as_pyx_format())
+    template_model = create_pyx_model(template_pyx)
+    merged = comparison.create_new_header_based_on_comparison(template_model)
+
+    if merged is None:
+        print("Merge failed")
 
 
 if __name__ == "__main__":

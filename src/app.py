@@ -6,11 +6,14 @@ import OpenGL.GL as gl
 
 show_another_window = False
 
+show_demo_window = pygui.BoolPtr(True)
 
 def render():
     global show_another_window
+    global show_demo_window
 
-    pygui.show_demo_window()
+    if show_demo_window:
+        pygui.show_demo_window(show_demo_window)
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
@@ -48,7 +51,7 @@ def main():
     # Vsync:
     # 1: On
     # 0: Off
-    glfw.swap_interval(1)
+    glfw.swap_interval(0)
 
     # Setup imgui
     pygui.create_context()

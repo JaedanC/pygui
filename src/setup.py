@@ -1,3 +1,4 @@
+import json
 import glob
 import os
 import sys
@@ -9,23 +10,44 @@ from Cython.Build import cythonize
 
 def main():
     if len(sys.argv) == 1:
-        print("python setup.py clean build_ext --build-lib pygui")
+        print("python setup.py clean build_ext --build-lib pygui [--dev]")
         return
+    
+    with open("config.json") as f:
+        config = json.load(f)
+
+    extension_name = config["EXTENSION_NAME"]
+    sources = [config["PYX_PATH"]]
+
+    # For speeding up developer builds
+    if "--dev" in sys.argv:
+        compile_option = "/Od"
+        sys.argv.remove("--dev")
+    else:
+        compile_option = "/Ox"
     
     extensions = [
         Extension(
-            "core",
-            [ "core/core.pyx" ],
-            include_dirs=["external/cimgui", "external/cimgui/generator/output"],
+            extension_name,
+            sources=sources,
+            # Any header files expected by implementations should have their
+            # directory added here. Cython will attempt to statically compile
+            # the functions we defined in our pxd file. So for the implementations,
+            # since we are linking them with a dll, the impl functions should be
+            # marked as extern "C" __declspec(dllexport)
+            include_dirs=[
+                "external",                 # My imconfig.h
+                "external/dear_bindings",   # cimgui.h
+                "core/backends",            # imgui_impl_*.h
+            ],
             library_dirs=["pygui/libs"],
             libraries=["cimgui", "glfw3dll", "imgui_glfw_opengl3"],
             define_macros=[
-                ("CIMGUI_DEFINE_ENUMS_AND_STRUCTS", None),
-                ("CIMGUI_USE_GLFW", None),
-                ("CIMGUI_USE_OPENGL3", None),
-                # ("CIMGUI_USE_OPENGL2", None),
-                # ("CIMGUI_USE_SDL2", None),
+                ("IMGUI_IMPL_API", 'extern "C" __declspec(dllexport)'),
+                ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
+                ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
             ],
+            extra_compile_args=([compile_option])
         )
     ]
 

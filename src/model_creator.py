@@ -1,98 +1,206 @@
 from __future__ import annotations
+from typing import List, Any, Dict
+from io import StringIO
+from pyx_parser import *
 import builtins
-import helpers
 import json
 import keyword
-import re
 import sys
-from io import StringIO
-from diff_match_patch import diff_match_patch
-from pyx_parser import *
-from typing import List, Tuple
+import textwrap
 
 
-def function_body_template(
-    header: HeaderSpec,
-    parameter_list: ParameterList,
-    return_type: CType,
-    function_name: str,
-    cimgui_function_name: str,
-    comment: str,
-    **kwargs
-):
-    """
-    Standardises the function generation process for methods and functions. Any
-    additional kwargs are passed onto the template.
-    """
-    parameter_tokens = []
-    argument_tokens = []
-    implementation_lines = []
-    to_return_tokens = []
+PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
 
-    # Expand array parameters:
-    # float value[2] == float value0, float value1
-    for parameter in parameter_list:
-        parameter_tokens += parameter.in_pyx_parameter_type_name_defaults(header)
-        argument_tokens += parameter.in_pyx_argument_names(header)
-        implementation_lines += parameter.get_expanded_implementation_lines(header)
-        to_return_tokens += parameter.get_additional_returns()
+
+class MergeFailed(Exception):
+    pass
+
+
+class MergeResult:
+    def __init__(self, old_pyx: str, new_pyx: str, template_pyx: str):
+        self.old_pyx: str      = old_pyx
+        self.new_pyx: str      = new_pyx
+        self.template_pyx: str = template_pyx
+
+        self.old_model: PyxHeader = create_pyx_model(old_pyx)
+        self.new_model: PyxHeader = create_pyx_model(new_pyx)
+        self.template_model: PyxHeader = create_pyx_model(template_pyx)
+
+        comparison = HeaderComparison(self.old_model, self.new_model)
+        self.merged_model: PyxHeader = comparison.create_new_header_based_on_comparison(self.template_model)
+        if self.merged_model is None:
+            raise MergeFailed
+        
+        self.merged_pyx: str = replace_after(
+            new_pyx,
+            PYX_TEMPLATE_MARKER,
+            self.merged_model.as_pyx()
+        )
+        self.merged_pyx_all_active: str = replace_after(
+            new_pyx,
+            PYX_TEMPLATE_MARKER,
+            self.merged_model.as_pyx(ignore_active_flag=True)
+        )
+
+
+class DearBinding:
+    def __init__(self, enums, typedefs, structs, functions):
+        self.enums: List[DearEnum] = enums
+        self.typedefs: List[DearTypedef] = typedefs
+        self.structs: List[DearStruct] = structs
+        self.functions: List[DearFunction] = []
+        
+        methods: List[DearFunction] = []
+        for function in functions:
+            function: DearFunction
+            if len(function.arguments) > 0 and function.arguments[0].name == "self":
+                methods.append(function)
+                continue
+            self.functions.append(function)
+        
+        struct_lookup = {s.name: s for s in self.structs}
+        for method in methods:
+            method: DearFunction
+            class_name = method.arguments[0].type.with_no_const_or_asterisk()
+            # Modify the name of the function so that it looks more like a 
+            # method.
+            method.python_name = method.python_name.replace(class_name + "_", "", 1)
+            struct_lookup[class_name].add_method(method)
     
-    # This is the string that makes up the return value of the cimgui
-    # function call
-    has_return_type = return_type is not None and not return_type.is_void()
-    res_name = "res"
-    return_type_string = ""
-    python_return_type_string = return_type.as_python_type(header)
-    if has_return_type:
+    def __repr__(self):
+        return \
+            "Enums:\n{}\n\n".format("\n".join([str(e) for e in self.enums])) + \
+            "Typedefs:\n{}\n\n".format("\n".join([str(e) for e in self.typedefs])) + \
+            "Structs:\n{}\n\n".format("\n".join([str(e) for e in self.structs])) + \
+            "Functions:\n{}\n".format("\n".join([str(e) for e in self.functions]))
 
-        if return_type.is_type_external(header):
-            return_type_string = header.library_name + "." + return_type.with_no_const()
-        else:
-            return_type_string = return_type.internal_str
+    def sort(self):
+        self.functions.sort(key=lambda x: x.name_omitted_imgui_prefix())
+        self.structs.sort(key=lambda x: x.name)
+        for struct in self.structs:
+            struct.fields.sort(key=lambda x: x.name)
+            struct.methods.sort(key=lambda x: x.name)
+
+    def is_cimgui_type(self, _type: DearType):
+        for enum in self.enums:
+            if _type.with_no_const_or_asterisk() == enum:
+                return True
+            for enum_element in enum.elements:
+                if _type.with_no_const_or_asterisk() == enum_element.name:
+                    return True
         
-        if return_type.is_type_class(header):
-            res_name = "{}.from_ptr(res)".format(return_type.with_no_const_or_asterisk())
-        elif return_type.is_string():
-            res_name = "_bytes(res)"
+        for typedef in self.typedefs:
+            if typedef.definition.raw_type == _type.with_no_const_or_asterisk():
+                return True
         
-    parameter_text = ", ".join(parameter_tokens)
-    
-    if len(argument_tokens) > 5:
-        argument_text = "\n" + helpers.indent_by(",\n".join(argument_tokens), 8) + "\n    "
-    else:
-        argument_text = ", ".join(argument_tokens)
-
-    with open("core/templates/functions.h") as f:
-        template = Template(f.read())
-
-    template.set_condition("has_comment", comment != "")
-    template.set_condition("has_return_type", has_return_type)
-    template.set_condition("has_return_tuple", False)
-    template.set_condition("has_body_lines", len(implementation_lines) > 0)
-
-    template.format(
-        function_name=function_name,
-        comment=comment,
-        parameters=parameter_text,
-        body_lines=helpers.indent_by("\n".join(implementation_lines), 4),
-        return_type=return_type_string,
-        python_return_type=python_return_type_string,
-        library_name=header.library_name,
-        function_pxd_name=cimgui_function_name,
-        arguments=argument_text,
-        res=res_name,
-        **kwargs
-    )
+        for struct in self.structs:
+            if _type.with_no_const_or_asterisk() == struct.name:
+                return True
         
-    return template.compile(**kwargs)
+        return False
 
+    def follow_type(self, _type: DearType) -> DearType:
+        if not self.is_cimgui_type(_type):
+            return _type
+        
+        for enum in self.enums:
+            if enum.name == _type.with_no_const_or_asterisk():
+                return DearType("int")
 
-def pretty_comment(comment: str):
-    comment = helpers.wrap_text(comment)
-    if comment == "":
-        return ""
+        for typedef in self.typedefs:
+            if _type.with_no_const_or_asterisk() == typedef.definition.raw_type:
+                return self.follow_type(typedef.base)
+        
+        return _type
 
-    return helpers.indent_by('"""\n{}\n"""'.format(comment), 4)
+    def as_name_type_default_parameter(self, argument: DearFunction.Argument):
+        parameter_format = "{}: {}{}".format(
+            argument.name,
+            self.as_python_type(self.follow_type(argument.type)),
+            "={}".format(argument.default_value) if argument.default_value is not None else ""
+        )
+        return parameter_format
+
+    def as_python_type(self, _type: DearType):
+        python_type_lookup = {
+            "bool": "bool",
+            "bool*": "BoolPtr",
+            "char": "int",
+            "int": "int",
+            "int*": "IntPtr",
+            "short": "int",
+            "short*": "IntPtr",
+            "long": "int",
+            "long*": "IntPtr",
+            "float": "float",
+            "float*": "FloatPtr",
+            "double": "float",
+            "double*": "DoublePtr",
+            "ImVec2": "tuple",
+            "ImVec4": "tuple",
+            "void": "None",
+            "char*": "str",
+        }
+        _type = self.follow_type(_type)
+        
+        if _type.is_array() and _type.ptr_version() is not None:
+            return "Sequence[" + _type.ptr_version() + "]"
+        
+        if _type.with_no_const_or_sign() in python_type_lookup:
+            return python_type_lookup[_type.with_no_const_or_sign()]
+        
+        for struct in self.structs:
+            if struct.name == _type.with_no_const_or_asterisk():
+                return struct.name
+        
+        if _type.is_function_type():
+            return "Callable"
+        
+
+        return "Any"
+
+    def marshall_c_to_python(self, _type: DearType):
+        _type = self.follow_type(_type)
+        
+        if _type.is_string():
+            return "_from_bytes({})"
+        
+        if _type.is_vec2():
+            return "_cast_ImVec2_tuple({})"
+        
+        if _type.is_vec4():
+            return "_cast_ImVec4_tuple({})"
+
+        if _type.ptr_version() is not None:
+            return _type.ptr_version() + "(dereference({}))"
+
+        if self.is_cimgui_type(_type):
+            return _type.with_no_const_or_asterisk() + ".from_ptr({})"
+        
+        return "{}"
+
+    def marshall_python_to_c(self, _type: DearType, default_value=None):
+        _type = self.follow_type(_type)
+
+        if _type.is_vec2():
+            return "_cast_tuple_ImVec2({})"
+
+        if _type.is_vec4():
+            return "_cast_tuple_ImVec4({})"
+        
+        if _type.is_string():
+            return "_bytes({})"
+        
+        if _type.ptr_version() and default_value == "None":
+            return _type.ptr_version() + ".ptr({})"
+        
+        if _type.ptr_version() is not None:
+            return "&{}.value"
+
+        if self.is_cimgui_type(_type):
+            return "{}._ptr"
+        
+        return "{}"
 
 
 class Template:
@@ -193,1584 +301,1584 @@ class Template:
         return self.base
 
 
-class CType:
-    lookup = {
-        "void": "None",
-        "char*": "str",
-        "const char*": "str",
-        "float*": "float",
-        "float": "float",
-        "int": "int",
-        "int*": "int",
-        "ImVec2": "tuple",
-        "const ImVec2": "tuple",
-        "ImVec4": "tuple",
-        "const ImVec4": "tuple",
-        "bool": "bool",
-        "bool*": "BoolPtr",
-    }
-    """
-    Represents a type without a name. Can also be a function pointer. Requires
-    a Parameter wrapper to be a function pointer.
-    """
+class Comments:
+    def __init__(self, comment_preceeding: List[str], comment_attached: str):
+        self.comment_proceeding: List[str] = comment_preceeding
+        self.comment_attached: str         = comment_attached
 
-    def __init__(self, _type: str):
-        _type = _type.replace("char* const[]", "char**")
-        _type = _type.replace("va_list", "char*")
-        self.internal_str: str = _type
-
-    def __repr__(self):
-        return "CType({}{})".format(
-            "FunctionPointer -> " if self.is_function_pointer() else "",
-            self.internal_str
-        )
-
-    def is_function_pointer(self):
-        """Returns true if the CType is a function pointer.
+        if self.comment_attached is not None:
+            self.comment_attached = self.comment_attached.replace('"', "'")
+            self.comment_attached = self.comment_attached.lstrip("// ").capitalize()
+        
+        self.comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
+        
+    def three_quote_all_comments(self):
+        if len(self.comment_proceeding) == 0 and self.comment_attached is None:
+            return None
+        
+        comment_attached_no_none = self.comment_attached if self.comment_attached is not None else ""
+        
+        comment = textwrap.dedent(
+        '''
         """
-        return "(*)" in self.internal_str
-
-    def is_pointer(self):
-        """Returns true if the CType is a pointer.
+        {}
         """
-        return "*" in self.internal_str
-    
-    def as_cython_type(self, header: HeaderSpec):
-        if self.is_function_pointer():
-            return "Callable"
-        
-        if self.internal_str in CType.lookup:
-            return CType.lookup[self.internal_str]
-        
-        for typedef in header.typedefs:
-            if typedef.definition.internal_str == self.internal_str:
-                return header.library_name + "." + typedef.definition.internal_str
+        ''')
 
-        return "Any"
-
-    def as_python_type(self, header: HeaderSpec):
-        if self.is_function_pointer():
-            return "Callable"
-        
-        shortened_type = self.with_no_const()
-        for (base, definition) in [(t.base, t.definition) for t in header.typedefs]:
-            if definition.internal_str == self.with_no_const_or_asterisk():
-                return base.as_python_type(header)
-
-        shortened_type = shortened_type \
-            .replace("unsigned ", "") \
-            .replace("signed ", "")
-
-        if shortened_type in CType.lookup:
-            return CType.lookup[shortened_type]
-        
-        if CType(shortened_type).is_type_class(header):
-            return CType(shortened_type).with_no_const_or_asterisk()
-            # return "_" + CType(shortened_type).with_no_const_or_asterisk()
-        
-        similar_type_lookup = {
-            "void*": "Any",
-            "short": "int",
-            "long": "int",
-            "double": "float",
-            "char": "int",
-        }
-
-        if shortened_type in similar_type_lookup:
-            return similar_type_lookup[shortened_type]
+        if len(self.comment_proceeding) == 0 or self.comment_attached is None:
+            comment = comment.format(
+                "\n".join(self.comment_proceeding) + comment_attached_no_none.capitalize())
         else:
-            return "Any"
+            comment = comment.format(
+                "\n".join(self.comment_proceeding) + "\n" + comment_attached_no_none.capitalize())
+        return comment.strip()
 
-    def is_type_class(self, header: HeaderSpec):
-        return self.with_no_const_or_asterisk() in [s.name for s in header.structs]
+    def three_quote_proceeding_only(self):
+        if len(self.comment_proceeding) == 0:
+            return None
+        
+        return textwrap.dedent(
+        '''
+        """
+        {}
+        """
+        '''.format("\n".join(self.comment_proceeding)))
+        return comment
 
-    def is_type_external(self, header: HeaderSpec):
-        if self.is_type_class(header):
-            return True
+    def hash_all_comments(self):
+        if len(self.comment_proceeding) == 0 and self.comment_attached is None:
+            return None
         
-        type_string = self.with_no_const_or_asterisk()
-        if type_string in [e.name for e in header.enums]:
-            return True
+        if len(self.comment_proceeding) > 0 and self.comment_attached is not None:
+            return textwrap.dedent(
+                """
+                {}
+                # {}
+                """).format(
+                    "\n".join(["# " + line for line in self.comment_proceeding]),
+                    self.comment_attached
+                ).strip("\n")
         
-        if type_string in [t.definition.internal_str for t in header.typedefs]:
-            return True
+        if len(self.comment_proceeding) > 0:
+            return "\n".join(["# " + line for line in self.comment_proceeding])
+        return "# " + self.comment_attached
+
+    def hash_proceeding_only(self):
+        if len(self.comment_proceeding) == 0:
+            return None
+
+        return "\n".join(["# " + line for line in self.comment_proceeding])
+
+    def hash_attached_only(self):
+        if self.comment_attached is None:
+            return None
+        return "# " + self.comment_attached
+
+
+class DearEnum:
+    class Value:
+        def __init__(self, name: str, value: int, comments: Comments):
+            self.name: str          = name
+            self.value: int         = value
+            self.comments: Comments = comments
         
-        # if type_string == "bool":
-        #     return False
+        def name_omitted_imgui_prefix(self):
+            return self.name.replace("ImGui", "", 1)
         
-        return False
+
+    def __init__(self, name: str, elements: List[Value], comments: Comments):
+        self.name: str                      = name
+        self.elements: List[DearEnum.Value] = elements
+        self.comments: Comments             = comments
     
-    def is_string(self):
-        return self.with_no_const() == "char*"
+    def __repr__(self):
+        return "Enum({} -> {} elements)".format(self.name, len(self.elements))
 
-    def follow_type(self, header: HeaderSpec):
-        type_string = self.with_no_const_or_asterisk()
-        for base, definition in [(t.base, t.definition) for t in header.typedefs]:
-            if definition.internal_str == type_string:
-                return base.follow_type(header)
-        
-        for enum_name in [e.name for e in header.enums]:
-            if enum_name == type_string:
-                return "int"
-        
-        for struct_name in [s.name for s in header.structs]:
-            if struct_name == type_string:
-                return struct_name
-                # return "_" + struct_name
 
-        return type_string \
-            .replace("unsigned ", "")
+class DearType:
+    def __init__(self, raw_type: str, is_array_size=None):
+        self.raw_type: str = raw_type
+        self.array_size: int = is_array_size
+    
+    def __repr__(self):
+        return "Type({})".format(self.raw_type)
+    
+    def is_function_type(self) -> bool:
+        return "(*" in self.raw_type
+    
+    def is_array(self):
+        return self.array_size is not None
 
     def with_no_const(self):
-        return self.internal_str \
+        return self.raw_type \
             .replace("const ", "")
+
+    def with_no_const_or_sign(self):
+        return self.with_no_const() \
+            .replace("unsigned ", "") \
+            .replace("signed ", "")
 
     def with_no_const_or_asterisk(self):
         return self.with_no_const() \
             .replace("*", "")
+    
+    def is_void_type(self):
+        return self.raw_type == "void"
+    
+    def is_string(self):
+        return self.with_no_const() == "char*"
+    
+    def is_vec2(self):
+        return self.with_no_const() == "ImVec2"
+    
+    def is_vec4(self):
+        return self.with_no_const() == "ImVec4"
 
-    def is_void(self):
-        return self.internal_str == "void"
-
-
-class Parameter:
-    """Represents a CType, name pair. A parameter may also have a default value
-    and a size. Size means that that Parameter is an array.
-    """
-
-    def __init__(self, name: str, _type: CType, default_value=None, size=1):
-        if name == "v":
-            name = "value"
-        self.name: str = name
-        self.type: CType = _type
-        
-        default_lookup = {
-            "NULL": "None",
-            "true": "True",
-            "false": "False",
+    def ptr_version(self):
+        ptr_version_mappings = {
+            "bool*": "BoolPtr",
+            "int*": "IntPtr",
+            "float*": "FloatPtr",
+            "double*": "DoublePtr",
         }
+        if self.is_array() and self.with_no_const() + "*" in ptr_version_mappings:
+                return ptr_version_mappings[self.with_no_const() + "*"]
 
-        if default_value in default_lookup:
-            default_value = default_lookup[default_value]
-        elif default_value is not None:
-            for i in range(10):
-                default_value = re.sub(str(i) + "f", str(i), default_value)
-            default_value = default_value.replace("ImVec2", "")
-            default_value = default_value.replace("ImVec4", "")
-            default_value = default_value.replace(",", ", ")
+        if self.with_no_const() in ptr_version_mappings:
+            return ptr_version_mappings[self.with_no_const()]
+        return None
 
-        self.default_value = default_value
-        self.size = size
 
+class DearTypedef:
+    def __init__(self, base: DearType, definition: DearType, comments: Comments):
+        self.base: DearType       = base
+        self.definition: DearType = definition
+        self.comments: Comments   = comments
+    
     def __repr__(self):
-        return "Param({}, {}){} {}".format(
-            self.type.__repr__(),
-            self.name,
-            f" = {self.default_value}" if self.default_value is not None else "",
-            f"size: {self.size}" if self.size > 1 else ""
-        )
+        return "Typedef({} <- {})".format(self.base, self.definition)
 
-    def in_pxd_format(self) -> str:
-        """Return the Parameter in *.pxd format
-        """
-        if self.type.is_function_pointer():
-            return self.type.internal_str.replace("(*)", f"(*{self.name})")
-        return "{} {}{}".format(
-            self.type.internal_str,
-            self.name,
-            f"[{self.size}]" if self.size > 1 else ""
-        )
-    
-    def in_pyx_parameter_type_name_defaults(self, header: HeaderSpec) -> List[str]:
-        output = []
-        for local_name in self._get_expanded_names():
-            type_string = self.type.as_python_type(header)
 
-            output.append("{name}: {type}{default}".format(
-                name=local_name,
-                type=type_string,
-                default="=" + self.default_value if self.default_value is not None else ""
-            ))
-        return output
-    
-    def in_pyx_argument_names(self, header: HeaderSpec) -> List[str]:
-        output = []
-        for local_argument in self._get_expanded_arguments(header):
-            if self.type.with_no_const() == "ImVec2":
-                output.append(f"_cast_tuple_ImVec2({local_argument})")
-            elif self.type.with_no_const() == "ImVec4":
-                output.append(f"_cast_tuple_ImVec4({local_argument})")
-            elif self.type.is_type_class(header):
-                output.append(local_argument + "._ptr")
-            elif self.type.as_cython_type(header) == "str":
-                output.append(f"_bytes({local_argument})")
-            else:
-                output.append(local_argument)
-
-        return output
-
-    def _get_expanded_names(self) -> List[str]:
-        if self.size == 1:
-            return [self.name]
-        return [self.name + str(i) for i in range(self.size)]
-    
-    def get_expanded_implementation_lines(self, header: HeaderSpec) -> List[str]:
-        if self.size == 1:
-            return []
+class DearStruct:
+    class Field:
+        def __init__(self, name: str, _type: DearType, comments: Comments):
+            self.name: str          = name
+            self.type: DearType     = _type
+            self.comments: Comments = comments
         
-        if self.type.is_type_external(header):
-            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
-        else:
-            type_string = self.type.with_no_const_or_asterisk()
-
-        implementation_lines = [("cdef {type}[{size}] io_{type_friendly}_{name} = [{expanded_names}]" \
-            .format(
-                type=type_string,
-                type_friendly=self.type.with_no_const_or_asterisk(),
-                size=self.size,
-                name=self.name,
-                expanded_names=", ".join(self._get_expanded_names())
-            ))]
-        return implementation_lines
+        def __repr__(self):
+            return "Field({}: {})".format(self.name, self.type)
     
-    def _get_expanded_arguments(self, header: HeaderSpec) -> List[str]:
-        if self.size == 1:
-            return [ self.name ]
-        
-        if self.type.is_type_external(header):
-            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
-        else:
-            type_string = self.type.with_no_const_or_asterisk()
+    def __init__(self, name: str, imgui_name: str, forward_declaration: bool,
+                 fields: List[Field], comments: Comments):
+        self.name: str                 = name
+        self.imgui_name: str           = imgui_name
+        self.forward_declaration: bool = forward_declaration
+        self.fields: List[DearStruct.Field] = fields
+        self.comments: Comments        = comments
 
-        return ["<{type}*>&io_{type_friendly}_{name}".format(
-            type=type_string,
-            type_friendly=self.type.with_no_const_or_asterisk(),
-            name=self.name
-        )]
-
-    def get_additional_returns(self) -> List[str]:
-        additional_returns = []
-        for i in range(self.size):
-            additional_returns.append(
-                "io_{type_friendly}_{name}[{i}]".format(
-                    type_friendly=self.type.with_no_const_or_asterisk(),
-                    name=self.name,
-                    i=i
-                )
-            )
-        return additional_returns
-
-    def is_array(self) -> bool:
-        return self.size > 1
+        self.methods: List[DearFunction] = []
     
-    def in_field_pyx_format(self, header: HeaderSpec):
-        with open("core/templates/fields.h") as f:
-            text = f.read()
-            getter = Template(text)
-            setter = Template(text)
-
-        type_string = self.type.as_cython_type(header)
-        res = "res"
-        if self.type.is_type_class(header):# and type_string == "Any":
-            type_string = header.library_name + "." + self.type.with_no_const_or_asterisk()
-            res = self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
-            # res = "_" + self.type.with_no_const_or_asterisk() + ".from_ptr(res)"
-        
-        getter.format(
-            field_name = helpers.pythonise_string(self.name),
-            cimgui_field_name = self.name,
-            field_type = type_string,
-            res = res,
-            python_type = self.type.as_python_type(header),
-        )
-
-        value = "value"
-        if self.type.with_no_const() == "ImVec2":
-            value = "_cast_tuple_ImVec2(value)"
-        elif self.type.with_no_const() == "ImVec4":
-            value = "_cast_tuple_ImVec4(value)"
-        elif self.type.is_type_class(header):
-            value = "value._ptr"
-        elif self.type.as_cython_type(header) == "str":
-            value = "_bytes(value)"
-
-        setter.format(
-            field_name = helpers.pythonise_string(self.name),
-            cimgui_field_name = self.name,
-            field_type = type_string,
-            res = res,
-            value = value,
-            python_type = self.type.as_python_type(header),
-        )
-
-        get_func = getter.compile(
-            is_getter=True
-        )
-
-        set_func = setter.compile(
-            is_getter=False
-        )
-
-        return helpers.indent_by(get_func + "\n" + set_func, 4)
-
-
-class ParameterList:
-    def __init__(self, parameters: List[Parameter]):
-        self.internal_parameters = parameters
-    
-    def __iter__(self):
-        self.i = 0
-        return self
-    
-    def __next__(self):
-        if self.i < len(self.internal_parameters):
-            to_return = self.internal_parameters[self.i]
-            self.i += 1
-            return to_return
-        raise StopIteration
-
-    def __len__(self):
-        return len(self.internal_parameters)
-
-    def in_pxd_format(self):
-        return [p.in_pxd_format() for p in self.internal_parameters]
-    
-
-class Typedef:
-    """Represents a base -> definition Typedef. Base and defintion are both
-    CTypes.
-    """
-
-    def __init__(self, base: CType, definition: CType):
-        self.base: CType = base
-        self.definition: CType = definition
-
     def __repr__(self):
-        return "Typedef(base: {}, {})".format(
-            self.base.__repr__(),
-            self.definition.__repr__(),
-        )
+        return "Struct({}({}))".format(self.name, ", ".join((str(f) for f in self.fields)))
 
-    def in_pxd_format(self) -> str:
-        if self.base.is_function_pointer():
-            return "    ctypedef {}".format(
-                self.base.internal_str \
-                    .replace(";", "") \
-                    .replace("(*)", " (*" + self.definition.internal_str + ")")
-            )
-        """Return the Typedef in *.pxd format
-        """
-        return "    ctypedef {} {}".format(
-            self.base.internal_str,
-            self.definition.internal_str
-        )
-
-
-class Enum:
-    """Represents a Enum. This is just a list of strings. Enums will have their
-    fixed size included in their name. 
-
-    TODO: Consider changing the list of strings to a list of Parameters.
-    """
-
-    def __init__(self, name: str, values: List[str]):
-        self.name: str = name
-        self.values: List[str] = values
-
-    def __repr__(self):
-        return "Enum({}):\n\t{}".format(
-            self.name,
-            "\n\t".join(self.values)
-        )
-
-    def in_pxd_format(self):
-        """Return the Enum in *.pxd format
-        """
-        value_output = StringIO()
-        if len(self.values) == 0:
-            value_output.write("pass")
-        else:
-            value_output.write("\n        ".join([v for v in self.values]))
-        return "    ctypedef enum {}:\n        {}".format(
-            self.name,
-            value_output.getvalue()
-        )
-    
-    def in_pyx_format(self, library_name):
-        value_output = StringIO()
-        for value in self.values:
-            snake_value = helpers.pythonise_string(value, make_upper=True) \
-                .replace("IM_GUI", "IMGUI")
-            value_output.write("{} = {}.{}\n".format(
-                snake_value,
-                library_name,
-                value
-            ))
-        return value_output.getvalue()
-
-
-class Function:
-    """Represents a non-method function. Functions have a name, return type and
-    list of parameters. Struct specific functions (methods) should not use this
-    class.
-    """
-
-    def __init__(self, name: str, return_type: CType, parameters: ParameterList, comment: str):
-        self.name: str = name
-        self.parameters: ParameterList = parameters
-        self.return_type: CType = return_type
-        self.comment = comment
-
-    def __repr__(self):
-        return "Function({}) -> {}:\n\t{}".format(
-            self.name,
-            self.return_type.internal_str,
-            "\n\t".join([p.__repr__() for p in self.parameters.internal_parameters])
-        )
-
-    def in_pxd_format(self):
-        """Return the Function in *.pxd format
-        """
-        return "    {} {}({}) except +".format(
-            self.return_type.internal_str,
-            self.name,
-            ", ".join(self.parameters.in_pxd_format())
-        )
-    
-    def in_pyx_format(self, header: HeaderSpec):
-        python_name = re.sub("^ig_", "", helpers.pythonise_string(self.name))
-        python_name = python_name.replace("im_gui_", "")
-        return function_body_template(
-            header,
-            self.parameters,
-            self.return_type,
-            python_name, 
-            self.name,
-            pretty_comment(self.comment),
-            is_constructor=False,
-        )
-
-
-class Method:
-    """Represents a struct specific function. Methods can be overloaded.
-    Overloaded methods share the same imgui_name. Methods can also be
-    constructors or destructors.
-    """
-
-    def __init__(self, imgui_name: str, cimgui_name: str, struct_name: str,
-                 return_type: CType, parameters: ParameterList,
-                 is_constructor: bool, is_destructor: bool, comment: str):
-        self.imgui_name: str = imgui_name
-        self.cimgui_name: str = cimgui_name
-        self.struct_name: str = struct_name
-        self.return_type: CType = return_type
-        self.parameters: ParameterList = parameters
-        self.is_constructor: bool = is_constructor
-        self.is_destructor: bool = is_destructor
-        self.comment: str = comment
-
-    def __repr__(self):
-        if self.is_constructor:
-            prefix = "@"
-        elif self.is_destructor:
-            prefix = "~"
-        else:
-            prefix = self.return_type.internal_str + " "
-
-        return "{}{}({})".format(
-            prefix,
-            self.cimgui_name,
-            ", ".join([p.__repr__() for p in self.parameters.internal_parameters])
-        )
-
-    def in_pxd_format(self):
-        """Return the Method in *.pxd format
-        """
-        return "    {} {}({}) except +".format(
-            self.return_type.internal_str if self.return_type is not None else "void",
-            self.cimgui_name,
-            ", ".join(self.parameters.in_pxd_format())
-        )
-    
-    def in_pyx_format(self, header: HeaderSpec):
-        function_name = helpers.pythonise_string(self.cimgui_name.replace(self.struct_name + "_", ""))
-        function_name = safe_python_name(function_name)
-        function_name = re.sub("^im_gui_", "", function_name)
-        function_name = re.sub("^im_", "", function_name)
-        function_name = re.sub("^imgui_", "", function_name)
-
-        output = function_body_template(
-            header,
-            self.parameters,
-            self.return_type,
-            function_name,
-            self.cimgui_name,
-            pretty_comment(self.comment),
-            is_constructor=self.is_constructor,
-            struct_name=self.struct_name
-        )
-        return helpers.indent_by(output, 4)
-
-
-class Struct:
-    """Represents a struct. Structs have a name and a list of parameters.
-    Parameters may have a size > 1, which means they are an array.
-    """
-
-    def __init__(self, name: str, fields: List[Parameter]):
-        self.name: str = name
-        self.fields: List[Parameter] = fields
-        self.methods: List[Method] = []
-
-    def __repr__(self):
-        return "Struct({}):\n\t{}\n\t{}".format(
-            self.name,
-            "\n\t".join([f.__repr__() for f in self.fields]),
-            "\n\t".join([m.__repr__() for m in self.methods])
-        )
-
-    def add_method(self, method: Method):
-        """Can be used later to assign a Method to this struct.
-        """
+    def add_method(self, method: DearFunction):
         self.methods.append(method)
 
-    def sort_methods(self):
-        """Sorts the methods so that the constructors and destructor are first.
-        """
-        to_sort_list = []
 
-        for method in self.methods:
-            if method.is_constructor:
-                to_sort_list.append((0, method.cimgui_name, method))
-                continue
+class DearFunction:
+    class Argument:
+        def __init__(self, name: str, _type: DearType, is_array: bool,
+                     default_value: Any, comments: Comments):
+            self.name: str          = name
+            self.type: DearType     = _type
+            self.is_array: bool     = is_array
+            self.comments: Comments = comments
 
-            if method.is_destructor:
-                to_sort_list.append((1, method.cimgui_name, method))
-                continue
+            default_lookup = {
+                "NULL": "None",
+                "true": "True",
+                "false": "False",
+            }
 
-            to_sort_list.append((2, method.cimgui_name, method))
-
-        to_sort_list.sort()
-        self.methods = [m[2] for m in to_sort_list]
-
-    def in_pxd_forward_declaration_format(self) -> str:
-        """Return the Struct in *.pxd format when you want to do a forward
-        declaration of the struct.
-        """
-        return f"    ctypedef struct {self.name}"
-
-    def in_pxd_format(self) -> str:
-        """Return the Struct in *.pxd format
-        """
-        field_output = StringIO()
-        if len(self.fields) == 0:
-            field_output.write("        pass\n")
-        else:
-            for parameter in self.fields:
-                field_output.write("        {}\n".format(
-                    parameter.in_pxd_format()
-                ))
-        return "    ctypedef struct {}:\n{}".format(
+            if default_value is not None:
+                if default_value in default_lookup:
+                    default_value = default_lookup[default_value]
+                
+                if "ImVec2" in default_value:
+                    default_value = default_value.replace("ImVec2", "")
+                    default_value = default_value.replace("f", "")
+                elif "ImVec4" in default_value:
+                    default_value = default_value.replace("ImVec4", "")
+                    default_value = default_value.replace("f", "")
+                
+                if _type.raw_type == "float":
+                    default_value = default_value.replace("f", "")
+            
+            self.default_value: Any = default_value
+        
+        def __repr__(self):
+            return "Arg({}: {})".format(self.name, self.type)
+    
+    def __init__(self, name: str, imgui_name: str, return_type: DearType,
+                 arguments: List[Argument], is_default_argument_helper: bool,
+                 is_manual_helper: bool, is_imstr_helper: bool, 
+                 has_imstr_helper: bool, comments: Comments):
+        self.name: str                        = name
+        self.python_name: str                 = name
+        self.imgui_name: str                  = imgui_name
+        self.return_type: DearType            = return_type
+        self.arguments: List[DearFunction.Argument] = arguments
+        self.is_default_argument_helper: bool = is_default_argument_helper
+        self.is_manual_helper: bool           = is_manual_helper
+        self.is_imstr_helper: bool            = is_imstr_helper
+        self.has_imstr_helper: bool           = has_imstr_helper
+        self.comments: Comments               = comments
+    
+    def __repr__(self):
+        return "Function({}({}) -> {})".format(
             self.name,
-            field_output.getvalue()
+            ", ".join((str(a) for a in self.arguments)),
+            self.return_type
         )
+    
+    def name_omitted_imgui_prefix(self):
+        return self.python_name.replace("ImGui_", "", 1)
 
 
-class HeaderSpec:
-    """Represents a complete parsed header file. This contains functions to
-    output the header file in various formats. Structs, Enums, Typedefs,
-    Functions (and Methods) sometimes require each other to perform some
-    operations. Thus, this class acts as a wrapper of sorts.
+def pythonise_string(string: str, make_upper=False) -> str:
+    """
+    Converts a string to be snake_case or UPPER_CASE depending on the value
+    of make_upper. Returns a new string.
     """
 
-    def __init__(self, header_data: List[HeaderData], library_name):
-        self.header_data: List[HeaderData] = header_data
-        self.structs: List[Struct] =     sum([h.structs   for h in header_data], start=[])
-        self.enums: List[Enum] =         sum([h.enums     for h in header_data], start=[])
-        self.typedefs: List[Typedef] =   sum([h.typedefs  for h in header_data], start=[])
-        self.functions: List[Function] = sum([h.functions for h in header_data], start=[])
-        self.library_name: str = library_name
-
-    def in_pxd_format(self):
-        """Returns the Header in fully complete *.pxd format for Cython
-        """
-        output = StringIO()
-        output.write("# -*- coding: utf-8 -*-\n")
-        output.write("# distutils: language = c++\n\n")
-        output.write("from libcpp cimport bool\n\n")
-        for header in self.header_data:
-            output.write(header.in_pyd_format() + "\n")
-        return output.getvalue()
-
-    def _in_raw_pyx_format(self):
-        output = StringIO()
-        # output.write("# distutils: language = c++\n")
-        # output.write("# cython: language_level = 3\n")
-        # output.write("# cython: embedsignature=True\n\n")
-
-        output.write(
-            "# [Imports]\n"
-            "import cython\n"
-            "import ctypes\n"
-            "import array\n"
-            "from collections import namedtuple\n"
-            "from cython.operator import dereference\n"
-            "from typing import Callable, Any, List, Sequence\n"
-            "\n"
-            "cimport ccimgui\n"
-            "from cython.view cimport array as cvarray\n"
-            "from libcpp cimport bool\n"
-            "from libc.float cimport FLT_MIN as LIBC_FLT_MIN\n"
-            "from libc.float cimport FLT_MAX as LIBC_FLT_MAX\n"
-            "from libc.stdint cimport uintptr_t\n"
-            "from libc.string cimport strncpy\n"
-            "# [End Imports]\n"
-            "\n"
-            "\n"
-        )
-
-        output.write("# [Enums]\n")
-        for enum in self.enums:
-            output.write(enum.in_pyx_format(self.library_name) + "\n")
-        output.write("# [End Enums]\n\n")
-
-        output.write("\n".join([
-            "# [Constant Functions]",
-            "# Vec2 = namedtuple('Vec2', ['x', 'y'])",
-            "# Vec4 = namedtuple('Vec4', ['x', 'y', 'z', 'w'])",
-            "",
-            "cdef bytes _bytes(str text):",
-            # "    if text is None:",
-            # "        return NULL",
-            # "    cdef bytes encoded_text = text.encode()",
-            # "    cdef char* c_text = <char*>encoded_text",
-            "    return text.encode()",
-            "",
-            "cdef str _from_bytes(bytes text):",
-            "    return <str>(text.decode('utf-8', errors='ignore'))",
-            "",
-            f"cdef _cast_ImVec2_tuple({self.library_name}.ImVec2 vec):",
-            "    # return Vec2(vec.x, vec.y)",
-            "    return (vec.x, vec.y)",
-            "",
-            f"cdef {self.library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:",
-            f"    cdef {self.library_name}.ImVec2 vec",
-            "    if len(pair) != 2:",
-            "        raise ValueError('pair param must be length of 2')",
-            "    vec.x, vec.y = pair",
-            "    return vec",
-            "",
-            f"cdef _cast_ImVec4_tuple({self.library_name}.ImVec4 vec):",
-            "    # return Vec4(vec.x, vec.y, vec.z, vec.w)",
-            "    return (vec.x, vec.y, vec.z, vec.w)",
-            "",
-            f"cdef {self.library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):",
-            f"    cdef {self.library_name}.ImVec4 vec",
-            "    if len(quadruple) != 4:",
-            "        raise ValueError('quadruple param must be length of 4')",
-            "",
-            "    vec.x, vec.y, vec.z, vec.w = quadruple",
-            "    return vec",
-            "",
-            "",
-            "def _py_vertex_buffer_vertex_pos_offset():",
-            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos",
-            "",
-            "def _py_vertex_buffer_vertex_uv_offset():",
-            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv",
-            "",
-            "def _py_vertex_buffer_vertex_col_offset():",
-            "    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col",
-            "",
-            "def _py_vertex_buffer_vertex_size():",
-            "    return sizeof(ccimgui.ImDrawVert)",
-            "",
-            "def _py_index_buffer_index_size():",
-            "    return sizeof(ccimgui.ImDrawIdx)",
-            "",
-            "cdef class BoolPtr:",
-            "    cdef public bool ptr",
-            "",
-            "    def __init__(self, initial_value: bool):",
-            "        self.ptr: bool = initial_value",
-            "",
-            "    def __bool__(self):",
-            "        return self.ptr",
-            "",
-            "cdef class IntPtr:",
-            "    cdef public int value",
-            "",
-            "    def __init__(self, initial_value: int):",
-            "        self.value: int = initial_value",
-            "",
-            "cdef class FloatPtr:",
-            "    cdef public float value",
-            "",
-            "    def __init__(self, initial_value: float):",
-            "        self.value = initial_value",
-            "",
-            "cdef class DoublePtr:",
-            "    cdef public double value",
-            "",
-            "    def __init__(self, initial_value: float):",
-            "        self.value = initial_value",
-            "",
-            "cdef class StrPtr:",
-            "    cdef char* buffer",
-            "    cdef public int buffer_size",
-            "",
-            "    def __init__(self, initial_value: str, buffer_size=256):",
-            "        self.buffer = <char*>ccimgui.igMemAlloc(buffer_size)",
-            "        self.buffer_size: int = buffer_size",
-            "        self.value = initial_value",
-            "    ",
-            "    def __dealloc__(self):",
-            "        ccimgui.igMemFree(self.buffer)",
-            "",
-            "    @property",
-            "    def value(self):",
-            "        return _from_bytes(self.buffer)",
-            "    @value.setter",
-            "    def value(self, value: str):",
-            "        strncpy(self.buffer, _bytes(value), self.buffer_size - 1)",
-            "        self.buffer[min((self.buffer_size - 1), len(value))] = 0",
-            "",
-            "cdef class Vec2Ptr:",
-            "    cdef public FloatPtr _x",
-            "    cdef public FloatPtr _y",
-            "",
-            "    def __init__(self, x: float, y: float):",
-            "        self._x = FloatPtr(x)",
-            "        self._y = FloatPtr(y)",
-            "",
-            "    @property",
-            "    def x(self):",
-            "        return self._x.value",
-            "    @x.setter",
-            "    def x(self, x):",
-            "        self._x.value = x",
-            "    @property",
-            "    def y(self):",
-            "        return self._y.value",
-            "    @y.setter",
-            "    def y(self, y):",
-            "        self._y.value = y",
-            "",
-            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):",
-            "        assert len(float_ptrs) >= 2",
-            "        self._x = float_ptrs[0]",
-            "        self._y = float_ptrs[1]",
-            "",
-            "    def as_floatptrs(self) -> Sequence[FloatPtr]:",
-            "        return [",
-            "            self._x,",
-            "            self._y,",
-            "        ]",
-            "",
-            "    def vec(self) -> Sequence[float]:",
-            "        return (",
-            "            self.x,",
-            "            self.y,",
-            "        )",
-            "",
-            "    def copy(self) -> Vec2Ptr:",
-            "        return Vec2Ptr(*self.vec())",
-            "",
-            "    cdef void from_array(self, float* array):",
-            "        self._x.value = array[0]",
-            "        self._y.value = array[1]",
-            "",
-            "    cdef void to_array(self, float* array):",
-            "        array[0] = self.x",
-            "        array[1] = self.y",
-            "",
-            "cdef class Vec4Ptr:",
-            "    cdef public FloatPtr _x",
-            "    cdef public FloatPtr _y",
-            "    cdef public FloatPtr _z",
-            "    cdef public FloatPtr _w",
-            "",
-            "    def __init__(self, x: float, y: float, z: float, w: float):",
-            "        self._x = FloatPtr(x)",
-            "        self._y = FloatPtr(y)",
-            "        self._z = FloatPtr(z)",
-            "        self._w = FloatPtr(w)",
-            "",
-            "    @property",
-            "    def x(self):",
-            "        return self._x.value",
-            "    @x.setter",
-            "    def x(self, x):",
-            "        self._x.value = x",
-            "    @property",
-            "    def y(self):",
-            "        return self._y.value",
-            "    @y.setter",
-            "    def y(self, y):",
-            "        self._y.value = y",
-            "    @property",
-            "    def z(self):",
-            "        return self._z.value",
-            "    @z.setter",
-            "    def z(self, z):",
-            "        self._z.value = z",
-            "    @property",
-            "    def w(self):",
-            "        return self._w.value",
-            "    @w.setter",
-            "    def w(self, w):",
-            "        self._w.value = w",
-            "",
-            "    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):",
-            "        assert len(float_ptrs) >= 4",
-            "        self._x = float_ptrs[0]",
-            "        self._y = float_ptrs[1]",
-            "        self._z = float_ptrs[2]",
-            "        self._w = float_ptrs[3]",
-            "",
-            "    def as_floatptrs(self) -> Sequence[FloatPtr]:",
-            "        return [",
-            "            self._x,",
-            "            self._y,",
-            "            self._z,",
-            "            self._w,",
-            "        ]",
-            "",
-            "    def vec(self) -> Sequence[float]:",
-            "        return (",
-            "            self.x,",
-            "            self.y,",
-            "            self.z,",
-            "            self.w,",
-            "        )",
-            "",
-            "    def copy(self) -> Vec4Ptr:",
-            "        return Vec4Ptr(*self.vec())",
-            "",
-            "    cdef void from_array(self, float* array):",
-            "        self._x.value = array[0]",
-            "        self._y.value = array[1]",
-            "        self._z.value = array[2]",
-            "        self._w.value = array[3]",
-            "",
-            "    cdef void to_array(self, float* array):",
-            "        array[0] = self.x",
-            "        array[1] = self.y",
-            "        array[2] = self.z",
-            "        array[3] = self.w",
-            "",
-            "def IM_COL32(int r, int g, int b, int a) -> int:",
-            "    cdef unsigned int output = 0",
-            "    output |= a << 24",
-            "    output |= b << 16",
-            "    output |= g << 8",
-            "    output |= r << 0",
-            "    return output",
-            "",
-            "FLT_MIN = LIBC_FLT_MIN",
-            "FLT_MAX = LIBC_FLT_MAX",
-            "IMGUI_PAYLOAD_TYPE_COLOR_3F = \"_COL3F\"",
-            "IMGUI_PAYLOAD_TYPE_COLOR_4F = \"_COL4F\"",
-            "",
-            "# [End Constant Functions]",
-            "",
-            "",
-            "",
-        ]))
-
-        for function in self.functions:
-            output.write("# [Function]\n")
-            output.write("# ?use_template(False)\n")
-            output.write("# ?active(False)\n")
-            output.write(function.in_pyx_format(self) + "\n")
-            output.write("# [End Function]\n\n")
-        
-        for struct in self.structs:
-            with open("core/templates/classes.h") as f:
-                template = f.read()
-            
-            output.write("# [Class]\n")
-            output.write("# [Class Constants]\n")
-            output.write("# ?use_template(False)\n")
-            output.write(template.format(
-                struct_name=struct.name,
-                library_name=self.library_name,
-            ))
-            output.write("    # [End Class Constants]\n\n")
-            
-            for method in struct.methods:
-                output.write("    # [Method]\n")
-                output.write("    # ?use_template(False)\n")
-                output.write("    # ?active(False)\n")
-                output.write(method.in_pyx_format(self) + "\n")
-                output.write("    # [End Method]\n\n")
-
-            for field in struct.fields:
-                output.write("    # [Field]\n")
-                output.write("    # ?use_template(False)\n")
-                output.write("    # ?active(False)\n")
-                output.write(field.in_field_pyx_format(self) + "\n")
-                output.write("    # [End Field]\n\n")
-
-            output.write("# [End Class]\n\n")
-        return output.getvalue()
-
-    def get_merged_collection(
-        self,
-        old_collection: PyxCollection,
-        template_collection: PyxCollection
-    ) -> Tuple[PyxCollection, PyxCollection, PyxCollection]:
-
-        """
-        Steps:
-        - Read core_generated.pyx -> old_collection
-        - Read core_template.pyx  -> template_collection
-        - Compute new pyx         -> new_collection
-        - Convert each content type to a PyxCollection so that they can be compared.
-        """
-        new_collection: PyxCollection = self.as_pyx_collection()
-
-        dmp = diff_match_patch()
-
-        """
-        - For each mergable in the new collection, find it's template
-          counterpart.
-            - If it doesn't exist then keep the new mergable.
-            - If it exists, check to see if use_template is not checked. If so,
-              keep the new mergable too.
-            - If it exists and use_template is checked. Make note of the old
-              mergable too. If the old mergable doesn't exist then keep the
-              template version completely
-                - If it does exist:
-                - Compute patches between the old and the new. Apply the patches
-                  to the template version and keep the template mergable.
-            - Finally, check to see if the mergable is "active". If it's active
-              then the resulting mergable should be commented out.
-            - This should then leave us with 4 files:
-                - core_generated_prev.pyx -> The old_collection as a backup.
-                - core_generated.pyx  ->  The new_collection unchanged.
-                - core_template.pyx   ->  The new_collection merged with the
-                                          template
-                - core.pyx            ->  The new_collection merged with the
-                                          template but also adhering to the
-                                          active flag, commenting out the impl.
-                                          as necessary.
-        """
-        to_keep = []
-        n_mergables = new_collection.get_all_mergable()
-        merge_failed = False
-        template_mergables_found = set()
-        for n_mergable in n_mergables:
-            n_type, n_name, n_obj = n_mergable
-            t_mergable = template_collection.get_mergeable_by_name(n_type, n_name)
-
-            # No template found
-            if t_mergable is None:
-                print("Not in template. Keeping new {} - {}.".format(n_type, n_name))
-                to_keep.append(n_mergable)
-                continue
-            
-            template_mergables_found.add(t_mergable)
-            
-            _, _, t_obj = t_mergable
-            # If the corresponding template function has not been set to
-            # use_template then ignore the template.
-            if not t_obj.use_template:
-                # print("Overwriting existing. Not using template {} - {}.".format(n_type, n_name))
-                to_keep.append(n_mergable)
-                continue
-            
-            o_mergable = old_collection.get_mergeable_by_name(n_type, n_name)
-            if o_mergable is None:
-                print("No history. Keeping template {} - {}.".format(n_type, n_name))
-                to_keep.append(t_mergable)
-                continue
-
-            _, _, o_obj = o_mergable
-            o_to_n_patches = dmp.patch_make(
-                "\n".join(o_obj.impl),
-                "\n".join(n_obj.impl)
-            )
-            merged_impl, successes = dmp.patch_apply(o_to_n_patches, "\n".join(t_obj.impl))
-            if False in successes:
-                merge_failed = True
-                print("---------------------------------------------------")
-                print("1. Could not apply patch between old:")
-                print("\n".join(o_obj.impl))
-                print("---------------------------------------------------")
-                print("2. And the new:")
-                print("\n".join(n_obj.impl))
-                print("---------------------------------------------------")
-                print("3. To template:")
-                print("\n".join(t_obj.impl))
-                print("---------------------------------------------------")
-                print("4. We got to:")
-                print(merged_impl)
-                print("---------------------------------------------------")
-                continue
-            
-            if len(successes) > 0:
-                print("Patched {} - {} successfully".format(n_type, n_name))
-
-            # Should keep any template specific information too
-            t_obj.impl = merged_impl.split("\n")
-            to_keep.append((n_type, n_name, t_obj))
-            # old_collection.apply_merge(n_mergable)
-
-        for t_mergable in template_collection.get_all_mergable():
-            if t_mergable in template_mergables_found:
-                continue
-            _, t_name, _ = t_mergable
-            print(f"Adding standalone template mergable: {t_name}")
-            to_keep.append(t_mergable)
-
-        for merged_item in to_keep:
-            new_collection.apply_merge(merged_item)
-
-        if merge_failed:
-            return old_collection, self.as_pyx_collection(), None
+    new_string = ""
+    isupper_count = 0
+    for i, char in enumerate(string.replace("_", "")):
+        if char.isupper():
+            if isupper_count == 0 and i > 0:
+                new_string += "_"
+            isupper_count += 1
+        elif isupper_count > 1 and i > 2: # i condition because of vslider_float
+            isupper_count = 0
+            new_string += "_"
         else:
-            return old_collection, self.as_pyx_collection(), new_collection
-
-    def as_pyx_collection(self) -> PyxCollection:
-        return create_pyx_collection(self._in_raw_pyx_format())
-
-    def in_pyi_format(self):
-        # TODO:
-        pass
-
-
-class HeaderData:
-    def __init__(self, structs, enums, typedefs, functions, header_file_name):
-        self.structs = structs
-        self.enums = enums
-        self.typedefs = typedefs
-        self.functions = functions
-        self.header_file_name = header_file_name
-
-    def in_pyd_format(self):
-        """Returns the Header in fully complete *.pxd format for Cython
-        """
-        output = StringIO()
-        output.write('cdef extern from "{}":\n'.format(self.header_file_name))
-        for struct in self.structs:
-            output.write(f"{struct.in_pxd_forward_declaration_format()}\n")
-        output.write("\n\n")
-
-        for typedef in self.typedefs:
-            output.write(f"{typedef.in_pxd_format()}\n")
-        output.write("\n\n")
-
-        for enum in self.enums:
-            output.write(f"{enum.in_pxd_format()}\n\n")
-        output.write("\n\n")
-
-        for struct in self.structs:
-            output.write(f"{struct.in_pxd_format()}\n")
-
-        for function in self.functions:
-            output.write(f"{function.in_pxd_format()}\n")
-
-        output.write("\n")
-        for struct in self.structs:
-            for method in struct.methods:
-                output.write(f"{method.in_pxd_format()}\n")
-
-        return output.getvalue()
+            isupper_count = 0
+        
+        new_string += char
+    
+    if make_upper:
+        return new_string.upper()
+    
+    return new_string.lower()
 
 
-def safe_python_name(name: str, suffix="_") -> str:
+def safe_python_name(name: str, edit_format="{}_") -> str:
     """Modifies a string to not be a keyword or built-in function. Not using
     this causes Cython to freak out. This adds an underscore if a conflict is
     found. A new string is returned.
     """
     if name in keyword.kwlist or name in dir(builtins) or name == "format":
-        name = name + suffix
+        name = edit_format.format(name)
     return name
 
 
-def header_model(base, library_name):
-    def parse_structs_and_enums(filename) -> Tuple[List[Struct], List[Enum]]:
-        with open(filename) as f:
-            model = json.load(f)
+def replace_after(src: str, marker_substring: str, new_impl: str) -> str:
+    ms_len = len(marker_substring)
+    src = src[:src.index(marker_substring) + ms_len] + new_impl
+    return src
 
-        structs_json = model["structs"]
-        structs: List[Struct] = []
-        for name, fields_list in structs_json.items():
-            fields = []
-            for field_json in fields_list:
-                _type = field_json["type"]
-                if _type == "union { int val_i; float val_f; void* val_p;}":
-                    fields.append(Parameter("val_i", CType("int")))
-                    fields.append(Parameter("val_f", CType("float")))
-                    fields.append(Parameter("val_p", CType("void*")))
-                    continue
 
-                field_name = safe_python_name(field_json["name"])
-                if field_name == "...":
-                    continue
+def wrap_text(text, to_size=60) -> str:
+    """
+    Adds newlines to text such that at least 'to_size' characters are present on
+    each line. When a 'to_size' characters are found, the next space will be
+    replaced by a newline.
+    """
+    output = ""
+    i = 0
+    for char in text:
+        if i < to_size:
+            output += char
+        elif char == " ":
+            output += "\n"
+            i = 0
+        else:
+            output += char
 
-                # This means that we need to add an additional data struct to
-                # represent this type. This struct does not appear in the .json
-                # file.
-                if "template_type" in field_json and _type not in [s.name for s in structs]:
-                    template_type = field_json["template_type"]
-                    template_fields = [
-                        Parameter("Size", CType("int")),
-                        Parameter("Capacity", CType("int")),
-                        Parameter("Data", CType(template_type + "*")),
-                    ]
-                    structs.append(Struct(_type, template_fields))
+        i += 1
+    return output
 
-                size = 1
-                if "size" in field_json:
-                    field_name = re.sub("\[.*\]", "", field_name)
-                    size = field_json["size"]
 
-                fields.append(Parameter(
-                    field_name,
-                    CType(_type),
-                    size=size
-                ))
-            structs.append(Struct(name, fields))
+def parse_binding_json(cimgui_json, definitions) -> DearBinding:
+    def parse_comment(json_containing_comment) -> Comments:
+        proceeding = []
+        attached = None
+        if "comments" not in json_containing_comment:
+            return Comments(proceeding, attached)
+        
+        if "attached" in json_containing_comment["comments"]:
+            attached = json_containing_comment["comments"]["attached"]
+        
+        if "preceding" in json_containing_comment["comments"]:
+            proceeding = json_containing_comment["comments"]["preceding"]
+        return Comments(proceeding, attached)
 
-        def dependency_aware_struct_sort(structs: List[Struct]):
-            # First, initialise the dictionary to contain the names of the structs
-            # as keys
-            dependency_graph = {s.name: [] for s in structs}
+    def passes_conditional(obj_containing_conditional, definitions, verbose=False):
+        def is_defined(expression, definitions):
+            for define, _ in definitions:
+                if expression == define:
+                    return True
+            return False
+        
+        def is_true(expression, definitions):
+            for define, value in definitions:
+                if expression == define:
+                    return value
+            return False
 
-            # Then, add the parameters to each struct that is known to be a struct
-            # itself. Pointers to structs are okay because we know their size on
-            # compilation.
-            for struct in structs:
-                for parameter in struct.fields:
-                    parameter: Parameter
-                    _type: CType = parameter.type
+        if "conditionals" not in obj_containing_conditional:
+            return True
 
-                    # We know the size of pointers so they can be ignored
-                    if _type.is_pointer():
-                        continue
+        conditional_list = obj_containing_conditional["conditionals"]
+        
+        if verbose:
+            print(conditional_list, end=" ")
 
-                    if _type.internal_str in dependency_graph:
-                        dependency_graph[struct.name].append(parameter)
-
-            # To improve time complexity, create a lookup between the name of the struct
-            # to the struct itself.
-            struct_lookup = {s.name: s for s in structs}
-
-            # Continue to pop structs that have no more dependencies.
-            safe_struct_order = []
-            while len(dependency_graph) > 0:
-                to_remove = []
-                for struct_name, parameters in dependency_graph.items():
-                    if len(parameters) != 0:
-                        continue
-
-                    safe_struct_order.append(struct_lookup[struct_name])
-                    to_remove.append(struct_name)
-
-                for old_struct_name in to_remove:
-                    dependency_graph.pop(old_struct_name)
-
-                # When we find the structs with no dependencies, go and remove themself
-                # from the other structs who might be waiting on this one.
-                for parameters in dependency_graph.values():
-                    parameter_to_remove = []
-                    for parameter in parameters:
-                        parameter: Parameter
-                        if parameter.type.internal_str in to_remove:
-                            parameter_to_remove.append(parameter)
-
-                    for parameter in parameter_to_remove:
-                        parameters.remove(parameter)
-            return safe_struct_order
-
-        structs = dependency_aware_struct_sort(structs)
-
-        enums_json = model["enums"]
-        enums = []
-        for name, value_list in enums_json.items():
-            values = []
-            for value_json in value_list:
-                value_name = value_json["name"]
-                if "size" in value_json:
-                    value_name = re.sub("\[.*\]", "", value_name)
-                    value_name += "[{}]".format(value_json["size"])
-
-                values.append(value_name)
-            enums.append(Enum(name, values))
-
-        enums.sort(key=lambda e: e.name)
-        return structs, enums
-
-    def parse_typedefs(structs: List[Struct], filename) -> List[Typedef]:
-        with open(filename) as f:
-            model = json.load(f)
-
-        typedefs = []
-        for definition, base in model.items():
-            if base.startswith("struct "):
-                potential_struct_name = base.replace("struct ", "")
-                if potential_struct_name not in [s.name for s in structs]:
-                    structs.append(Struct(potential_struct_name, []))
+        for conditional_obj in conditional_list:
+            condition, expression = conditional_obj.values()
+            if condition == "ifndef" and not is_defined(expression, definitions):
                 continue
 
-            # Ignore these
-            # ctypedef T value_type
-            # ctypedef const value_type* const_iterator
-            # ctypedef value_type* iterator
-            ignore_definitions = ["value_type", "const_iterator", "iterator"]
-            if definition in ignore_definitions:
+            if condition == "ifdef" and is_defined(expression, definitions):
+                continue
+            
+            if condition == "if":
+                if "defined" in expression or is_true(expression, definitions):
+                    continue
+            
+            if verbose:
+                print("Failed")
+            return False
+        if verbose:
+            print("Failed")
+        return True
+
+
+    # Enums
+    parsed_enums: List[DearEnum] = []
+    for enum_obj in cimgui_json["enums"]:
+        if not passes_conditional(enum_obj, definitions):
+            continue
+
+        enum_name = enum_obj["name"]
+
+        parsed_enums_values = []
+        for enum_element_obj in enum_obj["elements"]:
+            if not passes_conditional(enum_element_obj, definitions):
                 continue
 
-            typedefs.append(Typedef(
-                CType(base),
-                CType(definition)
+            enum_element_name = enum_element_obj["name"]
+            if "value" in enum_element_obj:
+                enum_element_value = enum_element_obj["value"]
+            else:
+                enum_element_value = None
+            enum_element_comment = parse_comment(enum_element_obj)
+            parsed_enums_values.append(DearEnum.Value(
+                enum_element_name,
+                enum_element_value,
+                enum_element_comment,
             ))
+        enum_comments = parse_comment(enum_obj)
+        parsed_enums.append(DearEnum(enum_name, parsed_enums_values, enum_comments))
+    
+    # Typedefs
+    parsed_typedefs: List[DearTypedef] = []
+    for typedef_obj in cimgui_json["typedefs"]:
+        if not passes_conditional(typedef_obj, definitions):
+            continue
 
-        def custom_typedef_sort(typedef: Typedef):
-            priority = [
-                "int",
-                "unsigned",
-                "signed",
-            ]
+        typedef_name = typedef_obj["name"]
+        typedef_type = typedef_obj["type"]["declaration"]
+        typedef_comments = parse_comment(typedef_obj)
+        parsed_typedefs.append(DearTypedef(
+            DearType(typedef_type),
+            DearType(typedef_name),
+            typedef_comments,
+        ))
+    
+    # Structs
+    parsed_structs: List[DearStruct] = []
+    for struct_obj in cimgui_json["structs"]:
+        if not passes_conditional(struct_obj, definitions):
+            continue
 
-            for i, _type in enumerate(priority):
-                if typedef.base.internal_str.startswith(_type):
-                    return (i, typedef.base.internal_str)
-            return (len(priority), typedef.base.internal_str)
+        # Ignore any anonymous structs
+        if struct_obj["is_anonymous"]:
+            continue
 
-        typedefs.sort(key=custom_typedef_sort)
-        return typedefs
-
-    def parse_functions_and_methods(filename) -> Tuple[List[Function], List[Method]]:
-        with open(filename) as f:
-            model = json.load(f)
-
-        functions = []
-        methods = []
-        for imgui_function_name, overloads in model.items():
-            for function_json in overloads:
-                # Parse the parameters of the method/function
-                parameters = []
-                for parameter_json in function_json["argsT"]:
-                    parameter_name = parameter_json["name"]
-
-                    # Extract the default value if there is one
-                    default_value = None
-                    if parameter_name in function_json["defaults"]:
-                        default_value = function_json["defaults"][parameter_name]
-                    
-                    parameter_name = safe_python_name(parameter_name)
-                    if parameter_name == "...":
-                        continue
-
-
-                    # Extracts the float[3] into float and size
-                    parameter_type = parameter_json["type"]
-                    size = 1
-                    found = re.match("^(.*)\[(.*)\].*$", parameter_type)
-                    if found is not None and len(found.group(2)) > 0:
-                        parameter_type = found.group(1)
-                        size = int(found.group(2))
-
-                    parameters.append(Parameter(
-                        parameter_name,
-                        CType(parameter_type),
-                        default_value=default_value,
-                        size=size
-                    ))
-
-                # ov_cimguiname : the overloaded cimgui name (if absent it would be taken from cimguiname)
-                # cimguiname : the name without overloading (this should be used if there is not ov_cimguiname)
-                cimgui_name = function_json["cimguiname"]
-                if "ov_cimguiname" in function_json:
-                    cimgui_name = function_json["ov_cimguiname"]
-                
-                function_comment = ""
-                if "comment" in function_json:
-                    function_comment = function_json["comment"] \
-                        .replace("// ", "") \
-                        .replace('"', "") \
-                        .replace('{', "{{") \
-                        .replace('}', "}}") \
-                        .capitalize()
-
-                if function_json["stname"] != "":
-                    # Method
-                    is_constructor = "constructor" in function_json
-                    is_destructor = "destructor" in function_json
-                    struct_name = function_json["stname"]
-
-                    return_type = None
-                    if "ret" in function_json:
-                        return_type = CType(function_json["ret"])
-                    elif is_constructor:
-                        return_type = CType(struct_name + "*")
-
-                    methods.append(Method(
-                        imgui_function_name,
-                        cimgui_name,
-                        struct_name,
-                        return_type,
-                        ParameterList(parameters),
-                        is_constructor,
-                        is_destructor,
-                        function_comment
-                    ))
-                else:
-                    # Function
-                    functions.append(Function(
-                        cimgui_name,
-                        CType(function_json["ret"]),
-                        ParameterList(parameters),
-                        function_comment
-                    ))
-
-        functions.sort(key=lambda f: f.name)
-        return functions, methods
-
-    structs, enums = parse_structs_and_enums(base + "/structs_and_enums.json")
-    typedefs = parse_typedefs(structs, base + "/typedefs_dict.json")
-    functions, methods = parse_functions_and_methods(
-        base + "/definitions.json")
-
-    impl_functions, _ = parse_functions_and_methods(
-        base + "/impl_definitions.json")
-
-    # Pairs the methods to a struct.
-    struct_lookup = {s.name: s for s in structs}
-    for method in methods:
-        try:
-            struct_lookup[method.struct_name].add_method(method)
-        except KeyError:
-            pass
-
-    for struct in structs:
-        struct.sort_methods()
-
-    # I want to remove any mention to these
-    # // Callback and functions types
-    # typedef int     (*ImGuiInputTextCallback)(ImGuiInputTextCallbackData* data);    // Callback function for ImGui::InputText()
-    # typedef void    (*ImGuiSizeCallback)(ImGuiSizeCallbackData* data);              // Callback function for ImGui::SetNextWindowSizeConstraints()
-    # typedef void*   (*ImGuiMemAllocFunc)(size_t sz, void* user_data);               // Function signature for ImGui::SetAllocatorFunctions()
-    # typedef void    (*ImGuiMemFreeFunc)(void* ptr, void* user_data);                // Function signature for ImGui::SetAllocatorFunctions()
-    to_remove = [
-        "ImDrawCallback",
-        # "ImGuiInputTextCallback",
-        "ImGuiSizeCallback",
-        "ImGuiMemAllocFunc",
-        "ImGuiMemFreeFunc",
-    ]
-
-    for bad_function_pointer in to_remove:
-        # Remove any typedefs that mention it
-        typedefs = [
-            t for t in typedefs if bad_function_pointer not in t.definition.internal_str]
-
-        # Remove any structs that have this as a field.
-        for struct in structs:
-            struct.fields = [
-                p for p in struct.fields if bad_function_pointer not in p.type.internal_str]
-
-            # Remove any methods that reference it.
-            keep_methods = []
-            for method in struct.methods:
-                failed = False
-                for parameter in method.parameters.internal_parameters:
-                    if bad_function_pointer in parameter.type.internal_str:
-                        failed = True
-                        break
-                if failed:
-                    continue
-                keep_methods.append(method)
-            struct.methods = keep_methods
-
-        # Remove any structs that reference that data that the function pointer would
-        # normally return -> Some Data struct.
-        structs = [s for s in structs if bad_function_pointer +
-                   "Data" not in s.name]
-
-        # Remove any functions that have a callback as a parameter.
-        keep_functions = []
-        for function in functions:
-            failed = False
-            for parameter in function.parameters.internal_parameters:
-                if bad_function_pointer in parameter.type.internal_str:
-                    failed = True
-                    break
-            if failed:
+        struct_name = struct_obj["name"]
+        struct_original_fully_qualified_name = struct_obj["original_fully_qualified_name"]
+        struct_forward_declaration = struct_obj["forward_declaration"]
+        struct_fields = []
+        for struct_field_obj in struct_obj["fields"]:
+            if not passes_conditional(struct_field_obj, definitions):
                 continue
-            keep_functions.append(function)
-        functions = keep_functions
 
-    cimgui_h = HeaderData(structs, enums, typedefs, functions, "cimgui.h")
+            # Ignore any anonymous fields
+            if struct_field_obj["is_anonymous"]:
+                continue
 
-    # Implementation Specific
-    cimgui_impl_h = HeaderData(
-        structs=[
-            Struct("GLFWwindow", []),
-            Struct("GLFWmonitor", []),
-        ],
-        enums=[],
-        typedefs=[],
-        functions=impl_functions,
-        header_file_name="cimgui_impl.h"
+            struct_field_type: str = struct_field_obj["type"]["declaration"]
+
+            # Weird edge case where instances of:
+            #       const int array[2]
+            # ...gets converted to
+            #       const int* const array
+            # Which Cython cannot handle. Here we remove the second const
+            if struct_field_type.count("const") >= 2:
+                struct_field_type = struct_field_type.replace("const", "__keeping__first__", 1)
+                struct_field_type = struct_field_type.replace("const", "")
+                struct_field_type = struct_field_type.replace("__keeping__first__", "const")
+
+            struct_field_comments = parse_comment(struct_field_obj)
+            for struct_field_name_obj in struct_field_obj["names"]:
+                struct_field_name = safe_python_name(struct_field_name_obj["name"])
+                struct_fields.append(DearStruct.Field(
+                    struct_field_name,
+                    DearType(struct_field_type),
+                    struct_field_comments,
+                ))
+        
+        struct_comments = parse_comment(struct_obj)
+        parsed_structs.append(DearStruct(
+            struct_name,
+            struct_original_fully_qualified_name,
+            struct_forward_declaration,
+            struct_fields,
+            struct_comments,
+        ))
+
+    # Functions
+    parsed_functions: List[DearFunction] = []
+    for function_obj in cimgui_json["functions"]:
+        if not passes_conditional(function_obj, definitions):
+            continue
+
+        function_name = function_obj["name"]
+        function_original_fully_qualified_name = function_obj["original_fully_qualified_name"]
+        function_return_type = function_obj["return_type"]["declaration"]
+        function_arguments = []
+        for function_argument_obj in function_obj["arguments"]:
+            if not passes_conditional(function_argument_obj, definitions):
+                continue
+
+            # Ignore any vargs stuff since Cython cannot handle this.
+            if function_argument_obj["is_varargs"]:
+                continue
+
+            function_argument_name = safe_python_name(function_argument_obj["name"])
+            function_argument_type = function_argument_obj["type"]["declaration"]
+            # Weird edge case where instances of:
+            #       const int array[2]
+            # ...gets converted to
+            #       const int* const array
+            # Which Cython cannot handle. Here we remove the second const
+            if function_argument_type.count("const") >= 2:
+                function_argument_type = function_argument_type.replace("const", "__keeping__first__", 1)
+                function_argument_type = function_argument_type.replace("const", "")
+                function_argument_type = function_argument_type.replace("__keeping__first__", "const")
+            
+            # I'm also not interested in keeping va_list since Cython cannot
+            # handle this.
+            if function_argument_type == "va_list":
+                continue
+
+            function_argument_array_bounds = None
+            function_argument_is_array = function_argument_obj["is_array"]
+            if function_argument_is_array:
+                function_argument_array_bounds = function_argument_obj["array_bounds"]
+
+            if "default_value" in function_argument_obj:
+                function_argument_default_value = function_argument_obj["default_value"]
+            else:
+                function_argument_default_value = None
+            function_argument_comments = parse_comment(function_argument_obj)
+            function_arguments.append(DearFunction.Argument(
+                function_argument_name,
+                DearType(function_argument_type, is_array_size=function_argument_array_bounds),
+                function_argument_is_array,
+                function_argument_default_value,
+                function_argument_comments,
+            ))
+        function_is_default_argument_helper = function_obj["is_default_argument_helper"]
+        function_is_manual_helper = function_obj["is_manual_helper"]
+        function_is_imstr_helper = function_obj["is_imstr_helper"]
+        function_has_imstr_helper = function_obj["has_imstr_helper"]
+        function_comments = parse_comment(function_obj)
+        parsed_functions.append(DearFunction(
+            function_name,
+            function_original_fully_qualified_name,
+            DearType(function_return_type),
+            function_arguments,
+            function_is_default_argument_helper,
+            function_is_manual_helper,
+            function_is_imstr_helper,
+            function_has_imstr_helper,
+            function_comments,
+        ))
+    
+    parsed_functions.sort(key=lambda x: x.name)
+    
+    return DearBinding(
+        parsed_enums,
+        parsed_typedefs,
+        parsed_structs,
+        parsed_functions,
     )
 
-    return HeaderSpec([cimgui_h, cimgui_impl_h], library_name)
+
+def to_pxd(header: DearBinding, header_file_name: str, include_base=True) -> str:
+    base = """
+    # -*- coding: utf-8 -*-
+    # distutils: language = c++
+
+    from libcpp cimport bool
+
+
+    """
+
+    dynamic_content = StringIO("")
+
+    if include_base:
+        dynamic_content.write(textwrap.dedent(base.lstrip("\n")))
+
+    dynamic_content.write('cdef extern from "{}":\n'.format(header_file_name))
+    
+    # Struct forward declaration
+    for struct in header.structs:
+        # You might think you could use this value but some typedefs require all
+        # the structs to be forward declared. So we can just be safe and do them
+        # all.
+        # if not struct.forward_declaration:
+        #     continue
+
+        struct_forward_declaration_pxd = "    ctypedef struct {}\n".format(struct.name)
+        dynamic_content.write(struct_forward_declaration_pxd)
+    dynamic_content.write("\n")
+
+    # Typedefs
+    typedef_format_test = "    ctypedef {}"
+
+    # Used for pretty printing the comments for each typdef
+    longest_typedef = 0
+    longest_function_ptr_typedef = 0
+    for typedef in header.typedefs:
+        if typedef.base.is_function_type():
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type
+            )
+        else:
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type + " " + typedef.definition.raw_type
+            )
+        if typedef.base.is_function_type():
+            longest_function_ptr_typedef = max(len(typedef_pxd), longest_function_ptr_typedef)
+        else:
+            longest_typedef = max(len(typedef_pxd), longest_typedef)
+
+
+    for typedef in header.typedefs:
+        # Typedef comments
+        comment_text = typedef.comments.hash_proceeding_only()
+        if comment_text is not None:
+            dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
+        
+        if typedef.base.is_function_type():
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type
+            )
+        else:
+            typedef_pxd = typedef_format_test.format(
+                typedef.base.raw_type + " " + typedef.definition.raw_type
+            )
+        if typedef.base.is_function_type():
+            padding_required = (5 + longest_function_ptr_typedef - len(typedef_pxd)) * " "
+        else:
+            padding_required = (5 + longest_typedef - len(typedef_pxd)) * " "
+
+
+        comment_text = typedef.comments.hash_attached_only()
+        dynamic_content.write("{}{}\n".format(
+            typedef_pxd,
+            padding_required + comment_text if comment_text is not None else ""
+        ))
+    dynamic_content.write("\n")
+
+    # Enums
+    for enum in header.enums:
+        # Used for pretty printing the comments for each value
+        longest_enum = 0
+        for enum_element in enum.elements:
+            longest_enum = max(len(enum_element.name), longest_enum)
+
+        # Enum comments
+        comment_text = enum.comments.hash_all_comments()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
+        
+        enum_pxd = "    ctypedef enum {}:\n".format(enum.name)
+        dynamic_content.write(enum_pxd)
+        for enum_element in enum.elements:
+            # Show attached comments only.
+            comment_text = enum_element.comments.hash_attached_only()
+            padding_required = (5 + longest_enum - len(enum_element.name)) * " "
+
+            enum_element_pxd = "        {}{}\n".format(
+                enum_element.name,
+                padding_required + comment_text if comment_text is not None else ""
+            )
+            dynamic_content.write(enum_element_pxd)
+        dynamic_content.write("\n")
+    dynamic_content.write("\n")
+    
+    # Structs
+    for struct in header.structs:
+        # Used for pretty printing the comments for each field
+        longest_field = 0
+        for field in struct.fields:
+            longest_field = max(len(field.name) + len(field.type.raw_type), longest_field)
+        
+        # Struct comments
+        comment_text = struct.comments.hash_all_comments()
+        if comment_text is not None:
+            dynamic_content.write(textwrap.indent(comment_text, "    ") + "\n")
+        
+        struct_pxd = "    ctypedef struct {}:\n".format(struct.name)
+        dynamic_content.write(struct_pxd)
+        if len(struct.fields) == 0:
+            dynamic_content.write("        pass\n")
+
+        for struct_field in struct.fields:
+            # Show attached comments only.
+            comment_text = struct_field.comments.hash_attached_only()
+            padding_required = (5 + longest_field - len(struct_field.name) - len(struct_field.type.raw_type)) * " "
+            
+            struct_field_pxd = "        {}{}{}\n".format(
+                struct_field.type.raw_type,
+                " " + struct_field.name if not struct_field.type.is_function_type() else "",
+                padding_required + comment_text if comment_text is not None else ""
+            )
+            dynamic_content.write(struct_field_pxd)
+        dynamic_content.write("\n")
+        
+        for struct_method in struct.methods:
+            # Struct comments
+            comment_text = struct_method.comments.hash_all_comments()
+            if comment_text is not None:
+                dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
+            
+            method_argument_strings = []
+            for method_argument in struct_method.arguments:
+                method_argument_strings.append("{}{}".format(
+                    method_argument.type.raw_type,
+                    " " + method_argument.name if not method_argument.type.is_function_type() else "",
+                ))
+            method_pxd = "    {} {}({}) except +\n".format(
+                struct_method.return_type.raw_type,
+                struct_method.name,
+                ", ".join(method_argument_strings)
+            )
+            dynamic_content.write(method_pxd)
+
+        dynamic_content.write("\n")
+    dynamic_content.write("\n")
+    
+    # Functions
+    for function in header.functions:
+        # Functions comments
+        comment_text = function.comments.hash_all_comments()
+        if comment_text is not None:
+            dynamic_content.write("\n" + textwrap.indent(comment_text, "    ") + "\n")
+
+        function_argument_strings = []
+        for function_argument in function.arguments:
+            function_argument_strings.append("{}{}".format(
+                function_argument.type.raw_type,
+                " " + function_argument.name if not function_argument.type.is_function_type() else "",
+            ))
+        function_pxd = "    {} {}({}) except +\n".format(
+            function.return_type.raw_type,
+            function.name,
+            ", ".join(function_argument_strings)
+        )
+        dynamic_content.write(function_pxd)
+    dynamic_content.write("\n")
+
+    return dynamic_content.getvalue()
+
+
+def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_base: bool) -> str:
+    header.sort()
+    base = """
+    # distutils: language = c++
+    # cython: language_level = 3
+    # cython: embedsignature=True
+
+    {imports}
+
+    cdef bytes _bytes(str text):
+        return text.encode()
+
+    cdef str _from_bytes(bytes text):
+        return <str>(text.decode('utf-8', errors='ignore'))
+
+    cdef _cast_ImVec2_tuple({pxd_library_name}.ImVec2 vec):
+        return (vec.x, vec.y)
+
+    cdef {pxd_library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:
+        cdef {pxd_library_name}.ImVec2 vec
+        if len(pair) != 2:
+            raise ValueError('pair param must be length of 2')
+        vec.x, vec.y = pair
+        return vec
+
+    cdef _cast_ImVec4_tuple({pxd_library_name}.ImVec4 vec):
+        return (vec.x, vec.y, vec.z, vec.w)
+
+    cdef {pxd_library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):
+        cdef {pxd_library_name}.ImVec4 vec
+        if len(quadruple) != 4:
+            raise ValueError('quadruple param must be length of 4')
+
+        vec.x, vec.y, vec.z, vec.w = quadruple
+        return vec
+
+
+    def _py_vertex_buffer_vertex_pos_offset():
+        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).pos
+
+    def _py_vertex_buffer_vertex_uv_offset():
+        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).uv
+
+    def _py_vertex_buffer_vertex_col_offset():
+        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).col
+
+    def _py_vertex_buffer_vertex_size():
+        return sizeof({pxd_library_name}.ImDrawVert)
+
+    def _py_index_buffer_index_size():
+        return sizeof({pxd_library_name}.ImDrawIdx)
+
+
+    cdef class BoolPtr:
+        @staticmethod
+        cdef bool* ptr(ptr: BoolPtr):
+            return <bool*>(NULL if ptr is None else <void*>(&ptr.value))
+        
+        cdef public bool value
+
+        def __init__(self, initial_value: bool):
+            self.value: bool = initial_value
+
+        def __bool__(self):
+            return self.value
+
+
+    cdef class IntPtr:
+        @staticmethod
+        cdef int* ptr(ptr: IntPtr):
+            return <int*>(NULL if ptr is None else <void*>(&ptr.value))
+        
+        cdef public int value
+
+        def __init__(self, initial_value: int):
+            self.value: int = initial_value
+
+
+    cdef class FloatPtr:
+        @staticmethod
+        cdef float* ptr(ptr: FloatPtr):
+            return <float*>(NULL if ptr is None else <void*>(&ptr.value))
+        
+        cdef public float value
+
+        def __init__(self, initial_value: float):
+            self.value = initial_value
+
+
+    cdef class DoublePtr:
+        @staticmethod
+        cdef double* ptr(ptr: DoublePtr):
+            return <double*>(NULL if ptr is None else <void*>(&ptr.value))
+        
+        cdef public double value
+
+        def __init__(self, initial_value: float):
+            self.value = initial_value
+
+
+    cdef class StrPtr:
+        cdef char* buffer
+        cdef public int buffer_size
+
+        def __init__(self, initial_value: str, buffer_size=256):
+            self.buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(buffer_size)
+            self.buffer_size: int = buffer_size
+            self.value = initial_value
+        
+        def __dealloc__(self):
+            {pxd_library_name}.ImGui_MemFree(self.buffer)
+
+        @property
+        def value(self):
+            return _from_bytes(self.buffer)
+        @value.setter
+        def value(self, value: str):
+            strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
+            self.buffer[min((self.buffer_size - 1), len(value))] = 0
+
+
+    cdef class Vec2Ptr:
+        cdef public FloatPtr _x
+        cdef public FloatPtr _y
+
+        def __init__(self, x: float, y: float):
+            self._x = FloatPtr(x)
+            self._y = FloatPtr(y)
+
+        @property
+        def x(self):
+            return self._x.value
+        @x.setter
+        def x(self, x):
+            self._x.value = x
+        @property
+        def y(self):
+            return self._y.value
+        @y.setter
+        def y(self, y):
+            self._y.value = y
+
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
+            assert len(float_ptrs) >= 2
+            self._x = float_ptrs[0]
+            self._y = float_ptrs[1]
+
+        def as_floatptrs(self) -> Sequence[FloatPtr]:
+            return [
+                self._x,
+                self._y,
+            ]
+
+        def vec(self) -> Sequence[float]:
+            return (
+                self.x,
+                self.y,
+            )
+
+        def copy(self) -> Vec2Ptr:
+            return Vec2Ptr(*self.vec())
+
+        cdef void from_array(self, float* array):
+            self._x.value = array[0]
+            self._y.value = array[1]
+
+        cdef void to_array(self, float* array):
+            array[0] = self.x
+            array[1] = self.y
+
+
+    cdef class Vec4Ptr:
+        cdef public FloatPtr _x
+        cdef public FloatPtr _y
+        cdef public FloatPtr _z
+        cdef public FloatPtr _w
+
+        def __init__(self, x: float, y: float, z: float, w: float):
+            self._x = FloatPtr(x)
+            self._y = FloatPtr(y)
+            self._z = FloatPtr(z)
+            self._w = FloatPtr(w)
+
+        @property
+        def x(self):
+            return self._x.value
+        @x.setter
+        def x(self, x):
+            self._x.value = x
+        @property
+        def y(self):
+            return self._y.value
+        @y.setter
+        def y(self, y):
+            self._y.value = y
+        @property
+        def z(self):
+            return self._z.value
+        @z.setter
+        def z(self, z):
+            self._z.value = z
+        @property
+        def w(self):
+            return self._w.value
+        @w.setter
+        def w(self, w):
+            self._w.value = w
+
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
+            assert len(float_ptrs) >= 4
+            self._x = float_ptrs[0]
+            self._y = float_ptrs[1]
+            self._z = float_ptrs[2]
+            self._w = float_ptrs[3]
+
+        def as_floatptrs(self) -> Sequence[FloatPtr]:
+            return [
+                self._x,
+                self._y,
+                self._z,
+                self._w,
+            ]
+
+        def vec(self) -> Sequence[float]:
+            return (
+                self.x,
+                self.y,
+                self.z,
+                self.w,
+            )
+
+        def copy(self) -> Vec4Ptr:
+            return Vec4Ptr(*self.vec())
+
+        cdef void from_array(self, float* array):
+            self._x.value = array[0]
+            self._y.value = array[1]
+            self._z.value = array[2]
+            self._w.value = array[3]
+
+        cdef void to_array(self, float* array):
+            array[0] = self.x
+            array[1] = self.y
+            array[2] = self.z
+            array[3] = self.w
+
+
+    def IM_COL32(int r, int g, int b, int a) -> int:
+        cdef unsigned int output = 0
+        output |= a << 24
+        output |= b << 16
+        output |= g << 8
+        output |= r << 0
+        return output
+
+    FLT_MIN = LIBC_FLT_MIN
+    FLT_MAX = LIBC_FLT_MAX
+    IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+    IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+    IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
+    IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
+    IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
+
+
+    """
+
+    pyx = StringIO()
+
+    if include_base:
+        pyx.write(textwrap.dedent(base.lstrip("\n")).format(
+            pxd_library_name=pxd_library_name,
+            imports=imports,
+        ))
+
+    # Add enums
+    for enum in header.enums:
+        for enum_element in enum.elements:
+            pyx.write("{} = {}.{}\n".format(
+                pythonise_string(enum_element.name_omitted_imgui_prefix(), make_upper=True),
+                pxd_library_name,
+                enum_element.name
+            ))
+
+    def function_to_pyx(header: DearBinding, function_template: Template, function: DearFunction) -> str:
+        # Python return type
+        python_return_type = header.as_python_type(function.return_type)
+
+        # Python function name
+        python_function_name = pythonise_string(function.name_omitted_imgui_prefix())
+
+        # Python function arguments
+        python_function_arguments = ", ".join([header.as_name_type_default_parameter(a) for a in function.arguments])
+
+        # Comments
+        function_comments = function.comments.three_quote_all_comments()
+        function_template.set_condition("has_comment", function_comments is not None)
+        if function_comments is not None:
+            function_template.format(comment=textwrap.indent(function_comments, "    "))
+
+        # Return type
+        function_template.set_condition("has_return_type", not function.return_type.is_void_type())
+        if function.return_type.is_function_type():
+            return_type = "Callable"
+        elif header.is_cimgui_type(function.return_type):
+            return_type = "{}.{}".format(pxd_library_name, function.return_type.with_no_const())
+        else:
+            return_type = function.return_type.raw_type
+
+        # Function arguments
+        if len(function.arguments) > 0:
+            function_argument_list = []
+            for argument in function.arguments:
+                marshalled_type = header.marshall_python_to_c(argument.type, argument.default_value).format(argument.name)
+                if argument.name == "self":
+                    marshalled_type = "self._ptr"
+                function_argument_list.append(marshalled_type)
+
+            function_arguments = "\n" + ",\n".join(function_argument_list) + "\n    "
+            function_arguments = textwrap.indent(function_arguments, "        ")
+        else:
+            function_arguments = ""
+
+        # res
+        followed_return_type = header.follow_type(function.return_type)
+        res = header.marshall_c_to_python(followed_return_type).format("res")
+
+        return function_template.format(
+            python_return_type=python_return_type,
+            python_function_name=python_function_name,
+            python_function_arguments=python_function_arguments,
+            return_type=return_type,
+            pxd_library_name=pxd_library_name,
+            function_name=function.name,
+            function_arguments=function_arguments,
+            res=res,
+        ).compile()
+
+    # Add Functions
+    with open("core/templates/function.h") as f:
+        function_base = f.read()
+    
+    pyx.write("\n\n")
+    pyx.write(PYX_TEMPLATE_MARKER)
+    for function in header.functions:
+        function_template = Template(function_base)
+        pyx.write("# [Function]\n")
+        function_pyx = function_to_pyx(header, function_template, function)
+        pyx.write(function_pyx)
+        pyx.write("# [End Function]\n\n")
+
+
+    # Add Classes/Methods
+    with open("core/templates/class.h") as f:
+        class_base = f.read()
+    with open("core/templates/field.h") as f:
+        field_base = f.read()
+    
+    for struct in header.structs:
+        class_template = Template(class_base)
+
+        struct_comments = struct.comments.three_quote_all_comments()
+        class_template.set_condition("has_comment", struct_comments is not None)
+        if struct_comments is not None:
+            class_template.format(comment=textwrap.indent(struct_comments, "    "))
+
+        class_template.format(
+            class_name=struct.name,
+            pxd_library_name=pxd_library_name,
+        )
+        pyx.write("# [Class]\n")
+        pyx.write("# [Class Constants]\n")
+        pyx.write(class_template.compile())
+        pyx.write("    # [End Class Constants]\n\n")
+        
+        for field in struct.fields:
+            field_template = Template(field_base)
+            
+             # Comments
+            field_comments = field.comments.three_quote_all_comments()
+            field_template.set_condition("has_comment", field_comments is not None)
+            if field_comments is not None:
+                field_template.format(comment=textwrap.indent(field_comments, "    "))
+
+            # Python type
+            python_type = header.as_python_type(field.type)
+
+            # Field type
+            if field.type.is_function_type():
+                field_type = "Callable"
+            elif header.is_cimgui_type(field.type):
+                field_type = "{}.{}".format(pxd_library_name, field.type.with_no_const())
+            else:
+                field_type = field.type.raw_type
+
+            # Res
+            res = header.marshall_c_to_python(field.type).format("res")
+
+            # Field name
+            field_name = pythonise_string(field.name)
+
+            # Cimgui field name
+            cimgui_field_name = field.name
+
+            # Value
+            value = header.marshall_python_to_c(field.type).format("value")
+
+            pyx.write("    # [Field]\n")
+            pyx.write(textwrap.indent(field_template.format(
+                python_type=python_type,
+                field_name=field_name,
+                field_type=field_type,
+                cimgui_field_name=cimgui_field_name,
+                res=res,
+                value=value,
+            ).compile(), "    "))
+            pyx.write("    # [End Field]\n\n")
+
+
+        for method in struct.methods:
+            method_template = Template(function_base)
+            method_pyx = function_to_pyx(header, method_template, method)
+            pyx.write("    # [Method]\n")
+            pyx.write(textwrap.indent(method_pyx, "    "))
+            pyx.write("    # [End Method]\n\n")
+        pyx.write("# [End Class]\n\n")
+
+    return pyx.getvalue()
+
+
+def generate_new_pyx(from_header: DearBinding, pxd_library_name: str, include_base=True):
+    imports = textwrap.dedent("""
+        import ctypes
+        import cython
+        import array
+        from cython.operator import dereference
+        from typing import Callable, Any, Sequence
+
+        cimport {}
+        
+        from cython.view cimport array as cvarray
+        from libcpp cimport bool
+        from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+        from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+        from libc.stdint cimport uintptr_t
+        from libc.string cimport strncpy
+        """
+    ).format(pxd_library_name)
+    return to_pyx(from_header, pxd_library_name, imports.strip(), include_base)
+
+
+def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
+    base = textwrap.dedent("""
+    # This file is auto-generated. If you need to edit this file then edit the
+    # template that this is created from instead.
+    from typing import Any, Callable, Tuple, List, Sequence
+    from PIL import Image
+
+
+    VERTEX_BUFFER_POS_OFFSET: int
+    VERTEX_BUFFER_UV_OFFSET: int
+    VERTEX_BUFFER_COL_OFFSET: int
+    VERTEX_SIZE: int
+    INDEX_SIZE: int
+    FLT_MIN: float
+    FLT_MAX: float
+
+    IMGUI_PAYLOAD_TYPE_COLOR_3F: int
+    IMGUI_PAYLOAD_TYPE_COLOR_4F: int
+
+    class BoolPtr:
+        value: bool
+        def __init__(self, initial_value: bool): ...
+        def __bool__(self) -> bool: ...
+
+    class IntPtr:
+        value: int
+        def __init__(self, initial_value: int): ...
+
+    class FloatPtr:
+        value: float
+        def __float__(self) -> float: ...
+
+    class DoublePtr:
+        value: float
+        def __init__(self, initial_value: float): ...
+
+    class StrPtr:
+        value: str
+        def __init__(self, initial_value: str, buffer_size=256): ...
+
+    class Vec4Ptr:
+        x: float
+        y: float
+        z: float
+        w: float
+        def __init__(self, x: float, y: float, z: float, w: float): ...
+        def vec(self) -> Tuple[float, float, float, float]: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def copy(self) -> Vec4Ptr: ...
+
+    class Vec2Ptr:
+        x: float
+        y: float
+        def __init__(self, x: float, y: float): ...
+        def vec(self) -> Tuple[float, float]: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
+        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def copy(self) -> Vec2Ptr: ...
+
+    def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
+
+    def load_image(image: Image) -> int: ...
+
+    """.lstrip("\n"))
+
+    # __init__.pyi ------------------------------------
+
+    pyi_output = StringIO()
+    pyi_output.write(base)
+    
+    with open("core/templates/function.pyi") as f:
+        function_template_src = f.read()
+    
+    with open("core/templates/class.pyi") as f:
+        class_template_src = f.read()
+    
+    with open("core/templates/field.pyi") as f:
+        field_template_src = f.read()
+
+    for header in headers:
+        for enum in header.enums:
+            for enum_value in enum.elements:
+                pyi_output.write("{}: int\n".format(pythonise_string(enum_value.name_omitted_imgui_prefix(), make_upper=True)))
+        pyi_output.write("\n")
+
+    for function in model.functions:
+        function_template = Template(function_template_src)
+
+        function_template.set_condition("has_comment", function.comment is not None)
+        function_template.format(
+            function_name=function.name,
+            function_parameters=function.parameters,
+            function_returns=function.options["returns"],
+            function_comment=textwrap.indent(f'"""\n{function.comment}\n"""', "    ")
+        )
+
+        if comparable_is_active(function):
+            pyi_output.write(function_template.compile())
+        else:
+            pyi_output.write(comment_text(function_template.compile()))
+    
+    pyi_output.write("\n")
+
+    for class_ in model.classes:
+        class_template = Template(class_template_src)
+        class_template.set_condition("has_content", class_.has_one_active_member() or class_.comment is not None)
+        class_template.set_condition("has_one_member", class_.has_one_active_member())
+        class_template.set_condition("has_comment", class_.comment is not None)
+
+        class_template.format(
+            class_name=class_.name,
+            class_comment=textwrap.indent(f'"""\n{class_.comment}\n"""', "    "),
+        )
+        pyi_output.write(class_template.compile())
+
+        for field in class_.fields:
+            field_template = Template(field_template_src)
+            field_template.set_condition("has_comment", field.comment is not None)
+            field_template.format(
+                field_name=field.name,
+                field_type=field.options["returns"],
+                field_comment=f'"""\n{field.comment}\n"""'
+            )
+            if comparable_is_active(field):
+                pyi_output.write(textwrap.indent(field_template.compile(), "    "))
+            else:
+                pyi_output.write(textwrap.indent(comment_text(field_template.compile()), "    "))
+
+        for method in class_.methods:
+            method_template = Template(function_template_src)
+            method_template.set_condition("has_comment", method.comment is not None)
+            method_template.format(
+                function_name=method.name,
+                function_parameters=method.parameters,
+                function_returns=method.options["returns"],
+                function_comment=textwrap.indent(f'"""\n{method.comment}\n"""', "    ")
+            )
+
+            if comparable_is_active(method):
+                pyi_output.write(textwrap.indent(method_template.compile(), "    "))
+            else:
+                pyi_output.write(textwrap.indent(comment_text(method_template.compile()), "    "))
+        pyi_output.write("\n")
+    
+
+    # __init__.py ------------------------------------
+    py = textwrap.dedent("""
+    from .{extension_name} import *
+
+    VERTEX_BUFFER_POS_OFFSET = {extension_name}._py_vertex_buffer_vertex_pos_offset()
+    VERTEX_BUFFER_UV_OFFSET = {extension_name}._py_vertex_buffer_vertex_uv_offset()
+    VERTEX_BUFFER_COL_OFFSET = {extension_name}._py_vertex_buffer_vertex_col_offset()
+    VERTEX_SIZE = {extension_name}._py_vertex_buffer_vertex_size()
+    INDEX_SIZE = {extension_name}._py_index_buffer_index_size()
+
+
+
+    import OpenGL.GL as gl
+    from PIL import Image
+
+    # From https://stackoverflow.com/questions/72325672/opengl-doesnt-draw-anything-if-i-use-pil-or-pypng-to-load-textures
+    def load_image(image: Image) -> int:
+        convert = image.convert("RGBA")
+        image_data = convert.tobytes()
+        # image_data = convert.transpose(Image.Transpose.FLIP_TOP_BOTTOM).tobytes()
+        w = image.width
+        h = image.height
+
+        # create the texture in VRAM
+        texture: int = gl.glGenTextures(1)
+        gl.glBindTexture(gl.GL_TEXTURE_2D, texture)
+
+        # configure some texture settings
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_S, gl.GL_REPEAT) # when you try to reference points beyond the edge of the texture, how should it behave?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_REPEAT) # in this case, repeat the texture data
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR) # when you zoom in, how should the new pixels be calculated?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR_MIPMAP_LINEAR) # when you zoom out, how should the existing pixels be combined?
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_BASE_LEVEL, 0)
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAX_LEVEL, 0)
+
+        # load texture onto the GPU
+        gl.glTexImage2D(
+            gl.GL_TEXTURE_2D,    # where to load texture data
+            0,                   # mipmap level
+            gl.GL_RGBA8,         # format to store data in
+            w,                   # image dimensions
+            h,                   #
+            0,                   # border thickness
+            gl.GL_RGBA,          # format data is provided in
+            gl.GL_UNSIGNED_BYTE, # type to read data as
+            image_data
+        )          # data to load as texture
+        # gl.debug.check_gl_error()
+
+        # generate smaller versions of the texture to save time when its zoomed out
+        gl.glGenerateMipmap(gl.GL_TEXTURE_2D)
+
+        # clean up afterwards
+        gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
+        return texture
+    """.format(extension_name=extension_name).lstrip("\n"))
+
+    return pyi_output.getvalue(), py
 
 
 def main():
+    with open("config.json") as f:
+        config = json.load(f)
+    
+    EXTENSION_NAME =          config["EXTENSION_NAME"]
+    CIMGUI_PXD_PATH =         config["CIMGUI_PXD_PATH"]
+    CIMGUI_LIBRARY_NAME =     config["CIMGUI_LIBRARY_NAME"]
+    GENERATED_PYX_PATH =      config["GENERATED_PYX_PATH"]
+    PYX_PATH =                config["PYX_PATH"]
+    PYX_TRIAL_PATH =          config["PYX_TRIAL_PATH"]
+    TEMPLATE_PYX_PATH =       config["TEMPLATE_PYX_PATH"]
+    TEMPLATE_PYX_TRIAL_PATH = config["TEMPLATE_PYX_TRIAL_PATH"]
+    INIT_PYI_PATH =           config["INIT_PYI_PATH"]
+    INIT_PY_PATH =            config["INIT_PY_PATH"]
+    
+    defines = [
+        ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
+        ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
+        ("IMGUI_HAS_IMSTR", False),
+    ]
+
+    headers: List[DearBinding] = []
+    header_files: List[str] = []
+    for module in config["modules"]:
+        header_files.append(module["header"])
+        with open(module["binding_json"]) as f:
+            headers.append(parse_binding_json(json.load(f), defines))
+
     def _help():
-        print("Usage: python model_creator <Option>")
-        print("  --trial      Attempts to merge the old/new/template content but writes the result to")
-        print("                 core_trial.pyx only.")
-        print("  --all        Typical usage. Builds the pxd/pyx/pyi file. The merged file is written")
-        print("                 to core.pyx. The old core_generated.pyx file is renamed to")
-        print("                 core_generated_prev.pyx.")
-        print("  --pxd        Builds the pxd file only.")
-        print("  --pyx        Builds the pyx file only.")
-        print("  --pyi        Builds the pyi file only.")
-        print("  --reset      Creates a new template to manually modify pxy files with. This will not")
-        print("                 complete if a template stil exists. You must delete core_template.pyx")
-        print("                 yourself.")
+        print(textwrap.dedent("""
+        Usage: python model_creator.py <Option>
+        Note: This script expects a file called config.json to exist in the calling directory.
+        The config file should contain the constants and backends used by the script.
+
+          --help       Prints this
+          --trial      Attempts to merge the old/new/template content but writes the result to
+                         core_trial.pyx only.
+          --all        Typical usage. Builds the pxd/pyx/pyi file. The merged file is written
+                         to core.pyx.
+          --pxd        Builds the pxd file only.
+          --pyx        Builds the pyx file only.
+          --pyi        Builds the pyi file only.
+          --reset      Creates a new template to manually modify pxy files with. This will not
+                         complete if a template stil exists. You must delete core_template.pyx
+                         yourself.
+        """.lstrip("\n")))
         return
 
+    def trial_pyx(headers: DearBinding, pxd_libary_name: str):
+        new_pyx = ""
+        for i, header in enumerate(headers):
+            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
 
-    def reset(header: HeaderSpec):
-        reset_pyx_content = header.as_pyx_collection().as_pyx_format()
         try:
-            with open("core/core_template.pyx") as f:
-                print("Error: Template core_template.pyx still exists.")
+            with open(GENERATED_PYX_PATH) as f:
+                old_pyx = f.read()
+        except FileNotFoundError:
+            print(f"Trial: '{GENERATED_PYX_PATH}' not found. Using new generated content as the old.")
+            old_pyx = new_pyx
+
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                template_pyx = f.read()
+        except FileNotFoundError:
+            print(f"Trial: '{TEMPLATE_PYX_PATH}' not found. Aborting. Use --reset first ")
+            return
+        
+        try:
+            merge_result = MergeResult(old_pyx, new_pyx, template_pyx)
+        except MergeFailed:
+            print("Trial: Merge failed. Aborting.")
+            return
+
+        with open(PYX_TRIAL_PATH, "w") as f:
+            f.write(merge_result.merged_pyx)
+        with open(TEMPLATE_PYX_TRIAL_PATH, "w") as f:
+            f.write(merge_result.merged_pyx_all_active)
+        print(f"Created {PYX_TRIAL_PATH}")
+        print(f"Created {TEMPLATE_PYX_TRIAL_PATH}")
+
+    def reset(headers: List[DearBinding], pxd_libary_name: str):
+        new_pyx = ""
+        for i, header in enumerate(headers):
+            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
+        
+        new_model = create_pyx_model(new_pyx)
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                print(f"Error: Template '{TEMPLATE_PYX_PATH}' still exists.")
                 print("Please delete the file manually if you are sure.")
+                return
         except FileNotFoundError:
-            with open("core/core_template.pyx", "w") as f:
-                f.write(reset_pyx_content)
-            with open("core/core.pyx", "w") as f:
-                f.write(reset_pyx_content)
+            with open(PYX_PATH, "w") as f:
+                f.write(replace_after(
+                    new_pyx,
+                    PYX_TEMPLATE_MARKER,
+                    new_model.as_pyx()
+                ))
+            with open(TEMPLATE_PYX_PATH, "w") as f:
+                f.write(replace_after(
+                    new_pyx,
+                    PYX_TEMPLATE_MARKER,
+                    new_model.as_pyx(ignore_active_flag=True)
+                ))
+            print(f"Created {PYX_PATH}")
+            print(f"Created {TEMPLATE_PYX_PATH}")
 
-
-    def write_pxd(header: HeaderSpec):
-        with open("core/ccimgui.pxd", "w") as f:
-            f.write(header.in_pxd_format())
-        print("Created core/ccimgui.pxd")
+    def write_pxd(headers: List[DearBinding], header_files: List[str]):
+        pxd = ""
+        for i, (header, header_file) in enumerate(zip(headers, header_files)):
+            pxd += to_pxd(header, header_file, i == 0) # TODO: Pass in the header's .h reference file
+        
+        with open(CIMGUI_PXD_PATH, "w") as f:
+            f.write(pxd)
+        print(f"Created {CIMGUI_PXD_PATH}")
     
+    def write_pyx(headers: List[DearBinding], pxd_libary_name: str):
+        new_pyx = ""
+        for i, header in enumerate(headers):
+            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
 
-    def write_pyx(header: HeaderSpec):
         try:
-            with open("core/core_template.pyx") as f:
-                template_collection = create_pyx_collection(f.read())
+            with open(GENERATED_PYX_PATH) as f:
+                old_pyx = f.read()
         except FileNotFoundError:
-            print("No template found. Please run with --reset first.")
+            print(f"'{GENERATED_PYX_PATH}' not found. Using new generated content as the old.")
+            old_pyx = new_pyx
+
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                template_pyx = f.read()
+        except FileNotFoundError:
+            print(f"'{TEMPLATE_PYX_PATH}' not found. Aborting. Use --reset first ")
             return
         
         try:
-            with open("core/core_generated.pyx") as f:
-                old_collection = create_pyx_collection(f.read())
+            merge_result = MergeResult(old_pyx, new_pyx, template_pyx)
+        except MergeFailed:
+            print("Merge failed. Aborting.")
+            return
+
+        with open(GENERATED_PYX_PATH, "w") as f:
+            f.write(merge_result.new_pyx)
+        with open(PYX_PATH, "w") as f:
+            f.write(merge_result.merged_pyx)
+        with open(TEMPLATE_PYX_PATH, "w") as f:
+            f.write(merge_result.merged_pyx_all_active)
+        print(f"Created {GENERATED_PYX_PATH}")
+        print(f"Created {PYX_PATH}")
+        print(f"Created {TEMPLATE_PYX_PATH}")
+    
+    def write_pyi(headers: List[DearBinding], extension_name: str):
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                model = create_pyx_model(f.read())
         except FileNotFoundError:
-            print("No existing generated content found. Treating new generated content as the old.")
-            old_collection = header.as_pyx_collection()
-
-        old_collection, new_collection, merged_collection = \
-            header.get_merged_collection(old_collection, template_collection)
-        
-        # Merge failed
-        if merged_collection is None:
-            print("Error: Merge failed. Not changing any files")
+            print(f"'{TEMPLATE_PYX_PATH}' not found. This is required to create the pyi file")
             return
         
-        with open("core/core.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
+        pyi, py = to_pyi(headers, model, extension_name)
 
-        with open("core/core_template.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
-
-        with open("core/core_generated.pyx", "w") as f:
-            f.write(new_collection.as_pyx_format())
-        
-        with open("core/core_generated_prev.pyx", "w") as f:
-            f.write(old_collection.as_pyx_format())
-
-        print("Created core/core.pyx")
-        print("Created core/core_template.pyx")
-        print("Created core/core_generated.pyx")
-        print("Created core/core_generated_prev.pyx")
-
-
-    def trial_pyx(header: HeaderSpec):
-        with open("core/core_template.pyx") as f:
-            template_collection = create_pyx_collection(f.read())
-        
-        with open("core/core_generated.pyx") as f:
-            old_collection = create_pyx_collection(f.read())
-
-        _, _, merged_collection = \
-            header.get_merged_collection(old_collection, template_collection)
-        
-        # Merge failed
-        if merged_collection is None:
-            print("Error: Merged failed. Trial was unsuccessful")
-            return
-        
-        with open("core/core_trial.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=False))
-        
-        with open("core/core_template_trial.pyx", "w") as f:
-            f.write(merged_collection.as_pyx_format(ignore_active_flag_show_regardless=True))
-        
-        print("Created core/core_trial.pyx")
-        print("Trial success")
-
-
-    def write_pyi():
-        with open("core/core.pyx") as f:
-            current_collection = create_pyx_collection(f.read())
-            pyi, py = current_collection.as_pyi_format()
-
-        with open("pygui/__init__.pyi", "w") as f:
+        with open(INIT_PYI_PATH, "w") as f:
             f.write(pyi)
-        
-        with open("pygui/__init__.py", "w") as f:
+        with open(INIT_PY_PATH, "w") as f:
             f.write(py)
-        
-        print("Created pygui/__init__.pyi")
-        print("Created pygui/__init__.py")
-    
+        print(f"Created {INIT_PYI_PATH}")
+        print(f"Created {INIT_PY_PATH}")
+        pass
 
-    if len(sys.argv) != 2:
-        return _help()
 
-    header = header_model("external/cimgui/generator/output", "ccimgui")
+    if len(sys.argv) < 2:
+        _help()
+        return
 
+    if "--help" in sys.argv:
+        _help()
+        return
     
     if "--trial" in sys.argv:
-        trial_pyx(header)
+        trial_pyx(headers, CIMGUI_LIBRARY_NAME)
         return
     
-    if "--all" in sys.argv:
-        write_pxd(header)
-        write_pyx(header)
-        write_pyi()
+    if "--reset" in sys.argv:
+        reset(headers, CIMGUI_LIBRARY_NAME)
         return
 
     if "--pxd" in sys.argv:
-        write_pxd(header)
+        write_pxd(headers, header_files)
         return
     
     if "--pyx" in sys.argv:
-        write_pyx(header)
+        write_pyx(headers, CIMGUI_LIBRARY_NAME)
         return
 
     if "--pyi" in sys.argv:
-        write_pyi()
+        write_pyi(headers, EXTENSION_NAME)
         return
-
-    if "--reset" in sys.argv:
-        reset(header)
+    
+    if "--all" in sys.argv:
+        write_pxd(headers, header_files)
+        write_pyx(headers, CIMGUI_LIBRARY_NAME)
+        write_pyi(headers, EXTENSION_NAME)
         return
-
-    _help()
 
 
 if __name__ == "__main__":

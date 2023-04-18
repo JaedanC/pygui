@@ -1,4 +1,3 @@
-
 # This file is auto-generated. If you need to edit this file then edit the
 # template that this is created from instead.
 from typing import Any, Callable, Tuple, List, Sequence
@@ -17,7 +16,7 @@ IMGUI_PAYLOAD_TYPE_COLOR_3F: int
 IMGUI_PAYLOAD_TYPE_COLOR_4F: int
 
 class BoolPtr:
-    ptr: bool
+    value: bool
     def __init__(self, initial_value: bool): ...
     def __bool__(self) -> bool: ...
 
@@ -625,6 +624,10 @@ MOUSE_CURSOR_RESIZE_NWSE: int
 MOUSE_CURSOR_HAND: int
 MOUSE_CURSOR_NOT_ALLOWED: int
 MOUSE_CURSOR_COUNT: int
+MOUSE_SOURCE_MOUSE: int
+MOUSE_SOURCE_TOUCH_SCREEN: int
+MOUSE_SOURCE_PEN: int
+MOUSE_SOURCE_COUNT: int
 COND_NONE: int
 COND_ALWAYS: int
 COND_ONCE: int
@@ -663,10 +666,11 @@ VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING: int
 VIEWPORT_FLAGS_NO_FOCUS_ON_CLICK: int
 VIEWPORT_FLAGS_NO_INPUTS: int
 VIEWPORT_FLAGS_NO_RENDERER_CLEAR: int
-VIEWPORT_FLAGS_TOP_MOST: int
-VIEWPORT_FLAGS_MINIMIZED: int
 VIEWPORT_FLAGS_NO_AUTO_MERGE: int
+VIEWPORT_FLAGS_TOP_MOST: int
 VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS: int
+VIEWPORT_FLAGS_IS_MINIMIZED: int
+VIEWPORT_FLAGS_IS_FOCUSED: int
 
 
 
@@ -2327,7 +2331,7 @@ def new_frame() -> None:
 # def push_id(str_id: str) -> None:
 #     """
 #     ID stack/scopes
-#     Read the FAQ (docs/FAQ.md or http://dearimgui.org/faq) for more details about how ID are handled in dear imgui.
+#     Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
 #     - Those questions are answered and impacted by understanding of the ID stack system:
 #     - "Q: Why is my widget not reacting when I click on it?"
 #     - "Q: How can I have widgets with an empty label?"
@@ -4689,6 +4693,10 @@ class ImGuiIO:
     # """
     # Mouse button went from down to !down
     # """
+    # mouse_source: int
+    # """
+    # Mouse actual input peripheral (mouse/touchscreen/pen).
+    # """
     # mouse_wheel: float
     # """
     # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
@@ -4696,6 +4704,10 @@ class ImGuiIO:
     # mouse_wheel_h: float
     # """
     # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
+    # """
+    # mouse_wheel_request_axis_swap: bool
+    # """
+    # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
     # """
     # nav_active: bool
     # """
@@ -4789,6 +4801,12 @@ class ImGuiIO:
     # def add_mouse_pos_event(self: ImGuiIO, x: float, y: float) -> None:
     #     """
     #     Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
+    #     """
+    #     pass
+
+    # def add_mouse_source_event(self: ImGuiIO, source: int) -> None:
+    #     """
+    #     Queue a mouse source change (mouse/touchscreen/pen)
     #     """
     #     pass
 
