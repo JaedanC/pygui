@@ -265,8 +265,8 @@ def IM_COL32(int r, int g, int b, int a) -> int:
 
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
-IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
-IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
 IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
 IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
@@ -898,9 +898,11 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
         _bytes(type_),
         flags
     )
+    if res == NULL:
+        return None
 
     cdef float* colour
-    if _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_3F:
+    if _from_bytes(res.DataType) == PAYLOAD_TYPE_COLOR_3F:
         colour = <float*>res.Data
         return Vec4Ptr(
             colour[0],
@@ -908,7 +910,7 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
             colour[2],
             1
         )
-    elif _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_4F:
+    elif _from_bytes(res.DataType) == PAYLOAD_TYPE_COLOR_4F:
         colour = <float*>res.Data
         return Vec4Ptr(
             colour[0],
@@ -1342,10 +1344,10 @@ def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def begin_table(str_id: str, column: int, flags: int=0):
+def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
     """
     Tables
     - Full-featured replacement for old Columns API.
@@ -1372,17 +1374,19 @@ def begin_table(str_id: str, column: int, flags: int=0):
     - 5. Call EndTable()
     Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
     """
-    cdef bool res = ccimgui.ImGui_BeginTable(
+    cdef bool res = ccimgui.ImGui_BeginTableEx(
         _bytes(str_id),
         column,
-        flags
+        flags,
+        _cast_tuple_ImVec2(outer_size),
+        inner_width
     )
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(bool)
 def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
     cdef bool res = ccimgui.ImGui_BeginTableEx(
@@ -1444,18 +1448,19 @@ def bullet_text_v(fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def button(label: str):
+def button(label: str, size: tuple=(0, 0)):
     """
     Widgets: Main
     - Most widgets return true when the value has been changed or when pressed/selected
     - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.
     Implied size = imvec2(0, 0)
     """
-    cdef bool res = ccimgui.ImGui_Button(
-        _bytes(label)
+    cdef bool res = ccimgui.ImGui_ButtonEx(
+        _bytes(label),
+        _cast_tuple_ImVec2(size)
     )
     return res
 # [End Function]
@@ -1489,7 +1494,7 @@ def calc_item_width():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
 def calc_text_size(text: str):
     """
@@ -1503,26 +1508,16 @@ def calc_text_size(text: str):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(tuple)
 def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
-    cdef ccimgui.ImVec2 res
-    
-    if text_end is None:
-        res = ccimgui.ImGui_CalcTextSizeEx(
-            _bytes(text),
-            NULL,
-            hide_text_after_double_hash,
-            wrap_width
-        )
-    else:
-        res = ccimgui.ImGui_CalcTextSizeEx(
-            _bytes(text),
-            _bytes(text_end),
-            hide_text_after_double_hash,
-            wrap_width
-        )
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_CalcTextSizeEx(
+        _bytes(text),
+        _bytes(text_end),
+        hide_text_after_double_hash,
+        wrap_width
+    )
     return _cast_ImVec2_tuple(res)
 # [End Function]
 
@@ -1620,17 +1615,18 @@ def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def color_button(desc_id: str, col: tuple, flags: int=0):
+def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
     """
-    Implied size = imvec2(0, 0)
+    Display a color square/button, hover for details, return true when pressed.
     """
-    cdef bool res = ccimgui.ImGui_ColorButton(
+    cdef bool res = ccimgui.ImGui_ColorButtonEx(
         _bytes(desc_id),
         _cast_tuple_ImVec4(col),
-        flags
+        flags,
+        _cast_tuple_ImVec2(size)
     )
     return res
 # [End Function]
@@ -1666,19 +1662,21 @@ def color_convert_float4_to_u32(in_: tuple):
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(None)
-def color_convert_hsv_to_rgb(h: float, s: float, v: float, colour: Vec4Ptr):
+# ?returns(tuple)
+def color_convert_hsv_to_rgb(h: float, s: float, value: float):
     cdef float c_floats[4]
+    cdef Vec4Ptr colour = Vec4Ptr(0, 0, 0, 1)
     colour.to_array(c_floats)
     ccimgui.ImGui_ColorConvertHSVtoRGB(
         h,
         s,
-        v,
+        value,
         &c_floats[0],
         &c_floats[1],
-        &c_floats[2]
+        &c_floats[2],
     )
     colour.from_array(c_floats)
+    return colour.vec()
 # [End Function]
 
 # [Function]
@@ -1773,7 +1771,7 @@ def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=No
     cdef bool res
 
     colour.to_array(c_floats)
-    if ref_col is None:
+    if ref_col is not None:
         ref_col.to_array(c_ref_col)
         res = ccimgui.ImGui_ColorPicker4(
             _bytes(label),
@@ -1789,7 +1787,7 @@ def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=No
             flags,
             NULL
         )
-    colour.to_array(c_floats)
+    colour.from_array(c_floats)
     return res
 # [End Function]
 
@@ -1819,18 +1817,33 @@ def columns_ex(count: int=1, id_: str=None, border: bool=True):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def combo(label: str, current_item: IntPtr, items_separated_by_zeros: str):
+def combo(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1):
     """
-    Implied popup_max_height_in_items = -1
+    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
     """
-    cdef bool res = ccimgui.ImGui_Combo(
+    cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(sum(len(s) + 1 for s in items) + 1)
+    
+    # Store items in array
+    cdef int counter = 0
+    for p_str in items:
+        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        # Null terminated string
+        c_strings[counter + len(p_str)] = 0
+        counter += len(p_str) + 1
+    
+    # Null terminated list
+    c_strings[counter] = 0
+
+    cdef bool res = ccimgui.ImGui_ComboEx(
         _bytes(label),
         &current_item.value,
-        _bytes(items_separated_by_zeros)
+        c_strings,
+        popup_max_height_in_items
     )
+    ccimgui.ImGui_MemFree(c_strings)
     return res
 # [End Function]
 
@@ -1901,33 +1914,19 @@ def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
-def combo_ex(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1):
+def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
     """
     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
     """
-    cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(sum(len(s) + 1 for s in items) + 1)
-    
-    # Store items in array
-    cdef int counter = 0
-    for p_str in items:
-        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
-        # Null terminated string
-        c_strings[counter + len(p_str)] = 0
-        counter += len(p_str) + 1
-    
-    # Null terminated list
-    c_strings[counter] = 0
-
     cdef bool res = ccimgui.ImGui_ComboEx(
         _bytes(label),
         &current_item.value,
-        c_strings,
+        _bytes(items_separated_by_zeros),
         popup_max_height_in_items
     )
-    ccimgui.ImGui_MemFree(c_strings)
     return res
 # [End Function]
 
@@ -2072,10 +2071,10 @@ def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, wind
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_float(label: str, v: FloatPtr):
+def drag_float(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     """
     Widgets: Drag Sliders
     - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
@@ -2090,25 +2089,16 @@ def drag_float(label: str, v: FloatPtr):
     - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
     If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    If v_min >= v_max we have no bound
     """
-    cdef bool res = ccimgui.ImGui_DragFloat(
+    cdef bool res = ccimgui.ImGui_DragFloatEx(
         _bytes(label),
-        &v.value
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def drag_float2(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragFloat2(
-        _bytes(label),
-        &v.value
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2117,7 +2107,10 @@ def drag_float2(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+def drag_float2(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
     cdef float c_floats[2]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -2140,13 +2133,15 @@ def drag_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def drag_float3(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragFloat3(
+def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragFloat2Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2155,7 +2150,10 @@ def drag_float3(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+def drag_float3(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
     cdef float c_floats[3]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -2180,13 +2178,15 @@ def drag_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def drag_float4(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragFloat4(
+def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragFloat3Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2195,7 +2195,10 @@ def drag_float4(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+def drag_float4(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
     cdef float c_floats[4]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -2220,7 +2223,24 @@ def drag_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
+# ?returns(bool)
+def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragFloat4Ex(
+        _bytes(label),
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
 def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     """
@@ -2274,31 +2294,21 @@ def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: Flo
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def drag_int(label: str, v: IntPtr):
+def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     """
-    Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
+    If v_min >= v_max we have no bound
     """
-    cdef bool res = ccimgui.ImGui_DragInt(
+    cdef bool res = ccimgui.ImGui_DragIntEx(
         _bytes(label),
-        &v.value
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def drag_int2(label: str, v: Sequence[IntPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragInt2(
-        _bytes(label),
-        &v.value
+        &value.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2307,7 +2317,7 @@ def drag_int2(label: str, v: Sequence[IntPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+def drag_int2(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef int c_ints[2]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -2330,13 +2340,15 @@ def drag_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_m
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def drag_int3(label: str, v: Sequence[IntPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragInt3(
+def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragInt2Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2345,7 +2357,7 @@ def drag_int3(label: str, v: Sequence[IntPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+def drag_int3(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef int c_ints[3]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -2370,13 +2382,15 @@ def drag_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_m
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def drag_int4(label: str, v: Sequence[IntPtr]):
-    """
-    Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragInt4(
+def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragInt3Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -2385,7 +2399,7 @@ def drag_int4(label: str, v: Sequence[IntPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def drag_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef int c_ints[4]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -2409,16 +2423,33 @@ def drag_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_m
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
-def drag_int_ex(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_DragInt4Ex(
+        _bytes(label),
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     """
     If v_min >= v_max we have no bound
     """
     cdef bool res = ccimgui.ImGui_DragIntEx(
         _bytes(label),
-        &value.value,
+        &v.value,
         v_speed,
         v_min,
         v_max,
@@ -3699,42 +3730,33 @@ def im_vector_destruct(vector: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def image(user_texture_id: Any, size: tuple):
+def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
-    ccimgui.ImGui_Image(
-        user_texture_id,
-        _cast_tuple_ImVec2(size)
+    ccimgui.ImGui_ImageEx(
+        <void*><uintptr_t>user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(tint_col),
+        _cast_tuple_ImVec4(border_col)
     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def image_button(str_id: str, user_texture_id: Any, size: tuple):
-    """
-    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
-    """
-    cdef bool res = ccimgui.ImGui_ImageButton(
-        _bytes(str_id),
-        user_texture_id,
-        _cast_tuple_ImVec2(size)
-    )
-    return res
 # [End Function]
 
 # [Function]
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def image_button_ex(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+    """
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
+    """
     cdef bool res = ccimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
         <void*><uintptr_t>user_texture_id,
@@ -3748,12 +3770,29 @@ def image_button_ex(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+    cdef bool res = ccimgui.ImGui_ImageButtonEx(
+        _bytes(str_id),
+        user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(bg_col),
+        _cast_tuple_ImVec4(tint_col)
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
 # ?returns(None)
-def image_ex(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
+def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
     ccimgui.ImGui_ImageEx(
-        <void*><uintptr_t>user_texture_id,
+        user_texture_id,
         _cast_tuple_ImVec2(size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -4015,21 +4054,10 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-def indent():
-    """
-    Implied indent_w = 0.0f
-    """
-    ccimgui.ImGui_Indent()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def indent_ex(indent_w: float=0.0):
+def indent(indent_w: float=0.0):
     """
     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
     """
@@ -4041,23 +4069,21 @@ def indent_ex(indent_w: float=0.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?returns(bool)
-def input_double(label: str, v: DoublePtr):
+# ?returns(None)
+def indent_ex(indent_w: float=0.0):
     """
-    Implied step = 0.0, step_fast = 0.0, format = '%.6f', flags = 0
+    Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
     """
-    cdef bool res = ccimgui.ImGui_InputDouble(
-        _bytes(label),
-        &v.value
+    ccimgui.ImGui_IndentEx(
+        indent_w
     )
-    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
+def input_double(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputDoubleEx(
         _bytes(label),
         &v.value,
@@ -4073,28 +4099,14 @@ def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def input_float(label: str, v: FloatPtr):
-    """
-    Implied step = 0.0f, step_fast = 0.0f, format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputFloat(
+def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputDoubleEx(
         _bytes(label),
-        &v.value
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def input_float2(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputFloat2(
-        _bytes(label),
-        &v.value
+        &v.value,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -4103,7 +4115,23 @@ def input_float2(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+def input_float(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputFloatEx(
+        _bytes(label),
+        &v.value,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def input_float2(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float c_floats[2]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -4123,13 +4151,12 @@ def input_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def input_float3(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputFloat3(
+def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputFloat2Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -4138,7 +4165,7 @@ def input_float3(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+def input_float3(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float c_floats[3]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -4160,13 +4187,12 @@ def input_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def input_float4(label: str, v: Sequence[FloatPtr]):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputFloat4(
+def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputFloat3Ex(
         _bytes(label),
-        &v.value
+        &v.value,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -4175,7 +4201,7 @@ def input_float4(label: str, v: Sequence[FloatPtr]):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+def input_float4(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef float c_floats[4]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -4197,7 +4223,21 @@ def input_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
+# ?returns(bool)
+def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputFloat4Ex(
+        _bytes(label),
+        &v.value,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
 def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputFloatEx(
@@ -4373,30 +4413,16 @@ def input_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, 
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def input_text(label: str, buf: str, buf_size: Any, flags: int=0):
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
     - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
     Implied callback = null, user_data = null
     """
-    cdef bool res = ccimgui.ImGui_InputText(
-        _bytes(label),
-        _bytes(buf),
-        buf_size,
-        flags
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(True)
-# ?active(True)
-# ?returns(bool)
-def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextEx(
         _bytes(label),
         buf.buffer,
@@ -4404,6 +4430,22 @@ def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None
         flags,
         NULL,
         NULL
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
+    cdef bool res = ccimgui.ImGui_InputTextEx(
+        _bytes(label),
+        _bytes(buf),
+        buf_size,
+        flags,
+        callback,
+        user_data
     )
     return res
 # [End Function]
@@ -4442,28 +4484,13 @@ def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0,
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: int=0):
-    """
-    Implied callback = null, user_data = null
-    """
-    cdef bool res = ccimgui.ImGui_InputTextWithHint(
-        _bytes(label),
-        _bytes(hint),
-        _bytes(buf),
-        buf_size,
-        flags
-    )
-    return res
-# [End Function]
-
-# [Function]
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_text_with_hint_ex(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
+def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
+    """
+    Implied callback = null, user_data = null
+    """
     cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
         _bytes(label),
         _bytes(hint),
@@ -4472,6 +4499,23 @@ def input_text_with_hint_ex(label: str, hint: str, buf: StrPtr, flags: int=0, ca
         flags,
         NULL,
         NULL
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
+    cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
+        _bytes(label),
+        _bytes(hint),
+        _bytes(buf),
+        buf_size,
+        flags,
+        callback,
+        user_data
     )
     return res
 # [End Function]
@@ -4657,7 +4701,7 @@ def is_item_hovered(flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def is_item_toggled_open():
     """
@@ -5274,7 +5318,7 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def new_line():
     """
@@ -5345,18 +5389,45 @@ def open_popup_on_item_click(str_id: str=None, popup_flags: int=1):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def plot_histogram(label: str, values: FloatPtr, values_count: int):
+def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     """
     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
     """
-    ccimgui.ImGui_PlotHistogram(
-        _bytes(label),
-        &values.value,
-        values_count
-    )
+    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
+    if c_floats is NULL:
+        raise MemoryError()
+    
+    for i in range(len(values)):
+        c_floats[i] = values[i]
+    
+    if overlay_text is None:
+        ccimgui.ImGui_PlotHistogramEx(
+            _bytes(label),
+            c_floats,
+            len(values),
+            values_offset,
+            NULL,
+            scale_min,
+            scale_max,
+            _cast_tuple_ImVec2(graph_size),
+            stride
+        )
+    else:
+        ccimgui.ImGui_PlotHistogramEx(
+            _bytes(label),
+            c_floats,
+            len(values),
+            values_offset,
+            _bytes(overlay_text),
+            scale_min,
+            scale_max,
+            _cast_tuple_ImVec2(graph_size),
+            stride
+        )
+    ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
 # [Function]
@@ -5394,21 +5465,14 @@ def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, v
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(None)
-def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
-    if c_floats is NULL:
-        raise MemoryError()
-    
-    for i in range(len(values)):
-        array[i] = values[i]
-    
+def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     ccimgui.ImGui_PlotHistogramEx(
         _bytes(label),
-        c_floats,
-        len(values),
+        &values.value,
+        values_count,
         values_offset,
         _bytes(overlay_text),
         scale_min,
@@ -5416,24 +5480,50 @@ def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0,
         _cast_tuple_ImVec2(graph_size),
         stride
     )
-    ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def plot_lines(label: str, values: FloatPtr, values_count: int):
+def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     """
     Widgets: Data Plotting
     - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
     """
-    ccimgui.ImGui_PlotLines(
-        _bytes(label),
-        &values.value,
-        values_count
-    )
+    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
+    if c_floats is NULL:
+        raise MemoryError()
+    
+    for i in range(len(values)):
+        c_floats[i] = values[i]
+
+    if overlay_text is None:
+        ccimgui.ImGui_PlotLinesEx(
+            _bytes(label),
+            c_floats,
+            len(values),
+            values_offset,
+            NULL,
+            scale_min,
+            scale_max,
+            _cast_tuple_ImVec2(graph_size),
+            stride
+        )
+    else:
+        ccimgui.ImGui_PlotLinesEx(
+            _bytes(label),
+            c_floats,
+            len(values),
+            values_offset,
+            _bytes(overlay_text),
+            scale_min,
+            scale_max,
+            _cast_tuple_ImVec2(graph_size),
+            stride
+        )
+    ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
 # [Function]
@@ -5471,21 +5561,14 @@ def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, value
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(None)
-def plot_lines_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
-    if c_floats is NULL:
-        raise MemoryError()
-    
-    for i in range(len(values)):
-        array[i] = values[i]
-
+def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     ccimgui.ImGui_PlotLinesEx(
         _bytes(label),
-        c_floats,
-        len(values),
+        &values.value,
+        values_count,
         values_offset,
         _bytes(overlay_text),
         scale_min,
@@ -5493,7 +5576,6 @@ def plot_lines_ex(label: str, values: Sequence[float], values_offset: int=0, ove
         _cast_tuple_ImVec2(graph_size),
         stride
     )
-    ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
 # [Function]
@@ -5540,21 +5622,13 @@ def pop_item_width():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def pop_style_color():
+def pop_style_color(count: int=1):
     """
     Implied count = 1
     """
-    ccimgui.ImGui_PopStyleColor()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(True)
-# ?returns(None)
-def pop_style_color_ex(count: int=1):
     ccimgui.ImGui_PopStyleColorEx(
         count
     )
@@ -5564,16 +5638,28 @@ def pop_style_color_ex(count: int=1):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def pop_style_var():
+def pop_style_color_ex(count: int=1):
+    ccimgui.ImGui_PopStyleColorEx(
+        count
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def pop_style_var(count: int=1):
     """
     Implied count = 1
     """
-    ccimgui.ImGui_PopStyleVar()
+    ccimgui.ImGui_PopStyleVarEx(
+        count
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def pop_style_var_ex(count: int=1):
     ccimgui.ImGui_PopStyleVarEx(
@@ -5935,19 +6021,22 @@ def reset_mouse_drag_delta_ex(button: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def same_line():
+def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
     """
-    Implied offset_from_start_x = 0.0f, spacing = -1.0f
+    Call between widgets or groups to layout them horizontally. x position given in window coordinates.
     """
-    ccimgui.ImGui_SameLine()
+    ccimgui.ImGui_SameLineEx(
+        offset_from_start_x,
+        spacing
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
     """
@@ -5987,41 +6076,46 @@ def save_ini_settings_to_memory(out_ini_size: Any=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def selectable(label: str):
+def selectable(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
     """
     Widgets: Selectables
     - A selectable highlights when hovered, and can display another color when selected.
     - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
     Implied selected = false, flags = 0, size = imvec2(0, 0)
+    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
     """
-    cdef bool res = ccimgui.ImGui_Selectable(
-        _bytes(label)
+    cdef bool res = ccimgui.ImGui_SelectableEx(
+        _bytes(label),
+        selected,
+        flags,
+        _cast_tuple_ImVec2(size)
     )
     return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0):
+def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)):
     """
-    Implied size = imvec2(0, 0)
+    'bool* p_selected' point to the selection state (read-write), as a convenient helper.
     """
-    cdef bool res = ccimgui.ImGui_SelectableBoolPtr(
+    cdef bool res = ccimgui.ImGui_SelectableBoolPtrEx(
         _bytes(label),
         &p_selected.value,
-        flags
+        flags,
+        _cast_tuple_ImVec2(size)
     )
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(bool)
 def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)):
     """
@@ -6038,7 +6132,7 @@ def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: 
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(bool)
 def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
     """
@@ -6247,7 +6341,7 @@ def set_item_allow_overlap():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def set_item_default_focus():
     """
@@ -6885,25 +6979,13 @@ def show_user_guide():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def slider_angle(label: str, v_rad: FloatPtr):
+def slider_angle(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
     """
     Implied v_degrees_min = -360.0f, v_degrees_max = +360.0f, format = '%.0f deg', flags = 0
     """
-    cdef bool res = ccimgui.ImGui_SliderAngle(
-        _bytes(label),
-        &v_rad.value
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(True)
-# ?returns(bool)
-def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderAngleEx(
         _bytes(label),
         &v_rad.value,
@@ -6919,38 +7001,14 @@ def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_float(label: str, v: FloatPtr, v_min: float, v_max: float):
-    """
-    Widgets: Regular Sliders
-    - CTRL+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
-    - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
-    - Format string may also be set to NULL or use the default format ("%f" or "%d").
-    - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
-    If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloat(
+def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderAngleEx(
         _bytes(label),
-        &v.value,
-        v_min,
-        v_max
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def slider_float2(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloat2(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max
+        &v_rad.value,
+        v_degrees_min,
+        v_degrees_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -6959,7 +7017,36 @@ def slider_float2(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+def slider_float(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    """
+    Widgets: Regular Sliders
+    - CTRL+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
+    - Format string may also be set to NULL or use the default format ("%f" or "%d").
+    - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
+    If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
+    Implied format = '%.3f', flags = 0
+    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
+    """
+    cdef bool res = ccimgui.ImGui_SliderFloatEx(
+        _bytes(label),
+        &value.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_float2(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    """
+    Implied format = '%.3f', flags = 0
+    """
     cdef float c_floats[2]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -6981,15 +7068,14 @@ def slider_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloat3(
+def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
         _bytes(label),
         &v.value,
         v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -6998,7 +7084,10 @@ def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+def slider_float3(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    """
+    Implied format = '%.3f', flags = 0
+    """
     cdef float c_floats[3]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -7022,15 +7111,14 @@ def slider_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloat4(
+def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
         _bytes(label),
         &v.value,
         v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -7039,7 +7127,10 @@ def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+def slider_float4(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    """
+    Implied format = '%.3f', flags = 0
+    """
     cdef float c_floats[4]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
@@ -7062,16 +7153,13 @@ def slider_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
-def slider_float_ex(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    """
-    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloatEx(
+def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
         _bytes(label),
-        &value.value,
+        &v.value,
         v_min,
         v_max,
         _bytes(format_),
@@ -7084,32 +7172,17 @@ def slider_float_ex(label: str, value: FloatPtr, v_min: float, v_max: float, for
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_int(label: str, v: IntPtr, v_min: int, v_max: int):
+def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     """
-    Implied format = '%d', flags = 0
+    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
     """
-    cdef bool res = ccimgui.ImGui_SliderInt(
+    cdef bool res = ccimgui.ImGui_SliderFloatEx(
         _bytes(label),
         &v.value,
         v_min,
-        v_max
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-def slider_int2(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
-    """
-    Implied format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderInt2(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -7118,7 +7191,29 @@ def slider_int2(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+def slider_int(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    """
+    Implied format = '%d', flags = 0
+    """
+    cdef bool res = ccimgui.ImGui_SliderIntEx(
+        _bytes(label),
+        &value.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def slider_int2(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    """
+    Implied format = '%d', flags = 0
+    """
     cdef int c_ints[2]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -7140,15 +7235,14 @@ def slider_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: in
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
-    """
-    Implied format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderInt3(
+def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderInt2Ex(
         _bytes(label),
         &v.value,
         v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -7157,7 +7251,10 @@ def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+def slider_int3(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    """
+    Implied format = '%d', flags = 0
+    """
     cdef int c_ints[3]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -7181,15 +7278,14 @@ def slider_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: in
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
-    """
-    Implied format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderInt4(
+def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderInt3Ex(
         _bytes(label),
         &v.value,
         v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -7198,7 +7294,10 @@ def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def slider_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    """
+    Implied format = '%d', flags = 0
+    """
     cdef int c_ints[4]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
@@ -7221,13 +7320,29 @@ def slider_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: in
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
+# ?use_template(False)
+# ?active(False)
 # ?returns(bool)
-def slider_int_ex(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderInt4Ex(
+        _bytes(label),
+        &v.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderIntEx(
         _bytes(label),
-        &value.value,
+        &v.value,
         v_min,
         v_max,
         _bytes(format_),
@@ -7509,19 +7624,22 @@ def table_next_column():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def table_next_row():
+def table_next_row(row_flags: int=0, min_row_height: float=0.0):
     """
-    Implied row_flags = 0, min_row_height = 0.0f
+    Append into the first cell of a new row.
     """
-    ccimgui.ImGui_TableNextRow()
+    ccimgui.ImGui_TableNextRowEx(
+        row_flags,
+        min_row_height
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
     """
@@ -7577,10 +7695,10 @@ def table_set_column_index(column_n: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def table_setup_column(label: str, flags: int=0):
+def table_setup_column(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
     """
     Tables: Headers & Columns declaration
     - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
@@ -7592,9 +7710,11 @@ def table_setup_column(label: str, flags: int=0):
     - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
     Implied init_width_or_weight = 0.0f, user_id = 0
     """
-    ccimgui.ImGui_TableSetupColumn(
+    ccimgui.ImGui_TableSetupColumnEx(
         _bytes(label),
-        flags
+        flags,
+        init_width_or_weight,
+        user_id
     )
 # [End Function]
 
@@ -7918,19 +8038,21 @@ def tree_push_ptr(ptr_id: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def unindent():
+def unindent(indent_w: float=0.0):
     """
-    Implied indent_w = 0.0f
+    Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
     """
-    ccimgui.ImGui_Unindent()
+    ccimgui.ImGui_UnindentEx(
+        indent_w
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(None)
 def unindent_ex(indent_w: float=0.0):
     """
@@ -9277,18 +9399,21 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
+    def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
         """
-        Implied rounding = 0.0f, flags = 0, thickness = 1.0f
+        A: upper-left, b: lower-right (== upper-left + size)
         """
-        ccimgui.ImDrawList_AddRect(
+        ccimgui.ImDrawList_AddRectEx(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
-            col
+            col,
+            rounding,
+            flags,
+            thickness
         )
     # [End Method]
 
@@ -9312,24 +9437,26 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
+    def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
         """
-        Implied rounding = 0.0f, flags = 0
+        A: upper-left, b: lower-right (== upper-left + size)
         """
-        ccimgui.ImDrawList_AddRectFilled(
+        ccimgui.ImDrawList_AddRectFilledEx(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
-            col
+            col,
+            rounding,
+            flags
         )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?returns(None)
     def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
         """
@@ -13788,7 +13915,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?returns(tuple)
     @property
@@ -13799,11 +13926,17 @@ cdef class ImGuiIO:
         (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
         Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
         """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePos
-        return _cast_ImVec2_tuple(res)
+        # cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePos
+        # return _cast_ImVec2_tuple(res)
+
+        # Not sure why but the typical way to read this member
+        # return nan unless this function is called instead. I'm going to
+        # raise an error below to make sure a user knows this.
+        return _cast_ImVec2_tuple(ccimgui.ImGui_GetMousePos())
     @mouse_pos.setter
     def mouse_pos(self, value: tuple):
-        dereference(self._ptr).MousePos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).MousePos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14718,7 +14851,7 @@ cdef class ImGuiKeyData:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 cdef class ImGuiListClipper:
     """
@@ -14751,8 +14884,8 @@ cdef class ImGuiListClipper:
         wrapper._ptr = _ptr
         return wrapper
     
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
+    # def __init__(self):
+    #     raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
 
     # [Field]
@@ -14870,7 +15003,7 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Method]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?returns(None)
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
@@ -14879,6 +15012,28 @@ cdef class ImGuiListClipper:
             items_count,
             items_height
         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(ImGuiListClipper)
+    @staticmethod
+    def create():
+        print("Creating")
+        cdef ccimgui.ImGuiListClipper* clipper = <ccimgui.ImGuiListClipper*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiListClipper))
+        return ImGuiListClipper.from_ptr(clipper)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(None)
+    @staticmethod
+    def destroy(self: ImGuiListClipper):
+        print("Destroying")
+        ccimgui.ImGui_MemFree(self._ptr)
+        self._ptr = NULL
     # [End Method]
 
     # [Method]
@@ -16925,7 +17080,7 @@ cdef class ImGuiTableSortSpecs:
     # [Field]
     # ?use_template(True)
     # ?active(True)
-    # ?returns(ImGuiTableColumnSortSpecs)
+    # ?returns(List[ImGuiTableColumnSortSpecs])
     @property
     def specs(self):
         """

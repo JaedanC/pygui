@@ -12,8 +12,8 @@ INDEX_SIZE: int
 FLT_MIN: float
 FLT_MAX: float
 
-IMGUI_PAYLOAD_TYPE_COLOR_3F: int
-IMGUI_PAYLOAD_TYPE_COLOR_4F: int
+PAYLOAD_TYPE_COLOR_3F: int
+PAYLOAD_TYPE_COLOR_4F: int
 
 class BoolPtr:
     value: bool
@@ -880,36 +880,36 @@ def begin_popup(str_id: str, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def begin_table(str_id: str, column: int, flags: int=0) -> bool:
-#     """
-#     Tables
-#     - Full-featured replacement for old Columns API.
-#     - See Demo->Tables for demo code. See top of imgui_tables.cpp for general commentary.
-#     - See ImGuiTableFlags_ and ImGuiTableColumnFlags_ enums for a description of available flags.
-#     The typical call flow is:
-#     - 1. Call BeginTable(), early out if returning false.
-#     - 2. Optionally call TableSetupColumn() to submit column name/flags/defaults.
-#     - 3. Optionally call TableSetupScrollFreeze() to request scroll freezing of columns/rows.
-#     - 4. Optionally call TableHeadersRow() to submit a header row. Names are pulled from TableSetupColumn() data.
-#     - 5. Populate contents:
-#     - In most situations you can use TableNextRow() + TableSetColumnIndex(N) to start appending into a column.
-#     - If you are using tables as a sort of grid, where every column is holding the same type of contents,
-#     you may prefer using TableNextColumn() instead of TableNextRow() + TableSetColumnIndex().
-#     TableNextColumn() will automatically wrap-around into the next row if needed.
-#     - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
-#     - Summary of possible call flow:
-#     --------------------------------------------------------------------------------------------------------
-#     TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
-#     TableNextRow() -> TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK
-#     TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
-#     TableNextRow()   -> Text("Hello 0")   // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
-#     --------------------------------------------------------------------------------------------------------
-#     - 5. Call EndTable()
-#     Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
-#     """
-#     pass
+def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool:
+    """
+    Tables
+    - Full-featured replacement for old Columns API.
+    - See Demo->Tables for demo code. See top of imgui_tables.cpp for general commentary.
+    - See ImGuiTableFlags_ and ImGuiTableColumnFlags_ enums for a description of available flags.
+    The typical call flow is:
+    - 1. Call BeginTable(), early out if returning false.
+    - 2. Optionally call TableSetupColumn() to submit column name/flags/defaults.
+    - 3. Optionally call TableSetupScrollFreeze() to request scroll freezing of columns/rows.
+    - 4. Optionally call TableHeadersRow() to submit a header row. Names are pulled from TableSetupColumn() data.
+    - 5. Populate contents:
+    - In most situations you can use TableNextRow() + TableSetColumnIndex(N) to start appending into a column.
+    - If you are using tables as a sort of grid, where every column is holding the same type of contents,
+    you may prefer using TableNextColumn() instead of TableNextRow() + TableSetColumnIndex().
+    TableNextColumn() will automatically wrap-around into the next row if needed.
+    - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
+    - Summary of possible call flow:
+    --------------------------------------------------------------------------------------------------------
+    TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
+    TableNextRow() -> TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK
+    TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
+    TableNextRow()   -> Text("Hello 0")   // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
+    --------------------------------------------------------------------------------------------------------
+    - 5. Call EndTable()
+    Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
+    """
+    pass
 
-def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool: ...
+# def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool: ...
 def begin_tooltip() -> bool:
     """
     Tooltips
@@ -931,7 +931,7 @@ def bullet_text(fmt: str) -> None:
     pass
 
 # def bullet_text_v(fmt: str) -> None: ...
-def button(label: str) -> bool:
+def button(label: str, size: tuple=(0, 0)) -> bool:
     """
     Widgets: Main
     - Most widgets return true when the value has been changed or when pressed/selected
@@ -952,14 +952,14 @@ def button(label: str) -> bool:
 #     """
 #     pass
 
-# def calc_text_size(text: str) -> tuple:
-#     """
-#     Text Utilities
-#     Implied text_end = null, hide_text_after_double_hash = false, wrap_width = -1.0f
-#     """
-#     pass
+def calc_text_size(text: str) -> tuple:
+    """
+    Text Utilities
+    Implied text_end = null, hide_text_after_double_hash = false, wrap_width = -1.0f
+    """
+    pass
 
-def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> tuple: ...
+# def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> tuple: ...
 def checkbox(label: str, v: BoolPtr) -> bool: ...
 def checkbox_flags(label: str, flags: IntPtr, flags_value: int) -> bool: ...
 # def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int) -> bool: ...
@@ -982,11 +982,11 @@ def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0) -> 
     """
     pass
 
-# def color_button(desc_id: str, col: tuple, flags: int=0) -> bool:
-#     """
-#     Implied size = imvec2(0, 0)
-#     """
-#     pass
+def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)) -> bool:
+    """
+    Display a color square/button, hover for details, return true when pressed.
+    """
+    pass
 
 # def color_button_ex(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)) -> bool:
 #     """
@@ -995,7 +995,7 @@ def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0) -> 
 #     pass
 
 # def color_convert_float4_to_u32(in_: tuple) -> int: ...
-def color_convert_hsv_to_rgb(h: float, s: float, v: float, colour: Vec4Ptr) -> None: ...
+def color_convert_hsv_to_rgb(h: float, s: float, value: float) -> tuple: ...
 # def color_convert_rgb_to_hsv(r: float, g: float, b: float, out_h: FloatPtr, out_s: FloatPtr, out_v: FloatPtr) -> None: ...
 # def color_convert_u32_to_float4(in_: int) -> tuple:
 #     """
@@ -1023,11 +1023,11 @@ def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=No
 #     pass
 
 # def columns_ex(count: int=1, id_: str=None, border: bool=True) -> None: ...
-# def combo(label: str, current_item: IntPtr, items_separated_by_zeros: str) -> bool:
-#     """
-#     Implied popup_max_height_in_items = -1
-#     """
-#     pass
+def combo(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1) -> bool:
+    """
+    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+    """
+    pass
 
 # def combo_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int) -> bool:
 #     """
@@ -1043,11 +1043,11 @@ def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=No
 #     pass
 
 # def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
-def combo_ex(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1) -> bool:
-    """
-    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
-    """
-    pass
+# def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1) -> bool:
+#     """
+#     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+#     """
+#     pass
 
 def create_context(shared_font_atlas: ImFontAtlas=None) -> ImGuiContext:
     """
@@ -1109,7 +1109,7 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     pass
 
 # def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None) -> int: ...
-def drag_float(label: str, v: FloatPtr) -> bool:
+def drag_float(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
     """
     Widgets: Drag Sliders
     - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
@@ -1124,35 +1124,36 @@ def drag_float(label: str, v: FloatPtr) -> bool:
     - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
     If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    """
-    pass
-
-# def drag_float2(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-#     """
-#     pass
-
-def drag_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
-# def drag_float3(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-#     """
-#     pass
-
-def drag_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
-# def drag_float4(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-#     """
-#     pass
-
-def drag_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
-def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
-    """
     If v_min >= v_max we have no bound
     """
     pass
+
+def drag_float2(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
+    pass
+
+# def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def drag_float3(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
+    pass
+
+# def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def drag_float4(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
+    pass
+
+# def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+# def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
+#     """
+#     If v_min >= v_max we have no bound
+#     """
+#     pass
 
 # def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr) -> bool:
 #     """
@@ -1161,38 +1162,23 @@ def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0,
 #     pass
 
 # def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0) -> bool: ...
-# def drag_int(label: str, v: IntPtr) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-#     """
-#     pass
-
-# def drag_int2(label: str, v: Sequence[IntPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-#     """
-#     pass
-
-def drag_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
-# def drag_int3(label: str, v: Sequence[IntPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-#     """
-#     pass
-
-def drag_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
-# def drag_int4(label: str, v: Sequence[IntPtr]) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-#     """
-#     pass
-
-def drag_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
-def drag_int_ex(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
+def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
     """
     If v_min >= v_max we have no bound
     """
     pass
+
+def drag_int2(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+# def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+def drag_int3(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+# def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+# def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+# def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
+#     """
+#     If v_min >= v_max we have no bound
+#     """
+#     pass
 
 # def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr) -> bool:
 #     """
@@ -1748,22 +1734,22 @@ def get_window_draw_list() -> ImDrawList:
 #     """
 #     pass
 
-# def image(user_texture_id: Any, size: tuple) -> None:
-#     """
-#     Widgets: Images
-#     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-#     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
-#     """
-#     pass
+def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
+    """
+    Widgets: Images
+    - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
+    """
+    pass
 
-# def image_button(str_id: str, user_texture_id: Any, size: tuple) -> bool:
-#     """
-#     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
-#     """
-#     pass
+def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
+    """
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
+    """
+    pass
 
-def image_button_ex(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool: ...
-def image_ex(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None: ...
+# def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool: ...
+# def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None: ...
 # def impl_glfw_char_callback(window: GLFWwindow, c: int) -> None: ...
 # def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int) -> None: ...
 # def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float) -> None: ...
@@ -1788,53 +1774,28 @@ def impl_open_gl_3_init(glsl_version: str=None) -> bool: ...
 def impl_open_gl_3_new_frame() -> None: ...
 def impl_open_gl_3_render_draw_data(draw_data: ImDrawData) -> None: ...
 def impl_open_gl_3_shutdown() -> None: ...
-# def indent() -> None:
-#     """
-#     Implied indent_w = 0.0f
-#     """
-#     pass
-
-def indent_ex(indent_w: float=0.0) -> None:
+def indent(indent_w: float=0.0) -> None:
     """
     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
     """
     pass
 
-# def input_double(label: str, v: DoublePtr) -> bool:
+# def indent_ex(indent_w: float=0.0) -> None:
 #     """
-#     Implied step = 0.0, step_fast = 0.0, format = '%.6f', flags = 0
-#     """
-#     pass
-
-def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0) -> bool: ...
-# def input_float(label: str, v: FloatPtr) -> bool:
-#     """
-#     Implied step = 0.0f, step_fast = 0.0f, format = '%.3f', flags = 0
+#     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
 #     """
 #     pass
 
-# def input_float2(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def input_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
-# def input_float3(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def input_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
-# def input_float4(label: str, v: Sequence[FloatPtr]) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def input_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
-def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def input_double(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0) -> bool: ...
+# def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0) -> bool: ...
+def input_float(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float2(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+# def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float3(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+# def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float4(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+# def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+# def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
 def input_int(label: str, v: IntPtr) -> bool:
     """
     Implied step = 1, step_fast = 100, flags = 0
@@ -1859,16 +1820,16 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 #     pass
 
 # def input_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
-# def input_text(label: str, buf: str, buf_size: Any, flags: int=0) -> bool:
-#     """
-#     Widgets: Input with Keyboard
-#     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
-#     - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
-#     Implied callback = null, user_data = null
-#     """
-#     pass
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
+    """
+    Widgets: Input with Keyboard
+    - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
+    - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
+    Implied callback = null, user_data = null
+    """
+    pass
 
-def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+# def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
 # def input_text_multiline(label: str, buf: str, buf_size: Any) -> bool:
 #     """
 #     Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
@@ -1876,13 +1837,13 @@ def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None
 #     pass
 
 # def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
-# def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: int=0) -> bool:
-#     """
-#     Implied callback = null, user_data = null
-#     """
-#     pass
+def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
+    """
+    Implied callback = null, user_data = null
+    """
+    pass
 
-def input_text_with_hint_ex(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+# def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
 # def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
 #     """
 #     Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
@@ -1970,11 +1931,11 @@ def is_item_hovered(flags: int=0) -> bool:
     """
     pass
 
-# def is_item_toggled_open() -> bool:
-#     """
-#     Was the last item open state toggled? set by treenode().
-#     """
-#     pass
+def is_item_toggled_open() -> bool:
+    """
+    Was the last item open state toggled? set by treenode().
+    """
+    pass
 
 # def is_item_visible() -> bool:
 #     """
@@ -2214,11 +2175,11 @@ def new_frame() -> None:
     """
     pass
 
-# def new_line() -> None:
-#     """
-#     Undo a sameline() or force a new line when in a horizontal-layout context.
-#     """
-#     pass
+def new_line() -> None:
+    """
+    Undo a sameline() or force a new line when in a horizontal-layout context.
+    """
+    pass
 
 # def next_column() -> None:
 #     """
@@ -2252,11 +2213,11 @@ def open_popup(str_id: str, popup_flags: int=0) -> None:
 #     """
 #     pass
 
-# def plot_histogram(label: str, values: FloatPtr, values_count: int) -> None:
-#     """
-#     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
-#     """
-#     pass
+def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None:
+    """
+    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
+    """
+    pass
 
 # def plot_histogram_callback(label: str, values_getter: Callable, data: Any, values_count: int) -> None:
 #     """
@@ -2265,14 +2226,14 @@ def open_popup(str_id: str, popup_flags: int=0) -> None:
 #     pass
 
 # def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
-def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
-# def plot_lines(label: str, values: FloatPtr, values_count: int) -> None:
-#     """
-#     Widgets: Data Plotting
-#     - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
-#     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
-#     """
-#     pass
+# def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
+def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None:
+    """
+    Widgets: Data Plotting
+    - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
+    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
+    """
+    pass
 
 # def plot_lines_callback(label: str, values_getter: Callable, data: Any, values_count: int) -> None:
 #     """
@@ -2281,7 +2242,7 @@ def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0,
 #     pass
 
 # def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
-def plot_lines_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
+# def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
 def pop_button_repeat() -> None: ...
 # def pop_clip_rect() -> None: ...
 # def pop_font() -> None: ...
@@ -2292,20 +2253,20 @@ def pop_id() -> None:
     pass
 
 # def pop_item_width() -> None: ...
-# def pop_style_color() -> None:
-#     """
-#     Implied count = 1
-#     """
-#     pass
+def pop_style_color(count: int=1) -> None:
+    """
+    Implied count = 1
+    """
+    pass
 
-def pop_style_color_ex(count: int=1) -> None: ...
-# def pop_style_var() -> None:
-#     """
-#     Implied count = 1
-#     """
-#     pass
+# def pop_style_color_ex(count: int=1) -> None: ...
+def pop_style_var(count: int=1) -> None:
+    """
+    Implied count = 1
+    """
+    pass
 
-def pop_style_var_ex(count: int=1) -> None: ...
+# def pop_style_var_ex(count: int=1) -> None: ...
 # def pop_tab_stop() -> None: ...
 def pop_text_wrap_pos() -> None: ...
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None) -> None: ...
@@ -2456,17 +2417,17 @@ def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_r
 #     """
 #     pass
 
-def same_line() -> None:
-    """
-    Implied offset_from_start_x = 0.0f, spacing = -1.0f
-    """
-    pass
-
-def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
+def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
     """
     Call between widgets or groups to layout them horizontally. x position given in window coordinates.
     """
     pass
+
+# def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
+#     """
+#     Call between widgets or groups to layout them horizontally. x position given in window coordinates.
+#     """
+#     pass
 
 # def save_ini_settings_to_disk(ini_filename: str) -> None:
 #     """
@@ -2480,32 +2441,33 @@ def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
 #     """
 #     pass
 
-def selectable(label: str) -> bool:
+def selectable(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)) -> bool:
     """
     Widgets: Selectables
     - A selectable highlights when hovered, and can display another color when selected.
     - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
     Implied selected = false, flags = 0, size = imvec2(0, 0)
+    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
     """
     pass
 
-def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0) -> bool:
-    """
-    Implied size = imvec2(0, 0)
-    """
-    pass
-
-def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)) -> bool:
+def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)) -> bool:
     """
     'bool* p_selected' point to the selection state (read-write), as a convenient helper.
     """
     pass
 
-def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)) -> bool:
-    """
-    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
-    """
-    pass
+# def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)) -> bool:
+#     """
+#     'bool* p_selected' point to the selection state (read-write), as a convenient helper.
+#     """
+#     pass
+
+# def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)) -> bool:
+#     """
+#     'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
+#     """
+#     pass
 
 def separator() -> None:
     """
@@ -2591,13 +2553,13 @@ def set_item_allow_overlap() -> None:
     """
     pass
 
-# def set_item_default_focus() -> None:
-#     """
-#     Focus, Activation
-#     - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
-#     Make last item the default focused item of a window.
-#     """
-#     pass
+def set_item_default_focus() -> None:
+    """
+    Focus, Activation
+    - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
+    Make last item the default focused item of a window.
+    """
+    pass
 
 # def set_keyboard_focus_here() -> None:
 #     """
@@ -2879,80 +2841,81 @@ def show_user_guide() -> None:
     """
     pass
 
-# def slider_angle(label: str, v_rad: FloatPtr) -> bool:
-#     """
-#     Implied v_degrees_min = -360.0f, v_degrees_max = +360.0f, format = '%.0f deg', flags = 0
-#     """
-#     pass
-
-def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0) -> bool: ...
-# def slider_float(label: str, v: FloatPtr, v_min: float, v_max: float) -> bool:
-#     """
-#     Widgets: Regular Sliders
-#     - CTRL+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
-#     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
-#     - Format string may also be set to NULL or use the default format ("%f" or "%d").
-#     - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
-#     If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-# def slider_float2(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def slider_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
-# def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def slider_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
-# def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float) -> bool:
-#     """
-#     Implied format = '%.3f', flags = 0
-#     """
-#     pass
-
-def slider_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
-def slider_float_ex(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+def slider_angle(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0) -> bool:
     """
+    Implied v_degrees_min = -360.0f, v_degrees_max = +360.0f, format = '%.0f deg', flags = 0
+    """
+    pass
+
+# def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0) -> bool: ...
+def slider_float(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Widgets: Regular Sliders
+    - CTRL+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
+    - Format string may also be set to NULL or use the default format ("%f" or "%d").
+    - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
+    If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
+    Implied format = '%.3f', flags = 0
     Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
     """
     pass
 
-# def slider_int(label: str, v: IntPtr, v_min: int, v_max: int) -> bool:
+def slider_float2(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied format = '%.3f', flags = 0
+    """
+    pass
+
+# def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def slider_float3(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied format = '%.3f', flags = 0
+    """
+    pass
+
+# def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def slider_float4(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Implied format = '%.3f', flags = 0
+    """
+    pass
+
+# def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+# def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
 #     """
-#     Implied format = '%d', flags = 0
+#     Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
 #     """
 #     pass
 
-# def slider_int2(label: str, v: Sequence[IntPtr], v_min: int, v_max: int) -> bool:
-#     """
-#     Implied format = '%d', flags = 0
-#     """
-#     pass
+def slider_int(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool:
+    """
+    Implied format = '%d', flags = 0
+    """
+    pass
 
-def slider_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-# def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int) -> bool:
-#     """
-#     Implied format = '%d', flags = 0
-#     """
-#     pass
+def slider_int2(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool:
+    """
+    Implied format = '%d', flags = 0
+    """
+    pass
 
-def slider_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-# def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int) -> bool:
-#     """
-#     Implied format = '%d', flags = 0
-#     """
-#     pass
+# def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int3(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool:
+    """
+    Implied format = '%d', flags = 0
+    """
+    pass
 
-def slider_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-def slider_int_ex(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+# def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool:
+    """
+    Implied format = '%d', flags = 0
+    """
+    pass
+
+# def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+# def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
 # def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any) -> bool:
 #     """
 #     Implied format = null, flags = 0
@@ -3064,17 +3027,17 @@ def table_next_column() -> bool:
     """
     pass
 
-# def table_next_row() -> None:
-#     """
-#     Implied row_flags = 0, min_row_height = 0.0f
-#     """
-#     pass
-
-def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0) -> None:
+def table_next_row(row_flags: int=0, min_row_height: float=0.0) -> None:
     """
     Append into the first cell of a new row.
     """
     pass
+
+# def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0) -> None:
+#     """
+#     Append into the first cell of a new row.
+#     """
+#     pass
 
 # def table_set_bg_color(target: int, color: int, column_n: int=-1) -> None:
 #     """
@@ -3094,7 +3057,7 @@ def table_set_column_index(column_n: int) -> bool:
     """
     pass
 
-def table_setup_column(label: str, flags: int=0) -> None:
+def table_setup_column(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0) -> None:
     """
     Tables: Headers & Columns declaration
     - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
@@ -3200,17 +3163,17 @@ def tree_pop() -> None:
 #     """
 #     pass
 
-# def unindent() -> None:
-#     """
-#     Implied indent_w = 0.0f
-#     """
-#     pass
-
-def unindent_ex(indent_w: float=0.0) -> None:
+def unindent(indent_w: float=0.0) -> None:
     """
     Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
     """
     pass
+
+# def unindent_ex(indent_w: float=0.0) -> None:
+#     """
+#     Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
+#     """
+#     pass
 
 def update_platform_windows() -> None:
     """
@@ -3539,11 +3502,11 @@ class ImDrawList:
 
     # def add_quad_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0) -> None: ...
     # def add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int) -> None: ...
-    # def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int) -> None:
-    #     """
-    #     Implied rounding = 0.0f, flags = 0, thickness = 1.0f
-    #     """
-    #     pass
+    def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0) -> None:
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
+        pass
 
     # def add_rect_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0) -> None:
     #     """
@@ -3551,17 +3514,17 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int) -> None:
-    #     """
-    #     Implied rounding = 0.0f, flags = 0
-    #     """
-    #     pass
-
-    def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
+    def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
         pass
+
+    # def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
+    #     """
+    #     A: upper-left, b: lower-right (== upper-left + size)
+    #     """
+    #     pass
 
     # def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
     # def add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str) -> None:
@@ -5006,6 +4969,8 @@ class ImGuiListClipper:
     # [internal] internal data
     # """
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
+    def create() -> ImGuiListClipper: ...
+    def destroy(self: ImGuiListClipper) -> None: ...
     # def end(self: ImGuiListClipper) -> None:
     #     """
     #     Automatically called on the last call of step() that returns false.
@@ -5523,7 +5488,7 @@ class ImGuiTableSortSpecs:
     When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
     Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
     """
-    specs: ImGuiTableColumnSortSpecs
+    specs: List[ImGuiTableColumnSortSpecs]
     """
     Pointer to sort spec array.
     """

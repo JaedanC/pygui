@@ -22,8 +22,8 @@ def help_marker(desc: str):
 
 def push_style_compact():
     style = pygui.get_style()
-    pygui.push_style_var_vec2(pygui.STYLE_VAR_FRAME_PADDING, (style.frame_padding[0], style.frame_padding[1] * 0.6))
-    pygui.push_style_var_vec2(pygui.STYLE_VAR_ITEM_SPACING, (style.item_spacing[0], style.item_spacing[1] * 0.6))
+    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (style.frame_padding[0], style.frame_padding[1] * 0.6))
+    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_ITEM_SPACING, (style.item_spacing[0], style.item_spacing[1] * 0.6))
 
 
 def pop_style_compact():
@@ -185,11 +185,11 @@ def show_demo_widgets():
         
         pygui.checkbox("checkbox", widget.general_check)
 
-        pygui.radio_button("radio a", widget.general_e, 0)
+        pygui.radio_button_int_ptr("radio a", widget.general_e, 0)
         pygui.same_line()
-        pygui.radio_button("radio b", widget.general_e, 1)
+        pygui.radio_button_int_ptr("radio b", widget.general_e, 1)
         pygui.same_line()
-        pygui.radio_button("radio c", widget.general_e, 2)
+        pygui.radio_button_int_ptr("radio c", widget.general_e, 2)
         
         # Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
         for i in range(6):
@@ -197,9 +197,9 @@ def show_demo_widgets():
                 pygui.same_line()
             
             pygui.push_id_int(i)
-            pygui.push_style_color_vec4(pygui.COL_BUTTON,         pygui.ImColor.hsv(i / 7, 0.6, 0.6))
-            pygui.push_style_color_vec4(pygui.COL_BUTTON_HOVERED, pygui.ImColor.hsv(i / 7, 0.7, 0.7))
-            pygui.push_style_color_vec4(pygui.COL_BUTTON_ACTIVE,  pygui.ImColor.hsv(i / 7, 0.8, 0.8))
+            pygui.push_style_color_im_vec4(pygui.COL_BUTTON,         pygui.color_convert_hsv_to_rgb(i / 7, 0.6, 0.6))
+            pygui.push_style_color_im_vec4(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(i / 7, 0.7, 0.7))
+            pygui.push_style_color_im_vec4(pygui.COL_BUTTON_ACTIVE,  pygui.color_convert_hsv_to_rgb(i / 7, 0.8, 0.8))
             pygui.button("Click")
             pygui.pop_style_color(3)
             pygui.pop_id()
@@ -416,12 +416,12 @@ def show_demo_widgets():
     
     if pygui.tree_node_ex("Collapsing Headers"):
         pygui.checkbox("Show 2nd header", widget.header_closable_group)
-        if pygui.collapsing_header("Header", None, pygui.TREE_NODE_FLAGS_NONE):
+        if pygui.collapsing_header("Header", pygui.TREE_NODE_FLAGS_NONE):
             pygui.text("IsItemHovered: {}".format(pygui.is_item_hovered()))
             for i in range(5):
                 pygui.text(f"Some content {i}")
         
-        if pygui.collapsing_header("Header with a close button", widget.header_closable_group):
+        if pygui.collapsing_header_bool_ptr("Header with a close button", widget.header_closable_group):
             pygui.text("IsItemHovered: {}".format(pygui.is_item_hovered()))
             for i in range(5):
                 pygui.text(f"more content {i}")
@@ -488,6 +488,7 @@ def show_demo_widgets():
             # TODO: This crashes. Not sure why.
             pygui.text("The call below crashes so it has been omitted in this demo.")
             pygui.text('pygui.input_text("UTF-8 input", static.widgets_text_utf8_buf)')
+            # pygui.input_text("UTF-8 input", widget.text_utf8_buf)
             pygui.tree_pop()
 
         pygui.tree_pop()
@@ -552,7 +553,7 @@ def show_demo_widgets():
                 # Read about UV coordinates here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
                 pygui.push_id_int(i)
                 if i > 0:
-                    pygui.push_style_var_vec2(pygui.STYLE_VAR_FRAME_PADDING, (i - 1, i - 1))
+                    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (i - 1, i - 1))
                 size = (32, 32)
                 uv0 = (0, 0)
                 uv1 = (32 / my_tex_w, 32 / my_tex_h)
@@ -657,7 +658,7 @@ def show_demo_widgets():
             pygui.selectable_bool_ptr("4. I am selectable", widget.select_selection[3])
             if pygui.selectable("5. I am double clickable", widget.select_selection[4], pygui.SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK):
                 if pygui.is_mouse_double_clicked(pygui.MOUSE_BUTTON_LEFT):
-                    widget.select_selection[4].ptr = not widget.select_selection[4].ptr
+                    widget.select_selection[4].value = not widget.select_selection[4].value
             pygui.tree_pop()
         
         if pygui.tree_node_ex("Selection State: Single Selection"):
@@ -672,7 +673,7 @@ def show_demo_widgets():
                 if pygui.selectable(f"Object {n}", widget.select_multi_state_selection[n]):
                     if not pygui.get_io().key_ctrl:
                         widget.select_multi_state_selection = [pygui.BoolPtr(False) for _ in range(len(widget.select_multi_state_selection))]
-                    widget.select_multi_state_selection[n].ptr = not widget.select_multi_state_selection[n].ptr
+                    widget.select_multi_state_selection[n].value = not widget.select_multi_state_selection[n].value
             pygui.tree_pop()
         
         if pygui.tree_node_ex("Rendering more text into the same line"):
@@ -713,7 +714,7 @@ def show_demo_widgets():
             current_time = pygui.get_time()
             winning_state = not any(0 in inner for inner in widget.select_grid_selected)
             if winning_state:
-                pygui.push_style_var_vec2(
+                pygui.push_style_var_im_vec2(
                     pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN,
                     (0.5 + 0.5 * math.cos(current_time * 2), 0.5 + 0.5 * math.sin(current_time * 3))
                 )
@@ -748,7 +749,7 @@ def show_demo_widgets():
                     alignment = (x / 2, y / 2)
                     if x > 0:
                         pygui.same_line()
-                    pygui.push_style_var_vec2(pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
+                    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
                     pygui.selectable_bool_ptr(
                         "({:.1f}, {:.1f})".format(alignment[0], alignment[1]),
                         widget.select_allign_selected[3 * y + x],
@@ -875,18 +876,17 @@ def show_demo_widgets():
         # Generate a default palette. The palette will persist and can be edited.
         if widget.colour_saved_palette_init:
             for n in range(len(widget.colour_saved_palette)):
-                pygui.color_convert_hsv_to_rgb(
+                widget.colour_saved_palette[n] = pygui.Vec4Ptr(*pygui.color_convert_hsv_to_rgb(
                     n / 31,
                     0.8,
-                    0.8,
-                    widget.colour_saved_palette[n],
-                )
+                    0.8
+                ))
                 widget.colour_saved_palette[n].w = 1 # Alpha
-            widget.colour_saved_palette_init.ptr = False
+            widget.colour_saved_palette_init.value = False
         
         open_popup = pygui.color_button("MyColor##3b", widget.colour_color.vec(), misc_flags)
         pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
-        open_popup |= pygui.button("Palette")
+        open_popup = open_popup or pygui.button("Palette")
         if open_popup:
             pygui.open_popup("mypicker")
             widget.colour_backup_color = widget.colour_color.copy()
@@ -1175,7 +1175,7 @@ def show_demo_tables():
     help_marker("Disable the indenting of tree nodes so demo tables can use the full window width.")
     pygui.separator()
     if table.disable_indent:
-        pygui.push_style_var_float(pygui.STYLE_VAR_INDENT_SPACING, 0)
+        pygui.push_style_var(pygui.STYLE_VAR_INDENT_SPACING, 0)
     
     # About Styling of tables
     # Most settings are configured on a per-table basis via the flags passed to BeginTable() and TableSetupColumns APIs.
@@ -1242,16 +1242,16 @@ def show_demo_tables():
             "ImGuiTableFlags_Borders\n = ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterV\n | ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterH")
         pygui.indent()
 
-        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.border_flags, pygui.TABLE_FLAGS_BORDERSH)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.border_flags, pygui.TABLE_FLAGS_BORDERS_H)
         pygui.indent()
-        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterH", table.border_flags, pygui.TABLE_FLAGS_BORDERS_OUTERH)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerH", table.border_flags, pygui.TABLE_FLAGS_BORDERS_INNERH)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterH", table.border_flags, pygui.TABLE_FLAGS_BORDERS_OUTER_H)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerH", table.border_flags, pygui.TABLE_FLAGS_BORDERS_INNER_H)
         pygui.unindent()
 
-        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.border_flags, pygui.TABLE_FLAGS_BORDERSV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.border_flags, pygui.TABLE_FLAGS_BORDERS_V)
         pygui.indent()
-        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.border_flags, pygui.TABLE_FLAGS_BORDERS_OUTERV)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.border_flags, pygui.TABLE_FLAGS_BORDERS_INNERV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.border_flags, pygui.TABLE_FLAGS_BORDERS_OUTER_V)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.border_flags, pygui.TABLE_FLAGS_BORDERS_INNER_V)
         pygui.unindent()
 
         pygui.checkbox_flags("ImGuiTableFlags_BordersOuter", table.border_flags, pygui.TABLE_FLAGS_BORDERS_OUTER)
@@ -1261,9 +1261,9 @@ def show_demo_tables():
         pygui.align_text_to_frame_padding()
         pygui.text("Cell contents:")
         pygui.same_line()
-        pygui.radio_button("Text", table.border_contents_type, table.ContentsType.CT_TEXT.value)
+        pygui.radio_button_int_ptr("Text", table.border_contents_type, table.ContentsType.CT_TEXT.value)
         pygui.same_line()
-        pygui.radio_button("FillButton", table.border_contents_type, table.ContentsType.CT_FILL_BUTTON.value)
+        pygui.radio_button_int_ptr("FillButton", table.border_contents_type, table.ContentsType.CT_FILL_BUTTON.value)
         pygui.checkbox("Display headers", table.border_display_headers)
         pygui.checkbox_flags("ImGuiTableFlags_NoBordersInBody", table.border_flags, pygui.TABLE_FLAGS_NO_BORDERS_IN_BODY)
         pygui.same_line()
@@ -1301,7 +1301,7 @@ def show_demo_tables():
         
         push_style_compact()
         pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.resize_flags, pygui.TABLE_FLAGS_RESIZABLE)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.resize_flags, pygui.TABLE_FLAGS_BORDERSV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.resize_flags, pygui.TABLE_FLAGS_BORDERS_V)
         pygui.same_line()
         help_marker("Using the _Resizable flag automatically enables the _BordersInnerV flag as well, this is why the resize borders are still showing when unchecking this.")
         pop_style_compact()
@@ -1324,7 +1324,7 @@ def show_demo_tables():
             "Double-click a column border to auto-fit the column to its contents.")
 
         push_style_compact()
-        pygui.checkbox_flags("ImGuiTableFlags_NoHostExtendX", table.resize_flags, pygui.TABLE_FLAGS_NO_HOST_EXTENDX)
+        pygui.checkbox_flags("ImGuiTableFlags_NoHostExtendX", table.resize_flags, pygui.TABLE_FLAGS_NO_HOST_EXTEND_X)
         pop_style_compact()
 
         if pygui.begin_table("table1", 3, table.resize_flags.value):
@@ -1428,17 +1428,17 @@ def show_demo_tables():
         )
 
         push_style_compact()
-        pygui.checkbox_flags("ImGuiTableFlags_PadOuterX", table.padding_flags, pygui.TABLE_FLAGS_PAD_OUTERX)
+        pygui.checkbox_flags("ImGuiTableFlags_PadOuterX", table.padding_flags, pygui.TABLE_FLAGS_PAD_OUTER_X)
         pygui.same_line()
         help_marker("Enable outer-most padding (default if ImGuiTableFlags_BordersOuterV is set)")
-        pygui.checkbox_flags("ImGuiTableFlags_NoPadOuterX", table.padding_flags, pygui.TABLE_FLAGS_NO_PAD_OUTERX)
+        pygui.checkbox_flags("ImGuiTableFlags_NoPadOuterX", table.padding_flags, pygui.TABLE_FLAGS_NO_PAD_OUTER_X)
         pygui.same_line()
         help_marker("Disable outer-most padding (default if ImGuiTableFlags_BordersOuterV is not set)")
-        pygui.checkbox_flags("ImGuiTableFlags_NoPadInnerX", table.padding_flags, pygui.TABLE_FLAGS_NO_PAD_INNERX)
+        pygui.checkbox_flags("ImGuiTableFlags_NoPadInnerX", table.padding_flags, pygui.TABLE_FLAGS_NO_PAD_INNER_X)
         pygui.same_line()
         help_marker("Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off)")
-        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.padding_flags, pygui.TABLE_FLAGS_BORDERS_OUTERV)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.padding_flags, pygui.TABLE_FLAGS_BORDERS_INNERV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersOuterV", table.padding_flags, pygui.TABLE_FLAGS_BORDERS_OUTER_V)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersInnerV", table.padding_flags, pygui.TABLE_FLAGS_BORDERS_INNER_V)
         pygui.checkbox("show_headers", table.padding_show_headers)
         pop_style_compact()
 
@@ -1465,8 +1465,8 @@ def show_demo_tables():
 
         push_style_compact()
         pygui.checkbox_flags("ImGuiTableFlags_Borders", table.padding_flags2, pygui.TABLE_FLAGS_BORDERS)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.padding_flags2, pygui.TABLE_FLAGS_BORDERSH)
-        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.padding_flags2, pygui.TABLE_FLAGS_BORDERSV)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersH", table.padding_flags2, pygui.TABLE_FLAGS_BORDERS_H)
+        pygui.checkbox_flags("ImGuiTableFlags_BordersV", table.padding_flags2, pygui.TABLE_FLAGS_BORDERS_V)
         pygui.checkbox_flags("ImGuiTableFlags_BordersInner", table.padding_flags2, pygui.TABLE_FLAGS_BORDERS_INNER)
         pygui.checkbox_flags("ImGuiTableFlags_BordersOuter", table.padding_flags2, pygui.TABLE_FLAGS_BORDERS_OUTER)
         pygui.checkbox_flags("ImGuiTableFlags_RowBg", table.padding_flags2, pygui.TABLE_FLAGS_ROW_BG)
@@ -1475,10 +1475,10 @@ def show_demo_tables():
         pygui.slider_float2("CellPadding", table.padding_cell_padding.as_floatptrs(), 0, 10, "%.0f")
         pop_style_compact()
 
-        pygui.push_style_var_vec2(pygui.STYLE_VAR_CELL_PADDING, table.padding_cell_padding.vec());
+        pygui.push_style_var_im_vec2(pygui.STYLE_VAR_CELL_PADDING, table.padding_cell_padding.vec());
         if pygui.begin_table("table_padding_2", 3, table.padding_flags2.value):
             if not table.padding_show_widget_frame_bg:
-                pygui.push_style_color_u32(pygui.COL_FRAME_BG, 0)
+                pygui.push_style_color(pygui.COL_FRAME_BG, 0)
             
             for cell in range(3 * 5):
                 pygui.table_next_column()
@@ -1583,7 +1583,12 @@ def show_demo_tables():
                 sort_specs.specs_dirty = False
             
             # Demonstrate using clipper for large vertical lists
-            clipper = pygui.ImGuiListClipper.list_clipper()
+            clipper = pygui.ImGuiListClipper.create()
+
+            # This is our first example of not being able to share heap objects
+            # across the dll. I need to get a pointer to a valid type that it
+            # creates, not me. This may require modifying cimgui to create a
+            # constructor function.
             clipper.begin(len(table.sort_items))
             while clipper.step():
                 for row_n in range(clipper.display_start, clipper.display_end):
@@ -1600,6 +1605,7 @@ def show_demo_tables():
                     pygui.table_next_column()
                     pygui.text("{}".format(item.quantity))
                     pygui.pop_id()
+            print("here")
             clipper.destroy()
 
             pygui.end_table()

@@ -1283,8 +1283,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_bas
 
     FLT_MIN = LIBC_FLT_MIN
     FLT_MAX = LIBC_FLT_MAX
-    IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"
-    IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+    PAYLOAD_TYPE_COLOR_3F = "_COL3F"
+    PAYLOAD_TYPE_COLOR_4F = "_COL4F"
     IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
     IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
     IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
@@ -1492,8 +1492,8 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     FLT_MIN: float
     FLT_MAX: float
 
-    IMGUI_PAYLOAD_TYPE_COLOR_3F: int
-    IMGUI_PAYLOAD_TYPE_COLOR_4F: int
+    PAYLOAD_TYPE_COLOR_3F: int
+    PAYLOAD_TYPE_COLOR_4F: int
 
     class BoolPtr:
         value: bool

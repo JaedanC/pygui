@@ -895,6 +895,7 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
     
     cdef float* colour
     if _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_3F:
+        print("Payload 3f")
         colour = <float*>res.Data
         return Vec4Ptr(
             colour[0],
@@ -903,6 +904,7 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
             1
         )
     elif _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_4F:
+        print("Payload 4f")
         colour = <float*>res.Data
         return Vec4Ptr(
             colour[0],
@@ -1445,9 +1447,10 @@ def color_convert_hs_vto_rgb(h: float, s: float, value: float, out_r: float, out
 # [Function]
 # ?use_template(True)
 # ?active(True)
-# ?returns(None)
-def color_convert_hsv_to_rgb(h: float, s: float, value: float, colour: Vec4Ptr):
+# ?returns(tuple)
+def color_convert_hsv_to_rgb(h: float, s: float, value: float):
     cdef float c_floats[4]
+    cdef Vec4Ptr colour = Vec4Ptr(0, 0, 0, 1)
     colour.to_array(c_floats)
     ccimgui.igColorConvertHSVtoRGB(
         h,
@@ -1458,6 +1461,7 @@ def color_convert_hsv_to_rgb(h: float, s: float, value: float, colour: Vec4Ptr):
         &c_floats[2],
     )
     colour.from_array(c_floats)
+    return colour.vec()
 # [End Function]
 
 # [Function]

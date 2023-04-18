@@ -6,14 +6,10 @@ from python_demo_window import pygui_demo_window
 
 show_another_window = False
 
-show_demo_window = pygui.BoolPtr(True)
-
 def render():
     global show_another_window
-    global show_demo_window
 
-    if show_demo_window:
-        pygui.show_demo_window(show_demo_window)
+    pygui.show_demo_window()
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
