@@ -15,7 +15,14 @@ from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
 from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
-from libc.string cimport strncpy
+from libc.stdlib cimport malloc, free
+from libc.string cimport strncpy, memset
+
+cdef void* _pygui_malloc(size_t sz, void* user_data):
+    return malloc(sz)
+
+cdef void _pygui_free(void* ptr, void* user_data):
+    free(ptr)
 
 cdef bytes _bytes(str text):
     return text.encode()
@@ -1941,6 +1948,9 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
     - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
     for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for details.
     """
+    # This allows us to make ImGui use the same malloc and free as us in case it
+    # didn't already.
+    ccimgui.ImGui_SetAllocatorFunctions(_pygui_malloc, _pygui_free, NULL)
     cdef ccimgui.ImGuiContext* res = ccimgui.ImGui_CreateContext(
         <ccimgui.ImFontAtlas*>(NULL if shared_font_atlas is None else <void*>shared_font_atlas._ptr)
     )
@@ -6179,7 +6189,7 @@ def separator_text(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(False)
 # ?returns(None)
 # def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
@@ -6188,6 +6198,8 @@ def separator_text(label: str):
 #     - Those functions are not reliant on the current context.
 #     - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
 #     for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for more details.
+
+#     Pygui note: see create_context(). This is where the allocator functions are set for ImGui.
 #     """
 #     ccimgui.ImGui_SetAllocatorFunctions(
 #         alloc_func,
@@ -14851,7 +14863,7 @@ cdef class ImGuiKeyData:
 
 # [Class]
 # [Class Constants]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 cdef class ImGuiListClipper:
     """
@@ -14884,8 +14896,8 @@ cdef class ImGuiListClipper:
         wrapper._ptr = _ptr
         return wrapper
     
-    # def __init__(self):
-    #     raise TypeError("This class cannot be instantiated directly.")
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
     # [End Class Constants]
 
     # [Field]
@@ -15007,13 +15019,11 @@ cdef class ImGuiListClipper:
     # ?active(True)
     # ?returns(None)
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
-        print("Begin")
         ccimgui.ImGuiListClipper_Begin(
             self._ptr,
             items_count,
             items_height
         )
-        print("EndBegin")
     # [End Method]
 
     # [Method]
@@ -15022,8 +15032,21 @@ cdef class ImGuiListClipper:
     # ?returns(ImGuiListClipper)
     @staticmethod
     def create():
-        print("Creating")
         cdef ccimgui.ImGuiListClipper* clipper = <ccimgui.ImGuiListClipper*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiListClipper))
+
+        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
+        # ImGuiListClipper::ImGuiListClipper()
+        # {
+        #     memset(this, 0, sizeof(*this));
+        #     Ctx = ImGui::GetCurrentContext();
+        #     IM_ASSERT(Ctx != NULL);
+        #     ItemsCount = -1;
+        # }
+
+        memset(clipper, 0, sizeof(ccimgui.ImGuiListClipper))
+        clipper.Ctx = ccimgui.ImGui_GetCurrentContext()
+        assert clipper.Ctx != NULL
+        clipper.ItemsCount = -1
         return ImGuiListClipper.from_ptr(clipper)
     # [End Method]
 
@@ -15031,9 +15054,7 @@ cdef class ImGuiListClipper:
     # ?use_template(True)
     # ?active(True)
     # ?returns(None)
-    @staticmethod
     def destroy(self: ImGuiListClipper):
-        print("Destroying")
         ccimgui.ImGui_MemFree(self._ptr)
         self._ptr = NULL
     # [End Method]

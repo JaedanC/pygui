@@ -1553,7 +1553,7 @@ def show_demo_tables():
                     # elif sort_spec.column_user_id == table.MyItemColumnID.Description.value:
                     #     compare_obj = element.name
                     
-                    if sort_spec.sort_direction == pygui.SORT_DIRECTION_ASCENDING:
+                    if sort_spec.sort_direction == pygui.SORT_DIRECTION_DESCENDING:
                         compare_obj = table.negated(compare_obj)
                     sort_with.append(compare_obj)
                 # Add a default sorting method
@@ -1605,7 +1605,6 @@ def show_demo_tables():
                     pygui.table_next_column()
                     pygui.text("{}".format(item.quantity))
                     pygui.pop_id()
-            print("here")
             clipper.destroy()
 
             pygui.end_table()

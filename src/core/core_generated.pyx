@@ -15,7 +15,14 @@ from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
 from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
-from libc.string cimport strncpy
+from libc.stdlib cimport malloc, free
+from libc.string cimport strncpy, memset
+
+cdef void* _pygui_malloc(size_t sz, void* user_data):
+    return malloc(sz)
+
+cdef void _pygui_free(void* ptr, void* user_data):
+    free(ptr)
 
 cdef bytes _bytes(str text):
     return text.encode()

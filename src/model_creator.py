@@ -1026,14 +1026,34 @@ def to_pxd(header: DearBinding, header_file_name: str, include_base=True) -> str
     return dynamic_content.getvalue()
 
 
-def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_base: bool) -> str:
+def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> str:
     header.sort()
     base = """
     # distutils: language = c++
     # cython: language_level = 3
     # cython: embedsignature=True
 
-    {imports}
+    import ctypes
+    import cython
+    import array
+    from cython.operator import dereference
+    from typing import Callable, Any, Sequence
+
+    cimport {pxd_library_name}
+    
+    from cython.view cimport array as cvarray
+    from libcpp cimport bool
+    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+    from libc.stdint cimport uintptr_t
+    from libc.stdlib cimport malloc, free
+    from libc.string cimport strncpy, memset
+
+    cdef void* _pygui_malloc(size_t sz, void* user_data):
+        return malloc(sz)
+    
+    cdef void _pygui_free(void* ptr, void* user_data):
+        free(ptr)
 
     cdef bytes _bytes(str text):
         return text.encode()
@@ -1296,8 +1316,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_bas
 
     if include_base:
         pyx.write(textwrap.dedent(base.lstrip("\n")).format(
-            pxd_library_name=pxd_library_name,
-            imports=imports,
+            pxd_library_name=pxd_library_name
         ))
 
     # Add enums
@@ -1453,27 +1472,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_bas
         pyx.write("# [End Class]\n\n")
 
     return pyx.getvalue()
-
-
-def generate_new_pyx(from_header: DearBinding, pxd_library_name: str, include_base=True):
-    imports = textwrap.dedent("""
-        import ctypes
-        import cython
-        import array
-        from cython.operator import dereference
-        from typing import Callable, Any, Sequence
-
-        cimport {}
-        
-        from cython.view cimport array as cvarray
-        from libcpp cimport bool
-        from libc.float cimport FLT_MIN as LIBC_FLT_MIN
-        from libc.float cimport FLT_MAX as LIBC_FLT_MAX
-        from libc.stdint cimport uintptr_t
-        from libc.string cimport strncpy
-        """
-    ).format(pxd_library_name)
-    return to_pyx(from_header, pxd_library_name, imports.strip(), include_base)
 
 
 def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
@@ -1735,7 +1733,7 @@ def main():
     def trial_pyx(headers: DearBinding, pxd_libary_name: str):
         new_pyx = ""
         for i, header in enumerate(headers):
-            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
+            new_pyx += to_pyx(header, pxd_libary_name, i == 0)
 
         try:
             with open(GENERATED_PYX_PATH) as f:
@@ -1767,7 +1765,7 @@ def main():
     def reset(headers: List[DearBinding], pxd_libary_name: str):
         new_pyx = ""
         for i, header in enumerate(headers):
-            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
+            new_pyx += to_pyx(header, pxd_libary_name, i == 0)
         
         new_model = create_pyx_model(new_pyx)
         try:
@@ -1803,7 +1801,7 @@ def main():
     def write_pyx(headers: List[DearBinding], pxd_libary_name: str):
         new_pyx = ""
         for i, header in enumerate(headers):
-            new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
+            new_pyx += to_pyx(header, pxd_libary_name, i == 0)
 
         try:
             with open(GENERATED_PYX_PATH) as f:
