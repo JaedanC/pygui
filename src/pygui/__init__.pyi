@@ -3127,7 +3127,7 @@ def text_colored(col: tuple, fmt: str) -> None:
     """
     pass
 
-def text_colored_v(col: tuple, fmt: str) -> None: ...
+# def text_colored_v(col: tuple, fmt: str) -> None: ...
 def text_disabled(fmt: str) -> None:
     """
     Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
@@ -3928,7 +3928,7 @@ class ImFontAtlas:
     """
     Texture height calculated during build().
     """
-    tex_id: Any
+    tex_id: int
     """
     User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
     """

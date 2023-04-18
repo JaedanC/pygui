@@ -746,9 +746,15 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             struct_field_comments = parse_comment(struct_field_obj)
             for struct_field_name_obj in struct_field_obj["names"]:
                 struct_field_name = safe_python_name(struct_field_name_obj["name"])
+
+                struct_field_name_is_array = False
+                if "is_array" in struct_field_name_obj:
+                    struct_field_name_is_array = struct_field_name_obj["is_array"]
+
+                local_struct_field_type = struct_field_type + ("*" if struct_field_name_is_array else "")
                 struct_fields.append(DearStruct.Field(
                     struct_field_name,
-                    DearType(struct_field_type),
+                    DearType(local_struct_field_type),
                     struct_field_comments,
                 ))
         

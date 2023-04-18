@@ -2,7 +2,7 @@ import pygui
 import glfw
 import OpenGL.GL as gl
 
-# from python_demo_window import show_demo_window
+from python_demo_window import pygui_demo_window
 
 show_another_window = False
 
@@ -26,7 +26,7 @@ def render():
 
     pygui.begin("Pygui Demo Window", None)
     # pygui.begin("Pygui Demo Window", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
-    # show_demo_window()
+    pygui_demo_window()
     pygui.end()
 
 

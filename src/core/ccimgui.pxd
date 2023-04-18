@@ -1103,7 +1103,7 @@ cdef extern from "cimgui.h":
         bool AntiAliasedFill                  # Enable anti-aliased edges around filled shapes (rounded rectangles, circles, etc.). disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
         float CurveTessellationTol            # Tessellation tolerance when using pathbeziercurveto() without a specific number of segments. decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
         float CircleTessellationMaxError      # Maximum error (in pixels) allowed when using addcircle()/addcirclefilled() or drawing rounded corner rectangles with no explicit segment count specified. decrease for higher quality but more geometry.
-        ImVec4 Colors
+        ImVec4* Colors
 
     void ImGuiStyle_ScaleAllSizes(ImGuiStyle* self, float scale_factor) except +
 
@@ -1181,7 +1181,7 @@ cdef extern from "cimgui.h":
         ImVec2 MouseDelta                                                                                          # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
         ImGuiContext* Ctx                                                                                          # Parent ui context (needs to be set explicitly by parent).
         ImVec2 MousePos                                                                                            # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
-        bool MouseDown                                                                                             # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
+        bool* MouseDown                                                                                            # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
         float MouseWheel                                                                                           # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
         float MouseWheelH                                                                                          # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
         ImGuiMouseSource MouseSource                                                                               # Mouse actual input peripheral (mouse/touchscreen/pen).
@@ -1191,23 +1191,23 @@ cdef extern from "cimgui.h":
         bool KeyAlt                                                                                                # Keyboard modifier down: alt
         bool KeySuper                                                                                              # Keyboard modifier down: cmd/super/windows
         ImGuiKeyChord KeyMods                                                                                      # Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. does not contains imguimod_shortcut which is pretranslated). read-only, updated by newframe()
-        ImGuiKeyData KeysData                                                                                      # Key state for all known keys. use iskeyxxx() functions to access this.
+        ImGuiKeyData* KeysData                                                                                     # Key state for all known keys. use iskeyxxx() functions to access this.
         bool WantCaptureMouseUnlessPopupClose                                                                      # Alternative to wantcapturemouse: (wantcapturemouse == true && wantcapturemouseunlesspopupclose == false) when a click over void is expected to close a popup.
         ImVec2 MousePosPrev                                                                                        # Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
-        ImVec2 MouseClickedPos                                                                                     # Position at time of clicking
-        double MouseClickedTime                                                                                    # Time of last click (used to figure out double-click)
-        bool MouseClicked                                                                                          # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
-        bool MouseDoubleClicked                                                                                    # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
-        ImU16 MouseClickedCount                                                                                    # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
-        ImU16 MouseClickedLastCount                                                                                # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
-        bool MouseReleased                                                                                         # Mouse button went from down to !down
-        bool MouseDownOwned                                                                                        # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
-        bool MouseDownOwnedUnlessPopupClose                                                                        # Track if button was clicked inside a dear imgui window.
+        ImVec2* MouseClickedPos                                                                                    # Position at time of clicking
+        double* MouseClickedTime                                                                                   # Time of last click (used to figure out double-click)
+        bool* MouseClicked                                                                                         # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
+        bool* MouseDoubleClicked                                                                                   # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
+        ImU16* MouseClickedCount                                                                                   # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
+        ImU16* MouseClickedLastCount                                                                               # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
+        bool* MouseReleased                                                                                        # Mouse button went from down to !down
+        bool* MouseDownOwned                                                                                       # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
+        bool* MouseDownOwnedUnlessPopupClose                                                                       # Track if button was clicked inside a dear imgui window.
         bool MouseWheelRequestAxisSwap                                                                             # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
-        float MouseDownDuration                                                                                    # Duration the mouse button has been down (0.0f == just clicked)
-        float MouseDownDurationPrev                                                                                # Previous time the mouse button has been down
-        ImVec2 MouseDragMaxDistanceAbs                                                                             # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
-        float MouseDragMaxDistanceSqr                                                                              # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
+        float* MouseDownDuration                                                                                   # Duration the mouse button has been down (0.0f == just clicked)
+        float* MouseDownDurationPrev                                                                               # Previous time the mouse button has been down
+        ImVec2* MouseDragMaxDistanceAbs                                                                            # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
+        float* MouseDragMaxDistanceSqr                                                                             # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
         float PenPressure                                                                                          # Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
         bool AppFocusLost                                                                                          # Only modify via addfocusevent()
         bool AppAcceptingEvents                                                                                    # Only modify via setappacceptingevents()
@@ -1330,7 +1330,7 @@ cdef extern from "cimgui.h":
         ImGuiID SourceId           # Source item id
         ImGuiID SourceParentId     # Source parent id (if available)
         int DataFrameCount         # Data timestamp
-        char DataType              # Data type tag (short user-supplied string, 32 characters max)
+        char* DataType             # Data type tag (short user-supplied string, 32 characters max)
         bool Preview               # Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
         bool Delivery              # Set when acceptdragdroppayload() was called and mouse button is released over the target item.
 
@@ -1367,7 +1367,7 @@ cdef extern from "cimgui.h":
 
     # Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
     ctypedef struct ImGuiTextFilter:
-        char InputBuf
+        char* InputBuf
         ImVector_ImGuiTextFilter_ImGuiTextRange Filters
         int CountGrep
 
@@ -1767,7 +1767,7 @@ cdef extern from "cimgui.h":
         unsigned int FontBuilderFlags     # 0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
         float RasterizerMultiply          # 1.0f     // brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable.
         ImWchar EllipsisChar              # -1       // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
-        char Name                         # Name (strictly to ease debugging)
+        char* Name                        # Name (strictly to ease debugging)
         ImFont* DstFont
 
 
@@ -1861,7 +1861,7 @@ cdef extern from "cimgui.h":
         ImVector_ImFontPtr Fonts                       # Hold all the fonts returned by addfont*. fonts[0] is the default font upon calling imgui::newframe(), use imgui::pushfont()/popfont() to change the current font.
         ImVector_ImFontAtlasCustomRect CustomRects     # Rectangles for packing custom texture data into the atlas.
         ImVector_ImFontConfig ConfigData               # Configuration data
-        ImVec4 TexUvLines                              # Uvs for baked anti-aliased lines
+        ImVec4* TexUvLines                             # Uvs for baked anti-aliased lines
         const ImFontBuilderIO* FontBuilderIO           # Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
         unsigned int FontBuilderFlags                  # Shared flags (for all fonts) for custom font builder. this is build implementation dependent. per-font override is also available in imfontconfig.
         int PackIdMouseCursors                         # Custom texture rectangle id for white pixel and mouse cursors
@@ -1977,7 +1977,7 @@ cdef extern from "cimgui.h":
         float Ascent                         # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
         float Descent                        # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
         int MetricsTotalSurface              # 4     // out //            // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
-        ImU8 Used4kPagesMap                  # 2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+        ImU8* Used4kPagesMap                 # 2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
 
     void ImFont_AddGlyph(ImFont* self, const ImFontConfig* src_cfg, ImWchar c, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float advance_x) except +
 

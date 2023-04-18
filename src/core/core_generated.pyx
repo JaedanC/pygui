@@ -9922,7 +9922,7 @@ cdef class ImFont:
         """
         2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
         """
-        cdef ccimgui.ImU8 res = dereference(self._ptr).Used4kPagesMap
+        cdef ccimgui.ImU8* res = dereference(self._ptr).Used4kPagesMap
         return res
     @used4k_pages_map.setter
     def used4k_pages_map(self, value: int):
@@ -10489,17 +10489,17 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(tuple)
+    # ?returns(ImVec4)
     @property
     def tex_uv_lines(self):
         """
         Uvs for baked anti-aliased lines
         """
-        cdef ccimgui.ImVec4 res = dereference(self._ptr).TexUvLines
-        return _cast_ImVec4_tuple(res)
+        cdef ccimgui.ImVec4* res = dereference(self._ptr).TexUvLines
+        return ImVec4.from_ptr(res)
     @tex_uv_lines.setter
-    def tex_uv_lines(self, value: tuple):
-        dereference(self._ptr).TexUvLines = _cast_tuple_ImVec4(value)
+    def tex_uv_lines(self, value: ImVec4):
+        dereference(self._ptr).TexUvLines = value._ptr
     # [End Field]
 
     # [Field]
@@ -11413,18 +11413,18 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def name(self):
         """
         [Internal]
         Name (strictly to ease debugging)
         """
-        cdef char res = dereference(self._ptr).Name
-        return res
+        cdef char* res = dereference(self._ptr).Name
+        return _from_bytes(res)
     @name.setter
-    def name(self, value: int):
-        dereference(self._ptr).Name = value
+    def name(self, value: str):
+        dereference(self._ptr).Name = _bytes(value)
     # [End Field]
 
     # [Field]
@@ -12762,7 +12762,7 @@ cdef class ImGuiIO:
         """
         Key state for all known keys. use iskeyxxx() functions to access this.
         """
-        cdef ccimgui.ImGuiKeyData res = dereference(self._ptr).KeysData
+        cdef ccimgui.ImGuiKeyData* res = dereference(self._ptr).KeysData
         return ImGuiKeyData.from_ptr(res)
     @keys_data.setter
     def keys_data(self, value: ImGuiKeyData):
@@ -12868,17 +12868,17 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_clicked(self):
         """
         Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
         """
-        cdef bool res = dereference(self._ptr).MouseClicked
-        return res
+        cdef bool* res = dereference(self._ptr).MouseClicked
+        return BoolPtr(dereference(res))
     @mouse_clicked.setter
-    def mouse_clicked(self, value: bool):
-        dereference(self._ptr).MouseClicked = value
+    def mouse_clicked(self, value: BoolPtr):
+        dereference(self._ptr).MouseClicked = &value.value
     # [End Field]
 
     # [Field]
@@ -12890,7 +12890,7 @@ cdef class ImGuiIO:
         """
         == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
         """
-        cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedCount
+        cdef ccimgui.ImU16* res = dereference(self._ptr).MouseClickedCount
         return res
     @mouse_clicked_count.setter
     def mouse_clicked_count(self, value: int):
@@ -12906,7 +12906,7 @@ cdef class ImGuiIO:
         """
         Count successive number of clicks. stays valid after mouse release. reset after another click is done.
         """
-        cdef ccimgui.ImU16 res = dereference(self._ptr).MouseClickedLastCount
+        cdef ccimgui.ImU16* res = dereference(self._ptr).MouseClickedLastCount
         return res
     @mouse_clicked_last_count.setter
     def mouse_clicked_last_count(self, value: int):
@@ -12916,33 +12916,33 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(tuple)
+    # ?returns(ImVec2)
     @property
     def mouse_clicked_pos(self):
         """
         Position at time of clicking
         """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).MouseClickedPos
-        return _cast_ImVec2_tuple(res)
+        cdef ccimgui.ImVec2* res = dereference(self._ptr).MouseClickedPos
+        return ImVec2.from_ptr(res)
     @mouse_clicked_pos.setter
-    def mouse_clicked_pos(self, value: tuple):
-        dereference(self._ptr).MouseClickedPos = _cast_tuple_ImVec2(value)
+    def mouse_clicked_pos(self, value: ImVec2):
+        dereference(self._ptr).MouseClickedPos = value._ptr
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(float)
+    # ?returns(DoublePtr)
     @property
     def mouse_clicked_time(self):
         """
         Time of last click (used to figure out double-click)
         """
-        cdef double res = dereference(self._ptr).MouseClickedTime
-        return res
+        cdef double* res = dereference(self._ptr).MouseClickedTime
+        return DoublePtr(dereference(res))
     @mouse_clicked_time.setter
-    def mouse_clicked_time(self, value: float):
-        dereference(self._ptr).MouseClickedTime = value
+    def mouse_clicked_time(self, value: DoublePtr):
+        dereference(self._ptr).MouseClickedTime = &value.value
     # [End Field]
 
     # [Field]
@@ -12996,129 +12996,129 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_double_clicked(self):
         """
         Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
         """
-        cdef bool res = dereference(self._ptr).MouseDoubleClicked
-        return res
+        cdef bool* res = dereference(self._ptr).MouseDoubleClicked
+        return BoolPtr(dereference(res))
     @mouse_double_clicked.setter
-    def mouse_double_clicked(self, value: bool):
-        dereference(self._ptr).MouseDoubleClicked = value
+    def mouse_double_clicked(self, value: BoolPtr):
+        dereference(self._ptr).MouseDoubleClicked = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_down(self):
         """
         Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
         """
-        cdef bool res = dereference(self._ptr).MouseDown
-        return res
+        cdef bool* res = dereference(self._ptr).MouseDown
+        return BoolPtr(dereference(res))
     @mouse_down.setter
-    def mouse_down(self, value: bool):
-        dereference(self._ptr).MouseDown = value
+    def mouse_down(self, value: BoolPtr):
+        dereference(self._ptr).MouseDown = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(float)
+    # ?returns(FloatPtr)
     @property
     def mouse_down_duration(self):
         """
         Duration the mouse button has been down (0.0f == just clicked)
         """
-        cdef float res = dereference(self._ptr).MouseDownDuration
-        return res
+        cdef float* res = dereference(self._ptr).MouseDownDuration
+        return FloatPtr(dereference(res))
     @mouse_down_duration.setter
-    def mouse_down_duration(self, value: float):
-        dereference(self._ptr).MouseDownDuration = value
+    def mouse_down_duration(self, value: FloatPtr):
+        dereference(self._ptr).MouseDownDuration = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(float)
+    # ?returns(FloatPtr)
     @property
     def mouse_down_duration_prev(self):
         """
         Previous time the mouse button has been down
         """
-        cdef float res = dereference(self._ptr).MouseDownDurationPrev
-        return res
+        cdef float* res = dereference(self._ptr).MouseDownDurationPrev
+        return FloatPtr(dereference(res))
     @mouse_down_duration_prev.setter
-    def mouse_down_duration_prev(self, value: float):
-        dereference(self._ptr).MouseDownDurationPrev = value
+    def mouse_down_duration_prev(self, value: FloatPtr):
+        dereference(self._ptr).MouseDownDurationPrev = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_down_owned(self):
         """
         Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
         """
-        cdef bool res = dereference(self._ptr).MouseDownOwned
-        return res
+        cdef bool* res = dereference(self._ptr).MouseDownOwned
+        return BoolPtr(dereference(res))
     @mouse_down_owned.setter
-    def mouse_down_owned(self, value: bool):
-        dereference(self._ptr).MouseDownOwned = value
+    def mouse_down_owned(self, value: BoolPtr):
+        dereference(self._ptr).MouseDownOwned = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_down_owned_unless_popup_close(self):
         """
         Track if button was clicked inside a dear imgui window.
         """
-        cdef bool res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
-        return res
+        cdef bool* res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
+        return BoolPtr(dereference(res))
     @mouse_down_owned_unless_popup_close.setter
-    def mouse_down_owned_unless_popup_close(self, value: bool):
-        dereference(self._ptr).MouseDownOwnedUnlessPopupClose = value
+    def mouse_down_owned_unless_popup_close(self, value: BoolPtr):
+        dereference(self._ptr).MouseDownOwnedUnlessPopupClose = &value.value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(tuple)
+    # ?returns(ImVec2)
     @property
     def mouse_drag_max_distance_abs(self):
         """
         Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
         """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).MouseDragMaxDistanceAbs
-        return _cast_ImVec2_tuple(res)
+        cdef ccimgui.ImVec2* res = dereference(self._ptr).MouseDragMaxDistanceAbs
+        return ImVec2.from_ptr(res)
     @mouse_drag_max_distance_abs.setter
-    def mouse_drag_max_distance_abs(self, value: tuple):
-        dereference(self._ptr).MouseDragMaxDistanceAbs = _cast_tuple_ImVec2(value)
+    def mouse_drag_max_distance_abs(self, value: ImVec2):
+        dereference(self._ptr).MouseDragMaxDistanceAbs = value._ptr
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(float)
+    # ?returns(FloatPtr)
     @property
     def mouse_drag_max_distance_sqr(self):
         """
         Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
         """
-        cdef float res = dereference(self._ptr).MouseDragMaxDistanceSqr
-        return res
+        cdef float* res = dereference(self._ptr).MouseDragMaxDistanceSqr
+        return FloatPtr(dereference(res))
     @mouse_drag_max_distance_sqr.setter
-    def mouse_drag_max_distance_sqr(self, value: float):
-        dereference(self._ptr).MouseDragMaxDistanceSqr = value
+    def mouse_drag_max_distance_sqr(self, value: FloatPtr):
+        dereference(self._ptr).MouseDragMaxDistanceSqr = &value.value
     # [End Field]
 
     # [Field]
@@ -13208,17 +13208,17 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(bool)
+    # ?returns(BoolPtr)
     @property
     def mouse_released(self):
         """
         Mouse button went from down to !down
         """
-        cdef bool res = dereference(self._ptr).MouseReleased
-        return res
+        cdef bool* res = dereference(self._ptr).MouseReleased
+        return BoolPtr(dereference(res))
     @mouse_released.setter
-    def mouse_released(self, value: bool):
-        dereference(self._ptr).MouseReleased = value
+    def mouse_released(self, value: BoolPtr):
+        dereference(self._ptr).MouseReleased = &value.value
     # [End Field]
 
     # [Field]
@@ -14375,17 +14375,17 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def data_type(self):
         """
         Data type tag (short user-supplied string, 32 characters max)
         """
-        cdef char res = dereference(self._ptr).DataType
-        return res
+        cdef char* res = dereference(self._ptr).DataType
+        return _from_bytes(res)
     @data_type.setter
-    def data_type(self, value: int):
-        dereference(self._ptr).DataType = value
+    def data_type(self, value: str):
+        dereference(self._ptr).DataType = _bytes(value)
     # [End Field]
 
     # [Field]
@@ -15646,14 +15646,14 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(tuple)
+    # ?returns(ImVec4)
     @property
     def colors(self):
-        cdef ccimgui.ImVec4 res = dereference(self._ptr).Colors
-        return _cast_ImVec4_tuple(res)
+        cdef ccimgui.ImVec4* res = dereference(self._ptr).Colors
+        return ImVec4.from_ptr(res)
     @colors.setter
-    def colors(self, value: tuple):
-        dereference(self._ptr).Colors = _cast_tuple_ImVec4(value)
+    def colors(self, value: ImVec4):
+        dereference(self._ptr).Colors = value._ptr
     # [End Field]
 
     # [Field]
@@ -16554,14 +16554,14 @@ cdef class ImGuiTextFilter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def input_buf(self):
-        cdef char res = dereference(self._ptr).InputBuf
-        return res
+        cdef char* res = dereference(self._ptr).InputBuf
+        return _from_bytes(res)
     @input_buf.setter
-    def input_buf(self, value: int):
-        dereference(self._ptr).InputBuf = value
+    def input_buf(self, value: str):
+        dereference(self._ptr).InputBuf = _bytes(value)
     # [End Field]
 
     # [Method]
