@@ -1,12 +1,6 @@
-[submodule "src/external/cimgui"]
-	path = src/external/cimgui
-	url = https://github.com/cimgui/cimgui
 [submodule "src/external/glfw"]
 	path = src/external/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "src/external/luajit"]
-	path = src/external/luajit
-	url = https://luajit.org/git/luajit.git
 [submodule "src/external/dear_bindings"]
 	path = src/external/dear_bindings
 	url = https://github.com/dearimgui/dear_bindings.git
