@@ -66,6 +66,7 @@ def main():
     # Check opengl version
     print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION).decode()))
     print("glfw version: {}.{}.{}".format(glfw.VERSION_MAJOR, glfw.VERSION_MINOR, glfw.VERSION_REVISION))
+    print("ImGui version: {}".format(pygui.get_version()))
 
     # Not sure why this crashes imgui
     # pygui.style_colors_dark()

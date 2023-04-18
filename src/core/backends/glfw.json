@@ -32,8 +32,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "install_callbacks",
@@ -41,8 +40,7 @@
                         "declaration": "bool"
                     },
                     "is_varargs": false,
-                    "is_array": false,
-                    "default_value": "NULL"
+                    "is_array": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -63,8 +61,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "install_callbacks",
@@ -72,8 +69,7 @@
                         "declaration": "bool"
                     },
                     "is_varargs": false,
-                    "is_array": false,
-                    "default_value": "NULL"
+                    "is_array": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -94,8 +90,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "install_callbacks",
@@ -103,8 +98,7 @@
                         "declaration": "bool"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -149,8 +143,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -171,8 +164,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -193,8 +185,7 @@
                         "declaration": "bool"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -215,8 +206,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "focused",
@@ -224,8 +214,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -246,8 +235,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "entered",
@@ -255,8 +243,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -277,8 +264,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "x",
@@ -286,8 +272,7 @@
                         "declaration": "double"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "y",
@@ -295,8 +280,7 @@
                         "declaration": "double"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -317,8 +301,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "button",
@@ -326,8 +309,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "action",
@@ -335,8 +317,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "mods",
@@ -344,8 +325,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -366,8 +346,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "xoffset",
@@ -375,8 +354,7 @@
                         "declaration": "double"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "yoffset",
@@ -384,8 +362,7 @@
                         "declaration": "double"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -406,8 +383,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "key",
@@ -415,8 +391,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "scancode",
@@ -424,8 +399,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "action",
@@ -433,8 +407,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "mods",
@@ -442,8 +415,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -464,8 +436,7 @@
                         "declaration": "GLFWwindow*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "c",
@@ -473,8 +444,7 @@
                         "declaration": "unsigned int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,
@@ -495,8 +465,7 @@
                         "declaration": "GLFWmonitor*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 },
                 {
                     "name": "event",
@@ -504,8 +473,7 @@
                         "declaration": "int"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,

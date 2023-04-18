@@ -2,15 +2,7 @@
     "defines": [],
     "enums": [],
     "typedefs": [],
-    "structs": [
-        {
-            "name": "ImDrawData",
-            "original_fully_qualified_name": "GLFWwindow",
-            "forward_declaration": false,
-            "is_anonymous": false,
-            "fields": []
-        }
-    ],
+    "structs": [],
     "functions": [
         {
             "name": "ImGui_ImplOpenGL3_Init",
@@ -71,8 +63,7 @@
                         "declaration": "ImDrawData*"
                     },
                     "is_array": false,
-                    "is_varargs": false,
-                    "default_value": "NULL"
+                    "is_varargs": false
                 }
             ],
             "is_default_argument_helper": false,

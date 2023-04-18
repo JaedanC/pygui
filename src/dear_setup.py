@@ -17,14 +17,14 @@ def main():
             "core_db",
             sources=[
                 "core/core_db.pyx",
-                "core/glfw_impl.pyx",
-                "core/opengl3_impl.pyx",
             ],
+            # My imconfig.h
+            # cimgui.h
+            # imgui_impl_*.h
             include_dirs=[
-                "external", # My imconfig.h
+                "external",
                 "external/dear_bindings",
-                "external/cimgui/imgui",
-                "external/cimgui/imgui/backends",
+                "core/backends",
             ],
             library_dirs=["pygui/libs"],
             libraries=["db_cimgui", "glfw3dll", "db_imgui_glfw_opengl3"],

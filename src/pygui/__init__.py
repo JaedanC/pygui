@@ -1,13 +1,10 @@
-
 from .core_db import *
-# from .glfw_impl import *
-# from .opengl3_impl import *
 
-# VERTEX_BUFFER_POS_OFFSET = core_db._py_vertex_buffer_vertex_pos_offset()
-# VERTEX_BUFFER_UV_OFFSET = core_db._py_vertex_buffer_vertex_uv_offset()
-# VERTEX_BUFFER_COL_OFFSET = core_db._py_vertex_buffer_vertex_col_offset()
-# VERTEX_SIZE = core_db._py_vertex_buffer_vertex_size()
-# INDEX_SIZE = core_db._py_index_buffer_index_size()
+VERTEX_BUFFER_POS_OFFSET = core_db._py_vertex_buffer_vertex_pos_offset()
+VERTEX_BUFFER_UV_OFFSET = core_db._py_vertex_buffer_vertex_uv_offset()
+VERTEX_BUFFER_COL_OFFSET = core_db._py_vertex_buffer_vertex_col_offset()
+VERTEX_SIZE = core_db._py_vertex_buffer_vertex_size()
+INDEX_SIZE = core_db._py_index_buffer_index_size()
 
 
 

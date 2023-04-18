@@ -18344,7 +18344,7 @@ cdef class ImVector_float:
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_char_callback(window: GLFWwindow=None, c: int=None):
+def impl_glfw_char_callback(window: GLFWwindow, c: int):
     ccimgui_db.ImGui_ImplGlfw_CharCallback(
         window._ptr,
         c
@@ -18355,7 +18355,7 @@ def impl_glfw_char_callback(window: GLFWwindow=None, c: int=None):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_cursor_enter_callback(window: GLFWwindow=None, entered: int=None):
+def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
     ccimgui_db.ImGui_ImplGlfw_CursorEnterCallback(
         window._ptr,
         entered
@@ -18366,7 +18366,7 @@ def impl_glfw_cursor_enter_callback(window: GLFWwindow=None, entered: int=None):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_cursor_pos_callback(window: GLFWwindow=None, x: float=None, y: float=None):
+def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
     ccimgui_db.ImGui_ImplGlfw_CursorPosCallback(
         window._ptr,
         x,
@@ -18378,7 +18378,7 @@ def impl_glfw_cursor_pos_callback(window: GLFWwindow=None, x: float=None, y: flo
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def impl_glfw_init_for_open_gl(window: GLFWwindow=None, install_callbacks: bool=None):
+def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForOpenGL(
         window._ptr,
         install_callbacks
@@ -18390,7 +18390,7 @@ def impl_glfw_init_for_open_gl(window: GLFWwindow=None, install_callbacks: bool=
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def impl_glfw_init_for_other(window: GLFWwindow=None, install_callbacks: bool=None):
+def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForOther(
         window._ptr,
         install_callbacks
@@ -18402,7 +18402,7 @@ def impl_glfw_init_for_other(window: GLFWwindow=None, install_callbacks: bool=No
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def impl_glfw_init_for_vulkan(window: GLFWwindow=None, install_callbacks: bool=None):
+def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui_db.ImGui_ImplGlfw_InitForVulkan(
         window._ptr,
         install_callbacks
@@ -18414,7 +18414,7 @@ def impl_glfw_init_for_vulkan(window: GLFWwindow=None, install_callbacks: bool=N
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_install_callbacks(window: GLFWwindow=None):
+def impl_glfw_install_callbacks(window: GLFWwindow):
     ccimgui_db.ImGui_ImplGlfw_InstallCallbacks(
         window._ptr
     )
@@ -18424,7 +18424,7 @@ def impl_glfw_install_callbacks(window: GLFWwindow=None):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_key_callback(window: GLFWwindow=None, key: int=None, scancode: int=None, action: int=None, mods: int=None):
+def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
     ccimgui_db.ImGui_ImplGlfw_KeyCallback(
         window._ptr,
         key,
@@ -18438,7 +18438,7 @@ def impl_glfw_key_callback(window: GLFWwindow=None, key: int=None, scancode: int
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_monitor_callback(monitor: GLFWmonitor=None, event: int=None):
+def impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
     ccimgui_db.ImGui_ImplGlfw_MonitorCallback(
         monitor._ptr,
         event
@@ -18449,7 +18449,7 @@ def impl_glfw_monitor_callback(monitor: GLFWmonitor=None, event: int=None):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_mouse_button_callback(window: GLFWwindow=None, button: int=None, action: int=None, mods: int=None):
+def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
     ccimgui_db.ImGui_ImplGlfw_MouseButtonCallback(
         window._ptr,
         button,
@@ -18470,7 +18470,7 @@ def impl_glfw_new_frame():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_restore_callbacks(window: GLFWwindow=None):
+def impl_glfw_restore_callbacks(window: GLFWwindow):
     ccimgui_db.ImGui_ImplGlfw_RestoreCallbacks(
         window._ptr
     )
@@ -18480,7 +18480,7 @@ def impl_glfw_restore_callbacks(window: GLFWwindow=None):
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_scroll_callback(window: GLFWwindow=None, xoffset: float=None, yoffset: float=None):
+def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
     ccimgui_db.ImGui_ImplGlfw_ScrollCallback(
         window._ptr,
         xoffset,
@@ -18492,7 +18492,7 @@ def impl_glfw_scroll_callback(window: GLFWwindow=None, xoffset: float=None, yoff
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool=None):
+def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
     ccimgui_db.ImGui_ImplGlfw_SetCallbacksChainForAllWindows(
         chain_for_all_windows
     )
@@ -18510,7 +18510,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_glfw_window_focus_callback(window: GLFWwindow=None, focused: int=None):
+def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
     ccimgui_db.ImGui_ImplGlfw_WindowFocusCallback(
         window._ptr,
         focused
@@ -18616,9 +18616,9 @@ def impl_open_gl_3_new_frame():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-def impl_open_gl_3_render_draw_data(draw_data: ImDrawData=None):
+def impl_open_gl_3_render_draw_data(draw_data: Any):
     ccimgui_db.ImGui_ImplOpenGL3_RenderDrawData(
-        draw_data._ptr
+        draw_data
     )
 # [End Function]
 
@@ -18629,23 +18629,4 @@ def impl_open_gl_3_render_draw_data(draw_data: ImDrawData=None):
 def impl_open_gl_3_shutdown():
     ccimgui_db.ImGui_ImplOpenGL3_Shutdown()
 # [End Function]
-
-# [Class]
-# [Class Constants]
-# ?use_template(False)
-# ?active(True)
-cdef class ImDrawData:
-    cdef ccimgui_db.ImDrawData* _ptr
-    
-    @staticmethod
-    cdef ImDrawData from_ptr(ccimgui_db.ImDrawData* _ptr):
-        cdef ImDrawData wrapper = ImDrawData.__new__(ImDrawData)
-        wrapper._ptr = _ptr
-        return wrapper
-    
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-    # [End Class Constants]
-
-# [End Class]
 

@@ -814,18 +814,22 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
     )
 
 
-def to_pxd(header: DearBinding, header_file: str) -> str:
-    pxd_base = """
+def to_pxd(header: DearBinding, header_file_name: str, include_base=True) -> str:
+    base = """
     # -*- coding: utf-8 -*-
     # distutils: language = c++
 
     from libcpp cimport bool
 
-    {}
+
     """
 
     dynamic_content = StringIO("")
-    dynamic_content.write('cdef extern from "{}":\n'.format(header_file))
+
+    if include_base:
+        dynamic_content.write(textwrap.dedent(base.lstrip("\n")))
+
+    dynamic_content.write('cdef extern from "{}":\n'.format(header_file_name))
     
     # Struct forward declaration
     for struct in header.structs:
@@ -986,7 +990,8 @@ def to_pxd(header: DearBinding, header_file: str) -> str:
         )
         dynamic_content.write(function_pxd)
     dynamic_content.write("\n")
-    return textwrap.dedent(pxd_base).format(dynamic_content.getvalue())
+
+    return dynamic_content.getvalue()
 
 
 def to_pyx(header: DearBinding, pxd_library_name: str, imports: str, include_base: bool) -> str:
@@ -1422,8 +1427,10 @@ def generate_new_pyx(from_header: DearBinding, pxd_library_name: str, include_ba
     return to_pyx(from_header, pxd_library_name, imports.strip(), include_base)
 
 
-def to_pyi(header: DearBinding, model: PyxHeader, include_base=True):
+def to_pyi(headers: List[DearBinding], model: PyxHeader):
     base = textwrap.dedent("""
+    # This file is auto-generated. If you need to edit this file then edit the
+    # template that this is created from instead.
     from typing import Any, Callable, Tuple, List, Sequence
     from PIL import Image
 
@@ -1491,42 +1498,80 @@ def to_pyi(header: DearBinding, model: PyxHeader, include_base=True):
     # __init__.pyi ------------------------------------
 
     pyi_output = StringIO()
+    pyi_output.write(base)
+    
+    with open("core/templates/function.pyi") as f:
+        function_template_src = f.read()
+    
+    with open("core/templates/class.pyi") as f:
+        class_template_src = f.read()
+    
+    with open("core/templates/field.pyi") as f:
+        field_template_src = f.read()
 
-    if include_base:
-        pyi_output.write(base)
-
-    for enum in header.enums:
-        for enum_value in enum.elements:
-            pyi_output.write("{}: int\n".format(pythonise_string(enum_value.name_omitted_imgui_prefix(), make_upper=True)))
-    pyi_output.write("\n")
+    for header in headers:
+        for enum in header.enums:
+            for enum_value in enum.elements:
+                pyi_output.write("{}: int\n".format(pythonise_string(enum_value.name_omitted_imgui_prefix(), make_upper=True)))
+        pyi_output.write("\n")
 
     for function in model.functions:
-        pyi_output.write("{}def {}({}) -> {}: ...\n".format(
-            "# " if not comparable_is_active(function) else "",
-            function.name,
-            function.parameters,
-            function.options["returns"]
-        ))
+        function_template = Template(function_template_src)
+
+        function_template.set_condition("has_comment", function.comment is not None)
+        function_template.format(
+            function_name=function.name,
+            function_parameters=function.parameters,
+            function_returns=function.options["returns"],
+            function_comment=textwrap.indent(f'"""\n{function.comment}\n"""', "    ")
+        )
+
+        if comparable_is_active(function):
+            pyi_output.write(function_template.compile())
+        else:
+            pyi_output.write(comment_text(function_template.compile()))
+    
     pyi_output.write("\n")
 
     for class_ in model.classes:
-        pyi_output.write("class {}:{}".format(
-            class_.name,
-            "\n" if class_.has_one_active_member() else " ...\n"
-        ))
+        class_template = Template(class_template_src)
+        class_template.set_condition("has_content", class_.has_one_active_member() or class_.comment is not None)
+        class_template.set_condition("has_one_member", class_.has_one_active_member())
+        class_template.set_condition("has_comment", class_.comment is not None)
+
+        class_template.format(
+            class_name=class_.name,
+            class_comment=textwrap.indent(f'"""\n{class_.comment}\n"""', "    "),
+        )
+        pyi_output.write(class_template.compile())
+
         for field in class_.fields:
-            pyi_output.write("    {}{}: {}\n".format(
-                "# " if not comparable_is_active(field) else "",
-                field.name,
-                field.options["returns"]
-            ))
+            field_template = Template(field_template_src)
+            field_template.set_condition("has_comment", field.comment is not None)
+            field_template.format(
+                field_name=field.name,
+                field_type=field.options["returns"],
+                field_comment=f'"""\n{field.comment}\n"""'
+            )
+            if comparable_is_active(field):
+                pyi_output.write(textwrap.indent(field_template.compile(), "    "))
+            else:
+                pyi_output.write(textwrap.indent(comment_text(field_template.compile()), "    "))
+
         for method in class_.methods:
-            pyi_output.write("    {}def {}({}) -> {}: ...\n".format(
-                "# " if not comparable_is_active(method) else "",
-                method.name,
-                method.parameters,
-                method.options["returns"]
-            ))
+            method_template = Template(function_template_src)
+            method_template.set_condition("has_comment", method.comment is not None)
+            method_template.format(
+                function_name=method.name,
+                function_parameters=method.parameters,
+                function_returns=method.options["returns"],
+                function_comment=textwrap.indent(f'"""\n{method.comment}\n"""', "    ")
+            )
+
+            if comparable_is_active(method):
+                pyi_output.write(textwrap.indent(method_template.compile(), "    "))
+            else:
+                pyi_output.write(textwrap.indent(comment_text(method_template.compile()), "    "))
         pyi_output.write("\n")
     
 
@@ -1585,48 +1630,37 @@ def to_pyi(header: DearBinding, model: PyxHeader, include_base=True):
         # clean up afterwards
         gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
         return texture
-    """)
+    """.lstrip("\n"))
 
-    return pyi_output.getvalue(), py if include_base else ""
+    return pyi_output.getvalue(), py
 
 
 def main():
-    CORE_INIT_PYI            = "pygui/__init__.pyi"
-    CORE_INIT_PY             = "pygui/__init__.py"
-
-    CIMGUI_PXD_HEADER_FILE   = "cimgui.h"
-    CIMGUI_PXD               = "core/ccimgui_db.pxd"
-    CIMGUI_LIBRARY_NAME      = "ccimgui_db"
-    CORE_GENERATED_PYX       = "core/core_generated_db.pyx"
-    CORE_PYX                 = "core/core_db.pyx"
-    CORE_PYX_TRIAL           = "core/core_db_trial.pyx"
-    CORE_TEMPLATE_PYX        = "core/core_template_db.pyx"
-    CORE_TEMPLATE_PYX_TRIAL  = "core/core_template_db_trial.pyx"
-
-    CORE_BINDING_JSON        = "external/dear_bindings/cimgui.json"
-
-    # python model.py --all --backends=glfw,opengl3
-    binding_jsons = [CORE_BINDING_JSON]
-    backends = []
-    for arg in sys.argv:
-        if "--backends=" in arg:
-            backends = arg.replace("--backends=", "", 1).split(",")
-            backends = list(filter(lambda x: x != "core", backends))
+    with open("config.json") as f:
+        config = json.load(f)
     
-    for backend in backends:
-        binding_jsons.append("core/backends/" + backend + ".json")
+    CIMGUI_PXD_PATH =         config["CIMGUI_PXD_PATH"]
+    CIMGUI_LIBRARY_NAME =     config["CIMGUI_LIBRARY_NAME"]
+    GENERATED_PYX_PATH =      config["GENERATED_PYX_PATH"]
+    PYX_PATH =                config["PYX_PATH"]
+    PYX_TRIAL_PATH =          config["PYX_TRIAL_PATH"]
+    TEMPLATE_PYX_PATH =       config["TEMPLATE_PYX_PATH"]
+    TEMPLATE_PYX_TRIAL_PATH = config["TEMPLATE_PYX_TRIAL_PATH"]
+    INIT_PYI_PATH =           config["INIT_PYI_PATH"]
+    INIT_PY_PATH =            config["INIT_PY_PATH"]
+    
+    defines = [
+        ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
+        ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
+        ("IMGUI_HAS_IMSTR", False),
+    ]
 
     headers: List[DearBinding] = []
-    for binding_json in binding_jsons:
-        with open(binding_json) as f:
-            binding_json_src = json.load(f)
-        
-        defines = [
-            ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
-            ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
-            ("IMGUI_HAS_IMSTR", False),
-        ]
-        headers.append(parse_binding_json(binding_json_src, defines))
+    header_files: List[str] = []
+    for module in config["modules"]:
+        header_files.append(module["header"])
+        with open(module["binding_json"]) as f:
+            headers.append(parse_binding_json(json.load(f), defines))
 
     def _help():
         print(textwrap.dedent("""
@@ -1652,17 +1686,17 @@ def main():
             new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
 
         try:
-            with open(CORE_GENERATED_PYX) as f:
+            with open(GENERATED_PYX_PATH) as f:
                 old_pyx = f.read()
         except FileNotFoundError:
-            print(f"Trial: '{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            print(f"Trial: '{GENERATED_PYX_PATH}' not found. Using new generated content as the old.")
             old_pyx = new_pyx
 
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
+            with open(TEMPLATE_PYX_PATH) as f:
                 template_pyx = f.read()
         except FileNotFoundError:
-            print(f"Trial: '{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            print(f"Trial: '{TEMPLATE_PYX_PATH}' not found. Aborting. Use --reset first ")
             return
         
         try:
@@ -1671,12 +1705,12 @@ def main():
             print("Trial: Merge failed. Aborting.")
             return
 
-        with open(CORE_PYX_TRIAL, "w") as f:
+        with open(PYX_TRIAL_PATH, "w") as f:
             f.write(merge_result.merged_pyx)
-        with open(CORE_TEMPLATE_PYX_TRIAL, "w") as f:
+        with open(TEMPLATE_PYX_TRIAL_PATH, "w") as f:
             f.write(merge_result.merged_pyx_all_active)
-        print(f"Created {CORE_PYX_TRIAL}")
-        print(f"Created {CORE_TEMPLATE_PYX_TRIAL}")
+        print(f"Created {PYX_TRIAL_PATH}")
+        print(f"Created {TEMPLATE_PYX_TRIAL_PATH}")
 
     def reset(headers: List[DearBinding], pxd_libary_name: str):
         new_pyx = ""
@@ -1685,34 +1719,34 @@ def main():
         
         new_model = create_pyx_model(new_pyx)
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
-                print(f"Error: Template '{CORE_TEMPLATE_PYX}' still exists.")
+            with open(TEMPLATE_PYX_PATH) as f:
+                print(f"Error: Template '{TEMPLATE_PYX_PATH}' still exists.")
                 print("Please delete the file manually if you are sure.")
                 return
         except FileNotFoundError:
-            with open(CORE_PYX, "w") as f:
+            with open(PYX_PATH, "w") as f:
                 f.write(replace_after(
                     new_pyx,
                     PYX_TEMPLATE_MARKER,
                     new_model.as_pyx()
                 ))
-            with open(CORE_TEMPLATE_PYX, "w") as f:
+            with open(TEMPLATE_PYX_PATH, "w") as f:
                 f.write(replace_after(
                     new_pyx,
                     PYX_TEMPLATE_MARKER,
                     new_model.as_pyx(ignore_active_flag=True)
                 ))
-            print(f"Created {CORE_PYX}")
-            print(f"Created {CORE_TEMPLATE_PYX}")
+            print(f"Created {PYX_PATH}")
+            print(f"Created {TEMPLATE_PYX_PATH}")
 
-    def write_pxd(headers: List[DearBinding]):
+    def write_pxd(headers: List[DearBinding], header_files: List[str]):
         pxd = ""
-        for i, header in enumerate(headers):
-            pxd += to_pxd(header, CIMGUI_PXD_HEADER_FILE) # TODO: Pass in the header's .h reference file
+        for i, (header, header_file) in enumerate(zip(headers, header_files)):
+            pxd += to_pxd(header, header_file, i == 0) # TODO: Pass in the header's .h reference file
         
-        with open(CIMGUI_PXD, "w") as f:
+        with open(CIMGUI_PXD_PATH, "w") as f:
             f.write(pxd)
-        print(f"Created {CIMGUI_PXD}")
+        print(f"Created {CIMGUI_PXD_PATH}")
     
     def write_pyx(headers: List[DearBinding], pxd_libary_name: str):
         new_pyx = ""
@@ -1720,17 +1754,17 @@ def main():
             new_pyx += generate_new_pyx(header, pxd_libary_name, i == 0)
 
         try:
-            with open(CORE_GENERATED_PYX) as f:
+            with open(GENERATED_PYX_PATH) as f:
                 old_pyx = f.read()
         except FileNotFoundError:
-            print(f"'{CORE_GENERATED_PYX}' not found. Using new generated content as the old.")
+            print(f"'{GENERATED_PYX_PATH}' not found. Using new generated content as the old.")
             old_pyx = new_pyx
 
         try:
-            with open(CORE_TEMPLATE_PYX) as f:
+            with open(TEMPLATE_PYX_PATH) as f:
                 template_pyx = f.read()
         except FileNotFoundError:
-            print(f"'{CORE_TEMPLATE_PYX}' not found. Aborting. Use --reset first ")
+            print(f"'{TEMPLATE_PYX_PATH}' not found. Aborting. Use --reset first ")
             return
         
         try:
@@ -1739,35 +1773,33 @@ def main():
             print("Merge failed. Aborting.")
             return
 
-        with open(CORE_GENERATED_PYX, "w") as f:
+        with open(GENERATED_PYX_PATH, "w") as f:
             f.write(merge_result.new_pyx)
-        with open(CORE_PYX, "w") as f:
+        with open(PYX_PATH, "w") as f:
             f.write(merge_result.merged_pyx)
-        with open(CORE_TEMPLATE_PYX, "w") as f:
+        with open(TEMPLATE_PYX_PATH, "w") as f:
             f.write(merge_result.merged_pyx_all_active)
-        print(f"Created {CORE_GENERATED_PYX}")
-        print(f"Created {CORE_PYX}")
-        print(f"Created {CORE_TEMPLATE_PYX}")
+        print(f"Created {GENERATED_PYX_PATH}")
+        print(f"Created {PYX_PATH}")
+        print(f"Created {TEMPLATE_PYX_PATH}")
     
     def write_pyi(headers: List[DearBinding]):
-        # TODO: Need to rewrite to include the implementations that are in the
-        # one file.
-        # try:
-        #     with open(CORE_TEMPLATE_PYX) as f:
-        #         model = create_pyx_model(f.read())
-        # except FileNotFoundError:
-        #     print(f"'{CORE_TEMPLATE_PYX}' not found. This is required to create the pyi file")
-        #     return
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                model = create_pyx_model(f.read())
+        except FileNotFoundError:
+            print(f"'{TEMPLATE_PYX_PATH}' not found. This is required to create the pyi file")
+            return
         
-        # pyi, py = to_pyi(header, model, include_base=unit_name=="core")
+        pyi, py = to_pyi(headers, model)
 
 
-        # with open(CORE_INIT_PYI, "w") as f:
-        #     f.write(pyi)
-        # with open(CORE_INIT_PY, "w") as f:
-        #     f.write(py)
-        # print(f"Created {CORE_INIT_PYI}")
-        # print(f"Created {CORE_INIT_PY}")
+        with open(INIT_PYI_PATH, "w") as f:
+            f.write(pyi)
+        with open(INIT_PY_PATH, "w") as f:
+            f.write(py)
+        print(f"Created {INIT_PYI_PATH}")
+        print(f"Created {INIT_PY_PATH}")
         pass
 
 
@@ -1788,7 +1820,7 @@ def main():
         return
 
     if "--pxd" in sys.argv:
-        write_pxd(headers, CIMGUI_LIBRARY_NAME)
+        write_pxd(headers, header_files)
         return
     
     if "--pyx" in sys.argv:
@@ -1800,7 +1832,7 @@ def main():
         return
     
     if "--all" in sys.argv:
-        write_pxd(headers, CIMGUI_LIBRARY_NAME)
+        write_pxd(headers, header_files)
         write_pyx(headers, CIMGUI_LIBRARY_NAME)
         write_pyi(headers)
         return

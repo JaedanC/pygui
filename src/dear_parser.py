@@ -11,7 +11,7 @@ def comment_text(text: str):
     """
     Adds a python comment to each line of the string. It tries to insert the
     comment as far to the right as possible in a line, such that no content is
-    missed.
+    missed. Blank lines are not commented.
     """
     min_spaces = len(text)
     for line in text.split("\n"):
@@ -25,7 +25,10 @@ def comment_text(text: str):
     
     output = []
     for line in text.split("\n"):
-        output.append(line[:min_spaces] + "# " + line[min_spaces:])
+        if line.strip() == "":
+            output.append("")
+        else:
+            output.append(line[:min_spaces] + "# " + line[min_spaces:])
     return "\n".join(output)
 
 
@@ -131,11 +134,12 @@ class PyxHeader:
 
 
 class PyxFunction:
-    def __init__(self, name: str, parameters: str, options: dict, impl: str):
+    def __init__(self, name: str, parameters: str, options: dict, impl: str, comment: str):
         self.name: str = name
         self.parameters: str = parameters
         self.options: dict = options
         self.impl: str = impl
+        self.comment: str = comment
     
     def copy(self):
         return PyxFunction(
@@ -143,29 +147,33 @@ class PyxFunction:
             self.parameters,
             self.options.copy(),
             self.impl,
+            self.comment,
         )
     
 
 class PyxClass:
     class Field:
-        def __init__(self, name, options: dict, impl: str):
+        def __init__(self, name, options: dict, impl: str, comment: str):
             self.name: str = name
             self.options: dict = options
             self.impl: str = impl
+            self.comment: str = comment
         
         def copy(self):
             return PyxClass.Field(
                 self.name,
                 self.options.copy(),
                 self.impl,
+                self.comment,
             )
     
     class Method:
-        def __init__(self, name, parameters: str, options: dict, impl: str):
+        def __init__(self, name, parameters: str, options: dict, impl: str, comment: str):
             self.name: str = name
             self.parameters: str = parameters
             self.options: dict = options
             self.impl: str = impl
+            self.comment: str = comment
         
         def copy(self):
             return PyxClass.Method(
@@ -173,22 +181,23 @@ class PyxClass:
                 self.parameters,
                 self.options.copy(),
                 self.impl,
+                self.comment,
             )
 
     def __init__(self, name, options: dict, impl: str,
-                 fields: List[Field], methods: List[Method]):
+                 fields: List[Field], methods: List[Method], comment: str):
         self.name: str = name
         self.options: dict = options
         self.impl: str = impl
         self.fields: List[PyxClass.Field] = fields
         self.methods: List[PyxClass.Method] = methods
+        self.comment: str = comment
     
     def has_one_active_member(self):
         for comparable in self.fields + self.methods:
             if comparable_is_active(comparable):
                 return True
         return False
-
 
     def copy(self):
         return PyxClass(
@@ -197,6 +206,7 @@ class PyxClass:
             self.impl,
             [f.copy() for f in self.fields],
             [m.copy() for m in self.methods],
+            self.comment,
         )
 
 
@@ -427,16 +437,29 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
                 return class_name_found.group(1)
         assert False
 
+    def parse_multiline_comment(src_containing_comment: str) -> str:
+        src_containing_comment = src_containing_comment.replace("    ", "")
+        try:
+            start_index = src_containing_comment.index('"""')
+            end_index = src_containing_comment.index('"""', start_index + 1)
+        except ValueError:
+            return None
+        
+        return src_containing_comment[start_index + 3:end_index].strip()
+
+
     parsed_functions: List[PyxFunction] = []
     for function_src in get_sections(pyx_src, "Function"):
         function_options = parse_options(function_src)
         function_body = parse_other_than_options(function_src)
         function_name, function_parameters = parse_function(function_src)
+        function_comment = parse_multiline_comment(function_src)
         parsed_functions.append(PyxFunction(
             function_name,
             function_parameters,
             function_options,
             function_body,
+            function_comment,
         ))
     
     parsed_classes: List[PyxClass] = []
@@ -445,16 +468,19 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         class_constants_options = parse_options(class_constants_section)
         class_constants_body = parse_other_than_options(class_constants_section)
         class_name = parse_class(class_constants_section)
+        class_comment = parse_multiline_comment(class_src)
 
         parsed_fields = []
         for class_field in get_sections(class_src, "Field"):
             field_options = parse_options(class_field)
             field_name, _ = parse_function(class_field)
             field_body = parse_other_than_options(class_field)
+            field_comment = parse_multiline_comment(class_field)
             parsed_fields.append(PyxClass.Field(
                 field_name,
                 field_options,
                 field_body,
+                field_comment,
             ))
         
         parsed_methods = []
@@ -462,11 +488,13 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
             method_options = parse_options(class_method)
             method_name, method_parameters = parse_function(class_method)
             method_body = parse_other_than_options(class_method)
+            method_comment = parse_multiline_comment(class_method)
             parsed_methods.append(PyxClass.Method(
                 method_name,
                 method_parameters,
                 method_options,
                 method_body,
+                method_comment,
             ))
         
         parsed_classes.append(PyxClass(
@@ -475,13 +503,10 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
             class_constants_body,
             parsed_fields,
             parsed_methods,
+            class_comment,
         ))
     
     return PyxHeader(parsed_functions, parsed_classes)
-
-
-        # else:
-        #     print("Found", old_c, "in the new")
 
 
 def main():
