@@ -1943,7 +1943,7 @@ cdef extern from "cimgui.h":
 
     # Default + vietnamese characters
     const ImWchar* ImFontAtlas_GetGlyphRangesVietnamese(ImFontAtlas* self) except +
-    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2 out_uv_border, ImVec2 out_uv_fill) except +
+    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2* out_uv_border, ImVec2* out_uv_fill) except +
 
     # 1 byte per-pixel
     void ImFontAtlas_GetTexDataAsAlpha8(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel) except +
@@ -2298,10 +2298,10 @@ cdef extern from "cimgui.h":
     # Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
     # - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
     # - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
-    bool ImGui_ColorEdit3(const char* label, float col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorEdit4(const char* label, float col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorPicker3(const char* label, float col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorPicker4(const char* label, float col, ImGuiColorEditFlags flags, const float* ref_col) except +
+    bool ImGui_ColorEdit3(const char* label, float* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorEdit4(const char* label, float* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorPicker3(const char* label, float* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorPicker4(const char* label, float* col, ImGuiColorEditFlags flags, const float* ref_col) except +
 
     # Legacy Columns API (prefer using Tables!)
     # - You can also use SameLine(pos_x) to mimic simplified columns.
@@ -2317,8 +2317,8 @@ cdef extern from "cimgui.h":
     bool ImGui_ComboCallbackEx(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int popup_max_height_in_items) except +
 
     # Implied popup_max_height_in_items = -1
-    bool ImGui_ComboChar(const char* label, int* current_item, const char* items, int items_count) except +
-    bool ImGui_ComboCharEx(const char* label, int* current_item, const char* items, int items_count, int popup_max_height_in_items) except +
+    bool ImGui_ComboChar(const char* label, int* current_item, const char** items, int items_count) except +
+    bool ImGui_ComboCharEx(const char* label, int* current_item, const char** items, int items_count, int popup_max_height_in_items) except +
 
     # Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
     bool ImGui_ComboEx(const char* label, int* current_item, const char* items_separated_by_zeros, int popup_max_height_in_items) except +
@@ -2378,16 +2378,16 @@ cdef extern from "cimgui.h":
     bool ImGui_DragFloat(const char* label, float* v) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat2(const char* label, float v) except +
-    bool ImGui_DragFloat2Ex(const char* label, float v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat2(const char* label, float* v) except +
+    bool ImGui_DragFloat2Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat3(const char* label, float v) except +
-    bool ImGui_DragFloat3Ex(const char* label, float v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat3(const char* label, float* v) except +
+    bool ImGui_DragFloat3Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat4(const char* label, float v) except +
-    bool ImGui_DragFloat4Ex(const char* label, float v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat4(const char* label, float* v) except +
+    bool ImGui_DragFloat4Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # If v_min >= v_max we have no bound
     bool ImGui_DragFloatEx(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -2400,16 +2400,16 @@ cdef extern from "cimgui.h":
     bool ImGui_DragInt(const char* label, int* v) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt2(const char* label, int v) except +
-    bool ImGui_DragInt2Ex(const char* label, int v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt2(const char* label, int* v) except +
+    bool ImGui_DragInt2Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt3(const char* label, int v) except +
-    bool ImGui_DragInt3Ex(const char* label, int v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt3(const char* label, int* v) except +
+    bool ImGui_DragInt3Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt4(const char* label, int v) except +
-    bool ImGui_DragInt4Ex(const char* label, int v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt4(const char* label, int* v) except +
+    bool ImGui_DragInt4Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # If v_min >= v_max we have no bound
     bool ImGui_DragIntEx(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -2724,23 +2724,23 @@ cdef extern from "cimgui.h":
     bool ImGui_InputFloat(const char* label, float* v) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat2(const char* label, float v) except +
-    bool ImGui_InputFloat2Ex(const char* label, float v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat2(const char* label, float* v) except +
+    bool ImGui_InputFloat2Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat3(const char* label, float v) except +
-    bool ImGui_InputFloat3Ex(const char* label, float v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat3(const char* label, float* v) except +
+    bool ImGui_InputFloat3Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat4(const char* label, float v) except +
-    bool ImGui_InputFloat4Ex(const char* label, float v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat4(const char* label, float* v) except +
+    bool ImGui_InputFloat4Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
     bool ImGui_InputFloatEx(const char* label, float* v, float step, float step_fast, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied step = 1, step_fast = 100, flags = 0
     bool ImGui_InputInt(const char* label, int* v) except +
-    bool ImGui_InputInt2(const char* label, int v, ImGuiInputTextFlags flags) except +
-    bool ImGui_InputInt3(const char* label, int v, ImGuiInputTextFlags flags) except +
-    bool ImGui_InputInt4(const char* label, int v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt2(const char* label, int* v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt3(const char* label, int* v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt4(const char* label, int* v, ImGuiInputTextFlags flags) except +
     bool ImGui_InputIntEx(const char* label, int* v, int step, int step_fast, ImGuiInputTextFlags flags) except +
 
     # Implied p_step = null, p_step_fast = null, format = null, flags = 0
@@ -2896,7 +2896,7 @@ cdef extern from "cimgui.h":
     # Display text+label aligned the same way as value+label widgets
     void ImGui_LabelText(const char* label, const char* fmt) except +
     void ImGui_LabelTextV(const char* label, const char* fmt) except +
-    bool ImGui_ListBox(const char* label, int* current_item, const char* items, int items_count, int height_in_items) except +
+    bool ImGui_ListBox(const char* label, int* current_item, const char** items, int items_count, int height_in_items) except +
 
     # Implied height_in_items = -1
     bool ImGui_ListBoxCallback(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count) except +
@@ -3317,16 +3317,16 @@ cdef extern from "cimgui.h":
     bool ImGui_SliderFloat(const char* label, float* v, float v_min, float v_max) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat2(const char* label, float v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat2Ex(const char* label, float v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat2(const char* label, float* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat2Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat3(const char* label, float v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat3Ex(const char* label, float v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat3(const char* label, float* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat3Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat4(const char* label, float v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat4Ex(const char* label, float v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat4(const char* label, float* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat4Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
     bool ImGui_SliderFloatEx(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -3335,16 +3335,16 @@ cdef extern from "cimgui.h":
     bool ImGui_SliderInt(const char* label, int* v, int v_min, int v_max) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt2(const char* label, int v, int v_min, int v_max) except +
-    bool ImGui_SliderInt2Ex(const char* label, int v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt2(const char* label, int* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt2Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt3(const char* label, int v, int v_min, int v_max) except +
-    bool ImGui_SliderInt3Ex(const char* label, int v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt3(const char* label, int* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt3Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt4(const char* label, int v, int v_min, int v_max) except +
-    bool ImGui_SliderInt4Ex(const char* label, int v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt4(const char* label, int* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt4Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool ImGui_SliderIntEx(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = null, flags = 0

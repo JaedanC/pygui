@@ -1795,14 +1795,14 @@ def combo_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, 
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def combo_char(label: str, current_item: IntPtr, items: str, items_count: int):
+def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int):
     """
     Implied popup_max_height_in_items = -1
     """
     cdef bool res = ccimgui.ImGui_ComboChar(
         _bytes(label),
         &current_item.value,
-        _bytes(items),
+        items,
         items_count
     )
     return res
@@ -1812,11 +1812,11 @@ def combo_char(label: str, current_item: IntPtr, items: str, items_count: int):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def combo_char_ex(label: str, current_item: IntPtr, items: str, items_count: int, popup_max_height_in_items: int=-1):
+def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ComboCharEx(
         _bytes(label),
         &current_item.value,
-        _bytes(items),
+        items,
         items_count,
         popup_max_height_in_items
     )
@@ -4570,11 +4570,11 @@ def label_text_v(label: str, fmt: str):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-def list_box(label: str, current_item: IntPtr, items: str, items_count: int, height_in_items: int=-1):
+def list_box(label: str, current_item: IntPtr, items: Any, items_count: int, height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ListBox(
         _bytes(label),
         &current_item.value,
-        _bytes(items),
+        items,
         items_count,
         height_in_items
     )
@@ -10932,14 +10932,14 @@ cdef class ImFontAtlas:
     # ?use_template(False)
     # ?active(False)
     # ?returns(bool)
-    def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: tuple, out_uv_fill: tuple):
+    def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
         cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
             self._ptr,
             cursor,
             out_offset._ptr,
             out_size._ptr,
-            _cast_tuple_ImVec2(out_uv_border),
-            _cast_tuple_ImVec2(out_uv_fill)
+            out_uv_border._ptr,
+            out_uv_fill._ptr
         )
         return res
     # [End Method]

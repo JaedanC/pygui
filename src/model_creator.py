@@ -399,6 +399,8 @@ class DearType:
     def __init__(self, raw_type: str, is_array_size=None):
         self.raw_type: str = raw_type
         self.array_size: int = is_array_size
+        if is_array_size is not None:
+            self.raw_type += "*"
     
     def __repr__(self):
         return "Type({})".format(self.raw_type)
@@ -441,8 +443,8 @@ class DearType:
             "float*": "FloatPtr",
             "double*": "DoublePtr",
         }
-        if self.is_array() and self.with_no_const() + "*" in ptr_version_mappings:
-                return ptr_version_mappings[self.with_no_const() + "*"]
+        if self.is_array() and self.with_no_const() in ptr_version_mappings:
+                return ptr_version_mappings[self.with_no_const()]
 
         if self.with_no_const() in ptr_version_mappings:
             return ptr_version_mappings[self.with_no_const()]

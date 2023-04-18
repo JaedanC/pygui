@@ -886,44 +886,70 @@ VIEWPORT_FLAGS_IS_FOCUSED = ccimgui.ImGuiViewportFlags_IsFocused
 # ---- Start Generated Content ----
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(ImGuiPayload)
-# def accept_drag_drop_payload(type_: str, flags: int=0):
-#     """
-#     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
-#     """
-#     cdef ccimgui.ImGuiPayload* res = ccimgui.ImGui_AcceptDragDropPayload(
-#         _bytes(type_),
-#         flags
-#     )
-#     return ImGuiPayload.from_ptr(res)
+# ?use_template(True)
+# ?active(True)
+# ?returns(Any)
+_drag_drop_payload = None
+def accept_drag_drop_payload(type_: str, flags: int=0):
+    """
+    Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
+    """
+    cdef const ccimgui.ImGuiPayload* res = ccimgui.ImGui_AcceptDragDropPayload(
+        _bytes(type_),
+        flags
+    )
+
+    cdef float* colour
+    if _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_3F:
+        colour = <float*>res.Data
+        return Vec4Ptr(
+            colour[0],
+            colour[1],
+            colour[2],
+            1
+        )
+    elif _from_bytes(res.DataType) == IMGUI_PAYLOAD_TYPE_COLOR_4F:
+        colour = <float*>res.Data
+        return Vec4Ptr(
+            colour[0],
+            colour[1],
+            colour[2],
+            colour[3]
+        )
+
+    if _drag_drop_payload is None:
+        return None
+    
+    payload_type, data = _drag_drop_payload
+    if payload_type == type_:
+        return data
+    return None
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def align_text_to_frame_padding():
-#     """
-#     Vertically align upcoming text baseline to framepadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)
-#     """
-#     ccimgui.ImGui_AlignTextToFramePadding()
+def align_text_to_frame_padding():
+    """
+    Vertically align upcoming text baseline to framepadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)
+    """
+    ccimgui.ImGui_AlignTextToFramePadding()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def arrow_button(str_id: str, dir_: int):
-#     """
-#     Square button with an arrow shape
-#     """
-#     cdef bool res = ccimgui.ImGui_ArrowButton(
-#         _bytes(str_id),
-#         dir_
-#     )
-#     return res
+def arrow_button(str_id: str, dir_: int):
+    """
+    Square button with an arrow shape
+    """
+    cdef bool res = ccimgui.ImGui_ArrowButton(
+        _bytes(str_id),
+        dir_
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -955,26 +981,26 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0):
-#     """
-#     Child Windows
-#     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
-#     - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
-#     - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
-#     Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
-#     [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-#     BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-#     returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginChild(
-#         _bytes(str_id),
-#         _cast_tuple_ImVec2(size),
-#         border,
-#         flags
-#     )
-#     return res
+def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0):
+    """
+    Child Windows
+    - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
+    - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
+    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
+    Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
+    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
+    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
+    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    """
+    cdef bool res = ccimgui.ImGui_BeginChild(
+        _bytes(str_id),
+        _cast_tuple_ImVec2(size),
+        border,
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1009,20 +1035,20 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_combo(label: str, preview_value: str, flags: int=0):
-#     """
-#     Widgets: Combo Box (Dropdown)
-#     - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.
-#     - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginCombo(
-#         _bytes(label),
-#         _bytes(preview_value),
-#         flags
-#     )
-#     return res
+def begin_combo(label: str, preview_value: str, flags: int=0):
+    """
+    Widgets: Combo Box (Dropdown)
+    - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.
+    - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.
+    """
+    cdef bool res = ccimgui.ImGui_BeginCombo(
+        _bytes(label),
+        _bytes(preview_value),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1043,65 +1069,65 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_drag_drop_source(flags: int=0):
-#     """
-#     Drag and Drop
-#     - On source items, call BeginDragDropSource(), if it returns true also call SetDragDropPayload() + EndDragDropSource().
-#     - On target candidates, call BeginDragDropTarget(), if it returns true also call AcceptDragDropPayload() + EndDragDropTarget().
-#     - If you stop calling BeginDragDropSource() the payload is preserved however it won't have a preview tooltip (we currently display a fallback "..." tooltip, see #1725)
-#     - An item can be both drag source and drop target.
-#     Call after submitting an item which may be dragged. when this return true, you can call setdragdroppayload() + enddragdropsource()
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginDragDropSource(
-#         flags
-#     )
-#     return res
+def begin_drag_drop_source(flags: int=0):
+    """
+    Drag and Drop
+    - On source items, call BeginDragDropSource(), if it returns true also call SetDragDropPayload() + EndDragDropSource().
+    - On target candidates, call BeginDragDropTarget(), if it returns true also call AcceptDragDropPayload() + EndDragDropTarget().
+    - If you stop calling BeginDragDropSource() the payload is preserved however it won't have a preview tooltip (we currently display a fallback "..." tooltip, see #1725)
+    - An item can be both drag source and drop target.
+    Call after submitting an item which may be dragged. when this return true, you can call setdragdroppayload() + enddragdropsource()
+    """
+    cdef bool res = ccimgui.ImGui_BeginDragDropSource(
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_drag_drop_target():
-#     """
-#     Call after submitting an item that may receive a payload. if this returns true, you can call acceptdragdroppayload() + enddragdroptarget()
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginDragDropTarget()
-#     return res
+def begin_drag_drop_target():
+    """
+    Call after submitting an item that may receive a payload. if this returns true, you can call acceptdragdroppayload() + enddragdroptarget()
+    """
+    cdef bool res = ccimgui.ImGui_BeginDragDropTarget()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def begin_group():
-#     """
-#     Lock horizontal starting position
-#     """
-#     ccimgui.ImGui_BeginGroup()
+def begin_group():
+    """
+    Lock horizontal starting position
+    """
+    ccimgui.ImGui_BeginGroup()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_list_box(label: str, size: tuple=(0, 0)):
-#     """
-#     Widgets: List Boxes
-#     - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
-#     - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
-#     - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
-#     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
-#     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
-#     Open a framed scrolling region
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginListBox(
-#         _bytes(label),
-#         _cast_tuple_ImVec2(size)
-#     )
-#     return res
+def begin_list_box(label: str, size: tuple=(0, 0)):
+    """
+    Widgets: List Boxes
+    - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
+    - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
+    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
+    - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
+    - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
+    Open a framed scrolling region
+    """
+    cdef bool res = ccimgui.ImGui_BeginListBox(
+        _bytes(label),
+        _cast_tuple_ImVec2(size)
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1164,20 +1190,20 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_popup(str_id: str, flags: int=0):
-#     """
-#     Popups: begin/end functions
-#     - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
-#     - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
-#     Return true if the popup is open, and you can start outputting to it.
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginPopup(
-#         _bytes(str_id),
-#         flags
-#     )
-#     return res
+def begin_popup(str_id: str, flags: int=0):
+    """
+    Popups: begin/end functions
+    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
+    - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
+    Return true if the popup is open, and you can start outputting to it.
+    """
+    cdef bool res = ccimgui.ImGui_BeginPopup(
+        _bytes(str_id),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1356,55 +1382,55 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
-#     cdef bool res = ccimgui.ImGui_BeginTableEx(
-#         _bytes(str_id),
-#         column,
-#         flags,
-#         _cast_tuple_ImVec2(outer_size),
-#         inner_width
-#     )
-#     return res
+def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
+    cdef bool res = ccimgui.ImGui_BeginTableEx(
+        _bytes(str_id),
+        column,
+        flags,
+        _cast_tuple_ImVec2(outer_size),
+        inner_width
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_tooltip():
-#     """
-#     Tooltips
-#     - Tooltip are windows following the mouse. They do not take focus away.
-#     Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginTooltip()
-#     return res
+def begin_tooltip():
+    """
+    Tooltips
+    - Tooltip are windows following the mouse. They do not take focus away.
+    Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
+    """
+    cdef bool res = ccimgui.ImGui_BeginTooltip()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def bullet():
-#     """
-#     Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
-#     """
-#     ccimgui.ImGui_Bullet()
+def bullet():
+    """
+    Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
+    """
+    ccimgui.ImGui_Bullet()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def bullet_text(fmt: str):
-#     """
-#     Shortcut for bullet()+text()
-#     """
-#     ccimgui.ImGui_BulletText(
-#         _bytes(fmt)
-#     )
+def bullet_text(fmt: str):
+    """
+    Shortcut for bullet()+text()
+    """
+    ccimgui.ImGui_BulletText(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -1419,19 +1445,19 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def button(label: str):
-#     """
-#     Widgets: Main
-#     - Most widgets return true when the value has been changed or when pressed/selected
-#     - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.
-#     Implied size = imvec2(0, 0)
-#     """
-#     cdef bool res = ccimgui.ImGui_Button(
-#         _bytes(label)
-#     )
-#     return res
+def button(label: str):
+    """
+    Widgets: Main
+    - Most widgets return true when the value has been changed or when pressed/selected
+    - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.
+    Implied size = imvec2(0, 0)
+    """
+    cdef bool res = ccimgui.ImGui_Button(
+        _bytes(label)
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1477,29 +1503,52 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(tuple)
-# def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_CalcTextSizeEx(
-#         _bytes(text),
-#         _bytes(text_end),
-#         hide_text_after_double_hash,
-#         wrap_width
-#     )
-#     return _cast_ImVec2_tuple(res)
+def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
+    cdef ccimgui.ImVec2 res
+    
+    if text_end is None:
+        res = ccimgui.ImGui_CalcTextSizeEx(
+            _bytes(text),
+            NULL,
+            hide_text_after_double_hash,
+            wrap_width
+        )
+    else:
+        res = ccimgui.ImGui_CalcTextSizeEx(
+            _bytes(text),
+            _bytes(text_end),
+            hide_text_after_double_hash,
+            wrap_width
+        )
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def checkbox(label: str, v: BoolPtr):
-#     cdef bool res = ccimgui.ImGui_Checkbox(
-#         _bytes(label),
-#         &v.value
-#     )
-#     return res
+def checkbox(label: str, v: BoolPtr):
+    cdef bool res = ccimgui.ImGui_Checkbox(
+        _bytes(label),
+        &v.value
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def checkbox_flags(label: str, flags: IntPtr, flags_value: int):
+    cdef bool res = ccimgui.ImGui_CheckboxFlagsIntPtr(
+        _bytes(label),
+        &flags.value,
+        flags_value
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1541,33 +1590,33 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def collapsing_header(label: str, flags: int=0):
-#     """
-#     If returning 'true' the header is open. doesn't indent nor push on id stack. user doesn't have to call treepop().
-#     """
-#     cdef bool res = ccimgui.ImGui_CollapsingHeader(
-#         _bytes(label),
-#         flags
-#     )
-#     return res
+def collapsing_header(label: str, flags: int=0):
+    """
+    If returning 'true' the header is open. doesn't indent nor push on id stack. user doesn't have to call treepop().
+    """
+    cdef bool res = ccimgui.ImGui_CollapsingHeader(
+        _bytes(label),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0):
-#     """
-#     When 'p_visible != null': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
-#     """
-#     cdef bool res = ccimgui.ImGui_CollapsingHeaderBoolPtr(
-#         _bytes(label),
-#         &p_visible.value,
-#         flags
-#     )
-#     return res
+def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0):
+    """
+    When 'p_visible != null': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
+    """
+    cdef bool res = ccimgui.ImGui_CollapsingHeaderBoolPtr(
+        _bytes(label),
+        &p_visible.value,
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -1615,18 +1664,21 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def color_convert_hsv_to_rgb(h: float, s: float, v: float, out_r: FloatPtr, out_g: FloatPtr, out_b: FloatPtr):
-#     ccimgui.ImGui_ColorConvertHSVtoRGB(
-#         h,
-#         s,
-#         v,
-#         &out_r.value,
-#         &out_g.value,
-#         &out_b.value
-#     )
+def color_convert_hsv_to_rgb(h: float, s: float, v: float, colour: Vec4Ptr):
+    cdef float c_floats[4]
+    colour.to_array(c_floats)
+    ccimgui.ImGui_ColorConvertHSVtoRGB(
+        h,
+        s,
+        v,
+        &c_floats[0],
+        &c_floats[1],
+        &c_floats[2]
+    )
+    colour.from_array(c_floats)
 # [End Function]
 
 # [Function]
@@ -1659,61 +1711,86 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def color_edit3(label: str, col: Sequence[FloatPtr], flags: int=0):
-#     """
-#     Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
-#     - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
-#     - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
-#     """
-#     cdef bool res = ccimgui.ImGui_ColorEdit3(
-#         _bytes(label),
-#         &col.value,
-#         flags
-#     )
-#     return res
+def color_edit3(label: str, colour: Vec4Ptr, flags: int=0):
+    """
+    Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
+    - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
+    - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
+    """
+    cdef float c_floats[4]
+    colour.to_array(c_floats)
+    cdef bool res = ccimgui.ImGui_ColorEdit3(
+        _bytes(label),
+        c_floats,
+        flags
+    )
+    colour.from_array(c_floats)
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def color_edit4(label: str, col: Sequence[FloatPtr], flags: int=0):
-#     cdef bool res = ccimgui.ImGui_ColorEdit4(
-#         _bytes(label),
-#         &col.value,
-#         flags
-#     )
-#     return res
+def color_edit4(label: str, colour: Vec4Ptr, flags: int=0):
+    cdef float c_floats[4]
+    colour.to_array(c_floats)
+    cdef bool res = ccimgui.ImGui_ColorEdit4(
+        _bytes(label),
+        c_floats,
+        flags
+    )
+    colour.from_array(c_floats)
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def color_picker3(label: str, col: Sequence[FloatPtr], flags: int=0):
-#     cdef bool res = ccimgui.ImGui_ColorPicker3(
-#         _bytes(label),
-#         &col.value,
-#         flags
-#     )
-#     return res
+def color_picker3(label: str, colour: Vec4Ptr, flags: int=0):
+    cdef float c_floats[4]
+    colour.to_array(c_floats)
+    cdef bool res = ccimgui.ImGui_ColorPicker3(
+        _bytes(label),
+        c_floats,
+        flags
+    )
+    colour.from_array(c_floats)
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def color_picker4(label: str, col: Sequence[FloatPtr], flags: int=0, ref_col: FloatPtr=None):
-#     cdef bool res = ccimgui.ImGui_ColorPicker4(
-#         _bytes(label),
-#         &col.value,
-#         flags,
-#         FloatPtr.ptr(ref_col)
-#     )
-#     return res
+def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=None):
+    cdef float c_floats[4]
+    cdef float c_ref_col[4]
+    cdef bool res
+
+    colour.to_array(c_floats)
+    if ref_col is None:
+        ref_col.to_array(c_ref_col)
+        res = ccimgui.ImGui_ColorPicker4(
+            _bytes(label),
+            c_floats,
+            flags,
+            c_ref_col
+        )
+        ref_col.from_array(c_ref_col)
+    else:
+        res = ccimgui.ImGui_ColorPicker4(
+            _bytes(label),
+            c_floats,
+            flags,
+            NULL
+        )
+    colour.to_array(c_floats)
+    return res
 # [End Function]
 
 # [Function]
@@ -1795,14 +1872,14 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def combo_char(label: str, current_item: IntPtr, items: str, items_count: int):
+# def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int):
 #     """
 #     Implied popup_max_height_in_items = -1
 #     """
 #     cdef bool res = ccimgui.ImGui_ComboChar(
 #         _bytes(label),
 #         &current_item.value,
-#         _bytes(items),
+#         items,
 #         items_count
 #     )
 #     return res
@@ -1812,11 +1889,11 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def combo_char_ex(label: str, current_item: IntPtr, items: str, items_count: int, popup_max_height_in_items: int=-1):
+# def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1):
 #     cdef bool res = ccimgui.ImGui_ComboCharEx(
 #         _bytes(label),
 #         &current_item.value,
-#         _bytes(items),
+#         items,
 #         items_count,
 #         popup_max_height_in_items
 #     )
@@ -1824,20 +1901,34 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
-#     """
-#     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
-#     """
-#     cdef bool res = ccimgui.ImGui_ComboEx(
-#         _bytes(label),
-#         &current_item.value,
-#         _bytes(items_separated_by_zeros),
-#         popup_max_height_in_items
-#     )
-#     return res
+def combo_ex(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1):
+    """
+    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+    """
+    cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(sum(len(s) + 1 for s in items) + 1)
+    
+    # Store items in array
+    cdef int counter = 0
+    for p_str in items:
+        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        # Null terminated string
+        c_strings[counter + len(p_str)] = 0
+        counter += len(p_str) + 1
+    
+    # Null terminated list
+    c_strings[counter] = 0
+
+    cdef bool res = ccimgui.ImGui_ComboEx(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        popup_max_height_in_items
+    )
+    ccimgui.ImGui_MemFree(c_strings)
+    return res
 # [End Function]
 
 # [Function]
@@ -1982,29 +2073,29 @@ def destroy_context(ctx: ImGuiContext=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def drag_float(label: str, v: FloatPtr):
-#     """
-#     Widgets: Drag Sliders
-#     - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
-#     - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',
-#     the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
-#     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
-#     - Format string may also be set to NULL or use the default format ("%f" or "%d").
-#     - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
-#     - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
-#     - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
-#     - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
-#     - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
-#     If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-#     """
-#     cdef bool res = ccimgui.ImGui_DragFloat(
-#         _bytes(label),
-#         &v.value
-#     )
-#     return res
+def drag_float(label: str, v: FloatPtr):
+    """
+    Widgets: Drag Sliders
+    - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',
+    the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
+    - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
+    - Format string may also be set to NULL or use the default format ("%f" or "%d").
+    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
+    - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
+    - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
+    - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
+    - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
+    If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
+    cdef bool res = ccimgui.ImGui_DragFloat(
+        _bytes(label),
+        &v.value
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -2023,20 +2114,26 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragFloat2Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[2]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+
+    cdef bool res = ccimgui.ImGui_DragFloat2Ex(
+        _bytes(label),
+        c_floats,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    return res
 # [End Function]
 
 # [Function]
@@ -2055,20 +2152,28 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragFloat3Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[3]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+
+    cdef bool res = ccimgui.ImGui_DragFloat3Ex(
+        _bytes(label),
+        c_floats,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    return res
 # [End Function]
 
 # [Function]
@@ -2087,40 +2192,50 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragFloat4Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[4]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+    c_floats[3] = float_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_DragFloat4Ex(
+        _bytes(label),
+        c_floats,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    float_ptrs[3].value = c_floats[3]
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     cdef bool res = ccimgui.ImGui_DragFloatEx(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+    """
+    If v_min >= v_max we have no bound
+    """
+    cdef bool res = ccimgui.ImGui_DragFloatEx(
+        _bytes(label),
+        &v.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -2189,20 +2304,26 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragInt2Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef int c_ints[2]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    
+    cdef bool res = ccimgui.ImGui_DragInt2Ex(
+        _bytes(label),
+        c_ints,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    return res
 # [End Function]
 
 # [Function]
@@ -2221,20 +2342,28 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragInt3Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef int c_ints[3]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value
+
+    cdef bool res = ccimgui.ImGui_DragInt3Ex(
+        _bytes(label),
+        c_ints,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    return res
 # [End Function]
 
 # [Function]
@@ -2253,40 +2382,50 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_DragInt4Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    cdef int c_ints[4]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value
+    c_ints[3] = int_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_DragInt4Ex(
+        _bytes(label),
+        c_ints,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    int_ptrs[3].value = c_ints[3]
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     cdef bool res = ccimgui.ImGui_DragIntEx(
-#         _bytes(label),
-#         &v.value,
-#         v_speed,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def drag_int_ex(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+    """
+    If v_min >= v_max we have no bound
+    """
+    cdef bool res = ccimgui.ImGui_DragIntEx(
+        _bytes(label),
+        &value.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -2417,10 +2556,10 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_child():
-#     ccimgui.ImGui_EndChild()
+def end_child():
+    ccimgui.ImGui_EndChild()
 # [End Function]
 
 # [Function]
@@ -2436,13 +2575,13 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_combo():
-#     """
-#     Only call endcombo() if begincombo() returns true!
-#     """
-#     ccimgui.ImGui_EndCombo()
+def end_combo():
+    """
+    Only call endcombo() if begincombo() returns true!
+    """
+    ccimgui.ImGui_EndCombo()
 # [End Function]
 
 # [Function]
@@ -2454,25 +2593,26 @@ def end():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def end_drag_drop_source():
-#     """
-#     Only call enddragdropsource() if begindragdropsource() returns true!
-#     """
-#     ccimgui.ImGui_EndDragDropSource()
+def end_drag_drop_source():
+    """
+    Only call enddragdropsource() if begindragdropsource() returns true!
+    """
+    ccimgui.ImGui_EndDragDropSource()
+    _drag_drop_payload = None
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_drag_drop_target():
-#     """
-#     Only call enddragdroptarget() if begindragdroptarget() returns true!
-#     """
-#     ccimgui.ImGui_EndDragDropTarget()
+def end_drag_drop_target():
+    """
+    Only call enddragdroptarget() if begindragdroptarget() returns true!
+    """
+    ccimgui.ImGui_EndDragDropTarget()
 # [End Function]
 
 # [Function]
@@ -2488,24 +2628,24 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_group():
-#     """
-#     Unlock horizontal starting position + capture the whole group bounding box into one 'item' (so you can use isitemhovered() or layout primitives such as sameline() on whole group, etc.)
-#     """
-#     ccimgui.ImGui_EndGroup()
+def end_group():
+    """
+    Unlock horizontal starting position + capture the whole group bounding box into one 'item' (so you can use isitemhovered() or layout primitives such as sameline() on whole group, etc.)
+    """
+    ccimgui.ImGui_EndGroup()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_list_box():
-#     """
-#     Only call endlistbox() if beginlistbox() returned true!
-#     """
-#     ccimgui.ImGui_EndListBox()
+def end_list_box():
+    """
+    Only call endlistbox() if beginlistbox() returned true!
+    """
+    ccimgui.ImGui_EndListBox()
 # [End Function]
 
 # [Function]
@@ -2543,13 +2683,13 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_popup():
-#     """
-#     Only call endpopup() if beginpopupxxx() returns true!
-#     """
-#     ccimgui.ImGui_EndPopup()
+def end_popup():
+    """
+    Only call endpopup() if beginpopupxxx() returns true!
+    """
+    ccimgui.ImGui_EndPopup()
 # [End Function]
 
 # [Function]
@@ -2576,24 +2716,24 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_table():
-#     """
-#     Only call endtable() if begintable() returns true!
-#     """
-#     ccimgui.ImGui_EndTable()
+def end_table():
+    """
+    Only call endtable() if begintable() returns true!
+    """
+    ccimgui.ImGui_EndTable()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_tooltip():
-#     """
-#     Only call endtooltip() if begintooltip() returns true!
-#     """
-#     ccimgui.ImGui_EndTooltip()
+def end_tooltip():
+    """
+    Only call endtooltip() if begintooltip() returns true!
+    """
+    ccimgui.ImGui_EndTooltip()
 # [End Function]
 
 # [Function]
@@ -2784,17 +2924,17 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_content_region_avail():
-#     """
-#     Content region
-#     - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
-#     - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
-#     == getcontentregionmax() - getcursorpos()
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionAvail()
-#     return _cast_ImVec2_tuple(res)
+def get_content_region_avail():
+    """
+    Content region
+    - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
+    - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
+    == getcontentregionmax() - getcursorpos()
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionAvail()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -2811,23 +2951,23 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImGuiContext)
-# def get_current_context():
-#     cdef ccimgui.ImGuiContext* res = ccimgui.ImGui_GetCurrentContext()
-#     return ImGuiContext.from_ptr(res)
+def get_current_context():
+    cdef ccimgui.ImGuiContext* res = ccimgui.ImGui_GetCurrentContext()
+    return ImGuiContext.from_ptr(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_cursor_pos():
-#     """
-#     Cursor position in window coordinates (relative to window position)
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorPos()
-#     return _cast_ImVec2_tuple(res)
+def get_cursor_pos():
+    """
+    Cursor position in window coordinates (relative to window position)
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorPos()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -2856,14 +2996,14 @@ def end():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_cursor_screen_pos():
-#     """
-#     Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorScreenPos()
-#     return _cast_ImVec2_tuple(res)
+def get_cursor_screen_pos():
+    """
+    Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorScreenPos()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -2879,15 +3019,21 @@ def end():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(ImGuiPayload)
-# def get_drag_drop_payload():
-#     """
-#     Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
-#     """
-#     cdef ccimgui.ImGuiPayload* res = ccimgui.ImGui_GetDragDropPayload()
-#     return ImGuiPayload.from_ptr(res)
+# ?use_template(True)
+# ?active(True)
+# ?returns(Tuple[str, Any])
+def get_drag_drop_payload():
+    """
+    Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
+    """
+    if _drag_drop_payload is None:
+        return None
+    
+    cdef const ccimgui.ImGuiPayload* res = ccimgui.ImGui_GetDragDropPayload()
+    if res is NULL:
+        raise ValueError("We shouldn't get here")
+    
+    return _drag_drop_payload
 # [End Function]
 
 # [Function]
@@ -2930,14 +3076,14 @@ def get_draw_data():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_font_size():
-#     """
-#     Get current font size (= height in pixels) of current font with current scale applied
-#     """
-#     cdef float res = ccimgui.ImGui_GetFontSize()
-#     return res
+def get_font_size():
+    """
+    Get current font size (= height in pixels) of current font with current scale applied
+    """
+    cdef float res = ccimgui.ImGui_GetFontSize()
+    return res
 # [End Function]
 
 # [Function]
@@ -3078,38 +3224,38 @@ def get_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_item_rect_max():
-#     """
-#     Get lower-right bounding rectangle of the last item (screen space)
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectMax()
-#     return _cast_ImVec2_tuple(res)
+def get_item_rect_max():
+    """
+    Get lower-right bounding rectangle of the last item (screen space)
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectMax()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_item_rect_min():
-#     """
-#     Get upper-left bounding rectangle of the last item (screen space)
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectMin()
-#     return _cast_ImVec2_tuple(res)
+def get_item_rect_min():
+    """
+    Get upper-left bounding rectangle of the last item (screen space)
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectMin()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
-# def get_item_rect_size():
-#     """
-#     Get size of last item
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectSize()
-#     return _cast_ImVec2_tuple(res)
+def get_item_rect_size():
+    """
+    Get size of last item
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectSize()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -3236,17 +3382,17 @@ def get_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImGuiPlatformIO)
-# def get_platform_io():
-#     """
-#     (Optional) Platform/OS interface for multi-viewport support
-#     Read comments around the ImGuiPlatformIO structure for more details.
-#     Note: You may use GetWindowViewport() to get the current viewport of the current window.
-#     Platform/renderer functions, for backend to setup + viewports list.
-#     """
-#     cdef ccimgui.ImGuiPlatformIO* res = ccimgui.ImGui_GetPlatformIO()
-#     return ImGuiPlatformIO.from_ptr(res)
+def get_platform_io():
+    """
+    (Optional) Platform/OS interface for multi-viewport support
+    Read comments around the ImGuiPlatformIO structure for more details.
+    Note: You may use GetWindowViewport() to get the current viewport of the current window.
+    Platform/renderer functions, for backend to setup + viewports list.
+    """
+    cdef ccimgui.ImGuiPlatformIO* res = ccimgui.ImGui_GetPlatformIO()
+    return ImGuiPlatformIO.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -3311,14 +3457,14 @@ def get_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImGuiStyle)
-# def get_style():
-#     """
-#     Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
-#     """
-#     cdef ccimgui.ImGuiStyle* res = ccimgui.ImGui_GetStyle()
-#     return ImGuiStyle.from_ptr(res)
+def get_style():
+    """
+    Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
+    """
+    cdef ccimgui.ImGuiStyle* res = ccimgui.ImGui_GetStyle()
+    return ImGuiStyle.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -3336,65 +3482,65 @@ def get_io():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(ImVec4)
-# def get_style_color_vec4(idx: int):
-#     """
-#     Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in.
-#     """
-#     cdef ccimgui.ImVec4* res = ccimgui.ImGui_GetStyleColorVec4(
-#         idx
-#     )
-#     return ImVec4.from_ptr(res)
+def get_style_color_vec4(idx: int):
+    """
+    Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in.
+    """
+    cdef ccimgui.ImVec4 res = dereference(ccimgui.ImGui_GetStyleColorVec4(
+        idx
+    ))
+    return _cast_ImVec4_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_text_line_height():
-#     """
-#     ~ fontsize
-#     """
-#     cdef float res = ccimgui.ImGui_GetTextLineHeight()
-#     return res
+def get_text_line_height():
+    """
+    ~ fontsize
+    """
+    cdef float res = ccimgui.ImGui_GetTextLineHeight()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_text_line_height_with_spacing():
-#     """
-#     ~ fontsize + style.itemspacing.y (distance in pixels between 2 consecutive lines of text)
-#     """
-#     cdef float res = ccimgui.ImGui_GetTextLineHeightWithSpacing()
-#     return res
+def get_text_line_height_with_spacing():
+    """
+    ~ fontsize + style.itemspacing.y (distance in pixels between 2 consecutive lines of text)
+    """
+    cdef float res = ccimgui.ImGui_GetTextLineHeightWithSpacing()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_time():
-#     """
-#     Get global imgui time. incremented by io.deltatime every frame.
-#     """
-#     cdef double res = ccimgui.ImGui_GetTime()
-#     return res
+def get_time():
+    """
+    Get global imgui time. incremented by io.deltatime every frame.
+    """
+    cdef double res = ccimgui.ImGui_GetTime()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_tree_node_to_label_spacing():
-#     """
-#     Horizontal distance preceding label when using treenode*() or bullet() == (g.fontsize + style.framepadding.x*2) for a regular unframed treenode
-#     """
-#     cdef float res = ccimgui.ImGui_GetTreeNodeToLabelSpacing()
-#     return res
+def get_tree_node_to_label_spacing():
+    """
+    Horizontal distance preceding label when using treenode*() or bullet() == (g.fontsize + style.framepadding.x*2) for a regular unframed treenode
+    """
+    cdef float res = ccimgui.ImGui_GetTreeNodeToLabelSpacing()
+    return res
 # [End Function]
 
 # [Function]
@@ -3456,14 +3602,14 @@ def get_version():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImDrawList)
-# def get_window_draw_list():
-#     """
-#     Get draw list associated to the current window, to append your own drawing primitives
-#     """
-#     cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetWindowDrawList()
-#     return ImDrawList.from_ptr(res)
+def get_window_draw_list():
+    """
+    Get draw list associated to the current window, to append your own drawing primitives
+    """
+    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetWindowDrawList()
+    return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -3585,35 +3731,35 @@ def get_version():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
-#     cdef bool res = ccimgui.ImGui_ImageButtonEx(
-#         _bytes(str_id),
-#         user_texture_id,
-#         _cast_tuple_ImVec2(size),
-#         _cast_tuple_ImVec2(uv0),
-#         _cast_tuple_ImVec2(uv1),
-#         _cast_tuple_ImVec4(bg_col),
-#         _cast_tuple_ImVec4(tint_col)
-#     )
-#     return res
+def image_button_ex(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+    cdef bool res = ccimgui.ImGui_ImageButtonEx(
+        _bytes(str_id),
+        <void*><uintptr_t>user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(bg_col),
+        _cast_tuple_ImVec4(tint_col)
+    )
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
-#     ccimgui.ImGui_ImageEx(
-#         user_texture_id,
-#         _cast_tuple_ImVec2(size),
-#         _cast_tuple_ImVec2(uv0),
-#         _cast_tuple_ImVec2(uv1),
-#         _cast_tuple_ImVec4(tint_col),
-#         _cast_tuple_ImVec4(border_col)
-#     )
+def image_ex(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
+    ccimgui.ImGui_ImageEx(
+        <void*><uintptr_t>user_texture_id,
+        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1),
+        _cast_tuple_ImVec4(tint_col),
+        _cast_tuple_ImVec4(border_col)
+    )
 # [End Function]
 
 # [Function]
@@ -3836,13 +3982,9 @@ def impl_open_gl_3_init(glsl_version: str=None):
     cdef bool res
 
     if glsl_version is None:
-        res = ccimgui.ImGui_ImplOpenGL3_Init(
-            NULL
-        )
+        res = ccimgui.ImGui_ImplOpenGL3_Init(NULL)
     else:
-        res = ccimgui.ImGui_ImplOpenGL3_Init(
-            _bytes(glsl_version)
-        )
+        res = ccimgui.ImGui_ImplOpenGL3_Init(_bytes(glsl_version))
     return res
 # [End Function]
 
@@ -3885,15 +4027,15 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def indent_ex(indent_w: float=0.0):
-#     """
-#     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
-#     """
-#     ccimgui.ImGui_IndentEx(
-#         indent_w
-#     )
+def indent_ex(indent_w: float=0.0):
+    """
+    Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
+    """
+    ccimgui.ImGui_IndentEx(
+        indent_w
+    )
 # [End Function]
 
 # [Function]
@@ -3913,18 +4055,18 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputDoubleEx(
-#         _bytes(label),
-#         &v.value,
-#         step,
-#         step_fast,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputDoubleEx(
+        _bytes(label),
+        &v.value,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -3958,17 +4100,23 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputFloat2Ex(
-#         _bytes(label),
-#         &v.value,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def input_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float c_floats[2]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+
+    cdef bool res = ccimgui.ImGui_InputFloat2Ex(
+        _bytes(label),
+        c_floats,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    return res
 # [End Function]
 
 # [Function]
@@ -3987,17 +4135,25 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputFloat3Ex(
-#         _bytes(label),
-#         &v.value,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def input_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float c_floats[3]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+
+    cdef bool res = ccimgui.ImGui_InputFloat3Ex(
+        _bytes(label),
+        c_floats,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    return res
 # [End Function]
 
 # [Function]
@@ -4016,102 +4172,136 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputFloat4Ex(
-#         _bytes(label),
-#         &v.value,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def input_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
+    cdef float c_floats[4]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+    c_floats[3] = float_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_InputFloat4Ex(
+        _bytes(label),
+        c_floats,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    float_ptrs[3].value = c_floats[3]
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputFloatEx(
-#         _bytes(label),
-#         &v.value,
-#         step,
-#         step_fast,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputFloatEx(
+        _bytes(label),
+        &v.value,
+        step,
+        step_fast,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def input_int(label: str, v: IntPtr):
-#     """
-#     Implied step = 1, step_fast = 100, flags = 0
-#     """
-#     cdef bool res = ccimgui.ImGui_InputInt(
-#         _bytes(label),
-#         &v.value
-#     )
-#     return res
+def input_int(label: str, v: IntPtr):
+    """
+    Implied step = 1, step_fast = 100, flags = 0
+    """
+    cdef bool res = ccimgui.ImGui_InputInt(
+        _bytes(label),
+        &v.value
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def input_int2(label: str, int_ptrs: Sequence[IntPtr], flags: int=0):
+    cdef int c_ints[2]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+
+    cdef bool res = ccimgui.ImGui_InputInt2(
+        _bytes(label),
+        c_ints,
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def input_int3(label: str, int_ptrs: Sequence[IntPtr], flags: int=0):
+    cdef int c_ints[3]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value
+
+    cdef bool res = ccimgui.ImGui_InputInt3(
+        _bytes(label),
+        c_ints,
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(bool)
+def input_int4(label: str, int_ptrs: Sequence[IntPtr], flags: int=0):
+    cdef int c_ints[4]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value
+    c_ints[3] = int_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_InputInt4(
+        _bytes(label),
+        c_ints,
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    int_ptrs[3].value = c_ints[3]
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def input_int2(label: str, v: Sequence[IntPtr], flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputInt2(
-#         _bytes(label),
-#         &v.value,
-#         flags
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-# def input_int3(label: str, v: Sequence[IntPtr], flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputInt3(
-#         _bytes(label),
-#         &v.value,
-#         flags
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-# def input_int4(label: str, v: Sequence[IntPtr], flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputInt4(
-#         _bytes(label),
-#         &v.value,
-#         flags
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-# def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
-#     cdef bool res = ccimgui.ImGui_InputIntEx(
-#         _bytes(label),
-#         &v.value,
-#         step,
-#         step_fast,
-#         flags
-#     )
-#     return res
+def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
+    cdef bool res = ccimgui.ImGui_InputIntEx(
+        _bytes(label),
+        &v.value,
+        step,
+        step_fast,
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -4203,19 +4393,19 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
-#     cdef bool res = ccimgui.ImGui_InputTextEx(
-#         _bytes(label),
-#         _bytes(buf),
-#         buf_size,
-#         flags,
-#         callback,
-#         user_data
-#     )
-#     return res
+def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
+    cdef bool res = ccimgui.ImGui_InputTextEx(
+        _bytes(label),
+        buf.buffer,
+        buf.buffer_size,
+        flags,
+        NULL,
+        NULL
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -4270,20 +4460,20 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
-#     cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
-#         _bytes(label),
-#         _bytes(hint),
-#         _bytes(buf),
-#         buf_size,
-#         flags,
-#         callback,
-#         user_data
-#     )
-#     return res
+def input_text_with_hint_ex(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
+    cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
+        _bytes(label),
+        _bytes(hint),
+        buf.buffer,
+        buf.buffer_size,
+        flags,
+        NULL,
+        NULL
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -4376,14 +4566,14 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def is_item_clicked():
-#     """
-#     Implied mouse_button = 0
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemClicked()
-#     return res
+def is_item_clicked():
+    """
+    Implied mouse_button = 0
+    """
+    cdef bool res = ccimgui.ImGui_IsItemClicked()
+    return res
 # [End Function]
 
 # [Function]
@@ -4450,19 +4640,19 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def is_item_hovered(flags: int=0):
-#     """
-#     Item/Widgets Utilities and Query Functions
-#     - Most of the functions are referring to the previous Item that has been submitted.
-#     - See Demo Window under "Widgets->Querying Status" for an interactive visualization of most of those functions.
-#     Is the last item hovered? (and usable, aka not blocked by a popup, etc.). see imguihoveredflags for more options.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemHovered(
-#         flags
-#     )
-#     return res
+def is_item_hovered(flags: int=0):
+    """
+    Item/Widgets Utilities and Query Functions
+    - Most of the functions are referring to the previous Item that has been submitted.
+    - See Demo Window under "Widgets->Querying Status" for an interactive visualization of most of those functions.
+    Is the last item hovered? (and usable, aka not blocked by a popup, etc.). see imguihoveredflags for more options.
+    """
+    cdef bool res = ccimgui.ImGui_IsItemHovered(
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -4582,16 +4772,16 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def is_mouse_double_clicked(button: int):
-#     """
-#     Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)
-#     """
-#     cdef bool res = ccimgui.ImGui_IsMouseDoubleClicked(
-#         button
-#     )
-#     return res
+def is_mouse_double_clicked(button: int):
+    """
+    Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)
+    """
+    cdef bool res = ccimgui.ImGui_IsMouseDoubleClicked(
+        button
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -4799,16 +4989,16 @@ def impl_open_gl_3_shutdown():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def label_text(label: str, fmt: str):
-#     """
-#     Display text+label aligned the same way as value+label widgets
-#     """
-#     ccimgui.ImGui_LabelText(
-#         _bytes(label),
-#         _bytes(fmt)
-#     )
+def label_text(label: str, fmt: str):
+    """
+    Display text+label aligned the same way as value+label widgets
+    """
+    ccimgui.ImGui_LabelText(
+        _bytes(label),
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -4823,18 +5013,39 @@ def impl_open_gl_3_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def list_box(label: str, current_item: IntPtr, items: str, items_count: int, height_in_items: int=-1):
-#     cdef bool res = ccimgui.ImGui_ListBox(
-#         _bytes(label),
-#         &current_item.value,
-#         _bytes(items),
-#         items_count,
-#         height_in_items
-#     )
-#     return res
+def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_items: int=-1):
+    cdef void* void_ptr
+    cdef char** c_strings = <char**>ccimgui.ImGui_MemAlloc(sizeof(void_ptr) * len(items))
+
+    # Creates a secondary array for each element
+    cdef char* array
+    for i, item in enumerate(items):
+        array = <char*>ccimgui.ImGui_MemAlloc(sizeof(char) * len(item) + 1)
+        strncpy(array, _bytes(item), len(item) + 1)
+        c_strings[i] = array
+    
+    cdef bool res = ccimgui.ImGui_ListBox(
+        _bytes(label),
+        &current_item.value,
+        c_strings,
+        len(items),
+        height_in_items
+    )
+    for i in range(len(items)):
+        ccimgui.ImGui_MemFree(c_strings[i])
+    ccimgui.ImGui_MemFree(c_strings)
+    return res
+    cdef bool res = ccimgui.ImGui_ListBox(
+        _bytes(label),
+        &current_item.value,
+        items,
+        items_count,
+        height_in_items
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -5093,24 +5304,24 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def open_popup(str_id: str, popup_flags: int=0):
-#     """
-#     Popups: open/close functions
-#     - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
-#     - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
-#     - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
-#     - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
-#     - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
-#     - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
-#     - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter
-#     Call to mark popup as open (don't call every frame!).
-#     """
-#     ccimgui.ImGui_OpenPopup(
-#         _bytes(str_id),
-#         popup_flags
-#     )
+def open_popup(str_id: str, popup_flags: int=0):
+    """
+    Popups: open/close functions
+    - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
+    - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
+    - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
+    - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
+    - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
+    - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter
+    Call to mark popup as open (don't call every frame!).
+    """
+    ccimgui.ImGui_OpenPopup(
+        _bytes(str_id),
+        popup_flags
+    )
 # [End Function]
 
 # [Function]
@@ -5191,21 +5402,29 @@ def new_frame():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-#     ccimgui.ImGui_PlotHistogramEx(
-#         _bytes(label),
-#         &values.value,
-#         values_count,
-#         values_offset,
-#         _bytes(overlay_text),
-#         scale_min,
-#         scale_max,
-#         _cast_tuple_ImVec2(graph_size),
-#         stride
-#     )
+def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
+    if c_floats is NULL:
+        raise MemoryError()
+    
+    for i in range(len(values)):
+        array[i] = values[i]
+    
+    ccimgui.ImGui_PlotHistogramEx(
+        _bytes(label),
+        c_floats,
+        len(values),
+        values_offset,
+        _bytes(overlay_text),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size),
+        stride
+    )
+    ccimgui.ImGui_MemFree(array)
 # [End Function]
 
 # [Function]
@@ -5260,29 +5479,37 @@ def new_frame():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
-#     ccimgui.ImGui_PlotLinesEx(
-#         _bytes(label),
-#         &values.value,
-#         values_count,
-#         values_offset,
-#         _bytes(overlay_text),
-#         scale_min,
-#         scale_max,
-#         _cast_tuple_ImVec2(graph_size),
-#         stride
-#     )
+def plot_lines_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+    cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
+    if c_floats is NULL:
+        raise MemoryError()
+    
+    for i in range(len(values)):
+        array[i] = values[i]
+
+    ccimgui.ImGui_PlotLinesEx(
+        _bytes(label),
+        c_floats,
+        len(values),
+        values_offset,
+        _bytes(overlay_text),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size),
+        stride
+    )
+    ccimgui.ImGui_MemFree(array)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def pop_button_repeat():
-#     ccimgui.ImGui_PopButtonRepeat()
+def pop_button_repeat():
+    ccimgui.ImGui_PopButtonRepeat()
 # [End Function]
 
 # [Function]
@@ -5303,13 +5530,13 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def pop_id():
-#     """
-#     Pop from the id stack.
-#     """
-#     ccimgui.ImGui_PopID()
+def pop_id():
+    """
+    Pop from the id stack.
+    """
+    ccimgui.ImGui_PopID()
 # [End Function]
 
 # [Function]
@@ -5333,12 +5560,12 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def pop_style_color_ex(count: int=1):
-#     ccimgui.ImGui_PopStyleColorEx(
-#         count
-#     )
+def pop_style_color_ex(count: int=1):
+    ccimgui.ImGui_PopStyleColorEx(
+        count
+    )
 # [End Function]
 
 # [Function]
@@ -5354,12 +5581,12 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def pop_style_var_ex(count: int=1):
-#     ccimgui.ImGui_PopStyleVarEx(
-#         count
-#     )
+def pop_style_var_ex(count: int=1):
+    ccimgui.ImGui_PopStyleVarEx(
+        count
+    )
 # [End Function]
 
 # [Function]
@@ -5372,35 +5599,42 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def pop_text_wrap_pos():
-#     ccimgui.ImGui_PopTextWrapPos()
+def pop_text_wrap_pos():
+    ccimgui.ImGui_PopTextWrapPos()
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
+    if overlay is None:
+        ccimgui.ImGui_ProgressBar(
+            fraction,
+            _cast_tuple_ImVec2(size_arg),
+            NULL
+        )
+    else:
+        ccimgui.ImGui_ProgressBar(
+            fraction,
+            _cast_tuple_ImVec2(size_arg),
+            _bytes(overlay)
+        )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
-#     ccimgui.ImGui_ProgressBar(
-#         fraction,
-#         _cast_tuple_ImVec2(size_arg),
-#         _bytes(overlay)
-#     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-# def push_button_repeat(repeat: bool):
-#     """
-#     In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
-#     """
-#     ccimgui.ImGui_PushButtonRepeat(
-#         repeat
-#     )
+def push_button_repeat(repeat: bool):
+    """
+    In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
+    """
+    ccimgui.ImGui_PushButtonRepeat(
+        repeat
+    )
 # [End Function]
 
 # [Function]
@@ -5435,26 +5669,53 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_id(str_id: str):
-#     """
-#     ID stack/scopes
-#     Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
-#     - Those questions are answered and impacted by understanding of the ID stack system:
-#     - "Q: Why is my widget not reacting when I click on it?"
-#     - "Q: How can I have widgets with an empty label?"
-#     - "Q: How can I have multiple widgets with the same label?"
-#     - Short version: ID are hashes of the entire ID stack. If you are creating widgets in a loop you most likely
-#     want to push a unique identifier (e.g. object pointer, loop index) to uniquely differentiate them.
-#     - You can also use the "Label##foobar" syntax within widget label to distinguish them from each others.
-#     - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,
-#     whereas "str_id" denote a string that is only used as an ID and not normally displayed.
-#     Push string into the id stack (will hash string).
-#     """
-#     ccimgui.ImGui_PushID(
-#         _bytes(str_id)
-#     )
+def push_id(str_id: str):
+    """
+    ID stack/scopes
+    Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
+    - Those questions are answered and impacted by understanding of the ID stack system:
+    - "Q: Why is my widget not reacting when I click on it?"
+    - "Q: How can I have widgets with an empty label?"
+    - "Q: How can I have multiple widgets with the same label?"
+    - Short version: ID are hashes of the entire ID stack. If you are creating widgets in a loop you most likely
+    want to push a unique identifier (e.g. object pointer, loop index) to uniquely differentiate them.
+    - You can also use the "Label##foobar" syntax within widget label to distinguish them from each others.
+    - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,
+    whereas "str_id" denote a string that is only used as an ID and not normally displayed.
+    Push string into the id stack (will hash string).
+    """
+    ccimgui.ImGui_PushID(
+        _bytes(str_id)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def push_id_int(int_id: int):
+    """
+    Push integer into the id stack (will hash integer).
+    """
+    ccimgui.ImGui_PushIDInt(
+        int_id
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?returns(None)
+def push_id_str(str_id_begin: str, str_id_end: str):
+    """
+    Push string into the id stack (will hash string).
+    """
+    ccimgui.ImGui_PushIDStr(
+        _bytes(str_id_begin),
+        _bytes(str_id_end)
+    )
 # [End Function]
 
 # [Function]
@@ -5513,55 +5774,55 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_style_color(idx: int, col: int):
-#     """
-#     Modify a style color. always use this if you modify the style after newframe().
-#     """
-#     ccimgui.ImGui_PushStyleColor(
-#         idx,
-#         col
-#     )
+def push_style_color(idx: int, col: int):
+    """
+    Modify a style color. always use this if you modify the style after newframe().
+    """
+    ccimgui.ImGui_PushStyleColor(
+        idx,
+        col
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_style_color_im_vec4(idx: int, col: tuple):
-#     ccimgui.ImGui_PushStyleColorImVec4(
-#         idx,
-#         _cast_tuple_ImVec4(col)
-#     )
+def push_style_color_im_vec4(idx: int, col: tuple):
+    ccimgui.ImGui_PushStyleColorImVec4(
+        idx,
+        _cast_tuple_ImVec4(col)
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_style_var(idx: int, val: float):
-#     """
-#     Modify a style float variable. always use this if you modify the style after newframe().
-#     """
-#     ccimgui.ImGui_PushStyleVar(
-#         idx,
-#         val
-#     )
+def push_style_var(idx: int, val: float):
+    """
+    Modify a style float variable. always use this if you modify the style after newframe().
+    """
+    ccimgui.ImGui_PushStyleVar(
+        idx,
+        val
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_style_var_im_vec2(idx: int, val: tuple):
-#     """
-#     Modify a style imvec2 variable. always use this if you modify the style after newframe().
-#     """
-#     ccimgui.ImGui_PushStyleVarImVec2(
-#         idx,
-#         _cast_tuple_ImVec2(val)
-#     )
+def push_style_var_im_vec2(idx: int, val: tuple):
+    """
+    Modify a style imvec2 variable. always use this if you modify the style after newframe().
+    """
+    ccimgui.ImGui_PushStyleVarImVec2(
+        idx,
+        _cast_tuple_ImVec2(val)
+    )
 # [End Function]
 
 # [Function]
@@ -5579,46 +5840,46 @@ def new_frame():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
-#     """
-#     Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space
-#     """
-#     ccimgui.ImGui_PushTextWrapPos(
-#         wrap_local_pos_x
-#     )
+def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
+    """
+    Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space
+    """
+    ccimgui.ImGui_PushTextWrapPos(
+        wrap_local_pos_x
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def radio_button(label: str, active: bool):
-#     """
-#     Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
-#     """
-#     cdef bool res = ccimgui.ImGui_RadioButton(
-#         _bytes(label),
-#         active
-#     )
-#     return res
+def radio_button(label: str, active: bool):
+    """
+    Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
+    """
+    cdef bool res = ccimgui.ImGui_RadioButton(
+        _bytes(label),
+        active
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def radio_button_int_ptr(label: str, v: IntPtr, v_button: int):
-#     """
-#     Shortcut to handle the above pattern when value is an integer
-#     """
-#     cdef bool res = ccimgui.ImGui_RadioButtonIntPtr(
-#         _bytes(label),
-#         &v.value,
-#         v_button
-#     )
-#     return res
+def radio_button_int_ptr(label: str, v: IntPtr, v_button: int):
+    """
+    Shortcut to handle the above pattern when value is an integer
+    """
+    cdef bool res = ccimgui.ImGui_RadioButtonIntPtr(
+        _bytes(label),
+        &v.value,
+        v_button
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -5644,17 +5905,17 @@ def render_platform_windows_default():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None):
-#     """
-#     Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
-#     """
-#     ccimgui.ImGui_RenderPlatformWindowsDefaultEx(
-#         platform_render_arg,
-#         renderer_render_arg
-#     )
+def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None):
+    """
+    Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
+    """
+    ccimgui.ImGui_RenderPlatformWindowsDefaultEx(
+        NULL if platform_render_arg is None else <void*>platform_render_arg,
+        NULL if renderer_render_arg is None else <void*>renderer_render_arg
+    )
 # [End Function]
 
 # [Function]
@@ -5683,27 +5944,27 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def same_line():
-#     """
-#     Implied offset_from_start_x = 0.0f, spacing = -1.0f
-#     """
-#     ccimgui.ImGui_SameLine()
+def same_line():
+    """
+    Implied offset_from_start_x = 0.0f, spacing = -1.0f
+    """
+    ccimgui.ImGui_SameLine()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
-#     """
-#     Call between widgets or groups to layout them horizontally. x position given in window coordinates.
-#     """
-#     ccimgui.ImGui_SameLineEx(
-#         offset_from_start_x,
-#         spacing
-#     )
+def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
+    """
+    Call between widgets or groups to layout them horizontally. x position given in window coordinates.
+    """
+    ccimgui.ImGui_SameLineEx(
+        offset_from_start_x,
+        spacing
+    )
 # [End Function]
 
 # [Function]
@@ -5735,100 +5996,100 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def selectable(label: str):
-#     """
-#     Widgets: Selectables
-#     - A selectable highlights when hovered, and can display another color when selected.
-#     - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
-#     Implied selected = false, flags = 0, size = imvec2(0, 0)
-#     """
-#     cdef bool res = ccimgui.ImGui_Selectable(
-#         _bytes(label)
-#     )
-#     return res
+def selectable(label: str):
+    """
+    Widgets: Selectables
+    - A selectable highlights when hovered, and can display another color when selected.
+    - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
+    Implied selected = false, flags = 0, size = imvec2(0, 0)
+    """
+    cdef bool res = ccimgui.ImGui_Selectable(
+        _bytes(label)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0):
-#     """
-#     Implied size = imvec2(0, 0)
-#     """
-#     cdef bool res = ccimgui.ImGui_SelectableBoolPtr(
-#         _bytes(label),
-#         &p_selected.value,
-#         flags
-#     )
-#     return res
+def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0):
+    """
+    Implied size = imvec2(0, 0)
+    """
+    cdef bool res = ccimgui.ImGui_SelectableBoolPtr(
+        _bytes(label),
+        &p_selected.value,
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)):
-#     """
-#     'bool* p_selected' point to the selection state (read-write), as a convenient helper.
-#     """
-#     cdef bool res = ccimgui.ImGui_SelectableBoolPtrEx(
-#         _bytes(label),
-#         &p_selected.value,
-#         flags,
-#         _cast_tuple_ImVec2(size)
-#     )
-#     return res
+def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)):
+    """
+    'bool* p_selected' point to the selection state (read-write), as a convenient helper.
+    """
+    cdef bool res = ccimgui.ImGui_SelectableBoolPtrEx(
+        _bytes(label),
+        &p_selected.value,
+        flags,
+        _cast_tuple_ImVec2(size)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
-#     """
-#     'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
-#     """
-#     cdef bool res = ccimgui.ImGui_SelectableEx(
-#         _bytes(label),
-#         selected,
-#         flags,
-#         _cast_tuple_ImVec2(size)
-#     )
-#     return res
+def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
+    """
+    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
+    """
+    cdef bool res = ccimgui.ImGui_SelectableEx(
+        _bytes(label),
+        selected,
+        flags,
+        _cast_tuple_ImVec2(size)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def separator():
-#     """
-#     Cursor / Layout
-#     - By "cursor" we mean the current output position.
-#     - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-#     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
-#     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-#     Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-#     Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
-#     Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
-#     """
-#     ccimgui.ImGui_Separator()
+def separator():
+    """
+    Cursor / Layout
+    - By "cursor" we mean the current output position.
+    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
+    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
+    Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
+    Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
+    Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
+    """
+    ccimgui.ImGui_Separator()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def separator_text(label: str):
-#     """
-#     Currently: formatted text with an horizontal line
-#     """
-#     ccimgui.ImGui_SeparatorText(
-#         _bytes(label)
-#     )
+def separator_text(label: str):
+    """
+    Currently: formatted text with an horizontal line
+    """
+    ccimgui.ImGui_SeparatorText(
+        _bytes(label)
+    )
 # [End Function]
 
 # [Function]
@@ -5861,15 +6122,15 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_color_edit_options(flags: int):
-#     """
-#     Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
-#     """
-#     ccimgui.ImGui_SetColorEditOptions(
-#         flags
-#     )
+def set_color_edit_options(flags: int):
+    """
+    Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
+    """
+    ccimgui.ImGui_SetColorEditOptions(
+        flags
+    )
 # [End Function]
 
 # [Function]
@@ -5963,31 +6224,33 @@ def render_platform_windows_default():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
-#     """
-#     Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
-#     """
-#     cdef bool res = ccimgui.ImGui_SetDragDropPayload(
-#         _bytes(type_),
-#         data,
-#         sz,
-#         cond
-#     )
-#     return res
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
+    """
+    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
+    """
+    cdef bool res = ccimgui.ImGui_SetDragDropPayload(
+        _bytes(type_),
+        NULL,
+        0,
+        cond
+    )
+    if res:
+        _drag_drop_payload = (type_, data)
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_item_allow_overlap():
-#     """
-#     Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
-#     """
-#     ccimgui.ImGui_SetItemAllowOverlap()
+def set_item_allow_overlap():
+    """
+    Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
+    """
+    ccimgui.ImGui_SetItemAllowOverlap()
 # [End Function]
 
 # [Function]
@@ -6068,29 +6331,29 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_next_item_open(is_open: bool, cond: int=0):
-#     """
-#     Set next treenode/collapsingheader open state.
-#     """
-#     ccimgui.ImGui_SetNextItemOpen(
-#         is_open,
-#         cond
-#     )
+def set_next_item_open(is_open: bool, cond: int=0):
+    """
+    Set next treenode/collapsingheader open state.
+    """
+    ccimgui.ImGui_SetNextItemOpen(
+        is_open,
+        cond
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_next_item_width(item_width: float):
-#     """
-#     Set width of the _next_ common large 'item+label' widget. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)
-#     """
-#     ccimgui.ImGui_SetNextItemWidth(
-#         item_width
-#     )
+def set_next_item_width(item_width: float):
+    """
+    Set width of the _next_ common large 'item+label' widget. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)
+    """
+    ccimgui.ImGui_SetNextItemWidth(
+        item_width
+    )
 # [End Function]
 
 # [Function]
@@ -6366,15 +6629,15 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_tooltip(fmt: str):
-#     """
-#     Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
-#     """
-#     ccimgui.ImGui_SetTooltip(
-#         _bytes(fmt)
-#     )
+def set_tooltip(fmt: str):
+    """
+    Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
+    """
+    ccimgui.ImGui_SetTooltip(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -6513,15 +6776,15 @@ def render_platform_windows_default():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def show_about_window(p_open: BoolPtr=None):
-#     """
-#     Create about window. display dear imgui version, credits and build/system information.
-#     """
-#     ccimgui.ImGui_ShowAboutWindow(
-#         BoolPtr.ptr(p_open)
-#     )
+def show_about_window(p_open: BoolPtr=None):
+    """
+    Create about window. display dear imgui version, credits and build/system information.
+    """
+    ccimgui.ImGui_ShowAboutWindow(
+        BoolPtr.ptr(p_open)
+    )
 # [End Function]
 
 # [Function]
@@ -6620,13 +6883,13 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def show_user_guide():
-#     """
-#     Add basic help/info block (not a window): how to manipulate imgui as an end-user (mouse/keyboard controls).
-#     """
-#     ccimgui.ImGui_ShowUserGuide()
+def show_user_guide():
+    """
+    Add basic help/info block (not a window): how to manipulate imgui as an end-user (mouse/keyboard controls).
+    """
+    ccimgui.ImGui_ShowUserGuide()
 # [End Function]
 
 # [Function]
@@ -6646,18 +6909,18 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderAngleEx(
-#         _bytes(label),
-#         &v_rad.value,
-#         v_degrees_min,
-#         v_degrees_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderAngleEx(
+        _bytes(label),
+        &v_rad.value,
+        v_degrees_min,
+        v_degrees_max,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -6701,19 +6964,25 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[2]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    
+    cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
+        _bytes(label),
+        c_floats,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    return res
 # [End Function]
 
 # [Function]
@@ -6734,19 +7003,27 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[3]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+
+    cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
+        _bytes(label),
+        c_floats,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    return res
 # [End Function]
 
 # [Function]
@@ -6767,38 +7044,48 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef float c_floats[4]
+    c_floats[0] = float_ptrs[0].value
+    c_floats[1] = float_ptrs[1].value
+    c_floats[2] = float_ptrs[2].value
+    c_floats[3] = float_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
+        _bytes(label),
+        c_floats,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    float_ptrs[0].value = c_floats[0]
+    float_ptrs[1].value = c_floats[1]
+    float_ptrs[2].value = c_floats[2]
+    float_ptrs[3].value = c_floats[3]
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-#     """
-#     Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
-#     """
-#     cdef bool res = ccimgui.ImGui_SliderFloatEx(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_float_ex(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    """
+    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
+    """
+    cdef bool res = ccimgui.ImGui_SliderFloatEx(
+        _bytes(label),
+        &value.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -6836,19 +7123,25 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderInt2Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef int c_ints[2]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+
+    cdef bool res = ccimgui.ImGui_SliderInt2Ex(
+        _bytes(label),
+        c_ints,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    return res
 # [End Function]
 
 # [Function]
@@ -6869,19 +7162,27 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderInt3Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef int c_ints[3]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value    
+
+    cdef bool res = ccimgui.ImGui_SliderInt3Ex(
+        _bytes(label),
+        c_ints,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    return res
 # [End Function]
 
 # [Function]
@@ -6902,35 +7203,45 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderInt4Ex(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef int c_ints[4]
+    c_ints[0] = int_ptrs[0].value
+    c_ints[1] = int_ptrs[1].value
+    c_ints[2] = int_ptrs[2].value
+    c_ints[3] = int_ptrs[3].value
+
+    cdef bool res = ccimgui.ImGui_SliderInt4Ex(
+        _bytes(label),
+        c_ints,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    int_ptrs[0].value = c_ints[0]
+    int_ptrs[1].value = c_ints[1]
+    int_ptrs[2].value = c_ints[2]
+    int_ptrs[3].value = c_ints[3]
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-#     cdef bool res = ccimgui.ImGui_SliderIntEx(
-#         _bytes(label),
-#         &v.value,
-#         v_min,
-#         v_max,
-#         _bytes(format_),
-#         flags
-#     )
-#     return res
+def slider_int_ex(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_SliderIntEx(
+        _bytes(label),
+        &value.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -7007,27 +7318,27 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def small_button(label: str):
-#     """
-#     Button with framepadding=(0,0) to easily embed within text
-#     """
-#     cdef bool res = ccimgui.ImGui_SmallButton(
-#         _bytes(label)
-#     )
-#     return res
+def small_button(label: str):
+    """
+    Button with framepadding=(0,0) to easily embed within text
+    """
+    cdef bool res = ccimgui.ImGui_SmallButton(
+        _bytes(label)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def spacing():
-#     """
-#     Add vertical spacing.
-#     """
-#     ccimgui.ImGui_Spacing()
+def spacing():
+    """
+    Add vertical spacing.
+    """
+    ccimgui.ImGui_Spacing()
 # [End Function]
 
 # [Function]
@@ -7045,16 +7356,16 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def style_colors_dark(dst: ImGuiStyle=None):
-#     """
-#     Styles
-#     New, recommended style (default)
-#     """
-#     ccimgui.ImGui_StyleColorsDark(
-#         dst._ptr
-#     )
+def style_colors_dark(dst: ImGuiStyle=None):
+    """
+    Styles
+    New, recommended style (default)
+    """
+    ccimgui.ImGui_StyleColorsDark(
+        dst._ptr
+    )
 # [End Function]
 
 # [Function]
@@ -7150,21 +7461,23 @@ def show_demo_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(ImGuiTableSortSpecs)
-# def table_get_sort_specs():
-#     """
-#     Tables: Sorting & Miscellaneous functions
-#     - Sorting: call TableGetSortSpecs() to retrieve latest sort specs for the table. NULL when not sorting.
-#     When 'sort_specs->SpecsDirty == true' you should sort your data. It will be true when sorting specs have
-#     changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
-#     else you may wastefully sort your data every frame!
-#     - Functions args 'int column_n' treat the default value of -1 as the same as passing the current column index.
-#     Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable().
-#     """
-#     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.ImGui_TableGetSortSpecs()
-#     return ImGuiTableSortSpecs.from_ptr(res)
+def table_get_sort_specs():
+    """
+    Tables: Sorting & Miscellaneous functions
+    - Sorting: call TableGetSortSpecs() to retrieve latest sort specs for the table. NULL when not sorting.
+    When 'sort_specs->SpecsDirty == true' you should sort your data. It will be true when sorting specs have
+    changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
+    else you may wastefully sort your data every frame!
+    - Functions args 'int column_n' treat the default value of -1 as the same as passing the current column index.
+    Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable().
+    """
+    cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.ImGui_TableGetSortSpecs()
+    if res == NULL:
+        return None
+    return ImGuiTableSortSpecs.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -7182,25 +7495,25 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def table_headers_row():
-#     """
-#     Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
-#     """
-#     ccimgui.ImGui_TableHeadersRow()
+def table_headers_row():
+    """
+    Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
+    """
+    ccimgui.ImGui_TableHeadersRow()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def table_next_column():
-#     """
-#     Append into the next column (or first column of next row if currently in last column). return true when column is visible.
-#     """
-#     cdef bool res = ccimgui.ImGui_TableNextColumn()
-#     return res
+def table_next_column():
+    """
+    Append into the next column (or first column of next row if currently in last column). return true when column is visible.
+    """
+    cdef bool res = ccimgui.ImGui_TableNextColumn()
+    return res
 # [End Function]
 
 # [Function]
@@ -7216,16 +7529,16 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
-#     """
-#     Append into the first cell of a new row.
-#     """
-#     ccimgui.ImGui_TableNextRowEx(
-#         row_flags,
-#         min_row_height
-#     )
+def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
+    """
+    Append into the first cell of a new row.
+    """
+    ccimgui.ImGui_TableNextRowEx(
+        row_flags,
+        min_row_height
+    )
 # [End Function]
 
 # [Function]
@@ -7259,38 +7572,38 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def table_set_column_index(column_n: int):
-#     """
-#     Append into the specified column. return true when column is visible.
-#     """
-#     cdef bool res = ccimgui.ImGui_TableSetColumnIndex(
-#         column_n
-#     )
-#     return res
+def table_set_column_index(column_n: int):
+    """
+    Append into the specified column. return true when column is visible.
+    """
+    cdef bool res = ccimgui.ImGui_TableSetColumnIndex(
+        column_n
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def table_setup_column(label: str, flags: int=0):
-#     """
-#     Tables: Headers & Columns declaration
-#     - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
-#     - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
-#     Headers are required to perform: reordering, sorting, and opening the context menu.
-#     The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
-#     - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
-#     some advanced use cases (e.g. adding custom widgets in header row).
-#     - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
-#     Implied init_width_or_weight = 0.0f, user_id = 0
-#     """
-#     ccimgui.ImGui_TableSetupColumn(
-#         _bytes(label),
-#         flags
-#     )
+def table_setup_column(label: str, flags: int=0):
+    """
+    Tables: Headers & Columns declaration
+    - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
+    - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
+    Headers are required to perform: reordering, sorting, and opening the context menu.
+    The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
+    - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
+    some advanced use cases (e.g. adding custom widgets in header row).
+    - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
+    Implied init_width_or_weight = 0.0f, user_id = 0
+    """
+    ccimgui.ImGui_TableSetupColumn(
+        _bytes(label),
+        flags
+    )
 # [End Function]
 
 # [Function]
@@ -7308,16 +7621,16 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def table_setup_scroll_freeze(cols: int, rows: int):
-#     """
-#     Lock columns/rows so they stay visible when scrolled.
-#     """
-#     ccimgui.ImGui_TableSetupScrollFreeze(
-#         cols,
-#         rows
-#     )
+def table_setup_scroll_freeze(cols: int, rows: int):
+    """
+    Lock columns/rows so they stay visible when scrolled.
+    """
+    ccimgui.ImGui_TableSetupScrollFreeze(
+        cols,
+        rows
+    )
 # [End Function]
 
 # [Function]
@@ -7335,40 +7648,40 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def text_colored(col: tuple, fmt: str):
-#     """
-#     Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();
-#     """
-#     ccimgui.ImGui_TextColored(
-#         _cast_tuple_ImVec4(col),
-#         _bytes(fmt)
-#     )
+def text_colored(col: tuple, fmt: str):
+    """
+    Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();
+    """
+    ccimgui.ImGui_TextColored(
+        _cast_tuple_ImVec4(col),
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def text_colored_v(col: tuple, fmt: str):
-#     ccimgui.ImGui_TextColoredV(
-#         _cast_tuple_ImVec4(col),
-#         _bytes(fmt)
-#     )
+def text_colored_v(col: tuple, fmt: str):
+    ccimgui.ImGui_TextColoredV(
+        _cast_tuple_ImVec4(col),
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def text_disabled(fmt: str):
-#     """
-#     Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
-#     """
-#     ccimgui.ImGui_TextDisabled(
-#         _bytes(fmt)
-#     )
+def text_disabled(fmt: str):
+    """
+    Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
+    """
+    ccimgui.ImGui_TextDisabled(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -7383,16 +7696,16 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def text_unformatted(text: str):
-#     """
-#     Widgets: Text
-#     Implied text_end = null
-#     """
-#     ccimgui.ImGui_TextUnformatted(
-#         _bytes(text)
-#     )
+def text_unformatted(text: str):
+    """
+    Widgets: Text
+    Implied text_end = null
+    """
+    ccimgui.ImGui_TextUnformatted(
+        _bytes(text)
+    )
 # [End Function]
 
 # [Function]
@@ -7421,15 +7734,15 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def text_wrapped(fmt: str):
-#     """
-#     Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize().
-#     """
-#     ccimgui.ImGui_TextWrapped(
-#         _bytes(fmt)
-#     )
+def text_wrapped(fmt: str):
+    """
+    Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize().
+    """
+    ccimgui.ImGui_TextWrapped(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -7459,14 +7772,14 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def tree_node_ex(label: str, flags: int=0):
-#     cdef bool res = ccimgui.ImGui_TreeNodeEx(
-#         _bytes(label),
-#         flags
-#     )
-#     return res
+def tree_node_ex(label: str, flags: int=0):
+    cdef bool res = ccimgui.ImGui_TreeNodeEx(
+        _bytes(label),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -7577,13 +7890,13 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def tree_pop():
-#     """
-#     ~ unindent()+popid()
-#     """
-#     ccimgui.ImGui_TreePop()
+def tree_pop():
+    """
+    ~ unindent()+popid()
+    """
+    ccimgui.ImGui_TreePop()
 # [End Function]
 
 # [Function]
@@ -7625,15 +7938,15 @@ def text(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def unindent_ex(indent_w: float=0.0):
-#     """
-#     Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
-#     """
-#     ccimgui.ImGui_UnindentEx(
-#         indent_w
-#     )
+def unindent_ex(indent_w: float=0.0):
+    """
+    Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
+    """
+    ccimgui.ImGui_UnindentEx(
+        indent_w
+    )
 # [End Function]
 
 # [Function]
@@ -7931,35 +8244,37 @@ cdef class ImDrawCmd:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def clip_rect(self):
-    #     """
-    #     4*4  // clipping rectangle (x1, y1, x2, y2). subtract imdrawdata->displaypos to get clipping rectangle in 'viewport' coordinates
-    #     """
-    #     cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
-    #     return _cast_ImVec4_tuple(res)
-    # @clip_rect.setter
-    # def clip_rect(self, value: tuple):
-    #     dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+    @property
+    def clip_rect(self):
+        """
+        4*4  // clipping rectangle (x1, y1, x2, y2). subtract imdrawdata->displaypos to get clipping rectangle in 'viewport' coordinates
+        """
+        cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
+        return _cast_ImVec4_tuple(res)
+    @clip_rect.setter
+    def clip_rect(self, value: tuple):
+        # dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def elem_count(self):
-    #     """
-    #     4    // number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
-    #     """
-    #     cdef unsigned int res = dereference(self._ptr).ElemCount
-    #     return res
-    # @elem_count.setter
-    # def elem_count(self, value: int):
-    #     dereference(self._ptr).ElemCount = value
+    @property
+    def elem_count(self):
+        """
+        4    // number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
+        """
+        cdef unsigned int res = dereference(self._ptr).ElemCount
+        return res
+    @elem_count.setter
+    def elem_count(self, value: int):
+        # dereference(self._ptr).ElemCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -7979,19 +8294,20 @@ cdef class ImDrawCmd:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(Any)
-    # @property
-    # def texture_id(self):
-    #     """
-    #     4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
-    #     """
-    #     cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
-    #     return res
-    # @texture_id.setter
-    # def texture_id(self, value: Any):
-    #     dereference(self._ptr).TextureId = value
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(object)
+    @property
+    def texture_id(self):
+        """
+        4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
+        """
+        cdef object res = <object>dereference(self._ptr).TextureId
+        return res
+    @texture_id.setter
+    def texture_id(self, value: Any):
+        # dereference(self._ptr).TextureId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -8078,16 +8394,17 @@ cdef class ImDrawCmdHeader:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def clip_rect(self):
-    #     cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
-    #     return _cast_ImVec4_tuple(res)
-    # @clip_rect.setter
-    # def clip_rect(self, value: tuple):
-    #     dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+    @property
+    def clip_rect(self):
+        cdef ccimgui.ImVec4 res = dereference(self._ptr).ClipRect
+        return _cast_ImVec4_tuple(res)
+    @clip_rect.setter
+    def clip_rect(self, value: tuple):
+        # dereference(self._ptr).ClipRect = _cast_tuple_ImVec4(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -8140,19 +8457,22 @@ cdef class ImDrawData:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImDrawList)
-    # @property
-    # def cmd_lists(self):
-    #     """
-    #     Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
-    #     """
-    #     cdef ccimgui.ImDrawList** res = dereference(self._ptr).CmdLists
-    #     return ImDrawList.from_ptr(res)
-    # @cmd_lists.setter
-    # def cmd_lists(self, value: ImDrawList):
-    #     dereference(self._ptr).CmdLists = value._ptr
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(List[ImDrawList])
+    @property
+    def cmd_lists(self):
+        """
+        Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
+        """
+        return [
+            ImDrawList.from_ptr(dereference(self._ptr).CmdLists[idx])
+            for idx in range(dereference(self._ptr).CmdListsCount)
+        ]
+    @cmd_lists.setter
+    def cmd_lists(self, value: ImDrawList):
+        # dereference(self._ptr).CmdLists = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -8311,16 +8631,16 @@ cdef class ImDrawData:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def scale_clip_rects(self: ImDrawData, fb_scale: tuple):
-    #     """
-    #     Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
-    #     """
-    #     ccimgui.ImDrawData_ScaleClipRects(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(fb_scale)
-    #     )
+    def scale_clip_rects(self: ImDrawData, fb_scale: tuple):
+        """
+        Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
+        """
+        ccimgui.ImDrawData_ScaleClipRects(
+            self._ptr,
+            _cast_tuple_ImVec2(fb_scale)
+        )
     # [End Method]
 # [End Class]
 
@@ -8369,20 +8689,23 @@ cdef class ImDrawList:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(ImVector_ImDrawCmd)
-    # @property
-    # def cmd_buffer(self):
-    #     """
-    #     This is what you have to render
-    #     Draw commands. typically 1 command = 1 gpu draw call, unless the command is a callback.
-    #     """
-    #     cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr).CmdBuffer
-    #     return ImVector_ImDrawCmd.from_ptr(res)
-    # @cmd_buffer.setter
-    # def cmd_buffer(self, value: ImVector_ImDrawCmd):
-    #     dereference(self._ptr).CmdBuffer = value._ptr
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(List[ImDrawCmd])
+    @property
+    def cmd_buffer(self):
+        """
+        This is what you have to render
+        Draw commands. typically 1 command = 1 gpu draw call, unless the command is a callback.
+        """
+        return [
+            ImDrawCmd.from_ptr(&dereference(self._ptr).CmdBuffer.Data[idx])
+            for idx in range(dereference(self._ptr).CmdBuffer.Size)
+        ]
+    @cmd_buffer.setter
+    def cmd_buffer(self, value: ImVector_ImDrawCmd):
+        # dereference(self._ptr).CmdBuffer = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -8451,18 +8774,18 @@ cdef class ImDrawList:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(ImVector_ImDrawIdx)
-    # @property
-    # def idx_buffer(self):
-    #     """
-    #     Index buffer. each command consume imdrawcmd::elemcount of those
-    #     """
-    #     cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
-    #     return ImVector_ImDrawIdx.from_ptr(res)
-    # @idx_buffer.setter
-    # def idx_buffer(self, value: ImVector_ImDrawIdx):
-    #     dereference(self._ptr).IdxBuffer = value._ptr
+    @property
+    def idx_buffer(self):
+        """
+        Index buffer. each command consume imdrawcmd::elemcount of those
+        """
+        cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr).IdxBuffer
+        return ImVector_ImDrawIdx.from_ptr(res)
+    @idx_buffer.setter
+    def idx_buffer(self, value: ImVector_ImDrawIdx):
+        dereference(self._ptr).IdxBuffer = value._ptr
     # [End Field]
 
     # [Field]
@@ -8546,19 +8869,19 @@ cdef class ImDrawList:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(ImVector_ImDrawVert)
-    # @property
-    # def vtx_buffer(self):
-    #     """
-    #     Vertex buffer.
-    #     """
-    #     cdef ccimgui.ImVector_ImDrawVert res = dereference(self._ptr).VtxBuffer
-    #     return ImVector_ImDrawVert.from_ptr(res)
-    # @vtx_buffer.setter
-    # def vtx_buffer(self, value: ImVector_ImDrawVert):
-    #     dereference(self._ptr).VtxBuffer = value._ptr
+    @property
+    def vtx_buffer(self):
+        """
+        Vertex buffer.
+        """
+        cdef ccimgui.ImVector_ImDrawVert* res = &dereference(self._ptr).VtxBuffer
+        return ImVector_ImDrawVert.from_ptr(res)
+    @vtx_buffer.setter
+    def vtx_buffer(self, value: ImVector_ImDrawVert):
+        dereference(self._ptr).VtxBuffer = value._ptr
     # [End Field]
 
     # [Field]
@@ -9012,20 +9335,20 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
-    #     """
-    #     A: upper-left, b: lower-right (== upper-left + size)
-    #     """
-    #     ccimgui.ImDrawList_AddRectFilledEx(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(p_min),
-    #         _cast_tuple_ImVec2(p_max),
-    #         col,
-    #         rounding,
-    #         flags
-    #     )
+    def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
+        ccimgui.ImDrawList_AddRectFilledEx(
+            self._ptr,
+            _cast_tuple_ImVec2(p_min),
+            _cast_tuple_ImVec2(p_max),
+            col,
+            rounding,
+            flags
+        )
     # [End Method]
 
     # [Method]
@@ -9170,42 +9493,42 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def channels_merge(self: ImDrawList):
-    #     ccimgui.ImDrawList_ChannelsMerge(
-    #         self._ptr
-    #     )
+    def channels_merge(self: ImDrawList):
+        ccimgui.ImDrawList_ChannelsMerge(
+            self._ptr
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def channels_set_current(self: ImDrawList, n: int):
-    #     ccimgui.ImDrawList_ChannelsSetCurrent(
-    #         self._ptr,
-    #         n
-    #     )
+    def channels_set_current(self: ImDrawList, n: int):
+        ccimgui.ImDrawList_ChannelsSetCurrent(
+            self._ptr,
+            n
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def channels_split(self: ImDrawList, count: int):
-    #     """
-    #     Advanced: Channels
-    #     - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
-    #     - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
-    #     - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
-    #     Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
-    #     Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
-    #     """
-    #     ccimgui.ImDrawList_ChannelsSplit(
-    #         self._ptr,
-    #         count
-    #     )
+    def channels_split(self: ImDrawList, count: int):
+        """
+        Advanced: Channels
+        - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
+        - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
+        - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
+        Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
+        Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
+        """
+        ccimgui.ImDrawList_ChannelsSplit(
+            self._ptr,
+            count
+        )
     # [End Method]
 
     # [Method]
@@ -10672,35 +10995,36 @@ cdef class ImFontAtlas:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def tex_height(self):
-    #     """
-    #     Texture height calculated during build().
-    #     """
-    #     cdef int res = dereference(self._ptr).TexHeight
-    #     return res
-    # @tex_height.setter
-    # def tex_height(self, value: int):
-    #     dereference(self._ptr).TexHeight = value
+    @property
+    def tex_height(self):
+        """
+        Texture height calculated during build().
+        """
+        cdef int res = dereference(self._ptr).TexHeight
+        return res
+    @tex_height.setter
+    def tex_height(self, value: int):
+        # dereference(self._ptr).TexHeight = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(Any)
-    # @property
-    # def tex_id(self):
-    #     """
-    #     User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
-    #     """
-    #     cdef ccimgui.ImTextureID res = dereference(self._ptr).TexID
-    #     return res
-    # @tex_id.setter
-    # def tex_id(self, value: Any):
-    #     dereference(self._ptr).TexID = value
+    @property
+    def tex_id(self):
+        """
+        User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
+        """
+        cdef ccimgui.ImTextureID res = <uintptr_t>dereference(self._ptr).TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, value: Any):
+        dereference(self._ptr).TexID = value
     # [End Field]
 
     # [Field]
@@ -10818,19 +11142,20 @@ cdef class ImFontAtlas:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def tex_width(self):
-    #     """
-    #     Texture width calculated during build().
-    #     """
-    #     cdef int res = dereference(self._ptr).TexWidth
-    #     return res
-    # @tex_width.setter
-    # def tex_width(self, value: int):
-    #     dereference(self._ptr).TexWidth = value
+    @property
+    def tex_width(self):
+        """
+        Texture width calculated during build().
+        """
+        cdef int res = dereference(self._ptr).TexWidth
+        return res
+    @tex_width.setter
+    def tex_width(self, value: int):
+        # dereference(self._ptr).TexWidth = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11059,15 +11384,15 @@ cdef class ImFontAtlas:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def clear_tex_data(self: ImFontAtlas):
-    #     """
-    #     Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
-    #     """
-    #     ccimgui.ImFontAtlas_ClearTexData(
-    #         self._ptr
-    #     )
+    def clear_tex_data(self: ImFontAtlas):
+        """
+        Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
+        """
+        ccimgui.ImFontAtlas_ClearTexData(
+            self._ptr
+        )
     # [End Method]
 
     # [Method]
@@ -11215,50 +11540,56 @@ cdef class ImFontAtlas:
     # ?use_template(False)
     # ?active(False)
     # ?returns(bool)
-    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: tuple, out_uv_fill: tuple):
+    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
     #     cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
     #         self._ptr,
     #         cursor,
     #         out_offset._ptr,
     #         out_size._ptr,
-    #         _cast_tuple_ImVec2(out_uv_border),
-    #         _cast_tuple_ImVec2(out_uv_fill)
+    #         out_uv_border._ptr,
+    #         out_uv_fill._ptr
     #     )
     #     return res
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    # def get_tex_data_as_alpha8(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
-    #     """
-    #     1 byte per-pixel
-    #     """
-    #     ccimgui.ImFontAtlas_GetTexDataAsAlpha8(
-    #         self._ptr,
-    #         out_pixels,
-    #         &out_width.value,
-    #         &out_height.value,
-    #         IntPtr.ptr(out_bytes_per_pixel)
-    #     )
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(bytes)
+    def get_tex_data_as_alpha8(self: ImFontAtlas, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
+        """
+        1 byte per-pixel
+        """
+        cdef unsigned char* pixels
+
+        ccimgui.ImFontAtlas_GetTexDataAsAlpha8(
+            self._ptr,
+            &pixels,
+            &out_width.value,
+            &out_height.value,
+            IntPtr.ptr(out_bytes_per_pixel)
+        )
+        return bytes(pixels[:out_width.value*out_height.value])
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?returns(None)
-    # def get_tex_data_as_rgba_32(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
-    #     """
-    #     4 bytes-per-pixel
-    #     """
-    #     ccimgui.ImFontAtlas_GetTexDataAsRGBA32(
-    #         self._ptr,
-    #         out_pixels,
-    #         &out_width.value,
-    #         &out_height.value,
-    #         IntPtr.ptr(out_bytes_per_pixel)
-    #     )
+    # ?use_template(True)
+    # ?active(True)
+    # ?returns(bytes)
+    def get_tex_data_as_rgba_32(self: ImFontAtlas, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
+        """
+        4 bytes-per-pixel
+        """
+        cdef unsigned char* pixels
+
+        ccimgui.ImFontAtlas_GetTexDataAsRGBA32(
+            self._ptr,
+            &pixels,
+            &out_width.value,
+            &out_height.value,
+            IntPtr.ptr(out_bytes_per_pixel)
+        )
+        return bytes(pixels[:out_width.value*out_height.value*4])
     # [End Method]
 
     # [Method]
@@ -12159,8 +12490,9 @@ cdef class ImGuiContext:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
+_io_clipboard = {}
 cdef class ImGuiIO:
     cdef ccimgui.ImGuiIO* _ptr
     
@@ -12168,6 +12500,11 @@ cdef class ImGuiIO:
     cdef ImGuiIO from_ptr(ccimgui.ImGuiIO* _ptr):
         cdef ImGuiIO wrapper = ImGuiIO.__new__(ImGuiIO)
         wrapper._ptr = _ptr
+        if <uintptr_t>ccimgui.igGetCurrentContext() not in _io_clipboard:
+            _io_clipboard[<uintptr_t>ccimgui.igGetCurrentContext()] = {
+               '_get_clipboard_text_fn': None,
+               '_set_clipboard_text_fn': None
+            }
         return wrapper
     
     def __init__(self):
@@ -12676,35 +13013,36 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(float)
-    # @property
-    # def delta_time(self):
-    #     """
-    #     = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
-    #     """
-    #     cdef float res = dereference(self._ptr).DeltaTime
-    #     return res
-    # @delta_time.setter
-    # def delta_time(self, value: float):
-    #     dereference(self._ptr).DeltaTime = value
+    @property
+    def delta_time(self):
+        """
+        = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
+        """
+        cdef float res = dereference(self._ptr).DeltaTime
+        return res
+    @delta_time.setter
+    def delta_time(self, value: float):
+        # dereference(self._ptr).DeltaTime = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def display_framebuffer_scale(self):
-    #     """
-    #     = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayFramebufferScale
-    #     return _cast_ImVec2_tuple(res)
-    # @display_framebuffer_scale.setter
-    # def display_framebuffer_scale(self, value: tuple):
-    #     dereference(self._ptr).DisplayFramebufferScale = _cast_tuple_ImVec2(value)
+    @property
+    def display_framebuffer_scale(self):
+        """
+        = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayFramebufferScale
+        return _cast_ImVec2_tuple(res)
+    @display_framebuffer_scale.setter
+    def display_framebuffer_scale(self, value: tuple):
+        dereference(self._ptr).DisplayFramebufferScale = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
@@ -12772,52 +13110,60 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(ImFontAtlas)
-    # @property
-    # def fonts(self):
-    #     """
-    #     <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
-    #     """
-    #     cdef ccimgui.ImFontAtlas* res = dereference(self._ptr).Fonts
-    #     return ImFontAtlas.from_ptr(res)
-    # @fonts.setter
-    # def fonts(self, value: ImFontAtlas):
-    #     dereference(self._ptr).Fonts = value._ptr
+    @property
+    def fonts(self):
+        """
+        <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
+        """
+        cdef ccimgui.ImFontAtlas* res = dereference(self._ptr).Fonts
+        return ImFontAtlas.from_ptr(res)
+    @fonts.setter
+    def fonts(self, value: ImFontAtlas):
+        # dereference(self._ptr).Fonts = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(float)
-    # @property
-    # def framerate(self):
-    #     """
-    #     Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
-    #     """
-    #     cdef float res = dereference(self._ptr).Framerate
-    #     return res
-    # @framerate.setter
-    # def framerate(self, value: float):
-    #     dereference(self._ptr).Framerate = value
+    @property
+    def framerate(self):
+        """
+        Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
+        """
+        cdef float res = dereference(self._ptr).Framerate
+        return res
+    @framerate.setter
+    def framerate(self, value: float):
+        # dereference(self._ptr).Framerate = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(Callable)
-    # @property
-    # def get_clipboard_text_fn(self):
-    #     """
-    #     Optional: Access OS clipboard
-    #     (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
-    #     """
-    #     cdef Callable res = dereference(self._ptr).GetClipboardTextFn
-    #     return res
-    # @get_clipboard_text_fn.setter
-    # def get_clipboard_text_fn(self, value: Callable):
-    #     dereference(self._ptr).GetClipboardTextFn = value
+    @property
+    def get_clipboard_text_fn(self):
+        return _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_get_clipboard_text_fn']
+    @get_clipboard_text_fn.setter
+    def get_clipboard_text_fn(self, value: Callable):
+        if callable(value):
+            _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_get_clipboard_text_fn'] = value
+            dereference(self._ptr).GetClipboardTextFn = self._get_clipboard_text
+        else:
+            raise ValueError("func is not a callable: %s" % str(value))
+    
+    @staticmethod
+    cdef const char* _get_clipboard_text(void* user_data):
+        text = _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_get_clipboard_text_fn']()
+        if type(text) is bytes:
+            return text
+        return _bytes(text)
     # [End Field]
 
     # [Field]
@@ -12918,34 +13264,34 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # @property
-    # def key_alt(self):
-    #     """
-    #     Keyboard modifier down: alt
-    #     """
-    #     cdef bool res = dereference(self._ptr).KeyAlt
-    #     return res
-    # @key_alt.setter
-    # def key_alt(self, value: bool):
-    #     dereference(self._ptr).KeyAlt = value
+    @property
+    def key_alt(self):
+        """
+        Keyboard modifier down: alt
+        """
+        cdef bool res = dereference(self._ptr).KeyAlt
+        return res
+    @key_alt.setter
+    def key_alt(self, value: bool):
+        dereference(self._ptr).KeyAlt = value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # @property
-    # def key_ctrl(self):
-    #     """
-    #     Keyboard modifier down: control
-    #     """
-    #     cdef bool res = dereference(self._ptr).KeyCtrl
-    #     return res
-    # @key_ctrl.setter
-    # def key_ctrl(self, value: bool):
-    #     dereference(self._ptr).KeyCtrl = value
+    @property
+    def key_ctrl(self):
+        """
+        Keyboard modifier down: control
+        """
+        cdef bool res = dereference(self._ptr).KeyCtrl
+        return res
+    @key_ctrl.setter
+    def key_ctrl(self, value: bool):
+        dereference(self._ptr).KeyCtrl = value
     # [End Field]
 
     # [Field]
@@ -12999,34 +13345,34 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # @property
-    # def key_shift(self):
-    #     """
-    #     Keyboard modifier down: shift
-    #     """
-    #     cdef bool res = dereference(self._ptr).KeyShift
-    #     return res
-    # @key_shift.setter
-    # def key_shift(self, value: bool):
-    #     dereference(self._ptr).KeyShift = value
+    @property
+    def key_shift(self):
+        """
+        Keyboard modifier down: shift
+        """
+        cdef bool res = dereference(self._ptr).KeyShift
+        return res
+    @key_shift.setter
+    def key_shift(self, value: bool):
+        dereference(self._ptr).KeyShift = value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # @property
-    # def key_super(self):
-    #     """
-    #     Keyboard modifier down: cmd/super/windows
-    #     """
-    #     cdef bool res = dereference(self._ptr).KeySuper
-    #     return res
-    # @key_super.setter
-    # def key_super(self, value: bool):
-    #     dereference(self._ptr).KeySuper = value
+    @property
+    def key_super(self):
+        """
+        Keyboard modifier down: cmd/super/windows
+        """
+        cdef bool res = dereference(self._ptr).KeySuper
+        return res
+    @key_super.setter
+    def key_super(self, value: bool):
+        dereference(self._ptr).KeySuper = value
     # [End Field]
 
     # [Field]
@@ -13431,38 +13777,39 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def mouse_hovered_viewport(self):
-    #     """
-    #     (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
-    #     """
-    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).MouseHoveredViewport
-    #     return res
-    # @mouse_hovered_viewport.setter
-    # def mouse_hovered_viewport(self, value: int):
-    #     dereference(self._ptr).MouseHoveredViewport = value
+    @property
+    def mouse_hovered_viewport(self):
+        """
+        (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).MouseHoveredViewport
+        return res
+    @mouse_hovered_viewport.setter
+    def mouse_hovered_viewport(self, value: int):
+        # dereference(self._ptr).MouseHoveredViewport = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def mouse_pos(self):
-    #     """
-    #     Main Input State
-    #     (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
-    #     (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
-    #     Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePos
-    #     return _cast_ImVec2_tuple(res)
-    # @mouse_pos.setter
-    # def mouse_pos(self, value: tuple):
-    #     dereference(self._ptr).MousePos = _cast_tuple_ImVec2(value)
+    @property
+    def mouse_pos(self):
+        """
+        Main Input State
+        (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
+        (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
+        Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).MousePos
+        return _cast_ImVec2_tuple(res)
+    @mouse_pos.setter
+    def mouse_pos(self, value: tuple):
+        dereference(self._ptr).MousePos = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
@@ -13515,34 +13862,34 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(float)
-    # @property
-    # def mouse_wheel(self):
-    #     """
-    #     Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
-    #     """
-    #     cdef float res = dereference(self._ptr).MouseWheel
-    #     return res
-    # @mouse_wheel.setter
-    # def mouse_wheel(self, value: float):
-    #     dereference(self._ptr).MouseWheel = value
+    @property
+    def mouse_wheel(self):
+        """
+        Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
+        """
+        cdef float res = dereference(self._ptr).MouseWheel
+        return res
+    @mouse_wheel.setter
+    def mouse_wheel(self, value: float):
+        dereference(self._ptr).MouseWheel = value
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(float)
-    # @property
-    # def mouse_wheel_h(self):
-    #     """
-    #     Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
-    #     """
-    #     cdef float res = dereference(self._ptr).MouseWheelH
-    #     return res
-    # @mouse_wheel_h.setter
-    # def mouse_wheel_h(self, value: float):
-    #     dereference(self._ptr).MouseWheelH = value
+    @property
+    def mouse_wheel_h(self):
+        """
+        Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
+        """
+        cdef float res = dereference(self._ptr).MouseWheelH
+        return res
+    @mouse_wheel_h.setter
+    def mouse_wheel_h(self, value: float):
+        dereference(self._ptr).MouseWheelH = value
     # [End Field]
 
     # [Field]
@@ -13610,16 +13957,23 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(Callable)
-    # @property
-    # def set_clipboard_text_fn(self):
-    #     cdef Callable res = dereference(self._ptr).SetClipboardTextFn
-    #     return res
-    # @set_clipboard_text_fn.setter
-    # def set_clipboard_text_fn(self, value: Callable):
-    #     dereference(self._ptr).SetClipboardTextFn = value
+    @property
+    def set_clipboard_text_fn(self):
+        return _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_set_clipboard_text_fn']
+    @set_clipboard_text_fn.setter
+    def set_clipboard_text_fn(self, value: Callable):
+        if callable(value):
+            _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_set_clipboard_text_fn'] = value
+            dereference(self._ptr).SetClipboardTextFn = self._set_clipboard_text
+        else:
+            raise ValueError("func is not a callable: %s" % str(value))
+    
+    @staticmethod
+    cdef void _set_clipboard_text(void* user_data, const char* text):
+        _io_clipboard[<uintptr_t>ccimgui.ImGui_GetCurrentContext()]['_set_clipboard_text_fn'](_from_bytes(text))
     # [End Field]
 
     # [Field]
@@ -13767,16 +14121,16 @@ cdef class ImGuiIO:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_input_character(self: ImGuiIO, c: int):
-    #     """
-    #     Queue a new character input
-    #     """
-    #     ccimgui.ImGuiIO_AddInputCharacter(
-    #         self._ptr,
-    #         c
-    #     )
+    def add_input_character(self: ImGuiIO, c: int):
+        """
+        Queue a new character input
+        """
+        ccimgui.ImGuiIO_AddInputCharacter(
+            self._ptr,
+            c
+        )
     # [End Method]
 
     # [Method]
@@ -13825,48 +14179,48 @@ cdef class ImGuiIO:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_key_event(self: ImGuiIO, key: int, down: bool):
-    #     """
-    #     Input Functions
-    #     Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
-    #     """
-    #     ccimgui.ImGuiIO_AddKeyEvent(
-    #         self._ptr,
-    #         key,
-    #         down
-    #     )
+    def add_key_event(self: ImGuiIO, key: int, down: bool):
+        """
+        Input Functions
+        Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
+        """
+        ccimgui.ImGuiIO_AddKeyEvent(
+            self._ptr,
+            key,
+            down
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_mouse_button_event(self: ImGuiIO, button: int, down: bool):
-    #     """
-    #     Queue a mouse button change
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseButtonEvent(
-    #         self._ptr,
-    #         button,
-    #         down
-    #     )
+    def add_mouse_button_event(self: ImGuiIO, button: int, down: bool):
+        """
+        Queue a mouse button change
+        """
+        ccimgui.ImGuiIO_AddMouseButtonEvent(
+            self._ptr,
+            button,
+            down
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
-    #     """
-    #     Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
-    #     """
-    #     ccimgui.ImGuiIO_AddMousePosEvent(
-    #         self._ptr,
-    #         x,
-    #         y
-    #     )
+    def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
+        """
+        Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
+        """
+        ccimgui.ImGuiIO_AddMousePosEvent(
+            self._ptr,
+            x,
+            y
+        )
     # [End Method]
 
     # [Method]
@@ -13899,17 +14253,17 @@ cdef class ImGuiIO:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
-    #     """
-    #     Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
-    #     """
-    #     ccimgui.ImGuiIO_AddMouseWheelEvent(
-    #         self._ptr,
-    #         wheel_x,
-    #         wheel_y
-    #     )
+    def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
+        """
+        Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
+        """
+        ccimgui.ImGuiIO_AddMouseWheelEvent(
+            self._ptr,
+            wheel_x,
+            wheel_y
+        )
     # [End Method]
 
     # [Method]
@@ -14424,35 +14778,37 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def display_end(self):
-    #     """
-    #     End of items to display (exclusive)
-    #     """
-    #     cdef int res = dereference(self._ptr).DisplayEnd
-    #     return res
-    # @display_end.setter
-    # def display_end(self, value: int):
-    #     dereference(self._ptr).DisplayEnd = value
+    @property
+    def display_end(self):
+        """
+        End of items to display (exclusive)
+        """
+        cdef int res = dereference(self._ptr).DisplayEnd
+        return res
+    @display_end.setter
+    def display_end(self, value: int):
+        # dereference(self._ptr).DisplayEnd = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def display_start(self):
-    #     """
-    #     First item to display, updated by each call to step()
-    #     """
-    #     cdef int res = dereference(self._ptr).DisplayStart
-    #     return res
-    # @display_start.setter
-    # def display_start(self, value: int):
-    #     dereference(self._ptr).DisplayStart = value
+    @property
+    def display_start(self):
+        """
+        First item to display, updated by each call to step()
+        """
+        cdef int res = dereference(self._ptr).DisplayStart
+        return res
+    @display_start.setter
+    def display_start(self, value: int):
+        # dereference(self._ptr).DisplayStart = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14521,14 +14877,14 @@ cdef class ImGuiListClipper:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
-    # def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
-    #     ccimgui.ImGuiListClipper_Begin(
-    #         self._ptr,
-    #         items_count,
-    #         items_height
-    #     )
+    def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
+        ccimgui.ImGuiListClipper_Begin(
+            self._ptr,
+            items_count,
+            items_height
+        )
     # [End Method]
 
     # [Method]
@@ -14562,16 +14918,16 @@ cdef class ImGuiListClipper:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # def step(self: ImGuiListClipper):
-    #     """
-    #     Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
-    #     """
-    #     cdef bool res = ccimgui.ImGuiListClipper_Step(
-    #         self._ptr
-    #     )
-    #     return res
+    def step(self: ImGuiListClipper):
+        """
+        Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
+        """
+        cdef bool res = ccimgui.ImGuiListClipper_Step(
+            self._ptr
+        )
+        return res
     # [End Method]
 # [End Class]
 
@@ -16019,18 +16375,18 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def frame_padding(self):
-    #     """
-    #     Padding within a framed rectangle (used by most widgets).
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).FramePadding
-    #     return _cast_ImVec2_tuple(res)
-    # @frame_padding.setter
-    # def frame_padding(self, value: tuple):
-    #     dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
+    @property
+    def frame_padding(self):
+        """
+        Padding within a framed rectangle (used by most widgets).
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).FramePadding
+        return _cast_ImVec2_tuple(res)
+    @frame_padding.setter
+    def frame_padding(self, value: tuple):
+        dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
@@ -16099,34 +16455,34 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def item_inner_spacing(self):
-    #     """
-    #     Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemInnerSpacing
-    #     return _cast_ImVec2_tuple(res)
-    # @item_inner_spacing.setter
-    # def item_inner_spacing(self, value: tuple):
-    #     dereference(self._ptr).ItemInnerSpacing = _cast_tuple_ImVec2(value)
+    @property
+    def item_inner_spacing(self):
+        """
+        Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemInnerSpacing
+        return _cast_ImVec2_tuple(res)
+    @item_inner_spacing.setter
+    def item_inner_spacing(self, value: tuple):
+        dereference(self._ptr).ItemInnerSpacing = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
-    # @property
-    # def item_spacing(self):
-    #     """
-    #     Horizontal and vertical spacing between widgets/lines.
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemSpacing
-    #     return _cast_ImVec2_tuple(res)
-    # @item_spacing.setter
-    # def item_spacing(self, value: tuple):
-    #     dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)
+    @property
+    def item_spacing(self):
+        """
+        Horizontal and vertical spacing between widgets/lines.
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).ItemSpacing
+        return _cast_ImVec2_tuple(res)
+    @item_spacing.setter
+    def item_spacing(self, value: tuple):
+        dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)
     # [End Field]
 
     # [Field]
@@ -16482,51 +16838,54 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def column_index(self):
-    #     """
-    #     Index of the column
-    #     """
-    #     cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
-    #     return res
-    # @column_index.setter
-    # def column_index(self, value: int):
-    #     dereference(self._ptr).ColumnIndex = value
+    @property
+    def column_index(self):
+        """
+        Index of the column
+        """
+        cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
+        return res
+    @column_index.setter
+    def column_index(self, value: int):
+        # dereference(self._ptr).ColumnIndex = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def column_user_id(self):
-    #     """
-    #     User id of the column (if specified by a tablesetupcolumn() call)
-    #     """
-    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
-    #     return res
-    # @column_user_id.setter
-    # def column_user_id(self, value: int):
-    #     dereference(self._ptr).ColumnUserID = value
+    @property
+    def column_user_id(self):
+        """
+        User id of the column (if specified by a tablesetupcolumn() call)
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
+        return res
+    @column_user_id.setter
+    def column_user_id(self, value: int):
+        # dereference(self._ptr).ColumnUserID = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def sort_direction(self):
-    #     """
-    #     Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
-    #     """
-    #     cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
-    #     return res
-    # @sort_direction.setter
-    # def sort_direction(self, value: int):
-    #     dereference(self._ptr).SortDirection = value
+    @property
+    def sort_direction(self):
+        """
+        Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
+        """
+        cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
+        return res
+    @sort_direction.setter
+    def sort_direction(self, value: int):
+        # dereference(self._ptr).SortDirection = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16570,51 +16929,55 @@ cdef class ImGuiTableSortSpecs:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(ImGuiTableColumnSortSpecs)
-    # @property
-    # def specs(self):
-    #     """
-    #     Pointer to sort spec array.
-    #     """
-    #     cdef ccimgui.ImGuiTableColumnSortSpecs* res = dereference(self._ptr).Specs
-    #     return ImGuiTableColumnSortSpecs.from_ptr(res)
-    # @specs.setter
-    # def specs(self, value: ImGuiTableColumnSortSpecs):
-    #     dereference(self._ptr).Specs = value._ptr
+    @property
+    def specs(self):
+        """
+        Pointer to sort spec array.
+        """
+        return [
+            ImGuiTableColumnSortSpecs.from_ptr(&dereference(self._ptr).Specs[idx])
+            for idx in range(dereference(self._ptr).SpecsCount)
+        ]
+    @specs.setter
+    def specs(self, value: ImGuiTableColumnSortSpecs):
+        # dereference(self._ptr).Specs = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def specs_count(self):
-    #     """
-    #     Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
-    #     """
-    #     cdef int res = dereference(self._ptr).SpecsCount
-    #     return res
-    # @specs_count.setter
-    # def specs_count(self, value: int):
-    #     dereference(self._ptr).SpecsCount = value
+    @property
+    def specs_count(self):
+        """
+        Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
+        """
+        cdef int res = dereference(self._ptr).SpecsCount
+        return res
+    @specs_count.setter
+    def specs_count(self, value: int):
+        # dereference(self._ptr).SpecsCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(bool)
-    # @property
-    # def specs_dirty(self):
-    #     """
-    #     Set to true when specs have changed since last time! use this to sort again, then clear the flag.
-    #     """
-    #     cdef bool res = dereference(self._ptr).SpecsDirty
-    #     return res
-    # @specs_dirty.setter
-    # def specs_dirty(self, value: bool):
-    #     dereference(self._ptr).SpecsDirty = value
+    @property
+    def specs_dirty(self):
+        """
+        Set to true when specs have changed since last time! use this to sort again, then clear the flag.
+        """
+        cdef bool res = dereference(self._ptr).SpecsDirty
+        return res
+    @specs_dirty.setter
+    def specs_dirty(self, value: bool):
+        dereference(self._ptr).SpecsDirty = value
     # [End Field]
 # [End Class]
 
@@ -17702,29 +18065,30 @@ cdef class ImVector_ImDrawIdx:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def data(self):
-    #     cdef ccimgui.ImDrawIdx* res = dereference(self._ptr).Data
-    #     return res
-    # @data.setter
-    # def data(self, value: int):
-    #     dereference(self._ptr).Data = value
+    @property
+    def data(self):
+        cdef size_t res = <uintptr_t>dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, value: int):
+        dereference(self._ptr).Data = value
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def size(self):
-    #     cdef int res = dereference(self._ptr).Size
-    #     return res
-    # @size.setter
-    # def size(self, value: int):
-    #     dereference(self._ptr).Size = value
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17759,29 +18123,31 @@ cdef class ImVector_ImDrawVert:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(ImDrawVert)
-    # @property
-    # def data(self):
-    #     cdef ccimgui.ImDrawVert* res = dereference(self._ptr).Data
-    #     return ImDrawVert.from_ptr(res)
-    # @data.setter
-    # def data(self, value: ImDrawVert):
-    #     dereference(self._ptr).Data = value._ptr
+    @property
+    def data(self):
+        cdef size_t res = <uintptr_t>dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, value: ImDrawVert):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(int)
-    # @property
-    # def size(self):
-    #     cdef int res = dereference(self._ptr).Size
-    #     return res
-    # @size.setter
-    # def size(self, value: int):
-    #     dereference(self._ptr).Size = value
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 

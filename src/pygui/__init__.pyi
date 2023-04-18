@@ -674,23 +674,23 @@ VIEWPORT_FLAGS_IS_FOCUSED: int
 
 
 
-# def accept_drag_drop_payload(type_: str, flags: int=0) -> ImGuiPayload:
-#     """
-#     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
-#     """
-#     pass
+def accept_drag_drop_payload(type_: str, flags: int=0) -> Any:
+    """
+    Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
+    """
+    pass
 
-# def align_text_to_frame_padding() -> None:
-#     """
-#     Vertically align upcoming text baseline to framepadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)
-#     """
-#     pass
+def align_text_to_frame_padding() -> None:
+    """
+    Vertically align upcoming text baseline to framepadding.y so that it will align properly to regularly framed items (call if you have text on a line before a framed item)
+    """
+    pass
 
-# def arrow_button(str_id: str, dir_: int) -> bool:
-#     """
-#     Square button with an arrow shape
-#     """
-#     pass
+def arrow_button(str_id: str, dir_: int) -> bool:
+    """
+    Square button with an arrow shape
+    """
+    pass
 
 def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
     """
@@ -709,18 +709,18 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
     """
     pass
 
-# def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool:
-#     """
-#     Child Windows
-#     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
-#     - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
-#     - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
-#     Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
-#     [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-#     BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-#     returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
-#     """
-#     pass
+def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool:
+    """
+    Child Windows
+    - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
+    - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
+    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
+    Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
+    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
+    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
+    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    """
+    pass
 
 # def begin_child_frame(id_: int, size: tuple, flags: int=0) -> bool:
 #     """
@@ -729,13 +729,13 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     pass
 
 # def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool: ...
-# def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
-#     """
-#     Widgets: Combo Box (Dropdown)
-#     - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.
-#     - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.
-#     """
-#     pass
+def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
+    """
+    Widgets: Combo Box (Dropdown)
+    - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.
+    - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.
+    """
+    pass
 
 # def begin_disabled(disabled: bool=True) -> None:
 #     """
@@ -746,40 +746,40 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def begin_drag_drop_source(flags: int=0) -> bool:
-#     """
-#     Drag and Drop
-#     - On source items, call BeginDragDropSource(), if it returns true also call SetDragDropPayload() + EndDragDropSource().
-#     - On target candidates, call BeginDragDropTarget(), if it returns true also call AcceptDragDropPayload() + EndDragDropTarget().
-#     - If you stop calling BeginDragDropSource() the payload is preserved however it won't have a preview tooltip (we currently display a fallback "..." tooltip, see #1725)
-#     - An item can be both drag source and drop target.
-#     Call after submitting an item which may be dragged. when this return true, you can call setdragdroppayload() + enddragdropsource()
-#     """
-#     pass
+def begin_drag_drop_source(flags: int=0) -> bool:
+    """
+    Drag and Drop
+    - On source items, call BeginDragDropSource(), if it returns true also call SetDragDropPayload() + EndDragDropSource().
+    - On target candidates, call BeginDragDropTarget(), if it returns true also call AcceptDragDropPayload() + EndDragDropTarget().
+    - If you stop calling BeginDragDropSource() the payload is preserved however it won't have a preview tooltip (we currently display a fallback "..." tooltip, see #1725)
+    - An item can be both drag source and drop target.
+    Call after submitting an item which may be dragged. when this return true, you can call setdragdroppayload() + enddragdropsource()
+    """
+    pass
 
-# def begin_drag_drop_target() -> bool:
-#     """
-#     Call after submitting an item that may receive a payload. if this returns true, you can call acceptdragdroppayload() + enddragdroptarget()
-#     """
-#     pass
+def begin_drag_drop_target() -> bool:
+    """
+    Call after submitting an item that may receive a payload. if this returns true, you can call acceptdragdroppayload() + enddragdroptarget()
+    """
+    pass
 
-# def begin_group() -> None:
-#     """
-#     Lock horizontal starting position
-#     """
-#     pass
+def begin_group() -> None:
+    """
+    Lock horizontal starting position
+    """
+    pass
 
-# def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
-#     """
-#     Widgets: List Boxes
-#     - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
-#     - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
-#     - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
-#     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
-#     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
-#     Open a framed scrolling region
-#     """
-#     pass
+def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
+    """
+    Widgets: List Boxes
+    - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
+    - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
+    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
+    - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
+    - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
+    Open a framed scrolling region
+    """
+    pass
 
 # def begin_main_menu_bar() -> bool:
 #     """
@@ -810,14 +810,14 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def begin_popup(str_id: str, flags: int=0) -> bool:
-#     """
-#     Popups: begin/end functions
-#     - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
-#     - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
-#     Return true if the popup is open, and you can start outputting to it.
-#     """
-#     pass
+def begin_popup(str_id: str, flags: int=0) -> bool:
+    """
+    Popups: begin/end functions
+    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
+    - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
+    Return true if the popup is open, and you can start outputting to it.
+    """
+    pass
 
 # def begin_popup_context_item() -> bool:
 #     """
@@ -909,36 +909,36 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool: ...
-# def begin_tooltip() -> bool:
-#     """
-#     Tooltips
-#     - Tooltip are windows following the mouse. They do not take focus away.
-#     Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
-#     """
-#     pass
+def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool: ...
+def begin_tooltip() -> bool:
+    """
+    Tooltips
+    - Tooltip are windows following the mouse. They do not take focus away.
+    Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
+    """
+    pass
 
-# def bullet() -> None:
-#     """
-#     Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
-#     """
-#     pass
+def bullet() -> None:
+    """
+    Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
+    """
+    pass
 
-# def bullet_text(fmt: str) -> None:
-#     """
-#     Shortcut for bullet()+text()
-#     """
-#     pass
+def bullet_text(fmt: str) -> None:
+    """
+    Shortcut for bullet()+text()
+    """
+    pass
 
 # def bullet_text_v(fmt: str) -> None: ...
-# def button(label: str) -> bool:
-#     """
-#     Widgets: Main
-#     - Most widgets return true when the value has been changed or when pressed/selected
-#     - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.
-#     Implied size = imvec2(0, 0)
-#     """
-#     pass
+def button(label: str) -> bool:
+    """
+    Widgets: Main
+    - Most widgets return true when the value has been changed or when pressed/selected
+    - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.
+    Implied size = imvec2(0, 0)
+    """
+    pass
 
 # def button_ex(label: str, size: tuple=(0, 0)) -> bool:
 #     """
@@ -959,8 +959,9 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> tuple: ...
-# def checkbox(label: str, v: BoolPtr) -> bool: ...
+def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> tuple: ...
+def checkbox(label: str, v: BoolPtr) -> bool: ...
+def checkbox_flags(label: str, flags: IntPtr, flags_value: int) -> bool: ...
 # def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int) -> bool: ...
 # def checkbox_flags_uint_ptr(label: str, flags: IntPtr, flags_value: int) -> bool: ...
 # def close_current_popup() -> None:
@@ -969,17 +970,17 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def collapsing_header(label: str, flags: int=0) -> bool:
-#     """
-#     If returning 'true' the header is open. doesn't indent nor push on id stack. user doesn't have to call treepop().
-#     """
-#     pass
+def collapsing_header(label: str, flags: int=0) -> bool:
+    """
+    If returning 'true' the header is open. doesn't indent nor push on id stack. user doesn't have to call treepop().
+    """
+    pass
 
-# def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0) -> bool:
-#     """
-#     When 'p_visible != null': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
-#     """
-#     pass
+def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0) -> bool:
+    """
+    When 'p_visible != null': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.
+    """
+    pass
 
 # def color_button(desc_id: str, col: tuple, flags: int=0) -> bool:
 #     """
@@ -994,7 +995,7 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     pass
 
 # def color_convert_float4_to_u32(in_: tuple) -> int: ...
-# def color_convert_hsv_to_rgb(h: float, s: float, v: float, out_r: FloatPtr, out_g: FloatPtr, out_b: FloatPtr) -> None: ...
+def color_convert_hsv_to_rgb(h: float, s: float, v: float, colour: Vec4Ptr) -> None: ...
 # def color_convert_rgb_to_hsv(r: float, g: float, b: float, out_h: FloatPtr, out_s: FloatPtr, out_v: FloatPtr) -> None: ...
 # def color_convert_u32_to_float4(in_: int) -> tuple:
 #     """
@@ -1002,17 +1003,17 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def color_edit3(label: str, col: Sequence[FloatPtr], flags: int=0) -> bool:
-#     """
-#     Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
-#     - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
-#     - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
-#     """
-#     pass
+def color_edit3(label: str, colour: Vec4Ptr, flags: int=0) -> bool:
+    """
+    Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
+    - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
+    - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
+    """
+    pass
 
-# def color_edit4(label: str, col: Sequence[FloatPtr], flags: int=0) -> bool: ...
-# def color_picker3(label: str, col: Sequence[FloatPtr], flags: int=0) -> bool: ...
-# def color_picker4(label: str, col: Sequence[FloatPtr], flags: int=0, ref_col: FloatPtr=None) -> bool: ...
+def color_edit4(label: str, colour: Vec4Ptr, flags: int=0) -> bool: ...
+def color_picker3(label: str, colour: Vec4Ptr, flags: int=0) -> bool: ...
+def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=None) -> bool: ...
 # def columns() -> None:
 #     """
 #     Legacy Columns API (prefer using Tables!)
@@ -1035,18 +1036,18 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
 #     pass
 
 # def combo_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
-# def combo_char(label: str, current_item: IntPtr, items: str, items_count: int) -> bool:
+# def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int) -> bool:
 #     """
 #     Implied popup_max_height_in_items = -1
 #     """
 #     pass
 
-# def combo_char_ex(label: str, current_item: IntPtr, items: str, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
-# def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1) -> bool:
-#     """
-#     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
-#     """
-#     pass
+# def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
+def combo_ex(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1) -> bool:
+    """
+    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+    """
+    pass
 
 def create_context(shared_font_atlas: ImFontAtlas=None) -> ImGuiContext:
     """
@@ -1108,23 +1109,23 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     pass
 
 # def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None) -> int: ...
-# def drag_float(label: str, v: FloatPtr) -> bool:
-#     """
-#     Widgets: Drag Sliders
-#     - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
-#     - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',
-#     the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
-#     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
-#     - Format string may also be set to NULL or use the default format ("%f" or "%d").
-#     - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
-#     - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
-#     - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
-#     - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
-#     - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
-#     If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-#     """
-#     pass
+def drag_float(label: str, v: FloatPtr) -> bool:
+    """
+    Widgets: Drag Sliders
+    - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',
+    the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
+    - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
+    - Format string may also be set to NULL or use the default format ("%f" or "%d").
+    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
+    - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
+    - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
+    - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
+    - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
+    If you get a warning converting a float to ImGuiSliderFlags, read https://github.com/ocornut/imgui/issues/3361
+    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
+    """
+    pass
 
 # def drag_float2(label: str, v: Sequence[FloatPtr]) -> bool:
 #     """
@@ -1132,26 +1133,26 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     """
 #     pass
 
-# def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def drag_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
 # def drag_float3(label: str, v: Sequence[FloatPtr]) -> bool:
 #     """
 #     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def drag_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
 # def drag_float4(label: str, v: Sequence[FloatPtr]) -> bool:
 #     """
 #     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
-# def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     pass
+def drag_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    If v_min >= v_max we have no bound
+    """
+    pass
 
 # def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr) -> bool:
 #     """
@@ -1172,26 +1173,26 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     """
 #     pass
 
-# def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+def drag_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 # def drag_int3(label: str, v: Sequence[IntPtr]) -> bool:
 #     """
 #     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
 #     """
 #     pass
 
-# def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+def drag_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 # def drag_int4(label: str, v: Sequence[IntPtr]) -> bool:
 #     """
 #     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
 #     """
 #     pass
 
-# def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
-# def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
-#     """
-#     If v_min >= v_max we have no bound
-#     """
-#     pass
+def drag_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
+def drag_int_ex(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
+    """
+    If v_min >= v_max we have no bound
+    """
+    pass
 
 # def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr) -> bool:
 #     """
@@ -1221,31 +1222,31 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     pass
 
 def end() -> None: ...
-# def end_child() -> None: ...
+def end_child() -> None: ...
 # def end_child_frame() -> None:
 #     """
 #     Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)
 #     """
 #     pass
 
-# def end_combo() -> None:
-#     """
-#     Only call endcombo() if begincombo() returns true!
-#     """
-#     pass
+def end_combo() -> None:
+    """
+    Only call endcombo() if begincombo() returns true!
+    """
+    pass
 
 # def end_disabled() -> None: ...
-# def end_drag_drop_source() -> None:
-#     """
-#     Only call enddragdropsource() if begindragdropsource() returns true!
-#     """
-#     pass
+def end_drag_drop_source() -> None:
+    """
+    Only call enddragdropsource() if begindragdropsource() returns true!
+    """
+    pass
 
-# def end_drag_drop_target() -> None:
-#     """
-#     Only call enddragdroptarget() if begindragdroptarget() returns true!
-#     """
-#     pass
+def end_drag_drop_target() -> None:
+    """
+    Only call enddragdroptarget() if begindragdroptarget() returns true!
+    """
+    pass
 
 # def end_frame() -> None:
 #     """
@@ -1253,17 +1254,17 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def end_group() -> None:
-#     """
-#     Unlock horizontal starting position + capture the whole group bounding box into one 'item' (so you can use isitemhovered() or layout primitives such as sameline() on whole group, etc.)
-#     """
-#     pass
+def end_group() -> None:
+    """
+    Unlock horizontal starting position + capture the whole group bounding box into one 'item' (so you can use isitemhovered() or layout primitives such as sameline() on whole group, etc.)
+    """
+    pass
 
-# def end_list_box() -> None:
-#     """
-#     Only call endlistbox() if beginlistbox() returned true!
-#     """
-#     pass
+def end_list_box() -> None:
+    """
+    Only call endlistbox() if beginlistbox() returned true!
+    """
+    pass
 
 # def end_main_menu_bar() -> None:
 #     """
@@ -1283,11 +1284,11 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def end_popup() -> None:
-#     """
-#     Only call endpopup() if beginpopupxxx() returns true!
-#     """
-#     pass
+def end_popup() -> None:
+    """
+    Only call endpopup() if beginpopupxxx() returns true!
+    """
+    pass
 
 # def end_tab_bar() -> None:
 #     """
@@ -1301,17 +1302,17 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def end_table() -> None:
-#     """
-#     Only call endtable() if begintable() returns true!
-#     """
-#     pass
+def end_table() -> None:
+    """
+    Only call endtable() if begintable() returns true!
+    """
+    pass
 
-# def end_tooltip() -> None:
-#     """
-#     Only call endtooltip() if begintooltip() returns true!
-#     """
-#     pass
+def end_tooltip() -> None:
+    """
+    Only call endtooltip() if begintooltip() returns true!
+    """
+    pass
 
 # def find_viewport_by_id(id_: int) -> ImGuiViewport:
 #     """
@@ -1389,14 +1390,14 @@ def end() -> None: ...
 #     pass
 
 # def get_columns_count() -> int: ...
-# def get_content_region_avail() -> tuple:
-#     """
-#     Content region
-#     - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
-#     - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
-#     == getcontentregionmax() - getcursorpos()
-#     """
-#     pass
+def get_content_region_avail() -> tuple:
+    """
+    Content region
+    - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
+    - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
+    == getcontentregionmax() - getcursorpos()
+    """
+    pass
 
 # def get_content_region_max() -> tuple:
 #     """
@@ -1404,12 +1405,12 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def get_current_context() -> ImGuiContext: ...
-# def get_cursor_pos() -> tuple:
-#     """
-#     Cursor position in window coordinates (relative to window position)
-#     """
-#     pass
+def get_current_context() -> ImGuiContext: ...
+def get_cursor_pos() -> tuple:
+    """
+    Cursor position in window coordinates (relative to window position)
+    """
+    pass
 
 # def get_cursor_pos_x() -> float:
 #     """
@@ -1423,11 +1424,11 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def get_cursor_screen_pos() -> tuple:
-#     """
-#     Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
-#     """
-#     pass
+def get_cursor_screen_pos() -> tuple:
+    """
+    Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
+    """
+    pass
 
 # def get_cursor_start_pos() -> tuple:
 #     """
@@ -1435,11 +1436,11 @@ def end() -> None: ...
 #     """
 #     pass
 
-# def get_drag_drop_payload() -> ImGuiPayload:
-#     """
-#     Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
-#     """
-#     pass
+def get_drag_drop_payload() -> Tuple[str, Any]:
+    """
+    Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
+    """
+    pass
 
 def get_draw_data() -> ImDrawData:
     """
@@ -1461,11 +1462,11 @@ def get_draw_data() -> ImDrawData:
 #     """
 #     pass
 
-# def get_font_size() -> float:
-#     """
-#     Get current font size (= height in pixels) of current font with current scale applied
-#     """
-#     pass
+def get_font_size() -> float:
+    """
+    Get current font size (= height in pixels) of current font with current scale applied
+    """
+    pass
 
 # def get_font_tex_uv_white_pixel() -> tuple:
 #     """
@@ -1524,23 +1525,23 @@ def get_io() -> ImGuiIO:
 #     """
 #     pass
 
-# def get_item_rect_max() -> tuple:
-#     """
-#     Get lower-right bounding rectangle of the last item (screen space)
-#     """
-#     pass
+def get_item_rect_max() -> tuple:
+    """
+    Get lower-right bounding rectangle of the last item (screen space)
+    """
+    pass
 
-# def get_item_rect_min() -> tuple:
-#     """
-#     Get upper-left bounding rectangle of the last item (screen space)
-#     """
-#     pass
+def get_item_rect_min() -> tuple:
+    """
+    Get upper-left bounding rectangle of the last item (screen space)
+    """
+    pass
 
-# def get_item_rect_size() -> tuple:
-#     """
-#     Get size of last item
-#     """
-#     pass
+def get_item_rect_size() -> tuple:
+    """
+    Get size of last item
+    """
+    pass
 
 # def get_key_index(key: int) -> int: ...
 # def get_key_name(key: int) -> str:
@@ -1595,14 +1596,14 @@ def get_io() -> ImGuiIO:
 #     """
 #     pass
 
-# def get_platform_io() -> ImGuiPlatformIO:
-#     """
-#     (Optional) Platform/OS interface for multi-viewport support
-#     Read comments around the ImGuiPlatformIO structure for more details.
-#     Note: You may use GetWindowViewport() to get the current viewport of the current window.
-#     Platform/renderer functions, for backend to setup + viewports list.
-#     """
-#     pass
+def get_platform_io() -> ImGuiPlatformIO:
+    """
+    (Optional) Platform/OS interface for multi-viewport support
+    Read comments around the ImGuiPlatformIO structure for more details.
+    Note: You may use GetWindowViewport() to get the current viewport of the current window.
+    Platform/renderer functions, for backend to setup + viewports list.
+    """
+    pass
 
 # def get_scroll_max_x() -> float:
 #     """
@@ -1632,11 +1633,11 @@ def get_io() -> ImGuiIO:
 #     pass
 
 # def get_state_storage() -> ImGuiStorage: ...
-# def get_style() -> ImGuiStyle:
-#     """
-#     Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
-#     """
-#     pass
+def get_style() -> ImGuiStyle:
+    """
+    Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
+    """
+    pass
 
 # def get_style_color_name(idx: int) -> str:
 #     """
@@ -1644,35 +1645,35 @@ def get_io() -> ImGuiIO:
 #     """
 #     pass
 
-# def get_style_color_vec4(idx: int) -> ImVec4:
-#     """
-#     Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in.
-#     """
-#     pass
+def get_style_color_vec4(idx: int) -> ImVec4:
+    """
+    Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in.
+    """
+    pass
 
-# def get_text_line_height() -> float:
-#     """
-#     ~ fontsize
-#     """
-#     pass
+def get_text_line_height() -> float:
+    """
+    ~ fontsize
+    """
+    pass
 
-# def get_text_line_height_with_spacing() -> float:
-#     """
-#     ~ fontsize + style.itemspacing.y (distance in pixels between 2 consecutive lines of text)
-#     """
-#     pass
+def get_text_line_height_with_spacing() -> float:
+    """
+    ~ fontsize + style.itemspacing.y (distance in pixels between 2 consecutive lines of text)
+    """
+    pass
 
-# def get_time() -> float:
-#     """
-#     Get global imgui time. incremented by io.deltatime every frame.
-#     """
-#     pass
+def get_time() -> float:
+    """
+    Get global imgui time. incremented by io.deltatime every frame.
+    """
+    pass
 
-# def get_tree_node_to_label_spacing() -> float:
-#     """
-#     Horizontal distance preceding label when using treenode*() or bullet() == (g.fontsize + style.framepadding.x*2) for a regular unframed treenode
-#     """
-#     pass
+def get_tree_node_to_label_spacing() -> float:
+    """
+    Horizontal distance preceding label when using treenode*() or bullet() == (g.fontsize + style.framepadding.x*2) for a regular unframed treenode
+    """
+    pass
 
 def get_version() -> str:
     """
@@ -1699,11 +1700,11 @@ def get_version() -> str:
 #     """
 #     pass
 
-# def get_window_draw_list() -> ImDrawList:
-#     """
-#     Get draw list associated to the current window, to append your own drawing primitives
-#     """
-#     pass
+def get_window_draw_list() -> ImDrawList:
+    """
+    Get draw list associated to the current window, to append your own drawing primitives
+    """
+    pass
 
 # def get_window_height() -> float:
 #     """
@@ -1761,8 +1762,8 @@ def get_version() -> str:
 #     """
 #     pass
 
-# def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool: ...
-# def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None: ...
+def image_button_ex(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool: ...
+def image_ex(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None: ...
 # def impl_glfw_char_callback(window: GLFWwindow, c: int) -> None: ...
 # def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int) -> None: ...
 # def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float) -> None: ...
@@ -1793,11 +1794,11 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def indent_ex(indent_w: float=0.0) -> None:
-#     """
-#     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
-#     """
-#     pass
+def indent_ex(indent_w: float=0.0) -> None:
+    """
+    Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
+    """
+    pass
 
 # def input_double(label: str, v: DoublePtr) -> bool:
 #     """
@@ -1805,7 +1806,7 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0) -> bool: ...
+def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0) -> bool: ...
 # def input_float(label: str, v: FloatPtr) -> bool:
 #     """
 #     Implied step = 0.0f, step_fast = 0.0f, format = '%.3f', flags = 0
@@ -1818,32 +1819,32 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
 # def input_float3(label: str, v: Sequence[FloatPtr]) -> bool:
 #     """
 #     Implied format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
 # def input_float4(label: str, v: Sequence[FloatPtr]) -> bool:
 #     """
 #     Implied format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
-# def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
-# def input_int(label: str, v: IntPtr) -> bool:
-#     """
-#     Implied step = 1, step_fast = 100, flags = 0
-#     """
-#     pass
+def input_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], format_: str="%.3f", flags: int=0) -> bool: ...
+def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0) -> bool: ...
+def input_int(label: str, v: IntPtr) -> bool:
+    """
+    Implied step = 1, step_fast = 100, flags = 0
+    """
+    pass
 
-# def input_int2(label: str, v: Sequence[IntPtr], flags: int=0) -> bool: ...
-# def input_int3(label: str, v: Sequence[IntPtr], flags: int=0) -> bool: ...
-# def input_int4(label: str, v: Sequence[IntPtr], flags: int=0) -> bool: ...
-# def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: int=0) -> bool: ...
+def input_int2(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
+def input_int3(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
+def input_int4(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
+def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: int=0) -> bool: ...
 # def input_scalar(label: str, data_type: int, p_data: Any) -> bool:
 #     """
 #     Implied p_step = null, p_step_fast = null, format = null, flags = 0
@@ -1867,7 +1868,7 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+def input_text_ex(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
 # def input_text_multiline(label: str, buf: str, buf_size: Any) -> bool:
 #     """
 #     Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
@@ -1881,7 +1882,7 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+def input_text_with_hint_ex(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
 # def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
 #     """
 #     Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
@@ -1924,11 +1925,11 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def is_item_clicked() -> bool:
-#     """
-#     Implied mouse_button = 0
-#     """
-#     pass
+def is_item_clicked() -> bool:
+    """
+    Implied mouse_button = 0
+    """
+    pass
 
 # def is_item_clicked_ex(mouse_button: int=0) -> bool:
 #     """
@@ -1960,14 +1961,14 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def is_item_hovered(flags: int=0) -> bool:
-#     """
-#     Item/Widgets Utilities and Query Functions
-#     - Most of the functions are referring to the previous Item that has been submitted.
-#     - See Demo Window under "Widgets->Querying Status" for an interactive visualization of most of those functions.
-#     Is the last item hovered? (and usable, aka not blocked by a popup, etc.). see imguihoveredflags for more options.
-#     """
-#     pass
+def is_item_hovered(flags: int=0) -> bool:
+    """
+    Item/Widgets Utilities and Query Functions
+    - Most of the functions are referring to the previous Item that has been submitted.
+    - See Demo Window under "Widgets->Querying Status" for an interactive visualization of most of those functions.
+    Is the last item hovered? (and usable, aka not blocked by a popup, etc.). see imguihoveredflags for more options.
+    """
+    pass
 
 # def is_item_toggled_open() -> bool:
 #     """
@@ -2022,11 +2023,11 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def is_mouse_double_clicked(button: int) -> bool:
-#     """
-#     Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)
-#     """
-#     pass
+def is_mouse_double_clicked(button: int) -> bool:
+    """
+    Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)
+    """
+    pass
 
 # def is_mouse_down(button: int) -> bool:
 #     """
@@ -2117,14 +2118,14 @@ def impl_open_gl_3_shutdown() -> None: ...
 #     """
 #     pass
 
-# def label_text(label: str, fmt: str) -> None:
-#     """
-#     Display text+label aligned the same way as value+label widgets
-#     """
-#     pass
+def label_text(label: str, fmt: str) -> None:
+    """
+    Display text+label aligned the same way as value+label widgets
+    """
+    pass
 
 # def label_text_v(label: str, fmt: str) -> None: ...
-# def list_box(label: str, current_item: IntPtr, items: str, items_count: int, height_in_items: int=-1) -> bool: ...
+def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_items: int=-1) -> bool: ...
 # def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int) -> bool:
 #     """
 #     Implied height_in_items = -1
@@ -2225,19 +2226,19 @@ def new_frame() -> None:
 #     """
 #     pass
 
-# def open_popup(str_id: str, popup_flags: int=0) -> None:
-#     """
-#     Popups: open/close functions
-#     - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
-#     - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
-#     - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
-#     - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
-#     - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
-#     - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
-#     - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter
-#     Call to mark popup as open (don't call every frame!).
-#     """
-#     pass
+def open_popup(str_id: str, popup_flags: int=0) -> None:
+    """
+    Popups: open/close functions
+    - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
+    - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
+    - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
+    - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
+    - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
+    - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter
+    Call to mark popup as open (don't call every frame!).
+    """
+    pass
 
 # def open_popup_id(id_: int, popup_flags: int=0) -> None:
 #     """
@@ -2264,7 +2265,7 @@ def new_frame() -> None:
 #     pass
 
 # def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
-# def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
+def plot_histogram_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
 # def plot_lines(label: str, values: FloatPtr, values_count: int) -> None:
 #     """
 #     Widgets: Data Plotting
@@ -2280,15 +2281,15 @@ def new_frame() -> None:
 #     pass
 
 # def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
-# def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
-# def pop_button_repeat() -> None: ...
+def plot_lines_ex(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
+def pop_button_repeat() -> None: ...
 # def pop_clip_rect() -> None: ...
 # def pop_font() -> None: ...
-# def pop_id() -> None:
-#     """
-#     Pop from the id stack.
-#     """
-#     pass
+def pop_id() -> None:
+    """
+    Pop from the id stack.
+    """
+    pass
 
 # def pop_item_width() -> None: ...
 # def pop_style_color() -> None:
@@ -2297,22 +2298,22 @@ def new_frame() -> None:
 #     """
 #     pass
 
-# def pop_style_color_ex(count: int=1) -> None: ...
+def pop_style_color_ex(count: int=1) -> None: ...
 # def pop_style_var() -> None:
 #     """
 #     Implied count = 1
 #     """
 #     pass
 
-# def pop_style_var_ex(count: int=1) -> None: ...
+def pop_style_var_ex(count: int=1) -> None: ...
 # def pop_tab_stop() -> None: ...
-# def pop_text_wrap_pos() -> None: ...
-# def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None) -> None: ...
-# def push_button_repeat(repeat: bool) -> None:
-#     """
-#     In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
-#     """
-#     pass
+def pop_text_wrap_pos() -> None: ...
+def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None) -> None: ...
+def push_button_repeat(repeat: bool) -> None:
+    """
+    In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
+    """
+    pass
 
 # def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool) -> None:
 #     """
@@ -2328,22 +2329,34 @@ def new_frame() -> None:
 #     """
 #     pass
 
-# def push_id(str_id: str) -> None:
-#     """
-#     ID stack/scopes
-#     Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
-#     - Those questions are answered and impacted by understanding of the ID stack system:
-#     - "Q: Why is my widget not reacting when I click on it?"
-#     - "Q: How can I have widgets with an empty label?"
-#     - "Q: How can I have multiple widgets with the same label?"
-#     - Short version: ID are hashes of the entire ID stack. If you are creating widgets in a loop you most likely
-#     want to push a unique identifier (e.g. object pointer, loop index) to uniquely differentiate them.
-#     - You can also use the "Label##foobar" syntax within widget label to distinguish them from each others.
-#     - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,
-#     whereas "str_id" denote a string that is only used as an ID and not normally displayed.
-#     Push string into the id stack (will hash string).
-#     """
-#     pass
+def push_id(str_id: str) -> None:
+    """
+    ID stack/scopes
+    Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
+    - Those questions are answered and impacted by understanding of the ID stack system:
+    - "Q: Why is my widget not reacting when I click on it?"
+    - "Q: How can I have widgets with an empty label?"
+    - "Q: How can I have multiple widgets with the same label?"
+    - Short version: ID are hashes of the entire ID stack. If you are creating widgets in a loop you most likely
+    want to push a unique identifier (e.g. object pointer, loop index) to uniquely differentiate them.
+    - You can also use the "Label##foobar" syntax within widget label to distinguish them from each others.
+    - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,
+    whereas "str_id" denote a string that is only used as an ID and not normally displayed.
+    Push string into the id stack (will hash string).
+    """
+    pass
+
+def push_id_int(int_id: int) -> None:
+    """
+    Push integer into the id stack (will hash integer).
+    """
+    pass
+
+def push_id_str(str_id_begin: str, str_id_end: str) -> None:
+    """
+    Push string into the id stack (will hash string).
+    """
+    pass
 
 # def push_idi_nt(int_id: int) -> None:
 #     """
@@ -2370,24 +2383,24 @@ def new_frame() -> None:
 #     """
 #     pass
 
-# def push_style_color(idx: int, col: int) -> None:
-#     """
-#     Modify a style color. always use this if you modify the style after newframe().
-#     """
-#     pass
+def push_style_color(idx: int, col: int) -> None:
+    """
+    Modify a style color. always use this if you modify the style after newframe().
+    """
+    pass
 
-# def push_style_color_im_vec4(idx: int, col: tuple) -> None: ...
-# def push_style_var(idx: int, val: float) -> None:
-#     """
-#     Modify a style float variable. always use this if you modify the style after newframe().
-#     """
-#     pass
+def push_style_color_im_vec4(idx: int, col: tuple) -> None: ...
+def push_style_var(idx: int, val: float) -> None:
+    """
+    Modify a style float variable. always use this if you modify the style after newframe().
+    """
+    pass
 
-# def push_style_var_im_vec2(idx: int, val: tuple) -> None:
-#     """
-#     Modify a style imvec2 variable. always use this if you modify the style after newframe().
-#     """
-#     pass
+def push_style_var_im_vec2(idx: int, val: tuple) -> None:
+    """
+    Modify a style imvec2 variable. always use this if you modify the style after newframe().
+    """
+    pass
 
 # def push_tab_stop(tab_stop: bool) -> None:
 #     """
@@ -2395,23 +2408,23 @@ def new_frame() -> None:
 #     """
 #     pass
 
-# def push_text_wrap_pos(wrap_local_pos_x: float=0.0) -> None:
-#     """
-#     Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space
-#     """
-#     pass
+def push_text_wrap_pos(wrap_local_pos_x: float=0.0) -> None:
+    """
+    Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space
+    """
+    pass
 
-# def radio_button(label: str, active: bool) -> bool:
-#     """
-#     Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
-#     """
-#     pass
+def radio_button(label: str, active: bool) -> bool:
+    """
+    Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
+    """
+    pass
 
-# def radio_button_int_ptr(label: str, v: IntPtr, v_button: int) -> bool:
-#     """
-#     Shortcut to handle the above pattern when value is an integer
-#     """
-#     pass
+def radio_button_int_ptr(label: str, v: IntPtr, v_button: int) -> bool:
+    """
+    Shortcut to handle the above pattern when value is an integer
+    """
+    pass
 
 def render() -> None:
     """
@@ -2425,11 +2438,11 @@ def render_platform_windows_default() -> None:
     """
     pass
 
-# def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None) -> None:
-#     """
-#     Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
-#     """
-#     pass
+def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None) -> None:
+    """
+    Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
+    """
+    pass
 
 # def reset_mouse_drag_delta() -> None:
 #     """
@@ -2443,17 +2456,17 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def same_line() -> None:
-#     """
-#     Implied offset_from_start_x = 0.0f, spacing = -1.0f
-#     """
-#     pass
+def same_line() -> None:
+    """
+    Implied offset_from_start_x = 0.0f, spacing = -1.0f
+    """
+    pass
 
-# def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
-#     """
-#     Call between widgets or groups to layout them horizontally. x position given in window coordinates.
-#     """
-#     pass
+def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0) -> None:
+    """
+    Call between widgets or groups to layout them horizontally. x position given in window coordinates.
+    """
+    pass
 
 # def save_ini_settings_to_disk(ini_filename: str) -> None:
 #     """
@@ -2467,51 +2480,51 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def selectable(label: str) -> bool:
-#     """
-#     Widgets: Selectables
-#     - A selectable highlights when hovered, and can display another color when selected.
-#     - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
-#     Implied selected = false, flags = 0, size = imvec2(0, 0)
-#     """
-#     pass
+def selectable(label: str) -> bool:
+    """
+    Widgets: Selectables
+    - A selectable highlights when hovered, and can display another color when selected.
+    - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.
+    Implied selected = false, flags = 0, size = imvec2(0, 0)
+    """
+    pass
 
-# def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0) -> bool:
-#     """
-#     Implied size = imvec2(0, 0)
-#     """
-#     pass
+def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0) -> bool:
+    """
+    Implied size = imvec2(0, 0)
+    """
+    pass
 
-# def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)) -> bool:
-#     """
-#     'bool* p_selected' point to the selection state (read-write), as a convenient helper.
-#     """
-#     pass
+def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)) -> bool:
+    """
+    'bool* p_selected' point to the selection state (read-write), as a convenient helper.
+    """
+    pass
 
-# def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)) -> bool:
-#     """
-#     'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
-#     """
-#     pass
+def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)) -> bool:
+    """
+    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
+    """
+    pass
 
-# def separator() -> None:
-#     """
-#     Cursor / Layout
-#     - By "cursor" we mean the current output position.
-#     - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-#     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
-#     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-#     Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-#     Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
-#     Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
-#     """
-#     pass
+def separator() -> None:
+    """
+    Cursor / Layout
+    - By "cursor" we mean the current output position.
+    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
+    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
+    Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
+    Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
+    Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
+    """
+    pass
 
-# def separator_text(label: str) -> None:
-#     """
-#     Currently: formatted text with an horizontal line
-#     """
-#     pass
+def separator_text(label: str) -> None:
+    """
+    Currently: formatted text with an horizontal line
+    """
+    pass
 
 # def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None) -> None:
 #     """
@@ -2523,11 +2536,11 @@ def render_platform_windows_default() -> None:
 #     pass
 
 # def set_clipboard_text(text: str) -> None: ...
-# def set_color_edit_options(flags: int) -> None:
-#     """
-#     Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
-#     """
-#     pass
+def set_color_edit_options(flags: int) -> None:
+    """
+    Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
+    """
+    pass
 
 # def set_column_offset(column_index: int, offset_x: float) -> None:
 #     """
@@ -2566,17 +2579,17 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0) -> bool:
-#     """
-#     Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
-#     """
-#     pass
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
+    """
+    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
+    """
+    pass
 
-# def set_item_allow_overlap() -> None:
-#     """
-#     Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
-#     """
-#     pass
+def set_item_allow_overlap() -> None:
+    """
+    Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
+    """
+    pass
 
 # def set_item_default_focus() -> None:
 #     """
@@ -2616,17 +2629,17 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def set_next_item_open(is_open: bool, cond: int=0) -> None:
-#     """
-#     Set next treenode/collapsingheader open state.
-#     """
-#     pass
+def set_next_item_open(is_open: bool, cond: int=0) -> None:
+    """
+    Set next treenode/collapsingheader open state.
+    """
+    pass
 
-# def set_next_item_width(item_width: float) -> None:
-#     """
-#     Set width of the _next_ common large 'item+label' widget. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)
-#     """
-#     pass
+def set_next_item_width(item_width: float) -> None:
+    """
+    Set width of the _next_ common large 'item+label' widget. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side)
+    """
+    pass
 
 # def set_next_window_bg_alpha(alpha: float) -> None:
 #     """
@@ -2750,11 +2763,11 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def set_tooltip(fmt: str) -> None:
-#     """
-#     Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
-#     """
-#     pass
+def set_tooltip(fmt: str) -> None:
+    """
+    Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
+    """
+    pass
 
 # def set_tooltip_v(fmt: str) -> None: ...
 # def set_window_collapsed(collapsed: bool, cond: int=0) -> None:
@@ -2811,11 +2824,11 @@ def render_platform_windows_default() -> None:
 #     """
 #     pass
 
-# def show_about_window(p_open: BoolPtr=None) -> None:
-#     """
-#     Create about window. display dear imgui version, credits and build/system information.
-#     """
-#     pass
+def show_about_window(p_open: BoolPtr=None) -> None:
+    """
+    Create about window. display dear imgui version, credits and build/system information.
+    """
+    pass
 
 # def show_debug_log_window(p_open: BoolPtr=None) -> None:
 #     """
@@ -2860,11 +2873,11 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def show_user_guide() -> None:
-#     """
-#     Add basic help/info block (not a window): how to manipulate imgui as an end-user (mouse/keyboard controls).
-#     """
-#     pass
+def show_user_guide() -> None:
+    """
+    Add basic help/info block (not a window): how to manipulate imgui as an end-user (mouse/keyboard controls).
+    """
+    pass
 
 # def slider_angle(label: str, v_rad: FloatPtr) -> bool:
 #     """
@@ -2872,7 +2885,7 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0) -> bool: ...
+def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0) -> bool: ...
 # def slider_float(label: str, v: FloatPtr, v_min: float, v_max: float) -> bool:
 #     """
 #     Widgets: Regular Sliders
@@ -2891,26 +2904,26 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def slider_float2_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
 # def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float) -> bool:
 #     """
 #     Implied format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def slider_float3_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
 # def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float) -> bool:
 #     """
 #     Implied format = '%.3f', flags = 0
 #     """
 #     pass
 
-# def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
-# def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
-#     """
-#     Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
-#     """
-#     pass
+def slider_float4_ex(label: str, float_ptrs: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def slider_float_ex(label: str, value: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
+    """
+    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
+    """
+    pass
 
 # def slider_int(label: str, v: IntPtr, v_min: int, v_max: int) -> bool:
 #     """
@@ -2924,22 +2937,22 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int2_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
 # def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int) -> bool:
 #     """
 #     Implied format = '%d', flags = 0
 #     """
 #     pass
 
-# def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int3_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
 # def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int) -> bool:
 #     """
 #     Implied format = '%d', flags = 0
 #     """
 #     pass
 
-# def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-# def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int4_ex(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def slider_int_ex(label: str, value: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
 # def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any) -> bool:
 #     """
 #     Implied format = null, flags = 0
@@ -2954,17 +2967,17 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     pass
 
 # def slider_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
-# def small_button(label: str) -> bool:
-#     """
-#     Button with framepadding=(0,0) to easily embed within text
-#     """
-#     pass
+def small_button(label: str) -> bool:
+    """
+    Button with framepadding=(0,0) to easily embed within text
+    """
+    pass
 
-# def spacing() -> None:
-#     """
-#     Add vertical spacing.
-#     """
-#     pass
+def spacing() -> None:
+    """
+    Add vertical spacing.
+    """
+    pass
 
 # def style_colors_classic(dst: ImGuiStyle=None) -> None:
 #     """
@@ -2972,12 +2985,12 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def style_colors_dark(dst: ImGuiStyle=None) -> None:
-#     """
-#     Styles
-#     New, recommended style (default)
-#     """
-#     pass
+def style_colors_dark(dst: ImGuiStyle=None) -> None:
+    """
+    Styles
+    New, recommended style (default)
+    """
+    pass
 
 # def style_colors_light(dst: ImGuiStyle=None) -> None:
 #     """
@@ -3021,17 +3034,17 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def table_get_sort_specs() -> ImGuiTableSortSpecs:
-#     """
-#     Tables: Sorting & Miscellaneous functions
-#     - Sorting: call TableGetSortSpecs() to retrieve latest sort specs for the table. NULL when not sorting.
-#     When 'sort_specs->SpecsDirty == true' you should sort your data. It will be true when sorting specs have
-#     changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
-#     else you may wastefully sort your data every frame!
-#     - Functions args 'int column_n' treat the default value of -1 as the same as passing the current column index.
-#     Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable().
-#     """
-#     pass
+def table_get_sort_specs() -> ImGuiTableSortSpecs:
+    """
+    Tables: Sorting & Miscellaneous functions
+    - Sorting: call TableGetSortSpecs() to retrieve latest sort specs for the table. NULL when not sorting.
+    When 'sort_specs->SpecsDirty == true' you should sort your data. It will be true when sorting specs have
+    changed since last call, or the first time. Make sure to set 'SpecsDirty = false' after sorting,
+    else you may wastefully sort your data every frame!
+    - Functions args 'int column_n' treat the default value of -1 as the same as passing the current column index.
+    Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable().
+    """
+    pass
 
 # def table_header(label: str) -> None:
 #     """
@@ -3039,17 +3052,17 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def table_headers_row() -> None:
-#     """
-#     Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
-#     """
-#     pass
+def table_headers_row() -> None:
+    """
+    Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
+    """
+    pass
 
-# def table_next_column() -> bool:
-#     """
-#     Append into the next column (or first column of next row if currently in last column). return true when column is visible.
-#     """
-#     pass
+def table_next_column() -> bool:
+    """
+    Append into the next column (or first column of next row if currently in last column). return true when column is visible.
+    """
+    pass
 
 # def table_next_row() -> None:
 #     """
@@ -3057,11 +3070,11 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0) -> None:
-#     """
-#     Append into the first cell of a new row.
-#     """
-#     pass
+def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0) -> None:
+    """
+    Append into the first cell of a new row.
+    """
+    pass
 
 # def table_set_bg_color(target: int, color: int, column_n: int=-1) -> None:
 #     """
@@ -3075,32 +3088,32 @@ def show_demo_window(p_open: BoolPtr=None) -> None:
 #     """
 #     pass
 
-# def table_set_column_index(column_n: int) -> bool:
-#     """
-#     Append into the specified column. return true when column is visible.
-#     """
-#     pass
+def table_set_column_index(column_n: int) -> bool:
+    """
+    Append into the specified column. return true when column is visible.
+    """
+    pass
 
-# def table_setup_column(label: str, flags: int=0) -> None:
-#     """
-#     Tables: Headers & Columns declaration
-#     - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
-#     - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
-#     Headers are required to perform: reordering, sorting, and opening the context menu.
-#     The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
-#     - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
-#     some advanced use cases (e.g. adding custom widgets in header row).
-#     - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
-#     Implied init_width_or_weight = 0.0f, user_id = 0
-#     """
-#     pass
+def table_setup_column(label: str, flags: int=0) -> None:
+    """
+    Tables: Headers & Columns declaration
+    - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
+    - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
+    Headers are required to perform: reordering, sorting, and opening the context menu.
+    The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
+    - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
+    some advanced use cases (e.g. adding custom widgets in header row).
+    - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
+    Implied init_width_or_weight = 0.0f, user_id = 0
+    """
+    pass
 
 # def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0) -> None: ...
-# def table_setup_scroll_freeze(cols: int, rows: int) -> None:
-#     """
-#     Lock columns/rows so they stay visible when scrolled.
-#     """
-#     pass
+def table_setup_scroll_freeze(cols: int, rows: int) -> None:
+    """
+    Lock columns/rows so they stay visible when scrolled.
+    """
+    pass
 
 def text(fmt: str) -> None:
     """
@@ -3108,26 +3121,26 @@ def text(fmt: str) -> None:
     """
     pass
 
-# def text_colored(col: tuple, fmt: str) -> None:
-#     """
-#     Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();
-#     """
-#     pass
+def text_colored(col: tuple, fmt: str) -> None:
+    """
+    Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();
+    """
+    pass
 
-# def text_colored_v(col: tuple, fmt: str) -> None: ...
-# def text_disabled(fmt: str) -> None:
-#     """
-#     Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
-#     """
-#     pass
+def text_colored_v(col: tuple, fmt: str) -> None: ...
+def text_disabled(fmt: str) -> None:
+    """
+    Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
+    """
+    pass
 
 # def text_disabled_v(fmt: str) -> None: ...
-# def text_unformatted(text: str) -> None:
-#     """
-#     Widgets: Text
-#     Implied text_end = null
-#     """
-#     pass
+def text_unformatted(text: str) -> None:
+    """
+    Widgets: Text
+    Implied text_end = null
+    """
+    pass
 
 # def text_unformatted_ex(text: str, text_end: str=None) -> None:
 #     """
@@ -3136,11 +3149,11 @@ def text(fmt: str) -> None:
 #     pass
 
 # def text_v(fmt: str) -> None: ...
-# def text_wrapped(fmt: str) -> None:
-#     """
-#     Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize().
-#     """
-#     pass
+def text_wrapped(fmt: str) -> None:
+    """
+    Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize().
+    """
+    pass
 
 # def text_wrapped_v(fmt: str) -> None: ...
 # def tree_node(label: str) -> bool:
@@ -3150,7 +3163,7 @@ def text(fmt: str) -> None:
 #     """
 #     pass
 
-# def tree_node_ex(label: str, flags: int=0) -> bool: ...
+def tree_node_ex(label: str, flags: int=0) -> bool: ...
 # def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_str(str_id: str, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_v(str_id: str, flags: int, fmt: str) -> bool: ...
@@ -3169,11 +3182,11 @@ def text(fmt: str) -> None:
 
 # def tree_node_v(str_id: str, fmt: str) -> bool: ...
 # def tree_node_vp_tr(ptr_id: Any, fmt: str) -> bool: ...
-# def tree_pop() -> None:
-#     """
-#     ~ unindent()+popid()
-#     """
-#     pass
+def tree_pop() -> None:
+    """
+    ~ unindent()+popid()
+    """
+    pass
 
 # def tree_push(str_id: str) -> None:
 #     """
@@ -3193,11 +3206,11 @@ def text(fmt: str) -> None:
 #     """
 #     pass
 
-# def unindent_ex(indent_w: float=0.0) -> None:
-#     """
-#     Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
-#     """
-#     pass
+def unindent_ex(indent_w: float=0.0) -> None:
+    """
+    Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
+    """
+    pass
 
 def update_platform_windows() -> None:
     """
@@ -3264,23 +3277,22 @@ class ImDrawCmd:
     Backends made for <1.71. will typically ignore the VtxOffset fields.
     - The ClipRect/TextureId/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
     """
-    pass
-    # clip_rect: tuple
-    # """
-    # 4*4  // clipping rectangle (x1, y1, x2, y2). subtract imdrawdata->displaypos to get clipping rectangle in 'viewport' coordinates
-    # """
-    # elem_count: int
-    # """
-    # 4// number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
-    # """
+    clip_rect: tuple
+    """
+    4*4  // clipping rectangle (x1, y1, x2, y2). subtract imdrawdata->displaypos to get clipping rectangle in 'viewport' coordinates
+    """
+    elem_count: int
+    """
+    4// number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
+    """
     # idx_offset: int
     # """
     # 4// start offset in index buffer.
     # """
-    # texture_id: Any
-    # """
-    # 4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
-    # """
+    texture_id: object
+    """
+    4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
+    """
     # user_callback: Callable
     # """
     # 4-8  // if != null, call the function instead of rendering the vertices. clip_rect and texture_id will be set normally.
@@ -3304,8 +3316,7 @@ class ImDrawCmdHeader:
     """
     [Internal] For use by ImDrawList
     """
-    pass
-    # clip_rect: tuple
+    clip_rect: tuple
     # texture_id: Any
     # vtx_offset: int
 
@@ -3315,11 +3326,10 @@ class ImDrawData:
     (NB: the style and the naming convention here is a little inconsistent, we currently preserve them for backward compatibility purpose,
     as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
     """
-    pass
-    # cmd_lists: ImDrawList
-    # """
-    # Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
-    # """
+    cmd_lists: List[ImDrawList]
+    """
+    Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
+    """
     # cmd_lists_count: int
     # """
     # Number of imdrawlist* to render
@@ -3364,11 +3374,11 @@ class ImDrawData:
     #     """
     #     pass
 
-    # def scale_clip_rects(self: ImDrawData, fb_scale: tuple) -> None:
-    #     """
-    #     Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
-    #     """
-    #     pass
+    def scale_clip_rects(self: ImDrawData, fb_scale: tuple) -> None:
+        """
+        Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
+        """
+        pass
 
 
 class ImDrawList:
@@ -3383,16 +3393,15 @@ class ImDrawList:
     You are totally free to apply whatever transformation matrix to want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
     Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.
     """
-    pass
     # clip_rect_stack: ImVector_ImVec4
     # """
     # [internal]
     # """
-    # cmd_buffer: ImVector_ImDrawCmd
-    # """
-    # This is what you have to render
-    # Draw commands. typically 1 command = 1 gpu draw call, unless the command is a callback.
-    # """
+    cmd_buffer: List[ImDrawCmd]
+    """
+    This is what you have to render
+    Draw commands. typically 1 command = 1 gpu draw call, unless the command is a callback.
+    """
     # cmd_header: ImDrawCmdHeader
     # """
     # [internal] template of active commands. fields should match those of cmdbuffer.back().
@@ -3409,10 +3418,10 @@ class ImDrawList:
     # """
     # [internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
     # """
-    # idx_buffer: ImVector_ImDrawIdx
-    # """
-    # Index buffer. each command consume imdrawcmd::elemcount of those
-    # """
+    idx_buffer: ImVector_ImDrawIdx
+    """
+    Index buffer. each command consume imdrawcmd::elemcount of those
+    """
     # idx_write_ptr: int
     # """
     # [internal] point within idxbuffer.data after each add command (to avoid using the imvector<> operators too much)
@@ -3433,10 +3442,10 @@ class ImDrawList:
     # """
     # [internal]
     # """
-    # vtx_buffer: ImVector_ImDrawVert
-    # """
-    # Vertex buffer.
-    # """
+    vtx_buffer: ImVector_ImDrawVert
+    """
+    Vertex buffer.
+    """
     # vtx_current_idx: int
     # """
     # [Internal, used while building lists]
@@ -3548,11 +3557,11 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
-    #     """
-    #     A: upper-left, b: lower-right (== upper-left + size)
-    #     """
-    #     pass
+    def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
+        """
+        A: upper-left, b: lower-right (== upper-left + size)
+        """
+        pass
 
     # def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
     # def add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str) -> None:
@@ -3578,18 +3587,18 @@ class ImDrawList:
     # def add_triangle_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0) -> None: ...
     # def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None: ...
     # def calc_circle_auto_segment_count(self: ImDrawList, radius: float) -> int: ...
-    # def channels_merge(self: ImDrawList) -> None: ...
-    # def channels_set_current(self: ImDrawList, n: int) -> None: ...
-    # def channels_split(self: ImDrawList, count: int) -> None:
-    #     """
-    #     Advanced: Channels
-    #     - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
-    #     - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
-    #     - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
-    #     Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
-    #     Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
-    #     """
-    #     pass
+    def channels_merge(self: ImDrawList) -> None: ...
+    def channels_set_current(self: ImDrawList, n: int) -> None: ...
+    def channels_split(self: ImDrawList, count: int) -> None:
+        """
+        Advanced: Channels
+        - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
+        - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
+        - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
+        Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
+        Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
+        """
+        pass
 
     # def clear_free_memory(self: ImDrawList) -> None: ...
     # def clone_output(self: ImDrawList) -> ImDrawList:
@@ -3869,7 +3878,6 @@ class ImFontAtlas:
     - Even though many functions are suffixed with "TTF", OTF data is supported just as well.
     - This is an old API and it is currently awkward for those and various other reasons! We will address them in the future!
     """
-    pass
     # config_data: ImVector_ImFontConfig
     # """
     # Configuration data
@@ -3916,14 +3924,14 @@ class ImFontAtlas:
     # """
     # Padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
     # """
-    # tex_height: int
-    # """
-    # Texture height calculated during build().
-    # """
-    # tex_id: Any
-    # """
-    # User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
-    # """
+    tex_height: int
+    """
+    Texture height calculated during build().
+    """
+    tex_id: Any
+    """
+    User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
+    """
     # tex_pixels_alpha8: str
     # """
     # 1 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight
@@ -3954,10 +3962,10 @@ class ImFontAtlas:
     # """
     # Texture coordinates to a white pixel
     # """
-    # tex_width: int
-    # """
-    # Texture width calculated during build().
-    # """
+    tex_width: int
+    """
+    Texture width calculated during build().
+    """
     # user_data: Any
     # """
     # Store your own atlas related user-data (if e.g. you have multiple font atlas).
@@ -4031,11 +4039,11 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def clear_tex_data(self: ImFontAtlas) -> None:
-    #     """
-    #     Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
-    #     """
-    #     pass
+    def clear_tex_data(self: ImFontAtlas) -> None:
+        """
+        Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
+        """
+        pass
 
     # def get_custom_rect_by_index(self: ImFontAtlas, index: int) -> ImFontAtlasCustomRect: ...
     # def get_glyph_ranges_chinese_full(self: ImFontAtlas) -> int:
@@ -4095,18 +4103,18 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: tuple, out_uv_fill: tuple) -> bool: ...
-    # def get_tex_data_as_alpha8(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None) -> None:
-    #     """
-    #     1 byte per-pixel
-    #     """
-    #     pass
+    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2) -> bool: ...
+    def get_tex_data_as_alpha8(self: ImFontAtlas, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None) -> bytes:
+        """
+        1 byte per-pixel
+        """
+        pass
 
-    # def get_tex_data_as_rgba_32(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None) -> None:
-    #     """
-    #     4 bytes-per-pixel
-    #     """
-    #     pass
+    def get_tex_data_as_rgba_32(self: ImFontAtlas, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None) -> bytes:
+        """
+        4 bytes-per-pixel
+        """
+        pass
 
     # def is_built(self: ImFontAtlas) -> bool:
     #     """
@@ -4483,14 +4491,14 @@ class ImGuiIO:
     # """
     # Parent ui context (needs to be set explicitly by parent).
     # """
-    # delta_time: float
-    # """
-    # = 1.0f/60.0f // time elapsed since last frame, in seconds. may change every frame.
-    # """
-    # display_framebuffer_scale: tuple
-    # """
-    # = (1, 1) // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
-    # """
+    delta_time: float
+    """
+    = 1.0f/60.0f // time elapsed since last frame, in seconds. may change every frame.
+    """
+    display_framebuffer_scale: tuple
+    """
+    = (1, 1) // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+    """
     display_size: tuple
     """
     <unset>  // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
@@ -4507,19 +4515,15 @@ class ImGuiIO:
     # """
     # = 1.0f   // global scale all fonts
     # """
-    # fonts: ImFontAtlas
-    # """
-    # <auto>   // font atlas: load, rasterize and pack one or more fonts into a single texture.
-    # """
-    # framerate: float
-    # """
-    # Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
-    # """
-    # get_clipboard_text_fn: Callable
-    # """
-    # Optional: Access OS clipboard
-    # (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
-    # """
+    fonts: ImFontAtlas
+    """
+    <auto>   // font atlas: load, rasterize and pack one or more fonts into a single texture.
+    """
+    framerate: float
+    """
+    Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
+    """
+    get_clipboard_text_fn: Callable
     # hover_delay_normal: float
     # """
     # = 0.30 sec   // delay on hovering before isitemhovered(imguihoveredflags_delaynormal) returns true.
@@ -4544,14 +4548,14 @@ class ImGuiIO:
     # """
     # For addinputcharacterutf16()
     # """
-    # key_alt: bool
-    # """
-    # Keyboard modifier down: alt
-    # """
-    # key_ctrl: bool
-    # """
-    # Keyboard modifier down: control
-    # """
+    key_alt: bool
+    """
+    Keyboard modifier down: alt
+    """
+    key_ctrl: bool
+    """
+    Keyboard modifier down: control
+    """
     # key_mods: int
     # """
     # Other state maintained from data above + IO function calls
@@ -4565,14 +4569,14 @@ class ImGuiIO:
     # """
     # = 0.050f // when holding a key/button, rate at which it repeats, in seconds.
     # """
-    # key_shift: bool
-    # """
-    # Keyboard modifier down: shift
-    # """
-    # key_super: bool
-    # """
-    # Keyboard modifier down: cmd/super/windows
-    # """
+    key_shift: bool
+    """
+    Keyboard modifier down: shift
+    """
+    key_super: bool
+    """
+    Keyboard modifier down: cmd/super/windows
+    """
     # keys_data: ImGuiKeyData
     # """
     # Key state for all known keys. use iskeyxxx() functions to access this.
@@ -4674,17 +4678,17 @@ class ImGuiIO:
     # Miscellaneous options
     # = false  // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
     # """
-    # mouse_hovered_viewport: int
-    # """
-    # (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
-    # """
-    # mouse_pos: tuple
-    # """
-    # Main Input State
-    # (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
-    # (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
-    # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
-    # """
+    mouse_hovered_viewport: int
+    """
+    (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
+    """
+    mouse_pos: tuple
+    """
+    Main Input State
+    (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
+    (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
+    Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
+    """
     # mouse_pos_prev: tuple
     # """
     # Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
@@ -4697,14 +4701,14 @@ class ImGuiIO:
     # """
     # Mouse actual input peripheral (mouse/touchscreen/pen).
     # """
-    # mouse_wheel: float
-    # """
-    # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
-    # """
-    # mouse_wheel_h: float
-    # """
-    # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
-    # """
+    mouse_wheel: float
+    """
+    Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
+    """
+    mouse_wheel_h: float
+    """
+    Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
+    """
     # mouse_wheel_request_axis_swap: bool
     # """
     # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
@@ -4721,7 +4725,7 @@ class ImGuiIO:
     # """
     # Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
     # """
-    # set_clipboard_text_fn: Callable
+    set_clipboard_text_fn: Callable
     # set_platform_ime_data_fn: Callable
     # """
     # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
@@ -4761,11 +4765,11 @@ class ImGuiIO:
     #     """
     #     pass
 
-    # def add_input_character(self: ImGuiIO, c: int) -> None:
-    #     """
-    #     Queue a new character input
-    #     """
-    #     pass
+    def add_input_character(self: ImGuiIO, c: int) -> None:
+        """
+        Queue a new character input
+        """
+        pass
 
     # def add_input_character_utf_16(self: ImGuiIO, c: int) -> None:
     #     """
@@ -4785,24 +4789,24 @@ class ImGuiIO:
     #     """
     #     pass
 
-    # def add_key_event(self: ImGuiIO, key: int, down: bool) -> None:
-    #     """
-    #     Input Functions
-    #     Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
-    #     """
-    #     pass
+    def add_key_event(self: ImGuiIO, key: int, down: bool) -> None:
+        """
+        Input Functions
+        Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
+        """
+        pass
 
-    # def add_mouse_button_event(self: ImGuiIO, button: int, down: bool) -> None:
-    #     """
-    #     Queue a mouse button change
-    #     """
-    #     pass
+    def add_mouse_button_event(self: ImGuiIO, button: int, down: bool) -> None:
+        """
+        Queue a mouse button change
+        """
+        pass
 
-    # def add_mouse_pos_event(self: ImGuiIO, x: float, y: float) -> None:
-    #     """
-    #     Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
-    #     """
-    #     pass
+    def add_mouse_pos_event(self: ImGuiIO, x: float, y: float) -> None:
+        """
+        Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
+        """
+        pass
 
     # def add_mouse_source_event(self: ImGuiIO, source: int) -> None:
     #     """
@@ -4816,11 +4820,11 @@ class ImGuiIO:
     #     """
     #     pass
 
-    # def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float) -> None:
-    #     """
-    #     Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
-    #     """
-    #     pass
+    def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float) -> None:
+        """
+        Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
+        """
+        pass
 
     # def clear_input_characters(self: ImGuiIO) -> None:
     #     """
@@ -4973,19 +4977,18 @@ class ImGuiListClipper:
     - User code submit visible elements.
     - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.
     """
-    pass
     # ctx: ImGuiContext
     # """
     # Parent ui context
     # """
-    # display_end: int
-    # """
-    # End of items to display (exclusive)
-    # """
-    # display_start: int
-    # """
-    # First item to display, updated by each call to step()
-    # """
+    display_end: int
+    """
+    End of items to display (exclusive)
+    """
+    display_start: int
+    """
+    First item to display, updated by each call to step()
+    """
     # items_count: int
     # """
     # [internal] number of items
@@ -5002,7 +5005,7 @@ class ImGuiListClipper:
     # """
     # [internal] internal data
     # """
-    # def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
+    def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
     # def end(self: ImGuiListClipper) -> None:
     #     """
     #     Automatically called on the last call of step() that returns false.
@@ -5016,11 +5019,11 @@ class ImGuiListClipper:
     #     """
     #     pass
 
-    # def step(self: ImGuiListClipper) -> bool:
-    #     """
-    #     Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
-    #     """
-    #     pass
+    def step(self: ImGuiListClipper) -> bool:
+        """
+        Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
+        """
+        pass
 
 
 class ImGuiPayload:
@@ -5317,7 +5320,6 @@ class ImGuiStyle:
     """
     Global alpha applies to everything in dear imgui.
     """
-    pass
     # alpha: float
     # """
     # Global alpha applies to everything in dear imgui.
@@ -5383,10 +5385,10 @@ class ImGuiStyle:
     # """
     # Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
     # """
-    # frame_padding: tuple
-    # """
-    # Padding within a framed rectangle (used by most widgets).
-    # """
+    frame_padding: tuple
+    """
+    Padding within a framed rectangle (used by most widgets).
+    """
     # frame_rounding: float
     # """
     # Radius of frame corners rounding. set to 0.0f to have rectangular frame (used by most widgets).
@@ -5403,14 +5405,14 @@ class ImGuiStyle:
     # """
     # Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
     # """
-    # item_inner_spacing: tuple
-    # """
-    # Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
-    # """
-    # item_spacing: tuple
-    # """
-    # Horizontal and vertical spacing between widgets/lines.
-    # """
+    item_inner_spacing: tuple
+    """
+    Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
+    """
+    item_spacing: tuple
+    """
+    Horizontal and vertical spacing between widgets/lines.
+    """
     # log_slider_deadzone: float
     # """
     # The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
@@ -5497,19 +5499,18 @@ class ImGuiTableColumnSortSpecs:
     """
     Sorting specification for one column of a table (sizeof == 12 bytes)
     """
-    pass
-    # column_index: int
-    # """
-    # Index of the column
-    # """
-    # column_user_id: int
-    # """
-    # User id of the column (if specified by a tablesetupcolumn() call)
-    # """
-    # sort_direction: int
-    # """
-    # Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
-    # """
+    column_index: int
+    """
+    Index of the column
+    """
+    column_user_id: int
+    """
+    User id of the column (if specified by a tablesetupcolumn() call)
+    """
+    sort_direction: int
+    """
+    Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
+    """
     # sort_order: int
     # """
     # Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
@@ -5522,19 +5523,18 @@ class ImGuiTableSortSpecs:
     When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
     Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
     """
-    pass
-    # specs: ImGuiTableColumnSortSpecs
-    # """
-    # Pointer to sort spec array.
-    # """
-    # specs_count: int
-    # """
-    # Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
-    # """
-    # specs_dirty: bool
-    # """
-    # Set to true when specs have changed since last time! use this to sort again, then clear the flag.
-    # """
+    specs: ImGuiTableColumnSortSpecs
+    """
+    Pointer to sort spec array.
+    """
+    specs_count: int
+    """
+    Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
+    """
+    specs_dirty: bool
+    """
+    Set to true when specs have changed since last time! use this to sort again, then clear the flag.
+    """
 
 class ImGuiTextBuffer:
     """
@@ -5748,15 +5748,15 @@ class ImVector_ImDrawCmd: ...
     # data: ImDrawCmd
     # size: int
 
-class ImVector_ImDrawIdx: ...
+class ImVector_ImDrawIdx:
     # capacity: int
-    # data: int
-    # size: int
+    data: int
+    size: int
 
-class ImVector_ImDrawVert: ...
+class ImVector_ImDrawVert:
     # capacity: int
-    # data: ImDrawVert
-    # size: int
+    data: ImDrawVert
+    size: int
 
 class ImVector_ImFontAtlasCustomRect: ...
     # capacity: int
