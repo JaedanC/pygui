@@ -77,6 +77,8 @@ def main():
     
     shutil.copy("requirements.txt", "../portable")
     print(f"Created ../portable/requirements.txt")
+    shutil.copy("python_demo_window.py", "../portable")
+    print(f"Created ../portable/python_demo_window.txt")
     shutil.copy("app.py", "../portable")
     print(f"Created ../portable/app.py")
     
