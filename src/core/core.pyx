@@ -1240,8 +1240,10 @@ def begin_popup(str_id: str, flags: int=0):
 #     """
 #     Open+begin popup when clicked on last item. use str_id==null to associate the popup to previous item. if you want to use that on a non-interactive item such as text() you need to pass in an explicit id here. read comments in .cpp!
 #     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
+
 #     cdef bool res = ccimgui.ImGui_BeginPopupContextItemEx(
-#         _bytes(str_id),
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
 #         popup_flags
 #     )
 #     return res
@@ -1267,8 +1269,10 @@ def begin_popup(str_id: str, flags: int=0):
 #     """
 #     Open+begin popup when clicked in void (where there are no windows).
 #     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
+
 #     cdef bool res = ccimgui.ImGui_BeginPopupContextVoidEx(
-#         _bytes(str_id),
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
 #         popup_flags
 #     )
 #     return res
@@ -1294,8 +1298,10 @@ def begin_popup(str_id: str, flags: int=0):
 #     """
 #     Open+begin popup when clicked on current window.
 #     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
+
 #     cdef bool res = ccimgui.ImGui_BeginPopupContextWindowEx(
-#         _bytes(str_id),
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
 #         popup_flags
 #     )
 #     return res
@@ -1519,9 +1525,11 @@ def calc_text_size(text: str):
 # ?active(False)
 # ?returns(tuple)
 # def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
+#     bytes_text_end = _bytes(text_end) if text_end is not None else None
+
 #     cdef ccimgui.ImVec2 res = ccimgui.ImGui_CalcTextSizeEx(
 #         _bytes(text),
-#         _bytes(text_end),
+#         ((<char*>bytes_text_end if text_end is not None else NULL)),
 #         hide_text_after_double_hash,
 #         wrap_width
 #     )
@@ -1816,9 +1824,11 @@ def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=No
 # ?active(False)
 # ?returns(None)
 # def columns_ex(count: int=1, id_: str=None, border: bool=True):
+#     bytes_id_ = _bytes(id_) if id_ is not None else None
+
 #     ccimgui.ImGui_ColumnsEx(
 #         count,
-#         _bytes(id_),
+#         ((<char*>bytes_id_ if id_ is not None else NULL)),
 #         border
 #     )
 # [End Function]
@@ -1952,7 +1962,7 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
     # didn't already.
     ccimgui.ImGui_SetAllocatorFunctions(_pygui_malloc, _pygui_free, NULL)
     cdef ccimgui.ImGuiContext* res = ccimgui.ImGui_CreateContext(
-        <ccimgui.ImFontAtlas*>(NULL if shared_font_atlas is None else <void*>shared_font_atlas._ptr)
+        <ccimgui.ImFontAtlas*>(NULL if shared_font_atlas is None else shared_font_atlas._ptr)
     )
     return ImGuiContext.from_ptr(res)
 # [End Function]
@@ -1991,7 +2001,7 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?returns(None)
 def destroy_context(ctx: ImGuiContext=None):
@@ -1999,7 +2009,7 @@ def destroy_context(ctx: ImGuiContext=None):
     Null = destroy current context
     """
     ccimgui.ImGui_DestroyContext(
-        <ccimgui.ImGuiContext*>(NULL if ctx is None else <void*>ctx._ptr)
+        <ccimgui.ImGuiContext*>(NULL if ctx is None else ctx._ptr)
     )
 # [End Function]
 
@@ -2050,7 +2060,7 @@ def destroy_context(ctx: ImGuiContext=None):
 #         id_,
 #         _cast_tuple_ImVec2(size),
 #         flags,
-#         window_class._ptr
+#         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
 #     )
 #     return res
 # [End Function]
@@ -2073,9 +2083,9 @@ def destroy_context(ctx: ImGuiContext=None):
 # ?returns(int)
 # def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
 #     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
-#         viewport._ptr,
+#         <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr),
 #         flags,
-#         window_class._ptr
+#         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
 #     )
 #     return res
 # [End Function]
@@ -2289,6 +2299,8 @@ def drag_float4(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, 
 # ?active(False)
 # ?returns(bool)
 # def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
+#     bytes_format_max = _bytes(format_max) if format_max is not None else None
+
 #     cdef bool res = ccimgui.ImGui_DragFloatRange2Ex(
 #         _bytes(label),
 #         &v_current_min.value,
@@ -2297,7 +2309,7 @@ def drag_float4(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, 
 #         v_min,
 #         v_max,
 #         _bytes(format_),
-#         _bytes(format_max),
+#         ((<char*>bytes_format_max if format_max is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -2490,6 +2502,8 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 # ?active(False)
 # ?returns(bool)
 # def drag_int_range2_ex(label: str, v_current_min: IntPtr, v_current_max: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0):
+#     bytes_format_max = _bytes(format_max) if format_max is not None else None
+
 #     cdef bool res = ccimgui.ImGui_DragIntRange2Ex(
 #         _bytes(label),
 #         &v_current_min.value,
@@ -2498,7 +2512,7 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 #         v_min,
 #         v_max,
 #         _bytes(format_),
-#         _bytes(format_max),
+#         ((<char*>bytes_format_max if format_max is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -2525,6 +2539,8 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 # ?active(False)
 # ?returns(bool)
 # def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_DragScalarEx(
 #         _bytes(label),
 #         data_type,
@@ -2532,7 +2548,7 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 #         v_speed,
 #         p_min,
 #         p_max,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -2560,6 +2576,8 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 # ?active(False)
 # ?returns(bool)
 # def drag_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_DragScalarNEx(
 #         _bytes(label),
 #         data_type,
@@ -2568,7 +2586,7 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 #         v_speed,
 #         p_min,
 #         p_max,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -4024,16 +4042,15 @@ def impl_glfw_shutdown():
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?returns(bool)
 def impl_open_gl_3_init(glsl_version: str=None):
-    cdef bool res
+    bytes_glsl_version = _bytes(glsl_version) if glsl_version is not None else None
 
-    if glsl_version is None:
-        res = ccimgui.ImGui_ImplOpenGL3_Init(NULL)
-    else:
-        res = ccimgui.ImGui_ImplOpenGL3_Init(_bytes(glsl_version))
+    cdef bool res = ccimgui.ImGui_ImplOpenGL3_Init(
+        ((<char*>bytes_glsl_version if glsl_version is not None else NULL))
+    )
     return res
 # [End Function]
 
@@ -4375,13 +4392,15 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 # ?active(False)
 # ?returns(bool)
 # def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_InputScalarEx(
 #         _bytes(label),
 #         data_type,
 #         p_data,
 #         p_step,
 #         p_step_fast,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -4409,6 +4428,8 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 # ?active(False)
 # ?returns(bool)
 # def input_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_InputScalarNEx(
 #         _bytes(label),
 #         data_type,
@@ -4416,7 +4437,7 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 #         components,
 #         p_step,
 #         p_step_fast,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -4911,7 +4932,7 @@ def is_mouse_double_clicked(button: int):
 #     By convention we use (-flt_max,-flt_max) to denote that there is no mouse available
 #     """
 #     cdef bool res = ccimgui.ImGui_IsMousePosValid(
-#         mouse_pos._ptr
+#         <ccimgui.ImVec2*>(NULL if mouse_pos is None else mouse_pos._ptr)
 #     )
 #     return res
 # [End Function]
@@ -5225,9 +5246,11 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     """
 #     Start logging to file
 #     """
+#     bytes_filename = _bytes(filename) if filename is not None else None
+
 #     ccimgui.ImGui_LogToFile(
 #         auto_open_depth,
-#         _bytes(filename)
+#         ((<char*>bytes_filename if filename is not None else NULL))
 #     )
 # [End Function]
 
@@ -5306,9 +5329,11 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     """
 #     Return true when activated.
 #     """
+#     bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+
 #     cdef bool res = ccimgui.ImGui_MenuItemEx(
 #         _bytes(label),
-#         _bytes(shortcut),
+#         ((<char*>bytes_shortcut if shortcut is not None else NULL)),
 #         selected,
 #         enabled
 #     )
@@ -5392,8 +5417,10 @@ def open_popup(str_id: str, popup_flags: int=0):
 #     """
 #     Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)
 #     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
+
 #     ccimgui.ImGui_OpenPopupOnItemClick(
-#         _bytes(str_id),
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
 #         popup_flags
 #     )
 # [End Function]
@@ -5413,30 +5440,19 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
     for i in range(len(values)):
         c_floats[i] = values[i]
     
-    if overlay_text is None:
-        ccimgui.ImGui_PlotHistogramEx(
-            _bytes(label),
-            c_floats,
-            len(values),
-            values_offset,
-            NULL,
-            scale_min,
-            scale_max,
-            _cast_tuple_ImVec2(graph_size),
-            stride
-        )
-    else:
-        ccimgui.ImGui_PlotHistogramEx(
-            _bytes(label),
-            c_floats,
-            len(values),
-            values_offset,
-            _bytes(overlay_text),
-            scale_min,
-            scale_max,
-            _cast_tuple_ImVec2(graph_size),
-            stride
-        )
+    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+    
+    ccimgui.ImGui_PlotHistogramEx(
+        _bytes(label),
+        c_floats,
+        len(values),
+        values_offset,
+        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size),
+        stride
+    )
     ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
@@ -5461,13 +5477,15 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
 # ?active(False)
 # ?returns(None)
 # def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
 #     ccimgui.ImGui_PlotHistogramCallbackEx(
 #         _bytes(label),
 #         values_getter,
 #         data,
 #         values_count,
 #         values_offset,
-#         _bytes(overlay_text),
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
 #         scale_min,
 #         scale_max,
 #         _cast_tuple_ImVec2(graph_size)
@@ -5479,12 +5497,14 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
 # ?active(False)
 # ?returns(None)
 # def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
 #     ccimgui.ImGui_PlotHistogramEx(
 #         _bytes(label),
 #         &values.value,
 #         values_count,
 #         values_offset,
-#         _bytes(overlay_text),
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
 #         scale_min,
 #         scale_max,
 #         _cast_tuple_ImVec2(graph_size),
@@ -5509,30 +5529,19 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
     for i in range(len(values)):
         c_floats[i] = values[i]
 
-    if overlay_text is None:
-        ccimgui.ImGui_PlotLinesEx(
-            _bytes(label),
-            c_floats,
-            len(values),
-            values_offset,
-            NULL,
-            scale_min,
-            scale_max,
-            _cast_tuple_ImVec2(graph_size),
-            stride
-        )
-    else:
-        ccimgui.ImGui_PlotLinesEx(
-            _bytes(label),
-            c_floats,
-            len(values),
-            values_offset,
-            _bytes(overlay_text),
-            scale_min,
-            scale_max,
-            _cast_tuple_ImVec2(graph_size),
-            stride
-        )
+    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
+    ccimgui.ImGui_PlotLinesEx(
+        _bytes(label),
+        c_floats,
+        len(values),
+        values_offset,
+        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size),
+        stride
+    )
     ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
 
@@ -5557,13 +5566,15 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
 # ?active(False)
 # ?returns(None)
 # def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
 #     ccimgui.ImGui_PlotLinesCallbackEx(
 #         _bytes(label),
 #         values_getter,
 #         data,
 #         values_count,
 #         values_offset,
-#         _bytes(overlay_text),
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
 #         scale_min,
 #         scale_max,
 #         _cast_tuple_ImVec2(graph_size)
@@ -5575,12 +5586,14 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
 # ?active(False)
 # ?returns(None)
 # def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
 #     ccimgui.ImGui_PlotLinesEx(
 #         _bytes(label),
 #         &values.value,
 #         values_count,
 #         values_offset,
-#         _bytes(overlay_text),
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
 #         scale_min,
 #         scale_max,
 #         _cast_tuple_ImVec2(graph_size),
@@ -5694,22 +5707,17 @@ def pop_text_wrap_pos():
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?returns(None)
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
-    if overlay is None:
-        ccimgui.ImGui_ProgressBar(
-            fraction,
-            _cast_tuple_ImVec2(size_arg),
-            NULL
-        )
-    else:
-        ccimgui.ImGui_ProgressBar(
-            fraction,
-            _cast_tuple_ImVec2(size_arg),
-            _bytes(overlay)
-        )
+    bytes_overlay = _bytes(overlay) if overlay is not None else None
+
+    ccimgui.ImGui_ProgressBar(
+        fraction,
+        _cast_tuple_ImVec2(size_arg),
+        ((<char*>bytes_overlay if overlay is not None else NULL))
+    )
 # [End Function]
 
 # [Function]
@@ -6961,7 +6969,7 @@ def show_demo_window(p_open: BoolPtr=None):
 #     Add style editor block (not a window). you can pass in a reference imguistyle structure to compare to, revert to and save to (else it uses the default style)
 #     """
 #     ccimgui.ImGui_ShowStyleEditor(
-#         ref._ptr
+#         <ccimgui.ImGuiStyle*>(NULL if ref is None else ref._ptr)
 #     )
 # [End Function]
 
@@ -7386,13 +7394,15 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
 # ?active(False)
 # ?returns(bool)
 # def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_SliderScalarEx(
 #         _bytes(label),
 #         data_type,
 #         p_data,
 #         p_min,
 #         p_max,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -7422,6 +7432,8 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
 # ?active(False)
 # ?returns(bool)
 # def slider_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_SliderScalarNEx(
 #         _bytes(label),
 #         data_type,
@@ -7429,7 +7441,7 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
 #         components,
 #         p_min,
 #         p_max,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -7462,15 +7474,15 @@ def spacing():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def style_colors_classic(dst: ImGuiStyle=None):
-#     """
-#     Classic imgui style
-#     """
-#     ccimgui.ImGui_StyleColorsClassic(
-#         dst._ptr
-#     )
+def style_colors_classic(dst: ImGuiStyle=None):
+    """
+    Classic imgui style
+    """
+    ccimgui.ImGui_StyleColorsClassic(
+        <ccimgui.ImGuiStyle*>(NULL if dst is None else dst._ptr)
+    )
 # [End Function]
 
 # [Function]
@@ -7483,21 +7495,21 @@ def style_colors_dark(dst: ImGuiStyle=None):
     New, recommended style (default)
     """
     ccimgui.ImGui_StyleColorsDark(
-        dst._ptr
+        <ccimgui.ImGuiStyle*>(NULL if dst is None else dst._ptr)
     )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def style_colors_light(dst: ImGuiStyle=None):
-#     """
-#     Best used with borders and a custom, thicker font
-#     """
-#     ccimgui.ImGui_StyleColorsLight(
-#         dst._ptr
-#     )
+def style_colors_light(dst: ImGuiStyle=None):
+    """
+    Best used with borders and a custom, thicker font
+    """
+    ccimgui.ImGui_StyleColorsLight(
+        <ccimgui.ImGuiStyle*>(NULL if dst is None else dst._ptr)
+    )
 # [End Function]
 
 # [Function]
@@ -7840,9 +7852,11 @@ def text_unformatted(text: str):
 #     """
 #     Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
 #     """
+#     bytes_text_end = _bytes(text_end) if text_end is not None else None
+
 #     ccimgui.ImGui_TextUnformattedEx(
 #         _bytes(text),
-#         _bytes(text_end)
+#         ((<char*>bytes_text_end if text_end is not None else NULL))
 #     )
 # [End Function]
 
@@ -8180,6 +8194,8 @@ def update_platform_windows():
 # ?active(False)
 # ?returns(bool)
 # def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
+
 #     cdef bool res = ccimgui.ImGui_VSliderScalarEx(
 #         _bytes(label),
 #         _cast_tuple_ImVec2(size),
@@ -8187,7 +8203,7 @@ def update_platform_windows():
 #         p_data,
 #         p_min,
 #         p_max,
-#         _bytes(format_),
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
 #         flags
 #     )
 #     return res
@@ -9520,14 +9536,16 @@ cdef class ImDrawList:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    # def add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
-    #     ccimgui.ImDrawList_AddTextEx(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(pos),
-    #         col,
-    #         _bytes(text_begin),
-    #         _bytes(text_end)
-    #     )
+#     def add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImDrawList_AddTextEx(
+#             self._ptr,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -9552,18 +9570,20 @@ cdef class ImDrawList:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    # def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
-    #     ccimgui.ImDrawList_AddTextImFontPtrEx(
-    #         self._ptr,
-    #         font._ptr,
-    #         font_size,
-    #         _cast_tuple_ImVec2(pos),
-    #         col,
-    #         _bytes(text_begin),
-    #         _bytes(text_end),
-    #         wrap_width,
-    #         cpu_fine_clip_rect._ptr
-    #     )
+#     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImDrawList_AddTextImFontPtrEx(
+#             self._ptr,
+#             font._ptr,
+#             font_size,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             wrap_width,
+#             <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
+#         )
     # [End Method]
 
     # [Method]
@@ -10743,20 +10763,22 @@ cdef class ImFont:
     # ?use_template(False)
     # ?active(False)
     # ?returns(tuple)
-    # def calc_text_size_ae_x(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
-    #     """
-    #     Utf8
-    #     """
-    #     cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeAEx(
-    #         self._ptr,
-    #         size,
-    #         max_width,
-    #         wrap_width,
-    #         _bytes(text_begin),
-    #         _bytes(text_end),
-    #         remaining
-    #     )
-    #     return _cast_ImVec2_tuple(res)
+#     def calc_text_size_ae_x(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
+#         """
+#         Utf8
+#         """
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeAEx(
+#             self._ptr,
+#             size,
+#             max_width,
+#             wrap_width,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             remaining
+#         )
+#         return _cast_ImVec2_tuple(res)
     # [End Method]
 
     # [Method]
@@ -11365,7 +11387,7 @@ cdef class ImFontAtlas:
     # def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
     #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
     #         self._ptr,
-    #         font_cfg._ptr
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr)
     #     )
     #     return ImFont.from_ptr(res)
     # [End Method]
@@ -11379,7 +11401,7 @@ cdef class ImFontAtlas:
     #         self._ptr,
     #         _bytes(filename),
     #         size_pixels,
-    #         font_cfg._ptr,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
     #     )
     #     return ImFont.from_ptr(res)
@@ -11397,7 +11419,7 @@ cdef class ImFontAtlas:
     #         self._ptr,
     #         _bytes(compressed_font_data_base85),
     #         size_pixels,
-    #         font_cfg._ptr,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
     #     )
     #     return ImFont.from_ptr(res)
@@ -11416,7 +11438,7 @@ cdef class ImFontAtlas:
     #         compressed_font_data,
     #         compressed_font_size,
     #         size_pixels,
-    #         font_cfg._ptr,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
     #     )
     #     return ImFont.from_ptr(res)
@@ -11435,7 +11457,7 @@ cdef class ImFontAtlas:
     #         font_data,
     #         font_size,
     #         size_pixels,
-    #         font_cfg._ptr,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
     #     )
     #     return ImFont.from_ptr(res)
@@ -12535,15 +12557,17 @@ cdef class ImFontGlyphRangesBuilder:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    # def add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None):
-    #     """
-    #     Add string (each character of the utf-8 string are added)
-    #     """
-    #     ccimgui.ImFontGlyphRangesBuilder_AddText(
-    #         self._ptr,
-    #         _bytes(text),
-    #         _bytes(text_end)
-    #     )
+#     def add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None):
+#         """
+#         Add string (each character of the utf-8 string are added)
+#         """
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImFontGlyphRangesBuilder_AddText(
+#             self._ptr,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -14755,13 +14779,15 @@ cdef class ImGuiInputTextCallbackData:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    # def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None):
-    #     ccimgui.ImGuiInputTextCallbackData_InsertChars(
-    #         self._ptr,
-    #         pos,
-    #         _bytes(text),
-    #         _bytes(text_end)
-    #     )
+#     def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImGuiInputTextCallbackData_InsertChars(
+#             self._ptr,
+#             pos,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -17191,12 +17217,14 @@ cdef class ImGuiTextBuffer:
     # ?use_template(False)
     # ?active(False)
     # ?returns(None)
-    # def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
-    #     ccimgui.ImGuiTextBuffer_append(
-    #         self._ptr,
-    #         _bytes(str_),
-    #         _bytes(str_end)
-    #     )
+#     def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
+#         bytes_str_end = _bytes(str_end) if str_end is not None else None
+
+#         ccimgui.ImGuiTextBuffer_append(
+#             self._ptr,
+#             _bytes(str_),
+#             ((<char*>bytes_str_end if str_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -17411,13 +17439,15 @@ cdef class ImGuiTextFilter:
     # ?use_template(False)
     # ?active(False)
     # ?returns(bool)
-    # def pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None):
-    #     cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(
-    #         self._ptr,
-    #         _bytes(text),
-    #         _bytes(text_end)
-    #     )
-    #     return res
+#     def pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(
+#             self._ptr,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
+#         return res
     # [End Method]
 # [End Class]
 

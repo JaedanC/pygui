@@ -4,7 +4,7 @@ import OpenGL.GL as gl
 
 from python_demo_window import pygui_demo_window
 
-show_another_window = False
+show_another_window = pygui.BoolPtr(True)
 
 def render():
     global show_another_window
@@ -13,10 +13,13 @@ def render():
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
+    pygui.progress_bar(0.25, (-pygui.FLT_MIN, 0), None)
+    pygui.progress_bar(0.75, (-pygui.FLT_MIN, 0), "Hello")
     pygui.end()
 
+
     if show_another_window:
-        pygui.begin("Another window")
+        pygui.begin("Another window", show_another_window)
         pygui.text("Some text")
         pygui.end()
 
@@ -47,7 +50,7 @@ def main():
     # Vsync:
     # 1: On
     # 0: Off
-    glfw.swap_interval(0)
+    glfw.swap_interval(1)
 
     # Setup imgui
     pygui.create_context()
@@ -60,15 +63,18 @@ def main():
     io.config_flags |= pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE
 
     pygui.impl_glfw_init_for_open_gl(window, True)
-    pygui.impl_open_gl_3_init("#version 130")
+    # pygui.impl_open_gl_3_init("#version 130")
+    pygui.impl_open_gl_3_init()
 
     # Check opengl version
     print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION).decode()))
     print("glfw version: {}.{}.{}".format(glfw.VERSION_MAJOR, glfw.VERSION_MINOR, glfw.VERSION_REVISION))
     print("ImGui version: {}".format(pygui.get_version()))
 
-    # Not sure why this crashes imgui
-    # pygui.style_colors_dark()
+    # Try out different styles
+    pygui.style_colors_dark()
+    # pygui.style_colors_light()
+    # pygui.style_colors_classic()
     clear_color = (0.45, 0.55, 0.6, 1.0)
 
     try:

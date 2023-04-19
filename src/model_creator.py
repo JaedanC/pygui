@@ -179,28 +179,44 @@ class DearBinding:
         
         return "{}"
 
-    def marshall_python_to_c(self, _type: DearType, default_value=None):
+    def marshall_python_to_c(self, _type: DearType, argument_name: str,
+                             pxd_library_name: str, default_value=None):
         _type = self.follow_type(_type)
 
+        additional_lines = []
+
+        output = "{name}"
         if _type.is_vec2():
-            return "_cast_tuple_ImVec2({})"
+            output = "_cast_tuple_ImVec2({name})"
 
-        if _type.is_vec4():
-            return "_cast_tuple_ImVec4({})"
+        elif _type.is_vec4():
+            output = "_cast_tuple_ImVec4({name})"
         
-        if _type.is_string():
-            return "_bytes({})"
-        
-        if _type.ptr_version() and default_value == "None":
-            return _type.ptr_version() + ".ptr({})"
-        
-        if _type.ptr_version() is not None:
-            return "&{}.value"
+        elif _type.is_string() and default_value == "None":
+            additional_lines.append(
+                "bytes_{name} = _bytes({name}) if {name} is not None else None".format(name=argument_name)
+            )
+            output = "((<char*>bytes_{name} if {name} is not None else NULL))"
 
-        if self.is_cimgui_type(_type):
-            return "{}._ptr"
+        elif _type.is_string():
+            output = "_bytes({name})"
         
-        return "{}"
+        elif _type.ptr_version() and default_value == "None":
+            output = _type.ptr_version() + ".ptr({name})"
+
+        elif self.is_cimgui_type(_type) and default_value == "None":
+            output = "<{pxd_library_name}.{type_name}>(NULL if {{name}} is None else {{name}}._ptr)".format(
+                pxd_library_name=pxd_library_name,
+                type_name=_type.with_no_const()
+            )
+        
+        elif _type.ptr_version() is not None:
+            output = "&{name}.value"
+
+        elif self.is_cimgui_type(_type):
+            output = "{name}._ptr"
+        
+        return output.format(name=argument_name), additional_lines
 
 
 class Template:
@@ -1354,10 +1370,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             return_type = function.return_type.raw_type
 
         # Function arguments
+        lines_required_for_marshalling = []
         if len(function.arguments) > 0:
             function_argument_list = []
             for argument in function.arguments:
-                marshalled_type = header.marshall_python_to_c(argument.type, argument.default_value).format(argument.name)
+                marshalled_type, additional_lines = header.marshall_python_to_c(argument.type, argument.name, pxd_library_name, argument.default_value)
+                lines_required_for_marshalling += additional_lines
                 if argument.name == "self":
                     marshalled_type = "self._ptr"
                 function_argument_list.append(marshalled_type)
@@ -1366,7 +1384,13 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             function_arguments = textwrap.indent(function_arguments, "        ")
         else:
             function_arguments = ""
-
+        
+        # Checking for lines required to marshalling between python and c
+        function_template.set_condition("has_additional_lines", len(lines_required_for_marshalling) > 0)
+        function_template.format(
+            additional_lines=textwrap.indent("\n".join(lines_required_for_marshalling), "    ")
+        )
+        
         # res
         followed_return_type = header.follow_type(function.return_type)
         res = header.marshall_c_to_python(followed_return_type).format("res")
@@ -1449,7 +1473,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             cimgui_field_name = field.name
 
             # Value
-            value = header.marshall_python_to_c(field.type).format("value")
+            value, _ = header.marshall_python_to_c(field.type, "value", pxd_library_name)
 
             pyx.write("    # [Field]\n")
             pyx.write(textwrap.indent(field_template.format(

@@ -2944,11 +2944,11 @@ def spacing() -> None:
     """
     pass
 
-# def style_colors_classic(dst: ImGuiStyle=None) -> None:
-#     """
-#     Classic imgui style
-#     """
-#     pass
+def style_colors_classic(dst: ImGuiStyle=None) -> None:
+    """
+    Classic imgui style
+    """
+    pass
 
 def style_colors_dark(dst: ImGuiStyle=None) -> None:
     """
@@ -2957,11 +2957,11 @@ def style_colors_dark(dst: ImGuiStyle=None) -> None:
     """
     pass
 
-# def style_colors_light(dst: ImGuiStyle=None) -> None:
-#     """
-#     Best used with borders and a custom, thicker font
-#     """
-#     pass
+def style_colors_light(dst: ImGuiStyle=None) -> None:
+    """
+    Best used with borders and a custom, thicker font
+    """
+    pass
 
 # def tab_item_button(label: str, flags: int=0) -> bool:
 #     """
