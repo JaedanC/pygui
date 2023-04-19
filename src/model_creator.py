@@ -570,25 +570,44 @@ def pythonise_string(string: str, make_upper=False) -> str:
     of make_upper. Returns a new string.
     """
 
-    new_string = ""
-    isupper_count = 0
-    for i, char in enumerate(string.replace("_", "")):
+    # Some groupings of uppercase characters are allowed. Each group is only
+    # allowed to have one member match.
+    exceptions_to_the_rule = [
+        ["ID"],
+        ["RGBA", "RGB"],
+        ["HSV"],
+        ["TTY"],
+        ["UTF"],
+        ["OSX"],
+    ]
+
+    for exception_group in exceptions_to_the_rule:
+        for exception in exception_group:
+            if exception in string:
+                string = string.replace(exception, "_" + exception + "_")
+                break
+    
+    # Replace last occurance of Ex with _Ex_
+    if string.endswith("Ex"):
+        string = string[::-1].replace("xE", "_xE_", 1)[::-1]
+    
+    new_string = StringIO()
+    is_upper_streak = 0
+    for i, char in enumerate(string):
         if char.isupper():
-            if isupper_count == 0 and i > 0:
-                new_string += "_"
-            isupper_count += 1
-        elif isupper_count > 1 and i > 2: # i condition because of vslider_float
-            isupper_count = 0
-            new_string += "_"
+            is_upper_streak += 1
         else:
-            isupper_count = 0
+            is_upper_streak = 0
         
-        new_string += char
-    
+        if is_upper_streak == 1 and i > 0:
+            new_string.write("_")
+        
+        new_string.write(char)
+    underscored_string = new_string.getvalue().strip("_").replace("__", "_")
     if make_upper:
-        return new_string.upper()
-    
-    return new_string.lower()
+        return underscored_string.upper()
+    else:
+        return underscored_string.lower()
 
 
 def safe_python_name(name: str, edit_format="{}_") -> str:
@@ -1513,6 +1532,7 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
 
     class StrPtr:
         value: str
+        buffer_size: int
         def __init__(self, initial_value: str, buffer_size=256): ...
 
     class Vec4Ptr:

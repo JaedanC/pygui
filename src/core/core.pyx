@@ -534,16 +534,16 @@ KEY_RIGHT_SHIFT = ccimgui.ImGuiKey_RightShift
 KEY_RIGHT_ALT = ccimgui.ImGuiKey_RightAlt
 KEY_RIGHT_SUPER = ccimgui.ImGuiKey_RightSuper
 KEY_MENU = ccimgui.ImGuiKey_Menu
-KEY0 = ccimgui.ImGuiKey_0
-KEY1 = ccimgui.ImGuiKey_1
-KEY2 = ccimgui.ImGuiKey_2
-KEY3 = ccimgui.ImGuiKey_3
-KEY4 = ccimgui.ImGuiKey_4
-KEY5 = ccimgui.ImGuiKey_5
-KEY6 = ccimgui.ImGuiKey_6
-KEY7 = ccimgui.ImGuiKey_7
-KEY8 = ccimgui.ImGuiKey_8
-KEY9 = ccimgui.ImGuiKey_9
+KEY_0 = ccimgui.ImGuiKey_0
+KEY_1 = ccimgui.ImGuiKey_1
+KEY_2 = ccimgui.ImGuiKey_2
+KEY_3 = ccimgui.ImGuiKey_3
+KEY_4 = ccimgui.ImGuiKey_4
+KEY_5 = ccimgui.ImGuiKey_5
+KEY_6 = ccimgui.ImGuiKey_6
+KEY_7 = ccimgui.ImGuiKey_7
+KEY_8 = ccimgui.ImGuiKey_8
+KEY_9 = ccimgui.ImGuiKey_9
 KEY_A = ccimgui.ImGuiKey_A
 KEY_B = ccimgui.ImGuiKey_B
 KEY_C = ccimgui.ImGuiKey_C
@@ -631,14 +631,14 @@ KEY_GAMEPAD_L2 = ccimgui.ImGuiKey_GamepadL2
 KEY_GAMEPAD_R2 = ccimgui.ImGuiKey_GamepadR2
 KEY_GAMEPAD_L3 = ccimgui.ImGuiKey_GamepadL3
 KEY_GAMEPAD_R3 = ccimgui.ImGuiKey_GamepadR3
-KEY_GAMEPAD_LS_TICK_LEFT = ccimgui.ImGuiKey_GamepadLStickLeft
-KEY_GAMEPAD_LS_TICK_RIGHT = ccimgui.ImGuiKey_GamepadLStickRight
-KEY_GAMEPAD_LS_TICK_UP = ccimgui.ImGuiKey_GamepadLStickUp
-KEY_GAMEPAD_LS_TICK_DOWN = ccimgui.ImGuiKey_GamepadLStickDown
-KEY_GAMEPAD_RS_TICK_LEFT = ccimgui.ImGuiKey_GamepadRStickLeft
-KEY_GAMEPAD_RS_TICK_RIGHT = ccimgui.ImGuiKey_GamepadRStickRight
-KEY_GAMEPAD_RS_TICK_UP = ccimgui.ImGuiKey_GamepadRStickUp
-KEY_GAMEPAD_RS_TICK_DOWN = ccimgui.ImGuiKey_GamepadRStickDown
+KEY_GAMEPAD_LSTICK_LEFT = ccimgui.ImGuiKey_GamepadLStickLeft
+KEY_GAMEPAD_LSTICK_RIGHT = ccimgui.ImGuiKey_GamepadLStickRight
+KEY_GAMEPAD_LSTICK_UP = ccimgui.ImGuiKey_GamepadLStickUp
+KEY_GAMEPAD_LSTICK_DOWN = ccimgui.ImGuiKey_GamepadLStickDown
+KEY_GAMEPAD_RSTICK_LEFT = ccimgui.ImGuiKey_GamepadRStickLeft
+KEY_GAMEPAD_RSTICK_RIGHT = ccimgui.ImGuiKey_GamepadRStickRight
+KEY_GAMEPAD_RSTICK_UP = ccimgui.ImGuiKey_GamepadRStickUp
+KEY_GAMEPAD_RSTICK_DOWN = ccimgui.ImGuiKey_GamepadRStickDown
 KEY_MOUSE_LEFT = ccimgui.ImGuiKey_MouseLeft
 KEY_MOUSE_RIGHT = ccimgui.ImGuiKey_MouseRight
 KEY_MOUSE_MIDDLE = ccimgui.ImGuiKey_MouseMiddle
@@ -674,7 +674,7 @@ CONFIG_FLAGS_DOCKING_ENABLE = ccimgui.ImGuiConfigFlags_DockingEnable
 CONFIG_FLAGS_VIEWPORTS_ENABLE = ccimgui.ImGuiConfigFlags_ViewportsEnable
 CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS = ccimgui.ImGuiConfigFlags_DpiEnableScaleViewports
 CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS = ccimgui.ImGuiConfigFlags_DpiEnableScaleFonts
-CONFIG_FLAGS_IS_SRGB = ccimgui.ImGuiConfigFlags_IsSRGB
+CONFIG_FLAGS_IS_S_RGB = ccimgui.ImGuiConfigFlags_IsSRGB
 CONFIG_FLAGS_IS_TOUCH_SCREEN = ccimgui.ImGuiConfigFlags_IsTouchScreen
 BACKEND_FLAGS_NONE = ccimgui.ImGuiBackendFlags_None
 BACKEND_FLAGS_HAS_GAMEPAD = ccimgui.ImGuiBackendFlags_HasGamepad
@@ -2560,7 +2560,7 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def drag_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+# def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
 #     bytes_format_ = _bytes(format_) if format_ is not None else None
 
 #     cdef bool res = ccimgui.ImGui_DragScalarNEx(
@@ -3223,7 +3223,7 @@ def get_frame_height_with_spacing():
 # ?use_template(False)
 # ?active(False)
 # ?returns(int)
-# def get_idp_tr(ptr_id: Any):
+# def get_id_ptr(ptr_id: Any):
 #     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDPtr(
 #         ptr_id
 #     )
@@ -3234,7 +3234,7 @@ def get_frame_height_with_spacing():
 # ?use_template(False)
 # ?active(False)
 # ?returns(int)
-# def get_ids_tr(str_id_begin: str, str_id_end: str):
+# def get_id_str(str_id_begin: str, str_id_end: str):
 #     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDStr(
 #         _bytes(str_id_begin),
 #         _bytes(str_id_end)
@@ -3997,7 +3997,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def impl_open_gl_3_create_device_objects():
+# def impl_open_gl3_create_device_objects():
 #     cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateDeviceObjects()
 #     return res
 # [End Function]
@@ -4006,7 +4006,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def impl_open_gl_3_create_fonts_texture():
+# def impl_open_gl3_create_fonts_texture():
 #     cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateFontsTexture()
 #     return res
 # [End Function]
@@ -4015,7 +4015,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-# def impl_open_gl_3_destroy_device_objects():
+# def impl_open_gl3_destroy_device_objects():
 #     ccimgui.ImGui_ImplOpenGL3_DestroyDeviceObjects()
 # [End Function]
 
@@ -4023,7 +4023,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(False)
 # ?returns(None)
-# def impl_open_gl_3_destroy_fonts_texture():
+# def impl_open_gl3_destroy_fonts_texture():
 #     ccimgui.ImGui_ImplOpenGL3_DestroyFontsTexture()
 # [End Function]
 
@@ -4031,7 +4031,7 @@ def impl_glfw_shutdown():
 # ?use_template(False)
 # ?active(True)
 # ?returns(bool)
-def impl_open_gl_3_init(glsl_version: str=None):
+def impl_open_gl3_init(glsl_version: str=None):
     bytes_glsl_version = _bytes(glsl_version) if glsl_version is not None else None
 
     cdef bool res = ccimgui.ImGui_ImplOpenGL3_Init(
@@ -4044,7 +4044,7 @@ def impl_open_gl_3_init(glsl_version: str=None):
 # ?use_template(False)
 # ?active(True)
 # ?returns(None)
-def impl_open_gl_3_new_frame():
+def impl_open_gl3_new_frame():
     ccimgui.ImGui_ImplOpenGL3_NewFrame()
 # [End Function]
 
@@ -4052,7 +4052,7 @@ def impl_open_gl_3_new_frame():
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def impl_open_gl_3_render_draw_data(draw_data: ImDrawData):
+def impl_open_gl3_render_draw_data(draw_data: ImDrawData):
     ccimgui.ImGui_ImplOpenGL3_RenderDrawData(
         draw_data._ptr
     )
@@ -4062,7 +4062,7 @@ def impl_open_gl_3_render_draw_data(draw_data: ImDrawData):
 # ?use_template(False)
 # ?active(True)
 # ?returns(None)
-def impl_open_gl_3_shutdown():
+def impl_open_gl3_shutdown():
     ccimgui.ImGui_ImplOpenGL3_Shutdown()
 # [End Function]
 
@@ -4413,7 +4413,7 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def input_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
+# def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
 #     bytes_format_ = _bytes(format_) if format_ is not None else None
 
 #     cdef bool res = ccimgui.ImGui_InputScalarNEx(
@@ -5796,6 +5796,19 @@ def push_id_int(int_id: int):
 # [End Function]
 
 # [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(None)
+# def push_id_ptr(ptr_id: Any):
+#     """
+#     Push pointer into the id stack (will hash pointer).
+#     """
+#     ccimgui.ImGui_PushIDPtr(
+#         ptr_id
+#     )
+# [End Function]
+
+# [Function]
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
@@ -5807,46 +5820,6 @@ def push_id_str(str_id_begin: str, str_id_end: str):
         _bytes(str_id_begin),
         _bytes(str_id_end)
     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-# def push_idi_nt(int_id: int):
-#     """
-#     Push integer into the id stack (will hash integer).
-#     """
-#     ccimgui.ImGui_PushIDInt(
-#         int_id
-#     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-# def push_idp_tr(ptr_id: Any):
-#     """
-#     Push pointer into the id stack (will hash pointer).
-#     """
-#     ccimgui.ImGui_PushIDPtr(
-#         ptr_id
-#     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(None)
-# def push_ids_tr(str_id_begin: str, str_id_end: str):
-#     """
-#     Push string into the id stack (will hash string).
-#     """
-#     ccimgui.ImGui_PushIDStr(
-#         _bytes(str_id_begin),
-#         _bytes(str_id_end)
-#     )
 # [End Function]
 
 # [Function]
@@ -7428,7 +7401,7 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def slider_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+# def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
 #     bytes_format_ = _bytes(format_) if format_ is not None else None
 
 #     cdef bool res = ccimgui.ImGui_SliderScalarNEx(
@@ -7961,7 +7934,7 @@ def tree_node(label: str, flags: int=0):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def tree_node_ex_vp_tr(ptr_id: Any, flags: int, fmt: str):
+# def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
 #     cdef bool res = ccimgui.ImGui_TreeNodeExVPtr(
 #         ptr_id,
 #         flags,
@@ -8016,7 +7989,7 @@ def tree_node(label: str, flags: int=0):
 # ?use_template(False)
 # ?active(False)
 # ?returns(bool)
-# def tree_node_vp_tr(ptr_id: Any, fmt: str):
+# def tree_node_vptr(ptr_id: Any, fmt: str):
 #     cdef bool res = ccimgui.ImGui_TreeNodeVPtr(
 #         ptr_id,
 #         _bytes(fmt)
@@ -10761,7 +10734,7 @@ cdef class ImFont:
     # ?use_template(False)
     # ?active(False)
     # ?returns(tuple)
-#     def calc_text_size_ae_x(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
+#     def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
 #         """
 #         Utf8
 #         """
@@ -13027,14 +13000,14 @@ cdef class ImGuiIO:
     # ?active(False)
     # ?returns(bool)
     # @property
-    # def config_mac_osxb_ehaviors(self):
+    # def config_mac_osx_behaviors(self):
     #     """
     #     = defined(__apple__) // os x style: text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
     #     """
     #     cdef bool res = dereference(self._ptr).ConfigMacOSXBehaviors
     #     return res
-    # @config_mac_osxb_ehaviors.setter
-    # def config_mac_osxb_ehaviors(self, value: bool):
+    # @config_mac_osx_behaviors.setter
+    # def config_mac_osx_behaviors(self, value: bool):
     #     dereference(self._ptr).ConfigMacOSXBehaviors = value
     # [End Field]
 
@@ -17261,22 +17234,22 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(None)
-    # def clear(self: ImGuiTextBuffer):
-    #     ccimgui.ImGuiTextBuffer_clear(
+    # ?returns(str)
+    # def c_str(self: ImGuiTextBuffer):
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
     #         self._ptr
     #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?returns(str)
-    # def cstr(self: ImGuiTextBuffer):
-    #     cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
+    # ?returns(None)
+    # def clear(self: ImGuiTextBuffer):
+    #     ccimgui.ImGuiTextBuffer_clear(
     #         self._ptr
     #     )
-    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]

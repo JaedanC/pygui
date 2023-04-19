@@ -27,6 +27,7 @@ class DoublePtr:
 
 class StrPtr:
     value: str
+    buffer_size: int
     def __init__(self, initial_value: str, buffer_size=256): ...
 
 class Vec4Ptr:
@@ -326,16 +327,16 @@ KEY_RIGHT_SHIFT: int
 KEY_RIGHT_ALT: int
 KEY_RIGHT_SUPER: int
 KEY_MENU: int
-KEY0: int
-KEY1: int
-KEY2: int
-KEY3: int
-KEY4: int
-KEY5: int
-KEY6: int
-KEY7: int
-KEY8: int
-KEY9: int
+KEY_0: int
+KEY_1: int
+KEY_2: int
+KEY_3: int
+KEY_4: int
+KEY_5: int
+KEY_6: int
+KEY_7: int
+KEY_8: int
+KEY_9: int
 KEY_A: int
 KEY_B: int
 KEY_C: int
@@ -423,14 +424,14 @@ KEY_GAMEPAD_L2: int
 KEY_GAMEPAD_R2: int
 KEY_GAMEPAD_L3: int
 KEY_GAMEPAD_R3: int
-KEY_GAMEPAD_LS_TICK_LEFT: int
-KEY_GAMEPAD_LS_TICK_RIGHT: int
-KEY_GAMEPAD_LS_TICK_UP: int
-KEY_GAMEPAD_LS_TICK_DOWN: int
-KEY_GAMEPAD_RS_TICK_LEFT: int
-KEY_GAMEPAD_RS_TICK_RIGHT: int
-KEY_GAMEPAD_RS_TICK_UP: int
-KEY_GAMEPAD_RS_TICK_DOWN: int
+KEY_GAMEPAD_LSTICK_LEFT: int
+KEY_GAMEPAD_LSTICK_RIGHT: int
+KEY_GAMEPAD_LSTICK_UP: int
+KEY_GAMEPAD_LSTICK_DOWN: int
+KEY_GAMEPAD_RSTICK_LEFT: int
+KEY_GAMEPAD_RSTICK_RIGHT: int
+KEY_GAMEPAD_RSTICK_UP: int
+KEY_GAMEPAD_RSTICK_DOWN: int
 KEY_MOUSE_LEFT: int
 KEY_MOUSE_RIGHT: int
 KEY_MOUSE_MIDDLE: int
@@ -466,7 +467,7 @@ CONFIG_FLAGS_DOCKING_ENABLE: int
 CONFIG_FLAGS_VIEWPORTS_ENABLE: int
 CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS: int
 CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS: int
-CONFIG_FLAGS_IS_SRGB: int
+CONFIG_FLAGS_IS_S_RGB: int
 CONFIG_FLAGS_IS_TOUCH_SCREEN: int
 BACKEND_FLAGS_NONE: int
 BACKEND_FLAGS_HAS_GAMEPAD: int
@@ -1193,7 +1194,7 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 #     """
 #     pass
 
-# def drag_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
+# def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
 def dummy(size: tuple) -> None:
     """
     Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
@@ -1489,8 +1490,8 @@ def get_frame_height_with_spacing() -> float:
 #     """
 #     pass
 
-# def get_idp_tr(ptr_id: Any) -> int: ...
-# def get_ids_tr(str_id_begin: str, str_id_end: str) -> int: ...
+# def get_id_ptr(ptr_id: Any) -> int: ...
+# def get_id_str(str_id_begin: str, str_id_end: str) -> int: ...
 def get_io() -> ImGuiIO:
     """
     Main
@@ -1759,14 +1760,14 @@ def impl_glfw_new_frame() -> None: ...
 # def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool) -> None: ...
 def impl_glfw_shutdown() -> None: ...
 # def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int) -> None: ...
-# def impl_open_gl_3_create_device_objects() -> bool: ...
-# def impl_open_gl_3_create_fonts_texture() -> bool: ...
-# def impl_open_gl_3_destroy_device_objects() -> None: ...
-# def impl_open_gl_3_destroy_fonts_texture() -> None: ...
-def impl_open_gl_3_init(glsl_version: str=None) -> bool: ...
-def impl_open_gl_3_new_frame() -> None: ...
-def impl_open_gl_3_render_draw_data(draw_data: ImDrawData) -> None: ...
-def impl_open_gl_3_shutdown() -> None: ...
+# def impl_open_gl3_create_device_objects() -> bool: ...
+# def impl_open_gl3_create_fonts_texture() -> bool: ...
+# def impl_open_gl3_destroy_device_objects() -> None: ...
+# def impl_open_gl3_destroy_fonts_texture() -> None: ...
+def impl_open_gl3_init(glsl_version: str=None) -> bool: ...
+def impl_open_gl3_new_frame() -> None: ...
+def impl_open_gl3_render_draw_data(draw_data: ImDrawData) -> None: ...
+def impl_open_gl3_shutdown() -> None: ...
 def indent(indent_w: float=0.0) -> None:
     """
     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
@@ -1812,7 +1813,7 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 #     """
 #     pass
 
-# def input_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
+# def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
 def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
     """
     Widgets: Input with Keyboard
@@ -2308,29 +2309,17 @@ def push_id_int(int_id: int) -> None:
     """
     pass
 
-def push_id_str(str_id_begin: str, str_id_end: str) -> None:
-    """
-    Push string into the id stack (will hash string).
-    """
-    pass
-
-# def push_idi_nt(int_id: int) -> None:
-#     """
-#     Push integer into the id stack (will hash integer).
-#     """
-#     pass
-
-# def push_idp_tr(ptr_id: Any) -> None:
+# def push_id_ptr(ptr_id: Any) -> None:
 #     """
 #     Push pointer into the id stack (will hash pointer).
 #     """
 #     pass
 
-# def push_ids_tr(str_id_begin: str, str_id_end: str) -> None:
-#     """
-#     Push string into the id stack (will hash string).
-#     """
-#     pass
+def push_id_str(str_id_begin: str, str_id_end: str) -> None:
+    """
+    Push string into the id stack (will hash string).
+    """
+    pass
 
 # def push_item_width(item_width: float) -> None:
 #     """
@@ -2926,7 +2915,7 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
 #     """
 #     pass
 
-# def slider_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
+# def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
 def small_button(label: str) -> bool:
     """
     Button with framepadding=(0,0) to easily embed within text
@@ -3127,7 +3116,7 @@ def tree_node(label: str, flags: int=0) -> bool:
 # def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_str(str_id: str, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_v(str_id: str, flags: int, fmt: str) -> bool: ...
-# def tree_node_ex_vp_tr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
+# def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
 # def tree_node_ptr(ptr_id: Any, fmt: str) -> bool:
 #     """
 #     '
@@ -3141,7 +3130,7 @@ def tree_node(label: str, flags: int=0) -> bool:
 #     pass
 
 # def tree_node_v(str_id: str, fmt: str) -> bool: ...
-# def tree_node_vp_tr(ptr_id: Any, fmt: str) -> bool: ...
+# def tree_node_vptr(ptr_id: Any, fmt: str) -> bool: ...
 def tree_pop() -> None:
     """
     ~ unindent()+popid()
@@ -3799,7 +3788,7 @@ class ImFont:
     #     """
     #     pass
 
-    # def calc_text_size_ae_x(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None) -> tuple:
+    # def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None) -> tuple:
     #     """
     #     Utf8
     #     """
@@ -4414,7 +4403,7 @@ class ImGuiIO:
     # """
     # = true   // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
     # """
-    # config_mac_osxb_ehaviors: bool
+    # config_mac_osx_behaviors: bool
     # """
     # = defined(__apple__) // os x style: text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
     # """
@@ -5509,8 +5498,8 @@ class ImGuiTextBuffer:
     # def appendf(self: ImGuiTextBuffer, fmt: str) -> None: ...
     # def appendfv(self: ImGuiTextBuffer, fmt: str) -> None: ...
     # def begin(self: ImGuiTextBuffer) -> str: ...
+    # def c_str(self: ImGuiTextBuffer) -> str: ...
     # def clear(self: ImGuiTextBuffer) -> None: ...
-    # def cstr(self: ImGuiTextBuffer) -> str: ...
     # def empty(self: ImGuiTextBuffer) -> bool: ...
     # def end(self: ImGuiTextBuffer) -> str:
     #     """

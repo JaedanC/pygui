@@ -61,8 +61,8 @@ def main():
     io.config_flags |= pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE
 
     pygui.impl_glfw_init_for_open_gl(window, True)
-    # pygui.impl_open_gl_3_init("#version 130")
-    pygui.impl_open_gl_3_init()
+    # pygui.impl_open_gl3_init("#version 130")
+    pygui.impl_open_gl3_init()
 
     # Check opengl version
     print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION).decode()))
@@ -78,7 +78,7 @@ def main():
     try:
         while not glfw.window_should_close(window):
             glfw.poll_events()
-            pygui.impl_open_gl_3_new_frame()
+            pygui.impl_open_gl3_new_frame()
             pygui.impl_glfw_new_frame()
             pygui.new_frame()
 
@@ -92,7 +92,7 @@ def main():
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
             draw_data = pygui.get_draw_data()
-            pygui.impl_open_gl_3_render_draw_data(draw_data)
+            pygui.impl_open_gl3_render_draw_data(draw_data)
 
             if io.config_flags & pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE:
                 backup_current_window = glfw.get_current_context()
@@ -104,7 +104,7 @@ def main():
     except KeyboardInterrupt:
         pass
     
-    pygui.impl_open_gl_3_shutdown()
+    pygui.impl_open_gl3_shutdown()
     pygui.impl_glfw_shutdown()
     pygui.destroy_context()
     glfw.destroy_window(window)

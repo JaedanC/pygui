@@ -90,7 +90,7 @@ class widget:
     tree_selection_mask = pygui.IntPtr(1 << 2)
     header_closable_group = pygui.BoolPtr(True)
     text_wrap_width = pygui.FloatPtr(200)
-    text_utf8_buf = pygui.StrPtr("\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e", 32)
+    text_utf8_buf = pygui.StrPtr("カキクケコ タイピング", 64)
     combo_flags = pygui.IntPtr(0)
     combo_item_current_idx = pygui.IntPtr(0)
     combo_item_current_2 = pygui.IntPtr(0)
@@ -488,13 +488,13 @@ def show_demo_widgets():
                 "Call io.Fonts->AddFontFromFileTTF() manually to load extra character ranges. "
                 "Read docs/FONTS.md for details.")
             # Normally we would use u8"blah blah" with the proper characters directly in the string.
-            pygui.text("Hiragana: \xe3\x81\x8b\xe3\x81\x8d\xe3\x81\x8f\xe3\x81\x91\xe3\x81\x93 (kakikukeko)")
-            pygui.text("Kanjis: \xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e (nihongo)")
+            pygui.text("Hiragana: カキクケコ タイピング (kakikukeko)")
+            pygui.text("Kanjis: 日本語 (nihongo)")
             # static char buf[32] = u8"NIHONGO"; // <- this is how you would write it with C++11, using real kanjis
             # TODO: This crashes. Not sure why.
             pygui.text("The call below crashes so it has been omitted in this demo.")
             pygui.text('pygui.input_text("UTF-8 input", static.widgets_text_utf8_buf)')
-            # pygui.input_text("UTF-8 input", widget.text_utf8_buf)
+            pygui.input_text("UTF-8 input", widget.text_utf8_buf)
             pygui.tree_pop()
 
         pygui.tree_pop()
