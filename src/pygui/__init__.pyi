@@ -787,22 +787,22 @@ def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
 #     """
 #     pass
 
-# def begin_menu(label: str) -> bool:
-#     """
-#     Implied enabled = true
-#     """
-#     pass
+def begin_menu(label: str, enabled: bool=True) -> bool:
+    """
+    Create a sub-menu entry. only call endmenu() if this returns true!
+    """
+    pass
 
-# def begin_menu_bar() -> bool:
-#     """
-#     Widgets: Menus
-#     - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
-#     - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
-#     - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
-#     - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
-#     Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
-#     """
-#     pass
+def begin_menu_bar() -> bool:
+    """
+    Widgets: Menus
+    - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
+    - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
+    - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
+    - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
+    Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
+    """
+    pass
 
 # def begin_menu_ex(label: str, enabled: bool=True) -> bool:
 #     """
@@ -819,16 +819,16 @@ def begin_popup(str_id: str, flags: int=0) -> bool:
     """
     pass
 
-# def begin_popup_context_item() -> bool:
-#     """
-#     Popups: open+begin combined functions helpers
-#     - Helpers to do OpenPopup+BeginPopup where the Open action is triggered by e.g. hovering an item and right-clicking.
-#     - They are convenient to easily create context menus, hence the name.
-#     - IMPORTANT: Notice that BeginPopupContextXXX takes ImGuiPopupFlags just like OpenPopup() and unlike BeginPopup(). For full consistency, we may add ImGuiWindowFlags to the BeginPopupContextXXX functions in the future.
-#     - IMPORTANT: Notice that we exceptionally default their flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter, so if you add other flags remember to re-add the ImGuiPopupFlags_MouseButtonRight.
-#     Implied str_id = null, popup_flags = 1
-#     """
-#     pass
+def begin_popup_context_item() -> bool:
+    """
+    Popups: open+begin combined functions helpers
+    - Helpers to do OpenPopup+BeginPopup where the Open action is triggered by e.g. hovering an item and right-clicking.
+    - They are convenient to easily create context menus, hence the name.
+    - IMPORTANT: Notice that BeginPopupContextXXX takes ImGuiPopupFlags just like OpenPopup() and unlike BeginPopup(). For full consistency, we may add ImGuiWindowFlags to the BeginPopupContextXXX functions in the future.
+    - IMPORTANT: Notice that we exceptionally default their flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter, so if you add other flags remember to re-add the ImGuiPopupFlags_MouseButtonRight.
+    Implied str_id = null, popup_flags = 1
+    """
+    pass
 
 # def begin_popup_context_item_ex(str_id: str=None, popup_flags: int=1) -> bool:
 #     """
@@ -848,11 +848,11 @@ def begin_popup(str_id: str, flags: int=0) -> bool:
 #     """
 #     pass
 
-# def begin_popup_context_window() -> bool:
-#     """
-#     Implied str_id = null, popup_flags = 1
-#     """
-#     pass
+def begin_popup_context_window() -> bool:
+    """
+    Implied str_id = null, popup_flags = 1
+    """
+    pass
 
 # def begin_popup_context_window_ex(str_id: str=None, popup_flags: int=1) -> bool:
 #     """
@@ -1201,11 +1201,11 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 #     pass
 
 # def drag_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
-# def dummy(size: tuple) -> None:
-#     """
-#     Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
-#     """
-#     pass
+def dummy(size: tuple) -> None:
+    """
+    Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
+    """
+    pass
 
 def end() -> None: ...
 def end_child() -> None: ...
@@ -1258,17 +1258,17 @@ def end_list_box() -> None:
 #     """
 #     pass
 
-# def end_menu() -> None:
-#     """
-#     Only call endmenu() if beginmenu() returns true!
-#     """
-#     pass
+def end_menu() -> None:
+    """
+    Only call endmenu() if beginmenu() returns true!
+    """
+    pass
 
-# def end_menu_bar() -> None:
-#     """
-#     Only call endmenubar() if beginmenubar() returns true!
-#     """
-#     pass
+def end_menu_bar() -> None:
+    """
+    Only call endmenubar() if beginmenubar() returns true!
+    """
+    pass
 
 def end_popup() -> None:
     """
@@ -1333,11 +1333,11 @@ def end_tooltip() -> None:
 #     """
 #     pass
 
-# def get_color_u32(idx: int) -> int:
-#     """
-#     Implied alpha_mul = 1.0f
-#     """
-#     pass
+def get_color_u32(idx: int, alpha_mul: float=1.0) -> int:
+    """
+    Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
+    """
+    pass
 
 # def get_color_u32_ex(idx: int, alpha_mul: float=1.0) -> int:
 #     """
@@ -1484,11 +1484,11 @@ def get_font_size() -> float:
 #     """
 #     pass
 
-# def get_frame_height_with_spacing() -> float:
-#     """
-#     ~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance in pixels between 2 consecutive lines of framed widgets)
-#     """
-#     pass
+def get_frame_height_with_spacing() -> float:
+    """
+    ~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance in pixels between 2 consecutive lines of framed widgets)
+    """
+    pass
 
 # def get_id(str_id: str) -> int:
 #     """
@@ -1597,11 +1597,11 @@ def get_platform_io() -> ImGuiPlatformIO:
 #     """
 #     pass
 
-# def get_scroll_max_y() -> float:
-#     """
-#     Get maximum scrolling amount ~~ contentsize.y - windowsize.y - decorationssize.y
-#     """
-#     pass
+def get_scroll_max_y() -> float:
+    """
+    Get maximum scrolling amount ~~ contentsize.y - windowsize.y - decorationssize.y
+    """
+    pass
 
 # def get_scroll_x() -> float:
 #     """
@@ -1612,11 +1612,11 @@ def get_platform_io() -> ImGuiPlatformIO:
 #     """
 #     pass
 
-# def get_scroll_y() -> float:
-#     """
-#     Get scrolling amount [0 .. getscrollmaxy()]
-#     """
-#     pass
+def get_scroll_y() -> float:
+    """
+    Get scrolling amount [0 .. getscrollmaxy()]
+    """
+    pass
 
 # def get_state_storage() -> ImGuiStorage: ...
 def get_style() -> ImGuiStyle:
@@ -1625,11 +1625,11 @@ def get_style() -> ImGuiStyle:
     """
     pass
 
-# def get_style_color_name(idx: int) -> str:
-#     """
-#     Get a string corresponding to the enum value (for display, saving, etc.).
-#     """
-#     pass
+def get_style_color_name(idx: int) -> str:
+    """
+    Get a string corresponding to the enum value (for display, saving, etc.).
+    """
+    pass
 
 def get_style_color_vec4(idx: int) -> ImVec4:
     """
@@ -2116,11 +2116,11 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     """
 #     pass
 
-# def log_finish() -> None:
-#     """
-#     Stop logging (close file, etc.)
-#     """
-#     pass
+def log_finish() -> None:
+    """
+    Stop logging (close file, etc.)
+    """
+    pass
 
 # def log_text(fmt: str) -> None:
 #     """
@@ -2129,11 +2129,11 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     pass
 
 # def log_text_v(fmt: str) -> None: ...
-# def log_to_clipboard(auto_open_depth: int=-1) -> None:
-#     """
-#     Start logging to os clipboard
-#     """
-#     pass
+def log_to_clipboard(auto_open_depth: int=-1) -> None:
+    """
+    Start logging to os clipboard
+    """
+    pass
 
 # def log_to_file(auto_open_depth: int=-1, filename: str=None) -> None:
 #     """
@@ -2151,17 +2151,17 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 
 # def mem_alloc(size: Any) -> Any: ...
 # def mem_free(ptr: Any) -> None: ...
-# def menu_item(label: str) -> bool:
-#     """
-#     Implied shortcut = null, selected = false, enabled = true
-#     """
-#     pass
+def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True) -> bool:
+    """
+    Return true when activated.
+    """
+    pass
 
-# def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True) -> bool:
-#     """
-#     Return true when activated + toggle (*p_selected) if p_selected != null
-#     """
-#     pass
+def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True) -> bool:
+    """
+    Return true when activated + toggle (*p_selected) if p_selected != null
+    """
+    pass
 
 # def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True) -> bool:
 #     """
@@ -2563,11 +2563,11 @@ def set_item_default_focus() -> None:
     """
     pass
 
-# def set_keyboard_focus_here() -> None:
-#     """
-#     Implied offset = 0
-#     """
-#     pass
+def set_keyboard_focus_here(offset: int=0) -> None:
+    """
+    Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
+    """
+    pass
 
 # def set_keyboard_focus_here_ex(offset: int=0) -> None:
 #     """
@@ -2661,11 +2661,11 @@ def set_next_item_width(item_width: float) -> None:
 #     """
 #     pass
 
-# def set_next_window_size(size: tuple, cond: int=0) -> None:
-#     """
-#     Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
-#     """
-#     pass
+def set_next_window_size(size: tuple, cond: int=0) -> None:
+    """
+    Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
+    """
+    pass
 
 # def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
 #     """
@@ -2697,11 +2697,11 @@ def set_next_item_width(item_width: float) -> None:
 #     """
 #     pass
 
-# def set_scroll_here_y(center_y_ratio: float=0.5) -> None:
-#     """
-#     Adjust scrolling amount to make current cursor position visible. center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
-#     """
-#     pass
+def set_scroll_here_y(center_y_ratio: float=0.5) -> None:
+    """
+    Adjust scrolling amount to make current cursor position visible. center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
+    """
+    pass
 
 # def set_scroll_x(scroll_x: float) -> None:
 #     """

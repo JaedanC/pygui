@@ -1152,34 +1152,35 @@ def begin_list_box(label: str, size: tuple=(0, 0)):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def begin_menu(label: str):
-#     """
-#     Implied enabled = true
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginMenu(
-#         _bytes(label)
-#     )
-#     return res
+def begin_menu(label: str, enabled: bool=True):
+    """
+    Create a sub-menu entry. only call endmenu() if this returns true!
+    """
+    cdef bool res = ccimgui.ImGui_BeginMenuEx(
+        _bytes(label),
+        enabled
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_menu_bar():
-#     """
-#     Widgets: Menus
-#     - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
-#     - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
-#     - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
-#     - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
-#     Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginMenuBar()
-#     return res
+def begin_menu_bar():
+    """
+    Widgets: Menus
+    - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
+    - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
+    - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
+    - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
+    Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
+    """
+    cdef bool res = ccimgui.ImGui_BeginMenuBar()
+    return res
 # [End Function]
 
 # [Function]
@@ -1217,19 +1218,19 @@ def begin_popup(str_id: str, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_popup_context_item():
-#     """
-#     Popups: open+begin combined functions helpers
-#     - Helpers to do OpenPopup+BeginPopup where the Open action is triggered by e.g. hovering an item and right-clicking.
-#     - They are convenient to easily create context menus, hence the name.
-#     - IMPORTANT: Notice that BeginPopupContextXXX takes ImGuiPopupFlags just like OpenPopup() and unlike BeginPopup(). For full consistency, we may add ImGuiWindowFlags to the BeginPopupContextXXX functions in the future.
-#     - IMPORTANT: Notice that we exceptionally default their flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter, so if you add other flags remember to re-add the ImGuiPopupFlags_MouseButtonRight.
-#     Implied str_id = null, popup_flags = 1
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginPopupContextItem()
-#     return res
+def begin_popup_context_item():
+    """
+    Popups: open+begin combined functions helpers
+    - Helpers to do OpenPopup+BeginPopup where the Open action is triggered by e.g. hovering an item and right-clicking.
+    - They are convenient to easily create context menus, hence the name.
+    - IMPORTANT: Notice that BeginPopupContextXXX takes ImGuiPopupFlags just like OpenPopup() and unlike BeginPopup(). For full consistency, we may add ImGuiWindowFlags to the BeginPopupContextXXX functions in the future.
+    - IMPORTANT: Notice that we exceptionally default their flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter, so if you add other flags remember to re-add the ImGuiPopupFlags_MouseButtonRight.
+    Implied str_id = null, popup_flags = 1
+    """
+    cdef bool res = ccimgui.ImGui_BeginPopupContextItem()
+    return res
 # [End Function]
 
 # [Function]
@@ -1280,14 +1281,14 @@ def begin_popup(str_id: str, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_popup_context_window():
-#     """
-#     Implied str_id = null, popup_flags = 1
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginPopupContextWindow()
-#     return res
+def begin_popup_context_window():
+    """
+    Implied str_id = null, popup_flags = 1
+    """
+    cdef bool res = ccimgui.ImGui_BeginPopupContextWindow()
+    return res
 # [End Function]
 
 # [Function]
@@ -2594,15 +2595,15 @@ def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def dummy(size: tuple):
-#     """
-#     Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
-#     """
-#     ccimgui.ImGui_Dummy(
-#         _cast_tuple_ImVec2(size)
-#     )
+def dummy(size: tuple):
+    """
+    Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
+    """
+    ccimgui.ImGui_Dummy(
+        _cast_tuple_ImVec2(size)
+    )
 # [End Function]
 
 # [Function]
@@ -2720,24 +2721,24 @@ def end_list_box():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_menu():
-#     """
-#     Only call endmenu() if beginmenu() returns true!
-#     """
-#     ccimgui.ImGui_EndMenu()
+def end_menu():
+    """
+    Only call endmenu() if beginmenu() returns true!
+    """
+    ccimgui.ImGui_EndMenu()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_menu_bar():
-#     """
-#     Only call endmenubar() if beginmenubar() returns true!
-#     """
-#     ccimgui.ImGui_EndMenuBar()
+def end_menu_bar():
+    """
+    Only call endmenubar() if beginmenubar() returns true!
+    """
+    ccimgui.ImGui_EndMenuBar()
 # [End Function]
 
 # [Function]
@@ -2876,17 +2877,18 @@ def end_tooltip():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(int)
-# def get_color_u32(idx: int):
-#     """
-#     Implied alpha_mul = 1.0f
-#     """
-#     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32(
-#         idx
-#     )
-#     return res
+def get_color_u32(idx: int, alpha_mul: float=1.0):
+    """
+    Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
+    """
+    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32Ex(
+        idx,
+        alpha_mul
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -3209,14 +3211,14 @@ def get_font_size():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_frame_height_with_spacing():
-#     """
-#     ~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance in pixels between 2 consecutive lines of framed widgets)
-#     """
-#     cdef float res = ccimgui.ImGui_GetFrameHeightWithSpacing()
-#     return res
+def get_frame_height_with_spacing():
+    """
+    ~ fontsize + style.framepadding.y * 2 + style.itemspacing.y (distance in pixels between 2 consecutive lines of framed widgets)
+    """
+    cdef float res = ccimgui.ImGui_GetFrameHeightWithSpacing()
+    return res
 # [End Function]
 
 # [Function]
@@ -3468,14 +3470,14 @@ def get_platform_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_scroll_max_y():
-#     """
-#     Get maximum scrolling amount ~~ contentsize.y - windowsize.y - decorationssize.y
-#     """
-#     cdef float res = ccimgui.ImGui_GetScrollMaxY()
-#     return res
+def get_scroll_max_y():
+    """
+    Get maximum scrolling amount ~~ contentsize.y - windowsize.y - decorationssize.y
+    """
+    cdef float res = ccimgui.ImGui_GetScrollMaxY()
+    return res
 # [End Function]
 
 # [Function]
@@ -3495,14 +3497,14 @@ def get_platform_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
-# def get_scroll_y():
-#     """
-#     Get scrolling amount [0 .. getscrollmaxy()]
-#     """
-#     cdef float res = ccimgui.ImGui_GetScrollY()
-#     return res
+def get_scroll_y():
+    """
+    Get scrolling amount [0 .. getscrollmaxy()]
+    """
+    cdef float res = ccimgui.ImGui_GetScrollY()
+    return res
 # [End Function]
 
 # [Function]
@@ -3528,16 +3530,16 @@ def get_style():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(str)
-# def get_style_color_name(idx: int):
-#     """
-#     Get a string corresponding to the enum value (for display, saving, etc.).
-#     """
-#     cdef const char* res = ccimgui.ImGui_GetStyleColorName(
-#         idx
-#     )
-#     return _from_bytes(res)
+def get_style_color_name(idx: int):
+    """
+    Get a string corresponding to the enum value (for display, saving, etc.).
+    """
+    cdef const char* res = ccimgui.ImGui_GetStyleColorName(
+        idx
+    )
+    return _from_bytes(res)
 # [End Function]
 
 # [Function]
@@ -5193,13 +5195,13 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def log_finish():
-#     """
-#     Stop logging (close file, etc.)
-#     """
-#     ccimgui.ImGui_LogFinish()
+def log_finish():
+    """
+    Stop logging (close file, etc.)
+    """
+    ccimgui.ImGui_LogFinish()
 # [End Function]
 
 # [Function]
@@ -5227,15 +5229,15 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def log_to_clipboard(auto_open_depth: int=-1):
-#     """
-#     Start logging to os clipboard
-#     """
-#     ccimgui.ImGui_LogToClipboard(
-#         auto_open_depth
-#     )
+def log_to_clipboard(auto_open_depth: int=-1):
+    """
+    Start logging to os clipboard
+    """
+    ccimgui.ImGui_LogToClipboard(
+        auto_open_depth
+    )
 # [End Function]
 
 # [Function]
@@ -5291,34 +5293,41 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def menu_item(label: str):
-#     """
-#     Implied shortcut = null, selected = false, enabled = true
-#     """
-#     cdef bool res = ccimgui.ImGui_MenuItem(
-#         _bytes(label)
-#     )
-#     return res
+def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True):
+    """
+    Return true when activated.
+    """
+    bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+
+    cdef bool res = ccimgui.ImGui_MenuItemEx(
+        _bytes(label),
+        ((<char*>bytes_shortcut if shortcut is not None else NULL)),
+        selected,
+        enabled
+    )
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-# def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True):
-#     """
-#     Return true when activated + toggle (*p_selected) if p_selected != null
-#     """
-#     cdef bool res = ccimgui.ImGui_MenuItemBoolPtr(
-#         _bytes(label),
-#         _bytes(shortcut),
-#         &p_selected.value,
-#         enabled
-#     )
-#     return res
+def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True):
+    """
+    Return true when activated + toggle (*p_selected) if p_selected != null
+    """
+    bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+
+    cdef bool res = ccimgui.ImGui_MenuItemBoolPtr(
+        _bytes(label),
+        ((<char*>bytes_shortcut if shortcut is not None else NULL)),
+        &p_selected.value,
+        enabled
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -6373,14 +6382,16 @@ def set_item_default_focus():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-# def set_keyboard_focus_here():
-#     """
-#     Implied offset = 0
-#     """
-#     ccimgui.ImGui_SetKeyboardFocusHere()
+def set_keyboard_focus_here(offset: int=0):
+    """
+    Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
+    """
+    ccimgui.ImGui_SetKeyboardFocusHereEx(
+        offset
+    )
 # [End Function]
 
 # [Function]
@@ -6586,16 +6597,16 @@ def set_next_item_width(item_width: float):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_next_window_size(size: tuple, cond: int=0):
-#     """
-#     Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
-#     """
-#     ccimgui.ImGui_SetNextWindowSize(
-#         _cast_tuple_ImVec2(size),
-#         cond
-#     )
+def set_next_window_size(size: tuple, cond: int=0):
+    """
+    Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
+    """
+    ccimgui.ImGui_SetNextWindowSize(
+        _cast_tuple_ImVec2(size),
+        cond
+    )
 # [End Function]
 
 # [Function]
@@ -6670,15 +6681,15 @@ def set_next_item_width(item_width: float):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def set_scroll_here_y(center_y_ratio: float=0.5):
-#     """
-#     Adjust scrolling amount to make current cursor position visible. center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
-#     """
-#     ccimgui.ImGui_SetScrollHereY(
-#         center_y_ratio
-#     )
+def set_scroll_here_y(center_y_ratio: float=0.5):
+    """
+    Adjust scrolling amount to make current cursor position visible. center_y_ratio=0.0: top, 0.5: center, 1.0: bottom. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
+    """
+    ccimgui.ImGui_SetScrollHereY(
+        center_y_ratio
+    )
 # [End Function]
 
 # [Function]

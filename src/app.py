@@ -13,8 +13,6 @@ def render():
     
     pygui.begin("Hello, World!")
     pygui.text("Some text")
-    pygui.progress_bar(0.25, (-pygui.FLT_MIN, 0), None)
-    pygui.progress_bar(0.75, (-pygui.FLT_MIN, 0), "Hello")
     pygui.end()
 
 
@@ -23,7 +21,7 @@ def render():
         pygui.text("Some text")
         pygui.end()
 
-    pygui.begin("Pygui Demo Window", None)
+    pygui.begin("Pygui Demo Window", None, pygui.WINDOW_FLAGS_MENU_BAR)
     # pygui.begin("Pygui Demo Window", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
     pygui_demo_window()
     pygui.end()

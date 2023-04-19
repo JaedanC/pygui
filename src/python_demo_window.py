@@ -31,6 +31,10 @@ def pop_style_compact():
 
 
 def pygui_demo_window():
+    if demo.show_app_console:
+        show_app_console(demo.show_app_console)
+    
+    show_menu_bar()
     show_demo_widgets()
     show_demo_tables()
 
@@ -1614,3 +1618,271 @@ def show_demo_tables():
 
     if table.disable_indent:
         pygui.pop_style_var()
+
+
+class menu:
+    b = pygui.BoolPtr(True)
+
+
+def show_menu_bar():
+    if pygui.begin_menu_bar():
+        if pygui.begin_menu("File"):
+            show_menu_file()
+            pygui.end_menu()
+        if pygui.begin_menu("Edit"):
+            if pygui.menu_item("Undo", "CTRL+Z"): pass
+            if pygui.menu_item("Redo", "CTRL+Y", False, False): pass
+            pygui.separator()
+            if pygui.menu_item("Cut", "CTRL+X"): pass
+            if pygui.menu_item("Copy", "CTRL+C"): pass
+            if pygui.menu_item("Paste", "CTRL+V"): pass
+            pygui.end_menu()
+        if pygui.begin_menu("Examples"):
+            pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
+            pygui.end_menu()
+        pygui.end_menu_bar()
+
+
+def show_menu_file():
+    pygui.menu_item("(demo menu)", None, False, False)
+    if pygui.menu_item("New"): pass
+    if pygui.menu_item("Open", "Ctrl+O"): pass
+    if pygui.begin_menu("Open Recent"):
+        pygui.menu_item("fish_hat.c")
+        pygui.menu_item("fish_hat.inl")
+        pygui.menu_item("fish_hat.h")
+        if pygui.begin_menu("More.."):
+            pygui.menu_item("Hello")
+            pygui.menu_item("Sailor")
+            if pygui.begin_menu("Recurse.."):
+                show_menu_file()
+                pygui.end_menu()
+            pygui.end_menu()
+        pygui.end_menu()
+    if pygui.menu_item("Save", "Ctrl+S"): pass
+    if pygui.menu_item("Save As.."): pass
+
+    if pygui.begin_menu("Colors"):
+        sz = pygui.get_text_line_height()
+        for i in range(pygui.COL_COUNT):
+            name = pygui.get_style_color_name(i)
+            p = pygui.get_cursor_screen_pos()
+            pygui.get_window_draw_list().add_rect_filled(
+                p, (p[0] + sz, p[1] + sz),
+                pygui.get_color_u32(i)
+            )
+            pygui.dummy((sz, sz))
+            pygui.same_line()
+            pygui.menu_item(name)
+        pygui.end_menu()
+    
+    # Here we demonstrate appending again to the "Options" menu (which we already created above)
+    # Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+    # In a real code-base using it would make senses to use this feature from very different code locations.
+    if pygui.begin_menu("Options"):
+        pygui.checkbox("SomeOption", menu.b)
+        pygui.end_menu()
+
+    if pygui.begin_menu("Disabled", False):
+        assert False # Should not be reached
+    
+    if pygui.menu_item("Checked", None, True): pass
+    pygui.separator()
+    if pygui.menu_item("Quit", "Alt+F4"): pass
+
+
+class ExampleAppConsole:
+    def __init__(self):
+        self.input_buf = pygui.StrPtr("", 256)
+        self.items = []
+        self.commands = [
+            "HELP",
+            "HISTORY",
+            "CLEAR",
+            "CLASSIFY",
+        ]
+        self.history = []
+        # -1: new line, 0..History.Size-1 browsing history.
+        self.history_pos = -1
+        # Not adding filter at the moment
+        self.auto_scroll = pygui.BoolPtr(True)
+        self.scroll_to_bottom = pygui.BoolPtr(False)
+    
+    def clear_log(self):
+        self.items.clear()
+    
+    def add_log(self, string: str, *args):
+        self.items.append(" ".join([string] + list(args)))
+    
+    def draw(self, title: str, p_open: pygui.BoolPtr):
+        pygui.set_next_window_size((520, 600), pygui.COND_FIRST_USE_EVER)
+        if not pygui.begin(title, p_open):
+            pygui.end()
+            return
+        
+        # As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
+        # So e.g. IsItemHovered() will return true when hovering the title bar.
+        # Here we create a context menu only available from the title bar.
+        if pygui.begin_popup_context_item():
+            if pygui.menu_item("Close Console"):
+                p_open.value = False
+            pygui.end_popup()
+        
+        pygui.text_wrapped(
+            "This example implements a console with basic coloring, completion (TAB key) and history (Up/Down keys). A more elaborate "
+            "implementation may want to store entries along with extra data such as timestamp, emitter, etc.")
+        pygui.text_wrapped("Enter 'HELP' for help.")
+
+        # TODO: display items starting from the bottom
+
+        if pygui.small_button("Add Debug Text"):
+            self.add_log("{} some text".format(len(self.items)))
+            self.add_log("some more text")
+            self.add_log("display very important message here!")
+        
+        pygui.same_line()
+        if pygui.small_button("Add Debug Error"):
+            self.add_log("[error] something went wrong")
+        pygui.same_line()
+        if pygui.small_button("Clear"):
+            self.clear_log()
+        pygui.same_line()
+        copy_to_clipboard = pygui.small_button("Copy")
+
+        pygui.separator()
+
+        # Options menu
+        if pygui.begin_popup("Options"):
+            pygui.checkbox("Auto-scroll", self.auto_scroll)
+            pygui.end_popup()
+
+        # TODO: Normally a filter would be here. Ignore for now
+
+        # Reserve enough left-over height for 1 separator + 1 input text
+        footer_height_to_reserve = pygui.get_style().item_spacing[1] + pygui.get_frame_height_with_spacing()
+        if pygui.begin_child("ScrollingRegion", (0, -footer_height_to_reserve), False, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
+            if pygui.begin_popup_context_window():
+                if pygui.selectable("Clear"):
+                    self.clear_log()
+                pygui.end_popup()
+            
+            # Display every line as a separate entry so we can change their color or add custom widgets.
+            # If you only want raw text you can use ImGui::TextUnformatted(log.begin(), log.end());
+            # NB- if you have thousands of entries this approach may be too inefficient and may require user-side clipping
+            # to only process visible items. The clipper will automatically measure the height of your first item and then
+            # "seek" to display only items in the visible area.
+            # To use the clipper we can replace your standard loop:
+            #      for (int i = 0; i < Items.Size; i++)
+            #   With:
+            #      ImGuiListClipper clipper;
+            #      clipper.Begin(Items.Size);
+            #      while (clipper.Step())
+            #         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+            # - That your items are evenly spaced (same height)
+            # - That you have cheap random access to your elements (you can access them given their index,
+            #   without processing all the ones before)
+            # You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
+            # We would need random-access on the post-filtered list.
+            # A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
+            # or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
+            # and appending newly elements as they are inserted. This is left as a task to the user until we can manage
+            # to improve this example code!
+            # If your items are of variable height:
+            # - Split them into same height items would be simpler and facilitate random-seeking into your list.
+            # - Consider using manual call to IsRectVisible() and skipping extraneous decoration from your items.
+            pygui.push_style_var_im_vec2(pygui.STYLE_VAR_ITEM_SPACING, (4, 1)) # Tighten spacing
+            if copy_to_clipboard:
+                pygui.log_to_clipboard()
+            
+            for item in self.items:
+                # TODO: Filter
+
+                # Normally you would store more information in your item than just a string.
+                # (e.g. make Items[] an array of structure, store color/type etc.)
+                
+                color = (0, 0, 0, 0)
+                has_color = False
+                if "[error]" in item:
+                    color = (1, 0.4, 0.4, 1)
+                    has_color = True
+                elif "#" in item:
+                    color = (1, 0.8, 0.6, 1)
+                    has_color = True
+                if has_color:
+                    pygui.push_style_color_im_vec4(pygui.COL_TEXT, color)
+                pygui.text_unformatted(item)
+                if has_color:
+                    pygui.pop_style_color()
+            
+            if copy_to_clipboard:
+                pygui.log_finish()
+            
+           # Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
+           # Using a scrollbar or mouse-wheel will take away from the bottom edge.
+            if self.scroll_to_bottom or (self.auto_scroll and pygui.get_scroll_y() >= pygui.get_scroll_max_y()):
+                pygui.set_scroll_here_y(1)
+            self.scroll_to_bottom.value = False
+
+            pygui.pop_style_var()
+        pygui.end_child()
+        pygui.separator()
+
+        # Command-line
+        reclaim_focus = False
+        input_text_flags = \
+            pygui.INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE | \
+            pygui.INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL
+            # TODO: Uncomment these when callbacks are completed
+            # pygui.NPUT_TEXT_FLAGS_CALLBACK_COMPLETION | \
+            # pygui.NPUT_TEXT_FLAGS_CALLBACK_HISTORY
+        
+        # TODO: Pygui note. No callback is used here.
+        if pygui.input_text("Input", self.input_buf, input_text_flags):
+            if len(self.input_buf.value.strip()) > 0:
+                self.exec_command(self.input_buf.value)
+            self.input_buf.value = ""
+            reclaim_focus = True
+
+        # Auto-focus on window apparition
+        pygui.set_item_default_focus()
+        if reclaim_focus:
+            pygui.set_keyboard_focus_here(-1) # Auto focus previous widget
+
+        pygui.end()
+
+    def exec_command(self, command_line: str):
+        self.add_log("# {}\n".format(command_line))
+
+        # Insert into history. First find match and delete it so it can be pushed to the back.
+        # This isn't trying to be smart or optimal.
+        self.history_pos = -1
+        for i in reversed(range(len(self.history))):
+            if self.history[i] == command_line:
+                self.history = self.history[i:]
+                break
+        
+        self.history.append(command_line)
+        if command_line == "CLEAR":
+            self.clear_log()
+        elif command_line == "HELP":
+            self.add_log("Commands:")
+            for command in self.commands:
+                self.add_log(f"- {command}")
+        elif command_line == "HISTORY":
+            first = len(self.history) - 10
+            for i in range(max(first, 0), len(self.history)):
+                self.add_log("{} {}\n".format(i, self.history[i]))
+        else:
+            self.add_log("Unknown command: {}".format(command_line))
+        
+        self.scroll_to_bottom.value = True
+
+
+class demo:
+    show_app_console = pygui.BoolPtr(False)
+    example_app_console = ExampleAppConsole()
+
+
+def show_app_console(p_open: pygui.BoolPtr):
+    demo.example_app_console.draw("Example: Pygui Console", p_open)
+

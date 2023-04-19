@@ -79,7 +79,7 @@ target_compile_options(cimgui PRIVATE "/FI${PYGUI_CONFIG_FILE}")
 #  - define: PYGUI_COMPILING_GLFW_IMPL
 #       GLFW_DLL
 #  		IMGUI_IMPL_API  extern "C" __declspec(dllexport)
-# 		IMGUI_API       extern "C" __declspec(dllimport)
+# 		IMGUI_API                  __declspec(dllimport)
 #  - include
 #       imgui_impl_glfw.h
 #       imgui_impl_opengl3.h

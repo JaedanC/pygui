@@ -1152,22 +1152,23 @@ def begin_main_menu_bar():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def begin_menu(label: str):
+def begin_menu(label: str, enabled: bool=True):
     """
-    Implied enabled = true
+    Create a sub-menu entry. only call endmenu() if this returns true!
     """
-    cdef bool res = ccimgui.ImGui_BeginMenu(
-        _bytes(label)
+    cdef bool res = ccimgui.ImGui_BeginMenuEx(
+        _bytes(label),
+        enabled
     )
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def begin_menu_bar():
     """
@@ -1217,7 +1218,7 @@ def begin_popup(str_id: str, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def begin_popup_context_item():
     """
@@ -1280,7 +1281,7 @@ def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def begin_popup_context_window():
     """
@@ -2594,7 +2595,7 @@ def drag_scalar_ne_x(label: str, data_type: int, p_data: Any, components: int, v
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def dummy(size: tuple):
     """
@@ -2720,7 +2721,7 @@ def end_main_menu_bar():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def end_menu():
     """
@@ -2731,7 +2732,7 @@ def end_menu():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def end_menu_bar():
     """
@@ -2876,15 +2877,16 @@ def get_clipboard_text():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(int)
-def get_color_u32(idx: int):
+def get_color_u32(idx: int, alpha_mul: float=1.0):
     """
-    Implied alpha_mul = 1.0f
+    Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
     """
-    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32(
-        idx
+    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32Ex(
+        idx,
+        alpha_mul
     )
     return res
 # [End Function]
@@ -3209,7 +3211,7 @@ def get_frame_height():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
 def get_frame_height_with_spacing():
     """
@@ -3468,7 +3470,7 @@ def get_scroll_max_x():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
 def get_scroll_max_y():
     """
@@ -3495,7 +3497,7 @@ def get_scroll_x():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
 def get_scroll_y():
     """
@@ -3528,7 +3530,7 @@ def get_style():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(str)
 def get_style_color_name(idx: int):
     """
@@ -5193,7 +5195,7 @@ def log_buttons():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def log_finish():
     """
@@ -5227,7 +5229,7 @@ def log_text_v(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def log_to_clipboard(auto_open_depth: int=-1):
     """
@@ -5291,30 +5293,37 @@ def mem_free(ptr: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def menu_item(label: str):
+def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True):
     """
-    Implied shortcut = null, selected = false, enabled = true
+    Return true when activated.
     """
-    cdef bool res = ccimgui.ImGui_MenuItem(
-        _bytes(label)
+    bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+
+    cdef bool res = ccimgui.ImGui_MenuItemEx(
+        _bytes(label),
+        ((<char*>bytes_shortcut if shortcut is not None else NULL)),
+        selected,
+        enabled
     )
     return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
 def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True):
     """
     Return true when activated + toggle (*p_selected) if p_selected != null
     """
+    bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+
     cdef bool res = ccimgui.ImGui_MenuItemBoolPtr(
         _bytes(label),
-        _bytes(shortcut),
+        ((<char*>bytes_shortcut if shortcut is not None else NULL)),
         &p_selected.value,
         enabled
     )
@@ -5516,11 +5525,13 @@ def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_of
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     """
     Widgets: Data Plotting
     - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
-    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
+    Implied stride = sizeof(float)
+    - Pygui note: stride has been omitted because we are instead passing in a list.
+    the underlying c_float array is handled by Cython.
     """
     cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
     if c_floats is NULL:
@@ -5540,7 +5551,7 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
         scale_min,
         scale_max,
         _cast_tuple_ImVec2(graph_size),
-        stride
+        sizeof(float)
     )
     ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
@@ -6373,14 +6384,16 @@ def set_item_default_focus():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(None)
-def set_keyboard_focus_here():
+def set_keyboard_focus_here(offset: int=0):
     """
-    Implied offset = 0
+    Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
     """
-    ccimgui.ImGui_SetKeyboardFocusHere()
+    ccimgui.ImGui_SetKeyboardFocusHereEx(
+        offset
+    )
 # [End Function]
 
 # [Function]
@@ -6586,7 +6599,7 @@ def set_next_window_scroll(scroll: tuple):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def set_next_window_size(size: tuple, cond: int=0):
     """
@@ -6670,7 +6683,7 @@ def set_scroll_here_x(center_x_ratio: float=0.5):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def set_scroll_here_y(center_y_ratio: float=0.5):
     """
