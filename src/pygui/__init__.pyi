@@ -3,15 +3,8 @@
 from typing import Any, Callable, Tuple, List, Sequence
 from PIL import Image
 
-
-VERTEX_BUFFER_POS_OFFSET: int
-VERTEX_BUFFER_UV_OFFSET: int
-VERTEX_BUFFER_COL_OFFSET: int
-VERTEX_SIZE: int
-INDEX_SIZE: int
 FLT_MIN: float
 FLT_MAX: float
-
 PAYLOAD_TYPE_COLOR_3F: int
 PAYLOAD_TYPE_COLOR_4F: int
 
@@ -866,19 +859,19 @@ def begin_popup_context_window() -> bool:
 #     """
 #     pass
 
-# def begin_tab_bar(str_id: str, flags: int=0) -> bool:
-#     """
-#     Tab Bars, Tabs
-#     - Note: Tabs are automatically created by the docking system (when in 'docking' branch). Use this to create tab bars/tabs yourself.
-#     Create and append into a tabbar
-#     """
-#     pass
+def begin_tab_bar(str_id: str, flags: int=0) -> bool:
+    """
+    Tab Bars, Tabs
+    - Note: Tabs are automatically created by the docking system (when in 'docking' branch). Use this to create tab bars/tabs yourself.
+    Create and append into a tabbar
+    """
+    pass
 
-# def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0) -> bool:
-#     """
-#     Create a tab. returns true if the tab is selected.
-#     """
-#     pass
+def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0) -> bool:
+    """
+    Create a tab. returns true if the tab is selected.
+    """
+    pass
 
 def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool:
     """
@@ -1276,17 +1269,17 @@ def end_popup() -> None:
     """
     pass
 
-# def end_tab_bar() -> None:
-#     """
-#     Only call endtabbar() if begintabbar() returns true!
-#     """
-#     pass
+def end_tab_bar() -> None:
+    """
+    Only call endtabbar() if begintabbar() returns true!
+    """
+    pass
 
-# def end_tab_item() -> None:
-#     """
-#     Only call endtabitem() if begintabitem() returns true!
-#     """
-#     pass
+def end_tab_item() -> None:
+    """
+    Only call endtabitem() if begintabitem() returns true!
+    """
+    pass
 
 def end_table() -> None:
     """
@@ -2227,11 +2220,13 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
 
 # def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
 # def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None: ...
-def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None:
+def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None:
     """
     Widgets: Data Plotting
     - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
-    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
+    Implied stride = sizeof(float)
+    - Pygui note: stride has been omitted because we are instead passing in a list.
+    the underlying c_float array is handled by Cython.
     """
     pass
 
@@ -3121,14 +3116,14 @@ def text_wrapped(fmt: str) -> None:
     pass
 
 # def text_wrapped_v(fmt: str) -> None: ...
-# def tree_node(label: str) -> bool:
-#     """
-#     Widgets: Trees
-#     - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
-#     """
-#     pass
+def tree_node(label: str, flags: int=0) -> bool:
+    """
+    Widgets: Trees
+    - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
+    """
+    pass
 
-def tree_node_ex(label: str, flags: int=0) -> bool: ...
+# def tree_node_ex(label: str, flags: int=0) -> bool: ...
 # def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_str(str_id: str, flags: int, fmt: str) -> bool: ...
 # def tree_node_ex_v(str_id: str, flags: int, fmt: str) -> bool: ...

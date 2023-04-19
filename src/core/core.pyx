@@ -52,22 +52,6 @@ cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     return vec
 
 
-def _py_vertex_buffer_vertex_pos_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos
-
-def _py_vertex_buffer_vertex_uv_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv
-
-def _py_vertex_buffer_vertex_col_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col
-
-def _py_vertex_buffer_vertex_size():
-    return sizeof(ccimgui.ImDrawVert)
-
-def _py_index_buffer_index_size():
-    return sizeof(ccimgui.ImDrawIdx)
-
-
 cdef class BoolPtr:
     @staticmethod
     cdef bool* ptr(ptr: BoolPtr):
@@ -1326,35 +1310,35 @@ def begin_popup_context_window():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_tab_bar(str_id: str, flags: int=0):
-#     """
-#     Tab Bars, Tabs
-#     - Note: Tabs are automatically created by the docking system (when in 'docking' branch). Use this to create tab bars/tabs yourself.
-#     Create and append into a tabbar
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginTabBar(
-#         _bytes(str_id),
-#         flags
-#     )
-#     return res
+def begin_tab_bar(str_id: str, flags: int=0):
+    """
+    Tab Bars, Tabs
+    - Note: Tabs are automatically created by the docking system (when in 'docking' branch). Use this to create tab bars/tabs yourself.
+    Create and append into a tabbar
+    """
+    cdef bool res = ccimgui.ImGui_BeginTabBar(
+        _bytes(str_id),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
-# def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
-#     """
-#     Create a tab. returns true if the tab is selected.
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginTabItem(
-#         _bytes(label),
-#         BoolPtr.ptr(p_open),
-#         flags
-#     )
-#     return res
+def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
+    """
+    Create a tab. returns true if the tab is selected.
+    """
+    cdef bool res = ccimgui.ImGui_BeginTabItem(
+        _bytes(label),
+        BoolPtr.ptr(p_open),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -2754,24 +2738,24 @@ def end_popup():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_tab_bar():
-#     """
-#     Only call endtabbar() if begintabbar() returns true!
-#     """
-#     ccimgui.ImGui_EndTabBar()
+def end_tab_bar():
+    """
+    Only call endtabbar() if begintabbar() returns true!
+    """
+    ccimgui.ImGui_EndTabBar()
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
-# def end_tab_item():
-#     """
-#     Only call endtabitem() if begintabitem() returns true!
-#     """
-#     ccimgui.ImGui_EndTabItem()
+def end_tab_item():
+    """
+    Only call endtabitem() if begintabitem() returns true!
+    """
+    ccimgui.ImGui_EndTabItem()
 # [End Function]
 
 # [Function]
@@ -5525,11 +5509,13 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
 # ?use_template(True)
 # ?active(True)
 # ?returns(None)
-def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
+def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     """
     Widgets: Data Plotting
     - Consider using ImPlot (https://github.com/epezent/implot) which is much better!
-    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
+    Implied stride = sizeof(float)
+    - Pygui note: stride has been omitted because we are instead passing in a list.
+    the underlying c_float array is handled by Cython.
     """
     cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
     if c_floats is NULL:
@@ -5549,7 +5535,7 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
         scale_min,
         scale_max,
         _cast_tuple_ImVec2(graph_size),
-        stride
+        sizeof(float)
     )
     ccimgui.ImGui_MemFree(c_floats)
 # [End Function]
@@ -7905,30 +7891,31 @@ def text_wrapped(fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
-# ?returns(bool)
-# def tree_node(label: str):
-#     """
-#     Widgets: Trees
-#     - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
-#     """
-#     cdef bool res = ccimgui.ImGui_TreeNode(
-#         _bytes(label)
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def tree_node_ex(label: str, flags: int=0):
+def tree_node(label: str, flags: int=0):
+    """
+    Widgets: Trees
+    - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
+    """
     cdef bool res = ccimgui.ImGui_TreeNodeEx(
         _bytes(label),
         flags
     )
     return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?returns(bool)
+# def tree_node_ex(label: str, flags: int=0):
+#     cdef bool res = ccimgui.ImGui_TreeNodeEx(
+#         _bytes(label),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]

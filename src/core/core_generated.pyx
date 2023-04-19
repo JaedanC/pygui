@@ -52,22 +52,6 @@ cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     return vec
 
 
-def _py_vertex_buffer_vertex_pos_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos
-
-def _py_vertex_buffer_vertex_uv_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv
-
-def _py_vertex_buffer_vertex_col_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col
-
-def _py_vertex_buffer_vertex_size():
-    return sizeof(ccimgui.ImDrawVert)
-
-def _py_index_buffer_index_size():
-    return sizeof(ccimgui.ImDrawIdx)
-
-
 cdef class BoolPtr:
     @staticmethod
     cdef bool* ptr(ptr: BoolPtr):

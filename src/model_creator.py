@@ -1099,22 +1099,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         return vec
 
 
-    def _py_vertex_buffer_vertex_pos_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).pos
-
-    def _py_vertex_buffer_vertex_uv_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).uv
-
-    def _py_vertex_buffer_vertex_col_offset():
-        return <uintptr_t><size_t>&(<{pxd_library_name}.ImDrawVert*>NULL).col
-
-    def _py_vertex_buffer_vertex_size():
-        return sizeof({pxd_library_name}.ImDrawVert)
-
-    def _py_index_buffer_index_size():
-        return sizeof({pxd_library_name}.ImDrawIdx)
-
-
     cdef class BoolPtr:
         @staticmethod
         cdef bool* ptr(ptr: BoolPtr):
@@ -1505,15 +1489,8 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     from typing import Any, Callable, Tuple, List, Sequence
     from PIL import Image
 
-
-    VERTEX_BUFFER_POS_OFFSET: int
-    VERTEX_BUFFER_UV_OFFSET: int
-    VERTEX_BUFFER_COL_OFFSET: int
-    VERTEX_SIZE: int
-    INDEX_SIZE: int
     FLT_MIN: float
     FLT_MAX: float
-
     PAYLOAD_TYPE_COLOR_3F: int
     PAYLOAD_TYPE_COLOR_4F: int
 
@@ -1649,13 +1626,6 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     # __init__.py ------------------------------------
     py = textwrap.dedent("""
     from .{extension_name} import *
-
-    VERTEX_BUFFER_POS_OFFSET = {extension_name}._py_vertex_buffer_vertex_pos_offset()
-    VERTEX_BUFFER_UV_OFFSET = {extension_name}._py_vertex_buffer_vertex_uv_offset()
-    VERTEX_BUFFER_COL_OFFSET = {extension_name}._py_vertex_buffer_vertex_col_offset()
-    VERTEX_SIZE = {extension_name}._py_vertex_buffer_vertex_size()
-    INDEX_SIZE = {extension_name}._py_index_buffer_index_size()
-
 
 
     import OpenGL.GL as gl

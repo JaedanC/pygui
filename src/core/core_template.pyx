@@ -52,22 +52,6 @@ cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     return vec
 
 
-def _py_vertex_buffer_vertex_pos_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).pos
-
-def _py_vertex_buffer_vertex_uv_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).uv
-
-def _py_vertex_buffer_vertex_col_offset():
-    return <uintptr_t><size_t>&(<ccimgui.ImDrawVert*>NULL).col
-
-def _py_vertex_buffer_vertex_size():
-    return sizeof(ccimgui.ImDrawVert)
-
-def _py_index_buffer_index_size():
-    return sizeof(ccimgui.ImDrawIdx)
-
-
 cdef class BoolPtr:
     @staticmethod
     cdef bool* ptr(ptr: BoolPtr):
@@ -1326,7 +1310,7 @@ def begin_popup_modal(name: str, p_open: BoolPtr=None, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def begin_tab_bar(str_id: str, flags: int=0):
     """
@@ -1343,7 +1327,7 @@ def begin_tab_bar(str_id: str, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
     """
@@ -2754,7 +2738,7 @@ def end_popup():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def end_tab_bar():
     """
@@ -2765,7 +2749,7 @@ def end_tab_bar():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def end_tab_item():
     """
@@ -7907,23 +7891,24 @@ def text_wrapped_v(fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?returns(bool)
-def tree_node(label: str):
+def tree_node(label: str, flags: int=0):
     """
     Widgets: Trees
     - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
     """
-    cdef bool res = ccimgui.ImGui_TreeNode(
-        _bytes(label)
+    cdef bool res = ccimgui.ImGui_TreeNodeEx(
+        _bytes(label),
+        flags
     )
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?returns(bool)
 def tree_node_ex(label: str, flags: int=0):
     cdef bool res = ccimgui.ImGui_TreeNodeEx(

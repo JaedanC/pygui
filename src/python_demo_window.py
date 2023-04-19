@@ -171,13 +171,15 @@ class widget:
     colour_color_hsv = pygui.Vec4Ptr(0.23, 1, 1, 1)
     multi_vec4f = pygui.Vec4Ptr(0.10, 0.2, 0.3, 0.44)
     multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
+    tab_tab_bar_flags = pygui.IntPtr(pygui.TAB_BAR_FLAGS_REORDERABLE)
+    tab_opened = [pygui.BoolPtr(True) for _ in range(4)]
 
 
 def show_demo_widgets():
     if not pygui.collapsing_header("Widgets"):
         return
     
-    if pygui.tree_node_ex("Basic"):
+    if pygui.tree_node("Basic"):
         pygui.separator_text("General")
 
         if pygui.button("Button"):
@@ -339,13 +341,13 @@ def show_demo_widgets():
 
         pygui.tree_pop()
     
-    if pygui.tree_node_ex("Trees"):
-        if pygui.tree_node_ex("Basic trees"):
+    if pygui.tree_node("Trees"):
+        if pygui.tree_node("Basic trees"):
             for i in range(5):
                 if i == 0:
                     pygui.set_next_item_open(True, pygui.COND_ONCE)
                 
-                if pygui.tree_node_ex("Child {}".format(i)):
+                if pygui.tree_node("Child {}".format(i)):
                     pygui.text("blah blah")
                     pygui.same_line()
                     if pygui.small_button("button"):
@@ -353,7 +355,7 @@ def show_demo_widgets():
                     pygui.tree_pop()
             pygui.tree_pop()
 
-        if pygui.tree_node_ex("Advanced, with Selectable nodes"):
+        if pygui.tree_node("Advanced, with Selectable nodes"):
             help_marker(
                 "This is a more typical looking tree with selectable nodes.\n"
                 "Click to select, CTRL+Click to toggle, click on arrows or double-click to open."
@@ -382,7 +384,7 @@ def show_demo_widgets():
                     node_flags |= pygui.TREE_NODE_FLAGS_SELECTED
                 if i < 3:
                     # Items 0..2 are Tree Node
-                    node_open = pygui.tree_node_ex(f"Selectable Node {i}", node_flags)
+                    node_open = pygui.tree_node(f"Selectable Node {i}", node_flags)
                     if pygui.is_item_clicked() and not pygui.is_item_toggled_open():
                         node_clicked = i
                     if widget.tree_test_drag_and_drop and pygui.begin_drag_drop_source():
@@ -397,7 +399,7 @@ def show_demo_widgets():
                     # The only reason we use TreeNode at all is to allow selection of the leaf. Otherwise we can
                     # use BulletText() or advance the cursor by GetTreeNodeToLabelSpacing() and call Text().
                     node_flags |= pygui.TREE_NODE_FLAGS_LEAF | pygui.TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN # ImGuiTreeNodeFlags_Bullet
-                    pygui.tree_node_ex(f"Selectable Leaf {i}", node_flags)
+                    pygui.tree_node(f"Selectable Leaf {i}", node_flags)
                     if pygui.is_item_clicked() and not pygui.is_item_toggled_open():
                         node_clicked = i
                     if widget.tree_test_drag_and_drop and pygui.begin_drag_drop_source():
@@ -418,7 +420,7 @@ def show_demo_widgets():
             pygui.tree_pop()
         pygui.tree_pop()
     
-    if pygui.tree_node_ex("Collapsing Headers"):
+    if pygui.tree_node("Collapsing Headers"):
         pygui.checkbox("Show 2nd header", widget.header_closable_group)
         if pygui.collapsing_header("Header", pygui.TREE_NODE_FLAGS_NONE):
             pygui.text("IsItemHovered: {}".format(pygui.is_item_hovered()))
@@ -431,10 +433,10 @@ def show_demo_widgets():
                 pygui.text(f"more content {i}")
         pygui.tree_pop()
     
-    if pygui.tree_node_ex("Bullets"):
+    if pygui.tree_node("Bullets"):
         pygui.bullet_text("Bullet point 1");
         pygui.bullet_text("Bullet point 2\nOn multiple lines");
-        if pygui.tree_node_ex("Tree node"):
+        if pygui.tree_node("Tree node"):
             pygui.bullet_text("Another bullet point")
             pygui.tree_pop()
         
@@ -444,8 +446,8 @@ def show_demo_widgets():
         pygui.small_button("Button")
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("Text"):
-        if pygui.tree_node_ex("Colorful text"):
+    if pygui.tree_node("Text"):
+        if pygui.tree_node("Colorful text"):
             pygui.text_colored((1, 0, 1, 1), "Pink")
             pygui.text_colored((1, 1, 0, 1), "Yellow")
             pygui.text_disabled("Disabled")
@@ -453,7 +455,7 @@ def show_demo_widgets():
             help_marker("The TextDisabled color is stored in ImGuiStyle.")
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("Word Wrapping"):
+        if pygui.tree_node("Word Wrapping"):
             pygui.text_wrapped(
                 "This text should automatically wrap on the edge of the window. The current implementation "
                 "for text wrapping follows simple rules suitable for English and possibly other languages.")
@@ -480,7 +482,7 @@ def show_demo_widgets():
                 pygui.pop_text_wrap_pos()
             pygui.tree_pop()
 
-        if pygui.tree_node_ex("UTF-8 Text"):
+        if pygui.tree_node("UTF-8 Text"):
             pygui.text_wrapped(
                 "CJK text will only appear if the font was loaded with the appropriate CJK character ranges. "
                 "Call io.Fonts->AddFontFromFileTTF() manually to load extra character ranges. "
@@ -497,15 +499,15 @@ def show_demo_widgets():
 
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("Images"):
-        if pygui.tree_node_ex("Custom Pygui Image"):
+    if pygui.tree_node("Images"):
+        if pygui.tree_node("Custom Pygui Image"):
             pygui.image(
                 widget.instance().widgets_image_texture,
                 (widget.instance().widgets_image.width / 2,
                 widget.instance().widgets_image.height / 2))
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("ImGui Demo"):
+        if pygui.tree_node("ImGui Demo"):
             io = pygui.get_io()
             pygui.text_wrapped(
                 "Below we are displaying the font texture (which is the only texture we have access to in this demo). "
@@ -576,7 +578,7 @@ def show_demo_widgets():
 
         pygui.tree_pop()
     
-    if pygui.tree_node_ex("Combo"):
+    if pygui.tree_node("Combo"):
         # Combo Boxes are also called "Dropdown" in other systems
         # Expose flags as checkbox for the demo
         pygui.checkbox_flags("ImGuiComboFlags_PopupAlignLeft", widget.combo_flags, pygui.COMBO_FLAGS_POPUP_ALIGN_LEFT)
@@ -623,7 +625,7 @@ def show_demo_widgets():
         # ImGui::Combo("combo 4 (function)", &item_current_4, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items));
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("List boxes"):
+    if pygui.tree_node("List boxes"):
         # Using the generic BeginListBox() API, you have full control over how to display the combo contents.
         # (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
         # stored in the object itself, etc.)
@@ -654,8 +656,8 @@ def show_demo_widgets():
         
         pygui.tree_pop()
     
-    if pygui.tree_node_ex("Selectables"):
-        if pygui.tree_node_ex("Basic"):
+    if pygui.tree_node("Selectables"):
+        if pygui.tree_node("Basic"):
             pygui.selectable_bool_ptr("1. I am selectable", widget.select_selection[0])
             pygui.selectable_bool_ptr("2. I am selectable", widget.select_selection[1])
             pygui.text("(I am not selectable)")
@@ -665,13 +667,13 @@ def show_demo_widgets():
                     widget.select_selection[4].value = not widget.select_selection[4].value
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("Selection State: Single Selection"):
+        if pygui.tree_node("Selection State: Single Selection"):
             for n in range(5):
                 if pygui.selectable(f"Object {n}", widget.select_single_state_selected == n):
                     widget.select_single_state_selected = n
             pygui.tree_pop()
 
-        if pygui.tree_node_ex("Selection State: Multiple Selection"):
+        if pygui.tree_node("Selection State: Multiple Selection"):
             help_marker("Hold CTRL and click to select multiple items.")
             for n in range(5):
                 if pygui.selectable(f"Object {n}", widget.select_multi_state_selection[n]):
@@ -680,7 +682,7 @@ def show_demo_widgets():
                     widget.select_multi_state_selection[n].value = not widget.select_multi_state_selection[n].value
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("Rendering more text into the same line"):
+        if pygui.tree_node("Rendering more text into the same line"):
             pygui.selectable_bool_ptr("main.c", widget.select_render_selected[0])
             pygui.same_line(300)
             pygui.text(" 2,345 bytes")
@@ -694,7 +696,7 @@ def show_demo_widgets():
             pygui.text(" 2,345 bytes")
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("In columns"):
+        if pygui.tree_node("In columns"):
             if pygui.begin_table("split1", 3, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS | pygui.TABLE_FLAGS_BORDERS):
                 for i in range(10):
                     pygui.table_next_column()
@@ -713,7 +715,7 @@ def show_demo_widgets():
                 pygui.end_table()
             pygui.tree_pop()
         
-        if pygui.tree_node_ex("Grid"):
+        if pygui.tree_node("Grid"):
             # Add in a bit of silly fun...
             current_time = pygui.get_time()
             winning_state = not any(0 in inner for inner in widget.select_grid_selected)
@@ -743,7 +745,7 @@ def show_demo_widgets():
                 pygui.pop_style_var()
             pygui.tree_pop()
 
-        if pygui.tree_node_ex("Alignment"):
+        if pygui.tree_node("Alignment"):
             help_marker(
                 "By default, Selectables uses style.SelectableTextAlign but it can be overridden on a per-item "
                 "basis using PushStyleVar(). You'll probably want to always keep your default situation to "
@@ -764,7 +766,58 @@ def show_demo_widgets():
             pygui.tree_pop()
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("Plotting"):
+    if pygui.tree_node("Tabs"):
+        if pygui.tree_node("Basic"):
+            tab_bar_flags = pygui.TAB_BAR_FLAGS_NONE
+            if pygui.begin_tab_bar("MyTabBar", tab_bar_flags):
+                if pygui.begin_tab_item("Avocado"):
+                    pygui.text("This is the Avocado tab!\nblah blah blah blah blah")
+                    pygui.end_tab_item()
+                if pygui.begin_tab_item("Broccoli"):
+                    pygui.text("This is the Broccoli tab!\nblah blah blah blah blah")
+                    pygui.end_tab_item()
+                if pygui.begin_tab_item("Cucumber"):
+                    pygui.text("This is the Cucumber tab!\nblah blah blah blah blah")
+                    pygui.end_tab_item()
+                pygui.end_tab_bar()
+            pygui.separator()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Advanced & Close Button"):
+            pygui.checkbox_flags("ImGuiTabBarFlags_Reorderable", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_REORDERABLE)
+            pygui.checkbox_flags("ImGuiTabBarFlags_AutoSelectNewTabs", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS)
+            pygui.checkbox_flags("ImGuiTabBarFlags_TabListPopupButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON)
+            pygui.checkbox_flags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON)
+            if widget.tab_tab_bar_flags.value & pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK == 0:
+                widget.tab_tab_bar_flags.value |= pygui.TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyResizeDown", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyScroll", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL)
+
+            # Tab Bar
+            names = ["Artichoke", "Beetroot", "Celery", "Daikon"]
+            for n in range(len(widget.tab_opened)):
+                if n > 0:
+                    pygui.same_line()
+                pygui.checkbox(names[n], widget.tab_opened[n])
+
+            # Passing a bool* to BeginTabItem() is similar to passing one to Begin():
+            # the underlying bool will be set to false when the tab is closed.
+            if pygui.begin_tab_bar("MyTabBar", widget.tab_tab_bar_flags.value):
+                for n in range(len(widget.tab_opened)):
+                    if widget.tab_opened[n] and pygui.begin_tab_item(names[n], widget.tab_opened[n], pygui.TAB_BAR_FLAGS_NONE):
+                        pygui.text("This is the {} tab!".format(names[n]))
+                        if n & 1:
+                            pygui.text("I am an odd tab.")
+                        pygui.end_tab_item()
+                pygui.end_tab_bar()
+            pygui.separator()
+            pygui.tree_pop()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("Plotting"):
         pygui.checkbox("Animate", widget.plotting_animate)
 
         # Plot as lines and plot as histogram
@@ -840,7 +893,7 @@ def show_demo_widgets():
         ))
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("Color/Picker Widgets"):
+    if pygui.tree_node("Color/Picker Widgets"):
         pygui.separator_text("Options")
         pygui.checkbox_flags("With Alpha Preview", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW)
         pygui.checkbox_flags("With Half Alpha Preview", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
@@ -1032,7 +1085,7 @@ def show_demo_widgets():
 
         pygui.tree_pop()
 
-    if pygui.tree_node_ex("Multi-component Widgets"):
+    if pygui.tree_node("Multi-component Widgets"):
         pygui.separator_text("2-wide")
         pygui.input_float2("input float2", widget.multi_vec4f.as_floatptrs())
         pygui.drag_float2("drag float2", widget.multi_vec4f.as_floatptrs(), 0.01, 0, 1)
@@ -1193,7 +1246,7 @@ def show_demo_tables():
     
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Basic"):
+    if pygui.tree_node("Basic"):
         # Here we will showcase three different ways to output a table.
         # They are very simple variations of a same thing!
 
@@ -1237,7 +1290,7 @@ def show_demo_tables():
     
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Borders, background"):
+    if pygui.tree_node("Borders, background"):
         push_style_compact()
         pygui.checkbox_flags("ImGuiTableFlags_RowBg", table.border_flags, pygui.TABLE_FLAGS_ROW_BG)
         pygui.checkbox_flags("ImGuiTableFlags_Borders", table.border_flags, pygui.TABLE_FLAGS_BORDERS)
@@ -1299,7 +1352,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Resizable, stretch"):
+    if pygui.tree_node("Resizable, stretch"):
         # By default, if we don't enable ScrollX the sizing policy for each column is "Stretch"
         # All columns maintain a sizing weight, and they will occupy all available width.
         
@@ -1321,7 +1374,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Resizable, fixed"):
+    if pygui.tree_node("Resizable, fixed"):
         help_marker(
             "Using _Resizable + _SizingFixedFit flags.\n"
             "Fixed-width columns generally makes more sense if you want to use horizontal scrolling.\n\n"
@@ -1342,7 +1395,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Resizable, mixed"):
+    if pygui.tree_node("Resizable, mixed"):
         help_marker(
             "Using TableSetupColumn() to alter resizing policy on a per-column basis.\n\n"
             "When combining Fixed and Stretch columns, generally you only want one, maybe two trailing columns to use _WidthStretch.")
@@ -1377,7 +1430,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Reorderable, hideable, with headers"):
+    if pygui.tree_node("Reorderable, hideable, with headers"):
         push_style_compact()
         pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.hidable_flags, pygui.TABLE_FLAGS_RESIZABLE)
         pygui.checkbox_flags("ImGuiTableFlags_Reorderable", table.hidable_flags, pygui.TABLE_FLAGS_REORDERABLE)
@@ -1418,7 +1471,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Padding"):
+    if pygui.tree_node("Padding"):
         # First example: showcase use of padding flags and effect of BorderOuterV/BorderInnerV on X padding.
         # We don't expose BorderOuterH/BorderInnerH here because they have no effect on X padding.
         help_marker(
@@ -1501,7 +1554,7 @@ def show_demo_tables():
 
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
-    if pygui.tree_node_ex("Sorting"):
+    if pygui.tree_node("Sorting"):
         template_item_names = [
             "Banana", "Apple", "Cherry", "Watermelon", "Grapefruit", "Strawberry", "Mango",
             "Kiwi", "Orange", "Pineapple", "Blueberry", "Plum", "Coconut", "Pear", "Apricot"
