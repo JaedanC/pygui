@@ -234,6 +234,14 @@ cdef class Vec4Ptr:
             self.w,
         )
 
+    def to_u32(self) -> int:
+        return IM_COL32(
+            int(self.x * 255),
+            int(self.y * 255),
+            int(self.z * 255),
+            int(self.w * 255),
+        )
+
     def copy(self) -> Vec4Ptr:
         return Vec4Ptr(*self.vec())
 
@@ -250,18 +258,26 @@ cdef class Vec4Ptr:
         array[3] = self.w
 
 
-def IM_COL32(int r, int g, int b, int a) -> int:
-    cdef unsigned int output = 0
-    output |= a << 24
-    output |= b << 16
-    output |= g << 8
-    output |= r << 0
-    return output
+IM_COL32_R_SHIFT = 0
+IM_COL32_G_SHIFT = 8
+IM_COL32_B_SHIFT = 16
+IM_COL32_A_SHIFT = 24
 
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
 PAYLOAD_TYPE_COLOR_3F = "_COL3F"
 PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned long output = 0
+    output |= a << IM_COL32_A_SHIFT
+    output |= b << IM_COL32_B_SHIFT
+    output |= g << IM_COL32_G_SHIFT
+    output |= r << IM_COL32_R_SHIFT
+    return output
+
+
 IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
 IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
 IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)

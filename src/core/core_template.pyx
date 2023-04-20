@@ -234,6 +234,14 @@ cdef class Vec4Ptr:
             self.w,
         )
 
+    def to_u32(self) -> int:
+        return IM_COL32(
+            int(self.x * 255),
+            int(self.y * 255),
+            int(self.z * 255),
+            int(self.w * 255),
+        )
+
     def copy(self) -> Vec4Ptr:
         return Vec4Ptr(*self.vec())
 
@@ -250,18 +258,26 @@ cdef class Vec4Ptr:
         array[3] = self.w
 
 
-def IM_COL32(int r, int g, int b, int a) -> int:
-    cdef unsigned int output = 0
-    output |= a << 24
-    output |= b << 16
-    output |= g << 8
-    output |= r << 0
-    return output
+IM_COL32_R_SHIFT = 0
+IM_COL32_G_SHIFT = 8
+IM_COL32_B_SHIFT = 16
+IM_COL32_A_SHIFT = 24
 
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
 PAYLOAD_TYPE_COLOR_3F = "_COL3F"
 PAYLOAD_TYPE_COLOR_4F = "_COL4F"
+
+
+def IM_COL32(int r, int g, int b, int a) -> int:
+    cdef unsigned long output = 0
+    output |= a << IM_COL32_A_SHIFT
+    output |= b << IM_COL32_B_SHIFT
+    output |= g << IM_COL32_G_SHIFT
+    output |= r << IM_COL32_R_SHIFT
+    return output
+
+
 IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
 IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
 IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
@@ -1484,7 +1500,7 @@ def button_ex(label: str, size: tuple=(0, 0)):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
 def calc_item_width():
     """
@@ -2826,7 +2842,7 @@ def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_use
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImDrawList)
 def get_background_draw_list():
     """
@@ -2872,6 +2888,8 @@ def get_color_u32(idx: int, alpha_mul: float=1.0):
     """
     Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
     """
+    if idx >= COL_COUNT:
+        raise IndexError("Perhaps you wanted to call get_color_u32_im_u32() instead?")
     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32Ex(
         idx,
         alpha_mul
@@ -2896,7 +2914,7 @@ def get_color_u32_ex(idx: int, alpha_mul: float=1.0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(int)
 def get_color_u32_im_u32(col: int):
     """
@@ -3149,7 +3167,7 @@ def get_font_tex_uv_white_pixel():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(ImDrawList)
 def get_foreground_draw_list():
     """
@@ -3187,7 +3205,7 @@ def get_frame_count():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(float)
 def get_frame_height():
     """
@@ -3392,7 +3410,7 @@ def get_mouse_cursor():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
 def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0):
     """
@@ -3675,7 +3693,7 @@ def get_window_height():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
 def get_window_pos():
     """
@@ -3687,7 +3705,7 @@ def get_window_pos():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(tuple)
 def get_window_size():
     """
@@ -4574,7 +4592,7 @@ def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flag
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def invisible_button(str_id: str, size: tuple, flags: int=0):
     """
@@ -4650,7 +4668,7 @@ def is_item_activated():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def is_item_active():
     """
@@ -4839,7 +4857,7 @@ def is_key_released(key: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def is_mouse_clicked(button: int):
     """
@@ -4882,7 +4900,7 @@ def is_mouse_double_clicked(button: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def is_mouse_down(button: int):
     """
@@ -4900,7 +4918,7 @@ def is_mouse_down(button: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(bool)
 def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
     """
@@ -5439,7 +5457,7 @@ def open_popup_id(id_: int, popup_flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def open_popup_on_item_click(str_id: str=None, popup_flags: int=1):
     """
@@ -5668,7 +5686,7 @@ def pop_id():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def pop_item_width():
     ccimgui.ImGui_PopItemWidth()
@@ -5765,7 +5783,7 @@ def push_button_repeat(repeat: bool):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool):
     """
@@ -5859,7 +5877,7 @@ def push_id_str(str_id_begin: str, str_id_end: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?returns(None)
 def push_item_width(item_width: float):
     """
@@ -9069,7 +9087,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0):
         """
@@ -9089,7 +9107,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0):
         """
@@ -9123,18 +9141,17 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_circle(self: ImDrawList, center: tuple, radius: float, col: int):
-        """
-        Implied num_segments = 0, thickness = 1.0f
-        """
-        ccimgui.ImDrawList_AddCircle(
+    def add_circle(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
+        ccimgui.ImDrawList_AddCircleEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
-            col
+            col,
+            num_segments,
+            thickness
         )
     # [End Method]
 
@@ -9155,7 +9172,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0):
         ccimgui.ImDrawList_AddCircleFilled(
@@ -9286,10 +9303,10 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int):
+    def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0):
         """
         Primitives
         - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
@@ -9298,13 +9315,13 @@ cdef class ImDrawList:
         In older versions (until Dear ImGui 1.77) the AddCircle functions defaulted to num_segments == 12.
         In future versions we will use textures to provide cheaper and higher-quality circles.
         Use AddNgon() and AddNgonFilled() functions if you need to guarantee a specific number of sides.
-        Implied thickness = 1.0f
         """
-        ccimgui.ImDrawList_AddLine(
+        ccimgui.ImDrawList_AddLineEx(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
-            col
+            col,
+            thickness
         )
     # [End Method]
 
@@ -9323,19 +9340,17 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
-        """
-        Implied thickness = 1.0f
-        """
-        ccimgui.ImDrawList_AddNgon(
+    def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
+        ccimgui.ImDrawList_AddNgonEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
             col,
-            num_segments
+            num_segments,
+            thickness
         )
     # [End Method]
 
@@ -9356,7 +9371,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
         ccimgui.ImDrawList_AddNgonFilled(
@@ -9508,7 +9523,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
         ccimgui.ImDrawList_AddRectFilledMultiColor(
@@ -9593,19 +9608,17 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
-        """
-        Implied thickness = 1.0f
-        """
-        ccimgui.ImDrawList_AddTriangle(
+    def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
+        ccimgui.ImDrawList_AddTriangleEx(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
-            col
+            col,
+            thickness
         )
     # [End Method]
 
@@ -9626,7 +9639,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
         ccimgui.ImDrawList_AddTriangleFilled(
@@ -9937,7 +9950,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def pop_clip_rect(self: ImDrawList):
         ccimgui.ImDrawList_PopClipRect(
@@ -10086,7 +10099,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False):
         """
@@ -13732,7 +13745,7 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(tuple)
     @property
     def mouse_delta(self):

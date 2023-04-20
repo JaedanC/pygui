@@ -37,6 +37,7 @@ class Vec4Ptr:
     w: float
     def __init__(self, x: float, y: float, z: float, w: float): ...
     def vec(self) -> Tuple[float, float, float, float]: ...
+    def to_u32(self) -> int: ...
     def as_floatptrs(self) -> Sequence[FloatPtr]: ...
     def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
     def to_floatptrs(self) -> Sequence[FloatPtr]: ...
@@ -940,11 +941,11 @@ def button(label: str, size: tuple=(0, 0)) -> bool:
 #     """
 #     pass
 
-# def calc_item_width() -> float:
-#     """
-#     Width of item given pushed settings and current cursor position. not necessarily the width of last item unlike most 'item' functions.
-#     """
-#     pass
+def calc_item_width() -> float:
+    """
+    Width of item given pushed settings and current cursor position. not necessarily the width of last item unlike most 'item' functions.
+    """
+    pass
 
 def calc_text_size(text: str) -> tuple:
     """
@@ -1307,12 +1308,12 @@ def end_tooltip() -> None:
 #     pass
 
 # def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_user_data: Any) -> None: ...
-# def get_background_draw_list() -> ImDrawList:
-#     """
-#     Background/Foreground Draw Lists
-#     Get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
-#     """
-#     pass
+def get_background_draw_list() -> ImDrawList:
+    """
+    Background/Foreground Draw Lists
+    Get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    """
+    pass
 
 # def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport) -> ImDrawList:
 #     """
@@ -1339,11 +1340,11 @@ def get_color_u32(idx: int, alpha_mul: float=1.0) -> int:
 #     """
 #     pass
 
-# def get_color_u32_im_u32(col: int) -> int:
-#     """
-#     Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
-#     """
-#     pass
+def get_color_u32_im_u32(col: int) -> int:
+    """
+    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    """
+    pass
 
 # def get_color_u32_im_vec4(col: tuple) -> int:
 #     """
@@ -1454,11 +1455,11 @@ def get_font_size() -> float:
 #     """
 #     pass
 
-# def get_foreground_draw_list() -> ImDrawList:
-#     """
-#     Get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
-#     """
-#     pass
+def get_foreground_draw_list() -> ImDrawList:
+    """
+    Get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
+    """
+    pass
 
 # def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport) -> ImDrawList:
 #     """
@@ -1472,11 +1473,11 @@ def get_font_size() -> float:
 #     """
 #     pass
 
-# def get_frame_height() -> float:
-#     """
-#     ~ fontsize + style.framepadding.y * 2
-#     """
-#     pass
+def get_frame_height() -> float:
+    """
+    ~ fontsize + style.framepadding.y * 2
+    """
+    pass
 
 def get_frame_height_with_spacing() -> float:
     """
@@ -1558,11 +1559,11 @@ def get_item_rect_size() -> tuple:
 #     """
 #     pass
 
-# def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0) -> tuple:
-#     """
-#     Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
-#     """
-#     pass
+def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0) -> tuple:
+    """
+    Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    """
+    pass
 
 # def get_mouse_pos() -> tuple:
 #     """
@@ -1692,17 +1693,17 @@ def get_window_draw_list() -> ImDrawList:
 #     """
 #     pass
 
-# def get_window_pos() -> tuple:
-#     """
-#     Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)
-#     """
-#     pass
+def get_window_pos() -> tuple:
+    """
+    Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)
+    """
+    pass
 
-# def get_window_size() -> tuple:
-#     """
-#     Get current window size
-#     """
-#     pass
+def get_window_size() -> tuple:
+    """
+    Get current window size
+    """
+    pass
 
 # def get_window_viewport() -> ImGuiViewport:
 #     """
@@ -1838,11 +1839,11 @@ def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callb
     pass
 
 # def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
-# def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
-#     """
-#     Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
-#     """
-#     pass
+def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
+    """
+    Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
+    """
+    pass
 
 # def is_any_item_active() -> bool:
 #     """
@@ -1874,11 +1875,11 @@ def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callb
 #     """
 #     pass
 
-# def is_item_active() -> bool:
-#     """
-#     Is the last item active? (e.g. button being held, text field being edited. this will continuously return true while holding mouse button on an item. items that don't interact will always return false)
-#     """
-#     pass
+def is_item_active() -> bool:
+    """
+    Is the last item active? (e.g. button being held, text field being edited. this will continuously return true while holding mouse button on an item. items that don't interact will always return false)
+    """
+    pass
 
 def is_item_clicked() -> bool:
     """
@@ -1966,11 +1967,11 @@ def is_item_toggled_open() -> bool:
 #     """
 #     pass
 
-# def is_mouse_clicked(button: int) -> bool:
-#     """
-#     Implied repeat = false
-#     """
-#     pass
+def is_mouse_clicked(button: int) -> bool:
+    """
+    Implied repeat = false
+    """
+    pass
 
 # def is_mouse_clicked_ex(button: int, repeat: bool=False) -> bool:
 #     """
@@ -1984,21 +1985,21 @@ def is_mouse_double_clicked(button: int) -> bool:
     """
     pass
 
-# def is_mouse_down(button: int) -> bool:
-#     """
-#     Inputs Utilities: Mouse specific
-#     - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
-#     - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
-#     - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')
-#     Is mouse button held?
-#     """
-#     pass
+def is_mouse_down(button: int) -> bool:
+    """
+    Inputs Utilities: Mouse specific
+    - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
+    - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
+    - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')
+    Is mouse button held?
+    """
+    pass
 
-# def is_mouse_dragging(button: int, lock_threshold: float=-1.0) -> bool:
-#     """
-#     Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
-#     """
-#     pass
+def is_mouse_dragging(button: int, lock_threshold: float=-1.0) -> bool:
+    """
+    Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    """
+    pass
 
 # def is_mouse_hovering_rect(r_min: tuple, r_max: tuple) -> bool:
 #     """
@@ -2201,11 +2202,11 @@ def open_popup(str_id: str, popup_flags: int=0) -> None:
 #     """
 #     pass
 
-# def open_popup_on_item_click(str_id: str=None, popup_flags: int=1) -> None:
-#     """
-#     Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)
-#     """
-#     pass
+def open_popup_on_item_click(str_id: str=None, popup_flags: int=1) -> None:
+    """
+    Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)
+    """
+    pass
 
 def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None:
     """
@@ -2248,7 +2249,7 @@ def pop_id() -> None:
     """
     pass
 
-# def pop_item_width() -> None: ...
+def pop_item_width() -> None: ...
 def pop_style_color(count: int=1) -> None:
     """
     Implied count = 1
@@ -2272,12 +2273,12 @@ def push_button_repeat(repeat: bool) -> None:
     """
     pass
 
-# def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool) -> None:
-#     """
-#     Clipping
-#     - Mouse hovering is affected by ImGui::PushClipRect() calls, unlike direct calls to ImDrawList::PushClipRect() which are render only.
-#     """
-#     pass
+def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool) -> None:
+    """
+    Clipping
+    - Mouse hovering is affected by ImGui::PushClipRect() calls, unlike direct calls to ImDrawList::PushClipRect() which are render only.
+    """
+    pass
 
 # def push_font(font: ImFont) -> None:
 #     """
@@ -2321,12 +2322,12 @@ def push_id_str(str_id_begin: str, str_id_end: str) -> None:
     """
     pass
 
-# def push_item_width(item_width: float) -> None:
-#     """
-#     Parameters stacks (current window)
-#     Push width of items for common large 'item+label' widgets. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side).
-#     """
-#     pass
+def push_item_width(item_width: float) -> None:
+    """
+    Parameters stacks (current window)
+    Push width of items for common large 'item+label' widgets. >0.0f: width in pixels, <0.0f align xx pixels to the right of window (so -flt_min always align width to the right side).
+    """
+    pass
 
 def push_style_color(idx: int, col: int) -> None:
     """
@@ -3404,17 +3405,17 @@ class ImDrawList:
     # """
     # [internal] point within vtxbuffer.data after each add command (to avoid using the imvector<> operators too much)
     # """
-    # def add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0) -> None:
-    #     """
-    #     Cubic bezier (4 control points)
-    #     """
-    #     pass
+    def add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0) -> None:
+        """
+        Cubic bezier (4 control points)
+        """
+        pass
 
-    # def add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0) -> None:
-    #     """
-    #     Quadratic bezier (3 control points)
-    #     """
-    #     pass
+    def add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0) -> None:
+        """
+        Quadratic bezier (3 control points)
+        """
+        pass
 
     # def add_callback(self: ImDrawList, callback: Callable, callback_data: Any) -> None:
     #     """
@@ -3423,14 +3424,9 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_circle(self: ImDrawList, center: tuple, radius: float, col: int) -> None:
-    #     """
-    #     Implied num_segments = 0, thickness = 1.0f
-    #     """
-    #     pass
-
+    def add_circle(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
     # def add_circle_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
-    # def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0) -> None: ...
+    def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0) -> None: ...
     # def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int) -> None: ...
     # def add_draw_cmd(self: ImDrawList) -> None:
     #     """
@@ -3457,28 +3453,22 @@ class ImDrawList:
 
     # def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
     # def add_image_rounded(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0) -> None: ...
-    # def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int) -> None:
-    #     """
-    #     Primitives
-    #     - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
-    #     - For rectangular primitives, "p_min" and "p_max" represent the upper-left and lower-right corners.
-    #     - For circle primitives, use "num_segments == 0" to automatically calculate tessellation (preferred).
-    #     In older versions (until Dear ImGui 1.77) the AddCircle functions defaulted to num_segments == 12.
-    #     In future versions we will use textures to provide cheaper and higher-quality circles.
-    #     Use AddNgon() and AddNgonFilled() functions if you need to guarantee a specific number of sides.
-    #     Implied thickness = 1.0f
-    #     """
-    #     pass
+    def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0) -> None:
+        """
+        Primitives
+        - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        - For rectangular primitives, "p_min" and "p_max" represent the upper-left and lower-right corners.
+        - For circle primitives, use "num_segments == 0" to automatically calculate tessellation (preferred).
+        In older versions (until Dear ImGui 1.77) the AddCircle functions defaulted to num_segments == 12.
+        In future versions we will use textures to provide cheaper and higher-quality circles.
+        Use AddNgon() and AddNgonFilled() functions if you need to guarantee a specific number of sides.
+        """
+        pass
 
     # def add_line_ex(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0) -> None: ...
-    # def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int) -> None:
-    #     """
-    #     Implied thickness = 1.0f
-    #     """
-    #     pass
-
+    def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0) -> None: ...
     # def add_ngon_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0) -> None: ...
-    # def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int) -> None: ...
+    def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int) -> None: ...
     # def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float) -> None: ...
     # def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int) -> None:
     #     """
@@ -3512,7 +3502,7 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
+    def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
     # def add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str) -> None:
     #     """
     #     Implied text_end = null
@@ -3527,14 +3517,9 @@ class ImDrawList:
     #     pass
 
     # def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None) -> None: ...
-    # def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None:
-    #     """
-    #     Implied thickness = 1.0f
-    #     """
-    #     pass
-
+    def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0) -> None: ...
     # def add_triangle_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0) -> None: ...
-    # def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None: ...
+    def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None: ...
     # def calc_circle_auto_segment_count(self: ImDrawList, radius: float) -> int: ...
     def channels_merge(self: ImDrawList) -> None: ...
     def channels_set_current(self: ImDrawList, n: int) -> None: ...
@@ -3594,7 +3579,7 @@ class ImDrawList:
     # def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple) -> None: ...
     # def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0) -> None: ...
     # def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0) -> None: ...
-    # def pop_clip_rect(self: ImDrawList) -> None: ...
+    def pop_clip_rect(self: ImDrawList) -> None: ...
     # def pop_texture_id(self: ImDrawList) -> None: ...
     # def pop_unused_draw_cmd(self: ImDrawList) -> None: ...
     # def prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int) -> None: ...
@@ -3622,11 +3607,11 @@ class ImDrawList:
 
     # def prim_write_idx(self: ImDrawList, idx: int) -> None: ...
     # def prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int) -> None: ...
-    # def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False) -> None:
-    #     """
-    #     Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
-    #     """
-    #     pass
+    def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False) -> None:
+        """
+        Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
+        """
+        pass
 
     # def push_clip_rect_full_screen(self: ImDrawList) -> None: ...
     # def push_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
@@ -4574,10 +4559,10 @@ class ImGuiIO:
     # """
     # Time of last click (used to figure out double-click)
     # """
-    # mouse_delta: tuple
-    # """
-    # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
-    # """
+    mouse_delta: tuple
+    """
+    Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
+    """
     # mouse_double_click_max_dist: float
     # """
     # = 6.0f   // distance threshold to stay in to validate a double-click, in pixels.

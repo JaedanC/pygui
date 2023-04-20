@@ -33,6 +33,8 @@ def pop_style_compact():
 def pygui_demo_window():
     if demo.show_app_console:
         show_app_console(demo.show_app_console)
+    if demo.show_custom_rendering:
+        show_app_custom_rendering(demo.show_custom_rendering)
     
     show_menu_bar()
     show_demo_widgets()
@@ -1697,6 +1699,7 @@ def show_menu_bar():
             pygui.end_menu()
         if pygui.begin_menu("Examples"):
             pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
+            pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
             pygui.end_menu()
         pygui.end_menu_bar()
 
@@ -1791,8 +1794,6 @@ class ExampleAppConsole:
             "implementation may want to store entries along with extra data such as timestamp, emitter, etc.")
         pygui.text_wrapped("Enter 'HELP' for help.")
 
-        # TODO: display items starting from the bottom
-
         if pygui.small_button("Add Debug Text"):
             self.add_log("{} some text".format(len(self.items)))
             self.add_log("some more text")
@@ -1814,7 +1815,12 @@ class ExampleAppConsole:
             pygui.checkbox("Auto-scroll", self.auto_scroll)
             pygui.end_popup()
 
-        # TODO: Normally a filter would be here. Ignore for now
+        # Options, Filter
+        if pygui.button("Options"):
+            pygui.open_popup("Options")
+        # pygui.same_line()
+        # Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+        pygui.separator()
 
         # Reserve enough left-over height for 1 separator + 1 input text
         footer_height_to_reserve = pygui.get_style().item_spacing[1] + pygui.get_frame_height_with_spacing()
@@ -2007,8 +2013,264 @@ class ExampleAppConsole:
 class demo:
     show_app_console = pygui.BoolPtr(False)
     example_app_console = ExampleAppConsole()
+    show_custom_rendering = pygui.BoolPtr(False)
+
+    render_sz = pygui.FloatPtr(36)
+    render_thickness = pygui.FloatPtr(3)
+    render_ngon_sides = pygui.IntPtr(6)
+    render_circle_segments_override = pygui.BoolPtr(False)
+    render_circle_segments_override_v = pygui.IntPtr(12)
+    render_curve_segments_override = pygui.BoolPtr(False)
+    render_curve_segments_override_v = pygui.IntPtr(8)
+    render_colf = pygui.Vec4Ptr(1, 1, 0.4, 1)
+
+    render_points = []
+    render_scrolling = [0, 0]
+    render_opt_enable_grid = pygui.BoolPtr(True)
+    render_opt_enable_context_menu = pygui.BoolPtr(True)
+    render_adding_line = False
+
+    render_draw_bg = pygui.BoolPtr(True)
+    render_draw_fg = pygui.BoolPtr(True)
 
 
 def show_app_console(p_open: pygui.BoolPtr):
     demo.example_app_console.draw("Example: Pygui Console", p_open)
 
+
+def show_app_custom_rendering(p_open: pygui.BoolPtr):
+    if not pygui.begin("Example: Pygui Custom rendering", p_open):
+        pygui.end()
+        return
+    
+    # Tip: If you do a lot of custom rendering, you probably want to use your own geometrical types and benefit of
+    # overloaded operators, etc. Define IM_VEC2_CLASS_EXTRA in imconfig.h to create implicit conversions between your
+    # types and ImVec2/ImVec4. Dear ImGui defines overloaded operators but they are internal to imgui.cpp and not
+    # exposed outside (to avoid messing with your types) In this example we are not using the maths operators!
+    if pygui.begin_tab_bar("##TabBar"):
+        if pygui.begin_tab_item("Primitives"):
+            pygui.push_item_width(-pygui.get_font_size() * 15)
+            draw_list = pygui.get_window_draw_list()
+
+            # Draw gradients
+            # (note that those are currently exacerbating our sRGB/Linear issues)
+            # Calling ImGui::GetColorU32() multiplies the given colors by the current Style Alpha, but you may pass the IM_COL32() directly as well..
+            pygui.text("Gradients")
+            gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
+            p0 = pygui.get_cursor_screen_pos()
+            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+            col_a = pygui.get_color_u32_im_u32(pygui.IM_COL32(0, 0, 0, 255))
+            col_b = pygui.get_color_u32_im_u32(pygui.IM_COL32(255, 255, 255, 255))
+            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
+            pygui.invisible_button("##gradient1", gradient_size)
+
+            p0 = pygui.get_cursor_screen_pos()
+            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+            col_a = pygui.get_color_u32_im_u32(pygui.IM_COL32(0, 255, 0, 255))
+            col_b = pygui.get_color_u32_im_u32(pygui.IM_COL32(255, 0, 0, 255))
+            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
+            pygui.invisible_button("##gradient2", gradient_size)
+
+            # Draw a bunch of primitives
+            pygui.text("All primitives")
+            pygui.drag_float("Size", demo.render_sz, 0.2, 2, 100, "%.0f")
+            pygui.drag_float("Thickness", demo.render_thickness, 0.05, 1, 8, "%.02f")
+            pygui.slider_int("N-gon sides", demo.render_ngon_sides, 3, 12)
+            pygui.checkbox("##circlesegmentoverride", demo.render_circle_segments_override)
+            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+            demo.render_circle_segments_override.value |= pygui.slider_int("Circle segments override", demo.render_circle_segments_override_v, 3, 40)
+            pygui.checkbox("##curvessegmentoverride", demo.render_curve_segments_override)
+            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+            demo.render_curve_segments_override.value |= pygui.slider_int("Curves segments override", demo.render_curve_segments_override_v, 3, 40)
+            pygui.color_edit4("Color", demo.render_colf)
+
+            p = pygui.get_cursor_screen_pos()
+            col = demo.render_colf.to_u32()
+            sz = demo.render_sz.value
+            spacing = 10.0
+            corners_tl_br = pygui.IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT | pygui.IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT
+            rounding = demo.render_sz.value / 5.0
+            circle_segments = demo.render_circle_segments_override_v.value if demo.render_circle_segments_override else 0
+            curve_segments = demo.render_curve_segments_override_v.value if demo.render_curve_segments_override else 0
+            x = p[0] + 4.0
+            y = p[1] + 4.0
+            for n in range(2):
+                # First line uses a thickness of 1.0f, second line uses the configurable thickness
+                th = 1 if (n == 0) else demo.render_thickness.value
+                draw_list.add_ngon((x + sz*0.5, y + sz*0.5), sz*0.5, col, demo.render_ngon_sides.value, th)
+                x += sz + spacing;  # N-gon
+                draw_list.add_circle((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments, th)
+                x += sz + spacing  # Circle
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, 0.0, pygui.IM_DRAW_FLAGS_NONE, th)
+                x += sz + spacing  # Square
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, pygui.IM_DRAW_FLAGS_NONE, th)
+                x += sz + spacing  # Square with all rounded corners
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, corners_tl_br, th)
+                x += sz + spacing  # Square with two rounded corners
+                draw_list.add_triangle((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col, th)
+                x += sz + spacing  # Triangle
+                # draw_list->AddTriangle(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col, th)
+                # x+= sz*0.4f + spacing # Thin triangle
+                draw_list.add_line((x, y), (x + sz, y), col, th)
+                x += sz + spacing  # Horizontal line (note: drawing a filled rectangle will be faster!)
+                draw_list.add_line((x, y), (x, y + sz), col, th)
+                x += spacing       # Vertical line (note: drawing a filled rectangle will be faster!)
+                draw_list.add_line((x, y), (x + sz, y + sz), col, th)
+                x += sz + spacing  # Diagonal line
+
+                # Quadratic Bezier Curve (3 control points)
+                cp3 = [
+                    (x, y + sz * 0.6),
+                    (x + sz * 0.5, y - sz * 0.4),
+                    (x + sz, y + sz),
+                ]
+                draw_list.add_bezier_quadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
+                x += sz + spacing
+
+                # # Cubic Bezier Curve (4 control points)
+                cp4 = [
+                    (x, y),
+                    (x + sz * 1.3, y + sz * 0.3),
+                    (x + sz - sz * 1.3, y + sz - sz * 0.3),
+                    (x + sz, y + sz),
+                ]
+                draw_list.add_bezier_cubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
+
+                x = p[0] + 4
+                y += sz + spacing
+            
+            draw_list.add_ngon_filled((x + sz * 0.5, y + sz * 0.5), sz*0.5, col, demo.render_ngon_sides.value)
+            x += sz + spacing;  # N-gon
+            draw_list.add_circle_filled((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments)
+            x += sz + spacing;  # Circle
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col)
+            x += sz + spacing;  # Square
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0)
+            x += sz + spacing;  # Square with all rounded corners
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0, corners_tl_br)
+            x += sz + spacing;  # Square with two rounded corners
+            draw_list.add_triangle_filled((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col)
+            x += sz + spacing;  # Triangle
+            # draw_list.AddTriangleFilled(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col); x += sz*0.4f + spacing; # Thin triangle
+            draw_list.add_rect_filled((x, y), (x + sz, y + demo.render_thickness.value), col)
+            x += sz + spacing;  # Horizontal line (faster than AddLine, but only handle integer thickness)
+            draw_list.add_rect_filled((x, y), (x + demo.render_thickness.value, y + sz), col)
+            x += spacing * 2.0;# Vertical line (faster than AddLine, but only handle integer thickness)
+            draw_list.add_rect_filled((x, y), (x + 1, y + 1), col)
+            x += sz;            # Pixel (faster than AddLine)
+            draw_list.add_rect_filled_multi_color((x, y), (x + sz, y + sz), pygui.IM_COL32(0, 0, 0, 255), pygui.IM_COL32(255, 0, 0, 255), pygui.IM_COL32(255, 255, 0, 255), pygui.IM_COL32(0, 255, 0, 255));
+
+            pygui.dummy(((sz + spacing) * 10.2, (sz + spacing) * 3.0))
+            pygui.pop_item_width()
+            pygui.end_tab_item()
+        
+        if pygui.begin_tab_item("Canvas"):
+            pygui.checkbox("Enable grid", demo.render_opt_enable_grid)
+            pygui.checkbox("Enable context menu", demo.render_opt_enable_context_menu)
+            pygui.text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.")
+
+            # Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
+            # Here we demonstrate that this can be replaced by simple offsetting + custom drawing + PushClipRect/PopClipRect() calls.
+            # To use a child window instead we could use, e.g:
+            #      ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));      // Disable padding
+            #      ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 50, 255));  // Set a background color
+            #      ImGui::BeginChild("canvas", ImVec2(0.0f, 0.0f), true, ImGuiWindowFlags_NoMove);
+            #      ImGui::PopStyleColor();
+            #      ImGui::PopStyleVar();
+            #      [...]
+            #      ImGui::EndChild();
+
+            # Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
+            canvas_p0 = pygui.get_cursor_screen_pos()      # ImDrawList API uses screen coordinates!
+            canvas_sz = pygui.get_content_region_avail()   # Resize canvas to what's available
+            if canvas_sz[0] < 50.0:
+                canvas_sz[0] = 50.0
+            if canvas_sz[1] < 50.0:
+                canvas_sz[1] = 50.0
+            canvas_p1 = (canvas_p0[0] + canvas_sz[0], canvas_p0[1] + canvas_sz[1])
+
+            # Draw border and background color
+            io = pygui.get_io()
+            draw_list = pygui.get_window_draw_list()
+            draw_list.add_rect_filled(canvas_p0, canvas_p1, pygui.IM_COL32(50, 50, 50, 255))
+            draw_list.add_rect(canvas_p0, canvas_p1, pygui.IM_COL32(255, 255, 255, 255))
+
+            # This will catch our interactions
+            pygui.invisible_button("canvas", canvas_sz, pygui.BUTTON_FLAGS_MOUSE_BUTTON_LEFT | pygui.BUTTON_FLAGS_MOUSE_BUTTON_RIGHT)
+            is_hovered = pygui.is_item_hovered()  # Hovered
+            is_active = pygui.is_item_active()    # Held
+            origin = (canvas_p0[0] + demo.render_scrolling[0], canvas_p0[1] + demo.render_scrolling[1]) # Lock scrolled origin
+            mouse_pos_in_canvas = (io.mouse_pos[0] - origin[0], io.mouse_pos[1] - origin[1])
+
+            # Add first and second point
+            if is_hovered and not demo.render_adding_line and pygui.is_mouse_clicked(pygui.MOUSE_BUTTON_LEFT):
+                demo.render_points.append(mouse_pos_in_canvas)
+                demo.render_points.append(mouse_pos_in_canvas)
+                demo.render_adding_line = True
+            if demo.render_adding_line:
+                demo.render_points[len(demo.render_points) - 1] = mouse_pos_in_canvas
+                if not pygui.is_mouse_down(pygui.MOUSE_BUTTON_LEFT):
+                    demo.render_adding_line = False
+            
+            # Pan (we use a zero mouse threshold when there's no context menu)
+            # You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
+            mouse_threshold_for_pan = -1 if demo.render_opt_enable_context_menu else 0
+            if is_active and pygui.is_mouse_dragging(pygui.MOUSE_BUTTON_RIGHT, mouse_threshold_for_pan):
+                demo.render_scrolling[0] += io.mouse_delta[0]
+                demo.render_scrolling[1] += io.mouse_delta[1]
+
+            # Context menu (under default mouse threshold)
+            drag_delta = pygui.get_mouse_drag_delta(pygui.MOUSE_BUTTON_RIGHT)
+            if demo.render_opt_enable_context_menu and drag_delta[0] == 0 and drag_delta[1] == 0:
+                pygui.open_popup_on_item_click("context", pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT)
+            if pygui.begin_popup("context"):
+                if demo.render_adding_line:
+                    demo.render_points = demo.render_points[:len(demo.render_points) - 2]
+                
+                demo.render_adding_line = False
+                if pygui.menu_item("Remove one", None, False, len(demo.render_points) > 0):
+                    demo.render_points.pop()
+                    demo.render_points.pop()
+                if pygui.menu_item("Remove all", None, False, len(demo.render_points) > 0):
+                    demo.render_points.clear()
+                pygui.end_popup()
+
+            # Draw grid + all lines in the canvas
+            draw_list.push_clip_rect(canvas_p0, canvas_p1, True);
+            if demo.render_opt_enable_grid:
+                GRID_STEP = 64
+
+                x = demo.render_scrolling[0] % GRID_STEP
+                while x < canvas_sz[0]:
+                    draw_list.add_line((canvas_p0[0] + x, canvas_p0[1]), (canvas_p0[0] + x, canvas_p1[1]), pygui.IM_COL32(200, 200, 200, 40))
+                    x += GRID_STEP
+                y = demo.render_scrolling[1] % GRID_STEP
+                while y < canvas_sz[1]:
+                    draw_list.add_line((canvas_p0[0], canvas_p0[1] + y), (canvas_p1[0], canvas_p0[1] + y), pygui.IM_COL32(200, 200, 200, 40))
+                    y += GRID_STEP
+            for n in range(0, len(demo.render_points), 2):
+                first = demo.render_points[n]
+                second = demo.render_points[n + 1]
+                draw_list.add_line((origin[0] + first[0], origin[1] + first[1]), (origin[0] + second[0], origin[1] + second[1]), pygui.IM_COL32(255, 255, 0, 255), 2)
+            draw_list.pop_clip_rect()
+
+            pygui.end_tab_item()
+
+        if pygui.begin_tab_item("BG/FG draw lists"):
+            pygui.checkbox("Draw in Background draw list", demo.render_draw_bg)
+            pygui.same_line()
+            help_marker("The Background draw list will be rendered below every Dear ImGui windows.")
+            pygui.checkbox("Draw in Foreground draw list", demo.render_draw_fg)
+            pygui.same_line()
+            help_marker("The Foreground draw list will be rendered over every Dear ImGui windows.")
+            window_pos = pygui.get_window_pos()
+            window_size = pygui.get_window_size()
+            window_center = (window_pos[0] + window_size[0] * 0.5, window_pos[1] + window_size[1] * 0.5)
+            if demo.render_draw_bg:
+                pygui.get_background_draw_list().add_circle(window_center, window_size[0] * 0.6, pygui.IM_COL32(255, 0, 0, 200), 0, 10 + 4)
+            if demo.render_draw_fg:
+                pygui.get_foreground_draw_list().add_circle(window_center, window_size[1] * 0.6, pygui.IM_COL32(0, 255, 0, 200), 0, 10)
+            pygui.end_tab_item()
+        pygui.end_tab_bar()
+    
+    pygui.end()
