@@ -1889,13 +1889,11 @@ class ExampleAppConsole:
         reclaim_focus = False
         input_text_flags = \
             pygui.INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE | \
-            pygui.INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL
-            # TODO: Uncomment these when callbacks are completed
-            # pygui.NPUT_TEXT_FLAGS_CALLBACK_COMPLETION | \
-            # pygui.NPUT_TEXT_FLAGS_CALLBACK_HISTORY
+            pygui.INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL | \
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION | \
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY
         
-        # TODO: Pygui note. No callback is used here.
-        if pygui.input_text("Input", self.input_buf, input_text_flags):
+        if pygui.input_text("Input", self.input_buf, input_text_flags, self.text_edit_callback):
             if len(self.input_buf.value.strip()) > 0:
                 self.exec_command(self.input_buf.value)
             self.input_buf.value = ""
@@ -1916,17 +1914,17 @@ class ExampleAppConsole:
         self.history_pos = -1
         for i in reversed(range(len(self.history))):
             if self.history[i] == command_line:
-                self.history = self.history[i:]
+                self.history.pop(i)
                 break
-        
         self.history.append(command_line)
-        if command_line == "CLEAR":
+        
+        if command_line.startswith("CLEAR"):
             self.clear_log()
-        elif command_line == "HELP":
+        elif command_line.startswith("HELP"):
             self.add_log("Commands:")
             for command in self.commands:
                 self.add_log(f"- {command}")
-        elif command_line == "HISTORY":
+        elif command_line.startswith("HISTORY"):
             first = len(self.history) - 10
             for i in range(max(first, 0), len(self.history)):
                 self.add_log("{} {}\n".format(i, self.history[i]))
@@ -1934,6 +1932,76 @@ class ExampleAppConsole:
             self.add_log("Unknown command: {}".format(command_line))
         
         self.scroll_to_bottom.value = True
+    
+    def text_edit_callback(self, data: pygui.ImGuiInputTextCallbackData, user_data) -> int:
+        if data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION:
+            # Example of TEXT COMPLETION
+            # Locate beginning of current word
+            word_end = data.cursor_pos
+            word_start = data.cursor_pos
+
+            while (word_start > 0):
+                c = data.buf[word_start - 1]
+                if c == ' ' or c == '\t' or c == ',' or c == ';':
+                    break
+                word_start -= 1
+            word = data.buf[word_start:word_end]
+        
+            candidates = [command for command in self.commands if command.startswith(word.upper())]
+            if len(candidates) == 0:
+                self.add_log('No match for "{}"!\n'.format(word))
+            elif len(candidates) == 1:
+                data.delete_chars(word_start, word_end - word_start)
+                data.insert_chars(data.cursor_pos, candidates[0] + " ")
+            
+            else:
+                # Multiple matches. Complete as much as we can..
+                # So inputing "C"+Tab will complete to "CL" then display "CLEAR" and "CLASSIFY" as matches.
+                match_len = word_end - word_start
+                while True:
+                    all_candidates_matches = True
+                    for i, candidate in enumerate(candidates):
+                        if i == 0:
+                            c = candidate[match_len].upper()
+                            continue
+                        
+                        if c != candidate[match_len].upper():
+                            all_candidates_matches = False
+                            break
+
+                    if not all_candidates_matches:
+                        break
+                    match_len += 1
+
+                if match_len > 0:
+                    data.delete_chars(word_start, word_end - word_start)
+                    data.insert_chars(data.cursor_pos, candidates[0][:match_len])
+
+                # List matches
+                self.add_log("Possible matches:\n")
+                for candidate in candidates:
+                    self.add_log("- {}\n".format(candidate))
+            
+        elif data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY:
+            # Example of HISTORY
+            prev_history_pos = self.history_pos
+            if data.event_key == pygui.KEY_UP_ARROW:
+                if self.history_pos == -1:
+                    self.history_pos = len(self.history) - 1
+                elif self.history_pos > 0:
+                    self.history_pos -= 1
+            elif data.event_key == pygui.KEY_DOWN_ARROW:
+                if self.history_pos != -1:
+                    self.history_pos += 1
+                    if self.history_pos >= len(self.history):
+                       self.history_pos = -1
+
+            # A better implementation would preserve the data on the current input line along with cursor position.
+            if prev_history_pos != self.history_pos:
+                history_str = self.history[self.history_pos] if self.history_pos >= 0 else ""
+                data.delete_chars(0, data.buf_text_len)
+                data.insert_chars(0, history_str)
+        return 0
 
 
 class demo:

@@ -4437,22 +4437,53 @@ def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, 
 # ?use_template(True)
 # ?active(True)
 # ?returns(bool)
-def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None):
+_input_text_user_data = {}
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiInputTextCallbackData, Any], int]=None, user_data: Any=None):
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
     - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
     Implied callback = null, user_data = null
     """
-    cdef bool res = ccimgui.ImGui_InputTextEx(
-        _bytes(label),
-        buf.buffer,
-        buf.buffer_size,
-        flags,
-        NULL,
-        NULL
-    )
+    # Pygui note. Since I want to the user to be able to send through python
+    # objects for the callback, I instead store the user_data inside a dictionary
+    # and pass through the label for this input_text as a lookup value.
+    cdef ccimgui.ImGuiID widget_id = ccimgui.ImGui_GetID(_bytes(label))
+    cdef bool res
+    if callback is not None:
+        _input_text_user_data[widget_id] = (callback, user_data)
+        res = ccimgui.ImGui_InputTextEx(
+            _bytes(label),
+            buf.buffer,
+            buf.buffer_size,
+            flags,
+            <ccimgui.ImGuiInputTextCallback>_input_text_callback,
+            <void*><uintptr_t>widget_id
+        )
+    else:
+        res = ccimgui.ImGui_InputTextEx(
+            _bytes(label),
+            buf.buffer,
+            buf.buffer_size,
+            flags,
+            NULL,
+            NULL
+        )
+
     return res
+
+cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
+    cdef int widget_id = <int><uintptr_t>callback_data.UserData
+    if widget_id not in _input_text_user_data:
+        raise RuntimeError
+    
+    python_callback, user_data = _input_text_user_data[widget_id]
+    cdef int callback_return_value = python_callback(
+        ImGuiInputTextCallbackData.from_ptr(&callback_data),
+        user_data
+    )
+    del _input_text_user_data[widget_id]
+    return callback_return_value
 # [End Function]
 
 # [Function]
@@ -14507,8 +14538,8 @@ cdef class ImGuiInputTextCallbackData:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(str)
     @property
     def buf(self):
@@ -14519,7 +14550,7 @@ cdef class ImGuiInputTextCallbackData:
         return _from_bytes(res)
     @buf.setter
     def buf(self, value: str):
-        dereference(self._ptr).Buf = _bytes(value)
+        strncpy(dereference(self._ptr).Buf, _bytes(value), len(_bytes(value)))
     # [End Field]
 
     # [Field]
@@ -14556,7 +14587,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
     @property
     def buf_text_len(self):
@@ -14588,7 +14619,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
     @property
     def cursor_pos(self):
@@ -14623,7 +14654,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
     @property
     def event_flag(self):
@@ -14639,7 +14670,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(int)
     @property
     def event_key(self):
@@ -14729,7 +14760,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?returns(None)
     def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int):
         ccimgui.ImGuiInputTextCallbackData_DeleteChars(
@@ -14751,17 +14782,15 @@ cdef class ImGuiInputTextCallbackData:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?returns(None)
-    def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None):
-        bytes_text_end = _bytes(text_end) if text_end is not None else None
-
+    def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str):
         ccimgui.ImGuiInputTextCallbackData_InsertChars(
             self._ptr,
             pos,
             _bytes(text),
-            ((<char*>bytes_text_end if text_end is not None else NULL))
+            NULL
         )
     # [End Method]
 

@@ -1814,7 +1814,7 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 #     pass
 
 # def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
-def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiInputTextCallbackData, Any], int]=None, user_data: Any=None) -> bool:
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
@@ -4818,11 +4818,10 @@ class ImGuiInputTextCallbackData:
     - ImGuiInputTextFlags_CallbackCharFilter:  Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
     - ImGuiInputTextFlags_CallbackResize:  Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
     """
-    pass
-    # buf: str
-    # """
-    # Text buffer  // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
-    # """
+    buf: str
+    """
+    Text buffer  // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
+    """
     # buf_dirty: bool
     # """
     # Set if you modify buf/buftextlen!// write// [completion,history,always]
@@ -4831,18 +4830,18 @@ class ImGuiInputTextCallbackData:
     # """
     # Buffer size (in bytes) = capacity+1  // read-only// [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
     # """
-    # buf_text_len: int
-    # """
-    # Text length (in bytes)   // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
-    # """
+    buf_text_len: int
+    """
+    Text length (in bytes)   // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
+    """
     # ctx: ImGuiContext
     # """
     # Parent ui context
     # """
-    # cursor_pos: int
-    # """
-    # Read-write   // [completion,history,always]
-    # """
+    cursor_pos: int
+    """
+    Read-write   // [completion,history,always]
+    """
     # event_char: int
     # """
     # Arguments for the different callback events
@@ -4850,14 +4849,14 @@ class ImGuiInputTextCallbackData:
     # - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
     # Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
     # """
-    # event_flag: int
-    # """
-    # One imguiinputtextflags_callback*// read-only
-    # """
-    # event_key: int
-    # """
-    # Key pressed (up/down/tab)// read-only// [completion,history]
-    # """
+    event_flag: int
+    """
+    One imguiinputtextflags_callback*// read-only
+    """
+    event_key: int
+    """
+    Key pressed (up/down/tab)// read-only// [completion,history]
+    """
     # flags: int
     # """
     # What user passed to inputtext()  // read-only
@@ -4875,9 +4874,9 @@ class ImGuiInputTextCallbackData:
     # What user passed to inputtext()  // read-only
     # """
     # def clear_selection(self: ImGuiInputTextCallbackData) -> None: ...
-    # def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int) -> None: ...
+    def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int) -> None: ...
     # def has_selection(self: ImGuiInputTextCallbackData) -> bool: ...
-    # def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None) -> None: ...
+    def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str) -> None: ...
     # def select_all(self: ImGuiInputTextCallbackData) -> None: ...
 
 class ImGuiKeyData:
