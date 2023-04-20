@@ -90,7 +90,7 @@ class widget:
     tree_selection_mask = pygui.IntPtr(1 << 2)
     header_closable_group = pygui.BoolPtr(True)
     text_wrap_width = pygui.FloatPtr(200)
-    text_utf8_buf = pygui.StrPtr("カキクケコ タイピング", 64)
+    text_utf8_buf = pygui.StrPtr("日本語", 64)
     combo_flags = pygui.IntPtr(0)
     combo_item_current_idx = pygui.IntPtr(0)
     combo_item_current_2 = pygui.IntPtr(0)
@@ -483,20 +483,25 @@ def show_demo_widgets():
             pygui.tree_pop()
 
         if pygui.tree_node("UTF-8 Text"):
+            # UTF-8 test with Japanese characters
+            # (Needs a suitable font? Try "Google Noto" or "Arial Unicode". See docs/FONTS.md for details.)
+            # - From C++11 you can use the u8"my text" syntax to encode literal strings as UTF-8
+            # - For earlier compiler, you may be able to encode your sources as UTF-8 (e.g. in Visual Studio, you
+            #   can save your source files as 'UTF-8 without signature').
+            # - FOR THIS DEMO FILE ONLY, BECAUSE WE WANT TO SUPPORT OLD COMPILERS, WE ARE *NOT* INCLUDING RAW UTF-8
+            #   CHARACTERS IN THIS SOURCE FILE. Instead we are encoding a few strings with hexadecimal constants.
+            #   Don't do this in your application! Please use u8"text in any language" in your application!
+            # Note that characters values are preserved even by InputText() if the font cannot be displayed,
+            # so you can safely copy & paste garbled characters into another application.
             pygui.text_wrapped(
                 "CJK text will only appear if the font was loaded with the appropriate CJK character ranges. "
                 "Call io.Fonts->AddFontFromFileTTF() manually to load extra character ranges. "
                 "Read docs/FONTS.md for details.")
             # Normally we would use u8"blah blah" with the proper characters directly in the string.
-            pygui.text("Hiragana: カキクケコ タイピング (kakikukeko)")
+            pygui.text("Hiragana: かきくけこ (kakikukeko)")
             pygui.text("Kanjis: 日本語 (nihongo)")
-            # static char buf[32] = u8"NIHONGO"; // <- this is how you would write it with C++11, using real kanjis
-            # TODO: This crashes. Not sure why.
-            pygui.text("The call below crashes so it has been omitted in this demo.")
-            pygui.text('pygui.input_text("UTF-8 input", static.widgets_text_utf8_buf)')
             pygui.input_text("UTF-8 input", widget.text_utf8_buf)
             pygui.tree_pop()
-
         pygui.tree_pop()
 
     if pygui.tree_node("Images"):

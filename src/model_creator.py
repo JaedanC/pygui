@@ -1182,8 +1182,12 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             return _from_bytes(self.buffer)
         @value.setter
         def value(self, value: str):
-            strncpy(self.buffer, _bytes(value), self.buffer_size - 1)
-            self.buffer[min((self.buffer_size - 1), len(value))] = 0
+            # Remember: len(bytes(str)) != len(str)
+            # So to mark the end of the string, you should use the len(bytes).
+            c_bytes = _bytes(value)
+            n_bytes = len(c_bytes)
+            strncpy(self.buffer, c_bytes, self.buffer_size)
+            self.buffer[min(n_bytes, self.buffer_size - 1)] = 0
 
 
     cdef class Vec2Ptr:
