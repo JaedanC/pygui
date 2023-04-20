@@ -6930,7 +6930,7 @@ def show_about_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):

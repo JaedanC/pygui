@@ -14,13 +14,13 @@ Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) us
 
 ![Intellisense](./docs/img/intellisense.png)
 
-This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as the C base. Much of this project is inspired by [pyimgui](https://github.com/pyimgui/pyimgui).
+This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as the C base. Pygui is inspired by [pyimgui](https://github.com/pyimgui/pyimgui).
 
 ## Limitations
 
 1. Current build assumes windows as the platform. Some work would be required to enable linux/mac builds.
-2. glfw/cimgui/imgui_impl need to be linked at compile time which may hurt performance slightly.
-3. Not all imgui functions are ported across. These would need to be worked on, but PR's welcome. See [pyimgui's](https://github.com/pyimgui/pyimgui) core.pyx for help.
+2. glfw/cimgui/imgui_impl need to be linked at runtime which may hurt performance slightly.
+3. Not all imgui functions are activated. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
 4. More work would be required to enable additional backends. I've attempted to make this easier though the modular nature of the CMake script and binding generator script.
 
 ## How to run
@@ -28,7 +28,7 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 First, download this repository recursively:
 
 ```bash
-git clone https://github.com/JaedanC/pygui.git --recursive
+git clone --recursive https://github.com/JaedanC/pygui.git
 ```
 
 Then, I suggest checking out the ImGui `docking` branch. Any commit can be used if you want.
@@ -136,12 +136,12 @@ The `src/core/core_template.pyx` is the file that should be editted if you want 
 
 Quick note on `use_template` and `active`:
 
-- `use_template`: When False, this function will e overridden by the generated default implementation. This can be good for resetting a function if you break it, or if the API changes.
+- `use_template`: When False, this function will be overridden by the generated default implementation. This can be good for resetting a function if you break it, or if the API changes.
 - `active`: When False, this function will be commented out in `core.pyx` when the pygui binding is created. This can be a handy way to disabling a function while also keeping a record of the existing implementation.
 
 ```python
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):
@@ -158,7 +158,7 @@ def show_demo_window(p_open: BoolPtr=None):
 
 When `use_template` is True, the function can be editted however you like. This includes including the name of the function, its parameters, and the function comment. You also have the ability to change what the function returns. This value is what will be used inside the `__init__.pyi` file. Cython syntax and usage can be found online, but here are a few tips:
 
-1. Most functions have been given a template that is 75% correct. Sometimes it requires modification to work. Other times it will work straight away.
+1. Most functions are templated corrently, but some require manual modification to work.
 2. `char *` and `str` can be converted to and from using `_bytes` and `_from_bytes`. See: `begin()` and `get_version()`.
 3. Tuples and ImVec2 can be converted using `_cast_tuple_ImVec2` and `_cast_ImVec2_tuple`. Use respective functions for ImVec4.
 4. Instances of classes returned cannot store any information on them because they simply serve as wrappers for a pointer to the real instance in c. Any information required to be stored on a class should instead be written to a dictionary. See `get_clipboard_text_fn` and `set_clipboard_text_fn`.
@@ -177,7 +177,7 @@ As long as all the functions in the header are defined in the format that is gen
 
 Make sure that when you compile, you have similar settings in CMake:
 
-```
+```txt
 # my_imgui_extension.dll
 # Layout:
 #  - define:
