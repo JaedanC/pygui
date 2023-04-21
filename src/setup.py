@@ -36,7 +36,7 @@ def main():
             # since we are linking them with a dll, the impl functions should be
             # marked as extern "C" __declspec(dllexport)
             include_dirs=[
-                "external",                 # My imconfig.h
+                "cpp_config",               # imconfig.h, pygui_config.h
                 "external/dear_bindings",   # cimgui.h
                 "core/backends",            # imgui_impl_*.h
             ],
@@ -46,6 +46,8 @@ def main():
                 ("IMGUI_IMPL_API", 'extern "C" __declspec(dllexport)'),
                 ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
                 ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
+                ("PYGUI_COMPILING_CIMGUI", True),
+                ("USE_CUSTOM_PYTHON_ERROR", True),
             ],
             extra_compile_args=([compile_option])
         )

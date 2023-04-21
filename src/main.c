@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	clearColor.y = 0.55f;
 	clearColor.z = 0.60f;
 	clearColor.w = 1.00f;
-	
+
 	// main event loop
 	bool quit = false;
 	while (!glfwWindowShouldClose(window))
@@ -130,6 +130,9 @@ int main(int argc, char* argv[])
 
 			ImGui_Text("Application average %.3f ms/frame (%.1f FPS)",
 				1000.0f / ImGui_GetIO()->Framerate, ImGui_GetIO()->Framerate);
+			if (ImGui_Button("Click to crash ImGui"))
+				IM_ASSERT(false && "If you're reading this, cimgui is crashing visibly!");
+
 			ImGui_End();
 		}
 

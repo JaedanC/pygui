@@ -39,6 +39,7 @@ def pygui_demo_window():
     show_menu_bar()
     show_demo_widgets()
     show_demo_tables()
+    crash_imgui()
 
 
 class widget:
@@ -2274,3 +2275,75 @@ def show_app_custom_rendering(p_open: pygui.BoolPtr):
         pygui.end_tab_bar()
     
     pygui.end()
+
+
+class crash_test:
+    error_text = pygui.StrPtr("", 256)
+    catch_message = ""
+
+
+def crash_imgui():
+    if not pygui.collapsing_header("Crash ImGui"):
+        return
+    
+    pygui.text("Test various crashes")
+    pygui.same_line()
+    help_marker(
+        "1. This will call a function in ImGui that is known to crash. This crash"
+        " should originate from ImGui itself. If cimgui was not compiled with"
+        " USE_CUSTOM_PYTHON_ERROR, then this will not be catchable.\n"
+        "2. This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this function call will raise a pygui.ImGuiError, otherwise it will"
+        " raise a normal AssertionError. In either cause, this should not crash"
+        " the program because pygui.ImGuiError should be equal to AssertionError"
+        " if USE_CUSTOM_PYTHON_ERROR is not defined.\n"
+        "3. This uses python's in-built assert function. If USE_CUSTOM_PYTHON_ERROR"
+        " is defined, then this should crash your program. This is okay because"
+        " it clearly shows that there is a difference between pygui.ImGuiError and"
+        " AssertionError\n"
+        "4. This force uses ImGui's error to try and catch the exception. If"
+        " USE_CUSTOM_PYTHON_ERROR is not defined, then this exception should"
+        " crash simply because pygui.core.Error is not a valid exception; it"
+        " should be None.\n"
+    )
+
+    if pygui.button("Clear"):
+        crash_test.catch_message = ""
+        crash_test.error_text.value = ""
+
+    
+    if pygui.button("Crash 1: pop_style_color() -> except pygui.Error"):
+        try:
+            pygui.pop_style_color(1)
+        except pygui.ImGuiError as e:
+            crash_test.catch_message = "Caught! You have custom exceptions on."
+            crash_test.error_text.value = str(e)
+    
+    if pygui.button("Crash 2: pygui.IM_ASSERT(False) -> except pygui.Error"):
+        try:
+            pygui.IM_ASSERT(False, "I am an error message")
+        except pygui.ImGuiError as e:
+            crash_test.catch_message = "Caught! This should never crash."
+            crash_test.error_text.value = str(e)
+    
+    if pygui.button("Crash 3: assert False -> except pygui.Error"):
+        try:
+            assert False, "I am another error message"
+        except pygui.ImGuiError as e:
+            crash_test.catch_message = "Caught! You have custom exceptions off."
+            crash_test.error_text.value = str(e)
+    
+    if pygui.button("Crash 4: pygui.IM_ASSERT(False) -> except pygui.core.Error"):
+        try:
+            assert pygui.IM_ASSERT(False, "We are an error message")
+        except pygui.get_imgui_error() as e:
+            # Prefer to use pygui.ImGuiError as it is safer. This value could
+            # be None if cimgui is not using a custom python exception. For this
+            # example this is exavtly what we want.
+            crash_test.catch_message = "Caught! You have custom exceptions on."
+            crash_test.error_text.value = str(e)
+    
+    if len(crash_test.catch_message) > 0:
+        pygui.text(crash_test.catch_message)
+        pygui.text_wrapped(crash_test.error_text.value)
+    

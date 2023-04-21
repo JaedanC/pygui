@@ -1,5 +1,9 @@
 from .core import *
 
+ImGuiError = core.get_imgui_error()
+if ImGuiError is None:
+    ImGuiError = AssertionError
+
 
 import OpenGL.GL as gl
 from PIL import Image

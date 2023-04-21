@@ -3,6 +3,11 @@
 
 from libcpp cimport bool
 
+cdef extern from "Python.h":
+    ctypedef struct PyObject
+
+cdef extern from "pygui_config.h":
+    PyObject* get_imgui_error()
 
 cdef extern from "cimgui.h":
     ctypedef struct ImDrawListSharedData

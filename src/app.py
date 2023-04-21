@@ -75,6 +75,16 @@ def main():
     # pygui.style_colors_classic()
     clear_color = (0.45, 0.55, 0.6, 1.0)
 
+    pygui.IM_ASSERT(True, "You should never see this")
+    try:
+        pygui.IM_ASSERT(False, "You should always see this")
+    except pygui.ImGuiError as e:
+        if isinstance(e, AssertionError):
+            print("Using AssertionError as IM_ASSERT")
+        else:
+            print("Using pygui.ImGuiError as IM_ASSERT")
+        print(e)
+
     try:
         while not glfw.window_should_close(window):
             glfw.poll_events()

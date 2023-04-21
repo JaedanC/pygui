@@ -887,7 +887,12 @@ def to_pxd(header: DearBinding, header_file_name: str, include_base=True) -> str
     # distutils: language = c++
 
     from libcpp cimport bool
+    
+    cdef extern from "Python.h":
+        ctypedef struct PyObject
 
+    cdef extern from "pygui_config.h":
+        PyObject* get_imgui_error()
 
     """
 
@@ -1348,6 +1353,31 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
     IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
 
+    def get_imgui_error():
+        cdef {pxd_library_name}.PyObject* imgui_exception
+        imgui_exception = {pxd_library_name}.get_imgui_error()
+        if imgui_exception == NULL:
+            return None
+
+        cdef object python_exception = <object>imgui_exception
+        return python_exception
+
+    def IM_ASSERT(condition: bool, error_message: str=""):
+        '''
+        If cimgui exposes us a custom exception, we will use that. Otherwise,
+        we will use Python's AssertionError.
+        '''
+        if condition:
+            return
+        
+        # The variable name of ImGuiError means nothing. It just makes python's
+        # traceback look nicer. The actual name of the exception is defined
+        # in the config.cpp
+        ImGuiError = get_imgui_error()
+        if ImGuiError is None:
+            raise AssertionError(error_message)
+        else:
+            raise ImGuiError(error_message)
 
     """
 
@@ -1533,6 +1563,8 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     PAYLOAD_TYPE_COLOR_3F: int
     PAYLOAD_TYPE_COLOR_4F: int
 
+    class ImGuiError(Exception): ...
+
     class BoolPtr:
         value: bool
         def __init__(self, initial_value: bool): ...
@@ -1580,7 +1612,11 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
 
     def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 
+    class ImGuiError(Exception): ...
+
     def load_image(image: Image) -> int: ...
+
+    def IM_ASSERT(condition: bool, msg: str=""): ...
 
     """.lstrip("\n"))
 
@@ -1667,6 +1703,10 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     # __init__.py ------------------------------------
     py = textwrap.dedent("""
     from .{extension_name} import *
+
+    ImGuiError = {extension_name}.get_imgui_error()
+    if ImGuiError is None:
+        ImGuiError = AssertionError
 
 
     import OpenGL.GL as gl

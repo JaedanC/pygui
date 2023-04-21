@@ -282,6 +282,31 @@ IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFF
 IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
 IM_COL32_BLACK_TRANS  = IM_COL32(0, 0, 0, 0)
 
+def get_imgui_error():
+    cdef ccimgui.PyObject* imgui_exception
+    imgui_exception = ccimgui.get_imgui_error()
+    if imgui_exception == NULL:
+        return None
+
+    cdef object python_exception = <object>imgui_exception
+    return python_exception
+
+def IM_ASSERT(condition: bool, error_message: str=""):
+    '''
+    If cimgui exposes us a custom exception, we will use that. Otherwise,
+    we will use Python's AssertionError.
+    '''
+    if condition:
+        return
+
+    # The variable name of ImGuiError means nothing. It just makes python's
+    # traceback look nicer. The actual name of the exception is defined
+    # in the config.cpp
+    ImGuiError = get_imgui_error()
+    if ImGuiError is None:
+        raise AssertionError(error_message)
+    else:
+        raise ImGuiError(error_message)
 
 WINDOW_FLAGS_NONE = ccimgui.ImGuiWindowFlags_None
 WINDOW_FLAGS_NO_TITLE_BAR = ccimgui.ImGuiWindowFlags_NoTitleBar
@@ -6930,7 +6955,7 @@ def show_about_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):

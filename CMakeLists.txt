@@ -13,9 +13,11 @@ set(GLFW_INCLUDE_DIRECTORY    ${GLFW_DIRECTORY}/include)
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-set(PYGUI_CONFIG_FILE      ${CMAKE_CURRENT_SOURCE_DIR}/src/external/pygui_config.h)
+set(PYGUI_CONFIG_H      ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.h)
+set(PYGUI_CONFIG_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.cpp)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+find_package(PythonLibs REQUIRED)
 
 # ------------------------------------------------------------------------------
 # glfw.dll
@@ -58,17 +60,22 @@ file(
     ${CIMGUI_DIRECTORY}/*.cpp
     ${IMGUI_DIRECTORY}/*.cpp
 )
-add_library(cimgui SHARED ${CIMGUI_FILES})
+add_library(cimgui SHARED ${CIMGUI_FILES} ${PYGUI_CONFIG_CPP})
 target_compile_definitions(cimgui PRIVATE
     PYGUI_COMPILING_CIMGUI
+    USE_CUSTOM_PYTHON_ERROR
 )
 target_include_directories(cimgui PRIVATE
     ${CIMGUI_DIRECTORY}
     ${IMGUI_DIRECTORY}
+    ${PYTHON_INCLUDE_DIRS}
+)
+target_link_libraries(cimgui
+    ${PYTHON_LIBRARIES}
 )
 
 # cl specific. Force include of the config file
-target_compile_options(cimgui PRIVATE "/FI${PYGUI_CONFIG_FILE}")
+target_compile_options(cimgui PRIVATE "/FI${PYGUI_CONFIG_H}")
 
 
 # ------------------------------------------------------------------------------
@@ -100,10 +107,11 @@ target_compile_definitions(imgui_glfw_opengl3 PRIVATE
 )
 target_include_directories(imgui_glfw_opengl3 PRIVATE
     ${IMGUI_DIRECTORY}
-    ${IMGUI_IMPL_DIRECTORY} # TODO Check if this is required
+    ${IMGUI_IMPL_DIRECTORY} # Technically this isn't required because the sources come
+                            # this directory but this is more obvious and I prefer that.
     ${GLFW_INCLUDE_DIRECTORY}
 )
-target_compile_options(imgui_glfw_opengl3 PRIVATE "/FI${PYGUI_CONFIG_FILE}")
+target_compile_options(imgui_glfw_opengl3 PRIVATE "/FI${PYGUI_CONFIG_H}")
 target_link_libraries(imgui_glfw_opengl3 cimgui glfw)
 
 
@@ -112,6 +120,15 @@ target_link_libraries(imgui_glfw_opengl3 cimgui glfw)
 # - Since this is a C file, we can only link to functions that at non-mangled.
 #   This is why this app uses the CIMGUI_API and the much simpler header file
 #   of cimgui_impl.h.
+# - VERY IMPORTANT. Since this links with cimgui (which may be compiled with
+#   a redefined IM_ASSERT macro), you need to be careful. If IM_ASSERT() fails
+#   then the program will crash WITHOUT an error message at all. If you are
+#   testing and want ImGui to crash with appropriate error messages OR want to
+#   use cimgui for your own application, then it is crucial you recompile cimgui
+#   WITHOUT the USE_CUSTOM_PYTHON_ERROR macro defined.
+# - To test that cimgui is not using Python, then there is a button in this
+#   example program called "Click to crash cimgui". If you see an error message
+#   then you are good. Otherwise, it is using the custom python exception.
 
 # Layout:
 #  - define: PYGUI_COMPILING_APP
@@ -135,7 +152,7 @@ target_include_directories(my_program PRIVATE
     ${IMGUILESS_IMPL_DIRECTORY}
 )
 # ${GLFW_INCLUDE_DIRECTORY}
-target_compile_options(my_program PRIVATE "/FI${PYGUI_CONFIG_FILE}")
+target_compile_options(my_program PRIVATE "/FI${PYGUI_CONFIG_H}")
 target_link_libraries(my_program cimgui imgui_glfw_opengl3 opengl32)
 
 # Since we are compiling SHARED dll's, then we are mostly interesting in

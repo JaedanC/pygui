@@ -8,6 +8,8 @@ FLT_MAX: float
 PAYLOAD_TYPE_COLOR_3F: int
 PAYLOAD_TYPE_COLOR_4F: int
 
+class ImGuiError(Exception): ...
+
 class BoolPtr:
     value: bool
     def __init__(self, initial_value: bool): ...
@@ -55,7 +57,11 @@ class Vec2Ptr:
 
 def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 
+class ImGuiError(Exception): ...
+
 def load_image(image: Image) -> int: ...
+
+def IM_ASSERT(condition: bool, msg: str=""): ...
 
 WINDOW_FLAGS_NONE: int
 WINDOW_FLAGS_NO_TITLE_BAR: int
