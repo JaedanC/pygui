@@ -924,6 +924,7 @@ VIEWPORT_FLAGS_IS_FOCUSED = ccimgui.ImGuiViewportFlags_IsFocused
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiPayload)
 def accept_drag_drop_payload(type_: str, flags: int=0):
     """
@@ -939,6 +940,7 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def align_text_to_frame_padding():
     """
@@ -950,6 +952,7 @@ def align_text_to_frame_padding():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def arrow_button(str_id: str, dir_: int):
     """
@@ -965,6 +968,7 @@ def arrow_button(str_id: str, dir_: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin(name: str, p_open: BoolPtr=None, flags: int=0):
     """
@@ -992,6 +996,7 @@ def begin(name: str, p_open: BoolPtr=None, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0):
     """
@@ -1016,6 +1021,7 @@ def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_child_frame(id_: int, size: tuple, flags: int=0):
     """
@@ -1032,6 +1038,7 @@ def begin_child_frame(id_: int, size: tuple, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=0):
     cdef bool res = ccimgui.ImGui_BeginChildID(
@@ -1046,6 +1053,7 @@ def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_combo(label: str, preview_value: str, flags: int=0):
     """
@@ -1064,6 +1072,7 @@ def begin_combo(label: str, preview_value: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def begin_disabled(disabled: bool=True):
     """
@@ -1080,6 +1089,7 @@ def begin_disabled(disabled: bool=True):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_drag_drop_source(flags: int=0):
     """
@@ -1099,6 +1109,7 @@ def begin_drag_drop_source(flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_drag_drop_target():
     """
@@ -1111,6 +1122,7 @@ def begin_drag_drop_target():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def begin_group():
     """
@@ -1122,6 +1134,7 @@ def begin_group():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_list_box(label: str, size: tuple=(0, 0)):
     """
@@ -1143,6 +1156,7 @@ def begin_list_box(label: str, size: tuple=(0, 0)):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_main_menu_bar():
     """
@@ -1155,6 +1169,7 @@ def begin_main_menu_bar():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_menu(label: str):
     """
@@ -1169,6 +1184,7 @@ def begin_menu(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_menu_bar():
     """
@@ -1186,6 +1202,7 @@ def begin_menu_bar():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_menu_ex(label: str, enabled: bool=True):
     """
@@ -1201,6 +1218,7 @@ def begin_menu_ex(label: str, enabled: bool=True):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup(str_id: str, flags: int=0):
     """
@@ -1219,6 +1237,7 @@ def begin_popup(str_id: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_item():
     """
@@ -1236,6 +1255,7 @@ def begin_popup_context_item():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_item_ex(str_id: str=None, popup_flags: int=1):
     """
@@ -1253,6 +1273,7 @@ def begin_popup_context_item_ex(str_id: str=None, popup_flags: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_void():
     """
@@ -1265,6 +1286,7 @@ def begin_popup_context_void():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1):
     """
@@ -1282,6 +1304,7 @@ def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_window():
     """
@@ -1294,6 +1317,7 @@ def begin_popup_context_window():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_context_window_ex(str_id: str=None, popup_flags: int=1):
     """
@@ -1311,6 +1335,7 @@ def begin_popup_context_window_ex(str_id: str=None, popup_flags: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_popup_modal(name: str, p_open: BoolPtr=None, flags: int=0):
     """
@@ -1327,6 +1352,7 @@ def begin_popup_modal(name: str, p_open: BoolPtr=None, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_tab_bar(str_id: str, flags: int=0):
     """
@@ -1344,6 +1370,7 @@ def begin_tab_bar(str_id: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
     """
@@ -1360,6 +1387,7 @@ def begin_tab_item(label: str, p_open: BoolPtr=None, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_table(str_id: str, column: int, flags: int=0):
     """
@@ -1399,6 +1427,7 @@ def begin_table(str_id: str, column: int, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0):
     cdef bool res = ccimgui.ImGui_BeginTableEx(
@@ -1414,6 +1443,7 @@ def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def begin_tooltip():
     """
@@ -1428,6 +1458,7 @@ def begin_tooltip():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def bullet():
     """
@@ -1439,6 +1470,7 @@ def bullet():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def bullet_text(fmt: str):
     """
@@ -1452,6 +1484,7 @@ def bullet_text(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def bullet_text_v(fmt: str):
     ccimgui.ImGui_BulletTextV(
@@ -1462,6 +1495,7 @@ def bullet_text_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def button(label: str):
     """
@@ -1479,6 +1513,7 @@ def button(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def button_ex(label: str, size: tuple=(0, 0)):
     """
@@ -1494,6 +1529,7 @@ def button_ex(label: str, size: tuple=(0, 0)):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def calc_item_width():
     """
@@ -1506,6 +1542,7 @@ def calc_item_width():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def calc_text_size(text: str):
     """
@@ -1521,6 +1558,7 @@ def calc_text_size(text: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
     bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -1537,6 +1575,7 @@ def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def checkbox(label: str, v: BoolPtr):
     cdef bool res = ccimgui.ImGui_Checkbox(
@@ -1549,6 +1588,7 @@ def checkbox(label: str, v: BoolPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int):
     cdef bool res = ccimgui.ImGui_CheckboxFlagsIntPtr(
@@ -1562,6 +1602,7 @@ def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def checkbox_flags_uint_ptr(label: str, flags: IntPtr, flags_value: int):
     cdef bool res = ccimgui.ImGui_CheckboxFlagsUintPtr(
@@ -1575,6 +1616,7 @@ def checkbox_flags_uint_ptr(label: str, flags: IntPtr, flags_value: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def close_current_popup():
     """
@@ -1586,6 +1628,7 @@ def close_current_popup():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def collapsing_header(label: str, flags: int=0):
     """
@@ -1601,6 +1644,7 @@ def collapsing_header(label: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0):
     """
@@ -1617,6 +1661,7 @@ def collapsing_header_bool_ptr(label: str, p_visible: BoolPtr, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_button(desc_id: str, col: tuple, flags: int=0):
     """
@@ -1633,6 +1678,7 @@ def color_button(desc_id: str, col: tuple, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_button_ex(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
     """
@@ -1650,6 +1696,7 @@ def color_button_ex(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def color_convert_float4_to_u32(in_: tuple):
     cdef ccimgui.ImU32 res = ccimgui.ImGui_ColorConvertFloat4ToU32(
@@ -1661,6 +1708,7 @@ def color_convert_float4_to_u32(in_: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def color_convert_hsv_to_rgb(h: float, s: float, v: float, out_r: FloatPtr, out_g: FloatPtr, out_b: FloatPtr):
     ccimgui.ImGui_ColorConvertHSVtoRGB(
@@ -1676,6 +1724,7 @@ def color_convert_hsv_to_rgb(h: float, s: float, v: float, out_r: FloatPtr, out_
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def color_convert_rgb_to_hsv(r: float, g: float, b: float, out_h: FloatPtr, out_s: FloatPtr, out_v: FloatPtr):
     ccimgui.ImGui_ColorConvertRGBtoHSV(
@@ -1691,6 +1740,7 @@ def color_convert_rgb_to_hsv(r: float, g: float, b: float, out_h: FloatPtr, out_
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def color_convert_u32_to_float4(in_: int):
     """
@@ -1705,6 +1755,7 @@ def color_convert_u32_to_float4(in_: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_edit3(label: str, col: Sequence[FloatPtr], flags: int=0):
     """
@@ -1723,6 +1774,7 @@ def color_edit3(label: str, col: Sequence[FloatPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_edit4(label: str, col: Sequence[FloatPtr], flags: int=0):
     cdef bool res = ccimgui.ImGui_ColorEdit4(
@@ -1736,6 +1788,7 @@ def color_edit4(label: str, col: Sequence[FloatPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_picker3(label: str, col: Sequence[FloatPtr], flags: int=0):
     cdef bool res = ccimgui.ImGui_ColorPicker3(
@@ -1749,6 +1802,7 @@ def color_picker3(label: str, col: Sequence[FloatPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def color_picker4(label: str, col: Sequence[FloatPtr], flags: int=0, ref_col: FloatPtr=None):
     cdef bool res = ccimgui.ImGui_ColorPicker4(
@@ -1763,6 +1817,7 @@ def color_picker4(label: str, col: Sequence[FloatPtr], flags: int=0, ref_col: Fl
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def columns():
     """
@@ -1776,6 +1831,7 @@ def columns():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def columns_ex(count: int=1, id_: str=None, border: bool=True):
     bytes_id_ = _bytes(id_) if id_ is not None else None
@@ -1790,6 +1846,7 @@ def columns_ex(count: int=1, id_: str=None, border: bool=True):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo(label: str, current_item: IntPtr, items_separated_by_zeros: str):
     """
@@ -1806,6 +1863,7 @@ def combo(label: str, current_item: IntPtr, items_separated_by_zeros: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int):
     """
@@ -1824,6 +1882,7 @@ def combo_callback(label: str, current_item: IntPtr, items_getter: Callable, dat
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
@@ -1840,6 +1899,7 @@ def combo_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int):
     """
@@ -1857,6 +1917,7 @@ def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ComboCharEx(
@@ -1872,6 +1933,7 @@ def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
     """
@@ -1889,6 +1951,7 @@ def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, po
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiContext)
 def create_context(shared_font_atlas: ImFontAtlas=None):
     """
@@ -1906,6 +1969,7 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: Any, sz_vec2: Any, sz_vec4: Any, sz_drawvert: Any, sz_drawidx: Any):
     """
@@ -1926,6 +1990,7 @@ def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def debug_text_encoding(text: str):
     """
@@ -1939,6 +2004,7 @@ def debug_text_encoding(text: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def destroy_context(ctx: ImGuiContext=None):
     """
@@ -1952,6 +2018,7 @@ def destroy_context(ctx: ImGuiContext=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def destroy_platform_windows():
     """
@@ -1963,6 +2030,7 @@ def destroy_platform_windows():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def dock_space(id_: int):
     """
@@ -1990,6 +2058,7 @@ def dock_space(id_: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def dock_space_ex(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
@@ -2004,6 +2073,7 @@ def dock_space_ex(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGu
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def dock_space_over_viewport():
     """
@@ -2016,6 +2086,7 @@ def dock_space_over_viewport():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
@@ -2029,6 +2100,7 @@ def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, wind
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float(label: str, v: FloatPtr):
     """
@@ -2056,6 +2128,7 @@ def drag_float(label: str, v: FloatPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float2(label: str, v: Sequence[FloatPtr]):
     """
@@ -2071,6 +2144,7 @@ def drag_float2(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragFloat2Ex(
@@ -2088,6 +2162,7 @@ def drag_float2_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float3(label: str, v: Sequence[FloatPtr]):
     """
@@ -2103,6 +2178,7 @@ def drag_float3(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragFloat3Ex(
@@ -2120,6 +2196,7 @@ def drag_float3_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float4(label: str, v: Sequence[FloatPtr]):
     """
@@ -2135,6 +2212,7 @@ def drag_float4(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragFloat4Ex(
@@ -2152,6 +2230,7 @@ def drag_float4_ex(label: str, v: Sequence[FloatPtr], v_speed: float=1.0, v_min:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
     """
@@ -2172,6 +2251,7 @@ def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0,
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr):
     """
@@ -2188,6 +2268,7 @@ def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatP
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
     bytes_format_max = _bytes(format_max) if format_max is not None else None
@@ -2209,6 +2290,7 @@ def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: Flo
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int(label: str, v: IntPtr):
     """
@@ -2224,6 +2306,7 @@ def drag_int(label: str, v: IntPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int2(label: str, v: Sequence[IntPtr]):
     """
@@ -2239,6 +2322,7 @@ def drag_int2(label: str, v: Sequence[IntPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragInt2Ex(
@@ -2256,6 +2340,7 @@ def drag_int2_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int3(label: str, v: Sequence[IntPtr]):
     """
@@ -2271,6 +2356,7 @@ def drag_int3(label: str, v: Sequence[IntPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragInt3Ex(
@@ -2288,6 +2374,7 @@ def drag_int3_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int4(label: str, v: Sequence[IntPtr]):
     """
@@ -2303,6 +2390,7 @@ def drag_int4(label: str, v: Sequence[IntPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_DragInt4Ex(
@@ -2320,6 +2408,7 @@ def drag_int4_ex(label: str, v: Sequence[IntPtr], v_speed: float=1.0, v_min: int
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
     """
@@ -2340,6 +2429,7 @@ def drag_int_ex(label: str, v: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr):
     """
@@ -2356,6 +2446,7 @@ def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_int_range2_ex(label: str, v_current_min: IntPtr, v_current_max: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0):
     bytes_format_max = _bytes(format_max) if format_max is not None else None
@@ -2377,6 +2468,7 @@ def drag_int_range2_ex(label: str, v_current_min: IntPtr, v_current_max: IntPtr,
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_scalar(label: str, data_type: int, p_data: Any):
     """
@@ -2393,6 +2485,7 @@ def drag_scalar(label: str, data_type: int, p_data: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -2413,6 +2506,7 @@ def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_scalar_n(label: str, data_type: int, p_data: Any, components: int):
     """
@@ -2430,6 +2524,7 @@ def drag_scalar_n(label: str, data_type: int, p_data: Any, components: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -2451,6 +2546,7 @@ def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def dummy(size: tuple):
     """
@@ -2464,6 +2560,7 @@ def dummy(size: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end():
     ccimgui.ImGui_End()
@@ -2472,6 +2569,7 @@ def end():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_child():
     ccimgui.ImGui_EndChild()
@@ -2480,6 +2578,7 @@ def end_child():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_child_frame():
     """
@@ -2491,6 +2590,7 @@ def end_child_frame():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_combo():
     """
@@ -2502,6 +2602,7 @@ def end_combo():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_disabled():
     ccimgui.ImGui_EndDisabled()
@@ -2510,6 +2611,7 @@ def end_disabled():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_drag_drop_source():
     """
@@ -2521,6 +2623,7 @@ def end_drag_drop_source():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_drag_drop_target():
     """
@@ -2532,6 +2635,7 @@ def end_drag_drop_target():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_frame():
     """
@@ -2543,6 +2647,7 @@ def end_frame():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_group():
     """
@@ -2554,6 +2659,7 @@ def end_group():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_list_box():
     """
@@ -2565,6 +2671,7 @@ def end_list_box():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_main_menu_bar():
     """
@@ -2576,6 +2683,7 @@ def end_main_menu_bar():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_menu():
     """
@@ -2587,6 +2695,7 @@ def end_menu():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_menu_bar():
     """
@@ -2598,6 +2707,7 @@ def end_menu_bar():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_popup():
     """
@@ -2609,6 +2719,7 @@ def end_popup():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_tab_bar():
     """
@@ -2620,6 +2731,7 @@ def end_tab_bar():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_tab_item():
     """
@@ -2631,6 +2743,7 @@ def end_tab_item():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_table():
     """
@@ -2642,6 +2755,7 @@ def end_table():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def end_tooltip():
     """
@@ -2653,6 +2767,7 @@ def end_tooltip():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiViewport)
 def find_viewport_by_id(id_: int):
     """
@@ -2667,6 +2782,7 @@ def find_viewport_by_id(id_: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiViewport)
 def find_viewport_by_platform_handle(platform_handle: Any):
     """
@@ -2681,6 +2797,7 @@ def find_viewport_by_platform_handle(platform_handle: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_user_data: Any):
     ccimgui.ImGui_GetAllocatorFunctions(
@@ -2693,6 +2810,7 @@ def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_use
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawList)
 def get_background_draw_list():
     """
@@ -2706,6 +2824,7 @@ def get_background_draw_list():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawList)
 def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
     """
@@ -2720,6 +2839,7 @@ def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def get_clipboard_text():
     """
@@ -2733,6 +2853,7 @@ def get_clipboard_text():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_color_u32(idx: int):
     """
@@ -2747,6 +2868,7 @@ def get_color_u32(idx: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_color_u32_ex(idx: int, alpha_mul: float=1.0):
     """
@@ -2762,6 +2884,7 @@ def get_color_u32_ex(idx: int, alpha_mul: float=1.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_color_u32_im_u32(col: int):
     """
@@ -2776,6 +2899,7 @@ def get_color_u32_im_u32(col: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_color_u32_im_vec4(col: tuple):
     """
@@ -2790,6 +2914,7 @@ def get_color_u32_im_vec4(col: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_column_index():
     """
@@ -2802,6 +2927,7 @@ def get_column_index():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_column_offset(column_index: int=-1):
     """
@@ -2816,6 +2942,7 @@ def get_column_offset(column_index: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_column_width(column_index: int=-1):
     """
@@ -2830,6 +2957,7 @@ def get_column_width(column_index: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_columns_count():
     cdef int res = ccimgui.ImGui_GetColumnsCount()
@@ -2839,6 +2967,7 @@ def get_columns_count():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_content_region_avail():
     """
@@ -2854,6 +2983,7 @@ def get_content_region_avail():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_content_region_max():
     """
@@ -2866,6 +2996,7 @@ def get_content_region_max():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiContext)
 def get_current_context():
     cdef ccimgui.ImGuiContext* res = ccimgui.ImGui_GetCurrentContext()
@@ -2875,6 +3006,7 @@ def get_current_context():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_cursor_pos():
     """
@@ -2887,6 +3019,7 @@ def get_cursor_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_cursor_pos_x():
     """
@@ -2899,6 +3032,7 @@ def get_cursor_pos_x():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_cursor_pos_y():
     """
@@ -2911,6 +3045,7 @@ def get_cursor_pos_y():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_cursor_screen_pos():
     """
@@ -2923,6 +3058,7 @@ def get_cursor_screen_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_cursor_start_pos():
     """
@@ -2935,6 +3071,7 @@ def get_cursor_start_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiPayload)
 def get_drag_drop_payload():
     """
@@ -2947,6 +3084,7 @@ def get_drag_drop_payload():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawData)
 def get_draw_data():
     """
@@ -2959,6 +3097,7 @@ def get_draw_data():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawListSharedData)
 def get_draw_list_shared_data():
     """
@@ -2971,6 +3110,7 @@ def get_draw_list_shared_data():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImFont)
 def get_font():
     """
@@ -2985,6 +3125,7 @@ def get_font():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_font_size():
     """
@@ -2997,6 +3138,7 @@ def get_font_size():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_font_tex_uv_white_pixel():
     """
@@ -3009,6 +3151,7 @@ def get_font_tex_uv_white_pixel():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawList)
 def get_foreground_draw_list():
     """
@@ -3021,6 +3164,7 @@ def get_foreground_draw_list():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawList)
 def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
     """
@@ -3035,6 +3179,7 @@ def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_frame_count():
     """
@@ -3047,6 +3192,7 @@ def get_frame_count():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_frame_height():
     """
@@ -3059,6 +3205,7 @@ def get_frame_height():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_frame_height_with_spacing():
     """
@@ -3071,6 +3218,7 @@ def get_frame_height_with_spacing():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_id(str_id: str):
     """
@@ -3085,6 +3233,7 @@ def get_id(str_id: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_id_ptr(ptr_id: Any):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDPtr(
@@ -3096,6 +3245,7 @@ def get_id_ptr(ptr_id: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_id_str(str_id_begin: str, str_id_end: str):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDStr(
@@ -3108,6 +3258,7 @@ def get_id_str(str_id_begin: str, str_id_end: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiIO)
 def get_io():
     """
@@ -3121,6 +3272,7 @@ def get_io():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_item_id():
     """
@@ -3133,6 +3285,7 @@ def get_item_id():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_item_rect_max():
     """
@@ -3145,6 +3298,7 @@ def get_item_rect_max():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_item_rect_min():
     """
@@ -3157,6 +3311,7 @@ def get_item_rect_min():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_item_rect_size():
     """
@@ -3169,6 +3324,7 @@ def get_item_rect_size():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_key_index(key: int):
     cdef ccimgui.ImGuiKey res = ccimgui.GetKeyIndex(
@@ -3180,6 +3336,7 @@ def get_key_index(key: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def get_key_name(key: int):
     """
@@ -3194,6 +3351,7 @@ def get_key_name(key: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_key_pressed_amount(key: int, repeat_delay: float, rate: float):
     """
@@ -3210,6 +3368,7 @@ def get_key_pressed_amount(key: int, repeat_delay: float, rate: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiViewport)
 def get_main_viewport():
     """
@@ -3226,6 +3385,7 @@ def get_main_viewport():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_mouse_clicked_count(button: int):
     """
@@ -3240,6 +3400,7 @@ def get_mouse_clicked_count(button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_mouse_cursor():
     """
@@ -3252,6 +3413,7 @@ def get_mouse_cursor():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0):
     """
@@ -3267,6 +3429,7 @@ def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_mouse_pos():
     """
@@ -3279,6 +3442,7 @@ def get_mouse_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_mouse_pos_on_opening_current_popup():
     """
@@ -3291,6 +3455,7 @@ def get_mouse_pos_on_opening_current_popup():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiPlatformIO)
 def get_platform_io():
     """
@@ -3306,6 +3471,7 @@ def get_platform_io():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_scroll_max_x():
     """
@@ -3318,6 +3484,7 @@ def get_scroll_max_x():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_scroll_max_y():
     """
@@ -3330,6 +3497,7 @@ def get_scroll_max_y():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_scroll_x():
     """
@@ -3345,6 +3513,7 @@ def get_scroll_x():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_scroll_y():
     """
@@ -3357,6 +3526,7 @@ def get_scroll_y():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiStorage)
 def get_state_storage():
     cdef ccimgui.ImGuiStorage* res = ccimgui.ImGui_GetStateStorage()
@@ -3366,6 +3536,7 @@ def get_state_storage():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiStyle)
 def get_style():
     """
@@ -3378,6 +3549,7 @@ def get_style():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def get_style_color_name(idx: int):
     """
@@ -3392,6 +3564,7 @@ def get_style_color_name(idx: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImVec4)
 def get_style_color_vec4(idx: int):
     """
@@ -3406,6 +3579,7 @@ def get_style_color_vec4(idx: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_text_line_height():
     """
@@ -3418,6 +3592,7 @@ def get_text_line_height():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_text_line_height_with_spacing():
     """
@@ -3430,6 +3605,7 @@ def get_text_line_height_with_spacing():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_time():
     """
@@ -3442,6 +3618,7 @@ def get_time():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_tree_node_to_label_spacing():
     """
@@ -3454,6 +3631,7 @@ def get_tree_node_to_label_spacing():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def get_version():
     """
@@ -3466,6 +3644,7 @@ def get_version():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_window_content_region_max():
     """
@@ -3478,6 +3657,7 @@ def get_window_content_region_max():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_window_content_region_min():
     """
@@ -3490,6 +3670,7 @@ def get_window_content_region_min():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def get_window_dock_id():
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetWindowDockID()
@@ -3499,6 +3680,7 @@ def get_window_dock_id():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_window_dpi_scale():
     """
@@ -3511,6 +3693,7 @@ def get_window_dpi_scale():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImDrawList)
 def get_window_draw_list():
     """
@@ -3523,6 +3706,7 @@ def get_window_draw_list():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_window_height():
     """
@@ -3535,6 +3719,7 @@ def get_window_height():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_window_pos():
     """
@@ -3547,6 +3732,7 @@ def get_window_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(tuple)
 def get_window_size():
     """
@@ -3559,6 +3745,7 @@ def get_window_size():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiViewport)
 def get_window_viewport():
     """
@@ -3571,6 +3758,7 @@ def get_window_viewport():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(float)
 def get_window_width():
     """
@@ -3583,6 +3771,7 @@ def get_window_width():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def im_vector_construct(vector: Any):
     """
@@ -3596,6 +3785,7 @@ def im_vector_construct(vector: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def im_vector_destruct(vector: Any):
     """
@@ -3609,6 +3799,7 @@ def im_vector_destruct(vector: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def image(user_texture_id: Any, size: tuple):
     """
@@ -3625,6 +3816,7 @@ def image(user_texture_id: Any, size: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def image_button(str_id: str, user_texture_id: Any, size: tuple):
     """
@@ -3641,6 +3833,7 @@ def image_button(str_id: str, user_texture_id: Any, size: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
     cdef bool res = ccimgui.ImGui_ImageButtonEx(
@@ -3658,6 +3851,7 @@ def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
     ccimgui.ImGui_ImageEx(
@@ -3673,6 +3867,7 @@ def image_ex(user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def indent():
     """
@@ -3684,6 +3879,7 @@ def indent():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def indent_ex(indent_w: float=0.0):
     """
@@ -3697,6 +3893,7 @@ def indent_ex(indent_w: float=0.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_double(label: str, v: DoublePtr):
     """
@@ -3712,6 +3909,7 @@ def input_double(label: str, v: DoublePtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputDoubleEx(
@@ -3728,6 +3926,7 @@ def input_double_ex(label: str, v: DoublePtr, step: float=0.0, step_fast: float=
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float(label: str, v: FloatPtr):
     """
@@ -3743,6 +3942,7 @@ def input_float(label: str, v: FloatPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float2(label: str, v: Sequence[FloatPtr]):
     """
@@ -3758,6 +3958,7 @@ def input_float2(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputFloat2Ex(
@@ -3772,6 +3973,7 @@ def input_float2_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flag
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float3(label: str, v: Sequence[FloatPtr]):
     """
@@ -3787,6 +3989,7 @@ def input_float3(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputFloat3Ex(
@@ -3801,6 +4004,7 @@ def input_float3_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flag
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float4(label: str, v: Sequence[FloatPtr]):
     """
@@ -3816,6 +4020,7 @@ def input_float4(label: str, v: Sequence[FloatPtr]):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputFloat4Ex(
@@ -3830,6 +4035,7 @@ def input_float4_ex(label: str, v: Sequence[FloatPtr], format_: str="%.3f", flag
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_InputFloatEx(
@@ -3846,6 +4052,7 @@ def input_float_ex(label: str, v: FloatPtr, step: float=0.0, step_fast: float=0.
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_int(label: str, v: IntPtr):
     """
@@ -3861,6 +4068,7 @@ def input_int(label: str, v: IntPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_int2(label: str, v: Sequence[IntPtr], flags: int=0):
     cdef bool res = ccimgui.ImGui_InputInt2(
@@ -3874,6 +4082,7 @@ def input_int2(label: str, v: Sequence[IntPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_int3(label: str, v: Sequence[IntPtr], flags: int=0):
     cdef bool res = ccimgui.ImGui_InputInt3(
@@ -3887,6 +4096,7 @@ def input_int3(label: str, v: Sequence[IntPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_int4(label: str, v: Sequence[IntPtr], flags: int=0):
     cdef bool res = ccimgui.ImGui_InputInt4(
@@ -3900,6 +4110,7 @@ def input_int4(label: str, v: Sequence[IntPtr], flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: int=0):
     cdef bool res = ccimgui.ImGui_InputIntEx(
@@ -3915,6 +4126,7 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_scalar(label: str, data_type: int, p_data: Any):
     """
@@ -3931,6 +4143,7 @@ def input_scalar(label: str, data_type: int, p_data: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -3950,6 +4163,7 @@ def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_scalar_n(label: str, data_type: int, p_data: Any, components: int):
     """
@@ -3967,6 +4181,7 @@ def input_scalar_n(label: str, data_type: int, p_data: Any, components: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -3987,6 +4202,7 @@ def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text(label: str, buf: str, buf_size: Any, flags: int=0):
     """
@@ -4007,6 +4223,7 @@ def input_text(label: str, buf: str, buf_size: Any, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextEx(
@@ -4023,6 +4240,7 @@ def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: C
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text_multiline(label: str, buf: str, buf_size: Any):
     """
@@ -4039,6 +4257,7 @@ def input_text_multiline(label: str, buf: str, buf_size: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextMultilineEx(
@@ -4056,6 +4275,7 @@ def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0,
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: int=0):
     """
@@ -4074,6 +4294,7 @@ def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
@@ -4091,6 +4312,7 @@ def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flag
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def invisible_button(str_id: str, size: tuple, flags: int=0):
     """
@@ -4107,6 +4329,7 @@ def invisible_button(str_id: str, size: tuple, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_any_item_active():
     """
@@ -4119,6 +4342,7 @@ def is_any_item_active():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_any_item_focused():
     """
@@ -4131,6 +4355,7 @@ def is_any_item_focused():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_any_item_hovered():
     """
@@ -4143,6 +4368,7 @@ def is_any_item_hovered():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_any_mouse_down():
     """
@@ -4155,6 +4381,7 @@ def is_any_mouse_down():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_activated():
     """
@@ -4167,6 +4394,7 @@ def is_item_activated():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_active():
     """
@@ -4179,6 +4407,7 @@ def is_item_active():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_clicked():
     """
@@ -4191,6 +4420,7 @@ def is_item_clicked():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_clicked_ex(mouse_button: int=0):
     """
@@ -4205,6 +4435,7 @@ def is_item_clicked_ex(mouse_button: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_deactivated():
     """
@@ -4217,6 +4448,7 @@ def is_item_deactivated():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_deactivated_after_edit():
     """
@@ -4229,6 +4461,7 @@ def is_item_deactivated_after_edit():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_edited():
     """
@@ -4241,6 +4474,7 @@ def is_item_edited():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_focused():
     """
@@ -4253,6 +4487,7 @@ def is_item_focused():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_hovered(flags: int=0):
     """
@@ -4270,6 +4505,7 @@ def is_item_hovered(flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_toggled_open():
     """
@@ -4282,6 +4518,7 @@ def is_item_toggled_open():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_item_visible():
     """
@@ -4294,6 +4531,7 @@ def is_item_visible():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_key_down(key: int):
     """
@@ -4313,6 +4551,7 @@ def is_key_down(key: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_key_pressed(key: int):
     """
@@ -4327,6 +4566,7 @@ def is_key_pressed(key: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_key_pressed_ex(key: int, repeat: bool=True):
     """
@@ -4342,6 +4582,7 @@ def is_key_pressed_ex(key: int, repeat: bool=True):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_key_released(key: int):
     """
@@ -4356,6 +4597,7 @@ def is_key_released(key: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_clicked(button: int):
     """
@@ -4370,6 +4612,7 @@ def is_mouse_clicked(button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_clicked_ex(button: int, repeat: bool=False):
     """
@@ -4385,6 +4628,7 @@ def is_mouse_clicked_ex(button: int, repeat: bool=False):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_double_clicked(button: int):
     """
@@ -4399,6 +4643,7 @@ def is_mouse_double_clicked(button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_down(button: int):
     """
@@ -4417,6 +4662,7 @@ def is_mouse_down(button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
     """
@@ -4432,6 +4678,7 @@ def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_hovering_rect(r_min: tuple, r_max: tuple):
     """
@@ -4447,6 +4694,7 @@ def is_mouse_hovering_rect(r_min: tuple, r_max: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_hovering_rect_ex(r_min: tuple, r_max: tuple, clip: bool=True):
     """
@@ -4463,6 +4711,7 @@ def is_mouse_hovering_rect_ex(r_min: tuple, r_max: tuple, clip: bool=True):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_pos_valid(mouse_pos: ImVec2=None):
     """
@@ -4477,6 +4726,7 @@ def is_mouse_pos_valid(mouse_pos: ImVec2=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_mouse_released(button: int):
     """
@@ -4491,6 +4741,7 @@ def is_mouse_released(button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_popup_open(str_id: str, flags: int=0):
     """
@@ -4510,6 +4761,7 @@ def is_popup_open(str_id: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_rect_visible(rect_min: tuple, rect_max: tuple):
     """
@@ -4525,6 +4777,7 @@ def is_rect_visible(rect_min: tuple, rect_max: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_rect_visible_by_size(size: tuple):
     """
@@ -4540,6 +4793,7 @@ def is_rect_visible_by_size(size: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_window_appearing():
     """
@@ -4553,6 +4807,7 @@ def is_window_appearing():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_window_collapsed():
     cdef bool res = ccimgui.ImGui_IsWindowCollapsed()
@@ -4562,6 +4817,7 @@ def is_window_collapsed():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_window_docked():
     """
@@ -4574,6 +4830,7 @@ def is_window_docked():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_window_focused(flags: int=0):
     """
@@ -4588,6 +4845,7 @@ def is_window_focused(flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def is_window_hovered(flags: int=0):
     """
@@ -4602,6 +4860,7 @@ def is_window_hovered(flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def label_text(label: str, fmt: str):
     """
@@ -4616,6 +4875,7 @@ def label_text(label: str, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def label_text_v(label: str, fmt: str):
     ccimgui.ImGui_LabelTextV(
@@ -4627,6 +4887,7 @@ def label_text_v(label: str, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def list_box(label: str, current_item: IntPtr, items: Any, items_count: int, height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ListBox(
@@ -4642,6 +4903,7 @@ def list_box(label: str, current_item: IntPtr, items: Any, items_count: int, hei
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int):
     """
@@ -4660,6 +4922,7 @@ def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def list_box_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
@@ -4676,6 +4939,7 @@ def list_box_callback_ex(label: str, current_item: IntPtr, items_getter: Callabl
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def load_ini_settings_from_disk(ini_filename: str):
     """
@@ -4693,6 +4957,7 @@ def load_ini_settings_from_disk(ini_filename: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def load_ini_settings_from_memory(ini_data: str, ini_size: Any=0):
     """
@@ -4707,6 +4972,7 @@ def load_ini_settings_from_memory(ini_data: str, ini_size: Any=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_buttons():
     """
@@ -4718,6 +4984,7 @@ def log_buttons():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_finish():
     """
@@ -4729,6 +4996,7 @@ def log_finish():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_text(fmt: str):
     """
@@ -4742,6 +5010,7 @@ def log_text(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_text_v(fmt: str):
     ccimgui.ImGui_LogTextV(
@@ -4752,6 +5021,7 @@ def log_text_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_to_clipboard(auto_open_depth: int=-1):
     """
@@ -4765,6 +5035,7 @@ def log_to_clipboard(auto_open_depth: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_to_file(auto_open_depth: int=-1, filename: str=None):
     """
@@ -4781,6 +5052,7 @@ def log_to_file(auto_open_depth: int=-1, filename: str=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def log_to_tty(auto_open_depth: int=-1):
     """
@@ -4796,6 +5068,7 @@ def log_to_tty(auto_open_depth: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(Any)
 def mem_alloc(size: Any):
     cdef void* res = ccimgui.ImGui_MemAlloc(
@@ -4807,6 +5080,7 @@ def mem_alloc(size: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def mem_free(ptr: Any):
     ccimgui.ImGui_MemFree(
@@ -4817,6 +5091,7 @@ def mem_free(ptr: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def menu_item(label: str):
     """
@@ -4831,6 +5106,7 @@ def menu_item(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: bool=True):
     """
@@ -4848,6 +5124,7 @@ def menu_item_bool_ptr(label: str, shortcut: str, p_selected: BoolPtr, enabled: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True):
     """
@@ -4867,6 +5144,7 @@ def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def new_frame():
     """
@@ -4878,6 +5156,7 @@ def new_frame():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def new_line():
     """
@@ -4889,6 +5168,7 @@ def new_line():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def next_column():
     """
@@ -4900,6 +5180,7 @@ def next_column():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def open_popup(str_id: str, popup_flags: int=0):
     """
@@ -4922,6 +5203,7 @@ def open_popup(str_id: str, popup_flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def open_popup_id(id_: int, popup_flags: int=0):
     """
@@ -4936,6 +5218,7 @@ def open_popup_id(id_: int, popup_flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def open_popup_on_item_click(str_id: str=None, popup_flags: int=1):
     """
@@ -4952,6 +5235,7 @@ def open_popup_on_item_click(str_id: str=None, popup_flags: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_histogram(label: str, values: FloatPtr, values_count: int):
     """
@@ -4967,6 +5251,7 @@ def plot_histogram(label: str, values: FloatPtr, values_count: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_histogram_callback(label: str, values_getter: Callable, data: Any, values_count: int):
     """
@@ -4983,6 +5268,7 @@ def plot_histogram_callback(label: str, values_getter: Callable, data: Any, valu
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -5003,6 +5289,7 @@ def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, v
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -5023,6 +5310,7 @@ def plot_histogram_ex(label: str, values: FloatPtr, values_count: int, values_of
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_lines(label: str, values: FloatPtr, values_count: int):
     """
@@ -5040,6 +5328,7 @@ def plot_lines(label: str, values: FloatPtr, values_count: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_lines_callback(label: str, values_getter: Callable, data: Any, values_count: int):
     """
@@ -5056,6 +5345,7 @@ def plot_lines_callback(label: str, values_getter: Callable, data: Any, values_c
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -5076,6 +5366,7 @@ def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, value
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -5096,6 +5387,7 @@ def plot_lines_ex(label: str, values: FloatPtr, values_count: int, values_offset
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_button_repeat():
     ccimgui.ImGui_PopButtonRepeat()
@@ -5104,6 +5396,7 @@ def pop_button_repeat():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_clip_rect():
     ccimgui.ImGui_PopClipRect()
@@ -5112,6 +5405,7 @@ def pop_clip_rect():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_font():
     ccimgui.ImGui_PopFont()
@@ -5120,6 +5414,7 @@ def pop_font():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_id():
     """
@@ -5131,6 +5426,7 @@ def pop_id():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_item_width():
     ccimgui.ImGui_PopItemWidth()
@@ -5139,6 +5435,7 @@ def pop_item_width():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_style_color():
     """
@@ -5150,6 +5447,7 @@ def pop_style_color():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_style_color_ex(count: int=1):
     ccimgui.ImGui_PopStyleColorEx(
@@ -5160,6 +5458,7 @@ def pop_style_color_ex(count: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_style_var():
     """
@@ -5171,6 +5470,7 @@ def pop_style_var():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_style_var_ex(count: int=1):
     ccimgui.ImGui_PopStyleVarEx(
@@ -5181,6 +5481,7 @@ def pop_style_var_ex(count: int=1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_tab_stop():
     ccimgui.ImGui_PopTabStop()
@@ -5189,6 +5490,7 @@ def pop_tab_stop():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def pop_text_wrap_pos():
     ccimgui.ImGui_PopTextWrapPos()
@@ -5197,6 +5499,7 @@ def pop_text_wrap_pos():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None):
     bytes_overlay = _bytes(overlay) if overlay is not None else None
@@ -5211,6 +5514,7 @@ def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=No
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_button_repeat(repeat: bool):
     """
@@ -5224,6 +5528,7 @@ def push_button_repeat(repeat: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool):
     """
@@ -5240,6 +5545,7 @@ def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_cu
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_font(font: ImFont):
     """
@@ -5254,6 +5560,7 @@ def push_font(font: ImFont):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_id(str_id: str):
     """
@@ -5278,6 +5585,7 @@ def push_id(str_id: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_id_int(int_id: int):
     """
@@ -5291,6 +5599,7 @@ def push_id_int(int_id: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_id_ptr(ptr_id: Any):
     """
@@ -5304,6 +5613,7 @@ def push_id_ptr(ptr_id: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_id_str(str_id_begin: str, str_id_end: str):
     """
@@ -5318,6 +5628,7 @@ def push_id_str(str_id_begin: str, str_id_end: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_item_width(item_width: float):
     """
@@ -5332,6 +5643,7 @@ def push_item_width(item_width: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_style_color(idx: int, col: int):
     """
@@ -5346,6 +5658,7 @@ def push_style_color(idx: int, col: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_style_color_im_vec4(idx: int, col: tuple):
     ccimgui.ImGui_PushStyleColorImVec4(
@@ -5357,6 +5670,7 @@ def push_style_color_im_vec4(idx: int, col: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_style_var(idx: int, val: float):
     """
@@ -5371,6 +5685,7 @@ def push_style_var(idx: int, val: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_style_var_im_vec2(idx: int, val: tuple):
     """
@@ -5385,6 +5700,7 @@ def push_style_var_im_vec2(idx: int, val: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_tab_stop(tab_stop: bool):
     """
@@ -5398,6 +5714,7 @@ def push_tab_stop(tab_stop: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
     """
@@ -5411,6 +5728,7 @@ def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def radio_button(label: str, active: bool):
     """
@@ -5426,6 +5744,7 @@ def radio_button(label: str, active: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def radio_button_int_ptr(label: str, v: IntPtr, v_button: int):
     """
@@ -5442,6 +5761,7 @@ def radio_button_int_ptr(label: str, v: IntPtr, v_button: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def render():
     """
@@ -5453,6 +5773,7 @@ def render():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def render_platform_windows_default():
     """
@@ -5464,6 +5785,7 @@ def render_platform_windows_default():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None):
     """
@@ -5478,6 +5800,7 @@ def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_r
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def reset_mouse_drag_delta():
     """
@@ -5489,6 +5812,7 @@ def reset_mouse_drag_delta():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def reset_mouse_drag_delta_ex(button: int=0):
     """
@@ -5502,6 +5826,7 @@ def reset_mouse_drag_delta_ex(button: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def same_line():
     """
@@ -5513,6 +5838,7 @@ def same_line():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
     """
@@ -5527,6 +5853,7 @@ def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def save_ini_settings_to_disk(ini_filename: str):
     """
@@ -5540,6 +5867,7 @@ def save_ini_settings_to_disk(ini_filename: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def save_ini_settings_to_memory(out_ini_size: Any=None):
     """
@@ -5554,6 +5882,7 @@ def save_ini_settings_to_memory(out_ini_size: Any=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def selectable(label: str):
     """
@@ -5571,6 +5900,7 @@ def selectable(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0):
     """
@@ -5587,6 +5917,7 @@ def selectable_bool_ptr(label: str, p_selected: BoolPtr, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: tuple=(0, 0)):
     """
@@ -5604,6 +5935,7 @@ def selectable_bool_ptr_ex(label: str, p_selected: BoolPtr, flags: int=0, size: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0, 0)):
     """
@@ -5621,6 +5953,7 @@ def selectable_ex(label: str, selected: bool=False, flags: int=0, size: tuple=(0
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def separator():
     """
@@ -5639,6 +5972,7 @@ def separator():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def separator_text(label: str):
     """
@@ -5652,6 +5986,7 @@ def separator_text(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
     """
@@ -5670,6 +6005,7 @@ def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_clipboard_text(text: str):
     ccimgui.ImGui_SetClipboardText(
@@ -5680,6 +6016,7 @@ def set_clipboard_text(text: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_color_edit_options(flags: int):
     """
@@ -5693,6 +6030,7 @@ def set_color_edit_options(flags: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_column_offset(column_index: int, offset_x: float):
     """
@@ -5707,6 +6045,7 @@ def set_column_offset(column_index: int, offset_x: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_column_width(column_index: int, width: float):
     """
@@ -5721,6 +6060,7 @@ def set_column_width(column_index: int, width: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_current_context(ctx: ImGuiContext):
     ccimgui.ImGui_SetCurrentContext(
@@ -5731,6 +6071,7 @@ def set_current_context(ctx: ImGuiContext):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_cursor_pos(local_pos: tuple):
     """
@@ -5744,6 +6085,7 @@ def set_cursor_pos(local_pos: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_cursor_pos_x(local_x: float):
     """
@@ -5757,6 +6099,7 @@ def set_cursor_pos_x(local_x: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_cursor_pos_y(local_y: float):
     """
@@ -5770,6 +6113,7 @@ def set_cursor_pos_y(local_y: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_cursor_screen_pos(pos: tuple):
     """
@@ -5783,6 +6127,7 @@ def set_cursor_screen_pos(pos: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
     """
@@ -5800,6 +6145,7 @@ def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_item_allow_overlap():
     """
@@ -5811,6 +6157,7 @@ def set_item_allow_overlap():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_item_default_focus():
     """
@@ -5824,6 +6171,7 @@ def set_item_default_focus():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_keyboard_focus_here():
     """
@@ -5835,6 +6183,7 @@ def set_keyboard_focus_here():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_keyboard_focus_here_ex(offset: int=0):
     """
@@ -5848,6 +6197,7 @@ def set_keyboard_focus_here_ex(offset: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_mouse_cursor(cursor_type: int):
     """
@@ -5861,6 +6211,7 @@ def set_mouse_cursor(cursor_type: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
     """
@@ -5874,6 +6225,7 @@ def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
     """
@@ -5887,6 +6239,7 @@ def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_item_open(is_open: bool, cond: int=0):
     """
@@ -5901,6 +6254,7 @@ def set_next_item_open(is_open: bool, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_item_width(item_width: float):
     """
@@ -5914,6 +6268,7 @@ def set_next_item_width(item_width: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_bg_alpha(alpha: float):
     """
@@ -5927,6 +6282,7 @@ def set_next_window_bg_alpha(alpha: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_class(window_class: ImGuiWindowClass):
     """
@@ -5940,6 +6296,7 @@ def set_next_window_class(window_class: ImGuiWindowClass):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_collapsed(collapsed: bool, cond: int=0):
     """
@@ -5954,6 +6311,7 @@ def set_next_window_collapsed(collapsed: bool, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_content_size(size: tuple):
     """
@@ -5967,6 +6325,7 @@ def set_next_window_content_size(size: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_dock_id(dock_id: int, cond: int=0):
     """
@@ -5981,6 +6340,7 @@ def set_next_window_dock_id(dock_id: int, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_focus():
     """
@@ -5992,6 +6352,7 @@ def set_next_window_focus():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_pos(pos: tuple, cond: int=0):
     """
@@ -6008,6 +6369,7 @@ def set_next_window_pos(pos: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_pos_ex(pos: tuple, cond: int=0, pivot: tuple=(0, 0)):
     """
@@ -6023,6 +6385,7 @@ def set_next_window_pos_ex(pos: tuple, cond: int=0, pivot: tuple=(0, 0)):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_scroll(scroll: tuple):
     """
@@ -6036,6 +6399,7 @@ def set_next_window_scroll(scroll: tuple):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_size(size: tuple, cond: int=0):
     """
@@ -6050,6 +6414,7 @@ def set_next_window_size(size: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None):
     """
@@ -6066,6 +6431,7 @@ def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_ca
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_next_window_viewport(viewport_id: int):
     """
@@ -6079,6 +6445,7 @@ def set_next_window_viewport(viewport_id: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_from_pos_x(local_x: float, center_x_ratio: float=0.5):
     """
@@ -6093,6 +6460,7 @@ def set_scroll_from_pos_x(local_x: float, center_x_ratio: float=0.5):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_from_pos_y(local_y: float, center_y_ratio: float=0.5):
     """
@@ -6107,6 +6475,7 @@ def set_scroll_from_pos_y(local_y: float, center_y_ratio: float=0.5):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_here_x(center_x_ratio: float=0.5):
     """
@@ -6120,6 +6489,7 @@ def set_scroll_here_x(center_x_ratio: float=0.5):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_here_y(center_y_ratio: float=0.5):
     """
@@ -6133,6 +6503,7 @@ def set_scroll_here_y(center_y_ratio: float=0.5):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_x(scroll_x: float):
     """
@@ -6146,6 +6517,7 @@ def set_scroll_x(scroll_x: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_scroll_y(scroll_y: float):
     """
@@ -6159,6 +6531,7 @@ def set_scroll_y(scroll_y: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_state_storage(storage: ImGuiStorage):
     """
@@ -6172,6 +6545,7 @@ def set_state_storage(storage: ImGuiStorage):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_tab_item_closed(tab_or_docked_window_label: str):
     """
@@ -6185,6 +6559,7 @@ def set_tab_item_closed(tab_or_docked_window_label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_tooltip(fmt: str):
     """
@@ -6198,6 +6573,7 @@ def set_tooltip(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_tooltip_v(fmt: str):
     ccimgui.ImGui_SetTooltipV(
@@ -6208,6 +6584,7 @@ def set_tooltip_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_collapsed(collapsed: bool, cond: int=0):
     """
@@ -6222,6 +6599,7 @@ def set_window_collapsed(collapsed: bool, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_collapsed_str(name: str, collapsed: bool, cond: int=0):
     """
@@ -6237,6 +6615,7 @@ def set_window_collapsed_str(name: str, collapsed: bool, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_focus():
     """
@@ -6248,6 +6627,7 @@ def set_window_focus():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_focus_str(name: str):
     """
@@ -6261,6 +6641,7 @@ def set_window_focus_str(name: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_font_scale(scale: float):
     """
@@ -6274,6 +6655,7 @@ def set_window_font_scale(scale: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_pos(pos: tuple, cond: int=0):
     """
@@ -6288,6 +6670,7 @@ def set_window_pos(pos: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_pos_str(name: str, pos: tuple, cond: int=0):
     """
@@ -6303,6 +6686,7 @@ def set_window_pos_str(name: str, pos: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_size(size: tuple, cond: int=0):
     """
@@ -6317,6 +6701,7 @@ def set_window_size(size: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def set_window_size_str(name: str, size: tuple, cond: int=0):
     """
@@ -6332,6 +6717,7 @@ def set_window_size_str(name: str, size: tuple, cond: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_about_window(p_open: BoolPtr=None):
     """
@@ -6345,6 +6731,7 @@ def show_about_window(p_open: BoolPtr=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_debug_log_window(p_open: BoolPtr=None):
     """
@@ -6358,6 +6745,7 @@ def show_debug_log_window(p_open: BoolPtr=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):
     """
@@ -6372,6 +6760,7 @@ def show_demo_window(p_open: BoolPtr=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_font_selector(label: str):
     """
@@ -6385,6 +6774,7 @@ def show_font_selector(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_metrics_window(p_open: BoolPtr=None):
     """
@@ -6398,6 +6788,7 @@ def show_metrics_window(p_open: BoolPtr=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_stack_tool_window(p_open: BoolPtr=None):
     """
@@ -6411,6 +6802,7 @@ def show_stack_tool_window(p_open: BoolPtr=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_style_editor(ref: ImGuiStyle=None):
     """
@@ -6424,6 +6816,7 @@ def show_style_editor(ref: ImGuiStyle=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def show_style_selector(label: str):
     """
@@ -6438,6 +6831,7 @@ def show_style_selector(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def show_user_guide():
     """
@@ -6449,6 +6843,7 @@ def show_user_guide():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_angle(label: str, v_rad: FloatPtr):
     """
@@ -6464,6 +6859,7 @@ def slider_angle(label: str, v_rad: FloatPtr):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderAngleEx(
@@ -6480,6 +6876,7 @@ def slider_angle_ex(label: str, v_rad: FloatPtr, v_degrees_min: float=-360.0, v_
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float(label: str, v: FloatPtr, v_min: float, v_max: float):
     """
@@ -6503,6 +6900,7 @@ def slider_float(label: str, v: FloatPtr, v_min: float, v_max: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float2(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
     """
@@ -6520,6 +6918,7 @@ def slider_float2(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
@@ -6536,6 +6935,7 @@ def slider_float2_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: flo
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
     """
@@ -6553,6 +6953,7 @@ def slider_float3(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
@@ -6569,6 +6970,7 @@ def slider_float3_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: flo
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float):
     """
@@ -6586,6 +6988,7 @@ def slider_float4(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float)
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
@@ -6602,6 +7005,7 @@ def slider_float4_ex(label: str, v: Sequence[FloatPtr], v_min: float, v_max: flo
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     """
@@ -6621,6 +7025,7 @@ def slider_float_ex(label: str, v: FloatPtr, v_min: float, v_max: float, format_
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int(label: str, v: IntPtr, v_min: int, v_max: int):
     """
@@ -6638,6 +7043,7 @@ def slider_int(label: str, v: IntPtr, v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int2(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
     """
@@ -6655,6 +7061,7 @@ def slider_int2(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderInt2Ex(
@@ -6671,6 +7078,7 @@ def slider_int2_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, form
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
     """
@@ -6688,6 +7096,7 @@ def slider_int3(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderInt3Ex(
@@ -6704,6 +7113,7 @@ def slider_int3_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, form
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
     """
@@ -6721,6 +7131,7 @@ def slider_int4(label: str, v: Sequence[IntPtr], v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderInt4Ex(
@@ -6737,6 +7148,7 @@ def slider_int4_ex(label: str, v: Sequence[IntPtr], v_min: int, v_max: int, form
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_SliderIntEx(
@@ -6753,6 +7165,7 @@ def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any):
     """
@@ -6771,6 +7184,7 @@ def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: An
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -6790,6 +7204,7 @@ def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_scalar_n(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any):
     """
@@ -6809,6 +7224,7 @@ def slider_scalar_n(label: str, data_type: int, p_data: Any, components: int, p_
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -6829,6 +7245,7 @@ def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int,
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def small_button(label: str):
     """
@@ -6843,6 +7260,7 @@ def small_button(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def spacing():
     """
@@ -6854,6 +7272,7 @@ def spacing():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def style_colors_classic(dst: ImGuiStyle=None):
     """
@@ -6867,6 +7286,7 @@ def style_colors_classic(dst: ImGuiStyle=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def style_colors_dark(dst: ImGuiStyle=None):
     """
@@ -6881,6 +7301,7 @@ def style_colors_dark(dst: ImGuiStyle=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def style_colors_light(dst: ImGuiStyle=None):
     """
@@ -6894,6 +7315,7 @@ def style_colors_light(dst: ImGuiStyle=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tab_item_button(label: str, flags: int=0):
     """
@@ -6909,6 +7331,7 @@ def tab_item_button(label: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def table_get_column_count():
     """
@@ -6921,6 +7344,7 @@ def table_get_column_count():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def table_get_column_flags(column_n: int=-1):
     """
@@ -6935,6 +7359,7 @@ def table_get_column_flags(column_n: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def table_get_column_index():
     """
@@ -6947,6 +7372,7 @@ def table_get_column_index():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(str)
 def table_get_column_name(column_n: int=-1):
     """
@@ -6961,6 +7387,7 @@ def table_get_column_name(column_n: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(int)
 def table_get_row_index():
     """
@@ -6973,6 +7400,7 @@ def table_get_row_index():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(ImGuiTableSortSpecs)
 def table_get_sort_specs():
     """
@@ -6991,6 +7419,7 @@ def table_get_sort_specs():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_header(label: str):
     """
@@ -7004,6 +7433,7 @@ def table_header(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_headers_row():
     """
@@ -7015,6 +7445,7 @@ def table_headers_row():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def table_next_column():
     """
@@ -7027,6 +7458,7 @@ def table_next_column():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_next_row():
     """
@@ -7038,6 +7470,7 @@ def table_next_row():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
     """
@@ -7052,6 +7485,7 @@ def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_set_bg_color(target: int, color: int, column_n: int=-1):
     """
@@ -7067,6 +7501,7 @@ def table_set_bg_color(target: int, color: int, column_n: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_set_column_enabled(column_n: int, v: bool):
     """
@@ -7081,6 +7516,7 @@ def table_set_column_enabled(column_n: int, v: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def table_set_column_index(column_n: int):
     """
@@ -7095,6 +7531,7 @@ def table_set_column_index(column_n: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_setup_column(label: str, flags: int=0):
     """
@@ -7117,6 +7554,7 @@ def table_setup_column(label: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
     ccimgui.ImGui_TableSetupColumnEx(
@@ -7130,6 +7568,7 @@ def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def table_setup_scroll_freeze(cols: int, rows: int):
     """
@@ -7144,6 +7583,7 @@ def table_setup_scroll_freeze(cols: int, rows: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text(fmt: str):
     """
@@ -7157,6 +7597,7 @@ def text(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_colored(col: tuple, fmt: str):
     """
@@ -7171,6 +7612,7 @@ def text_colored(col: tuple, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_colored_v(col: tuple, fmt: str):
     ccimgui.ImGui_TextColoredV(
@@ -7182,6 +7624,7 @@ def text_colored_v(col: tuple, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_disabled(fmt: str):
     """
@@ -7195,6 +7638,7 @@ def text_disabled(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_disabled_v(fmt: str):
     ccimgui.ImGui_TextDisabledV(
@@ -7205,6 +7649,7 @@ def text_disabled_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_unformatted(text: str):
     """
@@ -7219,6 +7664,7 @@ def text_unformatted(text: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_unformatted_ex(text: str, text_end: str=None):
     """
@@ -7235,6 +7681,7 @@ def text_unformatted_ex(text: str, text_end: str=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_v(fmt: str):
     ccimgui.ImGui_TextV(
@@ -7245,6 +7692,7 @@ def text_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_wrapped(fmt: str):
     """
@@ -7258,6 +7706,7 @@ def text_wrapped(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def text_wrapped_v(fmt: str):
     ccimgui.ImGui_TextWrappedV(
@@ -7268,6 +7717,7 @@ def text_wrapped_v(fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node(label: str):
     """
@@ -7283,6 +7733,7 @@ def tree_node(label: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ex(label: str, flags: int=0):
     cdef bool res = ccimgui.ImGui_TreeNodeEx(
@@ -7295,6 +7746,7 @@ def tree_node_ex(label: str, flags: int=0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeExPtr(
@@ -7308,6 +7760,7 @@ def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ex_str(str_id: str, flags: int, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeExStr(
@@ -7321,6 +7774,7 @@ def tree_node_ex_str(str_id: str, flags: int, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ex_v(str_id: str, flags: int, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeExV(
@@ -7334,6 +7788,7 @@ def tree_node_ex_v(str_id: str, flags: int, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeExVPtr(
@@ -7347,6 +7802,7 @@ def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_ptr(ptr_id: Any, fmt: str):
     """
@@ -7362,6 +7818,7 @@ def tree_node_ptr(ptr_id: Any, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_str(str_id: str, fmt: str):
     """
@@ -7377,6 +7834,7 @@ def tree_node_str(str_id: str, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_v(str_id: str, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeV(
@@ -7389,6 +7847,7 @@ def tree_node_v(str_id: str, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def tree_node_vptr(ptr_id: Any, fmt: str):
     cdef bool res = ccimgui.ImGui_TreeNodeVPtr(
@@ -7401,6 +7860,7 @@ def tree_node_vptr(ptr_id: Any, fmt: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def tree_pop():
     """
@@ -7412,6 +7872,7 @@ def tree_pop():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def tree_push(str_id: str):
     """
@@ -7425,6 +7886,7 @@ def tree_push(str_id: str):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def tree_push_ptr(ptr_id: Any):
     """
@@ -7438,6 +7900,7 @@ def tree_push_ptr(ptr_id: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def unindent():
     """
@@ -7449,6 +7912,7 @@ def unindent():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def unindent_ex(indent_w: float=0.0):
     """
@@ -7462,6 +7926,7 @@ def unindent_ex(indent_w: float=0.0):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def update_platform_windows():
     """
@@ -7473,6 +7938,7 @@ def update_platform_windows():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_float(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float):
     """
@@ -7491,6 +7957,7 @@ def vslider_float(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: flo
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_float_ex(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_VSliderFloatEx(
@@ -7508,6 +7975,7 @@ def vslider_float_ex(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int):
     """
@@ -7526,6 +7994,7 @@ def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_int_ex(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_VSliderIntEx(
@@ -7543,6 +8012,7 @@ def vslider_int_ex(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, f
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any):
     """
@@ -7562,6 +8032,7 @@ def vslider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -7583,6 +8054,7 @@ def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_mi
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImColor:
     """
     Helper: ImColor() implicitly converts colors to either ImU32 (packed 4x1 byte) or ImVec4 (4x1 float)
@@ -7605,6 +8077,7 @@ cdef class ImColor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def value(self):
@@ -7618,6 +8091,7 @@ cdef class ImColor:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImColor)
     def hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
         cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
@@ -7633,6 +8107,7 @@ cdef class ImColor:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
         """
@@ -7653,6 +8128,7 @@ cdef class ImColor:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawChannel:
     """
     [Internal] For use by ImDrawListSplitter
@@ -7672,6 +8148,7 @@ cdef class ImDrawChannel:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawCmd)
     @property
     def cmd_buffer(self):
@@ -7685,6 +8162,7 @@ cdef class ImDrawChannel:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawIdx)
     @property
     def idx_buffer(self):
@@ -7701,6 +8179,7 @@ cdef class ImDrawChannel:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawCmd:
     """
     Typically, 1 command = 1 GPU draw call (unless command is a callback)
@@ -7724,6 +8203,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def clip_rect(self):
@@ -7740,6 +8220,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def elem_count(self):
@@ -7756,6 +8237,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def idx_offset(self):
@@ -7772,6 +8254,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def texture_id(self):
@@ -7788,6 +8271,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def user_callback(self):
@@ -7804,6 +8288,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def user_callback_data(self):
@@ -7820,6 +8305,7 @@ cdef class ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def vtx_offset(self):
@@ -7836,6 +8322,7 @@ cdef class ImDrawCmd:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     def get_tex_id(self: ImDrawCmd):
         """
@@ -7853,6 +8340,7 @@ cdef class ImDrawCmd:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawCmdHeader:
     """
     [Internal] For use by ImDrawList
@@ -7872,6 +8360,7 @@ cdef class ImDrawCmdHeader:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def clip_rect(self):
@@ -7885,6 +8374,7 @@ cdef class ImDrawCmdHeader:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def texture_id(self):
@@ -7898,6 +8388,7 @@ cdef class ImDrawCmdHeader:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def vtx_offset(self):
@@ -7914,6 +8405,7 @@ cdef class ImDrawCmdHeader:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawData:
     """
     All draw data to render a Dear ImGui frame
@@ -7935,6 +8427,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawList)
     @property
     def cmd_lists(self):
@@ -7951,6 +8444,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def cmd_lists_count(self):
@@ -7967,6 +8461,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_pos(self):
@@ -7983,6 +8478,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_size(self):
@@ -7999,6 +8495,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def framebuffer_scale(self):
@@ -8015,6 +8512,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiViewport)
     @property
     def owner_viewport(self):
@@ -8031,6 +8529,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def total_idx_count(self):
@@ -8047,6 +8546,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def total_vtx_count(self):
@@ -8063,6 +8563,7 @@ cdef class ImDrawData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def valid(self):
@@ -8079,6 +8580,7 @@ cdef class ImDrawData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImDrawData):
         """
@@ -8092,6 +8594,7 @@ cdef class ImDrawData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def de_index_all_buffers(self: ImDrawData):
         """
@@ -8105,6 +8608,7 @@ cdef class ImDrawData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def scale_clip_rects(self: ImDrawData, fb_scale: tuple):
         """
@@ -8122,6 +8626,7 @@ cdef class ImDrawData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawList:
     """
     Draw command list
@@ -8149,6 +8654,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawCmd)
     @property
     def cmd_buffer(self):
@@ -8166,6 +8672,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def flags(self):
@@ -8182,6 +8689,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawIdx)
     @property
     def idx_buffer(self):
@@ -8198,6 +8706,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawVert)
     @property
     def vtx_buffer(self):
@@ -8214,6 +8723,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImVec4)
     @property
     def clip_rect_stack(self):
@@ -8230,6 +8740,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawCmdHeader)
     @property
     def cmd_header(self):
@@ -8246,6 +8757,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawListSharedData)
     @property
     def data(self):
@@ -8262,6 +8774,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def fringe_scale(self):
@@ -8278,6 +8791,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def idx_write_ptr(self):
@@ -8294,6 +8808,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def owner_name(self):
@@ -8310,6 +8825,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImVec2)
     @property
     def path(self):
@@ -8326,6 +8842,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawListSplitter)
     @property
     def splitter(self):
@@ -8342,6 +8859,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImTextureID)
     @property
     def texture_id_stack(self):
@@ -8358,6 +8876,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def vtx_current_idx(self):
@@ -8375,6 +8894,7 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawVert)
     @property
     def vtx_write_ptr(self):
@@ -8391,6 +8911,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0):
         """
@@ -8411,6 +8932,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0):
         """
@@ -8430,6 +8952,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_callback(self: ImDrawList, callback: Callable, callback_data: Any):
         """
@@ -8446,6 +8969,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_circle(self: ImDrawList, center: tuple, radius: float, col: int):
         """
@@ -8462,6 +8986,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_circle_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
         ccimgui.ImDrawList_AddCircleEx(
@@ -8477,6 +9002,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0):
         ccimgui.ImDrawList_AddCircleFilled(
@@ -8491,6 +9017,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
         ccimgui.ImDrawList_AddConvexPolyFilled(
@@ -8504,6 +9031,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_draw_cmd(self: ImDrawList):
         """
@@ -8517,6 +9045,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_image(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple):
         """
@@ -8537,6 +9066,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
         ccimgui.ImDrawList_AddImageEx(
@@ -8553,6 +9083,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_image_quad(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple):
         """
@@ -8571,6 +9102,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
         ccimgui.ImDrawList_AddImageQuadEx(
@@ -8591,6 +9123,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_image_rounded(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
         ccimgui.ImDrawList_AddImageRounded(
@@ -8609,6 +9142,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int):
         """
@@ -8632,6 +9166,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_line_ex(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0):
         ccimgui.ImDrawList_AddLineEx(
@@ -8646,6 +9181,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
         """
@@ -8663,6 +9199,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_ngon_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
         ccimgui.ImDrawList_AddNgonEx(
@@ -8678,6 +9215,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
         ccimgui.ImDrawList_AddNgonFilled(
@@ -8692,6 +9230,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
         ccimgui.ImDrawList_AddPolyline(
@@ -8707,6 +9246,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
         """
@@ -8725,6 +9265,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_quad_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
         ccimgui.ImDrawList_AddQuadEx(
@@ -8741,6 +9282,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
         ccimgui.ImDrawList_AddQuadFilled(
@@ -8756,6 +9298,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
         """
@@ -8772,6 +9315,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_rect_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
         """
@@ -8791,6 +9335,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
         """
@@ -8807,6 +9352,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
         """
@@ -8825,6 +9371,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
         ccimgui.ImDrawList_AddRectFilledMultiColor(
@@ -8841,6 +9388,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str):
         """
@@ -8857,6 +9405,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
         bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -8873,6 +9422,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str):
         """
@@ -8891,6 +9441,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
         bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -8911,6 +9462,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
         """
@@ -8928,6 +9480,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_triangle_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
         ccimgui.ImDrawList_AddTriangleEx(
@@ -8943,6 +9496,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
         ccimgui.ImDrawList_AddTriangleFilled(
@@ -8957,6 +9511,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def channels_merge(self: ImDrawList):
         ccimgui.ImDrawList_ChannelsMerge(
@@ -8967,6 +9522,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def channels_set_current(self: ImDrawList, n: int):
         ccimgui.ImDrawList_ChannelsSetCurrent(
@@ -8978,6 +9534,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def channels_split(self: ImDrawList, count: int):
         """
@@ -8997,6 +9554,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawList)
     def clone_output(self: ImDrawList):
         """
@@ -9011,6 +9569,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def get_clip_rect_max(self: ImDrawList):
         cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
@@ -9022,6 +9581,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def get_clip_rect_min(self: ImDrawList):
         cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMin(
@@ -9033,6 +9593,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
         ccimgui.ImDrawList_PathArcTo(
@@ -9048,6 +9609,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_arc_to_fast(self: ImDrawList, center: tuple, radius: float, a_min_of_12: int, a_max_of_12: int):
         """
@@ -9065,6 +9627,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0):
         """
@@ -9082,6 +9645,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0):
         """
@@ -9098,6 +9662,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_clear(self: ImDrawList):
         """
@@ -9112,6 +9677,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_fill_convex(self: ImDrawList, col: int):
         ccimgui.ImDrawList_PathFillConvex(
@@ -9123,6 +9689,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_line_to(self: ImDrawList, pos: tuple):
         ccimgui.ImDrawList_PathLineTo(
@@ -9134,6 +9701,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple):
         ccimgui.ImDrawList_PathLineToMergeDuplicate(
@@ -9145,6 +9713,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0):
         ccimgui.ImDrawList_PathRect(
@@ -9159,6 +9728,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0):
         ccimgui.ImDrawList_PathStroke(
@@ -9172,6 +9742,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def pop_clip_rect(self: ImDrawList):
         ccimgui.ImDrawList_PopClipRect(
@@ -9182,6 +9753,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def pop_texture_id(self: ImDrawList):
         ccimgui.ImDrawList_PopTextureID(
@@ -9192,6 +9764,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int):
         ccimgui.ImDrawList_PrimQuadUV(
@@ -9211,6 +9784,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_rect(self: ImDrawList, a: tuple, b: tuple, col: int):
         """
@@ -9227,6 +9801,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_rect_uv(self: ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int):
         ccimgui.ImDrawList_PrimRectUV(
@@ -9242,6 +9817,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int):
         """
@@ -9259,6 +9835,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
         ccimgui.ImDrawList_PrimUnreserve(
@@ -9271,6 +9848,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
         """
@@ -9287,6 +9865,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_write_idx(self: ImDrawList, idx: int):
         ccimgui.ImDrawList_PrimWriteIdx(
@@ -9298,6 +9877,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
         ccimgui.ImDrawList_PrimWriteVtx(
@@ -9311,6 +9891,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False):
         """
@@ -9327,6 +9908,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def push_clip_rect_full_screen(self: ImDrawList):
         ccimgui.ImDrawList_PushClipRectFullScreen(
@@ -9337,6 +9919,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def push_texture_id(self: ImDrawList, texture_id: Any):
         ccimgui.ImDrawList_PushTextureID(
@@ -9348,6 +9931,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
         cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
@@ -9360,6 +9944,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_free_memory(self: ImDrawList):
         ccimgui.ImDrawList__ClearFreeMemory(
@@ -9370,6 +9955,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def on_changed_clip_rect(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedClipRect(
@@ -9380,6 +9966,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def on_changed_texture_id(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedTextureID(
@@ -9390,6 +9977,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def on_changed_vtx_offset(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedVtxOffset(
@@ -9400,6 +9988,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
         ccimgui.ImDrawList__PathArcToFastEx(
@@ -9415,6 +10004,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
         ccimgui.ImDrawList__PathArcToN(
@@ -9430,6 +10020,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def pop_unused_draw_cmd(self: ImDrawList):
         ccimgui.ImDrawList__PopUnusedDrawCmd(
@@ -9440,6 +10031,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def reset_for_new_frame(self: ImDrawList):
         """
@@ -9453,6 +10045,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def try_merge_draw_cmds(self: ImDrawList):
         ccimgui.ImDrawList__TryMergeDrawCmds(
@@ -9466,6 +10059,7 @@ cdef class ImDrawList:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawListSharedData:
     """
     Data shared among multiple draw lists (typically owned by parent imgui context, but you may create one yourself)
@@ -9488,6 +10082,7 @@ cdef class ImDrawListSharedData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawListSplitter:
     """
     Split/Merge functions are used to split the draw list into different layers which can be drawn into out of order.
@@ -9508,6 +10103,7 @@ cdef class ImDrawListSplitter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImDrawChannel)
     @property
     def channels(self):
@@ -9524,6 +10120,7 @@ cdef class ImDrawListSplitter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def count(self):
@@ -9540,6 +10137,7 @@ cdef class ImDrawListSplitter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def current(self):
@@ -9556,6 +10154,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImDrawListSplitter):
         """
@@ -9569,6 +10168,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_free_memory(self: ImDrawListSplitter):
         ccimgui.ImDrawListSplitter_ClearFreeMemory(
@@ -9579,6 +10179,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def merge(self: ImDrawListSplitter, draw_list: ImDrawList):
         ccimgui.ImDrawListSplitter_Merge(
@@ -9590,6 +10191,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_current_channel(self: ImDrawListSplitter, draw_list: ImDrawList, channel_idx: int):
         ccimgui.ImDrawListSplitter_SetCurrentChannel(
@@ -9602,6 +10204,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def split(self: ImDrawListSplitter, draw_list: ImDrawList, count: int):
         ccimgui.ImDrawListSplitter_Split(
@@ -9617,6 +10220,7 @@ cdef class ImDrawListSplitter:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImDrawVert:
     cdef ccimgui.ImDrawVert* _ptr
     
@@ -9633,6 +10237,7 @@ cdef class ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def col(self):
@@ -9646,6 +10251,7 @@ cdef class ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def pos(self):
@@ -9659,6 +10265,7 @@ cdef class ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def uv(self):
@@ -9675,6 +10282,7 @@ cdef class ImDrawVert:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFont:
     """
     Font runtime data and rendering
@@ -9695,6 +10303,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def ascent(self):
@@ -9711,6 +10320,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontConfig)
     @property
     def config_data(self):
@@ -9727,6 +10337,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def config_data_count(self):
@@ -9743,6 +10354,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontAtlas)
     @property
     def container_atlas(self):
@@ -9760,6 +10372,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def descent(self):
@@ -9776,6 +10389,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def dirty_lookup_tables(self):
@@ -9792,6 +10406,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def ellipsis_char(self):
@@ -9808,6 +10423,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def ellipsis_char_count(self):
@@ -9824,6 +10440,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def ellipsis_char_step(self):
@@ -9840,6 +10457,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def ellipsis_width(self):
@@ -9856,6 +10474,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def fallback_advance_x(self):
@@ -9872,6 +10491,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def fallback_char(self):
@@ -9888,6 +10508,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontGlyph)
     @property
     def fallback_glyph(self):
@@ -9904,6 +10525,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def font_size(self):
@@ -9920,6 +10542,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImFontGlyph)
     @property
     def glyphs(self):
@@ -9936,6 +10559,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_float)
     @property
     def index_advance_x(self):
@@ -9953,6 +10577,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImWchar)
     @property
     def index_lookup(self):
@@ -9970,6 +10595,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_total_surface(self):
@@ -9986,6 +10612,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def scale(self):
@@ -10002,6 +10629,7 @@ cdef class ImFont:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def used4k_pages_map(self):
@@ -10018,6 +10646,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
         ccimgui.ImFont_AddGlyph(
@@ -10039,6 +10668,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_remap_char(self: ImFont, dst: int, src: int, overwrite_dst: bool=True):
         """
@@ -10055,6 +10685,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def build_lookup_table(self: ImFont):
         """
@@ -10068,6 +10699,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
         """
@@ -10088,6 +10720,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
         """
@@ -10110,6 +10743,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
         cdef const char* res = ccimgui.ImFont_CalcWordWrapPositionA(
@@ -10125,6 +10759,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_output_data(self: ImFont):
         ccimgui.ImFont_ClearOutputData(
@@ -10135,6 +10770,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontGlyph)
     def find_glyph(self: ImFont, c: int):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(
@@ -10147,6 +10783,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontGlyph)
     def find_glyph_no_fallback(self: ImFont, c: int):
         cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(
@@ -10159,6 +10796,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     def get_char_advance(self: ImFont, c: int):
         cdef float res = ccimgui.ImFont_GetCharAdvance(
@@ -10171,6 +10809,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     def get_debug_name(self: ImFont):
         cdef const char* res = ccimgui.ImFont_GetDebugName(
@@ -10182,6 +10821,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def grow_index(self: ImFont, new_size: int):
         ccimgui.ImFont_GrowIndex(
@@ -10193,6 +10833,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
         cdef bool res = ccimgui.ImFont_IsGlyphRangeUnused(
@@ -10206,6 +10847,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_loaded(self: ImFont):
         cdef bool res = ccimgui.ImFont_IsLoaded(
@@ -10217,6 +10859,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int):
         ccimgui.ImFont_RenderChar(
@@ -10232,6 +10875,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
         ccimgui.ImFont_RenderText(
@@ -10251,6 +10895,7 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_glyph_visible(self: ImFont, c: int, visible: bool):
         ccimgui.ImFont_SetGlyphVisible(
@@ -10266,6 +10911,7 @@ cdef class ImFont:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontAtlas:
     """
     Load and rasterize multiple TTF/OTF fonts into a same texture. The font atlas will build a single texture holding:
@@ -10301,6 +10947,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImFontConfig)
     @property
     def config_data(self):
@@ -10317,6 +10964,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImFontAtlasCustomRect)
     @property
     def custom_rects(self):
@@ -10333,6 +10981,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def flags(self):
@@ -10349,6 +10998,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def font_builder_flags(self):
@@ -10365,6 +11015,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontBuilderIO)
     @property
     def font_builder_io(self):
@@ -10382,6 +11033,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImFontPtr)
     @property
     def fonts(self):
@@ -10398,6 +11050,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def locked(self):
@@ -10414,6 +11067,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def pack_id_lines(self):
@@ -10430,6 +11084,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def pack_id_mouse_cursors(self):
@@ -10447,6 +11102,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def tex_desired_width(self):
@@ -10463,6 +11119,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def tex_glyph_padding(self):
@@ -10479,6 +11136,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def tex_height(self):
@@ -10495,6 +11153,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def tex_id(self):
@@ -10511,6 +11170,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def tex_pixels_alpha8(self):
@@ -10527,6 +11187,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(IntPtr)
     @property
     def tex_pixels_rgba_32(self):
@@ -10543,6 +11204,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def tex_pixels_use_colors(self):
@@ -10559,6 +11221,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def tex_ready(self):
@@ -10577,6 +11240,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec4)
     @property
     def tex_uv_lines(self):
@@ -10593,6 +11257,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def tex_uv_scale(self):
@@ -10609,6 +11274,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def tex_uv_white_pixel(self):
@@ -10625,6 +11291,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def tex_width(self):
@@ -10641,6 +11308,7 @@ cdef class ImFontAtlas:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def user_data(self):
@@ -10657,6 +11325,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)):
         cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
@@ -10674,6 +11343,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int):
         """
@@ -10696,6 +11366,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(
@@ -10708,6 +11379,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
@@ -10720,6 +11392,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
@@ -10735,6 +11408,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
@@ -10753,6 +11427,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
@@ -10772,6 +11447,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
@@ -10791,6 +11467,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def build(self: ImFontAtlas):
         """
@@ -10810,6 +11487,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2):
         """
@@ -10826,6 +11504,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImFontAtlas):
         """
@@ -10839,6 +11518,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_fonts(self: ImFontAtlas):
         """
@@ -10852,6 +11532,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_input_data(self: ImFontAtlas):
         """
@@ -10865,6 +11546,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_tex_data(self: ImFontAtlas):
         """
@@ -10878,6 +11560,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontAtlasCustomRect)
     def get_custom_rect_by_index(self: ImFontAtlas, index: int):
         cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(
@@ -10890,6 +11573,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_chinese_full(self: ImFontAtlas):
         """
@@ -10904,6 +11588,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas):
         """
@@ -10918,6 +11603,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_cyrillic(self: ImFontAtlas):
         """
@@ -10932,6 +11618,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_default(self: ImFontAtlas):
         """
@@ -10949,6 +11636,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_greek(self: ImFontAtlas):
         """
@@ -10963,6 +11651,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_japanese(self: ImFontAtlas):
         """
@@ -10977,6 +11666,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_korean(self: ImFontAtlas):
         """
@@ -10991,6 +11681,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_thai(self: ImFontAtlas):
         """
@@ -11005,6 +11696,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_glyph_ranges_vietnamese(self: ImFontAtlas):
         """
@@ -11019,6 +11711,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
         cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
@@ -11035,6 +11728,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def get_tex_data_as_alpha8(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
         """
@@ -11052,6 +11746,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def get_tex_data_as_rgba_32(self: ImFontAtlas, out_pixels: Any, out_width: IntPtr, out_height: IntPtr, out_bytes_per_pixel: IntPtr=None):
         """
@@ -11069,6 +11764,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_built(self: ImFontAtlas):
         """
@@ -11083,6 +11779,7 @@ cdef class ImFontAtlas:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_tex_id(self: ImFontAtlas, id_: Any):
         ccimgui.ImFontAtlas_SetTexID(
@@ -11097,6 +11794,7 @@ cdef class ImFontAtlas:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontAtlasCustomRect:
     """
     See ImFontAtlas::AddCustomRectXXX functions.
@@ -11116,6 +11814,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     @property
     def font(self):
@@ -11132,6 +11831,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def glyph_advance_x(self):
@@ -11148,6 +11848,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def glyph_id(self):
@@ -11164,6 +11865,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def glyph_offset(self):
@@ -11180,6 +11882,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def height(self):
@@ -11196,6 +11899,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def width(self):
@@ -11212,6 +11916,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def x(self):
@@ -11228,6 +11933,7 @@ cdef class ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def y(self):
@@ -11244,6 +11950,7 @@ cdef class ImFontAtlasCustomRect:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_packed(self: ImFontAtlasCustomRect):
         cdef bool res = ccimgui.ImFontAtlasCustomRect_IsPacked(
@@ -11258,6 +11965,7 @@ cdef class ImFontAtlasCustomRect:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontBuilderIO:
     """
     Opaque interface to a font builder (stb_truetype or freetype).
@@ -11280,6 +11988,7 @@ cdef class ImFontBuilderIO:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontConfig:
     cdef ccimgui.ImFontConfig* _ptr
     
@@ -11296,6 +12005,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     @property
     def dst_font(self):
@@ -11309,6 +12019,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def ellipsis_char(self):
@@ -11325,6 +12036,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def font_builder_flags(self):
@@ -11341,6 +12053,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def font_data(self):
@@ -11357,6 +12070,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def font_data_owned_by_atlas(self):
@@ -11373,6 +12087,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def font_data_size(self):
@@ -11389,6 +12104,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def font_no(self):
@@ -11405,6 +12121,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def glyph_extra_spacing(self):
@@ -11421,6 +12138,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def glyph_max_advance_x(self):
@@ -11437,6 +12155,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def glyph_min_advance_x(self):
@@ -11453,6 +12172,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def glyph_offset(self):
@@ -11469,6 +12189,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def glyph_ranges(self):
@@ -11485,6 +12206,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def merge_mode(self):
@@ -11501,6 +12223,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def name(self):
@@ -11518,6 +12241,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def oversample_h(self):
@@ -11534,6 +12258,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def oversample_v(self):
@@ -11550,6 +12275,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def pixel_snap_h(self):
@@ -11566,6 +12292,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def rasterizer_multiply(self):
@@ -11582,6 +12309,7 @@ cdef class ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def size_pixels(self):
@@ -11601,6 +12329,7 @@ cdef class ImFontConfig:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontGlyph:
     """
     Hold rendering data for one glyph.
@@ -11621,6 +12350,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def advance_x(self):
@@ -11637,6 +12367,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def codepoint(self):
@@ -11653,6 +12384,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def colored(self):
@@ -11669,6 +12401,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def u0(self):
@@ -11685,6 +12418,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def u1(self):
@@ -11701,6 +12435,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def v0(self):
@@ -11717,6 +12452,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def v1(self):
@@ -11733,6 +12469,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def visible(self):
@@ -11749,6 +12486,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def x0(self):
@@ -11765,6 +12503,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def x1(self):
@@ -11781,6 +12520,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def y0(self):
@@ -11797,6 +12537,7 @@ cdef class ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def y1(self):
@@ -11816,6 +12557,7 @@ cdef class ImFontGlyph:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImFontGlyphRangesBuilder:
     """
     Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
@@ -11836,6 +12578,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImU32)
     @property
     def used_chars(self):
@@ -11852,6 +12595,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_char(self: ImFontGlyphRangesBuilder, c: int):
         """
@@ -11866,6 +12610,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_ranges(self: ImFontGlyphRangesBuilder, ranges: int):
         """
@@ -11880,6 +12625,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None):
         """
@@ -11897,6 +12643,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def build_ranges(self: ImFontGlyphRangesBuilder, out_ranges: ImVector_ImWchar):
         """
@@ -11911,6 +12658,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImFontGlyphRangesBuilder):
         ccimgui.ImFontGlyphRangesBuilder_Clear(
@@ -11921,6 +12669,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def get_bit(self: ImFontGlyphRangesBuilder, n: Any):
         """
@@ -11936,6 +12685,7 @@ cdef class ImFontGlyphRangesBuilder:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_bit(self: ImFontGlyphRangesBuilder, n: Any):
         """
@@ -11953,6 +12703,7 @@ cdef class ImFontGlyphRangesBuilder:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiContext:
     """
     Dear imgui context (opaque structure, unless including imgui_internal.h)
@@ -11975,6 +12726,7 @@ cdef class ImGuiContext:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiIO:
     cdef ccimgui.ImGuiIO* _ptr
     
@@ -11991,6 +12743,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def app_accepting_events(self):
@@ -12007,6 +12760,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def app_focus_lost(self):
@@ -12023,6 +12777,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def backend_flags(self):
@@ -12039,6 +12794,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def backend_language_user_data(self):
@@ -12055,6 +12811,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def backend_platform_name(self):
@@ -12072,6 +12829,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def backend_platform_user_data(self):
@@ -12088,6 +12846,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def backend_renderer_name(self):
@@ -12104,6 +12863,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def backend_renderer_user_data(self):
@@ -12120,6 +12880,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def backend_using_legacy_key_arrays(self):
@@ -12136,6 +12897,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def backend_using_legacy_nav_input_array(self):
@@ -12152,6 +12914,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def clipboard_user_data(self):
@@ -12165,6 +12928,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_debug_begin_return_value_loop(self):
@@ -12181,6 +12945,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_debug_begin_return_value_once(self):
@@ -12202,6 +12967,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_docking_always_tab_bar(self):
@@ -12218,6 +12984,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_docking_no_split(self):
@@ -12235,6 +13002,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_docking_transparent_payload(self):
@@ -12251,6 +13019,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_docking_with_shift(self):
@@ -12267,6 +13036,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_drag_click_to_input_text(self):
@@ -12283,6 +13053,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def config_flags(self):
@@ -12299,6 +13070,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_input_text_cursor_blink(self):
@@ -12315,6 +13087,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_input_text_enter_keep_active(self):
@@ -12331,6 +13104,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_input_trickle_event_queue(self):
@@ -12347,6 +13121,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_mac_osx_behaviors(self):
@@ -12363,6 +13138,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def config_memory_compact_timer(self):
@@ -12379,6 +13155,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_viewports_no_auto_merge(self):
@@ -12396,6 +13173,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_viewports_no_decoration(self):
@@ -12412,6 +13190,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_viewports_no_default_parent(self):
@@ -12428,6 +13207,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_viewports_no_task_bar_icon(self):
@@ -12444,6 +13224,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_windows_move_from_title_bar_only(self):
@@ -12460,6 +13241,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def config_windows_resize_from_edges(self):
@@ -12476,6 +13258,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiContext)
     @property
     def ctx(self):
@@ -12492,6 +13275,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def delta_time(self):
@@ -12508,6 +13292,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_framebuffer_scale(self):
@@ -12524,6 +13309,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_size(self):
@@ -12540,6 +13326,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def font_allow_user_scaling(self):
@@ -12556,6 +13343,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     @property
     def font_default(self):
@@ -12572,6 +13360,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def font_global_scale(self):
@@ -12588,6 +13377,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontAtlas)
     @property
     def fonts(self):
@@ -12604,6 +13394,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def framerate(self):
@@ -12620,6 +13411,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def get_clipboard_text_fn(self):
@@ -12637,6 +13429,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def hover_delay_normal(self):
@@ -12653,6 +13446,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def hover_delay_short(self):
@@ -12669,6 +13463,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def ini_filename(self):
@@ -12685,6 +13480,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def ini_saving_rate(self):
@@ -12701,6 +13497,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImWchar)
     @property
     def input_queue_characters(self):
@@ -12717,6 +13514,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def input_queue_surrogate(self):
@@ -12733,6 +13531,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def key_alt(self):
@@ -12749,6 +13548,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def key_ctrl(self):
@@ -12765,6 +13565,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def key_mods(self):
@@ -12782,6 +13583,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def key_repeat_delay(self):
@@ -12798,6 +13600,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def key_repeat_rate(self):
@@ -12814,6 +13617,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def key_shift(self):
@@ -12830,6 +13634,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def key_super(self):
@@ -12846,6 +13651,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiKeyData)
     @property
     def keys_data(self):
@@ -12862,6 +13668,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def log_filename(self):
@@ -12878,6 +13685,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_active_allocations(self):
@@ -12894,6 +13702,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_active_windows(self):
@@ -12910,6 +13719,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_render_indices(self):
@@ -12926,6 +13736,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_render_vertices(self):
@@ -12942,6 +13753,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def metrics_render_windows(self):
@@ -12958,6 +13770,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_clicked(self):
@@ -12974,6 +13787,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def mouse_clicked_count(self):
@@ -12990,6 +13804,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def mouse_clicked_last_count(self):
@@ -13006,6 +13821,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec2)
     @property
     def mouse_clicked_pos(self):
@@ -13022,6 +13838,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(DoublePtr)
     @property
     def mouse_clicked_time(self):
@@ -13038,6 +13855,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def mouse_delta(self):
@@ -13054,6 +13872,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_double_click_max_dist(self):
@@ -13070,6 +13889,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_double_click_time(self):
@@ -13086,6 +13906,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_double_clicked(self):
@@ -13102,6 +13923,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_down(self):
@@ -13118,6 +13940,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(FloatPtr)
     @property
     def mouse_down_duration(self):
@@ -13134,6 +13957,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(FloatPtr)
     @property
     def mouse_down_duration_prev(self):
@@ -13150,6 +13974,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_down_owned(self):
@@ -13166,6 +13991,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_down_owned_unless_popup_close(self):
@@ -13182,6 +14008,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec2)
     @property
     def mouse_drag_max_distance_abs(self):
@@ -13198,6 +14025,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(FloatPtr)
     @property
     def mouse_drag_max_distance_sqr(self):
@@ -13214,6 +14042,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_drag_threshold(self):
@@ -13230,6 +14059,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def mouse_draw_cursor(self):
@@ -13247,6 +14077,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def mouse_hovered_viewport(self):
@@ -13263,6 +14094,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def mouse_pos(self):
@@ -13282,6 +14114,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def mouse_pos_prev(self):
@@ -13298,6 +14131,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     @property
     def mouse_released(self):
@@ -13314,6 +14148,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def mouse_source(self):
@@ -13330,6 +14165,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_wheel(self):
@@ -13346,6 +14182,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_wheel_h(self):
@@ -13362,6 +14199,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def mouse_wheel_request_axis_swap(self):
@@ -13378,6 +14216,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def nav_active(self):
@@ -13394,6 +14233,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def nav_visible(self):
@@ -13410,6 +14250,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def pen_pressure(self):
@@ -13426,6 +14267,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def set_clipboard_text_fn(self):
@@ -13439,6 +14281,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def set_platform_ime_data_fn(self):
@@ -13456,6 +14299,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def user_data(self):
@@ -13472,6 +14316,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_capture_keyboard(self):
@@ -13488,6 +14333,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_capture_mouse(self):
@@ -13504,6 +14350,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_capture_mouse_unless_popup_close(self):
@@ -13520,6 +14367,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_save_ini_settings(self):
@@ -13536,6 +14384,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_set_mouse_pos(self):
@@ -13552,6 +14401,7 @@ cdef class ImGuiIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_text_input(self):
@@ -13568,6 +14418,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_focus_event(self: ImGuiIO, focused: bool):
         """
@@ -13582,6 +14433,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_input_character(self: ImGuiIO, c: int):
         """
@@ -13596,6 +14448,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_input_character_utf_16(self: ImGuiIO, c: int):
         """
@@ -13610,6 +14463,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_input_characters_utf_8(self: ImGuiIO, str_: str):
         """
@@ -13624,6 +14478,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_key_analog_event(self: ImGuiIO, key: int, down: bool, v: float):
         """
@@ -13640,6 +14495,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_key_event(self: ImGuiIO, key: int, down: bool):
         """
@@ -13656,6 +14512,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_mouse_button_event(self: ImGuiIO, button: int, down: bool):
         """
@@ -13671,6 +14528,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
         """
@@ -13686,6 +14544,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_mouse_source_event(self: ImGuiIO, source: int):
         """
@@ -13700,6 +14559,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_mouse_viewport_event(self: ImGuiIO, id_: int):
         """
@@ -13714,6 +14574,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
         """
@@ -13729,6 +14590,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_input_characters(self: ImGuiIO):
         """
@@ -13742,6 +14604,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_input_keys(self: ImGuiIO):
         """
@@ -13755,6 +14618,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
         """
@@ -13769,6 +14633,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
         """
@@ -13785,6 +14650,7 @@ cdef class ImGuiIO:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
         """
@@ -13805,6 +14671,7 @@ cdef class ImGuiIO:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiInputTextCallbackData:
     """
     Shared state of InputText(), passed as an argument to your callback when a ImGuiInputTextFlags_Callback* flag is used.
@@ -13832,6 +14699,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def buf(self):
@@ -13848,6 +14716,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def buf_dirty(self):
@@ -13864,6 +14733,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def buf_size(self):
@@ -13880,6 +14750,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def buf_text_len(self):
@@ -13896,6 +14767,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiContext)
     @property
     def ctx(self):
@@ -13912,6 +14784,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def cursor_pos(self):
@@ -13928,6 +14801,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def event_char(self):
@@ -13947,6 +14821,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def event_flag(self):
@@ -13963,6 +14838,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def event_key(self):
@@ -13979,6 +14855,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def flags(self):
@@ -13995,6 +14872,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def selection_end(self):
@@ -14011,6 +14889,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def selection_start(self):
@@ -14027,6 +14906,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def user_data(self):
@@ -14043,6 +14923,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear_selection(self: ImGuiInputTextCallbackData):
         ccimgui.ImGuiInputTextCallbackData_ClearSelection(
@@ -14053,6 +14934,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int):
         ccimgui.ImGuiInputTextCallbackData_DeleteChars(
@@ -14065,6 +14947,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def has_selection(self: ImGuiInputTextCallbackData):
         cdef bool res = ccimgui.ImGuiInputTextCallbackData_HasSelection(
@@ -14076,6 +14959,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None):
         bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -14091,6 +14975,7 @@ cdef class ImGuiInputTextCallbackData:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def select_all(self: ImGuiInputTextCallbackData):
         ccimgui.ImGuiInputTextCallbackData_SelectAll(
@@ -14104,6 +14989,7 @@ cdef class ImGuiInputTextCallbackData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiKeyData:
     """
     [Internal] Storage used by IsKeyDown(), IsKeyPressed() etc functions.
@@ -14124,6 +15010,7 @@ cdef class ImGuiKeyData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def analog_value(self):
@@ -14140,6 +15027,7 @@ cdef class ImGuiKeyData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def down(self):
@@ -14156,6 +15044,7 @@ cdef class ImGuiKeyData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def down_duration(self):
@@ -14172,6 +15061,7 @@ cdef class ImGuiKeyData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def down_duration_prev(self):
@@ -14191,6 +15081,7 @@ cdef class ImGuiKeyData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiListClipper:
     """
     Helper: Manually clip large list of items.
@@ -14229,6 +15120,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiContext)
     @property
     def ctx(self):
@@ -14245,6 +15137,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def display_end(self):
@@ -14261,6 +15154,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def display_start(self):
@@ -14277,6 +15171,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def items_count(self):
@@ -14293,6 +15188,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def items_height(self):
@@ -14309,6 +15205,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def start_pos_y(self):
@@ -14325,6 +15222,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def temp_data(self):
@@ -14341,6 +15239,7 @@ cdef class ImGuiListClipper:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
         ccimgui.ImGuiListClipper_Begin(
@@ -14353,6 +15252,7 @@ cdef class ImGuiListClipper:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def end(self: ImGuiListClipper):
         """
@@ -14366,6 +15266,7 @@ cdef class ImGuiListClipper:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int):
         """
@@ -14382,6 +15283,7 @@ cdef class ImGuiListClipper:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def step(self: ImGuiListClipper):
         """
@@ -14399,6 +15301,7 @@ cdef class ImGuiListClipper:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiPayload:
     """
     Data payload for Drag and Drop operations: AcceptDragDropPayload(), GetDragDropPayload()
@@ -14418,6 +15321,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def data(self):
@@ -14435,6 +15339,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def data_frame_count(self):
@@ -14451,6 +15356,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def data_size(self):
@@ -14467,6 +15373,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def data_type(self):
@@ -14483,6 +15390,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def delivery(self):
@@ -14499,6 +15407,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def preview(self):
@@ -14515,6 +15424,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def source_id(self):
@@ -14532,6 +15442,7 @@ cdef class ImGuiPayload:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def source_parent_id(self):
@@ -14548,6 +15459,7 @@ cdef class ImGuiPayload:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImGuiPayload):
         ccimgui.ImGuiPayload_Clear(
@@ -14558,6 +15470,7 @@ cdef class ImGuiPayload:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_data_type(self: ImGuiPayload, type_: str):
         cdef bool res = ccimgui.ImGuiPayload_IsDataType(
@@ -14570,6 +15483,7 @@ cdef class ImGuiPayload:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_delivery(self: ImGuiPayload):
         cdef bool res = ccimgui.ImGuiPayload_IsDelivery(
@@ -14581,6 +15495,7 @@ cdef class ImGuiPayload:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_preview(self: ImGuiPayload):
         cdef bool res = ccimgui.ImGuiPayload_IsPreview(
@@ -14595,6 +15510,7 @@ cdef class ImGuiPayload:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiPlatformIO:
     """
     (Optional) Access via ImGui::GetPlatformIO()
@@ -14614,6 +15530,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImGuiPlatformMonitor)
     @property
     def monitors(self):
@@ -14632,6 +15549,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_create_vk_surface(self):
@@ -14648,6 +15566,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_create_window(self):
@@ -14665,6 +15584,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_destroy_window(self):
@@ -14681,6 +15601,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_get_window_dpi_scale(self):
@@ -14697,6 +15618,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_get_window_focus(self):
@@ -14713,6 +15635,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_get_window_minimized(self):
@@ -14729,6 +15652,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_get_window_pos(self):
@@ -14745,6 +15669,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_get_window_size(self):
@@ -14761,6 +15686,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_on_changed_viewport(self):
@@ -14777,6 +15703,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_render_window(self):
@@ -14793,6 +15720,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_set_window_alpha(self):
@@ -14809,6 +15737,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_set_window_focus(self):
@@ -14825,6 +15754,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_set_window_pos(self):
@@ -14841,6 +15771,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_set_window_size(self):
@@ -14857,6 +15788,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_set_window_title(self):
@@ -14873,6 +15805,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_show_window(self):
@@ -14889,6 +15822,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_swap_buffers(self):
@@ -14905,6 +15839,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def platform_update_window(self):
@@ -14921,6 +15856,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def renderer_create_window(self):
@@ -14938,6 +15874,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def renderer_destroy_window(self):
@@ -14954,6 +15891,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def renderer_render_window(self):
@@ -14970,6 +15908,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def renderer_set_window_size(self):
@@ -14986,6 +15925,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Callable)
     @property
     def renderer_swap_buffers(self):
@@ -15002,6 +15942,7 @@ cdef class ImGuiPlatformIO:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImGuiViewportPtr)
     @property
     def viewports(self):
@@ -15023,6 +15964,7 @@ cdef class ImGuiPlatformIO:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiPlatformImeData:
     """
     (Optional) Support for IME (Input Method Editor) via the io.SetPlatformImeDataFn() function.
@@ -15042,6 +15984,7 @@ cdef class ImGuiPlatformImeData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def input_line_height(self):
@@ -15058,6 +16001,7 @@ cdef class ImGuiPlatformImeData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def input_pos(self):
@@ -15074,6 +16018,7 @@ cdef class ImGuiPlatformImeData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def want_visible(self):
@@ -15093,6 +16038,7 @@ cdef class ImGuiPlatformImeData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiPlatformMonitor:
     """
     (Optional) This is required when enabling multi-viewport. Represent the bounds of each connected monitor/display and their DPI.
@@ -15113,6 +16059,7 @@ cdef class ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def dpi_scale(self):
@@ -15129,6 +16076,7 @@ cdef class ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def main_pos(self):
@@ -15145,6 +16093,7 @@ cdef class ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def main_size(self):
@@ -15161,6 +16110,7 @@ cdef class ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def work_pos(self):
@@ -15177,6 +16127,7 @@ cdef class ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def work_size(self):
@@ -15196,6 +16147,7 @@ cdef class ImGuiPlatformMonitor:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiSizeCallbackData:
     """
     Resizing callback data to apply custom constraint. As enabled by SetNextWindowSizeConstraints(). Callback is called during the next Begin().
@@ -15216,6 +16168,7 @@ cdef class ImGuiSizeCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def current_size(self):
@@ -15232,6 +16185,7 @@ cdef class ImGuiSizeCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def desired_size(self):
@@ -15248,6 +16202,7 @@ cdef class ImGuiSizeCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def pos(self):
@@ -15264,6 +16219,7 @@ cdef class ImGuiSizeCallbackData:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def user_data(self):
@@ -15283,6 +16239,7 @@ cdef class ImGuiSizeCallbackData:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiStorage:
     """
     Helper: Key->Value storage
@@ -15309,6 +16266,7 @@ cdef class ImGuiStorage:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImGuiStorage_ImGuiStoragePair)
     @property
     def data(self):
@@ -15322,6 +16280,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def build_sort_by_key(self: ImGuiStorage):
         """
@@ -15335,6 +16294,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImGuiStorage):
         """
@@ -15350,6 +16310,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def get_bool(self: ImGuiStorage, key: int, default_val: bool=False):
         cdef bool res = ccimgui.ImGuiStorage_GetBool(
@@ -15363,6 +16324,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(BoolPtr)
     def get_bool_ref(self: ImGuiStorage, key: int, default_val: bool=False):
         cdef bool* res = ccimgui.ImGuiStorage_GetBoolRef(
@@ -15376,6 +16338,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     def get_float(self: ImGuiStorage, key: int, default_val: float=0.0):
         cdef float res = ccimgui.ImGuiStorage_GetFloat(
@@ -15389,6 +16352,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(FloatPtr)
     def get_float_ref(self: ImGuiStorage, key: int, default_val: float=0.0):
         cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(
@@ -15402,6 +16366,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def get_int(self: ImGuiStorage, key: int, default_val: int=0):
         cdef int res = ccimgui.ImGuiStorage_GetInt(
@@ -15415,6 +16380,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(IntPtr)
     def get_int_ref(self: ImGuiStorage, key: int, default_val: int=0):
         """
@@ -15434,6 +16400,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     def get_void_ptr(self: ImGuiStorage, key: int):
         """
@@ -15449,6 +16416,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     def get_void_ptr_ref(self: ImGuiStorage, key: int, default_val: Any=None):
         cdef void** res = ccimgui.ImGuiStorage_GetVoidPtrRef(
@@ -15462,6 +16430,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_all_int(self: ImGuiStorage, val: int):
         """
@@ -15476,6 +16445,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_bool(self: ImGuiStorage, key: int, val: bool):
         ccimgui.ImGuiStorage_SetBool(
@@ -15488,6 +16458,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_float(self: ImGuiStorage, key: int, val: float):
         ccimgui.ImGuiStorage_SetFloat(
@@ -15500,6 +16471,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_int(self: ImGuiStorage, key: int, val: int):
         ccimgui.ImGuiStorage_SetInt(
@@ -15512,6 +16484,7 @@ cdef class ImGuiStorage:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def set_void_ptr(self: ImGuiStorage, key: int, val: Any):
         ccimgui.ImGuiStorage_SetVoidPtr(
@@ -15527,6 +16500,7 @@ cdef class ImGuiStorage:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiStorage_ImGuiStoragePair:
     """
     [Internal]
@@ -15546,6 +16520,7 @@ cdef class ImGuiStorage_ImGuiStoragePair:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def key(self):
@@ -15562,6 +16537,7 @@ cdef class ImGuiStorage_ImGuiStoragePair:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiStyle:
     cdef ccimgui.ImGuiStyle* _ptr
     
@@ -15578,6 +16554,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def alpha(self):
@@ -15594,6 +16571,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def anti_aliased_fill(self):
@@ -15610,6 +16588,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def anti_aliased_lines(self):
@@ -15626,6 +16605,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def anti_aliased_lines_use_tex(self):
@@ -15642,6 +16622,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def button_text_align(self):
@@ -15658,6 +16639,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def cell_padding(self):
@@ -15674,6 +16656,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def child_border_size(self):
@@ -15690,6 +16673,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def child_rounding(self):
@@ -15706,6 +16690,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def circle_tessellation_max_error(self):
@@ -15722,6 +16707,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def color_button_position(self):
@@ -15738,6 +16724,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec4)
     @property
     def colors(self):
@@ -15751,6 +16738,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def columns_min_spacing(self):
@@ -15767,6 +16755,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def curve_tessellation_tol(self):
@@ -15783,6 +16772,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def disabled_alpha(self):
@@ -15799,6 +16789,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_safe_area_padding(self):
@@ -15815,6 +16806,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def display_window_padding(self):
@@ -15831,6 +16823,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def frame_border_size(self):
@@ -15847,6 +16840,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def frame_padding(self):
@@ -15863,6 +16857,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def frame_rounding(self):
@@ -15879,6 +16874,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def grab_min_size(self):
@@ -15895,6 +16891,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def grab_rounding(self):
@@ -15911,6 +16908,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def indent_spacing(self):
@@ -15927,6 +16925,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def item_inner_spacing(self):
@@ -15943,6 +16942,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def item_spacing(self):
@@ -15959,6 +16959,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def log_slider_deadzone(self):
@@ -15975,6 +16976,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def mouse_cursor_scale(self):
@@ -15991,6 +16993,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def popup_border_size(self):
@@ -16007,6 +17010,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def popup_rounding(self):
@@ -16023,6 +17027,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def scrollbar_rounding(self):
@@ -16039,6 +17044,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def scrollbar_size(self):
@@ -16055,6 +17061,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def selectable_text_align(self):
@@ -16071,6 +17078,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def separator_text_align(self):
@@ -16087,6 +17095,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def separator_text_border_size(self):
@@ -16103,6 +17112,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def separator_text_padding(self):
@@ -16119,6 +17129,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def tab_border_size(self):
@@ -16135,6 +17146,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def tab_min_width_for_close_button(self):
@@ -16151,6 +17163,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def tab_rounding(self):
@@ -16167,6 +17180,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def touch_extra_padding(self):
@@ -16183,6 +17197,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def window_border_size(self):
@@ -16199,6 +17214,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def window_menu_button_position(self):
@@ -16215,6 +17231,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def window_min_size(self):
@@ -16231,6 +17248,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def window_padding(self):
@@ -16247,6 +17265,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def window_rounding(self):
@@ -16263,6 +17282,7 @@ cdef class ImGuiStyle:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def window_title_align(self):
@@ -16279,6 +17299,7 @@ cdef class ImGuiStyle:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
         ccimgui.ImGuiStyle_ScaleAllSizes(
@@ -16293,6 +17314,7 @@ cdef class ImGuiStyle:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiTableColumnSortSpecs:
     """
     Sorting specification for one column of a table (sizeof == 12 bytes)
@@ -16312,6 +17334,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def column_index(self):
@@ -16328,6 +17351,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def column_user_id(self):
@@ -16344,6 +17368,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def sort_direction(self):
@@ -16360,6 +17385,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def sort_order(self):
@@ -16379,6 +17405,7 @@ cdef class ImGuiTableColumnSortSpecs:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiTableSortSpecs:
     """
     Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
@@ -16401,6 +17428,7 @@ cdef class ImGuiTableSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiTableColumnSortSpecs)
     @property
     def specs(self):
@@ -16417,6 +17445,7 @@ cdef class ImGuiTableSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def specs_count(self):
@@ -16433,6 +17462,7 @@ cdef class ImGuiTableSortSpecs:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def specs_dirty(self):
@@ -16452,6 +17482,7 @@ cdef class ImGuiTableSortSpecs:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiTextBuffer:
     """
     Helper: Growable text buffer for logging/accumulating text
@@ -16472,6 +17503,7 @@ cdef class ImGuiTextBuffer:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_char)
     @property
     def buf(self):
@@ -16485,6 +17517,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
         bytes_str_end = _bytes(str_end) if str_end is not None else None
@@ -16499,6 +17532,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def appendf(self: ImGuiTextBuffer, fmt: str):
         ccimgui.ImGuiTextBuffer_appendf(
@@ -16510,6 +17544,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def appendfv(self: ImGuiTextBuffer, fmt: str):
         ccimgui.ImGuiTextBuffer_appendfv(
@@ -16521,6 +17556,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     def begin(self: ImGuiTextBuffer):
         cdef const char* res = ccimgui.ImGuiTextBuffer_begin(
@@ -16532,6 +17568,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     def c_str(self: ImGuiTextBuffer):
         cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
@@ -16543,6 +17580,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImGuiTextBuffer):
         ccimgui.ImGuiTextBuffer_clear(
@@ -16553,6 +17591,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def empty(self: ImGuiTextBuffer):
         cdef bool res = ccimgui.ImGuiTextBuffer_empty(
@@ -16564,6 +17603,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     def end(self: ImGuiTextBuffer):
         """
@@ -16578,6 +17618,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def reserve(self: ImGuiTextBuffer, capacity: int):
         ccimgui.ImGuiTextBuffer_reserve(
@@ -16589,6 +17630,7 @@ cdef class ImGuiTextBuffer:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     def size(self: ImGuiTextBuffer):
         cdef int res = ccimgui.ImGuiTextBuffer_size(
@@ -16603,6 +17645,7 @@ cdef class ImGuiTextBuffer:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiTextFilter:
     """
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
@@ -16622,6 +17665,7 @@ cdef class ImGuiTextFilter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def count_grep(self):
@@ -16635,6 +17679,7 @@ cdef class ImGuiTextFilter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVector_ImGuiTextFilter_ImGuiTextRange)
     @property
     def filters(self):
@@ -16648,6 +17693,7 @@ cdef class ImGuiTextFilter:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def input_buf(self):
@@ -16661,6 +17707,7 @@ cdef class ImGuiTextFilter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def build(self: ImGuiTextFilter):
         ccimgui.ImGuiTextFilter_Build(
@@ -16671,6 +17718,7 @@ cdef class ImGuiTextFilter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def clear(self: ImGuiTextFilter):
         ccimgui.ImGuiTextFilter_Clear(
@@ -16681,6 +17729,7 @@ cdef class ImGuiTextFilter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0):
         """
@@ -16697,6 +17746,7 @@ cdef class ImGuiTextFilter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def is_active(self: ImGuiTextFilter):
         cdef bool res = ccimgui.ImGuiTextFilter_IsActive(
@@ -16708,6 +17758,7 @@ cdef class ImGuiTextFilter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None):
         bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -16726,6 +17777,7 @@ cdef class ImGuiTextFilter:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiTextFilter_ImGuiTextRange:
     """
     [Internal]
@@ -16745,6 +17797,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def b(self):
@@ -16758,6 +17811,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def e(self):
@@ -16771,6 +17825,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     def empty(self: ImGuiTextFilter_ImGuiTextRange):
         cdef bool res = ccimgui.ImGuiTextFilter_ImGuiTextRange_empty(
@@ -16782,6 +17837,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(None)
     def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
         ccimgui.ImGuiTextFilter_ImGuiTextRange_split(
@@ -16797,6 +17853,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiViewport:
     """
     - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
@@ -16822,6 +17879,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def dpi_scale(self):
@@ -16838,6 +17896,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawData)
     @property
     def draw_data(self):
@@ -16854,6 +17913,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def flags(self):
@@ -16870,6 +17930,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def id(self):
@@ -16886,6 +17947,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def parent_viewport_id(self):
@@ -16902,6 +17964,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def platform_handle(self):
@@ -16918,6 +17981,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def platform_handle_raw(self):
@@ -16934,6 +17998,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def platform_request_close(self):
@@ -16950,6 +18015,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def platform_request_move(self):
@@ -16966,6 +18032,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def platform_request_resize(self):
@@ -16982,6 +18049,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def platform_user_data(self):
@@ -16998,6 +18066,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def platform_window_created(self):
@@ -17014,6 +18083,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def pos(self):
@@ -17030,6 +18100,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def renderer_user_data(self):
@@ -17051,6 +18122,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def size(self):
@@ -17067,6 +18139,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def work_pos(self):
@@ -17083,6 +18156,7 @@ cdef class ImGuiViewport:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     @property
     def work_size(self):
@@ -17099,6 +18173,7 @@ cdef class ImGuiViewport:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def get_center(self: ImGuiViewport):
         """
@@ -17113,6 +18188,7 @@ cdef class ImGuiViewport:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(tuple)
     def get_work_center(self: ImGuiViewport):
         cdef ccimgui.ImVec2 res = ccimgui.ImGuiViewport_GetWorkCenter(
@@ -17127,6 +18203,7 @@ cdef class ImGuiViewport:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImGuiWindowClass:
     """
     [ALPHA] Rarely used / very advanced uses only. Use with SetNextWindowClass() and DockSpace() functions.
@@ -17152,6 +18229,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def class_id(self):
@@ -17168,6 +18246,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def dock_node_flags_override_set(self):
@@ -17184,6 +18263,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def docking_allow_unclassed(self):
@@ -17200,6 +18280,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(bool)
     @property
     def docking_always_tab_bar(self):
@@ -17216,6 +18297,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def parent_viewport_id(self):
@@ -17232,6 +18314,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def tab_item_flags_override_set(self):
@@ -17248,6 +18331,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def viewport_flags_override_clear(self):
@@ -17264,6 +18348,7 @@ cdef class ImGuiWindowClass:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def viewport_flags_override_set(self):
@@ -17283,6 +18368,7 @@ cdef class ImGuiWindowClass:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVec2:
     cdef ccimgui.ImVec2* _ptr
     
@@ -17299,6 +18385,7 @@ cdef class ImVec2:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def x(self):
@@ -17312,6 +18399,7 @@ cdef class ImVec2:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def y(self):
@@ -17328,6 +18416,7 @@ cdef class ImVec2:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVec4:
     """
     ImVec4: 4D vector used to store clipping rectangles, colors etc. [Compile-time configurable type]
@@ -17347,6 +18436,7 @@ cdef class ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def w(self):
@@ -17360,6 +18450,7 @@ cdef class ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def x(self):
@@ -17373,6 +18464,7 @@ cdef class ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def y(self):
@@ -17386,6 +18478,7 @@ cdef class ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(float)
     @property
     def z(self):
@@ -17402,6 +18495,7 @@ cdef class ImVec4:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
     
@@ -17418,6 +18512,7 @@ cdef class ImVector_ImDrawChannel:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17431,6 +18526,7 @@ cdef class ImVector_ImDrawChannel:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawChannel)
     @property
     def data(self):
@@ -17444,6 +18540,7 @@ cdef class ImVector_ImDrawChannel:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17460,6 +18557,7 @@ cdef class ImVector_ImDrawChannel:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImDrawCmd:
     cdef ccimgui.ImVector_ImDrawCmd* _ptr
     
@@ -17476,6 +18574,7 @@ cdef class ImVector_ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17489,6 +18588,7 @@ cdef class ImVector_ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawCmd)
     @property
     def data(self):
@@ -17502,6 +18602,7 @@ cdef class ImVector_ImDrawCmd:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17518,6 +18619,7 @@ cdef class ImVector_ImDrawCmd:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImDrawIdx:
     cdef ccimgui.ImVector_ImDrawIdx* _ptr
     
@@ -17534,6 +18636,7 @@ cdef class ImVector_ImDrawIdx:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17547,6 +18650,7 @@ cdef class ImVector_ImDrawIdx:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def data(self):
@@ -17560,6 +18664,7 @@ cdef class ImVector_ImDrawIdx:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17576,6 +18681,7 @@ cdef class ImVector_ImDrawIdx:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImDrawVert:
     cdef ccimgui.ImVector_ImDrawVert* _ptr
     
@@ -17592,6 +18698,7 @@ cdef class ImVector_ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17605,6 +18712,7 @@ cdef class ImVector_ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImDrawVert)
     @property
     def data(self):
@@ -17618,6 +18726,7 @@ cdef class ImVector_ImDrawVert:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17634,6 +18743,7 @@ cdef class ImVector_ImDrawVert:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
     
@@ -17650,6 +18760,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17663,6 +18774,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontAtlasCustomRect)
     @property
     def data(self):
@@ -17676,6 +18788,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17692,6 +18805,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
     
@@ -17708,6 +18822,7 @@ cdef class ImVector_ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17721,6 +18836,7 @@ cdef class ImVector_ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontConfig)
     @property
     def data(self):
@@ -17734,6 +18850,7 @@ cdef class ImVector_ImFontConfig:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17750,6 +18867,7 @@ cdef class ImVector_ImFontConfig:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImFontGlyph:
     cdef ccimgui.ImVector_ImFontGlyph* _ptr
     
@@ -17766,6 +18884,7 @@ cdef class ImVector_ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17779,6 +18898,7 @@ cdef class ImVector_ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFontGlyph)
     @property
     def data(self):
@@ -17792,6 +18912,7 @@ cdef class ImVector_ImFontGlyph:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17808,6 +18929,7 @@ cdef class ImVector_ImFontGlyph:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
     
@@ -17824,6 +18946,7 @@ cdef class ImVector_ImFontPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17837,6 +18960,7 @@ cdef class ImVector_ImFontPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImFont)
     @property
     def data(self):
@@ -17850,6 +18974,7 @@ cdef class ImVector_ImFontPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17866,6 +18991,7 @@ cdef class ImVector_ImFontPtr:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImGuiPlatformMonitor:
     cdef ccimgui.ImVector_ImGuiPlatformMonitor* _ptr
     
@@ -17882,6 +19008,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17895,6 +19022,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiPlatformMonitor)
     @property
     def data(self):
@@ -17908,6 +19036,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17924,6 +19053,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     cdef ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr
     
@@ -17940,6 +19070,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -17953,6 +19084,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiStorage_ImGuiStoragePair)
     @property
     def data(self):
@@ -17966,6 +19098,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -17982,6 +19115,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
     
@@ -17998,6 +19132,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18011,6 +19146,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiTextFilter_ImGuiTextRange)
     @property
     def data(self):
@@ -18024,6 +19160,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18040,6 +19177,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
     
@@ -18056,6 +19194,7 @@ cdef class ImVector_ImGuiViewportPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18069,6 +19208,7 @@ cdef class ImVector_ImGuiViewportPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImGuiViewport)
     @property
     def data(self):
@@ -18082,6 +19222,7 @@ cdef class ImVector_ImGuiViewportPtr:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18098,6 +19239,7 @@ cdef class ImVector_ImGuiViewportPtr:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
     
@@ -18114,6 +19256,7 @@ cdef class ImVector_ImTextureID:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18127,6 +19270,7 @@ cdef class ImVector_ImTextureID:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(Any)
     @property
     def data(self):
@@ -18140,6 +19284,7 @@ cdef class ImVector_ImTextureID:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18156,6 +19301,7 @@ cdef class ImVector_ImTextureID:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImU32:
     cdef ccimgui.ImVector_ImU32* _ptr
     
@@ -18172,6 +19318,7 @@ cdef class ImVector_ImU32:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18185,6 +19332,7 @@ cdef class ImVector_ImU32:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def data(self):
@@ -18198,6 +19346,7 @@ cdef class ImVector_ImU32:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18214,6 +19363,7 @@ cdef class ImVector_ImU32:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
     
@@ -18230,6 +19380,7 @@ cdef class ImVector_ImVec2:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18243,6 +19394,7 @@ cdef class ImVector_ImVec2:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec2)
     @property
     def data(self):
@@ -18256,6 +19408,7 @@ cdef class ImVector_ImVec2:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18272,6 +19425,7 @@ cdef class ImVector_ImVec2:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
     
@@ -18288,6 +19442,7 @@ cdef class ImVector_ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18301,6 +19456,7 @@ cdef class ImVector_ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(ImVec4)
     @property
     def data(self):
@@ -18314,6 +19470,7 @@ cdef class ImVector_ImVec4:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18330,6 +19487,7 @@ cdef class ImVector_ImVec4:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_ImWchar:
     cdef ccimgui.ImVector_ImWchar* _ptr
     
@@ -18346,6 +19504,7 @@ cdef class ImVector_ImWchar:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18359,6 +19518,7 @@ cdef class ImVector_ImWchar:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def data(self):
@@ -18372,6 +19532,7 @@ cdef class ImVector_ImWchar:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18388,6 +19549,7 @@ cdef class ImVector_ImWchar:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_char:
     cdef ccimgui.ImVector_char* _ptr
     
@@ -18404,6 +19566,7 @@ cdef class ImVector_char:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18417,6 +19580,7 @@ cdef class ImVector_char:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(str)
     @property
     def data(self):
@@ -18430,6 +19594,7 @@ cdef class ImVector_char:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18446,6 +19611,7 @@ cdef class ImVector_char:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class ImVector_float:
     cdef ccimgui.ImVector_float* _ptr
     
@@ -18462,6 +19628,7 @@ cdef class ImVector_float:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def capacity(self):
@@ -18475,6 +19642,7 @@ cdef class ImVector_float:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(FloatPtr)
     @property
     def data(self):
@@ -18488,6 +19656,7 @@ cdef class ImVector_float:
     # [Field]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
     # ?returns(int)
     @property
     def size(self):
@@ -18507,6 +19676,7 @@ cdef class ImVector_float:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_char_callback(window: GLFWwindow, c: int):
     ccimgui.ImGui_ImplGlfw_CharCallback(
@@ -18518,6 +19688,7 @@ def impl_glfw_char_callback(window: GLFWwindow, c: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
     ccimgui.ImGui_ImplGlfw_CursorEnterCallback(
@@ -18529,6 +19700,7 @@ def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
     ccimgui.ImGui_ImplGlfw_CursorPosCallback(
@@ -18541,6 +19713,7 @@ def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(
@@ -18553,6 +19726,7 @@ def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui.ImGui_ImplGlfw_InitForOther(
@@ -18565,6 +19739,7 @@ def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
     cdef bool res = ccimgui.ImGui_ImplGlfw_InitForVulkan(
@@ -18577,6 +19752,7 @@ def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_install_callbacks(window: GLFWwindow):
     ccimgui.ImGui_ImplGlfw_InstallCallbacks(
@@ -18587,6 +19763,7 @@ def impl_glfw_install_callbacks(window: GLFWwindow):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
     ccimgui.ImGui_ImplGlfw_KeyCallback(
@@ -18601,6 +19778,7 @@ def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
     ccimgui.ImGui_ImplGlfw_MonitorCallback(
@@ -18612,6 +19790,7 @@ def impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
     ccimgui.ImGui_ImplGlfw_MouseButtonCallback(
@@ -18625,6 +19804,7 @@ def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_new_frame():
     ccimgui.ImGui_ImplGlfw_NewFrame()
@@ -18633,6 +19813,7 @@ def impl_glfw_new_frame():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_restore_callbacks(window: GLFWwindow):
     ccimgui.ImGui_ImplGlfw_RestoreCallbacks(
@@ -18643,6 +19824,7 @@ def impl_glfw_restore_callbacks(window: GLFWwindow):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
     ccimgui.ImGui_ImplGlfw_ScrollCallback(
@@ -18655,6 +19837,7 @@ def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
     ccimgui.ImGui_ImplGlfw_SetCallbacksChainForAllWindows(
@@ -18665,6 +19848,7 @@ def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_shutdown():
     ccimgui.ImGui_ImplGlfw_Shutdown()
@@ -18673,6 +19857,7 @@ def impl_glfw_shutdown():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
     ccimgui.ImGui_ImplGlfw_WindowFocusCallback(
@@ -18685,6 +19870,7 @@ def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class GLFWmonitor:
     cdef ccimgui.GLFWmonitor* _ptr
     
@@ -18704,6 +19890,7 @@ cdef class GLFWmonitor:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 cdef class GLFWwindow:
     cdef ccimgui.GLFWwindow* _ptr
     
@@ -18726,6 +19913,7 @@ cdef class GLFWwindow:
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_open_gl3_create_device_objects():
     cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateDeviceObjects()
@@ -18735,6 +19923,7 @@ def impl_open_gl3_create_device_objects():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_open_gl3_create_fonts_texture():
     cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateFontsTexture()
@@ -18744,6 +19933,7 @@ def impl_open_gl3_create_fonts_texture():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_open_gl3_destroy_device_objects():
     ccimgui.ImGui_ImplOpenGL3_DestroyDeviceObjects()
@@ -18752,6 +19942,7 @@ def impl_open_gl3_destroy_device_objects():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_open_gl3_destroy_fonts_texture():
     ccimgui.ImGui_ImplOpenGL3_DestroyFontsTexture()
@@ -18760,6 +19951,7 @@ def impl_open_gl3_destroy_fonts_texture():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(bool)
 def impl_open_gl3_init(glsl_version: str=None):
     bytes_glsl_version = _bytes(glsl_version) if glsl_version is not None else None
@@ -18773,6 +19965,7 @@ def impl_open_gl3_init(glsl_version: str=None):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_open_gl3_new_frame():
     ccimgui.ImGui_ImplOpenGL3_NewFrame()
@@ -18781,6 +19974,7 @@ def impl_open_gl3_new_frame():
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_open_gl3_render_draw_data(draw_data: Any):
     ccimgui.ImGui_ImplOpenGL3_RenderDrawData(
@@ -18791,6 +19985,7 @@ def impl_open_gl3_render_draw_data(draw_data: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns(None)
 def impl_open_gl3_shutdown():
     ccimgui.ImGui_ImplOpenGL3_Shutdown()

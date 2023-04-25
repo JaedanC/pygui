@@ -1,5 +1,6 @@
 # ?use_template(False)
 # ?active(False)
+# ?invisible(False)
 # ?returns({python_type})
 @property
 def {field_name}(self):

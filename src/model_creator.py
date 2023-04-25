@@ -1551,7 +1551,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     return pyx.getvalue()
 
 
-def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
+def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
+           show_comments: bool):
     base = textwrap.dedent("""
     # This file is auto-generated. If you need to edit this file then edit the
     # template that this is created from instead.
@@ -1641,9 +1642,12 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
         pyi_output.write("\n")
 
     for function in model.functions:
+        if comparable_is_invisible(function):
+            continue
+
         function_template = Template(function_template_src)
 
-        function_template.set_condition("has_comment", function.comment is not None)
+        function_template.set_condition("has_comment", function.comment is not None and show_comments)
         function_template.format(
             function_name=function.name,
             function_parameters=function.parameters,
@@ -1659,10 +1663,13 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
     pyi_output.write("\n")
 
     for class_ in model.classes:
+        if comparable_is_invisible(class_):
+            continue
+
         class_template = Template(class_template_src)
         class_template.set_condition("has_content", class_.has_one_active_member() or class_.comment is not None)
         class_template.set_condition("has_one_member", class_.has_one_active_member())
-        class_template.set_condition("has_comment", class_.comment is not None)
+        class_template.set_condition("has_comment", class_.comment is not None and show_comments)
 
         class_template.format(
             class_name=class_.name,
@@ -1671,8 +1678,11 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
         pyi_output.write(class_template.compile())
 
         for field in class_.fields:
+            if comparable_is_invisible(field):
+                continue
+
             field_template = Template(field_template_src)
-            field_template.set_condition("has_comment", field.comment is not None)
+            field_template.set_condition("has_comment", field.comment is not None and show_comments)
             field_template.format(
                 field_name=field.name,
                 field_type=field.options["returns"],
@@ -1684,8 +1694,11 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str):
                 pyi_output.write(textwrap.indent(comment_text(field_template.compile()), "    "))
 
         for method in class_.methods:
+            if comparable_is_invisible(method):
+                continue
+
             method_template = Template(function_template_src)
-            method_template.set_condition("has_comment", method.comment is not None)
+            method_template.set_condition("has_comment", method.comment is not None and show_comments)
             method_template.format(
                 function_name=method.name,
                 function_parameters=method.parameters,
@@ -1908,7 +1921,7 @@ def main():
         print(f"Created {PYX_PATH}")
         print(f"Created {TEMPLATE_PYX_PATH}")
     
-    def write_pyi(headers: List[DearBinding], extension_name: str):
+    def write_pyi(headers: List[DearBinding], extension_name: str, show_comments: bool):
         try:
             with open(TEMPLATE_PYX_PATH) as f:
                 model = create_pyx_model(f.read())
@@ -1916,7 +1929,7 @@ def main():
             print(f"'{TEMPLATE_PYX_PATH}' not found. This is required to create the pyi file")
             return
         
-        pyi, py = to_pyi(headers, model, extension_name)
+        pyi, py = to_pyi(headers, model, extension_name, show_comments)
 
         with open(INIT_PYI_PATH, "w") as f:
             f.write(pyi)
@@ -1930,6 +1943,8 @@ def main():
     if len(sys.argv) < 2:
         _help()
         return
+    
+    show_comments = "--nocomments" not in sys.argv
 
     if "--help" in sys.argv:
         _help()
@@ -1952,13 +1967,13 @@ def main():
         return
 
     if "--pyi" in sys.argv:
-        write_pyi(headers, EXTENSION_NAME)
+        write_pyi(headers, EXTENSION_NAME, show_comments)
         return
     
     if "--all" in sys.argv:
         write_pxd(headers, header_files)
         write_pyx(headers, CIMGUI_LIBRARY_NAME)
-        write_pyi(headers, EXTENSION_NAME)
+        write_pyi(headers, EXTENSION_NAME, show_comments)
         return
 
 

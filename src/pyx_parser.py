@@ -377,6 +377,13 @@ def comparable_is_using_template(comparable: Any):
     return True
 
 
+def comparable_is_invisible(comparable: Any):
+    options: dict = comparable.options
+    if "invisible" in options:
+        return options["invisible"] == "True"
+    return False
+
+
 def get_sections(src: str, section_name: str) -> List[str]:
     all_sections = []
     found_section = []
