@@ -2290,21 +2290,20 @@ def crash_imgui():
     pygui.same_line()
     help_marker(
         "1. This will call a function in ImGui that is known to crash. This crash"
-        " should originate from ImGui itself. If cimgui was not compiled with"
-        " USE_CUSTOM_PYTHON_ERROR, then this will not be catchable.\n"
+        " originates from ImGui itself. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this will exception will be caught.\n"
         "2. This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
         " this function call will raise a pygui.ImGuiError, otherwise it will"
-        " raise a normal AssertionError. In either cause, this should not crash"
-        " the program because pygui.ImGuiError should be equal to AssertionError"
-        " if USE_CUSTOM_PYTHON_ERROR is not defined.\n"
-        "3. This uses python's in-built assert function. If USE_CUSTOM_PYTHON_ERROR"
-        " is defined, then this should crash your program. This is okay because"
-        " it clearly shows that there is a difference between pygui.ImGuiError and"
-        " AssertionError\n"
-        "4. This force uses ImGui's error to try and catch the exception. If"
-        " USE_CUSTOM_PYTHON_ERROR is not defined, then this exception should"
-        " crash simply because pygui.core.Error is not a valid exception; it"
-        " should be None.\n"
+        " raise an AssertionError. In either cause, this should not crash because"
+        " pygui.ImGuiError is AssertionError when USE_CUSTOM_PYTHON_ERROR is"
+        " undefined.\n"
+        "3. This uses python's assert keyword. If USE_CUSTOM_PYTHON_ERROR is"
+        " defined this should crash your program because pygui.ImGuiError and"
+        " AssertionError are different.\n"
+        "4. This will call IM_ASSERT but will except by force using the ImGui's"
+        " exposed dll exception. If USE_CUSTOM_PYTHON_ERROR is not defined, this"
+        " will be caught, otherwise this will crash simply because you can't catch"
+        " and exception with 'None'.\n"
     )
 
     if pygui.button("Clear"):
