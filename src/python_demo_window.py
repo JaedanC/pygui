@@ -35,9 +35,14 @@ def pygui_demo_window():
         show_app_console(demo.show_app_console)
     if demo.show_custom_rendering:
         show_app_custom_rendering(demo.show_custom_rendering)
-    
+    if demo.show_about_window:
+        pygui.show_about_window(demo.show_about_window)
+    if demo.show_random_extras:
+        show_random_extras(demo.show_random_extras)
+
     show_menu_bar()
     show_demo_widgets()
+    show_demo_window_layout()
     show_demo_tables()
     crash_imgui()
 
@@ -625,12 +630,10 @@ def show_demo_widgets():
         pygui.combo("combo 3 (array)", widget.combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
-        # This one is yet to be added, but still I question if this is required
-        # in python. We're already inside a very high-level language. I'm yet to
-        # see a benefit of using a callback function.
-        # struct Funcs { static bool ItemGetter(void* data, int n, const char** out_str) { *out_str = ((const char**)data)[n]; return true; } };
-        # static int item_current_4 = 0;
-        # ImGui::Combo("combo 4 (function)", &item_current_4, &Funcs::ItemGetter, items, IM_ARRAYSIZE(items));
+        def item_getter(data, n: int, out_str: pygui.StrPtr) -> bool:
+            out_str.value = data[n]
+            return True
+        pygui.combo_callback("combo 4 (function)", widget.combo_item_current_4, item_getter, items, len(items))
         pygui.tree_pop()
 
     if pygui.tree_node("List boxes"):
@@ -1117,6 +1120,172 @@ def show_demo_widgets():
         pygui.input_int4("input int4", widget.multi_vec4i.as_floatptrs())
         pygui.drag_int4("drag int4", widget.multi_vec4i.as_floatptrs(), 1, 0, 255)
         pygui.slider_int4("slider int4", widget.multi_vec4i.as_floatptrs(), 0, 255)
+
+        pygui.tree_pop()
+
+
+class layout:
+    scroll_track_item = pygui.IntPtr(50)
+    scroll_enable_track = pygui.BoolPtr(True)
+    scroll_enable_extra_decorations = pygui.BoolPtr(False)
+    scroll_scroll_to_off_px = pygui.FloatPtr(0)
+    scroll_scroll_to_pos_px = pygui.FloatPtr(200)
+    scroll_lines = pygui.IntPtr(7)
+
+
+def show_demo_window_layout():
+    if not pygui.collapsing_header("Layout & Scrolling"):
+        return
+    
+    if pygui.tree_node("Scrolling"):
+        help_marker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
+        pygui.checkbox("Decoration", layout.scroll_enable_extra_decorations)
+        pygui.checkbox("Track", layout.scroll_enable_track)
+        pygui.push_item_width(100)
+        pygui.same_line(140)
+        layout.scroll_enable_track.value |= pygui.drag_int("##item", layout.scroll_track_item, 0.25, 0, 99, "Item = %d")
+
+        scroll_to_off = pygui.button("Scroll Offset")
+        pygui.same_line(140)
+        scroll_to_off |= pygui.drag_float("##off", layout.scroll_scroll_to_off_px, 1, 0, pygui.FLT_MAX, "+%.0f px")
+
+        scroll_to_pos = pygui.button("Scroll To Pos")
+        pygui.same_line(140)
+        scroll_to_pos |= pygui.drag_float("##pos", layout.scroll_scroll_to_pos_px, 1, -10, pygui.FLT_MAX, "X/Y = %.0f px")
+        pygui.pop_item_width()
+
+        if scroll_to_off or scroll_to_pos:
+            layout.scroll_enable_track.value = False
+        
+        style = pygui.get_style()
+        child_w = (pygui.get_content_region_avail()[0] - 4 * style.item_spacing[0]) / 5
+        if child_w < 1:
+            child_w = 1
+        pygui.push_id("##VerticalScrolling")
+        for i in range(5):
+            if i > 0:
+                pygui.same_line()
+            pygui.begin_group()
+            names = ["Top", "25%", "Center", "75%", "Bottom"]
+            pygui.text_unformatted(names[i])
+
+            child_flags = pygui.WINDOW_FLAGS_MENU_BAR if layout.scroll_enable_extra_decorations else 0
+            child_id = pygui.get_id(str(i))
+            child_is_visible = pygui.begin_child(str(child_id), (child_w, 200), True, child_flags)
+            if pygui.begin_menu_bar():
+                pygui.text_unformatted("abc")
+                pygui.end_menu_bar()
+            if scroll_to_off:
+                pygui.set_scroll_y(layout.scroll_scroll_to_off_px.value)
+            if scroll_to_pos:
+                pygui.set_scroll_from_pos_y(pygui.get_cursor_start_pos()[1] + layout.scroll_scroll_to_pos_px.value, i * 0.25)
+            if child_is_visible: # Avoid calling SetScrollHereY when running with culled items
+                for item in range(100):
+                    if layout.scroll_enable_track and item == layout.scroll_track_item.value:
+                        pygui.text_colored((1, 1, 0, 1), "Item {}".format(item))
+                        pygui.set_scroll_here_y(i * 0.25) # 0.0f:top, 0.5f:center, 1.0f:bottom
+                    else:
+                        pygui.text("Item {}".format(item))
+            scroll_y = pygui.get_scroll_y()
+            scroll_max_y = pygui.get_scroll_max_y()
+            pygui.end_child()
+            pygui.text("{:.0f}/{:.0f}".format(scroll_y, scroll_max_y))
+            pygui.end_group()
+        pygui.pop_id()
+
+        # Horizontal scroll functions
+        pygui.spacing()
+        help_marker(
+            "Use SetScrollHereX() or SetScrollFromPosX() to scroll to a given horizontal position.\n\n"
+            "Because the clipping rectangle of most window hides half worth of WindowPadding on the "
+            "left/right, using SetScrollFromPosX(+1) will usually result in clipped text whereas the "
+            "equivalent SetScrollFromPosY(+1) wouldn't.")
+        pygui.push_id("##HorizontalScrolling")
+        for i in range(5):
+            child_height = pygui.get_text_line_height() + style.scrollbar_size + style.window_padding[1] * 2
+            child_flags = pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.scroll_enable_extra_decorations else 0)
+            child_id = pygui.get_id(str(i))
+            child_is_visible = pygui.begin_child(str(child_id), (-100, child_height), True, child_flags)
+            if scroll_to_off:
+                pygui.set_scroll_x(layout.scroll_scroll_to_off_px.value)
+            if scroll_to_pos:
+                pygui.set_scroll_from_pos_x(pygui.get_cursor_start_pos()[0] + layout.scroll_scroll_to_pos_px.value, i * 0.25)
+            if child_is_visible: # Avoid calling SetScrollHereY when running with culled items
+                for item in range(100):
+                    if item > 0:
+                        pygui.same_line();
+                    if (layout.scroll_enable_track and item == layout.scroll_track_item.value):
+                        pygui.text_colored((1, 1, 0, 1), "Item {}".format(item))
+                        pygui.set_scroll_here_x(i * 0.25); # 0.0f:left, 0.5f:center, 1.0f:right
+                    else:
+                        pygui.text("Item {}".format(item))
+            scroll_x = pygui.get_scroll_x()
+            scroll_max_x = pygui.get_scroll_max_x()
+            pygui.end_child()
+            pygui.same_line()
+            names = ["Left", "25%", "Center", "75%", "Right"]
+            pygui.text("{}\n{:.0f}/{:.0f}".format(names[i], scroll_x, scroll_max_x))
+            pygui.spacing()
+        pygui.pop_id()
+
+        # Miscellaneous Horizontal Scrolling Demo
+        help_marker(
+            "Horizontal scrolling for a window is enabled via the ImGuiWindowFlags_HorizontalScrollbar flag.\n\n"
+            "You may want to also explicitly specify content width by using SetNextWindowContentWidth() before Begin().")
+        pygui.slider_int("Lines", layout.scroll_lines, 1, 15)
+        pygui.push_style_var(pygui.STYLE_VAR_FRAME_ROUNDING, 3)
+        pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (2, 1))
+        scrolling_child_size = (0, pygui.get_frame_height_with_spacing() * 7 + 30)
+        pygui.begin_child("scrolling", scrolling_child_size, True, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
+        for line in range(layout.scroll_lines.value):
+            # Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
+            # If you want to create your own time line for a real application you may be better off manipulating
+            # the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
+            # yourself. You may also want to use the lower-level ImDrawList API.
+            num_buttons = 10 + (line * 9 if line & 1 else line * 3)
+            
+            for n in range(num_buttons):
+                if n > 0:
+                    pygui.same_line()
+                pygui.push_id(str(n + line * 1000))
+                if n % 15 == 0:
+                    label = "FizzBuzz"
+                elif n % 3 == 0:
+                    label = "Fizz"
+                elif n % 5 == 0:
+                    label = "Buzz"
+                else:
+                    label = str(n)
+                hue = n * 0.05
+                pygui.push_style_color_im_vec4(pygui.COL_BUTTON, pygui.color_convert_hsv_to_rgb(hue, 0.6, 0.6))
+                pygui.push_style_color_im_vec4(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(hue, 0.7, 0.7))
+                pygui.push_style_color_im_vec4(pygui.COL_BUTTON_ACTIVE, pygui.color_convert_hsv_to_rgb(hue, 0.8, 0.8))
+                pygui.button(label, (40 + math.sin(line + n) * 20, 0))
+                pygui.pop_style_color(3)
+                pygui.pop_id()
+        scroll_x = pygui.get_scroll_x()
+        scroll_max_x = pygui.get_scroll_max_x()
+        pygui.end_child()
+        pygui.pop_style_var(2)
+        scroll_x_delta = 0
+        pygui.small_button("<<")
+        if pygui.is_item_active():
+            scroll_x_delta = -pygui.get_io().delta_time * 1000
+        pygui.same_line()
+        pygui.text("Scroll from code")
+        pygui.same_line()
+        pygui.small_button(">>")
+        if pygui.is_item_active():
+            scroll_x_delta = +pygui.get_io().delta_time * 1000
+        pygui.same_line()
+        pygui.text("{:.0f}/{:.0f}".format(scroll_x, scroll_max_x))
+        if scroll_x_delta != 0:
+            # Demonstrate a trick: you can use Begin to set yourself in the context of another window
+            # (here we are already out of your child window)
+            pygui.begin_child("scrolling")
+            pygui.set_scroll_x(pygui.get_scroll_x() + scroll_x_delta)
+            pygui.end_child()
+        pygui.spacing()
 
         pygui.tree_pop()
 
@@ -1701,6 +1870,10 @@ def show_menu_bar():
         if pygui.begin_menu("Examples"):
             pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
             pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
+            pygui.menu_item_bool_ptr("Pygui extras", None, demo.show_random_extras)
+            pygui.end_menu()
+        if pygui.begin_menu("Tools"):
+            pygui.menu_item_bool_ptr("About Dear ImGui", None, demo.show_about_window)
             pygui.end_menu()
         pygui.end_menu_bar()
 
@@ -2012,9 +2185,11 @@ class ExampleAppConsole:
 
 
 class demo:
-    show_app_console = pygui.BoolPtr(False)
     example_app_console = ExampleAppConsole()
+    show_app_console = pygui.BoolPtr(False)
     show_custom_rendering = pygui.BoolPtr(False)
+    show_about_window = pygui.BoolPtr(False)
+    show_random_extras = pygui.BoolPtr(False)
 
     render_sz = pygui.FloatPtr(36)
     render_thickness = pygui.FloatPtr(3)
@@ -2024,15 +2199,25 @@ class demo:
     render_curve_segments_override = pygui.BoolPtr(False)
     render_curve_segments_override_v = pygui.IntPtr(8)
     render_colf = pygui.Vec4Ptr(1, 1, 0.4, 1)
-
     render_points = []
     render_scrolling = [0, 0]
     render_opt_enable_grid = pygui.BoolPtr(True)
     render_opt_enable_context_menu = pygui.BoolPtr(True)
     render_adding_line = False
-
     render_draw_bg = pygui.BoolPtr(True)
     render_draw_fg = pygui.BoolPtr(True)
+
+    random_begin_disabled = pygui.BoolPtr(True)
+    random_first_checkbox = pygui.BoolPtr(False)
+    random_second_checkbox = pygui.BoolPtr(False)
+    random_third_checkbox = pygui.BoolPtr(False)
+    random_modal_checkbox = pygui.BoolPtr(False)
+    random_colour = pygui.Vec4Ptr(1, 1, 0, 1)
+    random_current_item = pygui.IntPtr(0)
+    random_error_text = [(1, 0, 0, 1), ""]
+    random_drag_min = pygui.IntPtr(1)
+    random_drag_max = pygui.IntPtr(100)
+    random_drag = pygui.IntPtr(50)
 
 
 def show_app_console(p_open: pygui.BoolPtr):
@@ -2274,6 +2459,186 @@ def show_app_custom_rendering(p_open: pygui.BoolPtr):
             pygui.end_tab_item()
         pygui.end_tab_bar()
     
+    pygui.end()
+
+
+def show_random_extras(p_open: pygui.BoolPtr):
+    if not pygui.begin("Example: Random Extras", p_open):
+        pygui.end()
+        return
+    
+    if pygui.tree_node("pygui.begin_child_frame()"):
+        new_id = pygui.get_id("begin_child_frame()")
+        item_height = pygui.get_text_line_height_with_spacing()
+        if pygui.begin_child_frame(new_id, (-pygui.FLT_MIN, item_height * 5 + 5)):
+            for n in range(5):
+                pygui.text("My Item {}".format(n))
+            pygui.end_child_frame()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_child_id()"):
+        new_id = pygui.get_id("begin_child_id()")
+        pygui.begin_child_id(new_id, (0, 260), True)
+        if pygui.begin_table("split", 2, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS):
+            for i in range(30):
+                pygui.table_next_column()
+                pygui.button("{:3f}".format(i), (-pygui.FLT_MIN, 0))
+            pygui.end_table()
+        pygui.end_child()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_disabled()"):
+        pygui.checkbox("Begin Disabled", demo.random_begin_disabled)
+        pygui.begin_disabled(demo.random_begin_disabled.value)
+        pygui.checkbox("First checkbox", demo.random_first_checkbox)
+        pygui.checkbox("Second checkbox", demo.random_second_checkbox)
+        pygui.end_disabled()
+        pygui.checkbox("Ignore disabled checkbox", demo.random_third_checkbox)
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.begin_main_menu_bar()"):
+        if pygui.begin_main_menu_bar():
+            if pygui.begin_menu("File"):
+                pygui.menu_item("Hello world")
+                pygui.end_menu()
+            
+            if pygui.begin_menu("Test"):
+                pygui.menu_item("Content1")
+                pygui.menu_item("Content2")
+                pygui.menu_item("Content3")
+                pygui.end_menu()
+            
+            if pygui.begin_menu("About"):
+                pygui.menu_item("About me etc...")
+                pygui.end_menu()
+            pygui.end_main_menu_bar()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.begin_popup_context_void()"):
+        pygui.text_wrapped(
+            "Popup only appears when you right click on the main window."
+            " This will make the usual ImGui menu appear."
+        )
+        if pygui.begin_popup_context_void(None, pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT):
+            show_menu_file()
+            pygui.end_popup()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_popup_modal()"):
+        pygui.text_wrapped("Modal windows are like popups but the user cannot close them by clicking outside.")
+        if pygui.button("Open Modal"):
+            pygui.open_popup("Modal?")
+
+        # Always center this window when appearing
+        center = pygui.get_main_viewport().get_center()
+        pygui.set_next_window_pos(center, pygui.COND_APPEARING, (0.5, 0.5))
+
+        if pygui.begin_popup_modal("Modal?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
+            pygui.text("This opens a modal popup")
+            pygui.separator()
+
+            pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
+            pygui.checkbox("This is a checkbox", demo.random_modal_checkbox)
+            pygui.pop_style_var()
+
+            if pygui.button("OK", (120, 0)):
+                pygui.close_current_popup()
+            pygui.set_item_default_focus()
+            pygui.same_line()
+            if pygui.button("Cancel", (120, 0)):
+                pygui.close_current_popup()
+            pygui.end_popup()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.color_convert_float4_to_u32()"):
+        draw_list = pygui.get_window_draw_list()
+
+        pygui.color_edit4("Edit rgb", demo.random_colour)
+        pygui.color_edit4("Edit hsv", demo.random_colour, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV)
+        float_to_u32 = pygui.color_convert_float4_to_u32(demo.random_colour.vec())
+        float_to_u32_macro = pygui.IM_COL32(*[c * 255 for c in demo.random_colour.vec()])
+        pygui.text("color_convert_float4_to_u32: {}".format(float_to_u32))
+        pygui.text("IM_COL32:                    {}".format(float_to_u32_macro))
+
+        gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
+
+        pygui.separator()
+        pygui.text("color_convert_u32_to_float4()")
+        u32_to_float4 = pygui.color_convert_u32_to_float4(float_to_u32)
+        pygui.text(str(u32_to_float4))
+        p0 = pygui.get_cursor_screen_pos()
+        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(u32_to_float4))
+        pygui.invisible_button("##gradient1", gradient_size)
+
+        pygui.separator()
+        pygui.text("color_convert_rgb_to_hsv()")
+        rgb_to_hsv = pygui.color_convert_rgb_to_hsv(*u32_to_float4)
+        pygui.text(str(rgb_to_hsv))
+        p0 = pygui.get_cursor_screen_pos()
+        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(*rgb_to_hsv)))
+        pygui.invisible_button("##gradient2", gradient_size)
+        
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.combo_callback()"):
+        def combo_callback_function(data, index: int, out: pygui.StrPtr) -> bool:
+            out.value = data[index]
+            return True
+        data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
+        
+        pygui.combo_callback("My Combo", demo.random_current_item,
+                             combo_callback_function, data, len(data))
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.debug_check_version_and_data_layout()"):
+        pygui.text_wrapped(
+            "If pressing this alerts ImGui then the sizes of the structs in"
+            " cython is different to ImGui. This *might* not be an issue.")
+        try:
+            if pygui.button("Call pygui.debug_check_version_and_data_layout()"):
+                pygui.debug_check_version_and_data_layout()
+                demo.random_error_text = [(0, 1, 0, 1), "Passed"]
+        except pygui.ImGuiError as e:
+            demo.random_error_text = [(1, 0, 0, 1), str(e)]
+        
+        if demo.random_error_text[1] != "":
+            pygui.push_style_color_im_vec4(pygui.COL_TEXT, demo.random_error_text[0])
+            pygui.text_wrapped(demo.random_error_text[1])
+            pygui.pop_style_color()
+
+        if demo.random_error_text[1] != "":
+            if pygui.button("Clear"):
+                demo.random_error_text[1] = ""
+
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.debug_text_encoding()"):
+        pygui.debug_text_encoding("Demo String")
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.drag_int_range2()"):
+        pygui.drag_int_range2("My drag_int2", demo.random_drag_min, demo.random_drag_max, 1, -500, 500)
+        pygui.drag_int("Using the range", demo.random_drag, 1, demo.random_drag_min.value, demo.random_drag_max.value)
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.drag_scalar()"):
+        pygui.drag_scalar("drag s8",         pygui.DATA_TYPE_S8,     None, 1,       None, None)
+        pygui.drag_scalar("drag u8",         pygui.DATA_TYPE_U8,     None, 1,       None, None, "%u ms")
+        pygui.drag_scalar("drag s16",        pygui.DATA_TYPE_S16,    None, 1 << 8,  None, None)
+        pygui.drag_scalar("drag u16",        pygui.DATA_TYPE_U16,    None, 1 << 8,  None, None, "%u ms")
+        pygui.drag_scalar("drag s32",        pygui.DATA_TYPE_S32,    None, 1 << 24, None, None)
+        pygui.drag_scalar("drag s32 hex",    pygui.DATA_TYPE_S32,    None, 1 << 24, None, None, "0x%08X")
+        pygui.drag_scalar("drag u32",        pygui.DATA_TYPE_U32,    None, 1 << 24, None, None, "%u ms")
+        pygui.drag_scalar("drag s64",        pygui.DATA_TYPE_S64,    None, 1 << 56, None, None)
+        pygui.drag_scalar("drag u64",        pygui.DATA_TYPE_U64,    None, 1 << 56, None, None)
+        pygui.drag_scalar("drag float",      pygui.DATA_TYPE_FLOAT,  None, 0.005,   None, None, "%f")
+        pygui.drag_scalar("drag double",     pygui.DATA_TYPE_DOUBLE, None, 0.0005,  None, None, "%.10f grams")
+        pygui.drag_scalar("drag float log",  pygui.DATA_TYPE_FLOAT,  None, 0.005,   None, None, "%f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        pygui.drag_scalar("drag double log", pygui.DATA_TYPE_DOUBLE, None, 0.00005, None, None, "0 < %.10f < 1", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        pygui.tree_pop()
+
     pygui.end()
 
 

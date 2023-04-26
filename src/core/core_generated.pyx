@@ -1607,7 +1607,7 @@ def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int):
 def checkbox_flags_uint_ptr(label: str, flags: IntPtr, flags_value: int):
     cdef bool res = ccimgui.ImGui_CheckboxFlagsUintPtr(
         _bytes(label),
-        flags,
+        &flags.value,
         flags_value
     )
     return res
@@ -1971,7 +1971,7 @@ def create_context(shared_font_atlas: ImFontAtlas=None):
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: Any, sz_vec2: Any, sz_vec4: Any, sz_drawvert: Any, sz_drawidx: Any):
+def debug_check_version_and_data_layout(version_str: str, sz_io: int, sz_style: int, sz_vec2: int, sz_vec4: int, sz_drawvert: int, sz_drawidx: int):
     """
     This is called by imgui_checkversion() macro.
     """
@@ -4204,7 +4204,7 @@ def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, 
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text(label: str, buf: str, buf_size: Any, flags: int=0):
+def input_text(label: str, buf: str, buf_size: int, flags: int=0):
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
@@ -4225,7 +4225,7 @@ def input_text(label: str, buf: str, buf_size: Any, flags: int=0):
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
+def input_text_ex(label: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextEx(
         _bytes(label),
         _bytes(buf),
@@ -4242,7 +4242,7 @@ def input_text_ex(label: str, buf: str, buf_size: Any, flags: int=0, callback: C
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_multiline(label: str, buf: str, buf_size: Any):
+def input_text_multiline(label: str, buf: str, buf_size: int):
     """
     Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
     """
@@ -4259,7 +4259,7 @@ def input_text_multiline(label: str, buf: str, buf_size: Any):
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
+def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextMultilineEx(
         _bytes(label),
         _bytes(buf),
@@ -4277,7 +4277,7 @@ def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0,
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: int=0):
+def input_text_with_hint(label: str, hint: str, buf: str, buf_size: int, flags: int=0):
     """
     Implied callback = null, user_data = null
     """
@@ -4296,7 +4296,7 @@ def input_text_with_hint(label: str, hint: str, buf: str, buf_size: Any, flags: 
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: Any, flags: int=0, callback: Callable=None, user_data: Any=None):
+def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
         _bytes(label),
         _bytes(hint),
@@ -4959,7 +4959,7 @@ def load_ini_settings_from_disk(ini_filename: str):
 # ?active(False)
 # ?invisible(False)
 # ?returns(None)
-def load_ini_settings_from_memory(ini_data: str, ini_size: Any=0):
+def load_ini_settings_from_memory(ini_data: str, ini_size: int=0):
     """
     Call after createcontext() and before the first call to newframe() to provide .ini data from your own data source.
     """
@@ -5070,7 +5070,7 @@ def log_to_tty(auto_open_depth: int=-1):
 # ?active(False)
 # ?invisible(False)
 # ?returns(Any)
-def mem_alloc(size: Any):
+def mem_alloc(size: int):
     cdef void* res = ccimgui.ImGui_MemAlloc(
         size
     )
@@ -6129,7 +6129,7 @@ def set_cursor_screen_pos(pos: tuple):
 # ?active(False)
 # ?invisible(False)
 # ?returns(bool)
-def set_drag_drop_payload(type_: str, data: Any, sz: Any, cond: int=0):
+def set_drag_drop_payload(type_: str, data: Any, sz: int, cond: int=0):
     """
     Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
     """
@@ -11195,10 +11195,10 @@ cdef class ImFontAtlas:
         4 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight * 4
         """
         cdef unsigned int* res = dereference(self._ptr).TexPixelsRGBA32
-        return res
+        return IntPtr(dereference(res))
     @tex_pixels_rgba_32.setter
     def tex_pixels_rgba_32(self, value: IntPtr):
-        dereference(self._ptr).TexPixelsRGBA32 = value
+        dereference(self._ptr).TexPixelsRGBA32 = &value.value
     # [End Field]
 
     # [Field]
@@ -12671,7 +12671,7 @@ cdef class ImFontGlyphRangesBuilder:
     # ?active(False)
     # ?invisible(False)
     # ?returns(bool)
-    def get_bit(self: ImFontGlyphRangesBuilder, n: Any):
+    def get_bit(self: ImFontGlyphRangesBuilder, n: int):
         """
         Get bit n in the array
         """
@@ -12687,7 +12687,7 @@ cdef class ImFontGlyphRangesBuilder:
     # ?active(False)
     # ?invisible(False)
     # ?returns(None)
-    def set_bit(self: ImFontGlyphRangesBuilder, n: Any):
+    def set_bit(self: ImFontGlyphRangesBuilder, n: int):
         """
         Set bit n in the array
         """
@@ -16105,6 +16105,23 @@ cdef class ImGuiPlatformMonitor:
     @main_size.setter
     def main_size(self, value: tuple):
         dereference(self._ptr).MainSize = _cast_tuple_ImVec2(value)
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?returns(Any)
+    @property
+    def platform_handle(self):
+        """
+        Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
+        """
+        cdef void* res = dereference(self._ptr).PlatformHandle
+        return res
+    @platform_handle.setter
+    def platform_handle(self, value: Any):
+        dereference(self._ptr).PlatformHandle = value
     # [End Field]
 
     # [Field]

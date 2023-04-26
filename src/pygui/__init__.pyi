@@ -723,13 +723,13 @@ def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=
     """
     pass
 
-# def begin_child_frame(id_: int, size: tuple, flags: int=0) -> bool:
-#     """
-#     Helper to create a child window / scrolling region that looks like a normal widget frame
-#     """
-#     pass
+def begin_child_frame(id_: int, size: tuple, flags: int=0) -> bool:
+    """
+    Helper to create a child window / scrolling region that looks like a normal widget frame
+    """
+    pass
 
-# def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool: ...
+def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool: ...
 def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
     """
     Widgets: Combo Box (Dropdown)
@@ -738,14 +738,14 @@ def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
     """
     pass
 
-# def begin_disabled(disabled: bool=True) -> None:
-#     """
-#     Disabling [BETA API]
-#     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
-#     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
-#     - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
-#     """
-#     pass
+def begin_disabled(disabled: bool=True) -> None:
+    """
+    Disabling [BETA API]
+    - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
+    - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
+    - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
+    """
+    pass
 
 def begin_drag_drop_source(flags: int=0) -> bool:
     """
@@ -782,11 +782,11 @@ def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
     """
     pass
 
-# def begin_main_menu_bar() -> bool:
-#     """
-#     Create and append to a full screen menu-bar.
-#     """
-#     pass
+def begin_main_menu_bar() -> bool:
+    """
+    Create and append to a full screen menu-bar.
+    """
+    pass
 
 def begin_menu(label: str, enabled: bool=True) -> bool:
     """
@@ -826,17 +826,11 @@ def begin_popup_context_item(str_id: str=None, popup_flags: int=1) -> bool:
     """
     pass
 
-# def begin_popup_context_void() -> bool:
-#     """
-#     Implied str_id = null, popup_flags = 1
-#     """
-#     pass
-
-# def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1) -> bool:
-#     """
-#     Open+begin popup when clicked in void (where there are no windows).
-#     """
-#     pass
+def begin_popup_context_void(str_id: str=None, popup_flags: int=1) -> bool:
+    """
+    Open+begin popup when clicked in void (where there are no windows).
+    """
+    pass
 
 def begin_popup_context_window(str_id: str=None, popup_flags: int=1) -> bool:
     """
@@ -844,11 +838,11 @@ def begin_popup_context_window(str_id: str=None, popup_flags: int=1) -> bool:
     """
     pass
 
-# def begin_popup_modal(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
-#     """
-#     Return true if the modal is open, and you can start outputting to it.
-#     """
-#     pass
+def begin_popup_modal(name: str, p_open: BoolPtr=None, flags: int=0) -> bool:
+    """
+    Return true if the modal is open, and you can start outputting to it.
+    """
+    pass
 
 def begin_tab_bar(str_id: str, flags: int=0) -> bool:
     """
@@ -913,7 +907,6 @@ def bullet_text(fmt: str) -> None:
     """
     pass
 
-# def bullet_text_v(fmt: str) -> None: ...
 def button(label: str, size: tuple=(0, 0)) -> bool:
     """
     Widgets: Main
@@ -938,13 +931,11 @@ def calc_text_size(text: str, text_end: str=None, hide_text_after_double_hash: b
 
 def checkbox(label: str, v: BoolPtr) -> bool: ...
 def checkbox_flags(label: str, flags: IntPtr, flags_value: int) -> bool: ...
-# def checkbox_flags_int_ptr(label: str, flags: IntPtr, flags_value: int) -> bool: ...
-# def checkbox_flags_uint_ptr(label: str, flags: IntPtr, flags_value: int) -> bool: ...
-# def close_current_popup() -> None:
-#     """
-#     Manually close the popup we have begin-ed into.
-#     """
-#     pass
+def close_current_popup() -> None:
+    """
+    Manually close the popup we have begin-ed into.
+    """
+    pass
 
 def collapsing_header(label: str, flags: int=0) -> bool:
     """
@@ -964,14 +955,14 @@ def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)) -> 
     """
     pass
 
-# def color_convert_float4_to_u32(in_: tuple) -> int: ...
-def color_convert_hsv_to_rgb(h: float, s: float, value: float) -> tuple: ...
-# def color_convert_rgb_to_hsv(r: float, g: float, b: float, out_h: FloatPtr, out_s: FloatPtr, out_v: FloatPtr) -> None: ...
-# def color_convert_u32_to_float4(in_: int) -> tuple:
-#     """
-#     Color Utilities
-#     """
-#     pass
+def color_convert_float4_to_u32(in_: tuple) -> int: ...
+def color_convert_hsv_to_rgb(h: float, s: float, value: float, a: float=1) -> tuple: ...
+def color_convert_rgb_to_hsv(r: float, g: float, b: float, a: float=1) -> tuple: ...
+def color_convert_u32_to_float4(in_: int) -> tuple:
+    """
+    Color Utilities
+    """
+    pass
 
 def color_edit3(label: str, colour: Vec4Ptr, flags: int=0) -> bool:
     """
@@ -984,41 +975,21 @@ def color_edit3(label: str, colour: Vec4Ptr, flags: int=0) -> bool:
 def color_edit4(label: str, colour: Vec4Ptr, flags: int=0) -> bool: ...
 def color_picker3(label: str, colour: Vec4Ptr, flags: int=0) -> bool: ...
 def color_picker4(label: str, colour: Vec4Ptr, flags: int=0, ref_col: Vec4Ptr=None) -> bool: ...
-# def columns() -> None:
-#     """
-#     Legacy Columns API (prefer using Tables!)
-#     - You can also use SameLine(pos_x) to mimic simplified columns.
-#     Implied count = 1, id = null, border = true
-#     """
-#     pass
+def columns(count: int=1, id_: str=None, border: bool=True) -> None:
+    """
+    Legacy Columns API (prefer using Tables!)
+    - You can also use SameLine(pos_x) to mimic simplified columns.
+    Implied count = 1, id = null, border = true
+    """
+    pass
 
-# def columns_ex(count: int=1, id_: str=None, border: bool=True) -> None: ...
 def combo(label: str, current_item: IntPtr, items: Sequence[str], popup_max_height_in_items: int=-1) -> bool:
     """
     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
     """
     pass
 
-# def combo_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int) -> bool:
-#     """
-#     Implied popup_max_height_in_items = -1
-#     """
-#     pass
-
-# def combo_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
-# def combo_char(label: str, current_item: IntPtr, items: Any, items_count: int) -> bool:
-#     """
-#     Implied popup_max_height_in_items = -1
-#     """
-#     pass
-
-# def combo_char_ex(label: str, current_item: IntPtr, items: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
-# def combo_ex(label: str, current_item: IntPtr, items_separated_by_zeros: str, popup_max_height_in_items: int=-1) -> bool:
-#     """
-#     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
-#     """
-#     pass
-
+def combo_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any, int, StrPtr], "bool"], data: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
 def create_context(shared_font_atlas: ImFontAtlas=None) -> ImGuiContext:
     """
     Context creation and access
@@ -1028,17 +999,17 @@ def create_context(shared_font_atlas: ImFontAtlas=None) -> ImGuiContext:
     """
     pass
 
-# def debug_check_version_and_data_layout(version_str: str, sz_io: Any, sz_style: Any, sz_vec2: Any, sz_vec4: Any, sz_drawvert: Any, sz_drawidx: Any) -> bool:
-#     """
-#     This is called by imgui_checkversion() macro.
-#     """
-#     pass
+def debug_check_version_and_data_layout() -> bool:
+    """
+    This is called by imgui_checkversion() macro.
+    """
+    pass
 
-# def debug_text_encoding(text: str) -> None:
-#     """
-#     Debug Utilities
-#     """
-#     pass
+def debug_text_encoding(text: str) -> None:
+    """
+    Debug Utilities
+    """
+    pass
 
 def destroy_context(ctx: ImGuiContext=None) -> None:
     """
@@ -1132,20 +1103,8 @@ def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max:
 def drag_int2(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 def drag_int3(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
-# def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', format_max = null, flags = 0
-#     """
-#     pass
-
-# def drag_int_range2_ex(label: str, v_current_min: IntPtr, v_current_max: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0) -> bool: ...
-# def drag_scalar(label: str, data_type: int, p_data: Any) -> bool:
-#     """
-#     Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
-#     """
-#     pass
-
-# def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
+def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0) -> bool: ...
+def drag_scalar(label: str, data_type: int, p_data: IntPtr, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
 # def drag_scalar_n(label: str, data_type: int, p_data: Any, components: int) -> bool:
 #     """
 #     Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
@@ -1161,11 +1120,11 @@ def dummy(size: tuple) -> None:
 
 def end() -> None: ...
 def end_child() -> None: ...
-# def end_child_frame() -> None:
-#     """
-#     Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)
-#     """
-#     pass
+def end_child_frame() -> None:
+    """
+    Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)
+    """
+    pass
 
 def end_combo() -> None:
     """
@@ -1173,7 +1132,7 @@ def end_combo() -> None:
     """
     pass
 
-# def end_disabled() -> None: ...
+def end_disabled() -> None: ...
 def end_drag_drop_source() -> None:
     """
     Only call enddragdropsource() if begindragdropsource() returns true!
@@ -1186,11 +1145,11 @@ def end_drag_drop_target() -> None:
     """
     pass
 
-# def end_frame() -> None:
-#     """
-#     Ends the dear imgui frame. automatically called by render(). if you don't need to render data (skipping rendering) you may call endframe() without render()... but you'll have wasted cpu already! if you don't need to render, better to not create any windows and not call newframe() at all!
-#     """
-#     pass
+def end_frame() -> None:
+    """
+    Ends the dear imgui frame. automatically called by render(). if you don't need to render data (skipping rendering) you may call endframe() without render()... but you'll have wasted cpu already! if you don't need to render, better to not create any windows and not call newframe() at all!
+    """
+    pass
 
 def end_group() -> None:
     """
@@ -1204,11 +1163,11 @@ def end_list_box() -> None:
     """
     pass
 
-# def end_main_menu_bar() -> None:
-#     """
-#     Only call endmainmenubar() if beginmainmenubar() returns true!
-#     """
-#     pass
+def end_main_menu_bar() -> None:
+    """
+    Only call endmainmenubar() if beginmainmenubar() returns true!
+    """
+    pass
 
 def end_menu() -> None:
     """
@@ -1362,11 +1321,11 @@ def get_cursor_screen_pos() -> tuple:
     """
     pass
 
-# def get_cursor_start_pos() -> tuple:
-#     """
-#     Initial cursor position in window coordinates
-#     """
-#     pass
+def get_cursor_start_pos() -> tuple:
+    """
+    Initial cursor position in window coordinates
+    """
+    pass
 
 def get_drag_drop_payload() -> Tuple[str, Any]:
     """
@@ -1436,11 +1395,11 @@ def get_frame_height_with_spacing() -> float:
     """
     pass
 
-# def get_id(str_id: str) -> int:
-#     """
-#     Calculate unique id (hash of whole id stack + given parameter). e.g. if you want to query into imguistorage yourself
-#     """
-#     pass
+def get_id(str_id: str) -> int:
+    """
+    Calculate unique id (hash of whole id stack + given parameter). e.g. if you want to query into imguistorage yourself
+    """
+    pass
 
 # def get_id_ptr(ptr_id: Any) -> int: ...
 # def get_id_str(str_id_begin: str, str_id_end: str) -> int: ...
@@ -1488,15 +1447,15 @@ def get_item_rect_size() -> tuple:
 #     """
 #     pass
 
-# def get_main_viewport() -> ImGuiViewport:
-#     """
-#     Viewports
-#     - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
-#     - In 'docking' branch with multi-viewport enabled, we extend this concept to have multiple active viewports.
-#     - In the future we will extend this concept further to also represent Platform Monitor and support a "no main platform window" operation mode.
-#     Return primary/default viewport. this can never be null.
-#     """
-#     pass
+def get_main_viewport() -> ImGuiViewport:
+    """
+    Viewports
+    - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
+    - In 'docking' branch with multi-viewport enabled, we extend this concept to have multiple active viewports.
+    - In the future we will extend this concept further to also represent Platform Monitor and support a "no main platform window" operation mode.
+    Return primary/default viewport. this can never be null.
+    """
+    pass
 
 # def get_mouse_clicked_count(button: int) -> int:
 #     """
@@ -1537,11 +1496,11 @@ def get_platform_io() -> ImGuiPlatformIO:
     """
     pass
 
-# def get_scroll_max_x() -> float:
-#     """
-#     Get maximum scrolling amount ~~ contentsize.x - windowsize.x - decorationssize.x
-#     """
-#     pass
+def get_scroll_max_x() -> float:
+    """
+    Get maximum scrolling amount ~~ contentsize.x - windowsize.x - decorationssize.x
+    """
+    pass
 
 def get_scroll_max_y() -> float:
     """
@@ -1549,14 +1508,14 @@ def get_scroll_max_y() -> float:
     """
     pass
 
-# def get_scroll_x() -> float:
-#     """
-#     Windows Scrolling
-#     - Any change of Scroll will be applied at the beginning of next frame in the first call to Begin().
-#     - You may instead use SetNextWindowScroll() prior to calling Begin() to avoid this delay, as an alternative to using SetScrollX()/SetScrollY().
-#     Get scrolling amount [0 .. getscrollmaxx()]
-#     """
-#     pass
+def get_scroll_x() -> float:
+    """
+    Windows Scrolling
+    - Any change of Scroll will be applied at the beginning of next frame in the first call to Begin().
+    - You may instead use SetNextWindowScroll() prior to calling Begin() to avoid this delay, as an alternative to using SetScrollX()/SetScrollY().
+    Get scrolling amount [0 .. getscrollmaxx()]
+    """
+    pass
 
 def get_scroll_y() -> float:
     """
@@ -1761,13 +1720,13 @@ def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiI
     """
     pass
 
-# def input_text_multiline(label: str, buf: str, buf_size: Any) -> bool:
+# def input_text_multiline(label: str, buf: str, buf_size: int) -> bool:
 #     """
 #     Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
 #     """
 #     pass
 
-# def input_text_multiline_ex(label: str, buf: str, buf_size: Any, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+# def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
 def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
     """
     Implied callback = null, user_data = null
@@ -2003,7 +1962,6 @@ def label_text(label: str, fmt: str) -> None:
     """
     pass
 
-# def label_text_v(label: str, fmt: str) -> None: ...
 def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_items: int=-1) -> bool: ...
 # def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int) -> bool:
 #     """
@@ -2022,7 +1980,7 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     """
 #     pass
 
-# def load_ini_settings_from_memory(ini_data: str, ini_size: Any=0) -> None:
+# def load_ini_settings_from_memory(ini_data: str, ini_size: int=0) -> None:
 #     """
 #     Call after createcontext() and before the first call to newframe() to provide .ini data from your own data source.
 #     """
@@ -2040,13 +1998,12 @@ def log_finish() -> None:
     """
     pass
 
-# def log_text(fmt: str) -> None:
-#     """
-#     Pass text data straight to log (without being displayed)
-#     """
-#     pass
+def log_text(fmt: str) -> None:
+    """
+    Pass text data straight to log (without being displayed)
+    """
+    pass
 
-# def log_text_v(fmt: str) -> None: ...
 def log_to_clipboard(auto_open_depth: int=-1) -> None:
     """
     Start logging to os clipboard
@@ -2067,7 +2024,7 @@ def log_to_clipboard(auto_open_depth: int=-1) -> None:
 #     """
 #     pass
 
-# def mem_alloc(size: Any) -> Any: ...
+# def mem_alloc(size: int) -> Any: ...
 # def mem_free(ptr: Any) -> None: ...
 def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True) -> bool:
     """
@@ -2418,7 +2375,7 @@ def set_color_edit_options(flags: int) -> None:
 #     """
 #     pass
 
-def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
+def set_drag_drop_payload(type_: str, data: int, cond: int=0) -> bool:
     """
     Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
     """
@@ -2510,19 +2467,13 @@ def set_next_item_width(item_width: float) -> None:
 #     """
 #     pass
 
-# def set_next_window_pos(pos: tuple, cond: int=0) -> None:
-#     """
-#     Window manipulation
-#     - Prefer using SetNextXXX functions (before Begin) rather that SetXXX functions (after Begin).
-#     Implied pivot = imvec2(0, 0)
-#     """
-#     pass
-
-# def set_next_window_pos_ex(pos: tuple, cond: int=0, pivot: tuple=(0, 0)) -> None:
-#     """
-#     Set next window position. call before begin(). use pivot=(0.5f,0.5f) to center on given point, etc.
-#     """
-#     pass
+def set_next_window_pos(pos: tuple, cond: int=0, pivot: tuple=(0, 0)) -> None:
+    """
+    Window manipulation
+    - Prefer using SetNextXXX functions (before Begin) rather that SetXXX functions (after Begin).
+    Set next window position. call before begin(). use pivot=(0.5f,0.5f) to center on given point, etc.
+    """
+    pass
 
 # def set_next_window_scroll(scroll: tuple) -> None:
 #     """
@@ -2548,23 +2499,23 @@ def set_next_window_size(size: tuple, cond: int=0) -> None:
 #     """
 #     pass
 
-# def set_scroll_from_pos_x(local_x: float, center_x_ratio: float=0.5) -> None:
-#     """
-#     Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position.
-#     """
-#     pass
+def set_scroll_from_pos_x(local_x: float, center_x_ratio: float=0.5) -> None:
+    """
+    Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position.
+    """
+    pass
 
-# def set_scroll_from_pos_y(local_y: float, center_y_ratio: float=0.5) -> None:
-#     """
-#     Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position.
-#     """
-#     pass
+def set_scroll_from_pos_y(local_y: float, center_y_ratio: float=0.5) -> None:
+    """
+    Adjust scrolling amount to make given position visible. generally getcursorstartpos() + offset to compute a valid position.
+    """
+    pass
 
-# def set_scroll_here_x(center_x_ratio: float=0.5) -> None:
-#     """
-#     Adjust scrolling amount to make current cursor position visible. center_x_ratio=0.0: left, 0.5: center, 1.0: right. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
-#     """
-#     pass
+def set_scroll_here_x(center_x_ratio: float=0.5) -> None:
+    """
+    Adjust scrolling amount to make current cursor position visible. center_x_ratio=0.0: left, 0.5: center, 1.0: right. when using to make a 'default/current item' visible, consider using setitemdefaultfocus() instead.
+    """
+    pass
 
 def set_scroll_here_y(center_y_ratio: float=0.5) -> None:
     """
@@ -2572,17 +2523,17 @@ def set_scroll_here_y(center_y_ratio: float=0.5) -> None:
     """
     pass
 
-# def set_scroll_x(scroll_x: float) -> None:
-#     """
-#     Set scrolling amount [0 .. getscrollmaxx()]
-#     """
-#     pass
+def set_scroll_x(scroll_x: float) -> None:
+    """
+    Set scrolling amount [0 .. getscrollmaxx()]
+    """
+    pass
 
-# def set_scroll_y(scroll_y: float) -> None:
-#     """
-#     Set scrolling amount [0 .. getscrollmaxy()]
-#     """
-#     pass
+def set_scroll_y(scroll_y: float) -> None:
+    """
+    Set scrolling amount [0 .. getscrollmaxy()]
+    """
+    pass
 
 # def set_state_storage(storage: ImGuiStorage) -> None:
 #     """
@@ -2602,7 +2553,6 @@ def set_tooltip(fmt: str) -> None:
     """
     pass
 
-# def set_tooltip_v(fmt: str) -> None: ...
 # def set_window_collapsed(collapsed: bool, cond: int=0) -> None:
 #     """
 #     (not recommended) set current window collapsed state. prefer using setnextwindowcollapsed().
@@ -2940,28 +2890,24 @@ def text_colored(col: tuple, fmt: str) -> None:
     """
     pass
 
-# def text_colored_v(col: tuple, fmt: str) -> None: ...
 def text_disabled(fmt: str) -> None:
     """
     Shortcut for pushstylecolor(imguicol_text, style.colors[imguicol_textdisabled]); text(fmt, ...); popstylecolor();
     """
     pass
 
-# def text_disabled_v(fmt: str) -> None: ...
 def text_unformatted(text: str, text_end: str=None) -> None:
     """
     Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
     """
     pass
 
-# def text_v(fmt: str) -> None: ...
 def text_wrapped(fmt: str) -> None:
     """
     Shortcut for pushtextwrappos(0.0f); text(fmt, ...); poptextwrappos();. note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using setnextwindowsize().
     """
     pass
 
-# def text_wrapped_v(fmt: str) -> None: ...
 def tree_node(label: str, flags: int=0) -> bool:
     """
     Widgets: Trees
@@ -2969,24 +2915,12 @@ def tree_node(label: str, flags: int=0) -> bool:
     """
     pass
 
-# def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
-# def tree_node_ex_str(str_id: str, flags: int, fmt: str) -> bool: ...
-# def tree_node_ex_v(str_id: str, flags: int, fmt: str) -> bool: ...
-# def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str) -> bool: ...
-# def tree_node_ptr(ptr_id: Any, fmt: str) -> bool:
-#     """
-#     '
-#     """
-#     pass
+def tree_node_str(str_id: str, fmt: str) -> bool:
+    """
+    Helper variation to easily decorelate the id from the displayed string. read the faq about why and how to use id. to align arbitrary text at the same level as a treenode() you can use bullet().
+    """
+    pass
 
-# def tree_node_str(str_id: str, fmt: str) -> bool:
-#     """
-#     Helper variation to easily decorelate the id from the displayed string. read the faq about why and how to use id. to align arbitrary text at the same level as a treenode() you can use bullet().
-#     """
-#     pass
-
-# def tree_node_v(str_id: str, fmt: str) -> bool: ...
-# def tree_node_vptr(ptr_id: Any, fmt: str) -> bool: ...
 def tree_pop() -> None:
     """
     ~ unindent()+popid()
@@ -4106,13 +4040,13 @@ class ImFontGlyphRangesBuilder:
     #     pass
 
     # def clear(self: ImFontGlyphRangesBuilder) -> None: ...
-    # def get_bit(self: ImFontGlyphRangesBuilder, n: Any) -> bool:
+    # def get_bit(self: ImFontGlyphRangesBuilder, n: int) -> bool:
     #     """
     #     Get bit n in the array
     #     """
     #     pass
 
-    # def set_bit(self: ImFontGlyphRangesBuilder, n: Any) -> None:
+    # def set_bit(self: ImFontGlyphRangesBuilder, n: int) -> None:
     #     """
     #     Set bit n in the array
     #     """
@@ -4986,6 +4920,10 @@ class ImGuiPlatformMonitor:
     # """
     # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
     # """
+    # platform_handle: Any
+    # """
+    # Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
+    # """
     # work_pos: tuple
     # """
     # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
@@ -5201,10 +5139,10 @@ class ImGuiStyle:
     # """
     # Radius of grab corners for scrollbar.
     # """
-    # scrollbar_size: float
-    # """
-    # Width of the vertical scrollbar, height of the horizontal scrollbar.
-    # """
+    scrollbar_size: float
+    """
+    Width of the vertical scrollbar, height of the horizontal scrollbar.
+    """
     # selectable_text_align: tuple
     # """
     # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
@@ -5249,10 +5187,10 @@ class ImGuiStyle:
     # """
     # Minimum window size. this is a global setting. if you want to constrain individual windows, use setnextwindowsizeconstraints().
     # """
-    # window_padding: tuple
-    # """
-    # Padding within a window.
-    # """
+    window_padding: tuple
+    """
+    Padding within a window.
+    """
     # window_rounding: float
     # """
     # Radius of window corners rounding. set to 0.0f to have rectangular windows. large values tend to lead to variety of artifacts and are not recommended.
@@ -5366,7 +5304,6 @@ class ImGuiViewport:
     - Work Area = entire viewport minus sections used by main menu bars (for platform windows), or by task bar (for platform monitor).
     - Windows are generally trying to stay within the Work Area of their host viewport.
     """
-    pass
     # dpi_scale: float
     # """
     # 1.0f = 96 dpi = no extra scale.
@@ -5440,11 +5377,11 @@ class ImGuiViewport:
     # """
     # Work area: size of the viewport minus task bars, menu bars, status bars (<= size)
     # """
-    # def get_center(self: ImGuiViewport) -> tuple:
-    #     """
-    #     Helpers
-    #     """
-    #     pass
+    def get_center(self: ImGuiViewport) -> tuple:
+        """
+        Helpers
+        """
+        pass
 
     # def get_work_center(self: ImGuiViewport) -> tuple: ...
 

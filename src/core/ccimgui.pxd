@@ -2075,11 +2075,12 @@ cdef extern from "cimgui.h":
     # (Optional) This is required when enabling multi-viewport. Represent the bounds of each connected monitor/display and their DPI.
     # We use this information for multiple DPI support + clamping the position of popups and tooltips so they don't straddle multiple monitors.
     ctypedef struct ImGuiPlatformMonitor:
-        ImVec2 MainPos      # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
-        ImVec2 MainSize     # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
-        ImVec2 WorkPos      # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
-        ImVec2 WorkSize     # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
-        float DpiScale      # 1.0f = 96 dpi
+        ImVec2 MainPos           # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
+        ImVec2 MainSize          # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
+        ImVec2 WorkPos           # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
+        ImVec2 WorkSize          # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
+        float DpiScale           # 1.0f = 96 dpi
+        void* PlatformHandle     # Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
 
 
     # (Optional) Support for IME (Input Method Editor) via the io.SetPlatformImeDataFn() function.

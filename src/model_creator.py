@@ -126,6 +126,7 @@ class DearBinding:
             "bool": "bool",
             "bool*": "BoolPtr",
             "char": "int",
+            "size_t": "int",
             "int": "int",
             "int*": "IntPtr",
             "short": "int",
@@ -459,11 +460,8 @@ class DearType:
             "float*": "FloatPtr",
             "double*": "DoublePtr",
         }
-        if self.is_array() and self.with_no_const() in ptr_version_mappings:
-                return ptr_version_mappings[self.with_no_const()]
-
-        if self.with_no_const() in ptr_version_mappings:
-            return ptr_version_mappings[self.with_no_const()]
+        if self.with_no_const_or_sign() in ptr_version_mappings:
+            return ptr_version_mappings[self.with_no_const_or_sign()]
         return None
 
 

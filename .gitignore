@@ -23,5 +23,6 @@ core.cpp
 
 CMakeFiles
 CMakeCache.txt
+CMakeSettings.json
 imgui.ini
 pyvenv.cfg
