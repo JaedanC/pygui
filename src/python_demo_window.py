@@ -177,6 +177,34 @@ class widget:
     colour_display_mode = pygui.IntPtr(False)
     colour_picker_mode = pygui.IntPtr(False)
     colour_color_hsv = pygui.Vec4Ptr(0.23, 1, 1, 1)
+    data_drag_clamp = pygui.BoolPtr(False)
+    data_s8_v = pygui.IntPtr(127)
+    data_u8_v = pygui.IntPtr(255)
+    data_s16_v = pygui.IntPtr(32767)
+    data_u16_v = pygui.IntPtr(65535)
+    data_s32_v = pygui.LongPtr(-1)
+    data_u32_v = pygui.LongPtr(-1)
+    data_s64_v = pygui.LongPtr(-1)
+    data_u64_v = pygui.LongPtr(-1)
+    data_f32_v = pygui.FloatPtr(0.123)
+    data_f64_v = pygui.DoublePtr(90000.01234567890123456789)
+    data_inputs_step = pygui.BoolPtr(True)
+    data_long_n = [
+        pygui.LongPtr(10000000),
+        pygui.LongPtr(20000000),
+    ]
+    data_float_n = [
+        pygui.FloatPtr(0.1),
+        pygui.FloatPtr(0.2),
+        pygui.FloatPtr(0.3),
+        pygui.FloatPtr(0.4),
+    ]
+    data_double_n = [
+        pygui.DoublePtr(0.00001),
+        pygui.DoublePtr(0.00002),
+        pygui.DoublePtr(0.00003),
+        pygui.DoublePtr(0.00004),
+    ]
     multi_vec4f = pygui.Vec4Ptr(0.10, 0.2, 0.3, 0.44)
     multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
     tab_tab_bar_flags = pygui.IntPtr(pygui.TAB_BAR_FLAGS_REORDERABLE)
@@ -1094,6 +1122,145 @@ def show_demo_widgets():
         pygui.drag_float4("Raw HSV values", drag_floats, 0.01, 0, 1)
         widget.colour_color_hsv = pygui.Vec4Ptr(*(f.value for f in drag_floats))
 
+        pygui.tree_pop()
+
+    if pygui.tree_node("Data Types"):
+        INT_MIN = (-2147483647 - 1)
+        INT_MAX = 2147483647
+        UINT_MAX = 0xffffffff
+        LLONG_MIN = (-9223372036854775807 - 1)
+        LLONG_MAX = 9223372036854775807
+        ULLONG_MAX = 0xffffffffffffffff
+        IM_PRId64 = "I64d"
+        IM_PRIu64 = "I64u"
+        s8_zero  = 0;  s8_one  = 1;  s8_fifty  = 50;  s8_min  = -128;         s8_max = 127
+        u8_zero  = 0;  u8_one  = 1;  u8_fifty  = 50;  u8_min  = 0;            u8_max = 255
+        s16_zero = 0;  s16_one = 1;  s16_fifty = 50;  s16_min = -32768;       s16_max = 32767
+        u16_zero = 0;  u16_one = 1;  u16_fifty = 50;  u16_min = 0;            u16_max = 65535
+        s32_zero = 0;  s32_one = 1;  s32_fifty = 50;  s32_min = INT_MIN//2;   s32_max = INT_MAX//2;    s32_hi_a = INT_MAX//2 - 100;    s32_hi_b = INT_MAX//2
+        u32_zero = 0;  u32_one = 1;  u32_fifty = 50;  u32_min = 0;            u32_max = UINT_MAX//2;   u32_hi_a = UINT_MAX//2 - 100;   u32_hi_b = UINT_MAX//2
+        s64_zero = 0;  s64_one = 1;  s64_fifty = 50;  s64_min = LLONG_MIN//2; s64_max = LLONG_MAX//2;  s64_hi_a = LLONG_MAX//2 - 100;  s64_hi_b = LLONG_MAX//2
+        u64_zero = 0;  u64_one = 1;  u64_fifty = 50;  u64_min = 0;            u64_max = ULLONG_MAX//2; u64_hi_a = ULLONG_MAX//2 - 100; u64_hi_b = ULLONG_MAX//2
+        f32_zero = 0;  f32_one = 1;  f32_lo_a = -10000000000;      f32_hi_a = +10000000000
+        f64_zero = 0;  f64_one = 1;  f64_lo_a = -1000000000000000; f64_hi_a = +1000000000000000
+
+        pygui.separator_text("Drags")
+        pygui.checkbox("Clamp integers to 0..50", widget.data_drag_clamp)
+        drag_clamp = widget.data_drag_clamp.value
+
+        pygui.drag_scalar("drag s8",         pygui.DATA_TYPE_S8,     widget.data_s8_v,  1,       s8_zero  if drag_clamp else None, s8_fifty  if drag_clamp else None)
+        pygui.drag_scalar("drag u8",         pygui.DATA_TYPE_U8,     widget.data_u8_v,  1,       u8_zero  if drag_clamp else None, u8_fifty  if drag_clamp else None, "%u ms")
+        pygui.drag_scalar("drag s16",        pygui.DATA_TYPE_S16,    widget.data_s16_v, 1 << 8,  s16_zero if drag_clamp else None, s16_fifty if drag_clamp else None)
+        pygui.drag_scalar("drag u16",        pygui.DATA_TYPE_U16,    widget.data_u16_v, 1 << 8,  u16_zero if drag_clamp else None, u16_fifty if drag_clamp else None, "%u ms")
+        pygui.drag_scalar("drag s32",        pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None)
+        pygui.drag_scalar("drag s32 hex",    pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None, "0x%08X")
+        pygui.drag_scalar("drag u32",        pygui.DATA_TYPE_U32,    widget.data_u32_v, 1 << 24, u32_zero if drag_clamp else None, u32_fifty if drag_clamp else None, "%u ms")
+        pygui.drag_scalar("drag s64",        pygui.DATA_TYPE_S64,    widget.data_s64_v, 1 << 56, s64_zero if drag_clamp else None, s64_fifty if drag_clamp else None)
+        pygui.drag_scalar("drag u64",        pygui.DATA_TYPE_U64,    widget.data_u64_v, 1 << 56, u64_zero if drag_clamp else None, u64_fifty if drag_clamp else None)
+        pygui.drag_scalar("drag float",      pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f")
+        pygui.drag_scalar("drag float log",  pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        pygui.drag_scalar("drag double",     pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, None,    "%.10f grams")
+        pygui.drag_scalar("drag double log", pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, f64_one, "0 < %.10f < 1", pygui.SLIDER_FLAGS_LOGARITHMIC)
+
+
+        pygui.separator_text("Sliders")
+        pygui.slider_scalar("slider s8 full",       pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_min,   s8_max,   "%d")
+        pygui.slider_scalar("slider u8 full",       pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_min,   u8_max,   "%u")
+        pygui.slider_scalar("slider s16 full",      pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_min,  s16_max,  "%d")
+        pygui.slider_scalar("slider u16 full",      pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_min,  u16_max,  "%u")
+        pygui.slider_scalar("slider s32 low",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty,"%d")
+        pygui.slider_scalar("slider s32 high",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_hi_a, s32_hi_b, "%d")
+        pygui.slider_scalar("slider s32 full",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_min,  s32_max,  "%d")
+        pygui.slider_scalar("slider s32 hex",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty, "0x%04X")
+        pygui.slider_scalar("slider u32 low",       pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_zero, u32_fifty,"%u")
+        pygui.slider_scalar("slider u32 high",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_hi_a, u32_hi_b, "%u")
+        pygui.slider_scalar("slider u32 full",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_min,  u32_max,  "%u")
+        pygui.slider_scalar("slider s64 low",       pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_zero, s64_fifty,"%" + IM_PRId64)
+        pygui.slider_scalar("slider s64 high",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_hi_a, s64_hi_b, "%" + IM_PRId64)
+        pygui.slider_scalar("slider s64 full",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_min,  s64_max,  "%" + IM_PRId64)
+        pygui.slider_scalar("slider u64 low",       pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_zero, u64_fifty,"%" + IM_PRIu64 + " ms")
+        pygui.slider_scalar("slider u64 high",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_hi_a, u64_hi_b, "%" + IM_PRIu64 + " ms")
+        pygui.slider_scalar("slider u64 full",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_min,  u64_max,  "%" + IM_PRIu64 + " ms")
+        pygui.slider_scalar("slider float low",     pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one)
+        pygui.slider_scalar("slider float low log", pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        pygui.slider_scalar("slider float high",    pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_lo_a, f32_hi_a, "%e")
+        pygui.slider_scalar("slider double low",    pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f grams")
+        pygui.slider_scalar("slider double low log",pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        pygui.slider_scalar("slider double high",   pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_lo_a, f64_hi_a, "%e grams")
+
+        pygui.separator_text("Sliders (reverse)")
+        pygui.slider_scalar("slider s8 reverse",    pygui.DATA_TYPE_S8,   widget.data_s8_v,  s8_max,    s8_min,   "%d")
+        pygui.slider_scalar("slider u8 reverse",    pygui.DATA_TYPE_U8,   widget.data_u8_v,  u8_max,    u8_min,   "%u")
+        pygui.slider_scalar("slider s32 reverse",   pygui.DATA_TYPE_S32,  widget.data_s32_v, s32_fifty, s32_zero, "%d")
+        pygui.slider_scalar("slider u32 reverse",   pygui.DATA_TYPE_U32,  widget.data_u32_v, u32_fifty, u32_zero, "%u")
+        pygui.slider_scalar("slider s64 reverse",   pygui.DATA_TYPE_S64,  widget.data_s64_v, s64_fifty, s64_zero, "%" + IM_PRId64)
+        pygui.slider_scalar("slider u64 reverse",   pygui.DATA_TYPE_U64,  widget.data_u64_v, u64_fifty, u64_zero, "%" + IM_PRIu64 + " ms")
+
+        pygui.separator_text("Inputs")
+        pygui.checkbox("Show step buttons", widget.data_inputs_step)
+        pygui.input_scalar("input s8",      pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_one  if widget.data_inputs_step else None, None, "%d")
+        pygui.input_scalar("input u8",      pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_one  if widget.data_inputs_step else None, None, "%u")
+        pygui.input_scalar("input s16",     pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_one if widget.data_inputs_step else None, None, "%d")
+        pygui.input_scalar("input u16",     pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_one if widget.data_inputs_step else None, None, "%u")
+        pygui.input_scalar("input s32",     pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%d")
+        pygui.input_scalar("input s32 hex", pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%04X")
+        pygui.input_scalar("input u32",     pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%u")
+        pygui.input_scalar("input u32 hex", pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%08X")
+        pygui.input_scalar("input s64",     pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_one if widget.data_inputs_step else None)
+        pygui.input_scalar("input u64",     pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_one if widget.data_inputs_step else None)
+        pygui.input_scalar("input float",   pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_one if widget.data_inputs_step else None)
+        pygui.input_scalar("input double",  pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_one if widget.data_inputs_step else None)
+
+        # The _n versions. These are annoying.
+        pygui.separator_text("Drag Scalar N")
+        help_marker(
+            "This example demonstrates the importance of selecting the correct data type.\n"
+            " 4 * 1 byte (s8/u8)   chars  == 1 * 4 byte int.\n"
+            " 2 * 2 byte (s16/u16) shorts == 1 * 4 byte int.\n"
+            " 2 * 4 byte (s16/u16) ints   == 1 * 8 byte long.\n"
+            " So if you want to edit an integer then you should select S32 as the type. Otherwise, this actually makes"
+            " a neat way to edit the bits of an integer"
+            )
+        pygui.drag_scalar_n("drag_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16)
+        pygui.drag_scalar_n("drag_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16)
+        pygui.drag_scalar_n("drag_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8)
+        pygui.drag_scalar_n("drag_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8)
+        pygui.drag_scalar_n("drag_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
+        pygui.drag_scalar_n("drag_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
+        pygui.drag_scalar_n("drag_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
+        pygui.drag_scalar_n("drag_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
+        pygui.drag_scalar_n("drag_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2, 1 << 54)
+        pygui.drag_scalar_n("drag_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2, 1 << 54)
+        pygui.drag_scalar_n("drag_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4)
+        pygui.drag_scalar_n("drag_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4)
+
+        pygui.separator_text("Slider Scalar N")
+        pygui.slider_scalar_n("slider_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16,  s8_min,  s8_max)
+        pygui.slider_scalar_n("slider_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16,  u8_min,  u8_max)
+        pygui.slider_scalar_n("slider_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   s16_min, s16_max)
+        pygui.slider_scalar_n("slider_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   u16_min, u16_max)
+        pygui.slider_scalar_n("slider_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
+        pygui.slider_scalar_n("slider_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
+        pygui.slider_scalar_n("slider_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
+        pygui.slider_scalar_n("slider_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
+        pygui.slider_scalar_n("slider_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   s64_min, s64_max)
+        pygui.slider_scalar_n("slider_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   u64_min, u64_max)
+        pygui.slider_scalar_n("slider_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  f32_lo_a, f32_hi_a)
+        pygui.slider_scalar_n("slider_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, f64_lo_a, f64_hi_a)
+
+        pygui.separator_text("Input Scalar N")
+        pygui.input_scalar_n("input_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 8,   1,    10) # It works with 16 but looks terrible
+        pygui.input_scalar_n("input_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 8,   2,    20)
+        pygui.input_scalar_n("input_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   3,    30)
+        pygui.input_scalar_n("input_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   4,    40)
+        pygui.input_scalar_n("input_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   5,    50)
+        pygui.input_scalar_n("input_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   6,    60)
+        pygui.input_scalar_n("input_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   7,    70)
+        pygui.input_scalar_n("input_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   8,    80)
+        pygui.input_scalar_n("input_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   9,    90)
+        pygui.input_scalar_n("input_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   10,   100)
+        pygui.input_scalar_n("input_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  0.1,  1)
+        pygui.input_scalar_n("input_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, 0.01, 0.1)
         pygui.tree_pop()
 
     if pygui.tree_node("Multi-component Widgets"):
@@ -2218,6 +2385,10 @@ class demo:
     random_drag_min = pygui.IntPtr(1)
     random_drag_max = pygui.IntPtr(100)
     random_drag = pygui.IntPtr(50)
+    random_drag_float_min = pygui.FloatPtr(0.001)
+    random_drag_float_max = pygui.FloatPtr(0.100)
+    random_drag_float = pygui.FloatPtr(0.05)
+    random_multiline_buffer = pygui.StrPtr("", 64)
 
 
 def show_app_console(p_open: pygui.BoolPtr):
@@ -2620,25 +2791,19 @@ def show_random_extras(p_open: pygui.BoolPtr):
     
     if pygui.tree_node("pygui.drag_int_range2()"):
         pygui.drag_int_range2("My drag_int2", demo.random_drag_min, demo.random_drag_max, 1, -500, 500)
-        pygui.drag_int("Using the range", demo.random_drag, 1, demo.random_drag_min.value, demo.random_drag_max.value)
+        pygui.drag_int("drag_int", demo.random_drag, 1, demo.random_drag_min.value, demo.random_drag_max.value)
+        pygui.drag_float_range2("My drag_float2", demo.random_drag_float_min, demo.random_drag_float_max, 0.001, -1, 1)
+        pygui.drag_float("drag_float", demo.random_drag_float, 0.001, demo.random_drag_float_min.value, demo.random_drag_float_max.value)
         pygui.tree_pop()
     
-    if pygui.tree_node("pygui.drag_scalar()"):
-        pygui.drag_scalar("drag s8",         pygui.DATA_TYPE_S8,     None, 1,       None, None)
-        pygui.drag_scalar("drag u8",         pygui.DATA_TYPE_U8,     None, 1,       None, None, "%u ms")
-        pygui.drag_scalar("drag s16",        pygui.DATA_TYPE_S16,    None, 1 << 8,  None, None)
-        pygui.drag_scalar("drag u16",        pygui.DATA_TYPE_U16,    None, 1 << 8,  None, None, "%u ms")
-        pygui.drag_scalar("drag s32",        pygui.DATA_TYPE_S32,    None, 1 << 24, None, None)
-        pygui.drag_scalar("drag s32 hex",    pygui.DATA_TYPE_S32,    None, 1 << 24, None, None, "0x%08X")
-        pygui.drag_scalar("drag u32",        pygui.DATA_TYPE_U32,    None, 1 << 24, None, None, "%u ms")
-        pygui.drag_scalar("drag s64",        pygui.DATA_TYPE_S64,    None, 1 << 56, None, None)
-        pygui.drag_scalar("drag u64",        pygui.DATA_TYPE_U64,    None, 1 << 56, None, None)
-        pygui.drag_scalar("drag float",      pygui.DATA_TYPE_FLOAT,  None, 0.005,   None, None, "%f")
-        pygui.drag_scalar("drag double",     pygui.DATA_TYPE_DOUBLE, None, 0.0005,  None, None, "%.10f grams")
-        pygui.drag_scalar("drag float log",  pygui.DATA_TYPE_FLOAT,  None, 0.005,   None, None, "%f", pygui.SLIDER_FLAGS_LOGARITHMIC)
-        pygui.drag_scalar("drag double log", pygui.DATA_TYPE_DOUBLE, None, 0.00005, None, None, "0 < %.10f < 1", pygui.SLIDER_FLAGS_LOGARITHMIC)
+    if pygui.tree_node("pygui.input_text_multiline()"):
+        def callback_function(callback_data, user_data) -> int:
+            print("Hello", user_data)
+            return 0
+        pygui.input_text_multiline("My text", demo.random_multiline_buffer, (-pygui.FLT_MIN, 100),
+                                   pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
         pygui.tree_pop()
-
+    
     pygui.end()
 
 

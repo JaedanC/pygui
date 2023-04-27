@@ -1144,6 +1144,16 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
 
         def __init__(self, initial_value: int):
             self.value: int = initial_value
+    
+    cdef class LongPtr:
+        @staticmethod
+        cdef long long* ptr(ptr: LongPtr):
+            return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
+        
+        cdef public long long value
+
+        def __init__(self, initial_value: int):
+            self.value: int = initial_value
 
 
     cdef class FloatPtr:
@@ -1570,6 +1580,10 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
         def __bool__(self) -> bool: ...
 
     class IntPtr:
+        value: int
+        def __init__(self, initial_value: int): ...
+
+    class LongPtr:
         value: int
         def __init__(self, initial_value: int): ...
 

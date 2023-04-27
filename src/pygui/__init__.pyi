@@ -19,6 +19,10 @@ class IntPtr:
     value: int
     def __init__(self, initial_value: int): ...
 
+class LongPtr:
+    value: int
+    def __init__(self, initial_value: int): ...
+
 class FloatPtr:
     value: float
     def __float__(self) -> float: ...
@@ -1087,13 +1091,7 @@ def drag_float4(label: str, float_ptrs: Sequence[FloatPtr], v_speed: float=1.0, 
     """
     pass
 
-# def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr) -> bool:
-#     """
-#     Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', format_max = null, flags = 0
-#     """
-#     pass
-
-# def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0) -> bool: ...
+def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0) -> bool: ...
 def drag_int(label: str, value: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool:
     """
     If v_min >= v_max we have no bound
@@ -1104,14 +1102,13 @@ def drag_int2(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min:
 def drag_int3(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 def drag_int4(label: str, int_ptrs: Sequence[IntPtr], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0) -> bool: ...
 def drag_int_range2(label: str, v_current_min: IntPtr, v_current_max: IntPtr, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0) -> bool: ...
-def drag_scalar(label: str, data_type: int, p_data: IntPtr, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
-# def drag_scalar_n(label: str, data_type: int, p_data: Any, components: int) -> bool:
-#     """
-#     Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
-#     """
-#     pass
+def drag_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", v_speed: float=1.0, _min: "int | float"=None, _max: "int | float"=None, format_: str=None, flags: int=0) -> bool: ...
+def drag_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, v_speed: float=1.0, p_min: "int | float"=None, p_max: "int | float"=None, format_: str=None, flags: int=0) -> bool:
+    """
+    Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
+    """
+    pass
 
-# def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0) -> bool: ...
 def dummy(size: tuple) -> None:
     """
     Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
@@ -1697,21 +1694,9 @@ def input_int(label: str, v: IntPtr) -> bool:
 def input_int2(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
 def input_int3(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
 def input_int4(label: str, int_ptrs: Sequence[IntPtr], flags: int=0) -> bool: ...
-# def input_scalar(label: str, data_type: int, p_data: Any) -> bool:
-#     """
-#     Implied p_step = null, p_step_fast = null, format = null, flags = 0
-#     """
-#     pass
-
-# def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
-# def input_scalar_n(label: str, data_type: int, p_data: Any, components: int) -> bool:
-#     """
-#     Implied p_step = null, p_step_fast = null, format = null, flags = 0
-#     """
-#     pass
-
-# def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0) -> bool: ...
-def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiInputTextCallbackData, Any], int]=None, user_data: Any=None) -> bool:
+def input_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", step: "int | float"=None, step_fast: "int | float"=None, format_: str=None, flags: int=0) -> bool: ...
+def input_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, p_step: "int | float"=None, p_step_fast: "int | float"=None, format_: str=None, flags: int=0) -> bool: ...
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool:
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
@@ -1720,13 +1705,7 @@ def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiI
     """
     pass
 
-# def input_text_multiline(label: str, buf: str, buf_size: int) -> bool:
-#     """
-#     Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
-#     """
-#     pass
-
-# def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None) -> bool: ...
+def input_text_multiline(label: str, buf: StrPtr, size: tuple=(0, 0), flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool: ...
 def input_text_with_hint(label: str, hint: str, buf: StrPtr, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
     """
     Implied callback = null, user_data = null
@@ -2723,20 +2702,8 @@ def slider_int4(label: str, int_ptrs: Sequence[IntPtr], v_min: int, v_max: int, 
     """
     pass
 
-# def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any) -> bool:
-#     """
-#     Implied format = null, flags = 0
-#     """
-#     pass
-
-# def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
-# def slider_scalar_n(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any) -> bool:
-#     """
-#     Implied format = null, flags = 0
-#     """
-#     pass
-
-# def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
+def slider_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0) -> bool: ...
+def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, p_min: "int | float", p_max: "int | float", format_: str=None, flags: int=0) -> bool: ...
 def small_button(label: str) -> bool:
     """
     Button with framepadding=(0,0) to easily embed within text

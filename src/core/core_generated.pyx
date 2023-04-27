@@ -76,6 +76,16 @@ cdef class IntPtr:
     def __init__(self, initial_value: int):
         self.value: int = initial_value
 
+cdef class LongPtr:
+    @staticmethod
+    cdef long long* ptr(ptr: LongPtr):
+        return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
+
+    cdef public long long value
+
+    def __init__(self, initial_value: int):
+        self.value: int = initial_value
+
 
 cdef class FloatPtr:
     @staticmethod

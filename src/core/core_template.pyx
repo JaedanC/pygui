@@ -76,6 +76,16 @@ cdef class IntPtr:
     def __init__(self, initial_value: int):
         self.value: int = initial_value
 
+cdef class LongPtr:
+    @staticmethod
+    cdef long long* ptr(ptr: LongPtr):
+        return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
+
+    cdef public long long value
+
+    def __init__(self, initial_value: int):
+        self.value: int = initial_value
+
 
 cdef class FloatPtr:
     @staticmethod
@@ -2431,18 +2441,23 @@ def drag_float_ex(label: str, v: FloatPtr, v_speed: float=1.0, v_min: float=0.0,
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr):
-    """
-    Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', format_max = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_DragFloatRange2(
+def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
+    bytes_format_max = _bytes(format_max) if format_max is not None else None
+
+    cdef bool res = ccimgui.ImGui_DragFloatRange2Ex(
         _bytes(label),
         &v_current_min.value,
-        &v_current_max.value
+        &v_current_max.value,
+        v_speed,
+        v_min,
+        v_max,
+        _bytes(format_),
+        ((<char*>bytes_format_max if format_max is not None else NULL)),
+        flags
     )
     return res
 # [End Function]
@@ -2450,7 +2465,7 @@ def drag_float_range2(label: str, v_current_min: FloatPtr, v_current_max: FloatP
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def drag_float_range2_ex(label: str, v_current_min: FloatPtr, v_current_max: FloatPtr, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
     bytes_format_max = _bytes(format_max) if format_max is not None else None
@@ -2692,19 +2707,65 @@ def drag_int_range2_ex(label: str, v_current_min: IntPtr, v_current_max: IntPtr,
 # ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def drag_scalar(label: str, data_type: int, p_data: IntPtr, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+def drag_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", v_speed: float=1.0, _min: "int | float"=None, _max: "int | float"=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
+    
+    cdef bool res
+    cdef long long min_int
+    cdef long long max_int
+    cdef long long value_int
+    cdef float min_float
+    cdef float max_float
+    cdef float value_float
+    cdef double min_double
+    cdef double max_double
+    cdef double value_double
+    if isinstance(p_data, IntPtr) or isinstance(p_data, LongPtr):
+        min_int = _min if _min is not None else 0
+        max_int = _max if _max is not None else 0
+        value_int = p_data.value
+        res = ccimgui.ImGui_DragScalarEx(
+            _bytes(label),
+            data_type,
+            &value_int,
+            v_speed,
+            &min_int if _min is not None else NULL,
+            &max_int if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_int
+    elif isinstance(p_data, FloatPtr):
+        min_float = <float>(_min if _min is not None else 0)
+        max_float = <float>(_max if _max is not None else 0)
+        value_float = p_data.value
+        res = ccimgui.ImGui_DragScalarEx(
+            _bytes(label),
+            data_type,
+            &value_float,
+            v_speed,
+            &min_float if _min is not None else NULL,
+            &max_float if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_float
+    else:
+        min_double = <double>(_min if _min is not None else 0)
+        max_double = <double>(_max if _max is not None else 0)
+        value_double = p_data.value
+        res = ccimgui.ImGui_DragScalarEx(
+            _bytes(label),
+            data_type,
+            &value_double,
+            v_speed,
+            &min_double if _min is not None else NULL,
+            &max_double if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_double
 
-    cdef bool res = ccimgui.ImGui_DragScalarEx(
-        _bytes(label),
-        data_type,
-        &p_data.value,
-        v_speed,
-        NULL,
-        NULL,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
     return res
 # [End Function]
 
@@ -2730,27 +2791,139 @@ def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, 
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def drag_scalar_n(label: str, data_type: int, p_data: Any, components: int):
+def drag_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, v_speed: float=1.0, p_min: "int | float"=None, p_max: "int | float"=None, format_: str=None, flags: int=0):
     """
     Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
     """
-    cdef bool res = ccimgui.ImGui_DragScalarN(
-        _bytes(label),
-        data_type,
-        p_data,
-        components
-    )
+    IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
+    
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+    cdef long long long_long_size
+
+    cdef int* c_ints
+    cdef long long* c_longs
+    cdef float* c_floats
+    cdef double* c_doubles
+
+    cdef int int_p_min
+    cdef int int_p_max
+    cdef long long long_p_min
+    cdef long long long_p_max
+    cdef float float_p_min
+    cdef float float_p_max
+    cdef double double_p_min
+    cdef double double_p_max
+
+    cdef bool res
+
+    first = p_data[0]
+    if isinstance(first, IntPtr):
+        c_ints = <int*>ccimgui.ImGui_MemAlloc(sizeof(int) * len(p_data))
+        int_p_min = p_min if p_min is not None else 0
+        int_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_ints[i] = p_data[i].value
+
+        res = ccimgui.ImGui_DragScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_ints,
+            components,
+            v_speed,
+            <void*>(&int_p_min if p_min is not None else NULL),
+            <void*>(&int_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_ints[i]
+
+        ccimgui.ImGui_MemFree(c_ints)
+    elif isinstance(first, LongPtr):
+        c_longs = <long long*>ccimgui.ImGui_MemAlloc(sizeof(long_long_size) * len(p_data))
+        long_p_min = p_min if p_min is not None else 0
+        long_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_longs[i] = p_data[i].value
+
+        res = ccimgui.ImGui_DragScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_longs,
+            components,
+            v_speed,
+            <void*>(&long_p_min if p_min is not None else NULL),
+            <void*>(&long_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_longs[i]
+
+        ccimgui.ImGui_MemFree(c_longs)
+    elif isinstance(first, FloatPtr):
+        c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(p_data))
+        float_p_min = p_min if p_min is not None else 0
+        float_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_floats[i] = p_data[i].value
+
+        res = ccimgui.ImGui_DragScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_floats,
+            components,
+            v_speed,
+            <void*>(&float_p_min if p_min is not None else NULL),
+            <void*>(&float_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_floats[i]
+
+        ccimgui.ImGui_MemFree(c_floats)
+    else:
+        c_doubles = <double*>ccimgui.ImGui_MemAlloc(sizeof(double) * len(p_data))
+        double_p_min = p_min if p_min is not None else 0
+        double_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_doubles[i] = p_data[i].value
+
+        res = ccimgui.ImGui_DragScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_doubles,
+            components,
+            v_speed,
+            <void*>(&double_p_min if p_min is not None else NULL),
+            <void*>(&double_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_doubles[i]
+
+        ccimgui.ImGui_MemFree(c_doubles)
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -4692,26 +4865,73 @@ def input_int_ex(label: str, v: IntPtr, step: int=1, step_fast: int=100, flags: 
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def input_scalar(label: str, data_type: int, p_data: Any):
-    """
-    Implied p_step = null, p_step_fast = null, format = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputScalar(
-        _bytes(label),
-        data_type,
-        p_data
-    )
+def input_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", step: "int | float"=None, step_fast: "int | float"=None, format_: str=None, flags: int=0):
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+
+    cdef bool res
+    cdef long long step_int
+    cdef long long step_fast_int
+    cdef long long data_int
+    cdef float step_float
+    cdef float step_fast_float
+    cdef float data_float
+    cdef double step_double
+    cdef double step_fast_double
+    cdef double data_double
+    if isinstance(p_data, IntPtr) or isinstance(p_data, LongPtr):
+        step_int = step if step is not None else 0
+        step_fast_int = step_fast if step_fast is not None else 0
+        data_int = p_data.value
+        res = ccimgui.ImGui_InputScalarEx(
+            _bytes(label),
+            data_type,
+            &data_int,
+            <void*>(&step_int if step is not None else NULL),
+            <void*>(&step_fast_int if step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = data_int
+    elif isinstance(p_data, FloatPtr):
+        step_float = step if step is not None else 0
+        step_fast_float = step_fast if step_fast is not None else 0
+        data_float = p_data.value
+        res = ccimgui.ImGui_InputScalarEx(
+            _bytes(label),
+            data_type,
+            &data_float,
+            <void*>(&step_float if step is not None else NULL),
+            <void*>(&step_fast_float if step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = data_float
+    else:
+        step_double = step if step is not None else 0
+        step_fast_double = step_fast if step_fast is not None else 0
+        data_double = p_data.value
+        res = ccimgui.ImGui_InputScalarEx(
+            _bytes(label),
+            data_type,
+            &data_double,
+            <void*>(&step_double if step is not None else NULL),
+            <void*>(&step_fast_double if step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = data_double
+
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -4729,27 +4949,133 @@ def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def input_scalar_n(label: str, data_type: int, p_data: Any, components: int):
-    """
-    Implied p_step = null, p_step_fast = null, format = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_InputScalarN(
-        _bytes(label),
-        data_type,
-        p_data,
-        components
-    )
+
+def input_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, p_step: "int | float"=None, p_step_fast: "int | float"=None, format_: str=None, flags: int=0):
+    IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
+    
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+    cdef long long long_long_size
+
+    cdef int* c_ints
+    cdef long long* c_longs
+    cdef float* c_floats
+    cdef double* c_doubles
+
+    cdef int int_p_step
+    cdef int int_p_step_fast
+    cdef long long long_p_step
+    cdef long long long_p_step_fast
+    cdef float float_p_step
+    cdef float float_p_step_fast
+    cdef double double_p_step
+    cdef double double_p_step_fast
+
+    cdef bool res
+
+    first = p_data[0]
+    if isinstance(first, IntPtr):
+        c_ints = <int*>ccimgui.ImGui_MemAlloc(sizeof(int) * len(p_data))
+        int_p_step = p_step if p_step is not None else 0
+        int_p_step_fast = p_step_fast if p_step is not None else 0
+
+        for i in range(len(p_data)):
+            c_ints[i] = p_data[i].value
+
+        res = ccimgui.ImGui_InputScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_ints,
+            components,
+            <void*>(&int_p_step if p_step is not None else NULL),
+            <void*>(&int_p_step_fast if p_step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_ints[i]
+
+        ccimgui.ImGui_MemFree(c_ints)
+    elif isinstance(first, LongPtr):
+        c_longs = <long long*>ccimgui.ImGui_MemAlloc(sizeof(long_long_size) * len(p_data))
+        long_p_step = p_step if p_step is not None else 0
+        long_p_step_fast = p_step_fast if p_step is not None else 0
+
+        for i in range(len(p_data)):
+            c_longs[i] = p_data[i].value
+
+        res = ccimgui.ImGui_InputScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_longs,
+            components,
+            <void*>(&long_p_step if p_step is not None else NULL),
+            <void*>(&long_p_step_fast if p_step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_longs[i]
+
+        ccimgui.ImGui_MemFree(c_longs)
+    elif isinstance(first, FloatPtr):
+        c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(p_data))
+        float_p_step = p_step if p_step is not None else 0
+        float_p_step_fast = p_step_fast if p_step is not None else 0
+
+        for i in range(len(p_data)):
+            c_floats[i] = p_data[i].value
+
+        res = ccimgui.ImGui_InputScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_floats,
+            components,
+            <void*>(&float_p_step if p_step is not None else NULL),
+            <void*>(&float_p_step_fast if p_step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_floats[i]
+
+        ccimgui.ImGui_MemFree(c_floats)
+    else:
+        c_doubles = <double*>ccimgui.ImGui_MemAlloc(sizeof(double) * len(p_data))
+        double_p_step = p_step if p_step is not None else 0
+        double_p_step_fast = p_step_fast if p_step is not None else 0
+
+        for i in range(len(p_data)):
+            c_doubles[i] = p_data[i].value
+
+        res = ccimgui.ImGui_InputScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_doubles,
+            components,
+            <void*>(&double_p_step if p_step is not None else NULL),
+            <void*>(&double_p_step_fast if p_step_fast is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_doubles[i]
+
+        ccimgui.ImGui_MemFree(c_doubles)
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -4773,7 +5099,7 @@ def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, 
 # ?invisible(False)
 # ?returns(bool)
 _input_text_user_data = {}
-def input_text(label: str, buf: StrPtr, flags: int=0, callback: Callable[[ImGuiInputTextCallbackData, Any], int]=None, user_data: Any=None):
+def input_text(label: str, buf: StrPtr, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None):
     """
     Widgets: Input with Keyboard
     - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
@@ -4839,26 +5165,41 @@ def input_text_ex(label: str, buf: str, buf_size: int, flags: int=0, callback: C
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_multiline(label: str, buf: str, buf_size: int):
-    """
-    Implied size = imvec2(0, 0), flags = 0, callback = null, user_data = null
-    """
-    cdef bool res = ccimgui.ImGui_InputTextMultiline(
-        _bytes(label),
-        _bytes(buf),
-        buf_size
-    )
+def input_text_multiline(label: str, buf: StrPtr, size: tuple=(0, 0), flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None):
+    cdef ccimgui.ImGuiID widget_id = ccimgui.ImGui_GetID(_bytes(label))
+    cdef bool res
+    if callback is not None:
+        _input_text_user_data[widget_id] = (callback, user_data)
+        res = ccimgui.ImGui_InputTextMultilineEx(
+            _bytes(label),
+            buf.buffer,
+            buf.buffer_size,
+            _cast_tuple_ImVec2(size),
+            flags,
+            <ccimgui.ImGuiInputTextCallback>_input_text_callback,
+            <void*><uintptr_t>widget_id
+        )
+    else:
+        res = ccimgui.ImGui_InputTextMultilineEx(
+            _bytes(label),
+            buf.buffer,
+            buf.buffer_size,
+            _cast_tuple_ImVec2(size),
+            flags,
+            NULL,
+            NULL
+        )
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: tuple=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
     cdef bool res = ccimgui.ImGui_InputTextMultilineEx(
@@ -7915,28 +8256,73 @@ def slider_int_ex(label: str, v: IntPtr, v_min: int, v_max: int, format_: str="%
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def slider_scalar(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any):
-    """
-    Implied format = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderScalar(
-        _bytes(label),
-        data_type,
-        p_data,
-        p_min,
-        p_max
-    )
+def slider_scalar(label: str, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0):
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+
+    cdef bool res
+    cdef long long min_int
+    cdef long long max_int
+    cdef long long value_int
+    cdef float min_float
+    cdef float max_float
+    cdef float value_float
+    cdef double min_double
+    cdef double max_double
+    cdef double value_double
+    if isinstance(p_data, IntPtr) or isinstance(p_data, LongPtr):
+        min_int = _min if _min is not None else 0
+        max_int = _max if _max is not None else 0
+        value_int = p_data.value
+        res = ccimgui.ImGui_SliderScalarEx(
+            _bytes(label),
+            data_type,
+            &value_int,
+            &min_int,
+            &max_int,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_int
+    elif isinstance(p_data, FloatPtr):
+        min_float = <float>(_min if _min is not None else 0)
+        max_float = <float>(_max if _max is not None else 0)
+        value_float = p_data.value
+        res = ccimgui.ImGui_SliderScalarEx(
+            _bytes(label),
+            data_type,
+            &value_float,
+            &min_float,
+            &max_float,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_float
+    else:
+        min_double = <double>(_min if _min is not None else 0)
+        max_double = <double>(_max if _max is not None else 0)
+        value_double = p_data.value
+        res = ccimgui.ImGui_SliderScalarEx(
+            _bytes(label),
+            data_type,
+            &value_double,
+            &min_double,
+            &max_double,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_double
+
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -7954,29 +8340,132 @@ def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max:
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def slider_scalar_n(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any):
-    """
-    Implied format = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_SliderScalarN(
-        _bytes(label),
-        data_type,
-        p_data,
-        components,
-        p_min,
-        p_max
-    )
+def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[IntPtr | LongPtr | FloatPtr | DoublePtr]", components: int, p_min: "int | float", p_max: "int | float", format_: str=None, flags: int=0):
+    IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
+    
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+    cdef long long long_long_size
+
+    cdef int* c_ints
+    cdef long long* c_longs
+    cdef float* c_floats
+    cdef double* c_doubles
+
+    cdef int int_p_min
+    cdef int int_p_max
+    cdef long long long_p_min
+    cdef long long long_p_max
+    cdef float float_p_min
+    cdef float float_p_max
+    cdef double double_p_min
+    cdef double double_p_max
+
+    cdef bool res
+
+    first = p_data[0]
+    if isinstance(first, IntPtr):
+        c_ints = <int*>ccimgui.ImGui_MemAlloc(sizeof(int) * len(p_data))
+        int_p_min = p_min if p_min is not None else 0
+        int_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_ints[i] = p_data[i].value
+
+        res = ccimgui.ImGui_SliderScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_ints,
+            components,
+            <void*>(&int_p_min if p_min is not None else NULL),
+            <void*>(&int_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_ints[i]
+
+        ccimgui.ImGui_MemFree(c_ints)
+    elif isinstance(first, LongPtr):
+        c_longs = <long long*>ccimgui.ImGui_MemAlloc(sizeof(long_long_size) * len(p_data))
+        long_p_min = p_min if p_min is not None else 0
+        long_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_longs[i] = p_data[i].value
+
+        res = ccimgui.ImGui_SliderScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_longs,
+            components,
+            <void*>(&long_p_min if p_min is not None else NULL),
+            <void*>(&long_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_longs[i]
+
+        ccimgui.ImGui_MemFree(c_longs)
+    elif isinstance(first, FloatPtr):
+        c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(p_data))
+        float_p_min = p_min if p_min is not None else 0
+        float_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_floats[i] = p_data[i].value
+
+        res = ccimgui.ImGui_SliderScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_floats,
+            components,
+            <void*>(&float_p_min if p_min is not None else NULL),
+            <void*>(&float_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_floats[i]
+
+        ccimgui.ImGui_MemFree(c_floats)
+    else:
+        c_doubles = <double*>ccimgui.ImGui_MemAlloc(sizeof(double) * len(p_data))
+        double_p_min = p_min if p_min is not None else 0
+        double_p_max = p_max if p_min is not None else 0
+
+        for i in range(len(p_data)):
+            c_doubles[i] = p_data[i].value
+
+        res = ccimgui.ImGui_SliderScalarNEx(
+            _bytes(label),
+            data_type,
+            <void*>c_doubles,
+            components,
+            <void*>(&double_p_min if p_min is not None else NULL),
+            <void*>(&double_p_max if p_max is not None else NULL),
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+
+        for i in range(len(p_data)):
+            p_data[i].value = c_doubles[i]
+
+        ccimgui.ImGui_MemFree(c_doubles)
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
