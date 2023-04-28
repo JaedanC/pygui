@@ -6,7 +6,7 @@ import ctypes
 import cython
 import array
 from cython.operator import dereference
-from typing import Callable, Any, Sequence
+from typing import Callable, Any, Sequence, Tuple
 
 cimport ccimgui
 
@@ -155,22 +155,28 @@ cdef class Vec2Ptr:
     def y(self, y):
         self._y.value = y
 
-    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-        assert len(float_ptrs) >= 2
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
+        IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
         self._x = float_ptrs[0]
         self._y = float_ptrs[1]
+        return self
 
-    def as_floatptrs(self) -> Sequence[FloatPtr]:
-        return [
+    def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
+        return (
             self._x,
             self._y,
-        ]
+        )
 
-    def vec(self) -> Sequence[float]:
+    def vec(self) -> Sequence[float, float]:
         return (
             self.x,
             self.y,
         )
+
+    def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr:
+        self.x = vec[0]
+        self.y = vec[1]
+        return self
 
     def copy(self) -> Vec2Ptr:
         return Vec2Ptr(*self.vec())
@@ -221,28 +227,36 @@ cdef class Vec4Ptr:
     def w(self, w):
         self._w.value = w
 
-    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-        assert len(float_ptrs) >= 4
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
+        IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
         self._x = float_ptrs[0]
         self._y = float_ptrs[1]
         self._z = float_ptrs[2]
         self._w = float_ptrs[3]
+        return self
 
-    def as_floatptrs(self) -> Sequence[FloatPtr]:
-        return [
+    def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
+        return (
             self._x,
             self._y,
             self._z,
             self._w,
-        ]
+        )
 
-    def vec(self) -> Sequence[float]:
+    def vec(self) -> Sequence[float, float, float, float]:
         return (
             self.x,
             self.y,
             self.z,
             self.w,
         )
+
+    def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr:
+        self.x = vec[0]
+        self.y = vec[1]
+        self.z = vec[2]
+        self.w = vec[3]
+        return self
 
     def to_u32(self) -> int:
         return IM_COL32(
@@ -2175,37 +2189,40 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def dock_space(id_: int):
-#     """
-#     Docking
-#     [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
-#     Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
-#     - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking/undocking.
-#     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-#     - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to _enable_ docking/undocking.
-#     About dockspaces:
-#     - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
-#     - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
-#     This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
-#     - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
-#     - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
-#     e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
-#     Implied size = imvec2(0, 0), flags = 0, window_class = null
-#     """
-#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpace(
-#         id_
-#     )
-#     return res
+def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
+    """
+    Docking
+    [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
+    Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
+    - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking/undocking.
+    - Drag from window menu button (upper-left button) to undock an entire node (all windows).
+    - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to _enable_ docking/undocking.
+    About dockspaces:
+    - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
+    - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
+    This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
+    - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
+    - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
+    e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
+    Implied size = imvec2(0, 0), flags = 0, window_class = null
+    """
+    cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
+        id_,
+        _cast_tuple_ImVec2(size),
+        flags,
+        <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(int)
 # def dock_space_ex(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
 #     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
@@ -2218,22 +2235,23 @@ def destroy_context(ctx: ImGuiContext=None):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def dock_space_over_viewport():
-#     """
-#     Implied viewport = null, flags = 0, window_class = null
-#     """
-#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewport()
-#     return res
+def dock_space_over_viewport(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
+    cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
+        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr),
+        flags,
+        <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(int)
 # def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
 #     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
@@ -3208,25 +3226,32 @@ def end_tooltip():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(ImDrawList)
-def get_background_draw_list():
+def get_background_draw_list(viewport: ImGuiViewport=None):
     """
     Background/Foreground Draw Lists
-    Get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    If viewport is None, get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    Otherwise, get background draw list for the given viewport.
     """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawList()
+    cdef ccimgui.ImDrawList* res
+    if viewport is None:
+        res = ccimgui.ImGui_GetBackgroundDrawList()
+    else:
+        res = ccimgui.ImGui_GetBackgroundDrawListImGuiViewportPtr(
+            viewport._ptr
+        )
     return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(ImDrawList)
-# def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
+# def get_background_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
 #     """
 #     Get background draw list for the given viewport. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
 #     """
@@ -3238,16 +3263,16 @@ def get_background_draw_list():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(str)
-# def get_clipboard_text():
-#     """
-#     Clipboard Utilities
-#     - Also see the LogToClipboard() function to capture GUI into clipboard, or easily output text data to the clipboard.
-#     """
-#     cdef const char* res = ccimgui.ImGui_GetClipboardText()
-#     return _from_bytes(res)
+def get_clipboard_text():
+    """
+    Clipboard Utilities
+    - Also see the LogToClipboard() function to capture GUI into clipboard, or easily output text data to the clipboard.
+    """
+    cdef const char* res = ccimgui.ImGui_GetClipboardText()
+    return _from_bytes(res)
 # [End Function]
 
 # [Function]
@@ -3301,17 +3326,17 @@ def get_color_u32_im_u32(col: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def get_color_u32_im_vec4(col: tuple):
-#     """
-#     Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
-#     """
-#     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImVec4(
-#         _cast_tuple_ImVec4(col)
-#     )
-#     return res
+def get_color_u32_im_vec4(col: tuple):
+    """
+    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    """
+    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImVec4(
+        _cast_tuple_ImVec4(col)
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -3385,15 +3410,15 @@ def get_content_region_avail():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
-# def get_content_region_max():
-#     """
-#     Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionMax()
-#     return _cast_ImVec2_tuple(res)
+def get_content_region_max():
+    """
+    Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionMax()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -3421,28 +3446,28 @@ def get_cursor_pos():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(float)
-# def get_cursor_pos_x():
-#     """
-#     (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc.
-#     """
-#     cdef float res = ccimgui.ImGui_GetCursorPosX()
-#     return res
+def get_cursor_pos_x():
+    """
+    (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc.
+    """
+    cdef float res = ccimgui.ImGui_GetCursorPosX()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(float)
-# def get_cursor_pos_y():
-#     """
-#     Other functions such as getcursorscreenpos or everything in imdrawlist::
-#     """
-#     cdef float res = ccimgui.ImGui_GetCursorPosY()
-#     return res
+def get_cursor_pos_y():
+    """
+    Other functions such as getcursorscreenpos or everything in imdrawlist::
+    """
+    cdef float res = ccimgui.ImGui_GetCursorPosY()
+    return res
 # [End Function]
 
 # [Function]
@@ -3558,24 +3583,31 @@ def get_font_size():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(ImDrawList)
-def get_foreground_draw_list():
+def get_foreground_draw_list(viewport: ImGuiViewport=None):
     """
-    Get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
+    If viewport is None, get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
+    Otherwise, get foreground draw list for the given viewport.
     """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawList()
+    cdef ccimgui.ImDrawList* res
+    if viewport is None:
+        res = ccimgui.ImGui_GetForegroundDrawList()
+    else:
+        res = ccimgui.ImGui_GetForegroundDrawListImGuiViewportPtr(
+            viewport._ptr
+        )
     return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(ImDrawList)
-# def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
+# def get_foreground_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
 #     """
 #     Get foreground draw list for the given viewport. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
 #     """
@@ -3587,15 +3619,15 @@ def get_foreground_draw_list():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def get_frame_count():
-#     """
-#     Get global imgui frame count. incremented by 1 every frame.
-#     """
-#     cdef int res = ccimgui.ImGui_GetFrameCount()
-#     return res
+def get_frame_count():
+    """
+    Get global imgui frame count. incremented by 1 every frame.
+    """
+    cdef int res = ccimgui.ImGui_GetFrameCount()
+    return res
 # [End Function]
 
 # [Function]
@@ -3745,7 +3777,7 @@ def get_item_rect_size():
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(str)
 # def get_key_name(key: int):
 #     """
@@ -3793,30 +3825,30 @@ def get_main_viewport():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def get_mouse_clicked_count(button: int):
-#     """
-#     Return the number of successive mouse-clicks at the time where a click happen (otherwise 0).
-#     """
-#     cdef int res = ccimgui.ImGui_GetMouseClickedCount(
-#         button
-#     )
-#     return res
+def get_mouse_clicked_count(button: int):
+    """
+    Return the number of successive mouse-clicks at the time where a click happen (otherwise 0).
+    """
+    cdef int res = ccimgui.ImGui_GetMouseClickedCount(
+        button
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def get_mouse_cursor():
-#     """
-#     Get desired mouse cursor shape. important: reset in imgui::newframe(), this is updated during the frame. valid before render(). if you use software rendering by setting io.mousedrawcursor imgui will render those for you
-#     """
-#     cdef ccimgui.ImGuiMouseCursor res = ccimgui.ImGui_GetMouseCursor()
-#     return res
+def get_mouse_cursor():
+    """
+    Get desired mouse cursor shape. important: reset in imgui::newframe(), this is updated during the frame. valid before render(). if you use software rendering by setting io.mousedrawcursor imgui will render those for you
+    """
+    cdef ccimgui.ImGuiMouseCursor res = ccimgui.ImGui_GetMouseCursor()
+    return res
 # [End Function]
 
 # [Function]
@@ -3837,28 +3869,28 @@ def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
-# def get_mouse_pos():
-#     """
-#     Shortcut to imgui::getio().mousepos provided by user, to be consistent with other calls
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetMousePos()
-#     return _cast_ImVec2_tuple(res)
+def get_mouse_pos():
+    """
+    Shortcut to imgui::getio().mousepos provided by user, to be consistent with other calls
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetMousePos()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
-# def get_mouse_pos_on_opening_current_popup():
-#     """
-#     Retrieve mouse position at the time of opening popup we have beginpopup() into (helper to avoid user backing that value themselves)
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetMousePosOnOpeningCurrentPopup()
-#     return _cast_ImVec2_tuple(res)
+def get_mouse_pos_on_opening_current_popup():
+    """
+    Retrieve mouse position at the time of opening popup we have beginpopup() into (helper to avoid user backing that value themselves)
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetMousePosOnOpeningCurrentPopup()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -4052,51 +4084,51 @@ def get_version():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
-# def get_window_content_region_max():
-#     """
-#     Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMax()
-#     return _cast_ImVec2_tuple(res)
+def get_window_content_region_max():
+    """
+    Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMax()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
-# def get_window_content_region_min():
-#     """
-#     Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates
-#     """
-#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMin()
-#     return _cast_ImVec2_tuple(res)
+def get_window_content_region_min():
+    """
+    Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMin()
+    return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
-# def get_window_dock_id():
-#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetWindowDockID()
-#     return res
+def get_window_dock_id():
+    cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetWindowDockID()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(float)
-# def get_window_dpi_scale():
-#     """
-#     Get dpi scale currently associated to the current window's viewport.
-#     """
-#     cdef float res = ccimgui.ImGui_GetWindowDpiScale()
-#     return res
+def get_window_dpi_scale():
+    """
+    Get dpi scale currently associated to the current window's viewport.
+    """
+    cdef float res = ccimgui.ImGui_GetWindowDpiScale()
+    return res
 # [End Function]
 
 # [Function]
@@ -4114,15 +4146,15 @@ def get_window_draw_list():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(float)
-# def get_window_height():
-#     """
-#     Get current window height (shortcut for getwindowsize().y)
-#     """
-#     cdef float res = ccimgui.ImGui_GetWindowHeight()
-#     return res
+def get_window_height():
+    """
+    Get current window height (shortcut for getwindowsize().y)
+    """
+    cdef float res = ccimgui.ImGui_GetWindowHeight()
+    return res
 # [End Function]
 
 # [Function]
@@ -4153,28 +4185,28 @@ def get_window_size():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(ImGuiViewport)
-# def get_window_viewport():
-#     """
-#     Get viewport currently associated to the current window.
-#     """
-#     cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_GetWindowViewport()
-#     return ImGuiViewport.from_ptr(res)
+def get_window_viewport():
+    """
+    Get viewport currently associated to the current window.
+    """
+    cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_GetWindowViewport()
+    return ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(float)
-# def get_window_width():
-#     """
-#     Get current window width (shortcut for getwindowsize().x)
-#     """
-#     cdef float res = ccimgui.ImGui_GetWindowWidth()
-#     return res
+def get_window_width():
+    """
+    Get current window width (shortcut for getwindowsize().x)
+    """
+    cdef float res = ccimgui.ImGui_GetWindowWidth()
+    return res
 # [End Function]
 
 # [Function]
@@ -5139,12 +5171,14 @@ cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
         raise RuntimeError
     
     python_callback, user_data = _input_text_user_data[widget_id]
-    cdef int callback_return_value = python_callback(
+    callback_return_value = python_callback(
         ImGuiInputTextCallbackData.from_ptr(&callback_data),
         user_data
     )
     del _input_text_user_data[widget_id]
-    return callback_return_value
+    if isinstance(callback_return_value, int):
+        return callback_return_value
+    return 0
 # [End Function]
 
 # [Function]
@@ -5272,67 +5306,67 @@ def invisible_button(str_id: str, size: tuple, flags: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_any_item_active():
-#     """
-#     Is any item active?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsAnyItemActive()
-#     return res
+def is_any_item_active():
+    """
+    Is any item active?
+    """
+    cdef bool res = ccimgui.ImGui_IsAnyItemActive()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_any_item_focused():
-#     """
-#     Is any item focused?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsAnyItemFocused()
-#     return res
+def is_any_item_focused():
+    """
+    Is any item focused?
+    """
+    cdef bool res = ccimgui.ImGui_IsAnyItemFocused()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_any_item_hovered():
-#     """
-#     Is any item hovered?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsAnyItemHovered()
-#     return res
+def is_any_item_hovered():
+    """
+    Is any item hovered?
+    """
+    cdef bool res = ccimgui.ImGui_IsAnyItemHovered()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_any_mouse_down():
-#     """
-#     [will obsolete] is any mouse button held? this was designed for backends, but prefer having backend maintain a mask of held mouse buttons, because upcoming input queue system will make this invalid.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsAnyMouseDown()
-#     return res
+def is_any_mouse_down():
+    """
+    [will obsolete] is any mouse button held? this was designed for backends, but prefer having backend maintain a mask of held mouse buttons, because upcoming input queue system will make this invalid.
+    """
+    cdef bool res = ccimgui.ImGui_IsAnyMouseDown()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_activated():
-#     """
-#     Was the last item just made active (item was previously inactive).
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemActivated()
-#     return res
+def is_item_activated():
+    """
+    Was the last item just made active (item was previously inactive).
+    """
+    cdef bool res = ccimgui.ImGui_IsItemActivated()
+    return res
 # [End Function]
 
 # [Function]
@@ -5380,54 +5414,54 @@ def is_item_clicked(mouse_button: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_deactivated():
-#     """
-#     Was the last item just made inactive (item was previously active). useful for undo/redo patterns with widgets that require continuous editing.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemDeactivated()
-#     return res
+def is_item_deactivated():
+    """
+    Was the last item just made inactive (item was previously active). useful for undo/redo patterns with widgets that require continuous editing.
+    """
+    cdef bool res = ccimgui.ImGui_IsItemDeactivated()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_deactivated_after_edit():
-#     """
-#     Was the last item just made inactive and made a value change when it was active? (e.g. slider/drag moved). useful for undo/redo patterns with widgets that require continuous editing. note that you may get false positives (some widgets such as combo()/listbox()/selectable() will return true even when clicking an already selected item).
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemDeactivatedAfterEdit()
-#     return res
+def is_item_deactivated_after_edit():
+    """
+    Was the last item just made inactive and made a value change when it was active? (e.g. slider/drag moved). useful for undo/redo patterns with widgets that require continuous editing. note that you may get false positives (some widgets such as combo()/listbox()/selectable() will return true even when clicking an already selected item).
+    """
+    cdef bool res = ccimgui.ImGui_IsItemDeactivatedAfterEdit()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_edited():
-#     """
-#     Did the last item modify its underlying value this frame? or was pressed? this is generally the same as the 'bool' return value of many widgets.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemEdited()
-#     return res
+def is_item_edited():
+    """
+    Did the last item modify its underlying value this frame? or was pressed? this is generally the same as the 'bool' return value of many widgets.
+    """
+    cdef bool res = ccimgui.ImGui_IsItemEdited()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_focused():
-#     """
-#     Is the last item focused for keyboard/gamepad navigation?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemFocused()
-#     return res
+def is_item_focused():
+    """
+    Is the last item focused for keyboard/gamepad navigation?
+    """
+    cdef bool res = ccimgui.ImGui_IsItemFocused()
+    return res
 # [End Function]
 
 # [Function]
@@ -5463,56 +5497,57 @@ def is_item_toggled_open():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_item_visible():
-#     """
-#     Is the last item visible? (items may be out of sight because of clipping/scrolling)
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemVisible()
-#     return res
+def is_item_visible():
+    """
+    Is the last item visible? (items may be out of sight because of clipping/scrolling)
+    """
+    cdef bool res = ccimgui.ImGui_IsItemVisible()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?returns(bool)
+def is_key_down(key: int):
+    """
+    Inputs Utilities: Keyboard/Mouse/Gamepad
+    - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
+    - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
+    - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
+    - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    Is key being held.
+    """
+    cdef bool res = ccimgui.ImGui_IsKeyDown(
+        key
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?invisible(False)
+# ?returns(bool)
+def is_key_pressed(key: int, repeat: bool=True):
+    """
+    Was key pressed (went from !down to down)? if repeat=true, uses io.keyrepeatdelay / keyrepeatrate
+    """
+    cdef bool res = ccimgui.ImGui_IsKeyPressedEx(
+        key,
+        repeat
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
-# ?returns(bool)
-# def is_key_down(key: int):
-#     """
-#     Inputs Utilities: Keyboard/Mouse/Gamepad
-#     - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
-#     - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
-#     - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-#     - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
-#     Is key being held.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsKeyDown(
-#         key
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?returns(bool)
-# def is_key_pressed(key: int):
-#     """
-#     Implied repeat = true
-#     """
-#     cdef bool res = ccimgui.ImGui_IsKeyPressed(
-#         key
-#     )
-#     return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 # def is_key_pressed_ex(key: int, repeat: bool=True):
 #     """
@@ -5527,17 +5562,17 @@ def is_item_toggled_open():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_key_released(key: int):
-#     """
-#     Was key released (went from down to !down)?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsKeyReleased(
-#         key
-#     )
-#     return res
+def is_key_released(key: int):
+    """
+    Was key released (went from down to !down)?
+    """
+    cdef bool res = ccimgui.ImGui_IsKeyReleased(
+        key
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -5623,25 +5658,26 @@ def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_mouse_hovering_rect(r_min: tuple, r_max: tuple):
-#     """
-#     Implied clip = true
-#     """
-#     cdef bool res = ccimgui.ImGui_IsMouseHoveringRect(
-#         _cast_tuple_ImVec2(r_min),
-#         _cast_tuple_ImVec2(r_max)
-#     )
-#     return res
+def is_mouse_hovering_rect(r_min: tuple, r_max: tuple, clip: bool=True):
+    """
+    Is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
+    """
+    cdef bool res = ccimgui.ImGui_IsMouseHoveringRectEx(
+        _cast_tuple_ImVec2(r_min),
+        _cast_tuple_ImVec2(r_max),
+        clip
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 # def is_mouse_hovering_rect_ex(r_min: tuple, r_max: tuple, clip: bool=True):
 #     """
@@ -5656,152 +5692,157 @@ def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_mouse_pos_valid(mouse_pos: ImVec2=None):
-#     """
-#     By convention we use (-flt_max,-flt_max) to denote that there is no mouse available
-#     """
-#     cdef bool res = ccimgui.ImGui_IsMousePosValid(
-#         <ccimgui.ImVec2*>(NULL if mouse_pos is None else mouse_pos._ptr)
-#     )
-#     return res
+def is_mouse_pos_valid(mouse_pos: tuple=None):
+    """
+    By convention we use (-flt_max,-flt_max) to denote that there is no mouse available
+    """
+    cdef ccimgui.ImVec2 vec
+    cdef bool res
+    if mouse_pos is None:
+        res = ccimgui.ImGui_IsMousePosValid(NULL)
+    else:
+        vec = _cast_tuple_ImVec2(mouse_pos)
+        res = ccimgui.ImGui_IsMousePosValid(&vec)
+
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_mouse_released(button: int):
-#     """
-#     Did mouse button released? (went from down to !down)
-#     """
-#     cdef bool res = ccimgui.ImGui_IsMouseReleased(
-#         button
-#     )
-#     return res
+def is_mouse_released(button: int):
+    """
+    Did mouse button released? (went from down to !down)
+    """
+    cdef bool res = ccimgui.ImGui_IsMouseReleased(
+        button
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_popup_open(str_id: str, flags: int=0):
-#     """
-#     Popups: query functions
-#     - IsPopupOpen(): return true if the popup is open at the current BeginPopup() level of the popup stack.
-#     - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId: return true if any popup is open at the current BeginPopup() level of the popup stack.
-#     - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId + ImGuiPopupFlags_AnyPopupLevel: return true if any popup is open.
-#     Return true if the popup is open.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsPopupOpen(
-#         _bytes(str_id),
-#         flags
-#     )
-#     return res
+def is_popup_open(str_id: str, flags: int=0):
+    """
+    Popups: query functions
+    - IsPopupOpen(): return true if the popup is open at the current BeginPopup() level of the popup stack.
+    - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId: return true if any popup is open at the current BeginPopup() level of the popup stack.
+    - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId + ImGuiPopupFlags_AnyPopupLevel: return true if any popup is open.
+    Return true if the popup is open.
+    """
+    cdef bool res = ccimgui.ImGui_IsPopupOpen(
+        _bytes(str_id),
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_rect_visible(rect_min: tuple, rect_max: tuple):
-#     """
-#     Test if rectangle (in screen space) is visible / not clipped. to perform coarse clipping on user's side.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsRectVisible(
-#         _cast_tuple_ImVec2(rect_min),
-#         _cast_tuple_ImVec2(rect_max)
-#     )
-#     return res
+def is_rect_visible(rect_min: tuple, rect_max: tuple):
+    """
+    Test if rectangle (in screen space) is visible / not clipped. to perform coarse clipping on user's side.
+    """
+    cdef bool res = ccimgui.ImGui_IsRectVisible(
+        _cast_tuple_ImVec2(rect_min),
+        _cast_tuple_ImVec2(rect_max)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_rect_visible_by_size(size: tuple):
-#     """
-#     Miscellaneous Utilities
-#     Test if rectangle (of given size, starting from cursor position) is visible / not clipped.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsRectVisibleBySize(
-#         _cast_tuple_ImVec2(size)
-#     )
-#     return res
+def is_rect_visible_by_size(size: tuple):
+    """
+    Miscellaneous Utilities
+    Test if rectangle (of given size, starting from cursor position) is visible / not clipped.
+    """
+    cdef bool res = ccimgui.ImGui_IsRectVisibleBySize(
+        _cast_tuple_ImVec2(size)
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_window_appearing():
-#     """
-#     Windows Utilities
-#     - 'current window' = the window we are appending into while inside a Begin()/End() block. 'next window' = next window we will Begin() into.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsWindowAppearing()
-#     return res
+def is_window_appearing():
+    """
+    Windows Utilities
+    - 'current window' = the window we are appending into while inside a Begin()/End() block. 'next window' = next window we will Begin() into.
+    """
+    cdef bool res = ccimgui.ImGui_IsWindowAppearing()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_window_collapsed():
-#     cdef bool res = ccimgui.ImGui_IsWindowCollapsed()
-#     return res
+def is_window_collapsed():
+    cdef bool res = ccimgui.ImGui_IsWindowCollapsed()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_window_docked():
-#     """
-#     Is current window docked into another window?
-#     """
-#     cdef bool res = ccimgui.ImGui_IsWindowDocked()
-#     return res
+def is_window_docked():
+    """
+    Is current window docked into another window?
+    """
+    cdef bool res = ccimgui.ImGui_IsWindowDocked()
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_window_focused(flags: int=0):
-#     """
-#     Is current window focused? or its root/child, depending on flags. see flags for options.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsWindowFocused(
-#         flags
-#     )
-#     return res
+def is_window_focused(flags: int=0):
+    """
+    Is current window focused? or its root/child, depending on flags. see flags for options.
+    """
+    cdef bool res = ccimgui.ImGui_IsWindowFocused(
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-# def is_window_hovered(flags: int=0):
-#     """
-#     Is current window hovered (and typically: not blocked by a popup/modal)? see flags for options. nb: if you are trying to check whether your mouse should be dispatched to imgui or to your app, you should use the 'io.wantcapturemouse' boolean for that! please read the faq!
-#     """
-#     cdef bool res = ccimgui.ImGui_IsWindowHovered(
-#         flags
-#     )
-#     return res
+def is_window_hovered(flags: int=0):
+    """
+    Is current window hovered (and typically: not blocked by a popup/modal)? see flags for options. nb: if you are trying to check whether your mouse should be dispatched to imgui or to your app, you should use the 'io.wantcapturemouse' boolean for that! please read the faq!
+    """
+    cdef bool res = ccimgui.ImGui_IsWindowHovered(
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -6028,7 +6069,7 @@ def log_to_clipboard(auto_open_depth: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(Any)
 # def mem_alloc(size: int):
 #     cdef void* res = ccimgui.ImGui_MemAlloc(
@@ -6040,7 +6081,7 @@ def log_to_clipboard(auto_open_depth: int=-1):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 # def mem_free(ptr: Any):
 #     ccimgui.ImGui_MemFree(
@@ -19446,20 +19487,21 @@ cdef class ImGuiViewport:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
-    # @property
-    # def pos(self):
-    #     """
-    #     Main area: position of the viewport (dear imgui coordinates are the same as os desktop/native coordinates)
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).Pos
-    #     return _cast_ImVec2_tuple(res)
-    # @pos.setter
-    # def pos(self, value: tuple):
-    #     dereference(self._ptr).Pos = _cast_tuple_ImVec2(value)
+    @property
+    def pos(self):
+        """
+        Main area: position of the viewport (dear imgui coordinates are the same as os desktop/native coordinates)
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).Pos
+        return _cast_ImVec2_tuple(res)
+    @pos.setter
+    def pos(self, value: tuple):
+        # dereference(self._ptr).Pos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19485,20 +19527,21 @@ cdef class ImGuiViewport:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
-    # @property
-    # def size(self):
-    #     """
-    #     Main area: size of the viewport.
-    #     """
-    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).Size
-    #     return _cast_ImVec2_tuple(res)
-    # @size.setter
-    # def size(self, value: tuple):
-    #     dereference(self._ptr).Size = _cast_tuple_ImVec2(value)
+    @property
+    def size(self):
+        """
+        Main area: size of the viewport.
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).Size
+        return _cast_ImVec2_tuple(res)
+    @size.setter
+    def size(self, value: tuple):
+        # dereference(self._ptr).Size = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]

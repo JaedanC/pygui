@@ -6,7 +6,7 @@ import ctypes
 import cython
 import array
 from cython.operator import dereference
-from typing import Callable, Any, Sequence
+from typing import Callable, Any, Sequence, Tuple
 
 cimport ccimgui
 
@@ -155,22 +155,28 @@ cdef class Vec2Ptr:
     def y(self, y):
         self._y.value = y
 
-    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-        assert len(float_ptrs) >= 2
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
+        IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
         self._x = float_ptrs[0]
         self._y = float_ptrs[1]
+        return self
 
-    def as_floatptrs(self) -> Sequence[FloatPtr]:
-        return [
+    def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
+        return (
             self._x,
             self._y,
-        ]
+        )
 
-    def vec(self) -> Sequence[float]:
+    def vec(self) -> Sequence[float, float]:
         return (
             self.x,
             self.y,
         )
+
+    def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr:
+        self.x = vec[0]
+        self.y = vec[1]
+        return self
 
     def copy(self) -> Vec2Ptr:
         return Vec2Ptr(*self.vec())
@@ -221,28 +227,36 @@ cdef class Vec4Ptr:
     def w(self, w):
         self._w.value = w
 
-    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-        assert len(float_ptrs) >= 4
+    def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
+        IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
         self._x = float_ptrs[0]
         self._y = float_ptrs[1]
         self._z = float_ptrs[2]
         self._w = float_ptrs[3]
+        return self
 
-    def as_floatptrs(self) -> Sequence[FloatPtr]:
-        return [
+    def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
+        return (
             self._x,
             self._y,
             self._z,
             self._w,
-        ]
+        )
 
-    def vec(self) -> Sequence[float]:
+    def vec(self) -> Sequence[float, float, float, float]:
         return (
             self.x,
             self.y,
             self.z,
             self.w,
         )
+
+    def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr:
+        self.x = vec[0]
+        self.y = vec[1]
+        self.z = vec[2]
+        self.w = vec[3]
+        return self
 
     def to_u32(self) -> int:
         return IM_COL32(
@@ -2836,7 +2850,7 @@ def get_background_draw_list():
 # ?active(False)
 # ?invisible(False)
 # ?returns(ImDrawList)
-def get_background_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
+def get_background_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
     """
     Get background draw list for the given viewport. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
     """
@@ -3176,7 +3190,7 @@ def get_foreground_draw_list():
 # ?active(False)
 # ?invisible(False)
 # ?returns(ImDrawList)
-def get_foreground_draw_list_im_gui_viewport_ptr(viewport: ImGuiViewport):
+def get_foreground_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
     """
     Get foreground draw list for the given viewport. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
     """

@@ -2389,6 +2389,16 @@ class demo:
     random_drag_float_max = pygui.FloatPtr(0.100)
     random_drag_float = pygui.FloatPtr(0.05)
     random_multiline_buffer = pygui.StrPtr("", 64)
+    random_is_activated = False
+    random_is_deactivated = False
+    random_edit_float = pygui.FloatPtr(5)
+    random_is_deactivated_after_edit = False
+    random_is_edited = False
+    random_checkboxes = [pygui.BoolPtr(False) for _ in range(10)]
+    random_key_press_log = []
+    random_mouse_press_log = []
+    random_show_window = pygui.BoolPtr(False)
+    random_window_log = []
 
 
 def show_app_console(p_open: pygui.BoolPtr):
@@ -2416,15 +2426,15 @@ def show_app_custom_rendering(p_open: pygui.BoolPtr):
             gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
             p0 = pygui.get_cursor_screen_pos()
             p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-            col_a = pygui.get_color_u32_im_u32(pygui.IM_COL32(0, 0, 0, 255))
-            col_b = pygui.get_color_u32_im_u32(pygui.IM_COL32(255, 255, 255, 255))
+            col_a = pygui.IM_COL32(0, 0, 0, 255)
+            col_b = pygui.IM_COL32(255, 255, 255, 255)
             draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
             pygui.invisible_button("##gradient1", gradient_size)
 
             p0 = pygui.get_cursor_screen_pos()
             p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-            col_a = pygui.get_color_u32_im_u32(pygui.IM_COL32(0, 255, 0, 255))
-            col_b = pygui.get_color_u32_im_u32(pygui.IM_COL32(255, 0, 0, 255))
+            col_a = pygui.get_color_u32_im_vec4((0, 1, 0, 1)) # Just to showcase the different colour functions
+            col_b = pygui.get_color_u32_im_vec4((1, 0, 0, 1))
             draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
             pygui.invisible_button("##gradient2", gradient_size)
 
@@ -2707,6 +2717,10 @@ def show_random_extras(p_open: pygui.BoolPtr):
         if pygui.begin_popup_modal("Modal?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
             pygui.text("This opens a modal popup")
             pygui.separator()
+            mouse_pos_on_popup = pygui.get_mouse_pos_on_opening_current_popup()
+            pygui.text("pygui.get_mouse_pos_on_opening_current_popup(): {}".format(
+                mouse_pos_on_popup
+            ))
 
             pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
             pygui.checkbox("This is a checkbox", demo.random_modal_checkbox)
@@ -2719,6 +2733,7 @@ def show_random_extras(p_open: pygui.BoolPtr):
             if pygui.button("Cancel", (120, 0)):
                 pygui.close_current_popup()
             pygui.end_popup()
+        pygui.text("pygui.is_popup_open(): {}".format(pygui.is_popup_open("Modal?")))
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.color_convert_float4_to_u32()"):
@@ -2797,13 +2812,223 @@ def show_random_extras(p_open: pygui.BoolPtr):
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.input_text_multiline()"):
-        def callback_function(callback_data, user_data) -> int:
+        def callback_function(callback_data, user_data):
             print("Hello", user_data)
-            return 0
         pygui.input_text_multiline("My text", demo.random_multiline_buffer, (-pygui.FLT_MIN, 100),
                                    pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
         pygui.tree_pop()
     
+    if pygui.tree_node("pygui.dock_space()"):
+        pygui.text_wrapped(
+            "This will spawn a window that can be docked inside this dockspace."
+            " This is because the dockspace is created *before* creating the"
+            " window."
+        )
+        dockspace_id = pygui.get_id("My Dockspace")
+        pygui.dock_space(dockspace_id, (500, 500))
+        pygui.begin("Dock me in the dockspace")
+        pygui.show_user_guide()
+        pygui.end()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.dock_space_over_viewport()"):
+        dockspace_id = pygui.get_id("My ViewportDockspace")
+        viewport = pygui.get_main_viewport()
+        pygui.dock_space_over_viewport(viewport, pygui.DOCK_NODE_FLAGS_NO_RESIZE)
+        pygui.begin("Dock me in the viewport")
+        pygui.show_user_guide()
+        pygui.end()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.get_clipboard_text()"):
+        clipboard_text = pygui.get_clipboard_text()
+        pygui.text("Current clipboard below")
+        pygui.separator()
+        pygui.text_wrapped(clipboard_text)
+        pygui.separator()
+        pygui.tree_pop()
+    
+    pygui.push_style_var(pygui.STYLE_VAR_INDENT_SPACING, 30)
+    if pygui.tree_node("Info functions"):
+        pygui.text("pygui.get_content_region_max(): {}".format(pygui.get_content_region_max()))
+        pygui.text_colored((1, 0, 0, 1), "pygui.get_cursor_pos_x(): {}".format(pygui.get_cursor_pos_x()))
+        pygui.text_colored((1, 0, 0, 1), "pygui.get_cursor_pos_y(): {}".format(pygui.get_cursor_pos_y()))
+        pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
+        pygui.text("pygui.get_frame_count(): {}".format(pygui.get_frame_count()))
+        pygui.text_colored((1, 0, 0, 1), "pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT)))
+        pygui.text_colored((1, 0, 0, 1), "pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT)))
+        pygui.text("pygui.get_mouse_cursor(): {}".format(pygui.get_mouse_cursor()))
+        pygui.text("pygui.get_window_content_region_max(): {}".format(pygui.get_window_content_region_max()))
+        pygui.text("pygui.get_window_content_region_min(): {}".format(pygui.get_window_content_region_min()))
+        pygui.text("pygui.get_window_dock_id(): {}".format(pygui.get_window_dock_id()))
+        pygui.text("pygui.get_window_dpi_scale(): {}".format(pygui.get_window_dpi_scale()))
+        pygui.text("pygui.get_window_height(): {}".format(pygui.get_window_height()))
+        pygui.text("pygui.get_window_width(): {}".format(pygui.get_window_width()))
+        # This function should be omitted from the cimgui API!
+        # pygui.text("pygui.get_key_index(pygui.KEY_A): {}".format(pygui.get_key_index(pygui.KEY_A)))
+        viewport = pygui.get_window_viewport()
+        pygui.text("pygui.get_window_viewport(): {}".format(viewport))
+        pygui.text("viewport.pos: {}".format(viewport.pos))
+        pygui.text("pygui.is_any_item_active(): {}".format(pygui.is_any_item_active()))
+        pygui.text("pygui.is_any_item_focused(): {}".format(pygui.is_any_item_focused()))
+        pygui.text("pygui.is_any_item_hovered(): {}".format(pygui.is_any_item_hovered()))
+        pygui.text("pygui.is_any_mouse_down(): {}".format(pygui.is_any_mouse_down()))
+        pygui.tree_pop()
+    pygui.pop_style_var()
+    
+    if pygui.tree_node("pygui.is_item_activated()"):
+        pygui.button("is_item_activated")
+        if pygui.is_item_activated() or demo.random_is_activated:
+            demo.random_is_activated = True
+            pygui.same_line()
+            pygui.text("Is Activated!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                demo.random_is_activated = False
+        pygui.button("is_item_deactivated")
+        if pygui.is_item_deactivated() or demo.random_is_deactivated:
+            demo.random_is_deactivated = True
+            pygui.same_line()
+            pygui.text("Is Deactivated!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                demo.random_is_deactivated = False
+        pygui.set_next_item_width(200)
+        pygui.drag_float("is_item_deactivated_after_edit", demo.random_edit_float, 0.01)
+        if pygui.is_item_deactivated_after_edit() or demo.random_is_deactivated_after_edit:
+            demo.random_is_deactivated_after_edit = True
+            pygui.same_line()
+            pygui.text("Is Deactivated after edit!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                demo.random_is_deactivated_after_edit = False
+        
+        pygui.set_next_item_width(200)
+        pygui.drag_float("is_item_edited", demo.random_edit_float, 0.01)
+        if pygui.is_item_edited() or demo.random_is_edited:
+            demo.random_is_edited = True
+            pygui.same_line()
+            pygui.text("Is Edited!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                demo.random_is_edited = False
+        
+        focused = -1
+        for i, bool_ptr in enumerate(demo.random_checkboxes):
+            if i > 0:
+                pygui.same_line()
+            pygui.push_style_color_im_vec4(pygui.COL_CHECK_MARK, pygui.color_convert_hsv_to_rgb(i / 10, 0.6, 0.6))
+            pygui.checkbox(f"##{i}", bool_ptr)
+            pygui.pop_style_color()
+            if pygui.is_item_focused():
+                focused = i
+        pygui.text("is_item_focused: {}".format(focused if focused != -1 else "None"))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_item_visible()"):
+        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6)):
+            pygui.text("Some")
+            pygui.text("Lines")
+            pygui.text("Inside")
+            pygui.text("The")
+            pygui.text("Child")
+            pygui.text("So")
+            pygui.text("That")
+            pygui.text("The")
+            pygui.text("Scroll")
+            pygui.text("Appears")
+            pygui.text_colored((0, 1, 0, 1), "Am I visible?")
+            visible = pygui.is_item_visible()
+            pygui.text("More")
+            pygui.text("Text")
+            rect_visible_from_cursor = pygui.is_rect_visible_by_size((10, 10))
+            cursor_screen_pos = pygui.get_cursor_screen_pos()
+            draw_list = pygui.get_window_draw_list()
+            draw_list.add_rect_filled(
+                cursor_screen_pos,
+                (cursor_screen_pos[0] + 10, cursor_screen_pos[1] + 10),
+                pygui.color_convert_float4_to_u32((0, 1, 0, 1))
+            )
+            pygui.dummy((10, pygui.get_text_line_height()))
+            pygui.text("Rect above for is_rect_visible_by_size")
+            pygui.text("Rect of this be seen?")
+            rect_min = pygui.get_item_rect_min()
+            rect_max = pygui.get_item_rect_max()
+            draw_list.add_rect(rect_min, rect_max, pygui.color_convert_float4_to_u32((0, 1, 0, 1)))
+            rect_visible = pygui.is_rect_visible(pygui.get_item_rect_min(), pygui.get_item_rect_max())
+        pygui.end_child()
+        pygui.text("is_item_visible: {}".format(visible))
+        pygui.text("is_rect_visible_by_size: {}".format(rect_visible_from_cursor))
+        pygui.text("is_rect_visible: {}".format(rect_visible))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_key_pressed(pygui.KEY_A)"):
+        pygui.text("Log for pygui.KEY_A")
+        if pygui.is_key_pressed(pygui.KEY_A):
+            demo.random_key_press_log.append("pygui.is_key_pressed(pygui.KEY_A)")
+        if pygui.is_key_down(pygui.KEY_A):
+            demo.random_key_press_log.append("pygui.is_key_down(pygui.KEY_A)")
+        if pygui.is_key_released(pygui.KEY_A):
+            demo.random_key_press_log.append("pygui.is_key_released(pygui.KEY_A)")
+        if pygui.begin_child("Log for pygui.KEY_A", (400, pygui.get_text_line_height_with_spacing() * 10), True):
+            for event in demo.random_key_press_log:
+                pygui.text(event)
+        pygui.end_child()
+        if pygui.button("Clear ##log"):
+            demo.random_key_press_log.clear()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.is_mouse_hovering_rect()"):
+        pygui.button("My button")
+        rect_min = pygui.get_item_rect_min()
+        rect_max = pygui.get_item_rect_max()
+        pygui.text("pygui.is_mouse_hovering_rect(): {}".format(pygui.is_mouse_hovering_rect(rect_min, rect_max)))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_mouse_pos_valid()"):
+        pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
+        pygui.text("pygui.is_mouse_pos_valid(): {}".format(pygui.is_mouse_pos_valid()))
+        pygui.text("pygui.is_mouse_pos_valid((-100, 100)): {}".format(pygui.is_mouse_pos_valid((-100, 100))))
+        pygui.text("pygui.is_mouse_pos_valid((-MAX, -MAX)): {}".format(pygui.is_mouse_pos_valid((-pygui.FLT_MAX, -pygui.FLT_MAX))))
+        pygui.tree_pop()
+    
+    pygui.push_style_var(pygui.STYLE_VAR_INDENT_SPACING, 30)
+    if pygui.tree_node("pygui.is_mouse_released()"):
+        if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
+            demo.random_mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
+        pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
+        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+            for event in demo.random_mouse_press_log:
+                pygui.text(event)
+        pygui.end_child()
+        if pygui.button("Clear"):
+            demo.random_mouse_press_log.clear()
+        pygui.tree_pop()
+    pygui.pop_style_var()
+    
+    if pygui.tree_node("pygui.is_window_appearing()"):
+        pygui.checkbox("Show window", demo.random_show_window)
+        
+        is_collapsed = "Unknown"
+        if demo.random_show_window:
+            pygui.begin("Window utilities")
+            pygui.text("Hello world")
+            pygui.text("pygui.is_window_docked(): {}".format(pygui.is_window_docked()))
+            pygui.text("pygui.is_window_hovered(): {}".format(pygui.is_window_hovered()))
+            if pygui.is_window_appearing():
+                demo.random_window_log.append("Appearing on frame {}".format(pygui.get_frame_count()))
+            # If __ minimised
+            is_collapsed = pygui.is_window_collapsed()
+            pygui.end()
+        
+        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+            for event in demo.random_window_log:
+                pygui.text(event)
+        pygui.end_child()
+        pygui.text("pygui.is_window_collapsed(): {}".format(is_collapsed))
+        if pygui.button("Clear ##log"):
+            demo.random_window_log.clear()
+        pygui.tree_pop()
     pygui.end()
 
 

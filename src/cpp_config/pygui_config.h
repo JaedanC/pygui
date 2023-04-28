@@ -7,6 +7,14 @@
 #define CIMGUI_API extern "C" __declspec(dllexport)
 #define IMGUI_API             __declspec(dllexport)
 
+// TODO: Additional settings. The cimgui.json file won't see this change, so see
+// if we find a way to change this value.
+// #define ImDrawIdx      unsigned int
+#define IMGUI_DISABLE_OBSOLETE_KEYIO
+#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+// This shouldn't be required if you look at cimgui.h
+// #define IMGUI_HAS_IMSTR false
+
 extern "C" {
     #ifdef _DEBUG
     #undef _DEBUG
@@ -70,11 +78,4 @@ CIMGUI_API PyObject* get_imgui_error();
 #define CIMGUI_API      __declspec(dllimport)
 #define IMGUI_IMPL_API  __declspec(dllimport)
 
-// TODO: Additional settings. The cimgui.json file won't see this change, so see
-// if we find a way to change this value.
-// #define ImDrawIdx      unsigned int
-#define IMGUI_DISABLE_OBSOLETE_KEYIO
-#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-// This shouldn't be required if you look at cimgui.h
-// #define IMGUI_HAS_IMSTR false
 #endif // PYGUI_COMPILING_APP

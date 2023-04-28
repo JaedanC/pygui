@@ -577,12 +577,13 @@ def pythonise_string(string: str, make_upper=False) -> str:
         ["TTY"],
         ["UTF"],
         ["OSX"],
+        ["ImGui"],
     ]
 
     for exception_group in exceptions_to_the_rule:
         for exception in exception_group:
             if exception in string:
-                string = string.replace(exception, "_" + exception + "_")
+                string = string.replace(exception, "_" + exception.lower() + "_")
                 break
     
     # Replace last occurance of Ex with _Ex_
@@ -1075,7 +1076,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     import cython
     import array
     from cython.operator import dereference
-    from typing import Callable, Any, Sequence
+    from typing import Callable, Any, Sequence, Tuple
 
     cimport {pxd_library_name}
     
@@ -1224,22 +1225,28 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         def y(self, y):
             self._y.value = y
 
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-            assert len(float_ptrs) >= 2
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
+            IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
             self._x = float_ptrs[0]
             self._y = float_ptrs[1]
+            return self
 
-        def as_floatptrs(self) -> Sequence[FloatPtr]:
-            return [
+        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
+            return (
                 self._x,
                 self._y,
-            ]
-
-        def vec(self) -> Sequence[float]:
+            )
+        
+        def vec(self) -> Sequence[float, float]:
             return (
                 self.x,
                 self.y,
             )
+
+        def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr:
+            self.x = vec[0]
+            self.y = vec[1]
+            return self
 
         def copy(self) -> Vec2Ptr:
             return Vec2Ptr(*self.vec())
@@ -1290,28 +1297,36 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         def w(self, w):
             self._w.value = w
 
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]):
-            assert len(float_ptrs) >= 4
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
+            IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
             self._x = float_ptrs[0]
             self._y = float_ptrs[1]
             self._z = float_ptrs[2]
             self._w = float_ptrs[3]
+            return self
 
-        def as_floatptrs(self) -> Sequence[FloatPtr]:
-            return [
+        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
+            return (
                 self._x,
                 self._y,
                 self._z,
                 self._w,
-            ]
+            )
 
-        def vec(self) -> Sequence[float]:
+        def vec(self) -> Sequence[float, float, float, float]:
             return (
                 self.x,
                 self.y,
                 self.z,
                 self.w,
             )
+        
+        def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr:
+            self.x = vec[0]
+            self.y = vec[1]
+            self.z = vec[2]
+            self.w = vec[3]
+            return self
         
         def to_u32(self) -> int:
             return IM_COL32(
@@ -1600,28 +1615,28 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
         buffer_size: int
         def __init__(self, initial_value: str, buffer_size=256): ...
 
+    class Vec2Ptr:
+        x: float
+        y: float
+        def __init__(self, x: float, y: float): ...
+        def vec(self) -> Sequence[float, float]: ...
+        def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr: ...
+        def copy(self) -> Vec2Ptr: ...
+
     class Vec4Ptr:
         x: float
         y: float
         z: float
         w: float
         def __init__(self, x: float, y: float, z: float, w: float): ...
-        def vec(self) -> Tuple[float, float, float, float]: ...
+        def vec(self) -> Sequence[float, float, float, float]: ...
+        def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr: ...
         def to_u32(self) -> int: ...
-        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
-        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
+        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr: ...
         def copy(self) -> Vec4Ptr: ...
-
-    class Vec2Ptr:
-        x: float
-        y: float
-        def __init__(self, x: float, y: float): ...
-        def vec(self) -> Tuple[float, float]: ...
-        def as_floatptrs(self) -> Sequence[FloatPtr]: ...
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr]): ...
-        def to_floatptrs(self) -> Sequence[FloatPtr]: ...
-        def copy(self) -> Vec2Ptr: ...
 
     def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 
