@@ -64,6 +64,7 @@ def main():
         shutil.rmtree("../portable")
 
     os.makedirs("../portable/pygui")
+    os.makedirs("../portable/pygui/img")
 
     to_copy = \
         glob.glob(r"pygui/*.dll") + \
@@ -77,6 +78,9 @@ def main():
         shutil.copy(file_to_copy, "../portable/pygui")
         print(f"Created ../portable/{file_to_copy}")
     
+    shutil.copy("pygui/img/code.png", "../portable/pygui/img")
+    print(f"Created ../portable/pygui/img/code.png")
+
     shutil.copy("requirements.txt", "../portable")
     print(f"Created ../portable/requirements.txt")
     shutil.copy("python_demo_window.py", "../portable")
