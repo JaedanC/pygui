@@ -3215,7 +3215,7 @@ def find_viewport_by_platform_handle(platform_handle: Any):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_user_data: Any):
     ccimgui.ImGui_GetAllocatorFunctions(
@@ -3531,7 +3531,7 @@ def get_draw_data():
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(ImDrawListSharedData)
 def get_draw_list_shared_data():
     """
@@ -3542,8 +3542,8 @@ def get_draw_list_shared_data():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(ImFont)
 def get_font():
@@ -3552,7 +3552,7 @@ def get_font():
     - Use the ShowStyleEditor() function to interactively see/edit the colors.
     Get current font
     """
-    cdef ccimgui.ImFont* res = ccimgui.ImGui_GetFont()
+    cdef const ccimgui.ImFont* res = ccimgui.ImGui_GetFont()
     return ImFont.from_ptr(res)
 # [End Function]
 
@@ -9417,7 +9417,8 @@ cdef class ImColor:
         return _cast_ImVec4_tuple(res)
     @value.setter
     def value(self, value: tuple):
-        dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
+        # dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -9487,7 +9488,8 @@ cdef class ImDrawChannel:
         return ImVector_ImDrawCmd.from_ptr(res)
     @cmd_buffer.setter
     def cmd_buffer(self, value: ImVector_ImDrawCmd):
-        dereference(self._ptr)._CmdBuffer = value._ptr
+        # dereference(self._ptr)._CmdBuffer = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9501,7 +9503,8 @@ cdef class ImDrawChannel:
         return ImVector_ImDrawIdx.from_ptr(res)
     @idx_buffer.setter
     def idx_buffer(self, value: ImVector_ImDrawIdx):
-        dereference(self._ptr)._IdxBuffer = value._ptr
+        # dereference(self._ptr)._IdxBuffer = value._ptr
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -9580,7 +9583,8 @@ cdef class ImDrawCmd:
         return res
     @idx_offset.setter
     def idx_offset(self, value: int):
-        dereference(self._ptr).IdxOffset = value
+        # dereference(self._ptr).IdxOffset = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9615,7 +9619,8 @@ cdef class ImDrawCmd:
         return res
     @user_callback.setter
     def user_callback(self, value: Callable):
-        dereference(self._ptr).UserCallback = value
+        # dereference(self._ptr).UserCallback = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9632,7 +9637,8 @@ cdef class ImDrawCmd:
         return res
     @user_callback_data.setter
     def user_callback_data(self, value: Any):
-        dereference(self._ptr).UserCallbackData = value
+        # dereference(self._ptr).UserCallbackData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9649,7 +9655,8 @@ cdef class ImDrawCmd:
         return res
     @vtx_offset.setter
     def vtx_offset(self, value: int):
-        dereference(self._ptr).VtxOffset = value
+        # dereference(self._ptr).VtxOffset = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -9715,7 +9722,8 @@ cdef class ImDrawCmdHeader:
         return res
     @texture_id.setter
     def texture_id(self, value: Any):
-        dereference(self._ptr).TextureId = value
+        # dereference(self._ptr).TextureId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9729,7 +9737,8 @@ cdef class ImDrawCmdHeader:
         return res
     @vtx_offset.setter
     def vtx_offset(self, value: int):
-        dereference(self._ptr).VtxOffset = value
+        # dereference(self._ptr).VtxOffset = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -9790,7 +9799,8 @@ cdef class ImDrawData:
         return res
     @cmd_lists_count.setter
     def cmd_lists_count(self, value: int):
-        dereference(self._ptr).CmdListsCount = value
+        # dereference(self._ptr).CmdListsCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9807,7 +9817,8 @@ cdef class ImDrawData:
         return _cast_ImVec2_tuple(res)
     @display_pos.setter
     def display_pos(self, value: tuple):
-        dereference(self._ptr).DisplayPos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplayPos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9824,7 +9835,8 @@ cdef class ImDrawData:
         return _cast_ImVec2_tuple(res)
     @display_size.setter
     def display_size(self, value: tuple):
-        dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9841,7 +9853,8 @@ cdef class ImDrawData:
         return _cast_ImVec2_tuple(res)
     @framebuffer_scale.setter
     def framebuffer_scale(self, value: tuple):
-        dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9858,7 +9871,8 @@ cdef class ImDrawData:
         return ImGuiViewport.from_ptr(res)
     @owner_viewport.setter
     def owner_viewport(self, value: ImGuiViewport):
-        dereference(self._ptr).OwnerViewport = value._ptr
+        # dereference(self._ptr).OwnerViewport = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9875,7 +9889,8 @@ cdef class ImDrawData:
         return res
     @total_idx_count.setter
     def total_idx_count(self, value: int):
-        dereference(self._ptr).TotalIdxCount = value
+        # dereference(self._ptr).TotalIdxCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9892,7 +9907,8 @@ cdef class ImDrawData:
         return res
     @total_vtx_count.setter
     def total_vtx_count(self, value: int):
-        dereference(self._ptr).TotalVtxCount = value
+        # dereference(self._ptr).TotalVtxCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -9909,7 +9925,8 @@ cdef class ImDrawData:
         return res
     @valid.setter
     def valid(self, value: bool):
-        dereference(self._ptr).Valid = value
+        # dereference(self._ptr).Valid = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -9999,7 +10016,8 @@ cdef class ImDrawList:
         return ImVector_ImVec4.from_ptr(res)
     @clip_rect_stack.setter
     def clip_rect_stack(self, value: ImVector_ImVec4):
-        dereference(self._ptr)._ClipRectStack = value._ptr
+        # dereference(self._ptr)._ClipRectStack = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10037,13 +10055,14 @@ cdef class ImDrawList:
         return ImDrawCmdHeader.from_ptr(res)
     @cmd_header.setter
     def cmd_header(self, value: ImDrawCmdHeader):
-        dereference(self._ptr)._CmdHeader = value._ptr
+        # dereference(self._ptr)._CmdHeader = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(ImDrawListSharedData)
     @property
     def data(self):
@@ -10054,7 +10073,8 @@ cdef class ImDrawList:
         return ImDrawListSharedData.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawListSharedData):
-        dereference(self._ptr)._Data = value._ptr
+        # dereference(self._ptr)._Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10071,7 +10091,8 @@ cdef class ImDrawList:
         return res
     @flags.setter
     def flags(self, value: int):
-        dereference(self._ptr).Flags = value
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10088,7 +10109,8 @@ cdef class ImDrawList:
         return res
     @fringe_scale.setter
     def fringe_scale(self, value: float):
-        dereference(self._ptr)._FringeScale = value
+        # dereference(self._ptr)._FringeScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10123,7 +10145,8 @@ cdef class ImDrawList:
         return res
     @idx_write_ptr.setter
     def idx_write_ptr(self, value: int):
-        dereference(self._ptr)._IdxWritePtr = value
+        # dereference(self._ptr)._IdxWritePtr = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10140,7 +10163,8 @@ cdef class ImDrawList:
         return _from_bytes(res)
     @owner_name.setter
     def owner_name(self, value: str):
-        dereference(self._ptr)._OwnerName = _bytes(value)
+        # dereference(self._ptr)._OwnerName = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10157,7 +10181,8 @@ cdef class ImDrawList:
         return ImVector_ImVec2.from_ptr(res)
     @path.setter
     def path(self, value: ImVector_ImVec2):
-        dereference(self._ptr)._Path = value._ptr
+        # dereference(self._ptr)._Path = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10174,7 +10199,8 @@ cdef class ImDrawList:
         return ImDrawListSplitter.from_ptr(res)
     @splitter.setter
     def splitter(self, value: ImDrawListSplitter):
-        dereference(self._ptr)._Splitter = value._ptr
+        # dereference(self._ptr)._Splitter = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10191,7 +10217,8 @@ cdef class ImDrawList:
         return ImVector_ImTextureID.from_ptr(res)
     @texture_id_stack.setter
     def texture_id_stack(self, value: ImVector_ImTextureID):
-        dereference(self._ptr)._TextureIdStack = value._ptr
+        # dereference(self._ptr)._TextureIdStack = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10227,7 +10254,8 @@ cdef class ImDrawList:
         return res
     @vtx_current_idx.setter
     def vtx_current_idx(self, value: int):
-        dereference(self._ptr)._VtxCurrentIdx = value
+        # dereference(self._ptr)._VtxCurrentIdx = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10244,7 +10272,8 @@ cdef class ImDrawList:
         return ImDrawVert.from_ptr(res)
     @vtx_write_ptr.setter
     def vtx_write_ptr(self, value: ImDrawVert):
-        dereference(self._ptr)._VtxWritePtr = value._ptr
+        # dereference(self._ptr)._VtxWritePtr = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -11397,7 +11426,7 @@ cdef class ImDrawList:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImDrawListSharedData:
     """
     Data shared among multiple draw lists (typically owned by parent imgui context, but you may create one yourself)
@@ -11451,7 +11480,8 @@ cdef class ImDrawListSplitter:
         return ImVector_ImDrawChannel.from_ptr(res)
     @channels.setter
     def channels(self, value: ImVector_ImDrawChannel):
-        dereference(self._ptr)._Channels = value._ptr
+        # dereference(self._ptr)._Channels = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11468,7 +11498,8 @@ cdef class ImDrawListSplitter:
         return res
     @count.setter
     def count(self, value: int):
-        dereference(self._ptr)._Count = value
+        # dereference(self._ptr)._Count = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11485,7 +11516,8 @@ cdef class ImDrawListSplitter:
         return res
     @current.setter
     def current(self, value: int):
-        dereference(self._ptr)._Current = value
+        # dereference(self._ptr)._Current = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -11581,7 +11613,8 @@ cdef class ImDrawVert:
         return res
     @col.setter
     def col(self, value: int):
-        dereference(self._ptr).col = value
+        # dereference(self._ptr).col = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11595,7 +11628,8 @@ cdef class ImDrawVert:
         return _cast_ImVec2_tuple(res)
     @pos.setter
     def pos(self, value: tuple):
-        dereference(self._ptr).pos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).pos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11609,13 +11643,14 @@ cdef class ImDrawVert:
         return _cast_ImVec2_tuple(res)
     @uv.setter
     def uv(self, value: tuple):
-        dereference(self._ptr).uv = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).uv = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFont:
@@ -11623,10 +11658,10 @@ cdef class ImFont:
     Font runtime data and rendering
     ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
     """
-    cdef ccimgui.ImFont* _ptr
+    cdef const ccimgui.ImFont* _ptr
     
     @staticmethod
-    cdef ImFont from_ptr(ccimgui.ImFont* _ptr):
+    cdef ImFont from_ptr(const ccimgui.ImFont* _ptr):
         cdef ImFont wrapper = ImFont.__new__(ImFont)
         wrapper._ptr = _ptr
         return wrapper
@@ -11637,7 +11672,7 @@ cdef class ImFont:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11649,12 +11684,13 @@ cdef class ImFont:
         return res
     @ascent.setter
     def ascent(self, value: float):
-        dereference(self._ptr).Ascent = value
+        # dereference(self._ptr).Ascent = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFontConfig)
     @property
@@ -11662,16 +11698,17 @@ cdef class ImFont:
         """
         4-8   // in  //            // pointer within containeratlas->configdata
         """
-        cdef ccimgui.ImFontConfig* res = dereference(self._ptr).ConfigData
+        cdef const ccimgui.ImFontConfig* res = dereference(self._ptr).ConfigData
         return ImFontConfig.from_ptr(res)
     @config_data.setter
     def config_data(self, value: ImFontConfig):
-        dereference(self._ptr).ConfigData = value._ptr
+        # dereference(self._ptr).ConfigData = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -11683,12 +11720,13 @@ cdef class ImFont:
         return res
     @config_data_count.setter
     def config_data_count(self, value: int):
-        dereference(self._ptr).ConfigDataCount = value
+        # dereference(self._ptr).ConfigDataCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFontAtlas)
     @property
@@ -11701,12 +11739,13 @@ cdef class ImFont:
         return ImFontAtlas.from_ptr(res)
     @container_atlas.setter
     def container_atlas(self, value: ImFontAtlas):
-        dereference(self._ptr).ContainerAtlas = value._ptr
+        # dereference(self._ptr).ContainerAtlas = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11718,12 +11757,13 @@ cdef class ImFont:
         return res
     @descent.setter
     def descent(self, value: float):
-        dereference(self._ptr).Descent = value
+        # dereference(self._ptr).Descent = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -11735,12 +11775,13 @@ cdef class ImFont:
         return res
     @dirty_lookup_tables.setter
     def dirty_lookup_tables(self, value: bool):
-        dereference(self._ptr).DirtyLookupTables = value
+        # dereference(self._ptr).DirtyLookupTables = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -11752,12 +11793,13 @@ cdef class ImFont:
         return res
     @ellipsis_char.setter
     def ellipsis_char(self, value: int):
-        dereference(self._ptr).EllipsisChar = value
+        # dereference(self._ptr).EllipsisChar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -11769,12 +11811,13 @@ cdef class ImFont:
         return res
     @ellipsis_char_count.setter
     def ellipsis_char_count(self, value: int):
-        dereference(self._ptr).EllipsisCharCount = value
+        # dereference(self._ptr).EllipsisCharCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11786,12 +11829,13 @@ cdef class ImFont:
         return res
     @ellipsis_char_step.setter
     def ellipsis_char_step(self, value: float):
-        dereference(self._ptr).EllipsisCharStep = value
+        # dereference(self._ptr).EllipsisCharStep = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11803,12 +11847,13 @@ cdef class ImFont:
         return res
     @ellipsis_width.setter
     def ellipsis_width(self, value: float):
-        dereference(self._ptr).EllipsisWidth = value
+        # dereference(self._ptr).EllipsisWidth = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11820,12 +11865,13 @@ cdef class ImFont:
         return res
     @fallback_advance_x.setter
     def fallback_advance_x(self, value: float):
-        dereference(self._ptr).FallbackAdvanceX = value
+        # dereference(self._ptr).FallbackAdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -11837,12 +11883,13 @@ cdef class ImFont:
         return res
     @fallback_char.setter
     def fallback_char(self, value: int):
-        dereference(self._ptr).FallbackChar = value
+        # dereference(self._ptr).FallbackChar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFontGlyph)
     @property
@@ -11850,16 +11897,17 @@ cdef class ImFont:
         """
         4-8   // out // = findglyph(fontfallbackchar)
         """
-        cdef ccimgui.ImFontGlyph* res = dereference(self._ptr).FallbackGlyph
+        cdef const ccimgui.ImFontGlyph* res = dereference(self._ptr).FallbackGlyph
         return ImFontGlyph.from_ptr(res)
     @fallback_glyph.setter
     def fallback_glyph(self, value: ImFontGlyph):
-        dereference(self._ptr).FallbackGlyph = value._ptr
+        # dereference(self._ptr).FallbackGlyph = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11871,12 +11919,13 @@ cdef class ImFont:
         return res
     @font_size.setter
     def font_size(self, value: float):
-        dereference(self._ptr).FontSize = value
+        # dereference(self._ptr).FontSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_ImFontGlyph)
     @property
@@ -11884,16 +11933,17 @@ cdef class ImFont:
         """
         12-16 // out //            // all glyphs.
         """
-        cdef ccimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
+        cdef const ccimgui.ImVector_ImFontGlyph* res = &dereference(self._ptr).Glyphs
         return ImVector_ImFontGlyph.from_ptr(res)
     @glyphs.setter
     def glyphs(self, value: ImVector_ImFontGlyph):
-        dereference(self._ptr).Glyphs = value._ptr
+        # dereference(self._ptr).Glyphs = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_float)
     @property
@@ -11902,16 +11952,17 @@ cdef class ImFont:
         Members: Hot ~20/24 bytes (for CalcTextSize)
         12-16 // out //            // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this this info, and are often bottleneck in large ui).
         """
-        cdef ccimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
+        cdef const ccimgui.ImVector_float* res = &dereference(self._ptr).IndexAdvanceX
         return ImVector_float.from_ptr(res)
     @index_advance_x.setter
     def index_advance_x(self, value: ImVector_float):
-        dereference(self._ptr).IndexAdvanceX = value._ptr
+        # dereference(self._ptr).IndexAdvanceX = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_ImWchar)
     @property
@@ -11920,16 +11971,17 @@ cdef class ImFont:
         Members: Hot ~28/40 bytes (for CalcTextSize + render loop)
         12-16 // out //            // sparse. index glyphs by unicode code-point.
         """
-        cdef ccimgui.ImVector_ImWchar res = dereference(self._ptr).IndexLookup
+        cdef const ccimgui.ImVector_ImWchar* res = &dereference(self._ptr).IndexLookup
         return ImVector_ImWchar.from_ptr(res)
     @index_lookup.setter
     def index_lookup(self, value: ImVector_ImWchar):
-        dereference(self._ptr).IndexLookup = value._ptr
+        # dereference(self._ptr).IndexLookup = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -11941,12 +11993,13 @@ cdef class ImFont:
         return res
     @metrics_total_surface.setter
     def metrics_total_surface(self, value: int):
-        dereference(self._ptr).MetricsTotalSurface = value
+        # dereference(self._ptr).MetricsTotalSurface = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -11958,7 +12011,8 @@ cdef class ImFont:
         return res
     @scale.setter
     def scale(self, value: float):
-        dereference(self._ptr).Scale = value
+        # dereference(self._ptr).Scale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11975,7 +12029,8 @@ cdef class ImFont:
         return res
     @used4k_pages_map.setter
     def used4k_pages_map(self, value: int):
-        dereference(self._ptr).Used4kPagesMap = value
+        # dereference(self._ptr).Used4kPagesMap = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -12279,8 +12334,8 @@ cdef class ImFontAtlas:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_ImFontConfig)
     @property
@@ -12288,16 +12343,17 @@ cdef class ImFontAtlas:
         """
         Configuration data
         """
-        cdef ccimgui.ImVector_ImFontConfig res = dereference(self._ptr).ConfigData
+        cdef ccimgui.ImVector_ImFontConfig* res = &dereference(self._ptr).ConfigData
         return ImVector_ImFontConfig.from_ptr(res)
     @config_data.setter
     def config_data(self, value: ImVector_ImFontConfig):
-        dereference(self._ptr).ConfigData = value._ptr
+        # dereference(self._ptr).ConfigData = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_ImFontAtlasCustomRect)
     @property
@@ -12305,16 +12361,17 @@ cdef class ImFontAtlas:
         """
         Rectangles for packing custom texture data into the atlas.
         """
-        cdef ccimgui.ImVector_ImFontAtlasCustomRect res = dereference(self._ptr).CustomRects
+        cdef ccimgui.ImVector_ImFontAtlasCustomRect* res = &dereference(self._ptr).CustomRects
         return ImVector_ImFontAtlasCustomRect.from_ptr(res)
     @custom_rects.setter
     def custom_rects(self, value: ImVector_ImFontAtlasCustomRect):
-        dereference(self._ptr).CustomRects = value._ptr
+        # dereference(self._ptr).CustomRects = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12326,12 +12383,13 @@ cdef class ImFontAtlas:
         return res
     @flags.setter
     def flags(self, value: int):
-        dereference(self._ptr).Flags = value
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12343,12 +12401,13 @@ cdef class ImFontAtlas:
         return res
     @font_builder_flags.setter
     def font_builder_flags(self, value: int):
-        dereference(self._ptr).FontBuilderFlags = value
+        # dereference(self._ptr).FontBuilderFlags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFontBuilderIO)
     @property
@@ -12357,16 +12416,17 @@ cdef class ImFontAtlas:
         [Internal] Font builder
         Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
         """
-        cdef ccimgui.ImFontBuilderIO* res = dereference(self._ptr).FontBuilderIO
+        cdef const ccimgui.ImFontBuilderIO* res = dereference(self._ptr).FontBuilderIO
         return ImFontBuilderIO.from_ptr(res)
     @font_builder_io.setter
     def font_builder_io(self, value: ImFontBuilderIO):
-        dereference(self._ptr).FontBuilderIO = value._ptr
+        # dereference(self._ptr).FontBuilderIO = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImVector_ImFontPtr)
     @property
@@ -12374,16 +12434,17 @@ cdef class ImFontAtlas:
         """
         Hold all the fonts returned by addfont*. fonts[0] is the default font upon calling imgui::newframe(), use imgui::pushfont()/popfont() to change the current font.
         """
-        cdef ccimgui.ImVector_ImFontPtr res = dereference(self._ptr).Fonts
+        cdef ccimgui.ImVector_ImFontPtr* res = &dereference(self._ptr).Fonts
         return ImVector_ImFontPtr.from_ptr(res)
     @fonts.setter
     def fonts(self, value: ImVector_ImFontPtr):
-        dereference(self._ptr).Fonts = value._ptr
+        # dereference(self._ptr).Fonts = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -12395,12 +12456,13 @@ cdef class ImFontAtlas:
         return res
     @locked.setter
     def locked(self, value: bool):
-        dereference(self._ptr).Locked = value
+        # dereference(self._ptr).Locked = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12412,12 +12474,13 @@ cdef class ImFontAtlas:
         return res
     @pack_id_lines.setter
     def pack_id_lines(self, value: int):
-        dereference(self._ptr).PackIdLines = value
+        # dereference(self._ptr).PackIdLines = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12430,12 +12493,13 @@ cdef class ImFontAtlas:
         return res
     @pack_id_mouse_cursors.setter
     def pack_id_mouse_cursors(self, value: int):
-        dereference(self._ptr).PackIdMouseCursors = value
+        # dereference(self._ptr).PackIdMouseCursors = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12447,12 +12511,13 @@ cdef class ImFontAtlas:
         return res
     @tex_desired_width.setter
     def tex_desired_width(self, value: int):
-        dereference(self._ptr).TexDesiredWidth = value
+        # dereference(self._ptr).TexDesiredWidth = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12464,7 +12529,8 @@ cdef class ImFontAtlas:
         return res
     @tex_glyph_padding.setter
     def tex_glyph_padding(self, value: int):
-        dereference(self._ptr).TexGlyphPadding = value
+        # dereference(self._ptr).TexGlyphPadding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -12499,12 +12565,13 @@ cdef class ImFontAtlas:
         return res
     @tex_id.setter
     def tex_id(self, value: Any):
-        dereference(self._ptr).TexID = <void*>value
+        # dereference(self._ptr).TexID = <void*>value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(str)
     @property
@@ -12516,12 +12583,13 @@ cdef class ImFontAtlas:
         return res
     @tex_pixels_alpha8.setter
     def tex_pixels_alpha8(self, value: str):
-        dereference(self._ptr).TexPixelsAlpha8 = value
+        # dereference(self._ptr).TexPixelsAlpha8 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(IntPtr)
     @property
@@ -12533,12 +12601,13 @@ cdef class ImFontAtlas:
         return IntPtr(dereference(res))
     @tex_pixels_rgba_32.setter
     def tex_pixels_rgba_32(self, value: IntPtr):
-        dereference(self._ptr).TexPixelsRGBA32 = &value.value
+        # dereference(self._ptr).TexPixelsRGBA32 = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -12550,12 +12619,13 @@ cdef class ImFontAtlas:
         return res
     @tex_pixels_use_colors.setter
     def tex_pixels_use_colors(self, value: bool):
-        dereference(self._ptr).TexPixelsUseColors = value
+        # dereference(self._ptr).TexPixelsUseColors = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -12569,12 +12639,13 @@ cdef class ImFontAtlas:
         return res
     @tex_ready.setter
     def tex_ready(self, value: bool):
-        dereference(self._ptr).TexReady = value
+        # dereference(self._ptr).TexReady = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -12583,15 +12654,18 @@ cdef class ImFontAtlas:
         Uvs for baked anti-aliased lines
         """
         cdef ccimgui.ImVec4* res = dereference(self._ptr).TexUvLines
-        return ImVec4.from_ptr(res)
+        cdef Vec4Ptr vec = Vec4Ptr(0, 0, 0, 0)
+        vec.from_array(&res.x)
+        return vec
     @tex_uv_lines.setter
     def tex_uv_lines(self, value: ImVec4):
-        dereference(self._ptr).TexUvLines = value._ptr
+        # dereference(self._ptr).TexUvLines = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -12603,12 +12677,13 @@ cdef class ImFontAtlas:
         return _cast_ImVec2_tuple(res)
     @tex_uv_scale.setter
     def tex_uv_scale(self, value: tuple):
-        dereference(self._ptr).TexUvScale = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).TexUvScale = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -12620,7 +12695,8 @@ cdef class ImFontAtlas:
         return _cast_ImVec2_tuple(res)
     @tex_uv_white_pixel.setter
     def tex_uv_white_pixel(self, value: tuple):
-        dereference(self._ptr).TexUvWhitePixel = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).TexUvWhitePixel = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -12655,7 +12731,8 @@ cdef class ImFontAtlas:
         return res
     @user_data.setter
     def user_data(self, value: Any):
-        dereference(self._ptr).UserData = value
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -13166,7 +13243,8 @@ cdef class ImFontAtlasCustomRect:
         return ImFont.from_ptr(res)
     @font.setter
     def font(self, value: ImFont):
-        dereference(self._ptr).Font = value._ptr
+        # dereference(self._ptr).Font = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13183,7 +13261,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @glyph_advance_x.setter
     def glyph_advance_x(self, value: float):
-        dereference(self._ptr).GlyphAdvanceX = value
+        # dereference(self._ptr).GlyphAdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13200,7 +13279,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @glyph_id.setter
     def glyph_id(self, value: int):
-        dereference(self._ptr).GlyphID = value
+        # dereference(self._ptr).GlyphID = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13217,7 +13297,8 @@ cdef class ImFontAtlasCustomRect:
         return _cast_ImVec2_tuple(res)
     @glyph_offset.setter
     def glyph_offset(self, value: tuple):
-        dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13234,7 +13315,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @height.setter
     def height(self, value: int):
-        dereference(self._ptr).Height = value
+        # dereference(self._ptr).Height = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13251,7 +13333,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @width.setter
     def width(self, value: int):
-        dereference(self._ptr).Width = value
+        # dereference(self._ptr).Width = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13268,7 +13351,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @x.setter
     def x(self, value: int):
-        dereference(self._ptr).X = value
+        # dereference(self._ptr).X = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13285,7 +13369,8 @@ cdef class ImFontAtlasCustomRect:
         return res
     @y.setter
     def y(self, value: int):
-        dereference(self._ptr).Y = value
+        # dereference(self._ptr).Y = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -13303,17 +13388,17 @@ cdef class ImFontAtlasCustomRect:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFontBuilderIO:
     """
     Opaque interface to a font builder (stb_truetype or freetype).
     """
-    cdef ccimgui.ImFontBuilderIO* _ptr
+    cdef const ccimgui.ImFontBuilderIO* _ptr
     
     @staticmethod
-    cdef ImFontBuilderIO from_ptr(ccimgui.ImFontBuilderIO* _ptr):
+    cdef ImFontBuilderIO from_ptr(const ccimgui.ImFontBuilderIO* _ptr):
         cdef ImFontBuilderIO wrapper = ImFontBuilderIO.__new__(ImFontBuilderIO)
         wrapper._ptr = _ptr
         return wrapper
@@ -13325,14 +13410,14 @@ cdef class ImFontBuilderIO:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFontConfig:
-    cdef ccimgui.ImFontConfig* _ptr
+    cdef const ccimgui.ImFontConfig* _ptr
     
     @staticmethod
-    cdef ImFontConfig from_ptr(ccimgui.ImFontConfig* _ptr):
+    cdef ImFontConfig from_ptr(const ccimgui.ImFontConfig* _ptr):
         cdef ImFontConfig wrapper = ImFontConfig.__new__(ImFontConfig)
         wrapper._ptr = _ptr
         return wrapper
@@ -13343,7 +13428,7 @@ cdef class ImFontConfig:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFont)
     @property
@@ -13352,12 +13437,13 @@ cdef class ImFontConfig:
         return ImFont.from_ptr(res)
     @dst_font.setter
     def dst_font(self, value: ImFont):
-        dereference(self._ptr).DstFont = value._ptr
+        # dereference(self._ptr).DstFont = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13369,12 +13455,13 @@ cdef class ImFontConfig:
         return res
     @ellipsis_char.setter
     def ellipsis_char(self, value: int):
-        dereference(self._ptr).EllipsisChar = value
+        # dereference(self._ptr).EllipsisChar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13386,13 +13473,14 @@ cdef class ImFontConfig:
         return res
     @font_builder_flags.setter
     def font_builder_flags(self, value: int):
-        dereference(self._ptr).FontBuilderFlags = value
+        # dereference(self._ptr).FontBuilderFlags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(Any)
     @property
     def font_data(self):
@@ -13403,12 +13491,13 @@ cdef class ImFontConfig:
         return res
     @font_data.setter
     def font_data(self, value: Any):
-        dereference(self._ptr).FontData = value
+        # dereference(self._ptr).FontData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -13420,12 +13509,13 @@ cdef class ImFontConfig:
         return res
     @font_data_owned_by_atlas.setter
     def font_data_owned_by_atlas(self, value: bool):
-        dereference(self._ptr).FontDataOwnedByAtlas = value
+        # dereference(self._ptr).FontDataOwnedByAtlas = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13437,12 +13527,13 @@ cdef class ImFontConfig:
         return res
     @font_data_size.setter
     def font_data_size(self, value: int):
-        dereference(self._ptr).FontDataSize = value
+        # dereference(self._ptr).FontDataSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13454,12 +13545,13 @@ cdef class ImFontConfig:
         return res
     @font_no.setter
     def font_no(self, value: int):
-        dereference(self._ptr).FontNo = value
+        # dereference(self._ptr).FontNo = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -13471,12 +13563,13 @@ cdef class ImFontConfig:
         return _cast_ImVec2_tuple(res)
     @glyph_extra_spacing.setter
     def glyph_extra_spacing(self, value: tuple):
-        dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -13488,12 +13581,13 @@ cdef class ImFontConfig:
         return res
     @glyph_max_advance_x.setter
     def glyph_max_advance_x(self, value: float):
-        dereference(self._ptr).GlyphMaxAdvanceX = value
+        # dereference(self._ptr).GlyphMaxAdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -13505,12 +13599,13 @@ cdef class ImFontConfig:
         return res
     @glyph_min_advance_x.setter
     def glyph_min_advance_x(self, value: float):
-        dereference(self._ptr).GlyphMinAdvanceX = value
+        # dereference(self._ptr).GlyphMinAdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -13522,7 +13617,8 @@ cdef class ImFontConfig:
         return _cast_ImVec2_tuple(res)
     @glyph_offset.setter
     def glyph_offset(self, value: tuple):
-        dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13539,12 +13635,13 @@ cdef class ImFontConfig:
         return res
     @glyph_ranges.setter
     def glyph_ranges(self, value: int):
-        dereference(self._ptr).GlyphRanges = value
+        # dereference(self._ptr).GlyphRanges = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -13556,12 +13653,13 @@ cdef class ImFontConfig:
         return res
     @merge_mode.setter
     def merge_mode(self, value: bool):
-        dereference(self._ptr).MergeMode = value
+        # dereference(self._ptr).MergeMode = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13570,16 +13668,16 @@ cdef class ImFontConfig:
         [Internal]
         Name (strictly to ease debugging)
         """
-        cdef char* res = dereference(self._ptr).Name
-        return _from_bytes(res)
+        return _from_bytes(dereference(self._ptr).Name)
     @name.setter
     def name(self, value: str):
-        dereference(self._ptr).Name = _bytes(value)
+        # dereference(self._ptr).Name = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13591,12 +13689,13 @@ cdef class ImFontConfig:
         return res
     @oversample_h.setter
     def oversample_h(self, value: int):
-        dereference(self._ptr).OversampleH = value
+        # dereference(self._ptr).OversampleH = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -13608,12 +13707,13 @@ cdef class ImFontConfig:
         return res
     @oversample_v.setter
     def oversample_v(self, value: int):
-        dereference(self._ptr).OversampleV = value
+        # dereference(self._ptr).OversampleV = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -13625,12 +13725,13 @@ cdef class ImFontConfig:
         return res
     @pixel_snap_h.setter
     def pixel_snap_h(self, value: bool):
-        dereference(self._ptr).PixelSnapH = value
+        # dereference(self._ptr).PixelSnapH = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -13642,12 +13743,13 @@ cdef class ImFontConfig:
         return res
     @rasterizer_multiply.setter
     def rasterizer_multiply(self, value: float):
-        dereference(self._ptr).RasterizerMultiply = value
+        # dereference(self._ptr).RasterizerMultiply = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -13659,13 +13761,14 @@ cdef class ImFontConfig:
         return res
     @size_pixels.setter
     def size_pixels(self, value: float):
-        dereference(self._ptr).SizePixels = value
+        # dereference(self._ptr).SizePixels = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFontGlyph:
@@ -13673,10 +13776,10 @@ cdef class ImFontGlyph:
     Hold rendering data for one glyph.
     (Note: some language parsers may fail to convert the 31+1 bitfield members, in this case maybe drop store a single u32 or we can rework this)
     """
-    cdef ccimgui.ImFontGlyph* _ptr
+    cdef const ccimgui.ImFontGlyph* _ptr
     
     @staticmethod
-    cdef ImFontGlyph from_ptr(ccimgui.ImFontGlyph* _ptr):
+    cdef ImFontGlyph from_ptr(const ccimgui.ImFontGlyph* _ptr):
         cdef ImFontGlyph wrapper = ImFontGlyph.__new__(ImFontGlyph)
         wrapper._ptr = _ptr
         return wrapper
@@ -13699,7 +13802,8 @@ cdef class ImFontGlyph:
         return res
     @advance_x.setter
     def advance_x(self, value: float):
-        dereference(self._ptr).AdvanceX = value
+        # dereference(self._ptr).AdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13716,7 +13820,8 @@ cdef class ImFontGlyph:
         return res
     @codepoint.setter
     def codepoint(self, value: int):
-        dereference(self._ptr).Codepoint = value
+        # dereference(self._ptr).Codepoint = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13733,7 +13838,8 @@ cdef class ImFontGlyph:
         return res
     @colored.setter
     def colored(self, value: int):
-        dereference(self._ptr).Colored = value
+        # dereference(self._ptr).Colored = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13750,7 +13856,8 @@ cdef class ImFontGlyph:
         return res
     @u0.setter
     def u0(self, value: float):
-        dereference(self._ptr).U0 = value
+        # dereference(self._ptr).U0 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13767,7 +13874,8 @@ cdef class ImFontGlyph:
         return res
     @u1.setter
     def u1(self, value: float):
-        dereference(self._ptr).U1 = value
+        # dereference(self._ptr).U1 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13784,7 +13892,8 @@ cdef class ImFontGlyph:
         return res
     @v0.setter
     def v0(self, value: float):
-        dereference(self._ptr).V0 = value
+        # dereference(self._ptr).V0 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13801,7 +13910,8 @@ cdef class ImFontGlyph:
         return res
     @v1.setter
     def v1(self, value: float):
-        dereference(self._ptr).V1 = value
+        # dereference(self._ptr).V1 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13818,7 +13928,8 @@ cdef class ImFontGlyph:
         return res
     @visible.setter
     def visible(self, value: int):
-        dereference(self._ptr).Visible = value
+        # dereference(self._ptr).Visible = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13835,7 +13946,8 @@ cdef class ImFontGlyph:
         return res
     @x0.setter
     def x0(self, value: float):
-        dereference(self._ptr).X0 = value
+        # dereference(self._ptr).X0 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13852,7 +13964,8 @@ cdef class ImFontGlyph:
         return res
     @x1.setter
     def x1(self, value: float):
-        dereference(self._ptr).X1 = value
+        # dereference(self._ptr).X1 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13869,7 +13982,8 @@ cdef class ImFontGlyph:
         return res
     @y0.setter
     def y0(self, value: float):
-        dereference(self._ptr).Y0 = value
+        # dereference(self._ptr).Y0 = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13886,7 +14000,8 @@ cdef class ImFontGlyph:
         return res
     @y1.setter
     def y1(self, value: float):
-        dereference(self._ptr).Y1 = value
+        # dereference(self._ptr).Y1 = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -13926,7 +14041,8 @@ cdef class ImFontGlyphRangesBuilder:
         return ImVector_ImU32.from_ptr(res)
     @used_chars.setter
     def used_chars(self, value: ImVector_ImU32):
-        dereference(self._ptr).UsedChars = value._ptr
+        # dereference(self._ptr).UsedChars = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -14095,7 +14211,8 @@ cdef class ImGuiIO:
         return res
     @app_accepting_events.setter
     def app_accepting_events(self, value: bool):
-        dereference(self._ptr).AppAcceptingEvents = value
+        # dereference(self._ptr).AppAcceptingEvents = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14112,7 +14229,8 @@ cdef class ImGuiIO:
         return res
     @app_focus_lost.setter
     def app_focus_lost(self, value: bool):
-        dereference(self._ptr).AppFocusLost = value
+        # dereference(self._ptr).AppFocusLost = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14129,7 +14247,8 @@ cdef class ImGuiIO:
         return res
     @backend_flags.setter
     def backend_flags(self, value: int):
-        dereference(self._ptr).BackendFlags = value
+        # dereference(self._ptr).BackendFlags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14146,7 +14265,8 @@ cdef class ImGuiIO:
         return res
     @backend_language_user_data.setter
     def backend_language_user_data(self, value: Any):
-        dereference(self._ptr).BackendLanguageUserData = value
+        # dereference(self._ptr).BackendLanguageUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14164,7 +14284,8 @@ cdef class ImGuiIO:
         return _from_bytes(res)
     @backend_platform_name.setter
     def backend_platform_name(self, value: str):
-        dereference(self._ptr).BackendPlatformName = _bytes(value)
+        # dereference(self._ptr).BackendPlatformName = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14181,7 +14302,8 @@ cdef class ImGuiIO:
         return res
     @backend_platform_user_data.setter
     def backend_platform_user_data(self, value: Any):
-        dereference(self._ptr).BackendPlatformUserData = value
+        # dereference(self._ptr).BackendPlatformUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14198,7 +14320,8 @@ cdef class ImGuiIO:
         return _from_bytes(res)
     @backend_renderer_name.setter
     def backend_renderer_name(self, value: str):
-        dereference(self._ptr).BackendRendererName = _bytes(value)
+        # dereference(self._ptr).BackendRendererName = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14215,7 +14338,8 @@ cdef class ImGuiIO:
         return res
     @backend_renderer_user_data.setter
     def backend_renderer_user_data(self, value: Any):
-        dereference(self._ptr).BackendRendererUserData = value
+        # dereference(self._ptr).BackendRendererUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14232,7 +14356,8 @@ cdef class ImGuiIO:
         return res
     @backend_using_legacy_key_arrays.setter
     def backend_using_legacy_key_arrays(self, value: int):
-        dereference(self._ptr).BackendUsingLegacyKeyArrays = value
+        # dereference(self._ptr).BackendUsingLegacyKeyArrays = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14249,7 +14374,8 @@ cdef class ImGuiIO:
         return res
     @backend_using_legacy_nav_input_array.setter
     def backend_using_legacy_nav_input_array(self, value: bool):
-        dereference(self._ptr).BackendUsingLegacyNavInputArray = value
+        # dereference(self._ptr).BackendUsingLegacyNavInputArray = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14263,7 +14389,8 @@ cdef class ImGuiIO:
         return res
     @clipboard_user_data.setter
     def clipboard_user_data(self, value: Any):
-        dereference(self._ptr).ClipboardUserData = value
+        # dereference(self._ptr).ClipboardUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14280,7 +14407,8 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_loop.setter
     def config_debug_begin_return_value_loop(self, value: bool):
-        dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
+        # dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14302,7 +14430,8 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_once.setter
     def config_debug_begin_return_value_once(self, value: bool):
-        dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+        # dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14319,7 +14448,8 @@ cdef class ImGuiIO:
         return res
     @config_docking_always_tab_bar.setter
     def config_docking_always_tab_bar(self, value: bool):
-        dereference(self._ptr).ConfigDockingAlwaysTabBar = value
+        # dereference(self._ptr).ConfigDockingAlwaysTabBar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14337,7 +14467,8 @@ cdef class ImGuiIO:
         return res
     @config_docking_no_split.setter
     def config_docking_no_split(self, value: bool):
-        dereference(self._ptr).ConfigDockingNoSplit = value
+        # dereference(self._ptr).ConfigDockingNoSplit = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14354,7 +14485,8 @@ cdef class ImGuiIO:
         return res
     @config_docking_transparent_payload.setter
     def config_docking_transparent_payload(self, value: bool):
-        dereference(self._ptr).ConfigDockingTransparentPayload = value
+        # dereference(self._ptr).ConfigDockingTransparentPayload = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14371,7 +14503,8 @@ cdef class ImGuiIO:
         return res
     @config_docking_with_shift.setter
     def config_docking_with_shift(self, value: bool):
-        dereference(self._ptr).ConfigDockingWithShift = value
+        # dereference(self._ptr).ConfigDockingWithShift = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14388,11 +14521,12 @@ cdef class ImGuiIO:
         return res
     @config_drag_click_to_input_text.setter
     def config_drag_click_to_input_text(self, value: bool):
-        dereference(self._ptr).ConfigDragClickToInputText = value
+        # dereference(self._ptr).ConfigDragClickToInputText = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -14406,6 +14540,7 @@ cdef class ImGuiIO:
     @config_flags.setter
     def config_flags(self, value: int):
         dereference(self._ptr).ConfigFlags = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14422,7 +14557,8 @@ cdef class ImGuiIO:
         return res
     @config_input_text_cursor_blink.setter
     def config_input_text_cursor_blink(self, value: bool):
-        dereference(self._ptr).ConfigInputTextCursorBlink = value
+        # dereference(self._ptr).ConfigInputTextCursorBlink = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14439,7 +14575,8 @@ cdef class ImGuiIO:
         return res
     @config_input_text_enter_keep_active.setter
     def config_input_text_enter_keep_active(self, value: bool):
-        dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+        # dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14456,7 +14593,8 @@ cdef class ImGuiIO:
         return res
     @config_input_trickle_event_queue.setter
     def config_input_trickle_event_queue(self, value: bool):
-        dereference(self._ptr).ConfigInputTrickleEventQueue = value
+        # dereference(self._ptr).ConfigInputTrickleEventQueue = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14473,7 +14611,8 @@ cdef class ImGuiIO:
         return res
     @config_mac_osx_behaviors.setter
     def config_mac_osx_behaviors(self, value: bool):
-        dereference(self._ptr).ConfigMacOSXBehaviors = value
+        # dereference(self._ptr).ConfigMacOSXBehaviors = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14490,7 +14629,8 @@ cdef class ImGuiIO:
         return res
     @config_memory_compact_timer.setter
     def config_memory_compact_timer(self, value: float):
-        dereference(self._ptr).ConfigMemoryCompactTimer = value
+        # dereference(self._ptr).ConfigMemoryCompactTimer = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14508,7 +14648,8 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_auto_merge.setter
     def config_viewports_no_auto_merge(self, value: bool):
-        dereference(self._ptr).ConfigViewportsNoAutoMerge = value
+        # dereference(self._ptr).ConfigViewportsNoAutoMerge = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14525,7 +14666,8 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_decoration.setter
     def config_viewports_no_decoration(self, value: bool):
-        dereference(self._ptr).ConfigViewportsNoDecoration = value
+        # dereference(self._ptr).ConfigViewportsNoDecoration = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14542,7 +14684,8 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_default_parent.setter
     def config_viewports_no_default_parent(self, value: bool):
-        dereference(self._ptr).ConfigViewportsNoDefaultParent = value
+        # dereference(self._ptr).ConfigViewportsNoDefaultParent = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14559,7 +14702,8 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_task_bar_icon.setter
     def config_viewports_no_task_bar_icon(self, value: bool):
-        dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
+        # dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14576,7 +14720,8 @@ cdef class ImGuiIO:
         return res
     @config_windows_move_from_title_bar_only.setter
     def config_windows_move_from_title_bar_only(self, value: bool):
-        dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
+        # dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14593,7 +14738,8 @@ cdef class ImGuiIO:
         return res
     @config_windows_resize_from_edges.setter
     def config_windows_resize_from_edges(self, value: bool):
-        dereference(self._ptr).ConfigWindowsResizeFromEdges = value
+        # dereference(self._ptr).ConfigWindowsResizeFromEdges = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14610,7 +14756,8 @@ cdef class ImGuiIO:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value._ptr
+        # dereference(self._ptr).Ctx = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14645,7 +14792,8 @@ cdef class ImGuiIO:
         return _cast_ImVec2_tuple(res)
     @display_framebuffer_scale.setter
     def display_framebuffer_scale(self, value: tuple):
-        dereference(self._ptr).DisplayFramebufferScale = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplayFramebufferScale = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14662,7 +14810,8 @@ cdef class ImGuiIO:
         return _cast_ImVec2_tuple(res)
     @display_size.setter
     def display_size(self, value: tuple):
-        dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14679,7 +14828,8 @@ cdef class ImGuiIO:
         return res
     @font_allow_user_scaling.setter
     def font_allow_user_scaling(self, value: bool):
-        dereference(self._ptr).FontAllowUserScaling = value
+        # dereference(self._ptr).FontAllowUserScaling = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14696,7 +14846,8 @@ cdef class ImGuiIO:
         return ImFont.from_ptr(res)
     @font_default.setter
     def font_default(self, value: ImFont):
-        dereference(self._ptr).FontDefault = value._ptr
+        # dereference(self._ptr).FontDefault = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14713,7 +14864,8 @@ cdef class ImGuiIO:
         return res
     @font_global_scale.setter
     def font_global_scale(self, value: float):
-        dereference(self._ptr).FontGlobalScale = value
+        # dereference(self._ptr).FontGlobalScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14790,7 +14942,8 @@ cdef class ImGuiIO:
         return res
     @hover_delay_normal.setter
     def hover_delay_normal(self, value: float):
-        dereference(self._ptr).HoverDelayNormal = value
+        # dereference(self._ptr).HoverDelayNormal = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14807,7 +14960,8 @@ cdef class ImGuiIO:
         return res
     @hover_delay_short.setter
     def hover_delay_short(self, value: float):
-        dereference(self._ptr).HoverDelayShort = value
+        # dereference(self._ptr).HoverDelayShort = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14824,7 +14978,8 @@ cdef class ImGuiIO:
         return _from_bytes(res)
     @ini_filename.setter
     def ini_filename(self, value: str):
-        dereference(self._ptr).IniFilename = _bytes(value)
+        # dereference(self._ptr).IniFilename = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14841,7 +14996,8 @@ cdef class ImGuiIO:
         return res
     @ini_saving_rate.setter
     def ini_saving_rate(self, value: float):
-        dereference(self._ptr).IniSavingRate = value
+        # dereference(self._ptr).IniSavingRate = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14858,7 +15014,8 @@ cdef class ImGuiIO:
         return ImVector_ImWchar.from_ptr(res)
     @input_queue_characters.setter
     def input_queue_characters(self, value: ImVector_ImWchar):
-        dereference(self._ptr).InputQueueCharacters = value._ptr
+        # dereference(self._ptr).InputQueueCharacters = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14875,7 +15032,8 @@ cdef class ImGuiIO:
         return res
     @input_queue_surrogate.setter
     def input_queue_surrogate(self, value: int):
-        dereference(self._ptr).InputQueueSurrogate = value
+        # dereference(self._ptr).InputQueueSurrogate = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14892,7 +15050,8 @@ cdef class ImGuiIO:
         return res
     @key_alt.setter
     def key_alt(self, value: bool):
-        dereference(self._ptr).KeyAlt = value
+        # dereference(self._ptr).KeyAlt = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14909,7 +15068,8 @@ cdef class ImGuiIO:
         return res
     @key_ctrl.setter
     def key_ctrl(self, value: bool):
-        dereference(self._ptr).KeyCtrl = value
+        # dereference(self._ptr).KeyCtrl = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14927,7 +15087,8 @@ cdef class ImGuiIO:
         return res
     @key_mods.setter
     def key_mods(self, value: int):
-        dereference(self._ptr).KeyMods = value
+        # dereference(self._ptr).KeyMods = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14944,7 +15105,8 @@ cdef class ImGuiIO:
         return res
     @key_repeat_delay.setter
     def key_repeat_delay(self, value: float):
-        dereference(self._ptr).KeyRepeatDelay = value
+        # dereference(self._ptr).KeyRepeatDelay = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14961,7 +15123,8 @@ cdef class ImGuiIO:
         return res
     @key_repeat_rate.setter
     def key_repeat_rate(self, value: float):
-        dereference(self._ptr).KeyRepeatRate = value
+        # dereference(self._ptr).KeyRepeatRate = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14978,7 +15141,8 @@ cdef class ImGuiIO:
         return res
     @key_shift.setter
     def key_shift(self, value: bool):
-        dereference(self._ptr).KeyShift = value
+        # dereference(self._ptr).KeyShift = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14995,7 +15159,8 @@ cdef class ImGuiIO:
         return res
     @key_super.setter
     def key_super(self, value: bool):
-        dereference(self._ptr).KeySuper = value
+        # dereference(self._ptr).KeySuper = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15012,7 +15177,8 @@ cdef class ImGuiIO:
         return ImGuiKeyData.from_ptr(res)
     @keys_data.setter
     def keys_data(self, value: ImGuiKeyData):
-        dereference(self._ptr).KeysData = value._ptr
+        # dereference(self._ptr).KeysData = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15029,7 +15195,8 @@ cdef class ImGuiIO:
         return _from_bytes(res)
     @log_filename.setter
     def log_filename(self, value: str):
-        dereference(self._ptr).LogFilename = _bytes(value)
+        # dereference(self._ptr).LogFilename = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15046,7 +15213,8 @@ cdef class ImGuiIO:
         return res
     @metrics_active_allocations.setter
     def metrics_active_allocations(self, value: int):
-        dereference(self._ptr).MetricsActiveAllocations = value
+        # dereference(self._ptr).MetricsActiveAllocations = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15063,7 +15231,8 @@ cdef class ImGuiIO:
         return res
     @metrics_active_windows.setter
     def metrics_active_windows(self, value: int):
-        dereference(self._ptr).MetricsActiveWindows = value
+        # dereference(self._ptr).MetricsActiveWindows = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15080,7 +15249,8 @@ cdef class ImGuiIO:
         return res
     @metrics_render_indices.setter
     def metrics_render_indices(self, value: int):
-        dereference(self._ptr).MetricsRenderIndices = value
+        # dereference(self._ptr).MetricsRenderIndices = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15097,7 +15267,8 @@ cdef class ImGuiIO:
         return res
     @metrics_render_vertices.setter
     def metrics_render_vertices(self, value: int):
-        dereference(self._ptr).MetricsRenderVertices = value
+        # dereference(self._ptr).MetricsRenderVertices = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15114,7 +15285,8 @@ cdef class ImGuiIO:
         return res
     @metrics_render_windows.setter
     def metrics_render_windows(self, value: int):
-        dereference(self._ptr).MetricsRenderWindows = value
+        # dereference(self._ptr).MetricsRenderWindows = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15131,7 +15303,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_clicked.setter
     def mouse_clicked(self, value: BoolPtr):
-        dereference(self._ptr).MouseClicked = &value.value
+        # dereference(self._ptr).MouseClicked = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15148,7 +15321,8 @@ cdef class ImGuiIO:
         return res
     @mouse_clicked_count.setter
     def mouse_clicked_count(self, value: int):
-        dereference(self._ptr).MouseClickedCount = value
+        # dereference(self._ptr).MouseClickedCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15165,7 +15339,8 @@ cdef class ImGuiIO:
         return res
     @mouse_clicked_last_count.setter
     def mouse_clicked_last_count(self, value: int):
-        dereference(self._ptr).MouseClickedLastCount = value
+        # dereference(self._ptr).MouseClickedLastCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15182,7 +15357,8 @@ cdef class ImGuiIO:
         return ImVec2.from_ptr(res)
     @mouse_clicked_pos.setter
     def mouse_clicked_pos(self, value: ImVec2):
-        dereference(self._ptr).MouseClickedPos = value._ptr
+        # dereference(self._ptr).MouseClickedPos = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15199,7 +15375,8 @@ cdef class ImGuiIO:
         return DoublePtr(dereference(res))
     @mouse_clicked_time.setter
     def mouse_clicked_time(self, value: DoublePtr):
-        dereference(self._ptr).MouseClickedTime = &value.value
+        # dereference(self._ptr).MouseClickedTime = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15216,7 +15393,8 @@ cdef class ImGuiIO:
         return _cast_ImVec2_tuple(res)
     @mouse_delta.setter
     def mouse_delta(self, value: tuple):
-        dereference(self._ptr).MouseDelta = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).MouseDelta = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15233,7 +15411,8 @@ cdef class ImGuiIO:
         return res
     @mouse_double_click_max_dist.setter
     def mouse_double_click_max_dist(self, value: float):
-        dereference(self._ptr).MouseDoubleClickMaxDist = value
+        # dereference(self._ptr).MouseDoubleClickMaxDist = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15250,7 +15429,8 @@ cdef class ImGuiIO:
         return res
     @mouse_double_click_time.setter
     def mouse_double_click_time(self, value: float):
-        dereference(self._ptr).MouseDoubleClickTime = value
+        # dereference(self._ptr).MouseDoubleClickTime = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15267,7 +15447,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_double_clicked.setter
     def mouse_double_clicked(self, value: BoolPtr):
-        dereference(self._ptr).MouseDoubleClicked = &value.value
+        # dereference(self._ptr).MouseDoubleClicked = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15284,7 +15465,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_down.setter
     def mouse_down(self, value: BoolPtr):
-        dereference(self._ptr).MouseDown = &value.value
+        # dereference(self._ptr).MouseDown = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15301,7 +15483,8 @@ cdef class ImGuiIO:
         return FloatPtr(dereference(res))
     @mouse_down_duration.setter
     def mouse_down_duration(self, value: FloatPtr):
-        dereference(self._ptr).MouseDownDuration = &value.value
+        # dereference(self._ptr).MouseDownDuration = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15318,7 +15501,8 @@ cdef class ImGuiIO:
         return FloatPtr(dereference(res))
     @mouse_down_duration_prev.setter
     def mouse_down_duration_prev(self, value: FloatPtr):
-        dereference(self._ptr).MouseDownDurationPrev = &value.value
+        # dereference(self._ptr).MouseDownDurationPrev = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15335,7 +15519,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_down_owned.setter
     def mouse_down_owned(self, value: BoolPtr):
-        dereference(self._ptr).MouseDownOwned = &value.value
+        # dereference(self._ptr).MouseDownOwned = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15352,7 +15537,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_down_owned_unless_popup_close.setter
     def mouse_down_owned_unless_popup_close(self, value: BoolPtr):
-        dereference(self._ptr).MouseDownOwnedUnlessPopupClose = &value.value
+        # dereference(self._ptr).MouseDownOwnedUnlessPopupClose = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15369,7 +15555,8 @@ cdef class ImGuiIO:
         return ImVec2.from_ptr(res)
     @mouse_drag_max_distance_abs.setter
     def mouse_drag_max_distance_abs(self, value: ImVec2):
-        dereference(self._ptr).MouseDragMaxDistanceAbs = value._ptr
+        # dereference(self._ptr).MouseDragMaxDistanceAbs = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15386,7 +15573,8 @@ cdef class ImGuiIO:
         return FloatPtr(dereference(res))
     @mouse_drag_max_distance_sqr.setter
     def mouse_drag_max_distance_sqr(self, value: FloatPtr):
-        dereference(self._ptr).MouseDragMaxDistanceSqr = &value.value
+        # dereference(self._ptr).MouseDragMaxDistanceSqr = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15403,7 +15591,8 @@ cdef class ImGuiIO:
         return res
     @mouse_drag_threshold.setter
     def mouse_drag_threshold(self, value: float):
-        dereference(self._ptr).MouseDragThreshold = value
+        # dereference(self._ptr).MouseDragThreshold = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15421,7 +15610,8 @@ cdef class ImGuiIO:
         return res
     @mouse_draw_cursor.setter
     def mouse_draw_cursor(self, value: bool):
-        dereference(self._ptr).MouseDrawCursor = value
+        # dereference(self._ptr).MouseDrawCursor = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15482,7 +15672,8 @@ cdef class ImGuiIO:
         return _cast_ImVec2_tuple(res)
     @mouse_pos_prev.setter
     def mouse_pos_prev(self, value: tuple):
-        dereference(self._ptr).MousePosPrev = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).MousePosPrev = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15499,7 +15690,8 @@ cdef class ImGuiIO:
         return BoolPtr(dereference(res))
     @mouse_released.setter
     def mouse_released(self, value: BoolPtr):
-        dereference(self._ptr).MouseReleased = &value.value
+        # dereference(self._ptr).MouseReleased = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15516,7 +15708,8 @@ cdef class ImGuiIO:
         return res
     @mouse_source.setter
     def mouse_source(self, value: int):
-        dereference(self._ptr).MouseSource = value
+        # dereference(self._ptr).MouseSource = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15533,7 +15726,8 @@ cdef class ImGuiIO:
         return res
     @mouse_wheel.setter
     def mouse_wheel(self, value: float):
-        dereference(self._ptr).MouseWheel = value
+        # dereference(self._ptr).MouseWheel = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15550,7 +15744,8 @@ cdef class ImGuiIO:
         return res
     @mouse_wheel_h.setter
     def mouse_wheel_h(self, value: float):
-        dereference(self._ptr).MouseWheelH = value
+        # dereference(self._ptr).MouseWheelH = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15567,7 +15762,8 @@ cdef class ImGuiIO:
         return res
     @mouse_wheel_request_axis_swap.setter
     def mouse_wheel_request_axis_swap(self, value: bool):
-        dereference(self._ptr).MouseWheelRequestAxisSwap = value
+        # dereference(self._ptr).MouseWheelRequestAxisSwap = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15584,7 +15780,8 @@ cdef class ImGuiIO:
         return res
     @nav_active.setter
     def nav_active(self, value: bool):
-        dereference(self._ptr).NavActive = value
+        # dereference(self._ptr).NavActive = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15601,7 +15798,8 @@ cdef class ImGuiIO:
         return res
     @nav_visible.setter
     def nav_visible(self, value: bool):
-        dereference(self._ptr).NavVisible = value
+        # dereference(self._ptr).NavVisible = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15618,7 +15816,8 @@ cdef class ImGuiIO:
         return res
     @pen_pressure.setter
     def pen_pressure(self, value: float):
-        dereference(self._ptr).PenPressure = value
+        # dereference(self._ptr).PenPressure = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15657,7 +15856,8 @@ cdef class ImGuiIO:
         return res
     @set_platform_ime_data_fn.setter
     def set_platform_ime_data_fn(self, value: Callable):
-        dereference(self._ptr).SetPlatformImeDataFn = value
+        # dereference(self._ptr).SetPlatformImeDataFn = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15674,7 +15874,8 @@ cdef class ImGuiIO:
         return res
     @user_data.setter
     def user_data(self, value: Any):
-        dereference(self._ptr).UserData = value
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15691,7 +15892,8 @@ cdef class ImGuiIO:
         return res
     @want_capture_keyboard.setter
     def want_capture_keyboard(self, value: bool):
-        dereference(self._ptr).WantCaptureKeyboard = value
+        # dereference(self._ptr).WantCaptureKeyboard = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15708,7 +15910,8 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse.setter
     def want_capture_mouse(self, value: bool):
-        dereference(self._ptr).WantCaptureMouse = value
+        # dereference(self._ptr).WantCaptureMouse = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15725,7 +15928,8 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse_unless_popup_close.setter
     def want_capture_mouse_unless_popup_close(self, value: bool):
-        dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
+        # dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15742,7 +15946,8 @@ cdef class ImGuiIO:
         return res
     @want_save_ini_settings.setter
     def want_save_ini_settings(self, value: bool):
-        dereference(self._ptr).WantSaveIniSettings = value
+        # dereference(self._ptr).WantSaveIniSettings = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15759,7 +15964,8 @@ cdef class ImGuiIO:
         return res
     @want_set_mouse_pos.setter
     def want_set_mouse_pos(self, value: bool):
-        dereference(self._ptr).WantSetMousePos = value
+        # dereference(self._ptr).WantSetMousePos = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15776,7 +15982,8 @@ cdef class ImGuiIO:
         return res
     @want_text_input.setter
     def want_text_input(self, value: bool):
-        dereference(self._ptr).WantTextInput = value
+        # dereference(self._ptr).WantTextInput = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -16070,10 +16277,11 @@ cdef class ImGuiInputTextCallbackData:
         Text buffer                          // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
         """
         cdef char* res = dereference(self._ptr).Buf
-        return _from_bytes(res)
+        # return _from_bytes(res)
     @buf.setter
     def buf(self, value: str):
         strncpy(dereference(self._ptr).Buf, _bytes(value), len(_bytes(value)))
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16090,7 +16298,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @buf_dirty.setter
     def buf_dirty(self, value: bool):
-        dereference(self._ptr).BufDirty = value
+        # dereference(self._ptr).BufDirty = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16107,7 +16316,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @buf_size.setter
     def buf_size(self, value: int):
-        dereference(self._ptr).BufSize = value
+        # dereference(self._ptr).BufSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16124,7 +16334,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @buf_text_len.setter
     def buf_text_len(self, value: int):
-        dereference(self._ptr).BufTextLen = value
+        # dereference(self._ptr).BufTextLen = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16141,7 +16352,8 @@ cdef class ImGuiInputTextCallbackData:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value._ptr
+        # dereference(self._ptr).Ctx = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16158,7 +16370,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @cursor_pos.setter
     def cursor_pos(self, value: int):
-        dereference(self._ptr).CursorPos = value
+        # dereference(self._ptr).CursorPos = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16178,7 +16391,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @event_char.setter
     def event_char(self, value: int):
-        dereference(self._ptr).EventChar = value
+        # dereference(self._ptr).EventChar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16195,7 +16409,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @event_flag.setter
     def event_flag(self, value: int):
-        dereference(self._ptr).EventFlag = value
+        # dereference(self._ptr).EventFlag = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16212,7 +16427,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @event_key.setter
     def event_key(self, value: int):
-        dereference(self._ptr).EventKey = value
+        # dereference(self._ptr).EventKey = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16229,7 +16445,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @flags.setter
     def flags(self, value: int):
-        dereference(self._ptr).Flags = value
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16246,7 +16463,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @selection_end.setter
     def selection_end(self, value: int):
-        dereference(self._ptr).SelectionEnd = value
+        # dereference(self._ptr).SelectionEnd = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16263,7 +16481,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @selection_start.setter
     def selection_start(self, value: int):
-        dereference(self._ptr).SelectionStart = value
+        # dereference(self._ptr).SelectionStart = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16280,7 +16499,8 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @user_data.setter
     def user_data(self, value: Any):
-        dereference(self._ptr).UserData = value
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -16381,7 +16601,8 @@ cdef class ImGuiKeyData:
         return res
     @analog_value.setter
     def analog_value(self, value: float):
-        dereference(self._ptr).AnalogValue = value
+        # dereference(self._ptr).AnalogValue = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16398,7 +16619,8 @@ cdef class ImGuiKeyData:
         return res
     @down.setter
     def down(self, value: bool):
-        dereference(self._ptr).Down = value
+        # dereference(self._ptr).Down = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16415,7 +16637,8 @@ cdef class ImGuiKeyData:
         return res
     @down_duration.setter
     def down_duration(self, value: float):
-        dereference(self._ptr).DownDuration = value
+        # dereference(self._ptr).DownDuration = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16432,7 +16655,8 @@ cdef class ImGuiKeyData:
         return res
     @down_duration_prev.setter
     def down_duration_prev(self, value: float):
-        dereference(self._ptr).DownDurationPrev = value
+        # dereference(self._ptr).DownDurationPrev = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -16490,7 +16714,8 @@ cdef class ImGuiListClipper:
         return ImGuiContext.from_ptr(res)
     @ctx.setter
     def ctx(self, value: ImGuiContext):
-        dereference(self._ptr).Ctx = value._ptr
+        # dereference(self._ptr).Ctx = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16543,7 +16768,8 @@ cdef class ImGuiListClipper:
         return res
     @items_count.setter
     def items_count(self, value: int):
-        dereference(self._ptr).ItemsCount = value
+        # dereference(self._ptr).ItemsCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16560,7 +16786,8 @@ cdef class ImGuiListClipper:
         return res
     @items_height.setter
     def items_height(self, value: float):
-        dereference(self._ptr).ItemsHeight = value
+        # dereference(self._ptr).ItemsHeight = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16577,7 +16804,8 @@ cdef class ImGuiListClipper:
         return res
     @start_pos_y.setter
     def start_pos_y(self, value: float):
-        dereference(self._ptr).StartPosY = value
+        # dereference(self._ptr).StartPosY = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16594,7 +16822,8 @@ cdef class ImGuiListClipper:
         return res
     @temp_data.setter
     def temp_data(self, value: Any):
-        dereference(self._ptr).TempData = value
+        # dereference(self._ptr).TempData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -16728,7 +16957,8 @@ cdef class ImGuiPayload:
         return res
     @data.setter
     def data(self, value: Any):
-        dereference(self._ptr).Data = value
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16745,7 +16975,8 @@ cdef class ImGuiPayload:
         return res
     @data_frame_count.setter
     def data_frame_count(self, value: int):
-        dereference(self._ptr).DataFrameCount = value
+        # dereference(self._ptr).DataFrameCount = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16762,7 +16993,8 @@ cdef class ImGuiPayload:
         return res
     @data_size.setter
     def data_size(self, value: int):
-        dereference(self._ptr).DataSize = value
+        # dereference(self._ptr).DataSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16779,7 +17011,8 @@ cdef class ImGuiPayload:
         return _from_bytes(res)
     @data_type.setter
     def data_type(self, value: str):
-        dereference(self._ptr).DataType = _bytes(value)
+        # dereference(self._ptr).DataType = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16796,7 +17029,8 @@ cdef class ImGuiPayload:
         return res
     @delivery.setter
     def delivery(self, value: bool):
-        dereference(self._ptr).Delivery = value
+        # dereference(self._ptr).Delivery = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16813,7 +17047,8 @@ cdef class ImGuiPayload:
         return res
     @preview.setter
     def preview(self, value: bool):
-        dereference(self._ptr).Preview = value
+        # dereference(self._ptr).Preview = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16831,7 +17066,8 @@ cdef class ImGuiPayload:
         return res
     @source_id.setter
     def source_id(self, value: int):
-        dereference(self._ptr).SourceId = value
+        # dereference(self._ptr).SourceId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16848,7 +17084,8 @@ cdef class ImGuiPayload:
         return res
     @source_parent_id.setter
     def source_parent_id(self, value: int):
-        dereference(self._ptr).SourceParentId = value
+        # dereference(self._ptr).SourceParentId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -16937,7 +17174,8 @@ cdef class ImGuiPlatformIO:
         return ImVector_ImGuiPlatformMonitor.from_ptr(res)
     @monitors.setter
     def monitors(self, value: ImVector_ImGuiPlatformMonitor):
-        dereference(self._ptr).Monitors = value._ptr
+        # dereference(self._ptr).Monitors = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16954,7 +17192,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_create_vk_surface.setter
     def platform_create_vk_surface(self, value: Callable):
-        dereference(self._ptr).Platform_CreateVkSurface = value
+        # dereference(self._ptr).Platform_CreateVkSurface = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16972,7 +17211,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_create_window.setter
     def platform_create_window(self, value: Callable):
-        dereference(self._ptr).Platform_CreateWindow = value
+        # dereference(self._ptr).Platform_CreateWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16989,7 +17229,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_destroy_window.setter
     def platform_destroy_window(self, value: Callable):
-        dereference(self._ptr).Platform_DestroyWindow = value
+        # dereference(self._ptr).Platform_DestroyWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17006,7 +17247,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_get_window_dpi_scale.setter
     def platform_get_window_dpi_scale(self, value: Callable):
-        dereference(self._ptr).Platform_GetWindowDpiScale = value
+        # dereference(self._ptr).Platform_GetWindowDpiScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17023,7 +17265,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_get_window_focus.setter
     def platform_get_window_focus(self, value: Callable):
-        dereference(self._ptr).Platform_GetWindowFocus = value
+        # dereference(self._ptr).Platform_GetWindowFocus = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17040,7 +17283,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_get_window_minimized.setter
     def platform_get_window_minimized(self, value: Callable):
-        dereference(self._ptr).Platform_GetWindowMinimized = value
+        # dereference(self._ptr).Platform_GetWindowMinimized = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17057,7 +17301,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_get_window_pos.setter
     def platform_get_window_pos(self, value: Callable):
-        dereference(self._ptr).Platform_GetWindowPos = value
+        # dereference(self._ptr).Platform_GetWindowPos = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17074,7 +17319,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_get_window_size.setter
     def platform_get_window_size(self, value: Callable):
-        dereference(self._ptr).Platform_GetWindowSize = value
+        # dereference(self._ptr).Platform_GetWindowSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17091,7 +17337,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_on_changed_viewport.setter
     def platform_on_changed_viewport(self, value: Callable):
-        dereference(self._ptr).Platform_OnChangedViewport = value
+        # dereference(self._ptr).Platform_OnChangedViewport = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17108,7 +17355,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_render_window.setter
     def platform_render_window(self, value: Callable):
-        dereference(self._ptr).Platform_RenderWindow = value
+        # dereference(self._ptr).Platform_RenderWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17125,7 +17373,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_set_window_alpha.setter
     def platform_set_window_alpha(self, value: Callable):
-        dereference(self._ptr).Platform_SetWindowAlpha = value
+        # dereference(self._ptr).Platform_SetWindowAlpha = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17142,7 +17391,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_set_window_focus.setter
     def platform_set_window_focus(self, value: Callable):
-        dereference(self._ptr).Platform_SetWindowFocus = value
+        # dereference(self._ptr).Platform_SetWindowFocus = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17159,7 +17409,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_set_window_pos.setter
     def platform_set_window_pos(self, value: Callable):
-        dereference(self._ptr).Platform_SetWindowPos = value
+        # dereference(self._ptr).Platform_SetWindowPos = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17176,7 +17427,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_set_window_size.setter
     def platform_set_window_size(self, value: Callable):
-        dereference(self._ptr).Platform_SetWindowSize = value
+        # dereference(self._ptr).Platform_SetWindowSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17193,7 +17445,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_set_window_title.setter
     def platform_set_window_title(self, value: Callable):
-        dereference(self._ptr).Platform_SetWindowTitle = value
+        # dereference(self._ptr).Platform_SetWindowTitle = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17210,7 +17463,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_show_window.setter
     def platform_show_window(self, value: Callable):
-        dereference(self._ptr).Platform_ShowWindow = value
+        # dereference(self._ptr).Platform_ShowWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17227,7 +17481,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_swap_buffers.setter
     def platform_swap_buffers(self, value: Callable):
-        dereference(self._ptr).Platform_SwapBuffers = value
+        # dereference(self._ptr).Platform_SwapBuffers = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17244,7 +17499,8 @@ cdef class ImGuiPlatformIO:
         return res
     @platform_update_window.setter
     def platform_update_window(self, value: Callable):
-        dereference(self._ptr).Platform_UpdateWindow = value
+        # dereference(self._ptr).Platform_UpdateWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17262,7 +17518,8 @@ cdef class ImGuiPlatformIO:
         return res
     @renderer_create_window.setter
     def renderer_create_window(self, value: Callable):
-        dereference(self._ptr).Renderer_CreateWindow = value
+        # dereference(self._ptr).Renderer_CreateWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17279,7 +17536,8 @@ cdef class ImGuiPlatformIO:
         return res
     @renderer_destroy_window.setter
     def renderer_destroy_window(self, value: Callable):
-        dereference(self._ptr).Renderer_DestroyWindow = value
+        # dereference(self._ptr).Renderer_DestroyWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17296,7 +17554,8 @@ cdef class ImGuiPlatformIO:
         return res
     @renderer_render_window.setter
     def renderer_render_window(self, value: Callable):
-        dereference(self._ptr).Renderer_RenderWindow = value
+        # dereference(self._ptr).Renderer_RenderWindow = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17313,7 +17572,8 @@ cdef class ImGuiPlatformIO:
         return res
     @renderer_set_window_size.setter
     def renderer_set_window_size(self, value: Callable):
-        dereference(self._ptr).Renderer_SetWindowSize = value
+        # dereference(self._ptr).Renderer_SetWindowSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17330,7 +17590,8 @@ cdef class ImGuiPlatformIO:
         return res
     @renderer_swap_buffers.setter
     def renderer_swap_buffers(self, value: Callable):
-        dereference(self._ptr).Renderer_SwapBuffers = value
+        # dereference(self._ptr).Renderer_SwapBuffers = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17349,7 +17610,8 @@ cdef class ImGuiPlatformIO:
         return ImVector_ImGuiViewportPtr.from_ptr(res)
     @viewports.setter
     def viewports(self, value: ImVector_ImGuiViewportPtr):
-        dereference(self._ptr).Viewports = value._ptr
+        # dereference(self._ptr).Viewports = value._ptr
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17388,7 +17650,8 @@ cdef class ImGuiPlatformImeData:
         return res
     @input_line_height.setter
     def input_line_height(self, value: float):
-        dereference(self._ptr).InputLineHeight = value
+        # dereference(self._ptr).InputLineHeight = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17405,7 +17668,8 @@ cdef class ImGuiPlatformImeData:
         return _cast_ImVec2_tuple(res)
     @input_pos.setter
     def input_pos(self, value: tuple):
-        dereference(self._ptr).InputPos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).InputPos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17422,7 +17686,8 @@ cdef class ImGuiPlatformImeData:
         return res
     @want_visible.setter
     def want_visible(self, value: bool):
-        dereference(self._ptr).WantVisible = value
+        # dereference(self._ptr).WantVisible = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17462,7 +17727,8 @@ cdef class ImGuiPlatformMonitor:
         return res
     @dpi_scale.setter
     def dpi_scale(self, value: float):
-        dereference(self._ptr).DpiScale = value
+        # dereference(self._ptr).DpiScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17479,7 +17745,8 @@ cdef class ImGuiPlatformMonitor:
         return _cast_ImVec2_tuple(res)
     @main_pos.setter
     def main_pos(self, value: tuple):
-        dereference(self._ptr).MainPos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).MainPos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17496,7 +17763,8 @@ cdef class ImGuiPlatformMonitor:
         return _cast_ImVec2_tuple(res)
     @main_size.setter
     def main_size(self, value: tuple):
-        dereference(self._ptr).MainSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).MainSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17530,7 +17798,8 @@ cdef class ImGuiPlatformMonitor:
         return _cast_ImVec2_tuple(res)
     @work_pos.setter
     def work_pos(self, value: tuple):
-        dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17547,7 +17816,8 @@ cdef class ImGuiPlatformMonitor:
         return _cast_ImVec2_tuple(res)
     @work_size.setter
     def work_size(self, value: tuple):
-        dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17587,7 +17857,8 @@ cdef class ImGuiSizeCallbackData:
         return _cast_ImVec2_tuple(res)
     @current_size.setter
     def current_size(self, value: tuple):
-        dereference(self._ptr).CurrentSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).CurrentSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17604,7 +17875,8 @@ cdef class ImGuiSizeCallbackData:
         return _cast_ImVec2_tuple(res)
     @desired_size.setter
     def desired_size(self, value: tuple):
-        dereference(self._ptr).DesiredSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DesiredSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17621,7 +17893,8 @@ cdef class ImGuiSizeCallbackData:
         return _cast_ImVec2_tuple(res)
     @pos.setter
     def pos(self, value: tuple):
-        dereference(self._ptr).Pos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).Pos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17638,7 +17911,8 @@ cdef class ImGuiSizeCallbackData:
         return res
     @user_data.setter
     def user_data(self, value: Any):
-        dereference(self._ptr).UserData = value
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17681,7 +17955,8 @@ cdef class ImGuiStorage:
         return ImVector_ImGuiStorage_ImGuiStoragePair.from_ptr(res)
     @data.setter
     def data(self, value: ImVector_ImGuiStorage_ImGuiStoragePair):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -17934,7 +18209,8 @@ cdef class ImGuiStorage_ImGuiStoragePair:
         return res
     @key.setter
     def key(self, value: int):
-        dereference(self._ptr).key = value
+        # dereference(self._ptr).key = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -17970,7 +18246,8 @@ cdef class ImGuiStyle:
         return res
     @alpha.setter
     def alpha(self, value: float):
-        dereference(self._ptr).Alpha = value
+        # dereference(self._ptr).Alpha = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17987,7 +18264,8 @@ cdef class ImGuiStyle:
         return res
     @anti_aliased_fill.setter
     def anti_aliased_fill(self, value: bool):
-        dereference(self._ptr).AntiAliasedFill = value
+        # dereference(self._ptr).AntiAliasedFill = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18004,7 +18282,8 @@ cdef class ImGuiStyle:
         return res
     @anti_aliased_lines.setter
     def anti_aliased_lines(self, value: bool):
-        dereference(self._ptr).AntiAliasedLines = value
+        # dereference(self._ptr).AntiAliasedLines = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18021,7 +18300,8 @@ cdef class ImGuiStyle:
         return res
     @anti_aliased_lines_use_tex.setter
     def anti_aliased_lines_use_tex(self, value: bool):
-        dereference(self._ptr).AntiAliasedLinesUseTex = value
+        # dereference(self._ptr).AntiAliasedLinesUseTex = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18038,7 +18318,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @button_text_align.setter
     def button_text_align(self, value: tuple):
-        dereference(self._ptr).ButtonTextAlign = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).ButtonTextAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18055,7 +18336,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @cell_padding.setter
     def cell_padding(self, value: tuple):
-        dereference(self._ptr).CellPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).CellPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18072,7 +18354,8 @@ cdef class ImGuiStyle:
         return res
     @child_border_size.setter
     def child_border_size(self, value: float):
-        dereference(self._ptr).ChildBorderSize = value
+        # dereference(self._ptr).ChildBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18089,7 +18372,8 @@ cdef class ImGuiStyle:
         return res
     @child_rounding.setter
     def child_rounding(self, value: float):
-        dereference(self._ptr).ChildRounding = value
+        # dereference(self._ptr).ChildRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18106,7 +18390,8 @@ cdef class ImGuiStyle:
         return res
     @circle_tessellation_max_error.setter
     def circle_tessellation_max_error(self, value: float):
-        dereference(self._ptr).CircleTessellationMaxError = value
+        # dereference(self._ptr).CircleTessellationMaxError = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18123,7 +18408,8 @@ cdef class ImGuiStyle:
         return res
     @color_button_position.setter
     def color_button_position(self, value: int):
-        dereference(self._ptr).ColorButtonPosition = value
+        # dereference(self._ptr).ColorButtonPosition = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18137,7 +18423,8 @@ cdef class ImGuiStyle:
         return ImVec4.from_ptr(res)
     @colors.setter
     def colors(self, value: ImVec4):
-        dereference(self._ptr).Colors = value._ptr
+        # dereference(self._ptr).Colors = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18154,7 +18441,8 @@ cdef class ImGuiStyle:
         return res
     @columns_min_spacing.setter
     def columns_min_spacing(self, value: float):
-        dereference(self._ptr).ColumnsMinSpacing = value
+        # dereference(self._ptr).ColumnsMinSpacing = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18171,7 +18459,8 @@ cdef class ImGuiStyle:
         return res
     @curve_tessellation_tol.setter
     def curve_tessellation_tol(self, value: float):
-        dereference(self._ptr).CurveTessellationTol = value
+        # dereference(self._ptr).CurveTessellationTol = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18188,7 +18477,8 @@ cdef class ImGuiStyle:
         return res
     @disabled_alpha.setter
     def disabled_alpha(self, value: float):
-        dereference(self._ptr).DisabledAlpha = value
+        # dereference(self._ptr).DisabledAlpha = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18205,7 +18495,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @display_safe_area_padding.setter
     def display_safe_area_padding(self, value: tuple):
-        dereference(self._ptr).DisplaySafeAreaPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplaySafeAreaPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18222,7 +18513,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @display_window_padding.setter
     def display_window_padding(self, value: tuple):
-        dereference(self._ptr).DisplayWindowPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).DisplayWindowPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18239,7 +18531,8 @@ cdef class ImGuiStyle:
         return res
     @frame_border_size.setter
     def frame_border_size(self, value: float):
-        dereference(self._ptr).FrameBorderSize = value
+        # dereference(self._ptr).FrameBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18256,7 +18549,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @frame_padding.setter
     def frame_padding(self, value: tuple):
-        dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).FramePadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18273,7 +18567,8 @@ cdef class ImGuiStyle:
         return res
     @frame_rounding.setter
     def frame_rounding(self, value: float):
-        dereference(self._ptr).FrameRounding = value
+        # dereference(self._ptr).FrameRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18290,7 +18585,8 @@ cdef class ImGuiStyle:
         return res
     @grab_min_size.setter
     def grab_min_size(self, value: float):
-        dereference(self._ptr).GrabMinSize = value
+        # dereference(self._ptr).GrabMinSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18307,7 +18603,8 @@ cdef class ImGuiStyle:
         return res
     @grab_rounding.setter
     def grab_rounding(self, value: float):
-        dereference(self._ptr).GrabRounding = value
+        # dereference(self._ptr).GrabRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18324,7 +18621,8 @@ cdef class ImGuiStyle:
         return res
     @indent_spacing.setter
     def indent_spacing(self, value: float):
-        dereference(self._ptr).IndentSpacing = value
+        # dereference(self._ptr).IndentSpacing = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18341,7 +18639,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @item_inner_spacing.setter
     def item_inner_spacing(self, value: tuple):
-        dereference(self._ptr).ItemInnerSpacing = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).ItemInnerSpacing = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18358,7 +18657,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @item_spacing.setter
     def item_spacing(self, value: tuple):
-        dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).ItemSpacing = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18375,7 +18675,8 @@ cdef class ImGuiStyle:
         return res
     @log_slider_deadzone.setter
     def log_slider_deadzone(self, value: float):
-        dereference(self._ptr).LogSliderDeadzone = value
+        # dereference(self._ptr).LogSliderDeadzone = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18392,7 +18693,8 @@ cdef class ImGuiStyle:
         return res
     @mouse_cursor_scale.setter
     def mouse_cursor_scale(self, value: float):
-        dereference(self._ptr).MouseCursorScale = value
+        # dereference(self._ptr).MouseCursorScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18409,7 +18711,8 @@ cdef class ImGuiStyle:
         return res
     @popup_border_size.setter
     def popup_border_size(self, value: float):
-        dereference(self._ptr).PopupBorderSize = value
+        # dereference(self._ptr).PopupBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18426,7 +18729,8 @@ cdef class ImGuiStyle:
         return res
     @popup_rounding.setter
     def popup_rounding(self, value: float):
-        dereference(self._ptr).PopupRounding = value
+        # dereference(self._ptr).PopupRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18443,7 +18747,8 @@ cdef class ImGuiStyle:
         return res
     @scrollbar_rounding.setter
     def scrollbar_rounding(self, value: float):
-        dereference(self._ptr).ScrollbarRounding = value
+        # dereference(self._ptr).ScrollbarRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18460,7 +18765,8 @@ cdef class ImGuiStyle:
         return res
     @scrollbar_size.setter
     def scrollbar_size(self, value: float):
-        dereference(self._ptr).ScrollbarSize = value
+        # dereference(self._ptr).ScrollbarSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18477,7 +18783,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @selectable_text_align.setter
     def selectable_text_align(self, value: tuple):
-        dereference(self._ptr).SelectableTextAlign = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).SelectableTextAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18494,7 +18801,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @separator_text_align.setter
     def separator_text_align(self, value: tuple):
-        dereference(self._ptr).SeparatorTextAlign = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).SeparatorTextAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18511,7 +18819,8 @@ cdef class ImGuiStyle:
         return res
     @separator_text_border_size.setter
     def separator_text_border_size(self, value: float):
-        dereference(self._ptr).SeparatorTextBorderSize = value
+        # dereference(self._ptr).SeparatorTextBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18528,7 +18837,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @separator_text_padding.setter
     def separator_text_padding(self, value: tuple):
-        dereference(self._ptr).SeparatorTextPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).SeparatorTextPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18545,7 +18855,8 @@ cdef class ImGuiStyle:
         return res
     @tab_border_size.setter
     def tab_border_size(self, value: float):
-        dereference(self._ptr).TabBorderSize = value
+        # dereference(self._ptr).TabBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18562,7 +18873,8 @@ cdef class ImGuiStyle:
         return res
     @tab_min_width_for_close_button.setter
     def tab_min_width_for_close_button(self, value: float):
-        dereference(self._ptr).TabMinWidthForCloseButton = value
+        # dereference(self._ptr).TabMinWidthForCloseButton = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18579,7 +18891,8 @@ cdef class ImGuiStyle:
         return res
     @tab_rounding.setter
     def tab_rounding(self, value: float):
-        dereference(self._ptr).TabRounding = value
+        # dereference(self._ptr).TabRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18596,7 +18909,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @touch_extra_padding.setter
     def touch_extra_padding(self, value: tuple):
-        dereference(self._ptr).TouchExtraPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).TouchExtraPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18613,7 +18927,8 @@ cdef class ImGuiStyle:
         return res
     @window_border_size.setter
     def window_border_size(self, value: float):
-        dereference(self._ptr).WindowBorderSize = value
+        # dereference(self._ptr).WindowBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18630,7 +18945,8 @@ cdef class ImGuiStyle:
         return res
     @window_menu_button_position.setter
     def window_menu_button_position(self, value: int):
-        dereference(self._ptr).WindowMenuButtonPosition = value
+        # dereference(self._ptr).WindowMenuButtonPosition = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18647,7 +18963,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @window_min_size.setter
     def window_min_size(self, value: tuple):
-        dereference(self._ptr).WindowMinSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WindowMinSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18664,7 +18981,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @window_padding.setter
     def window_padding(self, value: tuple):
-        dereference(self._ptr).WindowPadding = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WindowPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18681,7 +18999,8 @@ cdef class ImGuiStyle:
         return res
     @window_rounding.setter
     def window_rounding(self, value: float):
-        dereference(self._ptr).WindowRounding = value
+        # dereference(self._ptr).WindowRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18698,7 +19017,8 @@ cdef class ImGuiStyle:
         return _cast_ImVec2_tuple(res)
     @window_title_align.setter
     def window_title_align(self, value: tuple):
-        dereference(self._ptr).WindowTitleAlign = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WindowTitleAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -18803,7 +19123,8 @@ cdef class ImGuiTableColumnSortSpecs:
         return res
     @sort_order.setter
     def sort_order(self, value: int):
-        dereference(self._ptr).SortOrder = value
+        # dereference(self._ptr).SortOrder = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -18883,7 +19204,8 @@ cdef class ImGuiTableSortSpecs:
         return res
     @specs_dirty.setter
     def specs_dirty(self, value: bool):
-        dereference(self._ptr).SpecsDirty = value
+        # dereference(self._ptr).SpecsDirty = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -18920,7 +19242,8 @@ cdef class ImGuiTextBuffer:
         return ImVector_char.from_ptr(res)
     @buf.setter
     def buf(self, value: ImVector_char):
-        dereference(self._ptr).Buf = value._ptr
+        # dereference(self._ptr).Buf = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -19081,7 +19404,8 @@ cdef class ImGuiTextFilter:
         return res
     @count_grep.setter
     def count_grep(self, value: int):
-        dereference(self._ptr).CountGrep = value
+        # dereference(self._ptr).CountGrep = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19095,7 +19419,8 @@ cdef class ImGuiTextFilter:
         return ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
     @filters.setter
     def filters(self, value: ImVector_ImGuiTextFilter_ImGuiTextRange):
-        dereference(self._ptr).Filters = value._ptr
+        # dereference(self._ptr).Filters = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19109,7 +19434,8 @@ cdef class ImGuiTextFilter:
         return _from_bytes(res)
     @input_buf.setter
     def input_buf(self, value: str):
-        dereference(self._ptr).InputBuf = _bytes(value)
+        # dereference(self._ptr).InputBuf = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -19212,7 +19538,8 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
         return _from_bytes(res)
     @b.setter
     def b(self, value: str):
-        dereference(self._ptr).b = _bytes(value)
+        # dereference(self._ptr).b = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19226,7 +19553,8 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
         return _from_bytes(res)
     @e.setter
     def e(self, value: str):
-        dereference(self._ptr).e = _bytes(value)
+        # dereference(self._ptr).e = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -19296,7 +19624,8 @@ cdef class ImGuiViewport:
         return res
     @dpi_scale.setter
     def dpi_scale(self, value: float):
-        dereference(self._ptr).DpiScale = value
+        # dereference(self._ptr).DpiScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19313,7 +19642,8 @@ cdef class ImGuiViewport:
         return ImDrawData.from_ptr(res)
     @draw_data.setter
     def draw_data(self, value: ImDrawData):
-        dereference(self._ptr).DrawData = value._ptr
+        # dereference(self._ptr).DrawData = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19330,7 +19660,8 @@ cdef class ImGuiViewport:
         return res
     @flags.setter
     def flags(self, value: int):
-        dereference(self._ptr).Flags = value
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19347,7 +19678,8 @@ cdef class ImGuiViewport:
         return res
     @id.setter
     def id(self, value: int):
-        dereference(self._ptr).ID = value
+        # dereference(self._ptr).ID = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19364,7 +19696,8 @@ cdef class ImGuiViewport:
         return res
     @parent_viewport_id.setter
     def parent_viewport_id(self, value: int):
-        dereference(self._ptr).ParentViewportId = value
+        # dereference(self._ptr).ParentViewportId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19381,7 +19714,8 @@ cdef class ImGuiViewport:
         return res
     @platform_handle.setter
     def platform_handle(self, value: Any):
-        dereference(self._ptr).PlatformHandle = value
+        # dereference(self._ptr).PlatformHandle = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19398,7 +19732,8 @@ cdef class ImGuiViewport:
         return res
     @platform_handle_raw.setter
     def platform_handle_raw(self, value: Any):
-        dereference(self._ptr).PlatformHandleRaw = value
+        # dereference(self._ptr).PlatformHandleRaw = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19415,7 +19750,8 @@ cdef class ImGuiViewport:
         return res
     @platform_request_close.setter
     def platform_request_close(self, value: bool):
-        dereference(self._ptr).PlatformRequestClose = value
+        # dereference(self._ptr).PlatformRequestClose = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19432,7 +19768,8 @@ cdef class ImGuiViewport:
         return res
     @platform_request_move.setter
     def platform_request_move(self, value: bool):
-        dereference(self._ptr).PlatformRequestMove = value
+        # dereference(self._ptr).PlatformRequestMove = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19449,7 +19786,8 @@ cdef class ImGuiViewport:
         return res
     @platform_request_resize.setter
     def platform_request_resize(self, value: bool):
-        dereference(self._ptr).PlatformRequestResize = value
+        # dereference(self._ptr).PlatformRequestResize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19466,7 +19804,8 @@ cdef class ImGuiViewport:
         return res
     @platform_user_data.setter
     def platform_user_data(self, value: Any):
-        dereference(self._ptr).PlatformUserData = value
+        # dereference(self._ptr).PlatformUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19483,7 +19822,8 @@ cdef class ImGuiViewport:
         return res
     @platform_window_created.setter
     def platform_window_created(self, value: bool):
-        dereference(self._ptr).PlatformWindowCreated = value
+        # dereference(self._ptr).PlatformWindowCreated = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19523,7 +19863,8 @@ cdef class ImGuiViewport:
         return res
     @renderer_user_data.setter
     def renderer_user_data(self, value: Any):
-        dereference(self._ptr).RendererUserData = value
+        # dereference(self._ptr).RendererUserData = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19558,7 +19899,8 @@ cdef class ImGuiViewport:
         return _cast_ImVec2_tuple(res)
     @work_pos.setter
     def work_pos(self, value: tuple):
-        dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WorkPos = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19575,7 +19917,8 @@ cdef class ImGuiViewport:
         return _cast_ImVec2_tuple(res)
     @work_size.setter
     def work_size(self, value: tuple):
-        dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+        # dereference(self._ptr).WorkSize = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -19647,7 +19990,8 @@ cdef class ImGuiWindowClass:
         return res
     @class_id.setter
     def class_id(self, value: int):
-        dereference(self._ptr).ClassId = value
+        # dereference(self._ptr).ClassId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19664,7 +20008,8 @@ cdef class ImGuiWindowClass:
         return res
     @dock_node_flags_override_set.setter
     def dock_node_flags_override_set(self, value: int):
-        dereference(self._ptr).DockNodeFlagsOverrideSet = value
+        # dereference(self._ptr).DockNodeFlagsOverrideSet = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19681,7 +20026,8 @@ cdef class ImGuiWindowClass:
         return res
     @docking_allow_unclassed.setter
     def docking_allow_unclassed(self, value: bool):
-        dereference(self._ptr).DockingAllowUnclassed = value
+        # dereference(self._ptr).DockingAllowUnclassed = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19698,7 +20044,8 @@ cdef class ImGuiWindowClass:
         return res
     @docking_always_tab_bar.setter
     def docking_always_tab_bar(self, value: bool):
-        dereference(self._ptr).DockingAlwaysTabBar = value
+        # dereference(self._ptr).DockingAlwaysTabBar = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19715,7 +20062,8 @@ cdef class ImGuiWindowClass:
         return res
     @parent_viewport_id.setter
     def parent_viewport_id(self, value: int):
-        dereference(self._ptr).ParentViewportId = value
+        # dereference(self._ptr).ParentViewportId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19732,7 +20080,8 @@ cdef class ImGuiWindowClass:
         return res
     @tab_item_flags_override_set.setter
     def tab_item_flags_override_set(self, value: int):
-        dereference(self._ptr).TabItemFlagsOverrideSet = value
+        # dereference(self._ptr).TabItemFlagsOverrideSet = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19749,7 +20098,8 @@ cdef class ImGuiWindowClass:
         return res
     @viewport_flags_override_clear.setter
     def viewport_flags_override_clear(self, value: int):
-        dereference(self._ptr).ViewportFlagsOverrideClear = value
+        # dereference(self._ptr).ViewportFlagsOverrideClear = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19766,7 +20116,8 @@ cdef class ImGuiWindowClass:
         return res
     @viewport_flags_override_set.setter
     def viewport_flags_override_set(self, value: int):
-        dereference(self._ptr).ViewportFlagsOverrideSet = value
+        # dereference(self._ptr).ViewportFlagsOverrideSet = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -19799,7 +20150,8 @@ cdef class ImVec2:
         return res
     @x.setter
     def x(self, value: float):
-        dereference(self._ptr).x = value
+        # dereference(self._ptr).x = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19813,7 +20165,8 @@ cdef class ImVec2:
         return res
     @y.setter
     def y(self, value: float):
-        dereference(self._ptr).y = value
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -19849,7 +20202,8 @@ cdef class ImVec4:
         return res
     @w.setter
     def w(self, value: float):
-        dereference(self._ptr).w = value
+        # dereference(self._ptr).w = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19863,7 +20217,8 @@ cdef class ImVec4:
         return res
     @x.setter
     def x(self, value: float):
-        dereference(self._ptr).x = value
+        # dereference(self._ptr).x = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19877,7 +20232,8 @@ cdef class ImVec4:
         return res
     @y.setter
     def y(self, value: float):
-        dereference(self._ptr).y = value
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19891,7 +20247,8 @@ cdef class ImVec4:
         return res
     @z.setter
     def z(self, value: float):
-        dereference(self._ptr).z = value
+        # dereference(self._ptr).z = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -19924,7 +20281,8 @@ cdef class ImVector_ImDrawChannel:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19938,7 +20296,8 @@ cdef class ImVector_ImDrawChannel:
         return ImDrawChannel.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawChannel):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19952,7 +20311,8 @@ cdef class ImVector_ImDrawChannel:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -19985,7 +20345,8 @@ cdef class ImVector_ImDrawCmd:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19999,7 +20360,8 @@ cdef class ImVector_ImDrawCmd:
         return ImDrawCmd.from_ptr(res)
     @data.setter
     def data(self, value: ImDrawCmd):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20013,7 +20375,8 @@ cdef class ImVector_ImDrawCmd:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20046,7 +20409,8 @@ cdef class ImVector_ImDrawIdx:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20109,7 +20473,8 @@ cdef class ImVector_ImDrawVert:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20172,7 +20537,8 @@ cdef class ImVector_ImFontAtlasCustomRect:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20186,7 +20552,8 @@ cdef class ImVector_ImFontAtlasCustomRect:
         return ImFontAtlasCustomRect.from_ptr(res)
     @data.setter
     def data(self, value: ImFontAtlasCustomRect):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20200,7 +20567,8 @@ cdef class ImVector_ImFontAtlasCustomRect:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20233,7 +20601,8 @@ cdef class ImVector_ImFontConfig:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20247,7 +20616,8 @@ cdef class ImVector_ImFontConfig:
         return ImFontConfig.from_ptr(res)
     @data.setter
     def data(self, value: ImFontConfig):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20261,20 +20631,21 @@ cdef class ImVector_ImFontConfig:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImVector_ImFontGlyph:
-    cdef ccimgui.ImVector_ImFontGlyph* _ptr
+    cdef const ccimgui.ImVector_ImFontGlyph* _ptr
     
     @staticmethod
-    cdef ImVector_ImFontGlyph from_ptr(ccimgui.ImVector_ImFontGlyph* _ptr):
+    cdef ImVector_ImFontGlyph from_ptr(const ccimgui.ImVector_ImFontGlyph* _ptr):
         cdef ImVector_ImFontGlyph wrapper = ImVector_ImFontGlyph.__new__(ImVector_ImFontGlyph)
         wrapper._ptr = _ptr
         return wrapper
@@ -20294,7 +20665,8 @@ cdef class ImVector_ImFontGlyph:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20308,7 +20680,8 @@ cdef class ImVector_ImFontGlyph:
         return ImFontGlyph.from_ptr(res)
     @data.setter
     def data(self, value: ImFontGlyph):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20322,7 +20695,8 @@ cdef class ImVector_ImFontGlyph:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20355,7 +20729,8 @@ cdef class ImVector_ImFontPtr:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20369,7 +20744,8 @@ cdef class ImVector_ImFontPtr:
         return ImFont.from_ptr(res)
     @data.setter
     def data(self, value: ImFont):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20383,7 +20759,8 @@ cdef class ImVector_ImFontPtr:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20416,7 +20793,8 @@ cdef class ImVector_ImGuiPlatformMonitor:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20430,7 +20808,8 @@ cdef class ImVector_ImGuiPlatformMonitor:
         return ImGuiPlatformMonitor.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiPlatformMonitor):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20444,7 +20823,8 @@ cdef class ImVector_ImGuiPlatformMonitor:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20477,7 +20857,8 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20491,7 +20872,8 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
         return ImGuiStorage_ImGuiStoragePair.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiStorage_ImGuiStoragePair):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20505,7 +20887,8 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20538,7 +20921,8 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20552,7 +20936,8 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         return ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiTextFilter_ImGuiTextRange):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20566,7 +20951,8 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20599,7 +20985,8 @@ cdef class ImVector_ImGuiViewportPtr:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20613,7 +21000,8 @@ cdef class ImVector_ImGuiViewportPtr:
         return ImGuiViewport.from_ptr(res)
     @data.setter
     def data(self, value: ImGuiViewport):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20627,7 +21015,8 @@ cdef class ImVector_ImGuiViewportPtr:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20660,7 +21049,8 @@ cdef class ImVector_ImTextureID:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20674,7 +21064,8 @@ cdef class ImVector_ImTextureID:
         return res
     @data.setter
     def data(self, value: Any):
-        dereference(self._ptr).Data = value
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20688,7 +21079,8 @@ cdef class ImVector_ImTextureID:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20721,7 +21113,8 @@ cdef class ImVector_ImU32:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20735,7 +21128,8 @@ cdef class ImVector_ImU32:
         return res
     @data.setter
     def data(self, value: int):
-        dereference(self._ptr).Data = value
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20749,7 +21143,8 @@ cdef class ImVector_ImU32:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20782,7 +21177,8 @@ cdef class ImVector_ImVec2:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20796,7 +21192,8 @@ cdef class ImVector_ImVec2:
         return ImVec2.from_ptr(res)
     @data.setter
     def data(self, value: ImVec2):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20810,7 +21207,8 @@ cdef class ImVector_ImVec2:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20843,7 +21241,8 @@ cdef class ImVector_ImVec4:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20857,7 +21256,8 @@ cdef class ImVector_ImVec4:
         return ImVec4.from_ptr(res)
     @data.setter
     def data(self, value: ImVec4):
-        dereference(self._ptr).Data = value._ptr
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20871,20 +21271,21 @@ cdef class ImVector_ImVec4:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImVector_ImWchar:
-    cdef ccimgui.ImVector_ImWchar* _ptr
+    cdef const ccimgui.ImVector_ImWchar* _ptr
     
     @staticmethod
-    cdef ImVector_ImWchar from_ptr(ccimgui.ImVector_ImWchar* _ptr):
+    cdef ImVector_ImWchar from_ptr(const ccimgui.ImVector_ImWchar* _ptr):
         cdef ImVector_ImWchar wrapper = ImVector_ImWchar.__new__(ImVector_ImWchar)
         wrapper._ptr = _ptr
         return wrapper
@@ -20904,7 +21305,8 @@ cdef class ImVector_ImWchar:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20918,7 +21320,8 @@ cdef class ImVector_ImWchar:
         return res
     @data.setter
     def data(self, value: int):
-        dereference(self._ptr).Data = value
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20932,7 +21335,8 @@ cdef class ImVector_ImWchar:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20965,7 +21369,8 @@ cdef class ImVector_char:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20979,7 +21384,8 @@ cdef class ImVector_char:
         return _from_bytes(res)
     @data.setter
     def data(self, value: str):
-        dereference(self._ptr).Data = _bytes(value)
+        # dereference(self._ptr).Data = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20993,20 +21399,21 @@ cdef class ImVector_char:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImVector_float:
-    cdef ccimgui.ImVector_float* _ptr
+    cdef const ccimgui.ImVector_float* _ptr
     
     @staticmethod
-    cdef ImVector_float from_ptr(ccimgui.ImVector_float* _ptr):
+    cdef ImVector_float from_ptr(const ccimgui.ImVector_float* _ptr):
         cdef ImVector_float wrapper = ImVector_float.__new__(ImVector_float)
         wrapper._ptr = _ptr
         return wrapper
@@ -21026,7 +21433,8 @@ cdef class ImVector_float:
         return res
     @capacity.setter
     def capacity(self, value: int):
-        dereference(self._ptr).Capacity = value
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21040,7 +21448,8 @@ cdef class ImVector_float:
         return FloatPtr(dereference(res))
     @data.setter
     def data(self, value: FloatPtr):
-        dereference(self._ptr).Data = &value.value
+        # dereference(self._ptr).Data = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21054,7 +21463,8 @@ cdef class ImVector_float:
         return res
     @size.setter
     def size(self, value: int):
-        dereference(self._ptr).Size = value
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
     # [End Field]
 # [End Class]
 

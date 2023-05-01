@@ -11,4 +11,5 @@ def {field_name}(self):
     return {res}
 @{field_name}.setter
 def {field_name}(self, value: {python_type}):
-    dereference(self._ptr).{cimgui_field_name} = {value}
+    # dereference(self._ptr).{cimgui_field_name} = {value}
+    raise NotImplementedError
