@@ -112,6 +112,7 @@ def main():
             
             glfw.swap_buffers(window)
     except KeyboardInterrupt:
+        print("Closing")
         pass
     
     pygui.impl_open_gl3_shutdown()

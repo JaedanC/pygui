@@ -3030,72 +3030,405 @@ def show_random_extras(p_open: pygui.BoolPtr):
             demo.random_window_log.clear()
         pygui.tree_pop()
     
-    if pygui.tree_node("pygui.get_font()"):
+    if pygui.tree_node("Various Structs"):
+        def show_imfontglyph(glyph: pygui.ImFontGlyph):
+            pygui.menu_item("glyph.advance_x:   {}".format(glyph.advance_x))
+            pygui.menu_item("glyph.codepoint:   {}".format(glyph.codepoint))
+            pygui.menu_item("glyph.colored:     {}".format(glyph.colored))
+            pygui.menu_item("glyph.u0:          {}".format(glyph.u0))
+            pygui.menu_item("glyph.u1:          {}".format(glyph.u1))
+            pygui.menu_item("glyph.v0:          {}".format(glyph.v0))
+            pygui.menu_item("glyph.v1:          {}".format(glyph.v1))
+            pygui.menu_item("glyph.visible:     {}".format(glyph.visible))
+            pygui.menu_item("glyph.x0:          {}".format(glyph.x0))
+            pygui.menu_item("glyph.x1:          {}".format(glyph.x1))
+            pygui.menu_item("glyph.y0:          {}".format(glyph.y0))
+            pygui.menu_item("glyph.y1:          {}".format(glyph.y1))
+        
+        def show_imfontconfig(config: pygui.ImFontConfig):
+            if pygui.begin_menu("config.dst_font"):
+                show_imfont(config.dst_font)
+                pygui.end_menu()
+            pygui.menu_item("config.ellipsis_char:           {} {}".format(config.ellipsis_char, chr(config.ellipsis_char)))
+            pygui.menu_item("config.font_builder_flags:      {}".format(config.font_builder_flags))
+            pygui.menu_item("config.font_data_owned_by_atlas: {}".format(config.font_data_owned_by_atlas))
+            pygui.menu_item("config.font_data_size:          {}".format(config.font_data_size))
+            pygui.menu_item("config.font_no:                 {}".format(config.font_no))
+            pygui.menu_item("config.glyph_extra_spacing:     {}".format(config.glyph_extra_spacing))
+            pygui.menu_item("config.glyph_max_advance_x:     {}".format(config.glyph_max_advance_x))
+            pygui.menu_item("config.glyph_min_advance_x:     {}".format(config.glyph_min_advance_x))
+            pygui.menu_item("config.glyph_offset:            {}".format(config.glyph_offset))
+            pygui.menu_item("config.merge_mode:              {}".format(config.merge_mode))
+            pygui.menu_item("config.name:                    {}".format(config.name))
+            pygui.menu_item("config.oversample_h:            {}".format(config.oversample_h))
+            pygui.menu_item("config.oversample_v:            {}".format(config.oversample_v))
+            pygui.menu_item("config.pixel_snap_h:            {}".format(config.pixel_snap_h))
+            pygui.menu_item("config.rasterizer_multiply:     {}".format(config.rasterizer_multiply))
+
+        def show_imfontatlas(atlas: pygui.ImFontAtlas):
+            if pygui.begin_menu("atlas.config_data"):
+                for i, config in enumerate(atlas.config_data):
+                    if pygui.begin_menu(f"Config:  {i}"):
+                        show_imfontconfig(config)
+                        pygui.end_menu()
+                pygui.end_menu()
+            if pygui.begin_menu("atlas.custom_rects"):
+                for i, rect in enumerate(atlas.custom_rects):
+                    if pygui.begin_menu(f"Custom Rect:  {i}"):
+                        show_imfontatlascustomrect(rect)
+                        pygui.end_menu()
+                pygui.end_menu()
+            pygui.menu_item("atlas.flags:                   {}".format(atlas.flags))
+            pygui.menu_item("atlas.font_builder_flags:      {}".format(atlas.font_builder_flags))
+            pygui.menu_item("atlas.font_builder_io:         {}".format(atlas.font_builder_io))
+            if pygui.begin_menu("atlas.fonts"):
+                for i, font in enumerate(atlas.fonts):
+                    if pygui.begin_menu(f"Font:  {i}"):
+                        show_imfont(font)
+                        pygui.end_menu()
+                pygui.end_menu()
+            pygui.menu_item("atlas.locked:                  {}".format(atlas.locked))
+            pygui.menu_item("atlas.pack_id_lines:           {}".format(atlas.pack_id_lines))
+            pygui.menu_item("atlas.pack_id_mouse_cursors:   {}".format(atlas.pack_id_mouse_cursors))
+            pygui.menu_item("atlas.tex_desired_width:       {}".format(atlas.tex_desired_width))
+            pygui.menu_item("atlas.tex_glyph_padding:       {}".format(atlas.tex_glyph_padding))
+            pygui.menu_item("atlas.tex_height:              {}".format(atlas.tex_height))
+            pygui.menu_item("atlas.tex_id:                  {}".format(atlas.tex_id))
+            if pygui.begin_menu("atlas.tex_pixels_alpha8"):
+                for i, byte in enumerate(atlas.tex_pixels_alpha8):
+                    pygui.menu_item("Byte {}:  {}".format(i, byte))
+                pygui.end_menu()
+            if pygui.begin_menu("atlas.tex_pixels_rgba_32"):
+                bytes = atlas.tex_pixels_rgba_32
+                for i in range(len(bytes) // 4):
+                    cur = int.from_bytes(bytes[i:i+4], "big")
+                    pygui.menu_item("Byte {}:  {}".format(i, cur))
+                pygui.end_menu()
+            pygui.menu_item("atlas.tex_pixels_use_colors:   {}".format(atlas.tex_pixels_use_colors))
+            pygui.menu_item("atlas.tex_ready:               {}".format(atlas.tex_ready))
+            pygui.menu_item("atlas.tex_uv_lines:            {}".format(atlas.tex_uv_lines.vec()))
+            pygui.menu_item("atlas.tex_uv_scale:            {}".format(atlas.tex_uv_scale))
+            pygui.menu_item("atlas.tex_uv_white_pixel:      {}".format(atlas.tex_uv_white_pixel))
+            pygui.menu_item("atlas.tex_width:               {}".format(atlas.tex_width))
+
+        def show_imfontatlascustomrect(rect: pygui.ImFontAtlasCustomRect):
+            if rect.font is not None:
+                if pygui.begin_menu("rect.font"):
+                    show_imfont(rect.font)
+                    pygui.end_menu()
+            else:
+                pygui.menu_item("rect.font:             {}".format(None))
+            pygui.menu_item("rect.glyph_advance_x:  {}".format(rect.glyph_advance_x))
+            pygui.menu_item("rect.glyph_id:         {}".format(rect.glyph_id))
+            pygui.menu_item("rect.glyph_offset:     {}".format(rect.glyph_offset))
+            pygui.menu_item("rect.height:           {}".format(rect.height))
+            pygui.menu_item("rect.width:            {}".format(rect.width))
+            pygui.menu_item("rect.x:                {}".format(rect.x))
+            pygui.menu_item("rect.y:                {}".format(rect.y))
+            pygui.menu_item("rect.is_packed():      {}".format(rect.is_packed()))
+
+        def show_imfont(font: pygui.ImFont):
+            pygui.menu_item("font.ascent:                {}".format(font.ascent))
+            if pygui.begin_menu("font.config_data"):
+                show_imfontconfig(font.config_data)
+                pygui.end_menu()
+            pygui.menu_item("font.config_data_count:     {}".format(font.config_data_count))
+            if pygui.begin_menu("font.container_atlas"):
+                show_imfontatlas(font.container_atlas)
+                pygui.end_menu()
+            pygui.menu_item("font.descent:               {}".format(font.descent))
+            pygui.menu_item("font.dirty_lookup_tables:   {}".format(font.dirty_lookup_tables))
+            pygui.menu_item("font.ellipsis_char:         {} {}".format(font.ellipsis_char, chr(font.ellipsis_char)))
+            pygui.menu_item("font.ellipsis_char_count:   {}".format(font.ellipsis_char_count))
+            pygui.menu_item("font.ellipsis_char_step:    {}".format(font.ellipsis_char_step))
+            pygui.menu_item("font.ellipsis_width:        {}".format(font.ellipsis_width))
+            pygui.menu_item("font.fallback_advance_x:    {}".format(font.fallback_advance_x))
+            pygui.menu_item("font.fallback_char:         {} {}".format(font.fallback_char, chr(font.fallback_char)))
+            if pygui.begin_menu("font.fallback_glyph"):
+                show_imfontglyph(font.fallback_glyph)
+                pygui.end_menu()
+            pygui.menu_item("font.font_size:             {}".format(font.font_size))
+            if pygui.begin_menu("font.glyphs"):
+                for glyph in font.glyphs:
+                    if pygui.begin_menu("Glyph {}:    {}  ".format(glyph.codepoint, chr(glyph.codepoint))):
+                        show_imfontglyph(glyph)
+                        pygui.end_menu()
+                pygui.end_menu()
+            if pygui.begin_menu("font.index_advance_x"):
+                for i, flt in enumerate(font.index_advance_x):
+                    # chr(0) turns into a null character which terminates the string in c.
+                    # Very interesting that I can control that.
+                    pygui.menu_item("For char {} '{}':  {}".format(i, chr(i) if i != 0 else "\\0", flt))
+                pygui.end_menu()
+            if pygui.begin_menu("font.index_lookup"):
+                for i, _int in enumerate(font.index_lookup):
+                    pygui.menu_item("For char {} '{}':  {}".format(i, chr(i) if i != 0 else "\\0", _int))
+                pygui.end_menu()
+            pygui.menu_item("font.metrics_total_surface: {}".format(font.metrics_total_surface))
+            pygui.menu_item("font.scale:                 {}".format(font.scale))
+        
+        def show_imguiio(io: pygui.ImGuiIO):
+            pygui.menu_item("io.app_accepting_events:                   {}".format(io.app_accepting_events))
+            pygui.menu_item("io.app_focus_lost:                         {}".format(io.app_focus_lost))
+            pygui.menu_item("io.backend_flags:                          {}".format(io.backend_flags))
+            pygui.menu_item("io.backend_platform_name:                  {}".format(io.backend_platform_name))
+            pygui.menu_item("io.backend_renderer_name:                  {}".format(io.backend_renderer_name))
+            pygui.menu_item("io.backend_using_legacy_key_arrays:        {}".format(io.backend_using_legacy_key_arrays))
+            pygui.menu_item("io.backend_using_legacy_nav_input_array:   {}".format(io.backend_using_legacy_nav_input_array))
+            pygui.menu_item("io.config_debug_begin_return_value_loop:   {}".format(io.config_debug_begin_return_value_loop))
+            pygui.menu_item("io.config_debug_begin_return_value_once:   {}".format(io.config_debug_begin_return_value_once))
+            pygui.menu_item("io.config_docking_always_tab_bar:          {}".format(io.config_docking_always_tab_bar))
+            pygui.menu_item("io.config_docking_no_split:                {}".format(io.config_docking_no_split))
+            pygui.menu_item("io.config_docking_transparent_payload:     {}".format(io.config_docking_transparent_payload))
+            pygui.menu_item("io.config_docking_with_shift:              {}".format(io.config_docking_with_shift))
+            pygui.menu_item("io.config_drag_click_to_input_text:        {}".format(io.config_drag_click_to_input_text))
+            pygui.menu_item("io.config_flags:                           {}".format(io.config_flags))
+            pygui.menu_item("io.config_input_text_cursor_blink:         {}".format(io.config_input_text_cursor_blink))
+            pygui.menu_item("io.config_input_text_enter_keep_active:    {}".format(io.config_input_text_enter_keep_active))
+            pygui.menu_item("io.config_input_trickle_event_queue:       {}".format(io.config_input_trickle_event_queue))
+            pygui.menu_item("io.config_mac_osx_behaviors:               {}".format(io.config_mac_osx_behaviors))
+            pygui.menu_item("io.config_memory_compact_timer:            {}".format(io.config_memory_compact_timer))
+            pygui.menu_item("io.config_viewports_no_auto_merge:         {}".format(io.config_viewports_no_auto_merge))
+            pygui.menu_item("io.config_viewports_no_decoration:         {}".format(io.config_viewports_no_decoration))
+            pygui.menu_item("io.config_viewports_no_default_parent:     {}".format(io.config_viewports_no_default_parent))
+            pygui.menu_item("io.config_viewports_no_task_bar_icon:      {}".format(io.config_viewports_no_task_bar_icon))
+            pygui.menu_item("io.config_windows_move_from_title_bar_only:{}".format(io.config_windows_move_from_title_bar_only))
+            pygui.menu_item("io.config_windows_resize_from_edges:       {}".format(io.config_windows_resize_from_edges))
+            pygui.menu_item("io.ctx:                                    {}".format(io.ctx.__class__))
+            pygui.menu_item("io.delta_time:                             {}".format(io.delta_time))
+            pygui.menu_item("io.display_framebuffer_scale:              {}".format(io.display_framebuffer_scale))
+            pygui.menu_item("io.display_size:                           {}".format(io.display_size))
+            pygui.menu_item("io.font_allow_user_scaling:                {}".format(io.font_allow_user_scaling))
+            if io.font_default is not None:
+                if pygui.begin_menu("io.font_default"):
+                    show_imfont(io.font_default)
+                    pygui.end_menu()
+            else:
+                pygui.menu_item("io.font_default:                           {}".format(None))
+            pygui.menu_item("io.font_global_scale:                      {}".format(io.font_global_scale))
+            if pygui.begin_menu("io.fonts"):
+                show_imfontatlas(io.fonts)
+                pygui.end_menu()
+            pygui.menu_item("io.framerate:                              {}".format(io.framerate))
+            pygui.menu_item("io.get_clipboard_text_fn:                  {}".format(io.get_clipboard_text_fn))
+            pygui.menu_item("io.hover_delay_normal:                     {}".format(io.hover_delay_normal))
+            pygui.menu_item("io.hover_delay_short:                      {}".format(io.hover_delay_short))
+            pygui.menu_item("io.ini_filename:                           {}".format(io.ini_filename))
+            pygui.menu_item("io.ini_saving_rate:                        {}".format(io.ini_saving_rate))
+            pygui.menu_item("io.input_queue_characters:                 {}".format(io.input_queue_characters))
+            pygui.menu_item("io.input_queue_surrogate:                  {}".format(io.input_queue_surrogate))
+            pygui.menu_item("io.key_alt:                                {}".format(io.key_alt))
+            pygui.menu_item("io.key_ctrl:                               {}".format(io.key_ctrl))
+            pygui.menu_item("io.key_mods:                               {}".format(io.key_mods))
+            pygui.menu_item("io.key_repeat_delay:                       {}".format(io.key_repeat_delay))
+            pygui.menu_item("io.key_repeat_rate:                        {}".format(io.key_repeat_rate))
+            pygui.menu_item("io.key_shift:                              {}".format(io.key_shift))
+            pygui.menu_item("io.key_super:                              {}".format(io.key_super))
+            if pygui.begin_menu("io.keys_data"):
+                show_imguikeydata(io.keys_data)
+                pygui.end_menu()
+            pygui.menu_item("io.log_filename:                           {}".format(io.log_filename))
+            pygui.menu_item("io.metrics_active_allocations:             {}".format(io.metrics_active_allocations))
+            pygui.menu_item("io.metrics_active_windows:                 {}".format(io.metrics_active_windows))
+            pygui.menu_item("io.metrics_render_indices:                 {}".format(io.metrics_render_indices))
+            pygui.menu_item("io.metrics_render_vertices:                {}".format(io.metrics_render_vertices))
+            pygui.menu_item("io.metrics_render_windows:                 {}".format(io.metrics_render_windows))
+            pygui.menu_item("io.mouse_clicked:                          {}".format(io.mouse_clicked))
+            pygui.menu_item("io.mouse_clicked_count:                    {}".format(io.mouse_clicked_count))
+            pygui.menu_item("io.mouse_clicked_last_count:               {}".format(io.mouse_clicked_last_count))
+            pygui.menu_item("io.mouse_clicked_pos:                      {}".format(io.mouse_clicked_pos))
+            pygui.menu_item("io.mouse_clicked_time:                     {}".format(io.mouse_clicked_time))
+            pygui.menu_item("io.mouse_delta:                            {}".format(io.mouse_delta))
+            pygui.menu_item("io.mouse_double_click_max_dist:            {}".format(io.mouse_double_click_max_dist))
+            pygui.menu_item("io.mouse_double_click_time:                {}".format(io.mouse_double_click_time))
+            pygui.menu_item("io.mouse_double_clicked:                   {}".format(io.mouse_double_clicked))
+            pygui.menu_item("io.mouse_down:                             {}".format(io.mouse_down))
+            pygui.menu_item("io.mouse_down_duration:                    {}".format(io.mouse_down_duration))
+            pygui.menu_item("io.mouse_down_duration_prev:               {}".format(io.mouse_down_duration_prev))
+            pygui.menu_item("io.mouse_down_owned:                       {}".format(io.mouse_down_owned))
+            pygui.menu_item("io.mouse_down_owned_unless_popup_close:    {}".format(io.mouse_down_owned_unless_popup_close))
+            pygui.menu_item("io.mouse_drag_max_distance_abs:            {}".format(io.mouse_drag_max_distance_abs))
+            pygui.menu_item("io.mouse_drag_max_distance_sqr:            {}".format(io.mouse_drag_max_distance_sqr))
+            pygui.menu_item("io.mouse_drag_threshold:                   {}".format(io.mouse_drag_threshold))
+            pygui.menu_item("io.mouse_draw_cursor:                      {}".format(io.mouse_draw_cursor))
+            pygui.menu_item("io.mouse_hovered_viewport:                 {}".format(io.mouse_hovered_viewport))
+            pygui.menu_item("io.mouse_pos:                              {}".format(io.mouse_pos))
+            pygui.menu_item("io.mouse_pos_prev:                         {}".format(io.mouse_pos_prev))
+            pygui.menu_item("io.mouse_released:                         {}".format(io.mouse_released))
+            pygui.menu_item("io.mouse_source:                           {}".format(io.mouse_source))
+            pygui.menu_item("io.mouse_wheel:                            {}".format(io.mouse_wheel))
+            pygui.menu_item("io.mouse_wheel_h:                          {}".format(io.mouse_wheel_h))
+            pygui.menu_item("io.mouse_wheel_request_axis_swap:          {}".format(io.mouse_wheel_request_axis_swap))
+            pygui.menu_item("io.nav_active:                             {}".format(io.nav_active))
+            pygui.menu_item("io.nav_visible:                            {}".format(io.nav_visible))
+            pygui.menu_item("io.pen_pressure:                           {}".format(io.pen_pressure))
+            pygui.menu_item("io.set_clipboard_text_fn:                  {}".format(io.set_clipboard_text_fn))
+            pygui.menu_item("io.want_capture_keyboard:                  {}".format(io.want_capture_keyboard))
+            pygui.menu_item("io.want_capture_mouse:                     {}".format(io.want_capture_mouse))
+            pygui.menu_item("io.want_capture_mouse_unless_popup_close:  {}".format(io.want_capture_mouse_unless_popup_close))
+            pygui.menu_item("io.want_save_ini_settings:                 {}".format(io.want_save_ini_settings))
+            pygui.menu_item("io.want_set_mouse_pos:                     {}".format(io.want_set_mouse_pos))
+            pygui.menu_item("io.want_text_input:                        {}".format(io.want_text_input))
+
+        def show_imguikeydata(kd: pygui.ImGuiKeyData):
+            pygui.menu_item("kd.analog_value: {}".format(kd.analog_value))
+            pygui.menu_item("kd.down: {}".format(kd.down))
+            pygui.menu_item("kd.down_duration: {}".format(kd.down_duration))
+            pygui.menu_item("kd.down_duration_prev: {}".format(kd.down_duration_prev))
+
+        def show_imguistyle(style: pygui.ImGuiStyle):
+            pygui.menu_item("style.alpha:                           {}".format(style.alpha))
+            pygui.menu_item("style.anti_aliased_fill:               {}".format(style.anti_aliased_fill))
+            pygui.menu_item("style.anti_aliased_lines:              {}".format(style.anti_aliased_lines))
+            pygui.menu_item("style.anti_aliased_lines_use_tex:      {}".format(style.anti_aliased_lines_use_tex))
+            pygui.menu_item("style.button_text_align:               {}".format(style.button_text_align))
+            pygui.menu_item("style.cell_padding:                    {}".format(style.cell_padding))
+            pygui.menu_item("style.child_border_size:               {}".format(style.child_border_size))
+            pygui.menu_item("style.child_rounding:                  {}".format(style.child_rounding))
+            pygui.menu_item("style.circle_tessellation_max_error:   {}".format(style.circle_tessellation_max_error))
+            pygui.menu_item("style.color_button_position:           {}".format(style.color_button_position))
+            pygui.menu_item("style.colors:                          {}".format(style.colors))
+            pygui.menu_item("style.columns_min_spacing:             {}".format(style.columns_min_spacing))
+            pygui.menu_item("style.curve_tessellation_tol:          {}".format(style.curve_tessellation_tol))
+            pygui.menu_item("style.disabled_alpha:                  {}".format(style.disabled_alpha))
+            pygui.menu_item("style.display_safe_area_padding:       {}".format(style.display_safe_area_padding))
+            pygui.menu_item("style.display_window_padding:          {}".format(style.display_window_padding))
+            pygui.menu_item("style.frame_border_size:               {}".format(style.frame_border_size))
+            pygui.menu_item("style.frame_padding:                   {}".format(style.frame_padding))
+            pygui.menu_item("style.frame_rounding:                  {}".format(style.frame_rounding))
+            pygui.menu_item("style.grab_min_size:                   {}".format(style.grab_min_size))
+            pygui.menu_item("style.grab_rounding:                   {}".format(style.grab_rounding))
+            pygui.menu_item("style.indent_spacing:                  {}".format(style.indent_spacing))
+            pygui.menu_item("style.item_inner_spacing:              {}".format(style.item_inner_spacing))
+            pygui.menu_item("style.item_spacing:                    {}".format(style.item_spacing))
+            pygui.menu_item("style.log_slider_deadzone:             {}".format(style.log_slider_deadzone))
+            pygui.menu_item("style.mouse_cursor_scale:              {}".format(style.mouse_cursor_scale))
+            pygui.menu_item("style.popup_border_size:               {}".format(style.popup_border_size))
+            pygui.menu_item("style.popup_rounding:                  {}".format(style.popup_rounding))
+            pygui.menu_item("style.scrollbar_rounding:              {}".format(style.scrollbar_rounding))
+            pygui.menu_item("style.scrollbar_size:                  {}".format(style.scrollbar_size))
+            pygui.menu_item("style.selectable_text_align:           {}".format(style.selectable_text_align))
+            pygui.menu_item("style.separator_text_align:            {}".format(style.separator_text_align))
+            pygui.menu_item("style.separator_text_border_size:      {}".format(style.separator_text_border_size))
+            pygui.menu_item("style.separator_text_padding:          {}".format(style.separator_text_padding))
+            pygui.menu_item("style.tab_border_size:                 {}".format(style.tab_border_size))
+            pygui.menu_item("style.tab_min_width_for_close_button:  {}".format(style.tab_min_width_for_close_button))
+            pygui.menu_item("style.tab_rounding:                    {}".format(style.tab_rounding))
+            pygui.menu_item("style.touch_extra_padding:             {}".format(style.touch_extra_padding))
+            pygui.menu_item("style.window_border_size:              {}".format(style.window_border_size))
+            pygui.menu_item("style.window_menu_button_position:     {}".format(style.window_menu_button_position))
+            pygui.menu_item("style.window_min_size:                 {}".format(style.window_min_size))
+            pygui.menu_item("style.window_padding:                  {}".format(style.window_padding))
+            pygui.menu_item("style.window_rounding:                 {}".format(style.window_rounding))
+            pygui.menu_item("style.window_title_align:              {}".format(style.window_title_align))
+
+        def show_imguiviewport(vp: pygui.ImGuiViewport):
+            pygui.menu_item("vp.dpi_scale:                  {}".format(vp.dpi_scale))
+            pygui.menu_item("vp.draw_data:                  {}".format(vp.draw_data))
+            pygui.menu_item("vp.flags:                      {}".format(vp.flags))
+            pygui.menu_item("vp.id:                         {}".format(vp.id))
+            pygui.menu_item("vp.parent_viewport_id:         {}".format(vp.parent_viewport_id))
+            pygui.menu_item("vp.platform_request_close:     {}".format(vp.platform_request_close))
+            pygui.menu_item("vp.platform_request_move:      {}".format(vp.platform_request_move))
+            pygui.menu_item("vp.platform_request_resize:    {}".format(vp.platform_request_resize))
+            pygui.menu_item("vp.platform_window_created:    {}".format(vp.platform_window_created))
+            pygui.menu_item("vp.pos:                        {}".format(vp.pos))
+            pygui.menu_item("vp.size:                       {}".format(vp.size))
+            pygui.menu_item("vp.work_pos:                   {}".format(vp.work_pos))
+            pygui.menu_item("vp.work_size:                  {}".format(vp.work_size))
+            pygui.menu_item("vp.get_center():               {}".format(vp.get_center()))
+            pygui.menu_item("vp.get_work_center():          {}".format(vp.get_work_center()))
+
+        def show_imdrawlist(dl: pygui.ImDrawList):
+            if dl.cmd_buffer is not None:
+                if pygui.begin_menu("dl.cmd_buffer"):
+                    for i, cmd in enumerate(dl.cmd_buffer):
+                        if pygui.begin_menu("Command:  {}".format(i)):
+                            show_imdrawcmd(cmd)
+                            pygui.end_menu()
+                    pygui.end_menu()
+            else:
+                pygui.menu_item("dl.cmd_buffer: {}".format(None))
+            pygui.menu_item("dl.flags: {}".format(dl.flags))
+            pygui.menu_item("dl.idx_buffer: {}".format(dl.idx_buffer))
+            pygui.menu_item("dl.owner_name: {}".format(dl.owner_name))
+            if pygui.begin_menu("dl.vtx_buffer"):
+                for i, vert in enumerate(dl.vtx_buffer):
+                    if pygui.begin_menu("Vertex:  {}".format(i)):
+                        show_imdrawvert(vert)
+                        pygui.end_menu()
+                pygui.end_menu()
+
+        def show_imdrawvert(vert: pygui.ImDrawVert):
+            pygui.menu_item("vert.col: {}".format(vert.col))
+            pygui.menu_item("vert.pos: {}".format(vert.pos))
+            pygui.menu_item("vert.uv: {}".format(vert.uv))
+
+        def show_imdrawcmd(cmd: pygui.ImDrawCmd):
+            pygui.menu_item("cmd.clip_rect: {}".format(cmd.clip_rect))
+            pygui.menu_item("cmd.elem_count: {}".format(cmd.elem_count))
+            pygui.menu_item("cmd.idx_offset: {}".format(cmd.idx_offset))
+            pygui.menu_item("cmd.vtx_offset: {}".format(cmd.vtx_offset))
+
         font = pygui.get_font()
-        pygui.text("font.ascent:                {}".format(font.ascent))
-        pygui.text("font.config_data:           {}".format(font.config_data))
-        pygui.text("font.config_data_count:     {}".format(font.config_data_count))
-        pygui.text("font.container_atlas:       {}".format(font.container_atlas))
-        pygui.text("font.descent:               {}".format(font.descent))
-        pygui.text("font.dirty_lookup_tables:   {}".format(font.dirty_lookup_tables))
-        pygui.text("font.ellipsis_char:         {} {}".format(font.ellipsis_char, chr(font.ellipsis_char)))
-        pygui.text("font.ellipsis_char_count:   {}".format(font.ellipsis_char_count))
-        pygui.text("font.ellipsis_char_step:    {}".format(font.ellipsis_char_step))
-        pygui.text("font.ellipsis_width:        {}".format(font.ellipsis_width))
-        pygui.text("font.fallback_advance_x:    {}".format(font.fallback_advance_x))
-        pygui.text("font.fallback_char:         {} {}".format(font.fallback_char, chr(font.fallback_char)))
-        pygui.text("font.fallback_glyph:        {}".format(font.fallback_glyph))
-        pygui.text("font.font_size:             {}".format(font.font_size))
-        pygui.text("font.glyphs:                {}".format(font.glyphs))
-        pygui.text("font.index_advance_x:       {}".format(font.index_advance_x))
-        pygui.text("font.index_lookup:          {}".format(font.index_lookup))
-        pygui.text("font.metrics_total_surface: {}".format(font.metrics_total_surface))
-        pygui.text("font.scale:                 {}".format(font.scale))
-        pygui.separator()
+        if pygui.begin_menu("pygui.get_font()"):
+            show_imfont(font)
+            pygui.end_menu()
 
-        cd = font.config_data
-        pygui.text("cd = font.config_data")
-        pygui.text("cd.dst_font:                {}".format(cd.dst_font))
-        pygui.text("cd.ellipsis_char:           {} {}".format(cd.ellipsis_char, chr(cd.ellipsis_char)))
-        pygui.text("cd.font_builder_flags:      {}".format(cd.font_builder_flags))
-        pygui.text("cd.font_data_owned_by_atlas: {}".format(cd.font_data_owned_by_atlas))
-        pygui.text("cd.font_data_size:          {}".format(cd.font_data_size))
-        pygui.text("cd.font_no:                 {}".format(cd.font_no))
-        pygui.text("cd.glyph_extra_spacing:     {}".format(cd.glyph_extra_spacing))
-        pygui.text("cd.glyph_max_advance_x:     {}".format(cd.glyph_max_advance_x))
-        pygui.text("cd.glyph_min_advance_x:     {}".format(cd.glyph_min_advance_x))
-        pygui.text("cd.glyph_offset:            {}".format(cd.glyph_offset))
-        pygui.text("cd.merge_mode:              {}".format(cd.merge_mode))
-        pygui.text("cd.name:                    {}".format(cd.name))
-        pygui.text("cd.oversample_h:            {}".format(cd.oversample_h))
-        pygui.text("cd.oversample_v:            {}".format(cd.oversample_v))
-        pygui.text("cd.pixel_snap_h:            {}".format(cd.pixel_snap_h))
-        pygui.text("cd.rasterizer_multiply:     {}".format(cd.rasterizer_multiply))
-        pygui.separator()
+        io = pygui.get_io()
+        if pygui.begin_menu("pygui.get_io()"):
+            show_imguiio(io)
+            pygui.end_menu()
 
-        ca = font.container_atlas
-        pygui.text("ca = font.container_atlas")
-        pygui.text("ca.config_data:             {}".format(ca.config_data))
-        pygui.text("ca.custom_rects:            {}".format(ca.custom_rects))
-        pygui.text("ca.flags:                   {}".format(ca.flags))
-        pygui.text("ca.font_builder_flags:      {}".format(ca.font_builder_flags))
-        pygui.text("ca.font_builder_io:         {}".format(ca.font_builder_io))
-        pygui.text("ca.fonts:                   {}".format(ca.fonts))
-        pygui.text("ca.locked:                  {}".format(ca.locked))
-        pygui.text("ca.pack_id_lines:           {}".format(ca.pack_id_lines))
-        pygui.text("ca.pack_id_mouse_cursors:   {}".format(ca.pack_id_mouse_cursors))
-        pygui.text("ca.tex_desired_width:       {}".format(ca.tex_desired_width))
-        pygui.text("ca.tex_glyph_padding:       {}".format(ca.tex_glyph_padding))
-        pygui.text("ca.tex_height:              {}".format(ca.tex_height))
-        pygui.text("ca.tex_id:                  {}".format(ca.tex_id))
-        pygui.text("ca.tex_pixels_alpha8:       {}".format(ca.tex_pixels_alpha8))
-        pygui.text("ca.tex_pixels_rgba_32:      {}".format(ca.tex_pixels_rgba_32))
-        pygui.text("ca.tex_pixels_use_colors:   {}".format(ca.tex_pixels_use_colors))
-        pygui.text("ca.tex_ready:               {}".format(ca.tex_ready))
-        pygui.text("ca.tex_uv_lines:            {}".format(ca.tex_uv_lines))
-        pygui.text("ca.tex_uv_scale:            {}".format(ca.tex_uv_scale))
-        pygui.text("ca.tex_uv_white_pixel:      {}".format(ca.tex_uv_white_pixel))
-        pygui.text("ca.tex_width:               {}".format(ca.tex_width))
+        style = pygui.get_style()
+        if pygui.begin_menu("pygui.get_style()"):
+            show_imguistyle(style)
+            pygui.end_menu()
+        
+        vp = pygui.get_main_viewport()
+        if pygui.begin_menu("pygui.get_main_viewport()"):
+            show_imguiviewport(vp)
+            pygui.end_menu()
+        
+        dl = pygui.get_window_draw_list()
+        if pygui.begin_menu("pygui.get_window_draw_list()"):
+            show_imdrawlist(dl)
+            pygui.end_menu()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.ImDrawListSplitter"):
+        pygui.text_wrapped(
+            "The left column is channel 0. The right is channel 1. You can see"
+            " from this example that the right will always draw on top even"
+            " though every second draw call is the right.")
+        draw_list = pygui.get_window_draw_list()
+        splitter = pygui.ImDrawListSplitter.create()
+        splitter.split(draw_list, 2)
+
+        pygui.separator()
+        cs = pygui.get_cursor_screen_pos()
+        splitter.set_current_channel(draw_list, 0)
+        size = 60
+        gap = 40
+        for i in range(5):
+            splitter.set_current_channel(draw_list, 0)
+            draw_list.add_rect_filled(
+                (cs[0],        cs[1] + i * gap),
+                (cs[0] + size, cs[1] + i * gap + size),
+                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb(0.1 * i, 1, 0.8))
+            )
+            splitter.set_current_channel(draw_list, 1)
+            draw_list.add_rect(
+                (cs[0] + size/2,        cs[1] + i * gap + size/3),
+                (cs[0] + size/2 + size, cs[1] + i * gap + size + size/3),
+                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb((0.5 + 0.1 * i), 1, 0.8)),
+                20, 0, 8
+            )
+        splitter.merge(draw_list)
+        splitter.destroy()
+        pygui.dummy((10, size * 4))
+        pygui.separator()
         pygui.tree_pop()
 
     pygui.pop_style_var()

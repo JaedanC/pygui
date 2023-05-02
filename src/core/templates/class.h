@@ -9,6 +9,8 @@ cdef class {class_name}:
     
     @staticmethod
     cdef {class_name} from_ptr({pxd_library_name}.{class_name}* _ptr):
+        if _ptr == NULL:
+            return None
         cdef {class_name} wrapper = {class_name}.__new__({class_name})
         wrapper._ptr = _ptr
         return wrapper
