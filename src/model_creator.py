@@ -1604,7 +1604,7 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
 
     class FloatPtr:
         value: float
-        def __float__(self) -> float: ...
+        def __init__(self, initial_value: float): ...
 
     class DoublePtr:
         value: float
