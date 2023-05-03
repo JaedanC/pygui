@@ -2016,7 +2016,7 @@ def combo(label: str, current_item: IntPtr, items: Sequence[str], popup_max_heig
 combo_callback_data = {}
 def combo_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any, int, StrPtr], "bool"], data: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bytes label_bytes = _bytes(label)
-    cdef int lookup_id = ccimgui.ImGui_GetID(label_bytes)
+    cdef ccimgui.ImGuiID lookup_id = ccimgui.ImGui_GetID(label_bytes)
     combo_callback_data[lookup_id] = (data, items_getter)
     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
         _bytes(label),
@@ -2029,7 +2029,7 @@ def combo_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any
     return res
 
 cdef bool _combo_callback_function(void* data, int index, const char** out_str):
-    cdef int lookup_id = <int><uintptr_t>data
+    cdef ccimgui.ImGuiID lookup_id = <uintptr_t>data
     py_data, items_getter = combo_callback_data[lookup_id]
     cdef StrPtr out_str_ptr = StrPtr("")
     cdef bool res = items_getter(py_data, index, out_str_ptr)
@@ -3712,7 +3712,7 @@ def get_io():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
 def get_item_id():
@@ -5151,7 +5151,7 @@ def input_text(label: str, buf: StrPtr, flags: int=0, callback: "Callable[[ImGui
             buf.buffer_size,
             flags,
             <ccimgui.ImGuiInputTextCallback>_input_text_callback,
-            <void*><uintptr_t>widget_id
+            <void*>widget_id
         )
     else:
         res = ccimgui.ImGui_InputTextEx(
@@ -5166,9 +5166,9 @@ def input_text(label: str, buf: StrPtr, flags: int=0, callback: "Callable[[ImGui
     return res
 
 cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
-    cdef int widget_id = <int><uintptr_t>callback_data.UserData
+    cdef ccimgui.ImGuiID widget_id = <ccimgui.ImGuiID>callback_data.UserData
     if widget_id not in _input_text_user_data:
-        raise RuntimeError
+        raise RuntimeError("Did not find widget_id: {}".format(widget_id))
     
     python_callback, user_data = _input_text_user_data[widget_id]
     callback_return_value = python_callback(
@@ -5215,7 +5215,7 @@ def input_text_multiline(label: str, buf: StrPtr, size: tuple=(0, 0), flags: int
             _cast_tuple_ImVec2(size),
             flags,
             <ccimgui.ImGuiInputTextCallback>_input_text_callback,
-            <void*><uintptr_t>widget_id
+            <void*>widget_id
         )
     else:
         res = ccimgui.ImGui_InputTextMultilineEx(
@@ -6526,7 +6526,7 @@ def pop_style_var_ex(count: int=1):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def pop_tab_stop():
@@ -6573,7 +6573,7 @@ def push_button_repeat(repeat: bool):
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?invisible(False)
 # ?returns(None)
 def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool):
@@ -6604,11 +6604,11 @@ def push_font(font: ImFont):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def push_id(str_id: str):
+def push_id(obj: object):
     """
     ID stack/scopes
     Read the FAQ (docs/FAQ.md or http://dearimgui.com/faq) for more details about how ID are handled in dear imgui.
@@ -6622,16 +6622,18 @@ def push_id(str_id: str):
     - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,
     whereas "str_id" denote a string that is only used as an ID and not normally displayed.
     Push string into the id stack (will hash string).
+
+    pygui note: This will call python's hash() function on the parameter.
     """
-    ccimgui.ImGui_PushID(
-        _bytes(str_id)
+    ccimgui.ImGui_PushIDInt(
+        hash(obj)
     )
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
-# ?invisible(False)
+# ?use_template(False)
+# ?active(False)
+# ?invisible(True)
 # ?returns(None)
 def push_id_int(int_id: int):
     """
@@ -6645,7 +6647,7 @@ def push_id_int(int_id: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def push_id_ptr(ptr_id: Any):
     """
@@ -6657,9 +6659,9 @@ def push_id_ptr(ptr_id: Any):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
-# ?active(True)
-# ?invisible(False)
+# ?use_template(False)
+# ?active(False)
+# ?invisible(True)
 # ?returns(None)
 def push_id_str(str_id_begin: str, str_id_end: str):
     """
@@ -6687,24 +6689,31 @@ def push_item_width(item_width: float):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def push_style_color(idx: int, col: int):
+def push_style_color(idx: int, col: "int | tuple"):
     """
     Modify a style color. always use this if you modify the style after newframe().
+    pygui note: You can pass a u32 color or a 0-1, length 4 tuple for color.
     """
-    ccimgui.ImGui_PushStyleColor(
-        idx,
-        col
-    )
+    if isinstance(col, tuple):
+        ccimgui.ImGui_PushStyleColorImVec4(
+            idx,
+            _cast_tuple_ImVec4(col)
+        )
+    else:
+        ccimgui.ImGui_PushStyleColor(
+            idx,
+            col
+        )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
-# ?invisible(False)
+# ?active(False)
+# ?invisible(True)
 # ?returns(None)
 def push_style_color_im_vec4(idx: int, col: tuple):
     ccimgui.ImGui_PushStyleColorImVec4(
@@ -6714,24 +6723,31 @@ def push_style_color_im_vec4(idx: int, col: tuple):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def push_style_var(idx: int, val: float):
+def push_style_var(idx: int, val: "float | tuple"):
     """
     Modify a style float variable. always use this if you modify the style after newframe().
+    pygui note: You can pass a float or length 2 tuple.
     """
-    ccimgui.ImGui_PushStyleVar(
-        idx,
-        val
-    )
+    if isinstance(val, tuple):
+        ccimgui.ImGui_PushStyleVarImVec2(
+            idx,
+            _cast_tuple_ImVec2(val)
+        )
+    else:
+        ccimgui.ImGui_PushStyleVar(
+            idx,
+            val
+        )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
-# ?invisible(False)
+# ?active(False)
+# ?invisible(True)
 # ?returns(None)
 def push_style_var_im_vec2(idx: int, val: tuple):
     """
@@ -6745,7 +6761,7 @@ def push_style_var_im_vec2(idx: int, val: tuple):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def push_tab_stop(tab_stop: bool):
@@ -7043,7 +7059,7 @@ def separator_text(label: str):
 # [Function]
 # ?use_template(True)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
     """
@@ -7063,7 +7079,7 @@ def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_clipboard_text(text: str):
@@ -7129,7 +7145,7 @@ def set_current_context(ctx: ImGuiContext):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_cursor_pos(local_pos: tuple):
@@ -7143,7 +7159,7 @@ def set_cursor_pos(local_pos: tuple):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_cursor_pos_x(local_x: float):
@@ -7157,7 +7173,7 @@ def set_cursor_pos_x(local_x: float):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_cursor_pos_y(local_y: float):
@@ -7171,7 +7187,7 @@ def set_cursor_pos_y(local_y: float):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_cursor_screen_pos(pos: tuple):
@@ -7259,7 +7275,7 @@ def set_keyboard_focus_here_ex(offset: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_mouse_cursor(cursor_type: int):
@@ -7330,7 +7346,7 @@ def set_next_item_width(item_width: float):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_bg_alpha(alpha: float):
@@ -7358,7 +7374,7 @@ def set_next_window_class(window_class: ImGuiWindowClass):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_collapsed(collapsed: bool, cond: int=0):
@@ -7373,7 +7389,7 @@ def set_next_window_collapsed(collapsed: bool, cond: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_content_size(size: tuple):
@@ -7402,7 +7418,7 @@ def set_next_window_dock_id(dock_id: int, cond: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_focus():
@@ -7448,7 +7464,7 @@ def set_next_window_pos_ex(pos: tuple, cond: int=0, pivot: tuple=(0, 0)):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_scroll(scroll: tuple):
@@ -7807,7 +7823,7 @@ def show_debug_log_window(p_open: BoolPtr=None):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
@@ -7816,7 +7832,6 @@ def show_demo_window(p_open: BoolPtr=None):
     Demo, Debug, Information
     Create demo window. demonstrate most imgui features. call this to learn about the library! try to make it always available in your application!
     """
-
     ccimgui.ImGui_ShowDemoWindow(
         BoolPtr.ptr(p_open)
     )
@@ -7824,7 +7839,7 @@ def show_demo_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def show_font_selector(label: str):
@@ -7838,7 +7853,7 @@ def show_font_selector(label: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def show_metrics_window(p_open: BoolPtr=None):
@@ -7852,7 +7867,7 @@ def show_metrics_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def show_stack_tool_window(p_open: BoolPtr=None):
@@ -7866,7 +7881,7 @@ def show_stack_tool_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def show_style_editor(ref: ImGuiStyle=None):
@@ -7880,7 +7895,7 @@ def show_style_editor(ref: ImGuiStyle=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
 def show_style_selector(label: str):
@@ -8702,7 +8717,7 @@ def table_get_sort_specs():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def table_header(label: str):
@@ -8771,7 +8786,7 @@ def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def table_set_bg_color(target: int, color: int, column_n: int=-1):
@@ -8787,7 +8802,7 @@ def table_set_bg_color(target: int, color: int, column_n: int=-1):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def table_set_column_enabled(column_n: int, v: bool):
@@ -9163,7 +9178,7 @@ def tree_pop():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def tree_push(str_id: str):
@@ -9230,30 +9245,11 @@ def update_platform_windows():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def vslider_float(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float):
-    """
-    Implied format = '%.3f', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_VSliderFloat(
-        _bytes(label),
-        _cast_tuple_ImVec2(size),
-        &v.value,
-        v_min,
-        v_max
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?returns(bool)
-def vslider_float_ex(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+def vslider_float(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
     cdef bool res = ccimgui.ImGui_VSliderFloatEx(
         _bytes(label),
         _cast_tuple_ImVec2(size),
@@ -9269,18 +9265,35 @@ def vslider_float_ex(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
-def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int):
-    """
-    Implied format = '%d', flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_VSliderInt(
+def vslider_float_ex(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+    cdef bool res = ccimgui.ImGui_VSliderFloatEx(
         _bytes(label),
         _cast_tuple_ImVec2(size),
         &v.value,
         v_min,
-        v_max
+        v_max,
+        _bytes(format_),
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(True)
+# ?active(True)
+# ?invisible(False)
+# ?returns(bool)
+def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+    cdef bool res = ccimgui.ImGui_VSliderIntEx(
+        _bytes(label),
+        _cast_tuple_ImVec2(size),
+        &v.value,
+        v_min,
+        v_max,
+        _bytes(format_),
+        flags
     )
     return res
 # [End Function]
@@ -9288,7 +9301,7 @@ def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def vslider_int_ex(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0):
     cdef bool res = ccimgui.ImGui_VSliderIntEx(
@@ -9789,9 +9802,9 @@ cdef class ImDrawData:
         """
         Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
         """
+        cdef ccimgui.ImDrawList** cmd_lists = dereference(self._ptr).CmdLists
         return [
-            ImDrawList.from_ptr(dereference(self._ptr).CmdLists[idx])
-            for idx in range(dereference(self._ptr).CmdListsCount)
+            ImDrawList.from_ptr(cmd_lists[idx]) for idx in range(self.cmd_lists_count)
         ]
     @cmd_lists.setter
     def cmd_lists(self, value: ImDrawList):
@@ -9801,7 +9814,7 @@ cdef class ImDrawData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -12615,7 +12628,7 @@ cdef class ImFontAtlas:
         """
         User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
         """
-        cdef int res = <uintptr_t>dereference(self._ptr).TexID
+        cdef unsigned int res = <uintptr_t>dereference(self._ptr).TexID
         return res
     @tex_id.setter
     def tex_id(self, value: Any):
@@ -19295,7 +19308,7 @@ cdef class ImGuiTableSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
@@ -19308,8 +19321,8 @@ cdef class ImGuiTableSortSpecs:
         return res
     @specs_dirty.setter
     def specs_dirty(self, value: bool):
-        # dereference(self._ptr).SpecsDirty = value
-        raise NotImplementedError
+        dereference(self._ptr).SpecsDirty = value
+        # raise NotImplementedError
     # [End Field]
 # [End Class]
 

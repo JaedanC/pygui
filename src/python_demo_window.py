@@ -6,7 +6,6 @@ from PIL import Image
 from enum import Enum, auto
 
 
-# From: https://stackoverflow.com/questions/4092528/how-can-i-clamp-clip-restrict-a-number-to-some-range#comment53230306_4092550
 def clamp(n, smallest, largest):
     return max(smallest, min(n, largest))
 
@@ -20,30 +19,40 @@ def help_marker(desc: str):
         pygui.end_tooltip()
 
 
-def push_style_compact():
-    style = pygui.get_style()
-    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (style.frame_padding[0], style.frame_padding[1] * 0.6))
-    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_ITEM_SPACING, (style.item_spacing[0], style.item_spacing[1] * 0.6))
-
-
-def pop_style_compact():
-    pygui.pop_style_var(2)
-
-
 def pygui_demo_window():
+    show_menu_bar()
+
     if demo.show_app_console:
         show_app_console(demo.show_app_console)
     if demo.show_custom_rendering:
         show_app_custom_rendering(demo.show_custom_rendering)
     if demo.show_about_window:
         pygui.show_about_window(demo.show_about_window)
-    if demo.show_random_extras:
-        show_random_extras(demo.show_random_extras)
+    if demo.show_font_selector:
+        if pygui.begin("Font Selector", demo.show_font_selector):
+            pygui.show_font_selector("Font")
+        pygui.end()
+    if demo.show_metrics_window:
+        pygui.show_metrics_window(demo.show_metrics_window)
+    if demo.show_stack_tool_window:
+        pygui.show_stack_tool_window(demo.show_stack_tool_window)
+    if demo.show_style_editor:
+        if pygui.begin("Style Editor", demo.show_style_editor):
+            pygui.show_style_editor()
+        pygui.end()
+    if demo.show_style_selector:
+        if pygui.begin("Style Selector", demo.show_style_selector):
+            pygui.show_style_selector("Style")
+        pygui.end()
+    if demo.show_user_guide:
+        if pygui.begin("User Guide", demo.show_user_guide):
+            pygui.show_user_guide()
+        pygui.end()
 
-    show_menu_bar()
     show_demo_widgets()
     show_demo_window_layout()
     show_demo_tables()
+    show_random_extras()
     crash_imgui()
 
 
@@ -209,6 +218,22 @@ class widget:
     multi_vec4i = pygui.Vec4Ptr(1, 5, 100, 255)
     tab_tab_bar_flags = pygui.IntPtr(pygui.TAB_BAR_FLAGS_REORDERABLE)
     tab_opened = [pygui.BoolPtr(True) for _ in range(4)]
+    vert_int_value = pygui.IntPtr(0)
+    vert_values = [
+        pygui.FloatPtr(0),
+        pygui.FloatPtr(0.6),
+        pygui.FloatPtr(0.35),
+        pygui.FloatPtr(0.9),
+        pygui.FloatPtr(0.7),
+        pygui.FloatPtr(0.2),
+        pygui.FloatPtr(0),
+    ]
+    vert_values2 = [
+        pygui.FloatPtr(0.2),
+        pygui.FloatPtr(0.8),
+        pygui.FloatPtr(0.4),
+        pygui.FloatPtr(0.25),
+    ]
 
 
 def show_demo_widgets():
@@ -238,10 +263,10 @@ def show_demo_widgets():
             if i > 0:
                 pygui.same_line()
             
-            pygui.push_id_int(i)
-            pygui.push_style_color_im_vec4(pygui.COL_BUTTON,         pygui.color_convert_hsv_to_rgb(i / 7, 0.6, 0.6))
-            pygui.push_style_color_im_vec4(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(i / 7, 0.7, 0.7))
-            pygui.push_style_color_im_vec4(pygui.COL_BUTTON_ACTIVE,  pygui.color_convert_hsv_to_rgb(i / 7, 0.8, 0.8))
+            pygui.push_id(i)
+            pygui.push_style_color(pygui.COL_BUTTON,         pygui.color_convert_hsv_to_rgb(i / 7, 0.6, 0.6))
+            pygui.push_style_color(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(i / 7, 0.7, 0.7))
+            pygui.push_style_color(pygui.COL_BUTTON_ACTIVE,  pygui.color_convert_hsv_to_rgb(i / 7, 0.8, 0.8))
             pygui.button("Click")
             pygui.pop_style_color(3)
             pygui.pop_id()
@@ -598,9 +623,9 @@ def show_demo_widgets():
                 # UV coordinates are often (0.0f, 0.0f) and (1.0f, 1.0f) to display an entire textures.
                 # Here are trying to display only a 32x32 pixels area of the texture, hence the UV computation.
                 # Read about UV coordinates here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-                pygui.push_id_int(i)
+                pygui.push_id(i)
                 if i > 0:
-                    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (i - 1, i - 1))
+                    pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (i - 1, i - 1))
                 size = (32, 32)
                 uv0 = (0, 0)
                 uv1 = (32 / my_tex_w, 32 / my_tex_h)
@@ -759,7 +784,7 @@ def show_demo_widgets():
             current_time = pygui.get_time()
             winning_state = not any(0 in inner for inner in widget.select_grid_selected)
             if winning_state:
-                pygui.push_style_var_im_vec2(
+                pygui.push_style_var(
                     pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN,
                     (0.5 + 0.5 * math.cos(current_time * 2), 0.5 + 0.5 * math.sin(current_time * 3))
                 )
@@ -767,7 +792,7 @@ def show_demo_widgets():
                 for x in range(4):
                     if x > 0:
                         pygui.same_line()
-                    pygui.push_id_int(y * 4 + x)
+                    pygui.push_id(y * 4 + x)
                     if pygui.selectable("Sailor", bool(widget.select_grid_selected[y][x]), 0, (50, 50)):
                         widget.select_grid_selected[y][x] ^= 1
                         if x > 0:
@@ -794,7 +819,7 @@ def show_demo_widgets():
                     alignment = (x / 2, y / 2)
                     if x > 0:
                         pygui.same_line()
-                    pygui.push_style_var_im_vec2(pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
+                    pygui.push_style_var(pygui.STYLE_VAR_SELECTABLE_TEXT_ALIGN, alignment)
                     pygui.selectable_bool_ptr(
                         "({:.1f}, {:.1f})".format(alignment[0], alignment[1]),
                         widget.select_allign_selected[3 * y + x],
@@ -1001,7 +1026,7 @@ def show_demo_widgets():
             pygui.separator()
             pygui.text("Palette")
             for n in range(len(widget.colour_saved_palette)):
-                pygui.push_id_int(n)
+                pygui.push_id(n)
                 if n % 8 != 0:
                     pygui.same_line(0, pygui.get_style().item_spacing[0])
                 
@@ -1290,14 +1315,67 @@ def show_demo_widgets():
 
         pygui.tree_pop()
 
+    if pygui.tree_node("Vertical Sliders"):
+        spacing = 4
+        pygui.push_style_var(pygui.STYLE_VAR_ITEM_SPACING, (spacing, spacing))
+        pygui.vslider_int("##int", (18, 160), widget.vert_int_value, 0, 5)
+        pygui.same_line()
+
+        pygui.push_id("set1")
+        for i in range(7):
+            if i > 0:
+                pygui.same_line()
+            pygui.push_id(i)
+            pygui.push_style_color(pygui.COL_FRAME_BG, pygui.color_convert_hsv_to_rgb(i / 7, 0.5, 0.5))
+            pygui.push_style_color(pygui.COL_FRAME_BG_HOVERED, pygui.color_convert_hsv_to_rgb(i / 7, 0.6, 0.5))
+            pygui.push_style_color(pygui.COL_FRAME_BG_ACTIVE, pygui.color_convert_hsv_to_rgb(i / 7, 0.7, 0.5))
+            pygui.push_style_color(pygui.COL_SLIDER_GRAB, pygui.color_convert_hsv_to_rgb(i / 7, 0.9, 0.9))
+            pygui.vslider_float("##v", (18, 160), widget.vert_values[i], 0, 1, "")
+            if pygui.is_item_active() or pygui.is_item_hovered():
+                pygui.set_tooltip("{:.3f}".format(widget.vert_values[i].value))
+            pygui.pop_style_color(4)
+            pygui.pop_id()
+        pygui.pop_id()
+
+        pygui.same_line()
+        pygui.push_id("set2")
+        rows = 3
+        small_slider_size = (18, (160 - (rows - 1) * spacing) // rows)
+        for nx in range(4):
+            if nx > 0:
+                pygui.same_line()
+            pygui.begin_group()
+            for ny in range(rows):
+                pygui.push_id(nx * rows + ny)
+                pygui.vslider_float("##v", small_slider_size, widget.vert_values2[nx], 0, 1, "")
+                if pygui.is_item_active() or pygui.is_item_hovered():
+                    pygui.set_tooltip("{:.3f}".format(widget.vert_values2[nx].value))
+                pygui.pop_id()
+            pygui.end_group()
+        pygui.pop_id()
+
+        pygui.same_line()
+        pygui.push_id("set3")
+        for i in range(4):
+            if i > 0:
+                pygui.same_line()
+            pygui.push_id(i)
+            pygui.push_style_var(pygui.STYLE_VAR_GRAB_MIN_SIZE, 40)
+            pygui.vslider_float("##v", (40, 160), widget.vert_values[i], 0, 1, "%.2f\nsec")
+            pygui.pop_style_var()
+            pygui.pop_id()
+        pygui.pop_id()
+        pygui.pop_style_var()
+        pygui.tree_pop()
+
 
 class layout:
-    scroll_track_item = pygui.IntPtr(50)
-    scroll_enable_track = pygui.BoolPtr(True)
-    scroll_enable_extra_decorations = pygui.BoolPtr(False)
-    scroll_scroll_to_off_px = pygui.FloatPtr(0)
-    scroll_scroll_to_pos_px = pygui.FloatPtr(200)
-    scroll_lines = pygui.IntPtr(7)
+    track_item = pygui.IntPtr(50)
+    enable_track = pygui.BoolPtr(True)
+    enable_extra_decorations = pygui.BoolPtr(False)
+    scroll_to_off_px = pygui.FloatPtr(0)
+    scroll_to_pos_px = pygui.FloatPtr(200)
+    lines = pygui.IntPtr(7)
 
 
 def show_demo_window_layout():
@@ -1306,23 +1384,23 @@ def show_demo_window_layout():
     
     if pygui.tree_node("Scrolling"):
         help_marker("Use SetScrollHereY() or SetScrollFromPosY() to scroll to a given vertical position.")
-        pygui.checkbox("Decoration", layout.scroll_enable_extra_decorations)
-        pygui.checkbox("Track", layout.scroll_enable_track)
+        pygui.checkbox("Decoration", layout.enable_extra_decorations)
+        pygui.checkbox("Track", layout.enable_track)
         pygui.push_item_width(100)
         pygui.same_line(140)
-        layout.scroll_enable_track.value |= pygui.drag_int("##item", layout.scroll_track_item, 0.25, 0, 99, "Item = %d")
+        layout.enable_track.value |= pygui.drag_int("##item", layout.track_item, 0.25, 0, 99, "Item = %d")
 
         scroll_to_off = pygui.button("Scroll Offset")
         pygui.same_line(140)
-        scroll_to_off |= pygui.drag_float("##off", layout.scroll_scroll_to_off_px, 1, 0, pygui.FLT_MAX, "+%.0f px")
+        scroll_to_off |= pygui.drag_float("##off", layout.scroll_to_off_px, 1, 0, pygui.FLT_MAX, "+%.0f px")
 
         scroll_to_pos = pygui.button("Scroll To Pos")
         pygui.same_line(140)
-        scroll_to_pos |= pygui.drag_float("##pos", layout.scroll_scroll_to_pos_px, 1, -10, pygui.FLT_MAX, "X/Y = %.0f px")
+        scroll_to_pos |= pygui.drag_float("##pos", layout.scroll_to_pos_px, 1, -10, pygui.FLT_MAX, "X/Y = %.0f px")
         pygui.pop_item_width()
 
         if scroll_to_off or scroll_to_pos:
-            layout.scroll_enable_track.value = False
+            layout.enable_track.value = False
         
         style = pygui.get_style()
         child_w = (pygui.get_content_region_avail()[0] - 4 * style.item_spacing[0]) / 5
@@ -1336,19 +1414,19 @@ def show_demo_window_layout():
             names = ["Top", "25%", "Center", "75%", "Bottom"]
             pygui.text_unformatted(names[i])
 
-            child_flags = pygui.WINDOW_FLAGS_MENU_BAR if layout.scroll_enable_extra_decorations else 0
+            child_flags = pygui.WINDOW_FLAGS_MENU_BAR if layout.enable_extra_decorations else 0
             child_id = pygui.get_id(str(i))
             child_is_visible = pygui.begin_child(str(child_id), (child_w, 200), True, child_flags)
             if pygui.begin_menu_bar():
                 pygui.text_unformatted("abc")
                 pygui.end_menu_bar()
             if scroll_to_off:
-                pygui.set_scroll_y(layout.scroll_scroll_to_off_px.value)
+                pygui.set_scroll_y(layout.scroll_to_off_px.value)
             if scroll_to_pos:
-                pygui.set_scroll_from_pos_y(pygui.get_cursor_start_pos()[1] + layout.scroll_scroll_to_pos_px.value, i * 0.25)
+                pygui.set_scroll_from_pos_y(pygui.get_cursor_start_pos()[1] + layout.scroll_to_pos_px.value, i * 0.25)
             if child_is_visible: # Avoid calling SetScrollHereY when running with culled items
                 for item in range(100):
-                    if layout.scroll_enable_track and item == layout.scroll_track_item.value:
+                    if layout.enable_track and item == layout.track_item.value:
                         pygui.text_colored((1, 1, 0, 1), "Item {}".format(item))
                         pygui.set_scroll_here_y(i * 0.25) # 0.0f:top, 0.5f:center, 1.0f:bottom
                     else:
@@ -1370,18 +1448,18 @@ def show_demo_window_layout():
         pygui.push_id("##HorizontalScrolling")
         for i in range(5):
             child_height = pygui.get_text_line_height() + style.scrollbar_size + style.window_padding[1] * 2
-            child_flags = pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.scroll_enable_extra_decorations else 0)
+            child_flags = pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.enable_extra_decorations else 0)
             child_id = pygui.get_id(str(i))
             child_is_visible = pygui.begin_child(str(child_id), (-100, child_height), True, child_flags)
             if scroll_to_off:
-                pygui.set_scroll_x(layout.scroll_scroll_to_off_px.value)
+                pygui.set_scroll_x(layout.scroll_to_off_px.value)
             if scroll_to_pos:
-                pygui.set_scroll_from_pos_x(pygui.get_cursor_start_pos()[0] + layout.scroll_scroll_to_pos_px.value, i * 0.25)
+                pygui.set_scroll_from_pos_x(pygui.get_cursor_start_pos()[0] + layout.scroll_to_pos_px.value, i * 0.25)
             if child_is_visible: # Avoid calling SetScrollHereY when running with culled items
                 for item in range(100):
                     if item > 0:
                         pygui.same_line();
-                    if (layout.scroll_enable_track and item == layout.scroll_track_item.value):
+                    if (layout.enable_track and item == layout.track_item.value):
                         pygui.text_colored((1, 1, 0, 1), "Item {}".format(item))
                         pygui.set_scroll_here_x(i * 0.25); # 0.0f:left, 0.5f:center, 1.0f:right
                     else:
@@ -1399,12 +1477,12 @@ def show_demo_window_layout():
         help_marker(
             "Horizontal scrolling for a window is enabled via the ImGuiWindowFlags_HorizontalScrollbar flag.\n\n"
             "You may want to also explicitly specify content width by using SetNextWindowContentWidth() before Begin().")
-        pygui.slider_int("Lines", layout.scroll_lines, 1, 15)
+        pygui.slider_int("Lines", layout.lines, 1, 15)
         pygui.push_style_var(pygui.STYLE_VAR_FRAME_ROUNDING, 3)
-        pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (2, 1))
+        pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (2, 1))
         scrolling_child_size = (0, pygui.get_frame_height_with_spacing() * 7 + 30)
         pygui.begin_child("scrolling", scrolling_child_size, True, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
-        for line in range(layout.scroll_lines.value):
+        for line in range(layout.lines.value):
             # Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
             # If you want to create your own time line for a real application you may be better off manipulating
             # the cursor position yourself, aka using SetCursorPos/SetCursorScreenPos to position the widgets
@@ -1414,7 +1492,7 @@ def show_demo_window_layout():
             for n in range(num_buttons):
                 if n > 0:
                     pygui.same_line()
-                pygui.push_id(str(n + line * 1000))
+                pygui.push_id(n + line * 1000)
                 if n % 15 == 0:
                     label = "FizzBuzz"
                 elif n % 3 == 0:
@@ -1424,9 +1502,9 @@ def show_demo_window_layout():
                 else:
                     label = str(n)
                 hue = n * 0.05
-                pygui.push_style_color_im_vec4(pygui.COL_BUTTON, pygui.color_convert_hsv_to_rgb(hue, 0.6, 0.6))
-                pygui.push_style_color_im_vec4(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(hue, 0.7, 0.7))
-                pygui.push_style_color_im_vec4(pygui.COL_BUTTON_ACTIVE, pygui.color_convert_hsv_to_rgb(hue, 0.8, 0.8))
+                pygui.push_style_color(pygui.COL_BUTTON, pygui.color_convert_hsv_to_rgb(hue, 0.6, 0.6))
+                pygui.push_style_color(pygui.COL_BUTTON_HOVERED, pygui.color_convert_hsv_to_rgb(hue, 0.7, 0.7))
+                pygui.push_style_color(pygui.COL_BUTTON_ACTIVE, pygui.color_convert_hsv_to_rgb(hue, 0.8, 0.8))
                 pygui.button(label, (40 + math.sin(line + n) * 20, 0))
                 pygui.pop_style_color(3)
                 pygui.pop_id()
@@ -1554,6 +1632,14 @@ class table:
 
 
 def show_demo_tables():
+    def push_style_compact():
+        style = pygui.get_style()
+        pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (style.frame_padding[0], style.frame_padding[1] * 0.6))
+        pygui.push_style_var(pygui.STYLE_VAR_ITEM_SPACING, (style.item_spacing[0], style.item_spacing[1] * 0.6))
+
+    def pop_style_compact():
+        pygui.pop_style_var(2)
+
     if not pygui.collapsing_header("Tables & Columns"):
         return
     
@@ -1876,7 +1962,7 @@ def show_demo_tables():
         pygui.slider_float2("CellPadding", table.padding_cell_padding.as_floatptrs(), 0, 10, "%.0f")
         pop_style_compact()
 
-        pygui.push_style_var_im_vec2(pygui.STYLE_VAR_CELL_PADDING, table.padding_cell_padding.vec());
+        pygui.push_style_var(pygui.STYLE_VAR_CELL_PADDING, table.padding_cell_padding.vec());
         if pygui.begin_table("table_padding_2", 3, table.padding_flags2.value):
             if not table.padding_show_widget_frame_bg:
                 pygui.push_style_color(pygui.COL_FRAME_BG, 0)
@@ -1885,7 +1971,7 @@ def show_demo_tables():
                 pygui.table_next_column()
                 pygui.set_next_item_width(-pygui.FLT_MIN)
 
-                pygui.push_id_int(cell)
+                pygui.push_id(cell)
                 pygui.input_text("##cell", table.padding_text_bufs[cell])
                 pygui.pop_id()
 
@@ -1995,7 +2081,7 @@ def show_demo_tables():
                 for row_n in range(clipper.display_start, clipper.display_end):
                     # Display a data item
                     item: table.MyItem = table.sort_items[row_n]
-                    pygui.push_id_int(item._id)
+                    pygui.push_id(item._id)
                     pygui.table_next_row()
                     pygui.table_next_column()
                     pygui.text("{:.4f}".format(item._id))
@@ -2017,638 +2103,48 @@ def show_demo_tables():
         pygui.pop_style_var()
 
 
-class menu:
-    b = pygui.BoolPtr(True)
+class rand:
+    begin_disabled = pygui.BoolPtr(True)
+    first_checkbox = pygui.BoolPtr(False)
+    second_checkbox = pygui.BoolPtr(False)
+    third_checkbox = pygui.BoolPtr(False)
+    modal_checkbox = pygui.BoolPtr(False)
+    colour = pygui.Vec4Ptr(1, 1, 0, 1)
+    current_item = pygui.IntPtr(0)
+    error_text = [(1, 0, 0, 1), ""]
+    drag_min = pygui.IntPtr(1)
+    drag_max = pygui.IntPtr(100)
+    drag = pygui.IntPtr(50)
+    drag_float_min = pygui.FloatPtr(0.001)
+    drag_float_max = pygui.FloatPtr(0.100)
+    drag_float = pygui.FloatPtr(0.05)
+    multiline_buffer = pygui.StrPtr("", 64)
+    is_activated = False
+    is_deactivated = False
+    edit_float = pygui.FloatPtr(5)
+    is_deactivated_after_edit = False
+    is_edited = False
+    checkboxes = [pygui.BoolPtr(False) for _ in range(10)]
+    key_press_log = []
+    mouse_press_log = []
+    show_window = pygui.BoolPtr(False)
+    window_log = []
+    tree_checkboxes = [pygui.BoolPtr(False) for _ in range(3)]
+    text_input = [pygui.StrPtr("") for _ in range(3)]
+    next_window_alpha = pygui.FloatPtr(1)
+    next_window_collapsed = pygui.BoolPtr(False)
+    next_window_size = pygui.Vec2Ptr(500, 400)
+    next_window_content_size = pygui.Vec2Ptr(500, 400)
+    next_window_scroll = pygui.Vec2Ptr(-1, -1)
+    next_window_focus = pygui.BoolPtr(False)
+    next_window_spawned = pygui.BoolPtr(True)
 
 
-def show_menu_bar():
-    if pygui.begin_menu_bar():
-        if pygui.begin_menu("File"):
-            show_menu_file()
-            pygui.end_menu()
-        if pygui.begin_menu("Edit"):
-            if pygui.menu_item("Undo", "CTRL+Z"): pass
-            if pygui.menu_item("Redo", "CTRL+Y", False, False): pass
-            pygui.separator()
-            if pygui.menu_item("Cut", "CTRL+X"): pass
-            if pygui.menu_item("Copy", "CTRL+C"): pass
-            if pygui.menu_item("Paste", "CTRL+V"): pass
-            pygui.end_menu()
-        if pygui.begin_menu("Examples"):
-            pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
-            pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
-            pygui.menu_item_bool_ptr("Pygui extras", None, demo.show_random_extras)
-            pygui.end_menu()
-        if pygui.begin_menu("Tools"):
-            pygui.menu_item_bool_ptr("About Dear ImGui", None, demo.show_about_window)
-            pygui.end_menu()
-        pygui.end_menu_bar()
-
-
-def show_menu_file():
-    pygui.menu_item("(demo menu)", None, False, False)
-    if pygui.menu_item("New"): pass
-    if pygui.menu_item("Open", "Ctrl+O"): pass
-    if pygui.begin_menu("Open Recent"):
-        pygui.menu_item("fish_hat.c")
-        pygui.menu_item("fish_hat.inl")
-        pygui.menu_item("fish_hat.h")
-        if pygui.begin_menu("More.."):
-            pygui.menu_item("Hello")
-            pygui.menu_item("Sailor")
-            if pygui.begin_menu("Recurse.."):
-                show_menu_file()
-                pygui.end_menu()
-            pygui.end_menu()
-        pygui.end_menu()
-    if pygui.menu_item("Save", "Ctrl+S"): pass
-    if pygui.menu_item("Save As.."): pass
-
-    if pygui.begin_menu("Colors"):
-        sz = pygui.get_text_line_height()
-        for i in range(pygui.COL_COUNT):
-            name = pygui.get_style_color_name(i)
-            p = pygui.get_cursor_screen_pos()
-            pygui.get_window_draw_list().add_rect_filled(
-                p, (p[0] + sz, p[1] + sz),
-                pygui.get_color_u32(i)
-            )
-            pygui.dummy((sz, sz))
-            pygui.same_line()
-            pygui.menu_item(name)
-        pygui.end_menu()
-    
-    # Here we demonstrate appending again to the "Options" menu (which we already created above)
-    # Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
-    # In a real code-base using it would make senses to use this feature from very different code locations.
-    if pygui.begin_menu("Options"):
-        pygui.checkbox("SomeOption", menu.b)
-        pygui.end_menu()
-
-    if pygui.begin_menu("Disabled", False):
-        assert False # Should not be reached
-    
-    if pygui.menu_item("Checked", None, True): pass
-    pygui.separator()
-    if pygui.menu_item("Quit", "Alt+F4"): pass
-
-
-class ExampleAppConsole:
-    def __init__(self):
-        self.input_buf = pygui.StrPtr("", 256)
-        self.items = []
-        self.commands = [
-            "HELP",
-            "HISTORY",
-            "CLEAR",
-            "CLASSIFY",
-        ]
-        self.history = []
-        # -1: new line, 0..History.Size-1 browsing history.
-        self.history_pos = -1
-        # Not adding filter at the moment
-        self.auto_scroll = pygui.BoolPtr(True)
-        self.scroll_to_bottom = pygui.BoolPtr(False)
-    
-    def clear_log(self):
-        self.items.clear()
-    
-    def add_log(self, string: str, *args):
-        self.items.append(" ".join([string] + list(args)))
-    
-    def draw(self, title: str, p_open: pygui.BoolPtr):
-        pygui.set_next_window_size((520, 600), pygui.COND_FIRST_USE_EVER)
-        if not pygui.begin(title, p_open):
-            pygui.end()
-            return
-        
-        # As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
-        # So e.g. IsItemHovered() will return true when hovering the title bar.
-        # Here we create a context menu only available from the title bar.
-        if pygui.begin_popup_context_item():
-            if pygui.menu_item("Close Console"):
-                p_open.value = False
-            pygui.end_popup()
-        
-        pygui.text_wrapped(
-            "This example implements a console with basic coloring, completion (TAB key) and history (Up/Down keys). A more elaborate "
-            "implementation may want to store entries along with extra data such as timestamp, emitter, etc.")
-        pygui.text_wrapped("Enter 'HELP' for help.")
-
-        if pygui.small_button("Add Debug Text"):
-            self.add_log("{} some text".format(len(self.items)))
-            self.add_log("some more text")
-            self.add_log("display very important message here!")
-        
-        pygui.same_line()
-        if pygui.small_button("Add Debug Error"):
-            self.add_log("[error] something went wrong")
-        pygui.same_line()
-        if pygui.small_button("Clear"):
-            self.clear_log()
-        pygui.same_line()
-        copy_to_clipboard = pygui.small_button("Copy")
-
-        pygui.separator()
-
-        # Options menu
-        if pygui.begin_popup("Options"):
-            pygui.checkbox("Auto-scroll", self.auto_scroll)
-            pygui.end_popup()
-
-        # Options, Filter
-        if pygui.button("Options"):
-            pygui.open_popup("Options")
-        # pygui.same_line()
-        # Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
-        pygui.separator()
-
-        # Reserve enough left-over height for 1 separator + 1 input text
-        footer_height_to_reserve = pygui.get_style().item_spacing[1] + pygui.get_frame_height_with_spacing()
-        if pygui.begin_child("ScrollingRegion", (0, -footer_height_to_reserve), False, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
-            if pygui.begin_popup_context_window():
-                if pygui.selectable("Clear"):
-                    self.clear_log()
-                pygui.end_popup()
-            
-            # Display every line as a separate entry so we can change their color or add custom widgets.
-            # If you only want raw text you can use ImGui::TextUnformatted(log.begin(), log.end());
-            # NB- if you have thousands of entries this approach may be too inefficient and may require user-side clipping
-            # to only process visible items. The clipper will automatically measure the height of your first item and then
-            # "seek" to display only items in the visible area.
-            # To use the clipper we can replace your standard loop:
-            #      for (int i = 0; i < Items.Size; i++)
-            #   With:
-            #      ImGuiListClipper clipper;
-            #      clipper.Begin(Items.Size);
-            #      while (clipper.Step())
-            #         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
-            # - That your items are evenly spaced (same height)
-            # - That you have cheap random access to your elements (you can access them given their index,
-            #   without processing all the ones before)
-            # You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
-            # We would need random-access on the post-filtered list.
-            # A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
-            # or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
-            # and appending newly elements as they are inserted. This is left as a task to the user until we can manage
-            # to improve this example code!
-            # If your items are of variable height:
-            # - Split them into same height items would be simpler and facilitate random-seeking into your list.
-            # - Consider using manual call to IsRectVisible() and skipping extraneous decoration from your items.
-            pygui.push_style_var_im_vec2(pygui.STYLE_VAR_ITEM_SPACING, (4, 1)) # Tighten spacing
-            if copy_to_clipboard:
-                pygui.log_to_clipboard()
-            
-            for item in self.items:
-                # TODO: Filter
-
-                # Normally you would store more information in your item than just a string.
-                # (e.g. make Items[] an array of structure, store color/type etc.)
-                
-                color = (0, 0, 0, 0)
-                has_color = False
-                if "[error]" in item:
-                    color = (1, 0.4, 0.4, 1)
-                    has_color = True
-                elif "#" in item:
-                    color = (1, 0.8, 0.6, 1)
-                    has_color = True
-                if has_color:
-                    pygui.push_style_color_im_vec4(pygui.COL_TEXT, color)
-                pygui.text_unformatted(item)
-                if has_color:
-                    pygui.pop_style_color()
-            
-            if copy_to_clipboard:
-                pygui.log_finish()
-            
-           # Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
-           # Using a scrollbar or mouse-wheel will take away from the bottom edge.
-            if self.scroll_to_bottom or (self.auto_scroll and pygui.get_scroll_y() >= pygui.get_scroll_max_y()):
-                pygui.set_scroll_here_y(1)
-            self.scroll_to_bottom.value = False
-
-            pygui.pop_style_var()
-        pygui.end_child()
-        pygui.separator()
-
-        # Command-line
-        reclaim_focus = False
-        input_text_flags = \
-            pygui.INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE | \
-            pygui.INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL | \
-            pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION | \
-            pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY
-        
-        if pygui.input_text("Input", self.input_buf, input_text_flags, self.text_edit_callback):
-            if len(self.input_buf.value.strip()) > 0:
-                self.exec_command(self.input_buf.value)
-            self.input_buf.value = ""
-            reclaim_focus = True
-
-        # Auto-focus on window apparition
-        pygui.set_item_default_focus()
-        if reclaim_focus:
-            pygui.set_keyboard_focus_here(-1) # Auto focus previous widget
-
-        pygui.end()
-
-    def exec_command(self, command_line: str):
-        self.add_log("# {}\n".format(command_line))
-
-        # Insert into history. First find match and delete it so it can be pushed to the back.
-        # This isn't trying to be smart or optimal.
-        self.history_pos = -1
-        for i in reversed(range(len(self.history))):
-            if self.history[i] == command_line:
-                self.history.pop(i)
-                break
-        self.history.append(command_line)
-        
-        if command_line.startswith("CLEAR"):
-            self.clear_log()
-        elif command_line.startswith("HELP"):
-            self.add_log("Commands:")
-            for command in self.commands:
-                self.add_log(f"- {command}")
-        elif command_line.startswith("HISTORY"):
-            first = len(self.history) - 10
-            for i in range(max(first, 0), len(self.history)):
-                self.add_log("{} {}\n".format(i, self.history[i]))
-        else:
-            self.add_log("Unknown command: {}".format(command_line))
-        
-        self.scroll_to_bottom.value = True
-    
-    def text_edit_callback(self, data: pygui.ImGuiInputTextCallbackData, user_data) -> int:
-        if data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION:
-            # Example of TEXT COMPLETION
-            # Locate beginning of current word
-            word_end = data.cursor_pos
-            word_start = data.cursor_pos
-
-            while (word_start > 0):
-                c = data.buf[word_start - 1]
-                if c == ' ' or c == '\t' or c == ',' or c == ';':
-                    break
-                word_start -= 1
-            word = data.buf[word_start:word_end]
-        
-            candidates = [command for command in self.commands if command.startswith(word.upper())]
-            if len(candidates) == 0:
-                self.add_log('No match for "{}"!\n'.format(word))
-            elif len(candidates) == 1:
-                data.delete_chars(word_start, word_end - word_start)
-                data.insert_chars(data.cursor_pos, candidates[0] + " ")
-            
-            else:
-                # Multiple matches. Complete as much as we can..
-                # So inputing "C"+Tab will complete to "CL" then display "CLEAR" and "CLASSIFY" as matches.
-                match_len = word_end - word_start
-                while True:
-                    all_candidates_matches = True
-                    for i, candidate in enumerate(candidates):
-                        if i == 0:
-                            c = candidate[match_len].upper()
-                            continue
-                        
-                        if c != candidate[match_len].upper():
-                            all_candidates_matches = False
-                            break
-
-                    if not all_candidates_matches:
-                        break
-                    match_len += 1
-
-                if match_len > 0:
-                    data.delete_chars(word_start, word_end - word_start)
-                    data.insert_chars(data.cursor_pos, candidates[0][:match_len])
-
-                # List matches
-                self.add_log("Possible matches:\n")
-                for candidate in candidates:
-                    self.add_log("- {}\n".format(candidate))
-            
-        elif data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY:
-            # Example of HISTORY
-            prev_history_pos = self.history_pos
-            if data.event_key == pygui.KEY_UP_ARROW:
-                if self.history_pos == -1:
-                    self.history_pos = len(self.history) - 1
-                elif self.history_pos > 0:
-                    self.history_pos -= 1
-            elif data.event_key == pygui.KEY_DOWN_ARROW:
-                if self.history_pos != -1:
-                    self.history_pos += 1
-                    if self.history_pos >= len(self.history):
-                       self.history_pos = -1
-
-            # A better implementation would preserve the data on the current input line along with cursor position.
-            if prev_history_pos != self.history_pos:
-                history_str = self.history[self.history_pos] if self.history_pos >= 0 else ""
-                data.delete_chars(0, data.buf_text_len)
-                data.insert_chars(0, history_str)
-        return 0
-
-
-class demo:
-    example_app_console = ExampleAppConsole()
-    show_app_console = pygui.BoolPtr(False)
-    show_custom_rendering = pygui.BoolPtr(False)
-    show_about_window = pygui.BoolPtr(False)
-    show_random_extras = pygui.BoolPtr(False)
-
-    render_sz = pygui.FloatPtr(36)
-    render_thickness = pygui.FloatPtr(3)
-    render_ngon_sides = pygui.IntPtr(6)
-    render_circle_segments_override = pygui.BoolPtr(False)
-    render_circle_segments_override_v = pygui.IntPtr(12)
-    render_curve_segments_override = pygui.BoolPtr(False)
-    render_curve_segments_override_v = pygui.IntPtr(8)
-    render_colf = pygui.Vec4Ptr(1, 1, 0.4, 1)
-    render_points = []
-    render_scrolling = [0, 0]
-    render_opt_enable_grid = pygui.BoolPtr(True)
-    render_opt_enable_context_menu = pygui.BoolPtr(True)
-    render_adding_line = False
-    render_draw_bg = pygui.BoolPtr(True)
-    render_draw_fg = pygui.BoolPtr(True)
-
-    random_begin_disabled = pygui.BoolPtr(True)
-    random_first_checkbox = pygui.BoolPtr(False)
-    random_second_checkbox = pygui.BoolPtr(False)
-    random_third_checkbox = pygui.BoolPtr(False)
-    random_modal_checkbox = pygui.BoolPtr(False)
-    random_colour = pygui.Vec4Ptr(1, 1, 0, 1)
-    random_current_item = pygui.IntPtr(0)
-    random_error_text = [(1, 0, 0, 1), ""]
-    random_drag_min = pygui.IntPtr(1)
-    random_drag_max = pygui.IntPtr(100)
-    random_drag = pygui.IntPtr(50)
-    random_drag_float_min = pygui.FloatPtr(0.001)
-    random_drag_float_max = pygui.FloatPtr(0.100)
-    random_drag_float = pygui.FloatPtr(0.05)
-    random_multiline_buffer = pygui.StrPtr("", 64)
-    random_is_activated = False
-    random_is_deactivated = False
-    random_edit_float = pygui.FloatPtr(5)
-    random_is_deactivated_after_edit = False
-    random_is_edited = False
-    random_checkboxes = [pygui.BoolPtr(False) for _ in range(10)]
-    random_key_press_log = []
-    random_mouse_press_log = []
-    random_show_window = pygui.BoolPtr(False)
-    random_window_log = []
-
-
-def show_app_console(p_open: pygui.BoolPtr):
-    demo.example_app_console.draw("Example: Pygui Console", p_open)
-
-
-def show_app_custom_rendering(p_open: pygui.BoolPtr):
-    if not pygui.begin("Example: Pygui Custom rendering", p_open):
-        pygui.end()
+def show_random_extras():
+    if not pygui.collapsing_header("Random Extras"):
         return
-    
-    # Tip: If you do a lot of custom rendering, you probably want to use your own geometrical types and benefit of
-    # overloaded operators, etc. Define IM_VEC2_CLASS_EXTRA in imconfig.h to create implicit conversions between your
-    # types and ImVec2/ImVec4. Dear ImGui defines overloaded operators but they are internal to imgui.cpp and not
-    # exposed outside (to avoid messing with your types) In this example we are not using the maths operators!
-    if pygui.begin_tab_bar("##TabBar"):
-        if pygui.begin_tab_item("Primitives"):
-            pygui.push_item_width(-pygui.get_font_size() * 15)
-            draw_list = pygui.get_window_draw_list()
 
-            # Draw gradients
-            # (note that those are currently exacerbating our sRGB/Linear issues)
-            # Calling ImGui::GetColorU32() multiplies the given colors by the current Style Alpha, but you may pass the IM_COL32() directly as well..
-            pygui.text("Gradients")
-            gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
-            p0 = pygui.get_cursor_screen_pos()
-            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-            col_a = pygui.IM_COL32(0, 0, 0, 255)
-            col_b = pygui.IM_COL32(255, 255, 255, 255)
-            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
-            pygui.invisible_button("##gradient1", gradient_size)
-
-            p0 = pygui.get_cursor_screen_pos()
-            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-            col_a = pygui.get_color_u32_im_vec4((0, 1, 0, 1)) # Just to showcase the different colour functions
-            col_b = pygui.get_color_u32_im_vec4((1, 0, 0, 1))
-            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
-            pygui.invisible_button("##gradient2", gradient_size)
-
-            # Draw a bunch of primitives
-            pygui.text("All primitives")
-            pygui.drag_float("Size", demo.render_sz, 0.2, 2, 100, "%.0f")
-            pygui.drag_float("Thickness", demo.render_thickness, 0.05, 1, 8, "%.02f")
-            pygui.slider_int("N-gon sides", demo.render_ngon_sides, 3, 12)
-            pygui.checkbox("##circlesegmentoverride", demo.render_circle_segments_override)
-            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
-            demo.render_circle_segments_override.value |= pygui.slider_int("Circle segments override", demo.render_circle_segments_override_v, 3, 40)
-            pygui.checkbox("##curvessegmentoverride", demo.render_curve_segments_override)
-            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
-            demo.render_curve_segments_override.value |= pygui.slider_int("Curves segments override", demo.render_curve_segments_override_v, 3, 40)
-            pygui.color_edit4("Color", demo.render_colf)
-
-            p = pygui.get_cursor_screen_pos()
-            col = demo.render_colf.to_u32()
-            sz = demo.render_sz.value
-            spacing = 10.0
-            corners_tl_br = pygui.IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT | pygui.IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT
-            rounding = demo.render_sz.value / 5.0
-            circle_segments = demo.render_circle_segments_override_v.value if demo.render_circle_segments_override else 0
-            curve_segments = demo.render_curve_segments_override_v.value if demo.render_curve_segments_override else 0
-            x = p[0] + 4.0
-            y = p[1] + 4.0
-            for n in range(2):
-                # First line uses a thickness of 1.0f, second line uses the configurable thickness
-                th = 1 if (n == 0) else demo.render_thickness.value
-                draw_list.add_ngon((x + sz*0.5, y + sz*0.5), sz*0.5, col, demo.render_ngon_sides.value, th)
-                x += sz + spacing;  # N-gon
-                draw_list.add_circle((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments, th)
-                x += sz + spacing  # Circle
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, 0.0, pygui.IM_DRAW_FLAGS_NONE, th)
-                x += sz + spacing  # Square
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, pygui.IM_DRAW_FLAGS_NONE, th)
-                x += sz + spacing  # Square with all rounded corners
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, corners_tl_br, th)
-                x += sz + spacing  # Square with two rounded corners
-                draw_list.add_triangle((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col, th)
-                x += sz + spacing  # Triangle
-                # draw_list->AddTriangle(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col, th)
-                # x+= sz*0.4f + spacing # Thin triangle
-                draw_list.add_line((x, y), (x + sz, y), col, th)
-                x += sz + spacing  # Horizontal line (note: drawing a filled rectangle will be faster!)
-                draw_list.add_line((x, y), (x, y + sz), col, th)
-                x += spacing       # Vertical line (note: drawing a filled rectangle will be faster!)
-                draw_list.add_line((x, y), (x + sz, y + sz), col, th)
-                x += sz + spacing  # Diagonal line
-
-                # Quadratic Bezier Curve (3 control points)
-                cp3 = [
-                    (x, y + sz * 0.6),
-                    (x + sz * 0.5, y - sz * 0.4),
-                    (x + sz, y + sz),
-                ]
-                draw_list.add_bezier_quadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
-                x += sz + spacing
-
-                # # Cubic Bezier Curve (4 control points)
-                cp4 = [
-                    (x, y),
-                    (x + sz * 1.3, y + sz * 0.3),
-                    (x + sz - sz * 1.3, y + sz - sz * 0.3),
-                    (x + sz, y + sz),
-                ]
-                draw_list.add_bezier_cubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
-
-                x = p[0] + 4
-                y += sz + spacing
-            
-            draw_list.add_ngon_filled((x + sz * 0.5, y + sz * 0.5), sz*0.5, col, demo.render_ngon_sides.value)
-            x += sz + spacing;  # N-gon
-            draw_list.add_circle_filled((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments)
-            x += sz + spacing;  # Circle
-            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col)
-            x += sz + spacing;  # Square
-            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0)
-            x += sz + spacing;  # Square with all rounded corners
-            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0, corners_tl_br)
-            x += sz + spacing;  # Square with two rounded corners
-            draw_list.add_triangle_filled((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col)
-            x += sz + spacing;  # Triangle
-            # draw_list.AddTriangleFilled(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col); x += sz*0.4f + spacing; # Thin triangle
-            draw_list.add_rect_filled((x, y), (x + sz, y + demo.render_thickness.value), col)
-            x += sz + spacing;  # Horizontal line (faster than AddLine, but only handle integer thickness)
-            draw_list.add_rect_filled((x, y), (x + demo.render_thickness.value, y + sz), col)
-            x += spacing * 2.0;# Vertical line (faster than AddLine, but only handle integer thickness)
-            draw_list.add_rect_filled((x, y), (x + 1, y + 1), col)
-            x += sz;            # Pixel (faster than AddLine)
-            draw_list.add_rect_filled_multi_color((x, y), (x + sz, y + sz), pygui.IM_COL32(0, 0, 0, 255), pygui.IM_COL32(255, 0, 0, 255), pygui.IM_COL32(255, 255, 0, 255), pygui.IM_COL32(0, 255, 0, 255));
-
-            pygui.dummy(((sz + spacing) * 10.2, (sz + spacing) * 3.0))
-            pygui.pop_item_width()
-            pygui.end_tab_item()
-        
-        if pygui.begin_tab_item("Canvas"):
-            pygui.checkbox("Enable grid", demo.render_opt_enable_grid)
-            pygui.checkbox("Enable context menu", demo.render_opt_enable_context_menu)
-            pygui.text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.")
-
-            # Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
-            # Here we demonstrate that this can be replaced by simple offsetting + custom drawing + PushClipRect/PopClipRect() calls.
-            # To use a child window instead we could use, e.g:
-            #      ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));      // Disable padding
-            #      ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 50, 255));  // Set a background color
-            #      ImGui::BeginChild("canvas", ImVec2(0.0f, 0.0f), true, ImGuiWindowFlags_NoMove);
-            #      ImGui::PopStyleColor();
-            #      ImGui::PopStyleVar();
-            #      [...]
-            #      ImGui::EndChild();
-
-            # Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
-            canvas_p0 = pygui.get_cursor_screen_pos()      # ImDrawList API uses screen coordinates!
-            canvas_sz = pygui.get_content_region_avail()   # Resize canvas to what's available
-            if canvas_sz[0] < 50.0:
-                canvas_sz[0] = 50.0
-            if canvas_sz[1] < 50.0:
-                canvas_sz[1] = 50.0
-            canvas_p1 = (canvas_p0[0] + canvas_sz[0], canvas_p0[1] + canvas_sz[1])
-
-            # Draw border and background color
-            io = pygui.get_io()
-            draw_list = pygui.get_window_draw_list()
-            draw_list.add_rect_filled(canvas_p0, canvas_p1, pygui.IM_COL32(50, 50, 50, 255))
-            draw_list.add_rect(canvas_p0, canvas_p1, pygui.IM_COL32(255, 255, 255, 255))
-
-            # This will catch our interactions
-            pygui.invisible_button("canvas", canvas_sz, pygui.BUTTON_FLAGS_MOUSE_BUTTON_LEFT | pygui.BUTTON_FLAGS_MOUSE_BUTTON_RIGHT)
-            is_hovered = pygui.is_item_hovered()  # Hovered
-            is_active = pygui.is_item_active()    # Held
-            origin = (canvas_p0[0] + demo.render_scrolling[0], canvas_p0[1] + demo.render_scrolling[1]) # Lock scrolled origin
-            mouse_pos_in_canvas = (io.mouse_pos[0] - origin[0], io.mouse_pos[1] - origin[1])
-
-            # Add first and second point
-            if is_hovered and not demo.render_adding_line and pygui.is_mouse_clicked(pygui.MOUSE_BUTTON_LEFT):
-                demo.render_points.append(mouse_pos_in_canvas)
-                demo.render_points.append(mouse_pos_in_canvas)
-                demo.render_adding_line = True
-            if demo.render_adding_line:
-                demo.render_points[len(demo.render_points) - 1] = mouse_pos_in_canvas
-                if not pygui.is_mouse_down(pygui.MOUSE_BUTTON_LEFT):
-                    demo.render_adding_line = False
-            
-            # Pan (we use a zero mouse threshold when there's no context menu)
-            # You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
-            mouse_threshold_for_pan = -1 if demo.render_opt_enable_context_menu else 0
-            if is_active and pygui.is_mouse_dragging(pygui.MOUSE_BUTTON_RIGHT, mouse_threshold_for_pan):
-                demo.render_scrolling[0] += io.mouse_delta[0]
-                demo.render_scrolling[1] += io.mouse_delta[1]
-
-            # Context menu (under default mouse threshold)
-            drag_delta = pygui.get_mouse_drag_delta(pygui.MOUSE_BUTTON_RIGHT)
-            if demo.render_opt_enable_context_menu and drag_delta[0] == 0 and drag_delta[1] == 0:
-                pygui.open_popup_on_item_click("context", pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT)
-            if pygui.begin_popup("context"):
-                if demo.render_adding_line:
-                    demo.render_points = demo.render_points[:len(demo.render_points) - 2]
-                
-                demo.render_adding_line = False
-                if pygui.menu_item("Remove one", None, False, len(demo.render_points) > 0):
-                    demo.render_points.pop()
-                    demo.render_points.pop()
-                if pygui.menu_item("Remove all", None, False, len(demo.render_points) > 0):
-                    demo.render_points.clear()
-                pygui.end_popup()
-
-            # Draw grid + all lines in the canvas
-            draw_list.push_clip_rect(canvas_p0, canvas_p1, True);
-            if demo.render_opt_enable_grid:
-                GRID_STEP = 64
-
-                x = demo.render_scrolling[0] % GRID_STEP
-                while x < canvas_sz[0]:
-                    draw_list.add_line((canvas_p0[0] + x, canvas_p0[1]), (canvas_p0[0] + x, canvas_p1[1]), pygui.IM_COL32(200, 200, 200, 40))
-                    x += GRID_STEP
-                y = demo.render_scrolling[1] % GRID_STEP
-                while y < canvas_sz[1]:
-                    draw_list.add_line((canvas_p0[0], canvas_p0[1] + y), (canvas_p1[0], canvas_p0[1] + y), pygui.IM_COL32(200, 200, 200, 40))
-                    y += GRID_STEP
-            for n in range(0, len(demo.render_points), 2):
-                first = demo.render_points[n]
-                second = demo.render_points[n + 1]
-                draw_list.add_line((origin[0] + first[0], origin[1] + first[1]), (origin[0] + second[0], origin[1] + second[1]), pygui.IM_COL32(255, 255, 0, 255), 2)
-            draw_list.pop_clip_rect()
-
-            pygui.end_tab_item()
-
-        if pygui.begin_tab_item("BG/FG draw lists"):
-            pygui.checkbox("Draw in Background draw list", demo.render_draw_bg)
-            pygui.same_line()
-            help_marker("The Background draw list will be rendered below every Dear ImGui windows.")
-            pygui.checkbox("Draw in Foreground draw list", demo.render_draw_fg)
-            pygui.same_line()
-            help_marker("The Foreground draw list will be rendered over every Dear ImGui windows.")
-            window_pos = pygui.get_window_pos()
-            window_size = pygui.get_window_size()
-            window_center = (window_pos[0] + window_size[0] * 0.5, window_pos[1] + window_size[1] * 0.5)
-            if demo.render_draw_bg:
-                pygui.get_background_draw_list().add_circle(window_center, window_size[0] * 0.6, pygui.IM_COL32(255, 0, 0, 200), 0, 10 + 4)
-            if demo.render_draw_fg:
-                pygui.get_foreground_draw_list().add_circle(window_center, window_size[1] * 0.6, pygui.IM_COL32(0, 255, 0, 200), 0, 10)
-            pygui.end_tab_item()
-        pygui.end_tab_bar()
-    
-    pygui.end()
-
-
-def show_random_extras(p_open: pygui.BoolPtr):
     pygui.push_style_var(pygui.STYLE_VAR_INDENT_SPACING, 30)
-    if not pygui.begin("Example: Random Extras", p_open):
-        pygui.end()
-        return
-    
     if pygui.tree_node("pygui.begin_child_frame()"):
         new_id = pygui.get_id("begin_child_frame()")
         item_height = pygui.get_text_line_height_with_spacing()
@@ -2670,12 +2166,12 @@ def show_random_extras(p_open: pygui.BoolPtr):
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.begin_disabled()"):
-        pygui.checkbox("Begin Disabled", demo.random_begin_disabled)
-        pygui.begin_disabled(demo.random_begin_disabled.value)
-        pygui.checkbox("First checkbox", demo.random_first_checkbox)
-        pygui.checkbox("Second checkbox", demo.random_second_checkbox)
+        pygui.checkbox("Begin Disabled", rand.begin_disabled)
+        pygui.begin_disabled(rand.begin_disabled.value)
+        pygui.checkbox("First checkbox", rand.first_checkbox)
+        pygui.checkbox("Second checkbox", rand.second_checkbox)
         pygui.end_disabled()
-        pygui.checkbox("Ignore disabled checkbox", demo.random_third_checkbox)
+        pygui.checkbox("Ignore disabled checkbox", rand.third_checkbox)
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.begin_main_menu_bar()"):
@@ -2723,8 +2219,8 @@ def show_random_extras(p_open: pygui.BoolPtr):
                 mouse_pos_on_popup
             ))
 
-            pygui.push_style_var_im_vec2(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
-            pygui.checkbox("This is a checkbox", demo.random_modal_checkbox)
+            pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
+            pygui.checkbox("This is a checkbox", rand.modal_checkbox)
             pygui.pop_style_var()
 
             if pygui.button("OK", (120, 0)):
@@ -2740,10 +2236,10 @@ def show_random_extras(p_open: pygui.BoolPtr):
     if pygui.tree_node("pygui.color_convert_float4_to_u32()"):
         draw_list = pygui.get_window_draw_list()
 
-        pygui.color_edit4("Edit rgb", demo.random_colour)
-        pygui.color_edit4("Edit hsv", demo.random_colour, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV)
-        float_to_u32 = pygui.color_convert_float4_to_u32(demo.random_colour.vec())
-        float_to_u32_macro = pygui.IM_COL32(*[c * 255 for c in demo.random_colour.vec()])
+        pygui.color_edit4("Edit rgb", rand.colour)
+        pygui.color_edit4("Edit hsv", rand.colour, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV)
+        float_to_u32 = pygui.color_convert_float4_to_u32(rand.colour.vec())
+        float_to_u32_macro = pygui.IM_COL32(*[c * 255 for c in rand.colour.vec()])
         pygui.text("color_convert_float4_to_u32: {}".format(float_to_u32))
         pygui.text("IM_COL32:                    {}".format(float_to_u32_macro))
 
@@ -2775,7 +2271,7 @@ def show_random_extras(p_open: pygui.BoolPtr):
             return True
         data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
         
-        pygui.combo_callback("My Combo", demo.random_current_item,
+        pygui.combo_callback("My Combo", rand.current_item,
                              combo_callback_function, data, len(data))
         pygui.tree_pop()
 
@@ -2786,18 +2282,18 @@ def show_random_extras(p_open: pygui.BoolPtr):
         try:
             if pygui.button("Call pygui.debug_check_version_and_data_layout()"):
                 pygui.debug_check_version_and_data_layout()
-                demo.random_error_text = [(0, 1, 0, 1), "Passed"]
+                rand.error_text = [(0, 1, 0, 1), "Passed"]
         except pygui.ImGuiError as e:
-            demo.random_error_text = [(1, 0, 0, 1), str(e)]
+            rand.error_text = [(1, 0, 0, 1), str(e)]
         
-        if demo.random_error_text[1] != "":
-            pygui.push_style_color_im_vec4(pygui.COL_TEXT, demo.random_error_text[0])
-            pygui.text_wrapped(demo.random_error_text[1])
+        if rand.error_text[1] != "":
+            pygui.push_style_color(pygui.COL_TEXT, rand.error_text[0])
+            pygui.text_wrapped(rand.error_text[1])
             pygui.pop_style_color()
 
-        if demo.random_error_text[1] != "":
+        if rand.error_text[1] != "":
             if pygui.button("Clear"):
-                demo.random_error_text[1] = ""
+                rand.error_text[1] = ""
 
         pygui.tree_pop()
     
@@ -2806,17 +2302,21 @@ def show_random_extras(p_open: pygui.BoolPtr):
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.drag_int_range2()"):
-        pygui.drag_int_range2("My drag_int2", demo.random_drag_min, demo.random_drag_max, 1, -500, 500)
-        pygui.drag_int("drag_int", demo.random_drag, 1, demo.random_drag_min.value, demo.random_drag_max.value)
-        pygui.drag_float_range2("My drag_float2", demo.random_drag_float_min, demo.random_drag_float_max, 0.001, -1, 1)
-        pygui.drag_float("drag_float", demo.random_drag_float, 0.001, demo.random_drag_float_min.value, demo.random_drag_float_max.value)
+        pygui.drag_int_range2("My drag_int2", rand.drag_min, rand.drag_max, 1, -500, 500)
+        pygui.drag_int("drag_int", rand.drag, 1, rand.drag_min.value, rand.drag_max.value)
+        pygui.drag_float_range2("My drag_float2", rand.drag_float_min, rand.drag_float_max, 0.001, -1, 1)
+        pygui.drag_float("drag_float", rand.drag_float, 0.001, rand.drag_float_min.value, rand.drag_float_max.value)
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.input_text_multiline()"):
         def callback_function(callback_data, user_data):
             print("Hello", user_data)
-        pygui.input_text_multiline("My text", demo.random_multiline_buffer, (-pygui.FLT_MIN, 100),
-                                   pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
+        
+        pygui.input_text_multiline(
+            "My text", rand.multiline_buffer, (-pygui.FLT_MIN, 100),
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
+        if pygui.button("Copy to clipboard"):
+            pygui.set_clipboard_text(rand.multiline_buffer.value)
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.dock_space()"):
@@ -2851,12 +2351,15 @@ def show_random_extras(p_open: pygui.BoolPtr):
     
     if pygui.tree_node("Info functions"):
         pygui.text("pygui.get_content_region_max(): {}".format(pygui.get_content_region_max()))
-        pygui.text_colored((1, 0, 0, 1), "pygui.get_cursor_pos_x(): {}".format(pygui.get_cursor_pos_x()))
-        pygui.text_colored((1, 0, 0, 1), "pygui.get_cursor_pos_y(): {}".format(pygui.get_cursor_pos_y()))
+        pygui.text("pygui.get_cursor_pos_x(): {}".format(pygui.get_cursor_pos_x()))
+        pygui.text("pygui.get_cursor_pos_y(): {}".format(pygui.get_cursor_pos_y()))
         pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
         pygui.text("pygui.get_frame_count(): {}".format(pygui.get_frame_count()))
-        pygui.text_colored((1, 0, 0, 1), "pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT)))
-        pygui.text_colored((1, 0, 0, 1), "pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT)))
+        left_click_count = pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT)
+        if left_click_count > 0:
+            print("pygui.MOUSE_BUTTON_LEFT: {}".format(left_click_count))
+        pygui.text("pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT): {}".format(left_click_count))
+        pygui.text("pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT)))
         pygui.text("pygui.get_mouse_cursor(): {}".format(pygui.get_mouse_cursor()))
         pygui.text("pygui.get_window_content_region_max(): {}".format(pygui.get_window_content_region_max()))
         pygui.text("pygui.get_window_content_region_min(): {}".format(pygui.get_window_content_region_min()))
@@ -2877,46 +2380,46 @@ def show_random_extras(p_open: pygui.BoolPtr):
     
     if pygui.tree_node("pygui.is_item_activated()"):
         pygui.button("is_item_activated")
-        if pygui.is_item_activated() or demo.random_is_activated:
-            demo.random_is_activated = True
+        if pygui.is_item_activated() or rand.is_activated:
+            rand.is_activated = True
             pygui.same_line()
             pygui.text("Is Activated!")
             pygui.same_line()
             if pygui.button("Reset"):
-                demo.random_is_activated = False
+                rand.is_activated = False
         pygui.button("is_item_deactivated")
-        if pygui.is_item_deactivated() or demo.random_is_deactivated:
-            demo.random_is_deactivated = True
+        if pygui.is_item_deactivated() or rand.is_deactivated:
+            rand.is_deactivated = True
             pygui.same_line()
             pygui.text("Is Deactivated!")
             pygui.same_line()
             if pygui.button("Reset"):
-                demo.random_is_deactivated = False
+                rand.is_deactivated = False
         pygui.set_next_item_width(200)
-        pygui.drag_float("is_item_deactivated_after_edit", demo.random_edit_float, 0.01)
-        if pygui.is_item_deactivated_after_edit() or demo.random_is_deactivated_after_edit:
-            demo.random_is_deactivated_after_edit = True
+        pygui.drag_float("is_item_deactivated_after_edit", rand.edit_float, 0.01)
+        if pygui.is_item_deactivated_after_edit() or rand.is_deactivated_after_edit:
+            rand.is_deactivated_after_edit = True
             pygui.same_line()
             pygui.text("Is Deactivated after edit!")
             pygui.same_line()
             if pygui.button("Reset"):
-                demo.random_is_deactivated_after_edit = False
+                rand.is_deactivated_after_edit = False
         
         pygui.set_next_item_width(200)
-        pygui.drag_float("is_item_edited", demo.random_edit_float, 0.01)
-        if pygui.is_item_edited() or demo.random_is_edited:
-            demo.random_is_edited = True
+        pygui.drag_float("is_item_edited", rand.edit_float, 0.01)
+        if pygui.is_item_edited() or rand.is_edited:
+            rand.is_edited = True
             pygui.same_line()
             pygui.text("Is Edited!")
             pygui.same_line()
             if pygui.button("Reset"):
-                demo.random_is_edited = False
+                rand.is_edited = False
         
         focused = -1
-        for i, bool_ptr in enumerate(demo.random_checkboxes):
+        for i, bool_ptr in enumerate(rand.checkboxes):
             if i > 0:
                 pygui.same_line()
-            pygui.push_style_color_im_vec4(pygui.COL_CHECK_MARK, pygui.color_convert_hsv_to_rgb(i / 10, 0.6, 0.6))
+            pygui.push_style_color(pygui.COL_CHECK_MARK, pygui.color_convert_hsv_to_rgb(i / 10, 0.6, 0.6))
             pygui.checkbox(f"##{i}", bool_ptr)
             pygui.pop_style_color()
             if pygui.is_item_focused():
@@ -2967,23 +2470,24 @@ def show_random_extras(p_open: pygui.BoolPtr):
     if pygui.tree_node("pygui.is_key_pressed(pygui.KEY_A)"):
         pygui.text("Log for pygui.KEY_A")
         if pygui.is_key_pressed(pygui.KEY_A):
-            demo.random_key_press_log.append("pygui.is_key_pressed(pygui.KEY_A)")
+            rand.key_press_log.append("pygui.is_key_pressed(pygui.KEY_A)")
         if pygui.is_key_down(pygui.KEY_A):
-            demo.random_key_press_log.append("pygui.is_key_down(pygui.KEY_A)")
+            rand.key_press_log.append("pygui.is_key_down(pygui.KEY_A)")
         if pygui.is_key_released(pygui.KEY_A):
-            demo.random_key_press_log.append("pygui.is_key_released(pygui.KEY_A)")
+            rand.key_press_log.append("pygui.is_key_released(pygui.KEY_A)")
         if pygui.begin_child("Log for pygui.KEY_A", (400, pygui.get_text_line_height_with_spacing() * 10), True):
-            for event in demo.random_key_press_log:
+            for event in rand.key_press_log:
                 pygui.text(event)
         pygui.end_child()
         if pygui.button("Clear ##log"):
-            demo.random_key_press_log.clear()
+            rand.key_press_log.clear()
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.is_mouse_hovering_rect()"):
         pygui.button("My button")
         rect_min = pygui.get_item_rect_min()
         rect_max = pygui.get_item_rect_max()
+        pygui.text("Item id above: {}".format(pygui.get_item_id()))
         pygui.text("pygui.is_mouse_hovering_rect(): {}".format(pygui.is_mouse_hovering_rect(rect_min, rect_max)))
         pygui.tree_pop()
     
@@ -2996,38 +2500,38 @@ def show_random_extras(p_open: pygui.BoolPtr):
     
     if pygui.tree_node("pygui.is_mouse_released()"):
         if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
-            demo.random_mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
+            rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
         pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
         if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), True):
-            for event in demo.random_mouse_press_log:
+            for event in rand.mouse_press_log:
                 pygui.text(event)
         pygui.end_child()
         if pygui.button("Clear"):
-            demo.random_mouse_press_log.clear()
+            rand.mouse_press_log.clear()
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.is_window_appearing()"):
-        pygui.checkbox("Show window", demo.random_show_window)
+        pygui.checkbox("Show window", rand.show_window)
         
         is_collapsed = "Unknown"
-        if demo.random_show_window:
+        if rand.show_window:
             pygui.begin("Window utilities")
             pygui.text("Hello world")
             pygui.text("pygui.is_window_docked(): {}".format(pygui.is_window_docked()))
             pygui.text("pygui.is_window_hovered(): {}".format(pygui.is_window_hovered()))
             if pygui.is_window_appearing():
-                demo.random_window_log.append("Appearing on frame {}".format(pygui.get_frame_count()))
+                rand.window_log.append("Appearing on frame {}".format(pygui.get_frame_count()))
             # If __ minimised
             is_collapsed = pygui.is_window_collapsed()
             pygui.end()
         
         if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), True):
-            for event in demo.random_window_log:
+            for event in rand.window_log:
                 pygui.text(event)
         pygui.end_child()
         pygui.text("pygui.is_window_collapsed(): {}".format(is_collapsed))
         if pygui.button("Clear ##log"):
-            demo.random_window_log.clear()
+            rand.window_log.clear()
         pygui.tree_pop()
     
     if pygui.tree_node("Various Structs"):
@@ -3431,7 +2935,749 @@ def show_random_extras(p_open: pygui.BoolPtr):
         pygui.separator()
         pygui.tree_pop()
 
+    if pygui.tree_node("pygui.set_cursor_pos()"):
+        pygui.text("Hello World")
+        cursor_pos = pygui.get_cursor_pos()
+        pygui.set_cursor_pos((cursor_pos[0] + 50, cursor_pos[1] + 50))
+        pygui.text("After setting xy cursor")
+        pygui.text("After cursor")
+        pygui.set_cursor_pos_x(cursor_pos[0] + 50)
+        pygui.text("After setting x cursor")
+        pygui.text("After cursor")
+        cursor_pos = pygui.get_cursor_pos()
+        pygui.set_cursor_pos_y(cursor_pos[1] + 50)
+        pygui.text("After setting y cursor")
+        pygui.text("After cursor")
+        screen_cursor_pos = pygui.get_cursor_screen_pos()
+        pygui.set_cursor_screen_pos((screen_cursor_pos[0] + 50, screen_cursor_pos[1] + 50))
+        pygui.text("After setting xy screen cursor")
+        pygui.text("After cursor")
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.set_mouse_cursor()"):
+        cursor_names = [
+            "pygui.MOUSE_CURSOR_ARROW",
+            "pygui.MOUSE_CURSOR_TEXT_INPUT",
+            "pygui.MOUSE_CURSOR_RESIZE_ALL",
+            "pygui.MOUSE_CURSOR_RESIZE_NS",
+            "pygui.MOUSE_CURSOR_RESIZE_EW",
+            "pygui.MOUSE_CURSOR_RESIZE_NESW",
+            "pygui.MOUSE_CURSOR_RESIZE_NWSE",
+            "pygui.MOUSE_CURSOR_HAND",
+            "pygui.MOUSE_CURSOR_NOT_ALLOWED",
+        ]
+        for i in range(len(cursor_names)):
+            cursor_name = cursor_names[i]
+            pygui.button(cursor_name)
+            if pygui.is_item_hovered():
+                pygui.set_mouse_cursor(i)
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.table_header()"):
+        names = ["Apple", "Banana", "Mango", "Passionfruit"]
+        if pygui.begin_table("Fruit Orders", 3, pygui.TABLE_FLAGS_BORDERS | pygui.TABLE_FLAGS_HIDEABLE):
+            pygui.table_header("Bruh")
+            pygui.table_setup_column("Name", pygui.TABLE_COLUMN_FLAGS_WIDTH_FIXED)
+            pygui.table_setup_column("Amount")
+            pygui.table_setup_column("Hidden")
+            pygui.table_headers_row()
+            pygui.table_set_column_enabled(2, False)
+            for name in names:
+                pygui.table_next_column()
+                pygui.table_set_bg_color(pygui.TABLE_BG_TARGET_CELL_BG, pygui.get_color_u32_im_vec4((0, 0.3, 0, 1)))
+                pygui.text(name)
+                pygui.table_next_column()
+                pygui.table_set_bg_color(pygui.TABLE_BG_TARGET_CELL_BG, pygui.get_color_u32_im_vec4((0, 0, 0.3, 1)))
+                pygui.text(str((len(name) + 35) % 8))
+                pygui.table_next_column()
+                pygui.text("Hidden value")
+            pygui.end_table()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.tree_push()"):
+        if pygui.button("Click"):
+            print("First")
+        pygui.tree_push("First")
+        if pygui.button("Click"):
+            print("Second")
+        pygui.tree_pop()
+
+        pygui.tree_push("Second")
+        if pygui.button("Click"):
+            print("Third")
+        pygui.tree_pop()
+
+        pygui.tree_push("First")
+        pygui.text("This one doesn't print anything")
+        if pygui.button("Click"):
+            print("Fourth")
+        pygui.tree_pop()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.push_tab_stop()"):
+        pygui.text("You can tab here")
+        pygui.push_id("First")
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_id()
+
+        pygui.separator()
+
+        pygui.text("You can't tab here")
+        pygui.push_id("Second")
+        pygui.push_tab_stop(False)
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_tab_stop()
+        pygui.pop_id()
+
+        pygui.separator()
+
+        pygui.text("You can tab here again")
+        pygui.push_id("Third")
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_id()
+
+    if pygui.tree_node("pygui.set_next_window_bg_alpha()"):
+        pygui.text("Check pass through central node in dockspace.")
+        pygui.drag_float("Next window bg alpha", rand.next_window_alpha, 0.02, 0, 1)
+        pygui.drag_int2("Next window content size", rand.next_window_content_size.as_floatptrs(), 2, 1, 1000)
+        pygui.drag_int2("Next window size", rand.next_window_size.as_floatptrs(), 2, 10, 1000)
+        pygui.drag_float2("Next window scroll", rand.next_window_scroll.as_floatptrs(), 2, -1, 1000)
+        pygui.checkbox("Next window collapsed", rand.next_window_collapsed)
+        pygui.checkbox("Next window focused", rand.next_window_focus)
+        pygui.checkbox("Spawn window", rand.next_window_spawned)
+        
+        if rand.next_window_spawned:
+            pygui.set_next_window_bg_alpha(rand.next_window_alpha.value)
+            pygui.set_next_window_collapsed(rand.next_window_collapsed.value)
+            pygui.set_next_window_content_size(rand.next_window_content_size.vec())
+            pygui.set_next_window_size(rand.next_window_size.vec())
+            pygui.set_next_window_scroll(rand.next_window_scroll.vec())
+            if rand.next_window_focus and rand.next_window_spawned:
+                pygui.set_next_window_focus()
+        
+            if pygui.begin("The Next Window", rand.next_window_spawned, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
+                for i in range(100):
+                    pygui.text("Adding text that is really long: Line {}".format(i))
+            pygui.end()
+        pygui.tree_pop()
+    
+
     pygui.pop_style_var()
+
+
+class menu:
+    b = pygui.BoolPtr(True)
+
+
+def show_menu_bar():
+    if pygui.begin_menu_bar():
+        if pygui.begin_menu("File"):
+            show_menu_file()
+            pygui.end_menu()
+        if pygui.begin_menu("Edit"):
+            if pygui.menu_item("Undo", "CTRL+Z"): pass
+            if pygui.menu_item("Redo", "CTRL+Y", False, False): pass
+            pygui.separator()
+            if pygui.menu_item("Cut", "CTRL+X"): pass
+            if pygui.menu_item("Copy", "CTRL+C"): pass
+            if pygui.menu_item("Paste", "CTRL+V"): pass
+            pygui.end_menu()
+        if pygui.begin_menu("Examples"):
+            pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
+            pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
+            pygui.end_menu()
+        if pygui.begin_menu("Tools"):
+            pygui.menu_item_bool_ptr("Font Selector", None, demo.show_font_selector)
+            pygui.menu_item_bool_ptr("Metrics/Debugger", None, demo.show_metrics_window)
+            pygui.menu_item_bool_ptr("Stack Tool", None, demo.show_stack_tool_window)
+            pygui.menu_item_bool_ptr("Style Editor", None, demo.show_style_editor)
+            pygui.menu_item_bool_ptr("Style Selector", None, demo.show_style_selector)
+            pygui.menu_item_bool_ptr("User guide", None, demo.show_user_guide)
+            pygui.menu_item_bool_ptr("About Dear ImGui", None, demo.show_about_window)
+            pygui.end_menu()
+        pygui.end_menu_bar()
+
+
+def show_menu_file():
+    pygui.menu_item("(demo menu)", None, False, False)
+    if pygui.menu_item("New"): pass
+    if pygui.menu_item("Open", "Ctrl+O"): pass
+    if pygui.begin_menu("Open Recent"):
+        pygui.menu_item("fish_hat.c")
+        pygui.menu_item("fish_hat.inl")
+        pygui.menu_item("fish_hat.h")
+        if pygui.begin_menu("More.."):
+            pygui.menu_item("Hello")
+            pygui.menu_item("Sailor")
+            if pygui.begin_menu("Recurse.."):
+                show_menu_file()
+                pygui.end_menu()
+            pygui.end_menu()
+        pygui.end_menu()
+    if pygui.menu_item("Save", "Ctrl+S"): pass
+    if pygui.menu_item("Save As.."): pass
+
+    if pygui.begin_menu("Colors"):
+        sz = pygui.get_text_line_height()
+        for i in range(pygui.COL_COUNT):
+            name = pygui.get_style_color_name(i)
+            p = pygui.get_cursor_screen_pos()
+            pygui.get_window_draw_list().add_rect_filled(
+                p, (p[0] + sz, p[1] + sz),
+                pygui.get_color_u32(i)
+            )
+            pygui.dummy((sz, sz))
+            pygui.same_line()
+            pygui.menu_item(name)
+        pygui.end_menu()
+    
+    # Here we demonstrate appending again to the "Options" menu (which we already created above)
+    # Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+    # In a real code-base using it would make senses to use this feature from very different code locations.
+    if pygui.begin_menu("Options"):
+        pygui.checkbox("SomeOption", menu.b)
+        pygui.end_menu()
+
+    if pygui.begin_menu("Disabled", False):
+        assert False # Should not be reached
+    
+    if pygui.menu_item("Checked", None, True): pass
+    pygui.separator()
+    if pygui.menu_item("Quit", "Alt+F4"): pass
+
+
+class ExampleAppConsole:
+    def __init__(self):
+        self.input_buf = pygui.StrPtr("", 256)
+        self.items = []
+        self.commands = [
+            "HELP",
+            "HISTORY",
+            "CLEAR",
+            "CLASSIFY",
+        ]
+        self.history = []
+        # -1: new line, 0..History.Size-1 browsing history.
+        self.history_pos = -1
+        # Not adding filter at the moment
+        self.auto_scroll = pygui.BoolPtr(True)
+        self.scroll_to_bottom = pygui.BoolPtr(False)
+    
+    def clear_log(self):
+        self.items.clear()
+    
+    def add_log(self, string: str, *args):
+        self.items.append(" ".join([string] + list(args)))
+    
+    def draw(self, title: str, p_open: pygui.BoolPtr):
+        pygui.set_next_window_size((520, 600), pygui.COND_FIRST_USE_EVER)
+        if not pygui.begin(title, p_open):
+            pygui.end()
+            return
+        
+        # As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
+        # So e.g. IsItemHovered() will return true when hovering the title bar.
+        # Here we create a context menu only available from the title bar.
+        if pygui.begin_popup_context_item():
+            if pygui.menu_item("Close Console"):
+                p_open.value = False
+            pygui.end_popup()
+        
+        pygui.text_wrapped(
+            "This example implements a console with basic coloring, completion (TAB key) and history (Up/Down keys). A more elaborate "
+            "implementation may want to store entries along with extra data such as timestamp, emitter, etc.")
+        pygui.text_wrapped("Enter 'HELP' for help.")
+
+        if pygui.small_button("Add Debug Text"):
+            self.add_log("{} some text".format(len(self.items)))
+            self.add_log("some more text")
+            self.add_log("display very important message here!")
+        
+        pygui.same_line()
+        if pygui.small_button("Add Debug Error"):
+            self.add_log("[error] something went wrong")
+        pygui.same_line()
+        if pygui.small_button("Clear"):
+            self.clear_log()
+        pygui.same_line()
+        copy_to_clipboard = pygui.small_button("Copy")
+
+        pygui.separator()
+
+        # Options menu
+        if pygui.begin_popup("Options"):
+            pygui.checkbox("Auto-scroll", self.auto_scroll)
+            pygui.end_popup()
+
+        # Options, Filter
+        if pygui.button("Options"):
+            pygui.open_popup("Options")
+        # pygui.same_line()
+        # Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+        pygui.separator()
+
+        # Reserve enough left-over height for 1 separator + 1 input text
+        footer_height_to_reserve = pygui.get_style().item_spacing[1] + pygui.get_frame_height_with_spacing()
+        if pygui.begin_child("ScrollingRegion", (0, -footer_height_to_reserve), False, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
+            if pygui.begin_popup_context_window():
+                if pygui.selectable("Clear"):
+                    self.clear_log()
+                pygui.end_popup()
+            
+            # Display every line as a separate entry so we can change their color or add custom widgets.
+            # If you only want raw text you can use ImGui::TextUnformatted(log.begin(), log.end());
+            # NB- if you have thousands of entries this approach may be too inefficient and may require user-side clipping
+            # to only process visible items. The clipper will automatically measure the height of your first item and then
+            # "seek" to display only items in the visible area.
+            # To use the clipper we can replace your standard loop:
+            #      for (int i = 0; i < Items.Size; i++)
+            #   With:
+            #      ImGuiListClipper clipper;
+            #      clipper.Begin(Items.Size);
+            #      while (clipper.Step())
+            #         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+            # - That your items are evenly spaced (same height)
+            # - That you have cheap random access to your elements (you can access them given their index,
+            #   without processing all the ones before)
+            # You cannot this code as-is if a filter is active because it breaks the 'cheap random-access' property.
+            # We would need random-access on the post-filtered list.
+            # A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices
+            # or offsets of items that passed the filtering test, recomputing this array when user changes the filter,
+            # and appending newly elements as they are inserted. This is left as a task to the user until we can manage
+            # to improve this example code!
+            # If your items are of variable height:
+            # - Split them into same height items would be simpler and facilitate random-seeking into your list.
+            # - Consider using manual call to IsRectVisible() and skipping extraneous decoration from your items.
+            pygui.push_style_var(pygui.STYLE_VAR_ITEM_SPACING, (4, 1)) # Tighten spacing
+            if copy_to_clipboard:
+                pygui.log_to_clipboard()
+            
+            for item in self.items:
+                # TODO: Filter
+
+                # Normally you would store more information in your item than just a string.
+                # (e.g. make Items[] an array of structure, store color/type etc.)
+                
+                color = (0, 0, 0, 0)
+                has_color = False
+                if "[error]" in item:
+                    color = (1, 0.4, 0.4, 1)
+                    has_color = True
+                elif "#" in item:
+                    color = (1, 0.8, 0.6, 1)
+                    has_color = True
+                if has_color:
+                    pygui.push_style_color(pygui.COL_TEXT, color)
+                pygui.text_unformatted(item)
+                if has_color:
+                    pygui.pop_style_color()
+            
+            if copy_to_clipboard:
+                pygui.log_finish()
+            
+           # Keep up at the bottom of the scroll region if we were already at the bottom at the beginning of the frame.
+           # Using a scrollbar or mouse-wheel will take away from the bottom edge.
+            if self.scroll_to_bottom or (self.auto_scroll and pygui.get_scroll_y() >= pygui.get_scroll_max_y()):
+                pygui.set_scroll_here_y(1)
+            self.scroll_to_bottom.value = False
+
+            pygui.pop_style_var()
+        pygui.end_child()
+        pygui.separator()
+
+        # Command-line
+        reclaim_focus = False
+        input_text_flags = \
+            pygui.INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE | \
+            pygui.INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL | \
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION | \
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY
+        
+        if pygui.input_text("Input", self.input_buf, input_text_flags, self.text_edit_callback):
+            if len(self.input_buf.value.strip()) > 0:
+                self.exec_command(self.input_buf.value)
+            self.input_buf.value = ""
+            reclaim_focus = True
+
+        # Auto-focus on window apparition
+        pygui.set_item_default_focus()
+        if reclaim_focus:
+            pygui.set_keyboard_focus_here(-1) # Auto focus previous widget
+
+        pygui.end()
+
+    def exec_command(self, command_line: str):
+        self.add_log("# {}\n".format(command_line))
+
+        # Insert into history. First find match and delete it so it can be pushed to the back.
+        # This isn't trying to be smart or optimal.
+        self.history_pos = -1
+        for i in reversed(range(len(self.history))):
+            if self.history[i] == command_line:
+                self.history.pop(i)
+                break
+        self.history.append(command_line)
+        
+        if command_line.startswith("CLEAR"):
+            self.clear_log()
+        elif command_line.startswith("HELP"):
+            self.add_log("Commands:")
+            for command in self.commands:
+                self.add_log(f"- {command}")
+        elif command_line.startswith("HISTORY"):
+            first = len(self.history) - 10
+            for i in range(max(first, 0), len(self.history)):
+                self.add_log("{} {}\n".format(i, self.history[i]))
+        else:
+            self.add_log("Unknown command: {}".format(command_line))
+        
+        self.scroll_to_bottom.value = True
+    
+    def text_edit_callback(self, data: pygui.ImGuiInputTextCallbackData, user_data) -> int:
+        if data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION:
+            # Example of TEXT COMPLETION
+            # Locate beginning of current word
+            word_end = data.cursor_pos
+            word_start = data.cursor_pos
+
+            while (word_start > 0):
+                c = data.buf[word_start - 1]
+                if c == ' ' or c == '\t' or c == ',' or c == ';':
+                    break
+                word_start -= 1
+            word = data.buf[word_start:word_end]
+        
+            candidates = [command for command in self.commands if command.startswith(word.upper())]
+            if len(candidates) == 0:
+                self.add_log('No match for "{}"!\n'.format(word))
+            elif len(candidates) == 1:
+                data.delete_chars(word_start, word_end - word_start)
+                data.insert_chars(data.cursor_pos, candidates[0] + " ")
+            
+            else:
+                # Multiple matches. Complete as much as we can..
+                # So inputing "C"+Tab will complete to "CL" then display "CLEAR" and "CLASSIFY" as matches.
+                match_len = word_end - word_start
+                while True:
+                    all_candidates_matches = True
+                    for i, candidate in enumerate(candidates):
+                        if i == 0:
+                            c = candidate[match_len].upper()
+                            continue
+                        
+                        if c != candidate[match_len].upper():
+                            all_candidates_matches = False
+                            break
+
+                    if not all_candidates_matches:
+                        break
+                    match_len += 1
+
+                if match_len > 0:
+                    data.delete_chars(word_start, word_end - word_start)
+                    data.insert_chars(data.cursor_pos, candidates[0][:match_len])
+
+                # List matches
+                self.add_log("Possible matches:\n")
+                for candidate in candidates:
+                    self.add_log("- {}\n".format(candidate))
+            
+        elif data.event_flag == pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY:
+            # Example of HISTORY
+            prev_history_pos = self.history_pos
+            if data.event_key == pygui.KEY_UP_ARROW:
+                if self.history_pos == -1:
+                    self.history_pos = len(self.history) - 1
+                elif self.history_pos > 0:
+                    self.history_pos -= 1
+            elif data.event_key == pygui.KEY_DOWN_ARROW:
+                if self.history_pos != -1:
+                    self.history_pos += 1
+                    if self.history_pos >= len(self.history):
+                       self.history_pos = -1
+
+            # A better implementation would preserve the data on the current input line along with cursor position.
+            if prev_history_pos != self.history_pos:
+                history_str = self.history[self.history_pos] if self.history_pos >= 0 else ""
+                data.delete_chars(0, data.buf_text_len)
+                data.insert_chars(0, history_str)
+        return 0
+
+
+class demo:
+    example_app_console = ExampleAppConsole()
+    show_app_console = pygui.BoolPtr(False)
+    show_custom_rendering = pygui.BoolPtr(False)
+    show_about_window = pygui.BoolPtr(False)
+    show_font_selector = pygui.BoolPtr(False)
+    show_metrics_window = pygui.BoolPtr(False)
+    show_stack_tool_window = pygui.BoolPtr(False)
+    show_style_editor = pygui.BoolPtr(False)
+    show_style_selector = pygui.BoolPtr(False)
+    show_user_guide = pygui.BoolPtr(False)
+
+    render_sz = pygui.FloatPtr(36)
+    render_thickness = pygui.FloatPtr(3)
+    render_ngon_sides = pygui.IntPtr(6)
+    render_circle_segments_override = pygui.BoolPtr(False)
+    render_circle_segments_override_v = pygui.IntPtr(12)
+    render_curve_segments_override = pygui.BoolPtr(False)
+    render_curve_segments_override_v = pygui.IntPtr(8)
+    render_colf = pygui.Vec4Ptr(1, 1, 0.4, 1)
+    render_points = []
+    render_scrolling = [0, 0]
+    render_opt_enable_grid = pygui.BoolPtr(True)
+    render_opt_enable_context_menu = pygui.BoolPtr(True)
+    render_adding_line = False
+    render_draw_bg = pygui.BoolPtr(True)
+    render_draw_fg = pygui.BoolPtr(True)
+
+
+def show_app_console(p_open: pygui.BoolPtr):
+    demo.example_app_console.draw("Example: Pygui Console", p_open)
+
+
+def show_app_custom_rendering(p_open: pygui.BoolPtr):
+    if not pygui.begin("Example: Pygui Custom rendering", p_open):
+        pygui.end()
+        return
+    
+    # Tip: If you do a lot of custom rendering, you probably want to use your own geometrical types and benefit of
+    # overloaded operators, etc. Define IM_VEC2_CLASS_EXTRA in imconfig.h to create implicit conversions between your
+    # types and ImVec2/ImVec4. Dear ImGui defines overloaded operators but they are internal to imgui.cpp and not
+    # exposed outside (to avoid messing with your types) In this example we are not using the maths operators!
+    if pygui.begin_tab_bar("##TabBar"):
+        if pygui.begin_tab_item("Primitives"):
+            pygui.push_item_width(-pygui.get_font_size() * 15)
+            draw_list = pygui.get_window_draw_list()
+
+            # Draw gradients
+            # (note that those are currently exacerbating our sRGB/Linear issues)
+            # Calling ImGui::GetColorU32() multiplies the given colors by the current Style Alpha, but you may pass the IM_COL32() directly as well..
+            pygui.text("Gradients")
+            gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
+            p0 = pygui.get_cursor_screen_pos()
+            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+            col_a = pygui.IM_COL32(0, 0, 0, 255)
+            col_b = pygui.IM_COL32(255, 255, 255, 255)
+            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
+            pygui.invisible_button("##gradient1", gradient_size)
+
+            p0 = pygui.get_cursor_screen_pos()
+            p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+            col_a = pygui.get_color_u32_im_vec4((0, 1, 0, 1)) # Just to showcase the different colour functions
+            col_b = pygui.get_color_u32_im_vec4((1, 0, 0, 1))
+            draw_list.add_rect_filled_multi_color(p0, p1, col_a, col_b, col_b, col_a)
+            pygui.invisible_button("##gradient2", gradient_size)
+
+            # Draw a bunch of primitives
+            pygui.text("All primitives")
+            pygui.drag_float("Size", demo.render_sz, 0.2, 2, 100, "%.0f")
+            pygui.drag_float("Thickness", demo.render_thickness, 0.05, 1, 8, "%.02f")
+            pygui.slider_int("N-gon sides", demo.render_ngon_sides, 3, 12)
+            pygui.checkbox("##circlesegmentoverride", demo.render_circle_segments_override)
+            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+            demo.render_circle_segments_override.value |= pygui.slider_int("Circle segments override", demo.render_circle_segments_override_v, 3, 40)
+            pygui.checkbox("##curvessegmentoverride", demo.render_curve_segments_override)
+            pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
+            demo.render_curve_segments_override.value |= pygui.slider_int("Curves segments override", demo.render_curve_segments_override_v, 3, 40)
+            pygui.color_edit4("Color", demo.render_colf)
+
+            p = pygui.get_cursor_screen_pos()
+            col = demo.render_colf.to_u32()
+            sz = demo.render_sz.value
+            spacing = 10.0
+            corners_tl_br = pygui.IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT | pygui.IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT
+            rounding = demo.render_sz.value / 5.0
+            circle_segments = demo.render_circle_segments_override_v.value if demo.render_circle_segments_override else 0
+            curve_segments = demo.render_curve_segments_override_v.value if demo.render_curve_segments_override else 0
+            x = p[0] + 4.0
+            y = p[1] + 4.0
+            for n in range(2):
+                # First line uses a thickness of 1.0f, second line uses the configurable thickness
+                th = 1 if (n == 0) else demo.render_thickness.value
+                draw_list.add_ngon((x + sz*0.5, y + sz*0.5), sz*0.5, col, demo.render_ngon_sides.value, th)
+                x += sz + spacing;  # N-gon
+                draw_list.add_circle((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments, th)
+                x += sz + spacing  # Circle
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, 0.0, pygui.IM_DRAW_FLAGS_NONE, th)
+                x += sz + spacing  # Square
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, pygui.IM_DRAW_FLAGS_NONE, th)
+                x += sz + spacing  # Square with all rounded corners
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, corners_tl_br, th)
+                x += sz + spacing  # Square with two rounded corners
+                draw_list.add_triangle((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col, th)
+                x += sz + spacing  # Triangle
+                # draw_list->AddTriangle(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col, th)
+                # x+= sz*0.4f + spacing # Thin triangle
+                draw_list.add_line((x, y), (x + sz, y), col, th)
+                x += sz + spacing  # Horizontal line (note: drawing a filled rectangle will be faster!)
+                draw_list.add_line((x, y), (x, y + sz), col, th)
+                x += spacing       # Vertical line (note: drawing a filled rectangle will be faster!)
+                draw_list.add_line((x, y), (x + sz, y + sz), col, th)
+                x += sz + spacing  # Diagonal line
+
+                # Quadratic Bezier Curve (3 control points)
+                cp3 = [
+                    (x, y + sz * 0.6),
+                    (x + sz * 0.5, y - sz * 0.4),
+                    (x + sz, y + sz),
+                ]
+                draw_list.add_bezier_quadratic(cp3[0], cp3[1], cp3[2], col, th, curve_segments)
+                x += sz + spacing
+
+                # # Cubic Bezier Curve (4 control points)
+                cp4 = [
+                    (x, y),
+                    (x + sz * 1.3, y + sz * 0.3),
+                    (x + sz - sz * 1.3, y + sz - sz * 0.3),
+                    (x + sz, y + sz),
+                ]
+                draw_list.add_bezier_cubic(cp4[0], cp4[1], cp4[2], cp4[3], col, th, curve_segments)
+
+                x = p[0] + 4
+                y += sz + spacing
+            
+            draw_list.add_ngon_filled((x + sz * 0.5, y + sz * 0.5), sz*0.5, col, demo.render_ngon_sides.value)
+            x += sz + spacing;  # N-gon
+            draw_list.add_circle_filled((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments)
+            x += sz + spacing;  # Circle
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col)
+            x += sz + spacing;  # Square
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0)
+            x += sz + spacing;  # Square with all rounded corners
+            draw_list.add_rect_filled((x, y), (x + sz, y + sz), col, 10.0, corners_tl_br)
+            x += sz + spacing;  # Square with two rounded corners
+            draw_list.add_triangle_filled((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col)
+            x += sz + spacing;  # Triangle
+            # draw_list.AddTriangleFilled(ImVec2(x+sz*0.2f,y), ImVec2(x, y+sz-0.5f), ImVec2(x+sz*0.4f, y+sz-0.5f), col); x += sz*0.4f + spacing; # Thin triangle
+            draw_list.add_rect_filled((x, y), (x + sz, y + demo.render_thickness.value), col)
+            x += sz + spacing;  # Horizontal line (faster than AddLine, but only handle integer thickness)
+            draw_list.add_rect_filled((x, y), (x + demo.render_thickness.value, y + sz), col)
+            x += spacing * 2.0;# Vertical line (faster than AddLine, but only handle integer thickness)
+            draw_list.add_rect_filled((x, y), (x + 1, y + 1), col)
+            x += sz;            # Pixel (faster than AddLine)
+            draw_list.add_rect_filled_multi_color((x, y), (x + sz, y + sz), pygui.IM_COL32(0, 0, 0, 255), pygui.IM_COL32(255, 0, 0, 255), pygui.IM_COL32(255, 255, 0, 255), pygui.IM_COL32(0, 255, 0, 255));
+
+            pygui.dummy(((sz + spacing) * 10.2, (sz + spacing) * 3.0))
+            pygui.pop_item_width()
+            pygui.end_tab_item()
+        
+        if pygui.begin_tab_item("Canvas"):
+            pygui.checkbox("Enable grid", demo.render_opt_enable_grid)
+            pygui.checkbox("Enable context menu", demo.render_opt_enable_context_menu)
+            pygui.text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.")
+
+            # Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
+            # Here we demonstrate that this can be replaced by simple offsetting + custom drawing + PushClipRect/PopClipRect() calls.
+            # To use a child window instead we could use, e.g:
+            #      ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));      // Disable padding
+            #      ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 50, 255));  // Set a background color
+            #      ImGui::BeginChild("canvas", ImVec2(0.0f, 0.0f), true, ImGuiWindowFlags_NoMove);
+            #      ImGui::PopStyleColor();
+            #      ImGui::PopStyleVar();
+            #      [...]
+            #      ImGui::EndChild();
+
+            # Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
+            canvas_p0 = pygui.get_cursor_screen_pos()      # ImDrawList API uses screen coordinates!
+            canvas_sz = pygui.get_content_region_avail()   # Resize canvas to what's available
+            if canvas_sz[0] < 50.0:
+                canvas_sz[0] = 50.0
+            if canvas_sz[1] < 50.0:
+                canvas_sz[1] = 50.0
+            canvas_p1 = (canvas_p0[0] + canvas_sz[0], canvas_p0[1] + canvas_sz[1])
+
+            # Draw border and background color
+            io = pygui.get_io()
+            draw_list = pygui.get_window_draw_list()
+            draw_list.add_rect_filled(canvas_p0, canvas_p1, pygui.IM_COL32(50, 50, 50, 255))
+            draw_list.add_rect(canvas_p0, canvas_p1, pygui.IM_COL32(255, 255, 255, 255))
+
+            # This will catch our interactions
+            pygui.invisible_button("canvas", canvas_sz, pygui.BUTTON_FLAGS_MOUSE_BUTTON_LEFT | pygui.BUTTON_FLAGS_MOUSE_BUTTON_RIGHT)
+            is_hovered = pygui.is_item_hovered()  # Hovered
+            is_active = pygui.is_item_active()    # Held
+            origin = (canvas_p0[0] + demo.render_scrolling[0], canvas_p0[1] + demo.render_scrolling[1]) # Lock scrolled origin
+            mouse_pos_in_canvas = (io.mouse_pos[0] - origin[0], io.mouse_pos[1] - origin[1])
+
+            # Add first and second point
+            if is_hovered and not demo.render_adding_line and pygui.is_mouse_clicked(pygui.MOUSE_BUTTON_LEFT):
+                demo.render_points.append(mouse_pos_in_canvas)
+                demo.render_points.append(mouse_pos_in_canvas)
+                demo.render_adding_line = True
+            if demo.render_adding_line:
+                demo.render_points[len(demo.render_points) - 1] = mouse_pos_in_canvas
+                if not pygui.is_mouse_down(pygui.MOUSE_BUTTON_LEFT):
+                    demo.render_adding_line = False
+            
+            # Pan (we use a zero mouse threshold when there's no context menu)
+            # You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
+            mouse_threshold_for_pan = -1 if demo.render_opt_enable_context_menu else 0
+            if is_active and pygui.is_mouse_dragging(pygui.MOUSE_BUTTON_RIGHT, mouse_threshold_for_pan):
+                demo.render_scrolling[0] += io.mouse_delta[0]
+                demo.render_scrolling[1] += io.mouse_delta[1]
+
+            # Context menu (under default mouse threshold)
+            drag_delta = pygui.get_mouse_drag_delta(pygui.MOUSE_BUTTON_RIGHT)
+            if demo.render_opt_enable_context_menu and drag_delta[0] == 0 and drag_delta[1] == 0:
+                pygui.open_popup_on_item_click("context", pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT)
+            if pygui.begin_popup("context"):
+                if demo.render_adding_line:
+                    demo.render_points = demo.render_points[:len(demo.render_points) - 2]
+                
+                demo.render_adding_line = False
+                if pygui.menu_item("Remove one", None, False, len(demo.render_points) > 0):
+                    demo.render_points.pop()
+                    demo.render_points.pop()
+                if pygui.menu_item("Remove all", None, False, len(demo.render_points) > 0):
+                    demo.render_points.clear()
+                pygui.end_popup()
+
+            # Draw grid + all lines in the canvas
+            draw_list.push_clip_rect(canvas_p0, canvas_p1, True);
+            if demo.render_opt_enable_grid:
+                GRID_STEP = 64
+
+                x = demo.render_scrolling[0] % GRID_STEP
+                while x < canvas_sz[0]:
+                    draw_list.add_line((canvas_p0[0] + x, canvas_p0[1]), (canvas_p0[0] + x, canvas_p1[1]), pygui.IM_COL32(200, 200, 200, 40))
+                    x += GRID_STEP
+                y = demo.render_scrolling[1] % GRID_STEP
+                while y < canvas_sz[1]:
+                    draw_list.add_line((canvas_p0[0], canvas_p0[1] + y), (canvas_p1[0], canvas_p0[1] + y), pygui.IM_COL32(200, 200, 200, 40))
+                    y += GRID_STEP
+            for n in range(0, len(demo.render_points), 2):
+                first = demo.render_points[n]
+                second = demo.render_points[n + 1]
+                draw_list.add_line((origin[0] + first[0], origin[1] + first[1]), (origin[0] + second[0], origin[1] + second[1]), pygui.IM_COL32(255, 255, 0, 255), 2)
+            draw_list.pop_clip_rect()
+
+            pygui.end_tab_item()
+
+        if pygui.begin_tab_item("BG/FG draw lists"):
+            pygui.checkbox("Draw in Background draw list", demo.render_draw_bg)
+            pygui.same_line()
+            help_marker("The Background draw list will be rendered below every Dear ImGui windows.")
+            pygui.checkbox("Draw in Foreground draw list", demo.render_draw_fg)
+            pygui.same_line()
+            help_marker("The Foreground draw list will be rendered over every Dear ImGui windows.")
+            window_pos = pygui.get_window_pos()
+            window_size = pygui.get_window_size()
+            window_center = (window_pos[0] + window_size[0] * 0.5, window_pos[1] + window_size[1] * 0.5)
+            if demo.render_draw_bg:
+                pygui.get_background_draw_list().add_circle(window_center, window_size[0] * 0.6, pygui.IM_COL32(255, 0, 0, 200), 0, 10 + 4)
+            if demo.render_draw_fg:
+                pygui.get_foreground_draw_list().add_circle(window_center, window_size[1] * 0.6, pygui.IM_COL32(0, 255, 0, 200), 0, 10)
+            pygui.end_tab_item()
+        pygui.end_tab_bar()
+    
     pygui.end()
 
 

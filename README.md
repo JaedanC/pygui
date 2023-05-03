@@ -10,11 +10,39 @@ Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) us
 2. Imgui Multi-Viewport Support.
 3. Intellisense Support. (`__init__.pyi` file)
 4. Uses Imgui's `glfw_opengl3` backend. Minimal understanding of OpenGL is needed.
-5. Includes a minimal c example.
+5. Includes an extensive pygui example (and a minimal c example).
 
 ![Intellisense](./docs/img/intellisense.png)
 
 This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as the C base. Pygui is inspired by [pyimgui](https://github.com/pyimgui/pyimgui).
+
+## Why choose pygui over other ImGui python wrappers?
+
+1. The binding is **auto-generated**:
+
+    Over time, the API for ImGui will change, and so keeping up with the changes is hard if you plan on manually updating the wrapper to match the changes. Pygui fixes this by dynamically generating the binding between cimgui and python to *significantly reduce* the manual work required to maintain the wrapper.
+
+    Every struct and function (within reason) is mapped from cimgui to pygui. You as a user can then choose to activate and/or modify a default wrapper of the function. In a majority of cases the default implementation will work out-of-the-box, but for more complicated functions (like mapping python lists to c arrays), some manual work is required.
+
+    This also meant that including **docking** and **multi-viewport** support was easy. I just switched branch and rebuilt the binding! As time progresses, this repository should continue to be useful.
+
+2. Writing pygui code is *almost* exactly the same as writing imgui code.
+
+    A deliberate choice of pygui is to match imgui's API as much as possible. I'm not interested in adding wrapper `App` classes or anything like that. Pygui is just a wrapper! Setting up the glfw context is left to user, (exactly like imgui's minimal examples!).
+
+    Secondly, function calls match imgui as much as possible. Where imgui expects (for example) `int*` parameters, these have been replaced with pygui wrappers, so that the `input_` style functions work exactly like they do in imgui. There is no weird returning of multiple values in a tuple to retrieve inputs.
+
+3. An `__init__.pyi` file is included with comments from cimgui.
+
+    This makes developing with pygui much easier because many code editors recognise the `__init__.pyi` as the interface and such will do intellisense using it. No red squiggly lines, no guessing of function parameters, and no need to check imgui.h for comments.'
+
+4. An extensive pygui demo window is included (`python_demo_window.py`).
+
+    Some other wrappers don't include an example. My demo window tests all the functions, methods, and fields in pygui. It even has some functions from the imgui demo done in pygui, just to show that even the most complicated of features is not only possible in python, but often much simpler too.
+
+5. It's fast, because you spend a minimal amount of time inside Python.
+
+    Pygui uses imgui's backend so all of the rendering is in c++. I don't need to maintain a rendering context inside Python. The imgui devs have done it for me. But, you can still write your own renderer if you need, because the vertices (etc) are still available to be read in python.
 
 ## Limitations
 
@@ -22,8 +50,15 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 2. glfw/cimgui/imgui_impl need to be linked at runtime which may hurt performance slightly.
 3. Not all imgui functions are activated. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
 4. More work would be required to enable additional backends. I've attempted to make this easier though the modular nature of the CMake script and binding generator script.
+5. No `with` functionality has been added. No being lazy; your `pygui.begin()` must have a `pygui.end()`.
 
 ## How to run
+
+You will need:
+
+- git
+- python (pip)
+- cmake
 
 First, download this repository recursively:
 
@@ -74,7 +109,7 @@ This step will compile:
 - imgui_glfw_opengl3
 - glfw
 
-All as shared `.dll`'s so that you can recompile each module and/or include extra implementations as a dll. It is very important that glfw is NOT compiled statically. If it is compiled statically then python's glfw will refer do a different instance, causing imgui to crash on startup.
+...As shared `.dll`'s so that you can recompile each module and/or include extra implementations as a dll. It is very important that glfw is NOT compiled statically. If it is compiled statically then python's glfw will refer do a different instance, causing imgui to crash on startup.
 
 You may use Visual Studio or the command-line (developer console on windows) to run CMake. I will be using Visual Studio.
 
@@ -128,28 +163,29 @@ python app.py
 
 Bindings are creating by reading the output of dear_binding's `cimgui.json` that contains information about the cimgui implementation. This file is parsed and then used to create three files:
 
-1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/external/cimgui/cimgui.h`) and any defined backends. This file does not need to be touched if the API changes.
+1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/external/dear_bindings/cimgui.h`) and any defined backends. This file does not need to be touched if the API changes.
 2. `pyx`: (Located at `src/core/core.pyx`) This file contains the generated cython that will be compiled. This file can be editted if you want, but new additions should instead be put inside `src/core/core_template.pyx`. More on this later.
 3. `pyi`: (Located at `src/pygui/__init__.pyi`) This file contains the cython function definitions so that intellisense on editors work correctly with pygui. Cython does not export any symbols so this file is required if you don't want squiggly lines everywhere in your editor, (and if you want comments!).
 
 The `src/core/core_template.pyx` is the file that should be editted if you want to change any implementation between python and cimgui. This file is the go-between, needing to marshall types between python and c. **A majority of functions are disabled by default**, but then can be turned on by changing `active` to True. Example:
 
-Quick note on `use_template` and `active`:
+Quick note on options:
 
 - `use_template`: When False, this function will be overridden by the generated default implementation. This can be good for resetting a function if you break it, or if the API changes.
 - `active`: When False, this function will be commented out in `core.pyx` when the pygui binding is created. This can be a handy way to disabling a function while also keeping a record of the existing implementation.
+- `invisible`: When True, this function will not be added to `__init__.pyi`, effectively rendering the function as invisible inside the API. It can still technically be called if the function is also `active`.
 
 ```python
 # [Function]
 # ?use_template(False)
 # ?active(True)
+# ?invisible(False)
 # ?returns(None)
 def show_demo_window(p_open: BoolPtr=None):
     """
     Demo, Debug, Information
     Create demo window. demonstrate most imgui features. call this to learn about the library! try to make it always available in your application!
     """
-
     ccimgui.ImGui_ShowDemoWindow(
         BoolPtr.ptr(p_open)
     )
@@ -161,12 +197,12 @@ When `use_template` is True, the function can be editted however you like. This 
 1. Most functions are templated corrently, but some require manual modification to work.
 2. `char *` and `str` can be converted to and from using `_bytes` and `_from_bytes`. See: `begin()` and `get_version()`.
 3. Tuples and ImVec2 can be converted using `_cast_tuple_ImVec2` and `_cast_ImVec2_tuple`. Use respective functions for ImVec4.
-4. Instances of classes returned cannot store any information on them because they simply serve as wrappers for a pointer to the real instance in c. Any information required to be stored on a class should instead be written to a dictionary. See `get_clipboard_text_fn` and `set_clipboard_text_fn`.
-5. Converting to and from lists is much harder. Consider looking at `ImDrawData.cmd_lists` and `ImGuiIO.key_map`.
+4. Instances of classes returned cannot store any information on them because they simply serve as wrappers for a pointer to the real instance in c. Any information required to be stored on a class should instead be written to a dictionary inside cython. See `input_text` and `get_clipboard_text_fn`.
+5. Converting to and from lists is much harder. Consider looking at `ImGuiTableSortSpecs.specs` and `ImDrawList.cmd_buffer`.
 6. Most pointers have been wrapped inside a pygui `<Type>Ptr` class. This allows for the function signatures between imgui and pygui to match very closely, without an overreliance on tuples.
-7. Dear bindings accounts for languages without default function parameters, but since python support them, many function calls where appropriate use the `*_ex()` variant while retaining the original name.
+7. Dear bindings accounts for languages without default function parameters, but since python supports them, many function calls where appropriate use the `*_ex()` variant while retaining the original name.
 
-Running `./src/model_creator.py` with no options will give you a better look into the options provided. Importantly, whenever the pyx is generated, this will read `core_template.pyx` and merge it with `core_generated` to create `core.pyx`. **If a function inside `core_template.pyx` is not marked as `use_template`, it will be reset to whatever is inside `core_generated.pyx` and `core_template.pyx` will be modified!**. This is by design.
+Running `./src/model_creator.py` with no options will give you a better look into the options provided. Importantly, whenever the pyx is generated, this will read `core_template.pyx` and merge it with `core_generated.pyx` to create `core.pyx`. **If a function inside `core_template.pyx` is not marked as `use_template`, it will be reset to whatever is inside `core_generated.pyx` and `core_template.pyx` will be modified!**. This is by design.
 
 If you are unsure about the output, run `python model_creator.py --trial`. This will generate `*_trial.pyx` versions of `core.pyx` and `core_template.pyx` so you can see what each file *would* look like if you ran `model_creator.py --pyx`.
 
@@ -191,4 +227,4 @@ Make sure that when you compile, you have similar settings in CMake:
 #       cimgui
 ```
 
-ImGui needs to be dynamically linked at runtime. This process would not be trivial, but the infrastructure is there. This is the beauty of dynamically generated bindings. Another issue would be namespacing. It would be good to compile libraries inside a namespace. This could be done by placing everything inside a class.
+ImGui needs to be dynamically linked at runtime. This process would not be trivial, but the infrastructure is there. This is the beauty of dynamically generated bindings.
