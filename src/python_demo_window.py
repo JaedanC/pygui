@@ -20,6 +20,7 @@ def help_marker(desc: str):
 
 
 def pygui_demo_window():
+    pygui.begin("Pygui Demo Window", None, pygui.WINDOW_FLAGS_MENU_BAR)
     show_menu_bar()
 
     if demo.show_app_console:
@@ -28,6 +29,8 @@ def pygui_demo_window():
         show_app_custom_rendering(demo.show_custom_rendering)
     if demo.show_about_window:
         pygui.show_about_window(demo.show_about_window)
+    if demo.show_debug_log_window:
+        pygui.show_debug_log_window(demo.show_debug_log_window)
     if demo.show_font_selector:
         if pygui.begin("Font Selector", demo.show_font_selector):
             pygui.show_font_selector("Font")
@@ -54,6 +57,7 @@ def pygui_demo_window():
     show_demo_tables()
     show_random_extras()
     crash_imgui()
+    pygui.end()
 
 
 class widget:
@@ -1173,119 +1177,140 @@ def show_demo_widgets():
         pygui.checkbox("Clamp integers to 0..50", widget.data_drag_clamp)
         drag_clamp = widget.data_drag_clamp.value
 
-        pygui.drag_scalar("drag s8",         pygui.DATA_TYPE_S8,     widget.data_s8_v,  1,       s8_zero  if drag_clamp else None, s8_fifty  if drag_clamp else None)
-        pygui.drag_scalar("drag u8",         pygui.DATA_TYPE_U8,     widget.data_u8_v,  1,       u8_zero  if drag_clamp else None, u8_fifty  if drag_clamp else None, "%u ms")
-        pygui.drag_scalar("drag s16",        pygui.DATA_TYPE_S16,    widget.data_s16_v, 1 << 8,  s16_zero if drag_clamp else None, s16_fifty if drag_clamp else None)
-        pygui.drag_scalar("drag u16",        pygui.DATA_TYPE_U16,    widget.data_u16_v, 1 << 8,  u16_zero if drag_clamp else None, u16_fifty if drag_clamp else None, "%u ms")
-        pygui.drag_scalar("drag s32",        pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None)
-        pygui.drag_scalar("drag s32 hex",    pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None, "0x%08X")
-        pygui.drag_scalar("drag u32",        pygui.DATA_TYPE_U32,    widget.data_u32_v, 1 << 24, u32_zero if drag_clamp else None, u32_fifty if drag_clamp else None, "%u ms")
-        pygui.drag_scalar("drag s64",        pygui.DATA_TYPE_S64,    widget.data_s64_v, 1 << 56, s64_zero if drag_clamp else None, s64_fifty if drag_clamp else None)
-        pygui.drag_scalar("drag u64",        pygui.DATA_TYPE_U64,    widget.data_u64_v, 1 << 56, u64_zero if drag_clamp else None, u64_fifty if drag_clamp else None)
-        pygui.drag_scalar("drag float",      pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f")
-        pygui.drag_scalar("drag float log",  pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f", pygui.SLIDER_FLAGS_LOGARITHMIC)
-        pygui.drag_scalar("drag double",     pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, None,    "%.10f grams")
-        pygui.drag_scalar("drag double log", pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, f64_one, "0 < %.10f < 1", pygui.SLIDER_FLAGS_LOGARITHMIC)
+        if pygui.tree_node("drag_scalar"):
+            pygui.drag_scalar("drag s8",         pygui.DATA_TYPE_S8,     widget.data_s8_v,  1,       s8_zero  if drag_clamp else None, s8_fifty  if drag_clamp else None)
+            pygui.drag_scalar("drag u8",         pygui.DATA_TYPE_U8,     widget.data_u8_v,  1,       u8_zero  if drag_clamp else None, u8_fifty  if drag_clamp else None, "%u ms")
+            pygui.drag_scalar("drag s16",        pygui.DATA_TYPE_S16,    widget.data_s16_v, 1 << 8,  s16_zero if drag_clamp else None, s16_fifty if drag_clamp else None)
+            pygui.drag_scalar("drag u16",        pygui.DATA_TYPE_U16,    widget.data_u16_v, 1 << 8,  u16_zero if drag_clamp else None, u16_fifty if drag_clamp else None, "%u ms")
+            pygui.drag_scalar("drag s32",        pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None)
+            pygui.drag_scalar("drag s32 hex",    pygui.DATA_TYPE_S32,    widget.data_s32_v, 1 << 24, s32_zero if drag_clamp else None, s32_fifty if drag_clamp else None, "0x%08X")
+            pygui.drag_scalar("drag u32",        pygui.DATA_TYPE_U32,    widget.data_u32_v, 1 << 24, u32_zero if drag_clamp else None, u32_fifty if drag_clamp else None, "%u ms")
+            pygui.drag_scalar("drag s64",        pygui.DATA_TYPE_S64,    widget.data_s64_v, 1 << 56, s64_zero if drag_clamp else None, s64_fifty if drag_clamp else None)
+            pygui.drag_scalar("drag u64",        pygui.DATA_TYPE_U64,    widget.data_u64_v, 1 << 56, u64_zero if drag_clamp else None, u64_fifty if drag_clamp else None)
+            pygui.drag_scalar("drag float",      pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f")
+            pygui.drag_scalar("drag float log",  pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, 0.005,   f32_zero, f32_one, "%f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+            pygui.drag_scalar("drag double",     pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, None,    "%.10f grams")
+            pygui.drag_scalar("drag double log", pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, 0.0005,  f64_zero, f64_one, "0 < %.10f < 1", pygui.SLIDER_FLAGS_LOGARITHMIC)
+            pygui.tree_pop()
 
+        if pygui.tree_node("slider_scalar"):
+            pygui.slider_scalar("slider s8 full",       pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_min,   s8_max,   "%d")
+            pygui.slider_scalar("slider u8 full",       pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_min,   u8_max,   "%u")
+            pygui.slider_scalar("slider s16 full",      pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_min,  s16_max,  "%d")
+            pygui.slider_scalar("slider u16 full",      pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_min,  u16_max,  "%u")
+            pygui.slider_scalar("slider s32 low",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty,"%d")
+            pygui.slider_scalar("slider s32 high",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_hi_a, s32_hi_b, "%d")
+            pygui.slider_scalar("slider s32 full",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_min,  s32_max,  "%d")
+            pygui.slider_scalar("slider s32 hex",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty, "0x%04X")
+            pygui.slider_scalar("slider u32 low",       pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_zero, u32_fifty,"%u")
+            pygui.slider_scalar("slider u32 high",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_hi_a, u32_hi_b, "%u")
+            pygui.slider_scalar("slider u32 full",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_min,  u32_max,  "%u")
+            pygui.slider_scalar("slider s64 low",       pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_zero, s64_fifty,"%" + IM_PRId64)
+            pygui.slider_scalar("slider s64 high",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_hi_a, s64_hi_b, "%" + IM_PRId64)
+            pygui.slider_scalar("slider s64 full",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_min,  s64_max,  "%" + IM_PRId64)
+            pygui.slider_scalar("slider u64 low",       pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_zero, u64_fifty,"%" + IM_PRIu64 + " ms")
+            pygui.slider_scalar("slider u64 high",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_hi_a, u64_hi_b, "%" + IM_PRIu64 + " ms")
+            pygui.slider_scalar("slider u64 full",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_min,  u64_max,  "%" + IM_PRIu64 + " ms")
+            pygui.slider_scalar("slider float low",     pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one)
+            pygui.slider_scalar("slider float low log", pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+            pygui.slider_scalar("slider float high",    pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_lo_a, f32_hi_a, "%e")
+            pygui.slider_scalar("slider double low",    pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f grams")
+            pygui.slider_scalar("slider double low log",pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
+            pygui.slider_scalar("slider double high",   pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_lo_a, f64_hi_a, "%e grams")
+            pygui.tree_pop()
 
-        pygui.separator_text("Sliders")
-        pygui.slider_scalar("slider s8 full",       pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_min,   s8_max,   "%d")
-        pygui.slider_scalar("slider u8 full",       pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_min,   u8_max,   "%u")
-        pygui.slider_scalar("slider s16 full",      pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_min,  s16_max,  "%d")
-        pygui.slider_scalar("slider u16 full",      pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_min,  u16_max,  "%u")
-        pygui.slider_scalar("slider s32 low",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty,"%d")
-        pygui.slider_scalar("slider s32 high",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_hi_a, s32_hi_b, "%d")
-        pygui.slider_scalar("slider s32 full",      pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_min,  s32_max,  "%d")
-        pygui.slider_scalar("slider s32 hex",       pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_zero, s32_fifty, "0x%04X")
-        pygui.slider_scalar("slider u32 low",       pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_zero, u32_fifty,"%u")
-        pygui.slider_scalar("slider u32 high",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_hi_a, u32_hi_b, "%u")
-        pygui.slider_scalar("slider u32 full",      pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_min,  u32_max,  "%u")
-        pygui.slider_scalar("slider s64 low",       pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_zero, s64_fifty,"%" + IM_PRId64)
-        pygui.slider_scalar("slider s64 high",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_hi_a, s64_hi_b, "%" + IM_PRId64)
-        pygui.slider_scalar("slider s64 full",      pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_min,  s64_max,  "%" + IM_PRId64)
-        pygui.slider_scalar("slider u64 low",       pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_zero, u64_fifty,"%" + IM_PRIu64 + " ms")
-        pygui.slider_scalar("slider u64 high",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_hi_a, u64_hi_b, "%" + IM_PRIu64 + " ms")
-        pygui.slider_scalar("slider u64 full",      pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_min,  u64_max,  "%" + IM_PRIu64 + " ms")
-        pygui.slider_scalar("slider float low",     pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one)
-        pygui.slider_scalar("slider float low log", pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
-        pygui.slider_scalar("slider float high",    pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_lo_a, f32_hi_a, "%e")
-        pygui.slider_scalar("slider double low",    pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f grams")
-        pygui.slider_scalar("slider double low log",pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_one,  "%.10f", pygui.SLIDER_FLAGS_LOGARITHMIC)
-        pygui.slider_scalar("slider double high",   pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_lo_a, f64_hi_a, "%e grams")
+        if pygui.tree_node("slider_scalar reverse"):
+            pygui.slider_scalar("slider s8 reverse",    pygui.DATA_TYPE_S8,   widget.data_s8_v,  s8_max,    s8_min,   "%d")
+            pygui.slider_scalar("slider u8 reverse",    pygui.DATA_TYPE_U8,   widget.data_u8_v,  u8_max,    u8_min,   "%u")
+            pygui.slider_scalar("slider s32 reverse",   pygui.DATA_TYPE_S32,  widget.data_s32_v, s32_fifty, s32_zero, "%d")
+            pygui.slider_scalar("slider u32 reverse",   pygui.DATA_TYPE_U32,  widget.data_u32_v, u32_fifty, u32_zero, "%u")
+            pygui.slider_scalar("slider s64 reverse",   pygui.DATA_TYPE_S64,  widget.data_s64_v, s64_fifty, s64_zero, "%" + IM_PRId64)
+            pygui.slider_scalar("slider u64 reverse",   pygui.DATA_TYPE_U64,  widget.data_u64_v, u64_fifty, u64_zero, "%" + IM_PRIu64 + " ms")
+            pygui.tree_pop()
 
-        pygui.separator_text("Sliders (reverse)")
-        pygui.slider_scalar("slider s8 reverse",    pygui.DATA_TYPE_S8,   widget.data_s8_v,  s8_max,    s8_min,   "%d")
-        pygui.slider_scalar("slider u8 reverse",    pygui.DATA_TYPE_U8,   widget.data_u8_v,  u8_max,    u8_min,   "%u")
-        pygui.slider_scalar("slider s32 reverse",   pygui.DATA_TYPE_S32,  widget.data_s32_v, s32_fifty, s32_zero, "%d")
-        pygui.slider_scalar("slider u32 reverse",   pygui.DATA_TYPE_U32,  widget.data_u32_v, u32_fifty, u32_zero, "%u")
-        pygui.slider_scalar("slider s64 reverse",   pygui.DATA_TYPE_S64,  widget.data_s64_v, s64_fifty, s64_zero, "%" + IM_PRId64)
-        pygui.slider_scalar("slider u64 reverse",   pygui.DATA_TYPE_U64,  widget.data_u64_v, u64_fifty, u64_zero, "%" + IM_PRIu64 + " ms")
-
-        pygui.separator_text("Inputs")
-        pygui.checkbox("Show step buttons", widget.data_inputs_step)
-        pygui.input_scalar("input s8",      pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_one  if widget.data_inputs_step else None, None, "%d")
-        pygui.input_scalar("input u8",      pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_one  if widget.data_inputs_step else None, None, "%u")
-        pygui.input_scalar("input s16",     pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_one if widget.data_inputs_step else None, None, "%d")
-        pygui.input_scalar("input u16",     pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_one if widget.data_inputs_step else None, None, "%u")
-        pygui.input_scalar("input s32",     pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%d")
-        pygui.input_scalar("input s32 hex", pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%04X")
-        pygui.input_scalar("input u32",     pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%u")
-        pygui.input_scalar("input u32 hex", pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%08X")
-        pygui.input_scalar("input s64",     pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_one if widget.data_inputs_step else None)
-        pygui.input_scalar("input u64",     pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_one if widget.data_inputs_step else None)
-        pygui.input_scalar("input float",   pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_one if widget.data_inputs_step else None)
-        pygui.input_scalar("input double",  pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_one if widget.data_inputs_step else None)
+        if pygui.tree_node("input_scalar"):
+            pygui.checkbox("Show step buttons", widget.data_inputs_step)
+            pygui.input_scalar("input s8",      pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_one  if widget.data_inputs_step else None, None, "%d")
+            pygui.input_scalar("input u8",      pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_one  if widget.data_inputs_step else None, None, "%u")
+            pygui.input_scalar("input s16",     pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_one if widget.data_inputs_step else None, None, "%d")
+            pygui.input_scalar("input u16",     pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_one if widget.data_inputs_step else None, None, "%u")
+            pygui.input_scalar("input s32",     pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%d")
+            pygui.input_scalar("input s32 hex", pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_one if widget.data_inputs_step else None, None, "%04X")
+            pygui.input_scalar("input u32",     pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%u")
+            pygui.input_scalar("input u32 hex", pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_one if widget.data_inputs_step else None, None, "%08X")
+            pygui.input_scalar("input s64",     pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_one if widget.data_inputs_step else None)
+            pygui.input_scalar("input u64",     pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_one if widget.data_inputs_step else None)
+            pygui.input_scalar("input float",   pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_one if widget.data_inputs_step else None)
+            pygui.input_scalar("input double",  pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_one if widget.data_inputs_step else None)
+            pygui.tree_pop()
 
         # The _n versions. These are annoying.
-        pygui.separator_text("Drag Scalar N")
-        help_marker(
-            "This example demonstrates the importance of selecting the correct data type.\n"
-            " 4 * 1 byte (s8/u8)   chars  == 1 * 4 byte int.\n"
-            " 2 * 2 byte (s16/u16) shorts == 1 * 4 byte int.\n"
-            " 2 * 4 byte (s16/u16) ints   == 1 * 8 byte long.\n"
-            " So if you want to edit an integer then you should select S32 as the type. Otherwise, this actually makes"
-            " a neat way to edit the bits of an integer"
-            )
-        pygui.drag_scalar_n("drag_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16)
-        pygui.drag_scalar_n("drag_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16)
-        pygui.drag_scalar_n("drag_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8)
-        pygui.drag_scalar_n("drag_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8)
-        pygui.drag_scalar_n("drag_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
-        pygui.drag_scalar_n("drag_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
-        pygui.drag_scalar_n("drag_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
-        pygui.drag_scalar_n("drag_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
-        pygui.drag_scalar_n("drag_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2, 1 << 54)
-        pygui.drag_scalar_n("drag_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2, 1 << 54)
-        pygui.drag_scalar_n("drag_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4)
-        pygui.drag_scalar_n("drag_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4)
+        if pygui.tree_node("drag_scalar_n"):
+            help_marker(
+                "This example demonstrates the importance of selecting the correct data type.\n"
+                " 4 * 1 byte (s8/u8)   chars  == 1 * 4 byte int.\n"
+                " 2 * 2 byte (s16/u16) shorts == 1 * 4 byte int.\n"
+                " 2 * 4 byte (s16/u16) ints   == 1 * 8 byte long.\n"
+                " So if you want to edit an integer then you should select S32 as the type. Otherwise, this actually makes"
+                " a neat way to edit the bits of an integer")
+            pygui.drag_scalar_n("drag_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16)
+            pygui.drag_scalar_n("drag_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16)
+            pygui.drag_scalar_n("drag_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8)
+            pygui.drag_scalar_n("drag_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8)
+            pygui.drag_scalar_n("drag_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
+            pygui.drag_scalar_n("drag_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4)
+            pygui.drag_scalar_n("drag_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
+            pygui.drag_scalar_n("drag_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4, 1 << 22)
+            pygui.drag_scalar_n("drag_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2, 1 << 54)
+            pygui.drag_scalar_n("drag_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2, 1 << 54)
+            pygui.drag_scalar_n("drag_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4)
+            pygui.drag_scalar_n("drag_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4)
+            pygui.tree_pop()
 
-        pygui.separator_text("Slider Scalar N")
-        pygui.slider_scalar_n("slider_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16,  s8_min,  s8_max)
-        pygui.slider_scalar_n("slider_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16,  u8_min,  u8_max)
-        pygui.slider_scalar_n("slider_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   s16_min, s16_max)
-        pygui.slider_scalar_n("slider_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   u16_min, u16_max)
-        pygui.slider_scalar_n("slider_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
-        pygui.slider_scalar_n("slider_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
-        pygui.slider_scalar_n("slider_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
-        pygui.slider_scalar_n("slider_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
-        pygui.slider_scalar_n("slider_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   s64_min, s64_max)
-        pygui.slider_scalar_n("slider_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   u64_min, u64_max)
-        pygui.slider_scalar_n("slider_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  f32_lo_a, f32_hi_a)
-        pygui.slider_scalar_n("slider_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, f64_lo_a, f64_hi_a)
+        if pygui.tree_node("slider_scalar_n"):
+            pygui.slider_scalar_n("slider_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 16,  s8_min,  s8_max)
+            pygui.slider_scalar_n("slider_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 16,  u8_min,  u8_max)
+            pygui.slider_scalar_n("slider_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   s16_min, s16_max)
+            pygui.slider_scalar_n("slider_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   u16_min, u16_max)
+            pygui.slider_scalar_n("slider_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
+            pygui.slider_scalar_n("slider_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   s32_min, s32_max)
+            pygui.slider_scalar_n("slider_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
+            pygui.slider_scalar_n("slider_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   u32_min, u32_max)
+            pygui.slider_scalar_n("slider_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   s64_min, s64_max)
+            pygui.slider_scalar_n("slider_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   u64_min, u64_max)
+            pygui.slider_scalar_n("slider_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  f32_lo_a, f32_hi_a)
+            pygui.slider_scalar_n("slider_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, f64_lo_a, f64_hi_a)
+            pygui.tree_pop()
 
-        pygui.separator_text("Input Scalar N")
-        pygui.input_scalar_n("input_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 8,   1,    10) # It works with 16 but looks terrible
-        pygui.input_scalar_n("input_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 8,   2,    20)
-        pygui.input_scalar_n("input_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   3,    30)
-        pygui.input_scalar_n("input_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   4,    40)
-        pygui.input_scalar_n("input_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   5,    50)
-        pygui.input_scalar_n("input_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   6,    60)
-        pygui.input_scalar_n("input_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   7,    70)
-        pygui.input_scalar_n("input_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   8,    80)
-        pygui.input_scalar_n("input_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   9,    90)
-        pygui.input_scalar_n("input_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   10,   100)
-        pygui.input_scalar_n("input_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  0.1,  1)
-        pygui.input_scalar_n("input_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, 0.01, 0.1)
+        if pygui.tree_node("input_scalar_n"):
+            pygui.input_scalar_n("input_n s8",      pygui.DATA_TYPE_S8,     widget.data_long_n, 8,   1,    10) # It works with 16 but looks terrible
+            pygui.input_scalar_n("input_n u8",      pygui.DATA_TYPE_U8,     widget.data_long_n, 8,   2,    20)
+            pygui.input_scalar_n("input_n s16",     pygui.DATA_TYPE_S16,    widget.data_long_n, 8,   3,    30)
+            pygui.input_scalar_n("input_n u16",     pygui.DATA_TYPE_U16,    widget.data_long_n, 8,   4,    40)
+            pygui.input_scalar_n("input_n s32",     pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   5,    50)
+            pygui.input_scalar_n("input_n s32 hex", pygui.DATA_TYPE_S32,    widget.data_long_n, 4,   6,    60)
+            pygui.input_scalar_n("input_n u32",     pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   7,    70)
+            pygui.input_scalar_n("input_n u32 hex", pygui.DATA_TYPE_U32,    widget.data_long_n, 4,   8,    80)
+            pygui.input_scalar_n("input_n s64",     pygui.DATA_TYPE_S64,    widget.data_long_n, 2,   9,    90)
+            pygui.input_scalar_n("input_n u64",     pygui.DATA_TYPE_U64,    widget.data_long_n, 2,   10,   100)
+            pygui.input_scalar_n("input_n float",   pygui.DATA_TYPE_FLOAT,  widget.data_float_n, 4,  0.1,  1)
+            pygui.input_scalar_n("input_n double",  pygui.DATA_TYPE_DOUBLE, widget.data_double_n, 4, 0.01, 0.1)
+            pygui.tree_pop()
+
+        if pygui.tree_node("vslider_scalar"):
+            pygui.vslider_scalar("##vslider_scalar s8",      (80, 160), pygui.DATA_TYPE_S8,     widget.data_s8_v,  s8_min,   s8_max);   pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar u8",      (80, 160), pygui.DATA_TYPE_U8,     widget.data_u8_v,  u8_min,   u8_max);   pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar s16",     (80, 160), pygui.DATA_TYPE_S16,    widget.data_s16_v, s16_min,  s16_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar u16",     (80, 160), pygui.DATA_TYPE_U16,    widget.data_u16_v, u16_min,  u16_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar s32",     (80, 160), pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_min,  s32_max)
+            pygui.vslider_scalar("##vslider_scalar s32 hex", (80, 160), pygui.DATA_TYPE_S32,    widget.data_s32_v, s32_min,  s32_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar u32",     (80, 160), pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_min,  u32_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar u32 hex", (80, 160), pygui.DATA_TYPE_U32,    widget.data_u32_v, u32_min,  u32_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar s64",     (80, 160), pygui.DATA_TYPE_S64,    widget.data_s64_v, s64_min,  s64_max);  pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar u64",     (80, 160), pygui.DATA_TYPE_U64,    widget.data_u64_v, u64_min,  u64_max)
+            pygui.vslider_scalar("##vslider_scalar float",   (80, 160), pygui.DATA_TYPE_FLOAT,  widget.data_f32_v, f32_zero, f32_hi_a); pygui.same_line()
+            pygui.vslider_scalar("##vslider_scalar double",  (80, 160), pygui.DATA_TYPE_DOUBLE, widget.data_f64_v, f64_zero, f64_hi_a)
+            pygui.tree_pop()
         pygui.tree_pop()
 
     if pygui.tree_node("Multi-component Widgets"):
@@ -2111,6 +2136,7 @@ class rand:
     modal_checkbox = pygui.BoolPtr(False)
     colour = pygui.Vec4Ptr(1, 1, 0, 1)
     current_item = pygui.IntPtr(0)
+    current_item_list = pygui.IntPtr(0)
     error_text = [(1, 0, 0, 1), ""]
     drag_min = pygui.IntPtr(1)
     drag_max = pygui.IntPtr(100)
@@ -2119,6 +2145,7 @@ class rand:
     drag_float_max = pygui.FloatPtr(0.100)
     drag_float = pygui.FloatPtr(0.05)
     multiline_buffer = pygui.StrPtr("", 64)
+    left_click_count = pygui.IntPtr(0)
     is_activated = False
     is_deactivated = False
     edit_float = pygui.FloatPtr(5)
@@ -2131,9 +2158,16 @@ class rand:
     window_log = []
     tree_checkboxes = [pygui.BoolPtr(False) for _ in range(3)]
     text_input = [pygui.StrPtr("") for _ in range(3)]
+    next_window_docked = pygui.BoolPtr(True)
+    next_window_dock_window_spawned = pygui.BoolPtr(True)
     next_window_alpha = pygui.FloatPtr(1)
     next_window_collapsed = pygui.BoolPtr(False)
+    next_window_do_size = pygui.BoolPtr(False)
+    next_window_in_main_viewport = pygui.BoolPtr(False)
     next_window_size = pygui.Vec2Ptr(500, 400)
+    next_window_do_size_constraint = pygui.BoolPtr(False)
+    next_window_size_constraint_min = pygui.Vec2Ptr(10, 10)
+    next_window_size_constraint_max = pygui.Vec2Ptr(300, 300)
     next_window_content_size = pygui.Vec2Ptr(500, 400)
     next_window_scroll = pygui.Vec2Ptr(-1, -1)
     next_window_focus = pygui.BoolPtr(False)
@@ -2145,221 +2179,21 @@ def show_random_extras():
         return
 
     pygui.push_style_var(pygui.STYLE_VAR_INDENT_SPACING, 30)
-    if pygui.tree_node("pygui.begin_child_frame()"):
-        new_id = pygui.get_id("begin_child_frame()")
-        item_height = pygui.get_text_line_height_with_spacing()
-        if pygui.begin_child_frame(new_id, (-pygui.FLT_MIN, item_height * 5 + 5)):
-            for n in range(5):
-                pygui.text("My Item {}".format(n))
-            pygui.end_child_frame()
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.begin_child_id()"):
-        new_id = pygui.get_id("begin_child_id()")
-        pygui.begin_child_id(new_id, (0, 260), True)
-        if pygui.begin_table("split", 2, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS):
-            for i in range(30):
-                pygui.table_next_column()
-                pygui.button("{:3f}".format(i), (-pygui.FLT_MIN, 0))
-            pygui.end_table()
-        pygui.end_child()
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.begin_disabled()"):
-        pygui.checkbox("Begin Disabled", rand.begin_disabled)
-        pygui.begin_disabled(rand.begin_disabled.value)
-        pygui.checkbox("First checkbox", rand.first_checkbox)
-        pygui.checkbox("Second checkbox", rand.second_checkbox)
-        pygui.end_disabled()
-        pygui.checkbox("Ignore disabled checkbox", rand.third_checkbox)
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.begin_main_menu_bar()"):
-        if pygui.begin_main_menu_bar():
-            if pygui.begin_menu("File"):
-                pygui.menu_item("Hello world")
-                pygui.end_menu()
-            
-            if pygui.begin_menu("Test"):
-                pygui.menu_item("Content1")
-                pygui.menu_item("Content2")
-                pygui.menu_item("Content3")
-                pygui.end_menu()
-            
-            if pygui.begin_menu("About"):
-                pygui.menu_item("About me etc...")
-                pygui.end_menu()
-            pygui.end_main_menu_bar()
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.begin_popup_context_void()"):
-        pygui.text_wrapped(
-            "Popup only appears when you right click on the main window."
-            " This will make the usual ImGui menu appear."
-        )
-        if pygui.begin_popup_context_void(None, pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT):
-            show_menu_file()
-            pygui.end_popup()
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.begin_popup_modal()"):
-        pygui.text_wrapped("Modal windows are like popups but the user cannot close them by clicking outside.")
-        if pygui.button("Open Modal"):
-            pygui.open_popup("Modal?")
-
-        # Always center this window when appearing
-        center = pygui.get_main_viewport().get_center()
-        pygui.set_next_window_pos(center, pygui.COND_APPEARING, (0.5, 0.5))
-
-        if pygui.begin_popup_modal("Modal?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
-            pygui.text("This opens a modal popup")
-            pygui.separator()
-            mouse_pos_on_popup = pygui.get_mouse_pos_on_opening_current_popup()
-            pygui.text("pygui.get_mouse_pos_on_opening_current_popup(): {}".format(
-                mouse_pos_on_popup
-            ))
-
-            pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
-            pygui.checkbox("This is a checkbox", rand.modal_checkbox)
-            pygui.pop_style_var()
-
-            if pygui.button("OK", (120, 0)):
-                pygui.close_current_popup()
-            pygui.set_item_default_focus()
-            pygui.same_line()
-            if pygui.button("Cancel", (120, 0)):
-                pygui.close_current_popup()
-            pygui.end_popup()
-        pygui.text("pygui.is_popup_open(): {}".format(pygui.is_popup_open("Modal?")))
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.color_convert_float4_to_u32()"):
-        draw_list = pygui.get_window_draw_list()
-
-        pygui.color_edit4("Edit rgb", rand.colour)
-        pygui.color_edit4("Edit hsv", rand.colour, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV)
-        float_to_u32 = pygui.color_convert_float4_to_u32(rand.colour.vec())
-        float_to_u32_macro = pygui.IM_COL32(*[c * 255 for c in rand.colour.vec()])
-        pygui.text("color_convert_float4_to_u32: {}".format(float_to_u32))
-        pygui.text("IM_COL32:                    {}".format(float_to_u32_macro))
-
-        gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
-
-        pygui.separator()
-        pygui.text("color_convert_u32_to_float4()")
-        u32_to_float4 = pygui.color_convert_u32_to_float4(float_to_u32)
-        pygui.text(str(u32_to_float4))
-        p0 = pygui.get_cursor_screen_pos()
-        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(u32_to_float4))
-        pygui.invisible_button("##gradient1", gradient_size)
-
-        pygui.separator()
-        pygui.text("color_convert_rgb_to_hsv()")
-        rgb_to_hsv = pygui.color_convert_rgb_to_hsv(*u32_to_float4)
-        pygui.text(str(rgb_to_hsv))
-        p0 = pygui.get_cursor_screen_pos()
-        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
-        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(*rgb_to_hsv)))
-        pygui.invisible_button("##gradient2", gradient_size)
-        
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.combo_callback()"):
-        def combo_callback_function(data, index: int, out: pygui.StrPtr) -> bool:
-            out.value = data[index]
-            return True
-        data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
-        
-        pygui.combo_callback("My Combo", rand.current_item,
-                             combo_callback_function, data, len(data))
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.debug_check_version_and_data_layout()"):
-        pygui.text_wrapped(
-            "If pressing this alerts ImGui then the sizes of the structs in"
-            " cython is different to ImGui. This *might* not be an issue.")
-        try:
-            if pygui.button("Call pygui.debug_check_version_and_data_layout()"):
-                pygui.debug_check_version_and_data_layout()
-                rand.error_text = [(0, 1, 0, 1), "Passed"]
-        except pygui.ImGuiError as e:
-            rand.error_text = [(1, 0, 0, 1), str(e)]
-        
-        if rand.error_text[1] != "":
-            pygui.push_style_color(pygui.COL_TEXT, rand.error_text[0])
-            pygui.text_wrapped(rand.error_text[1])
-            pygui.pop_style_color()
-
-        if rand.error_text[1] != "":
-            if pygui.button("Clear"):
-                rand.error_text[1] = ""
-
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.debug_text_encoding()"):
-        pygui.debug_text_encoding("Demo String")
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.drag_int_range2()"):
-        pygui.drag_int_range2("My drag_int2", rand.drag_min, rand.drag_max, 1, -500, 500)
-        pygui.drag_int("drag_int", rand.drag, 1, rand.drag_min.value, rand.drag_max.value)
-        pygui.drag_float_range2("My drag_float2", rand.drag_float_min, rand.drag_float_max, 0.001, -1, 1)
-        pygui.drag_float("drag_float", rand.drag_float, 0.001, rand.drag_float_min.value, rand.drag_float_max.value)
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.input_text_multiline()"):
-        def callback_function(callback_data, user_data):
-            print("Hello", user_data)
-        
-        pygui.input_text_multiline(
-            "My text", rand.multiline_buffer, (-pygui.FLT_MIN, 100),
-            pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
-        if pygui.button("Copy to clipboard"):
-            pygui.set_clipboard_text(rand.multiline_buffer.value)
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.dock_space()"):
-        pygui.text_wrapped(
-            "This will spawn a window that can be docked inside this dockspace."
-            " This is because the dockspace is created *before* creating the"
-            " window."
-        )
-        dockspace_id = pygui.get_id("My Dockspace")
-        pygui.dock_space(dockspace_id, (500, 500))
-        pygui.begin("Dock me in the dockspace")
-        pygui.show_user_guide()
-        pygui.end()
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.dock_space_over_viewport()"):
-        dockspace_id = pygui.get_id("My ViewportDockspace")
-        viewport = pygui.get_main_viewport()
-        pygui.dock_space_over_viewport(viewport, pygui.DOCK_NODE_FLAGS_NO_RESIZE)
-        pygui.begin("Dock me in the viewport")
-        pygui.show_user_guide()
-        pygui.end()
-        pygui.tree_pop()
-
-    if pygui.tree_node("pygui.get_clipboard_text()"):
-        clipboard_text = pygui.get_clipboard_text()
-        pygui.text("Current clipboard below")
-        pygui.separator()
-        pygui.text_wrapped(clipboard_text)
-        pygui.separator()
-        pygui.tree_pop()
-    
     if pygui.tree_node("Info functions"):
+        pygui.text("pygui.get_font_size(): {}".format(pygui.get_font_size()))
+        pygui.text("pygui.get_font_tex_uv_white_pixel(): {}".format(pygui.get_font_tex_uv_white_pixel()))
         pygui.text("pygui.get_content_region_max(): {}".format(pygui.get_content_region_max()))
         pygui.text("pygui.get_cursor_pos_x(): {}".format(pygui.get_cursor_pos_x()))
         pygui.text("pygui.get_cursor_pos_y(): {}".format(pygui.get_cursor_pos_y()))
         pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
         pygui.text("pygui.get_frame_count(): {}".format(pygui.get_frame_count()))
         left_click_count = pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT)
-        if left_click_count > 0:
-            print("pygui.MOUSE_BUTTON_LEFT: {}".format(left_click_count))
-        pygui.text("pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT): {}".format(left_click_count))
-        pygui.text("pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT): {}".format(pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_RIGHT)))
+        left_click_string = "pygui.get_mouse_clicked_count(pygui.MOUSE_BUTTON_LEFT): {}"
+        if left_click_count == 0:
+            pygui.text(left_click_string.format(rand.left_click_count.value))
+        else:
+            rand.left_click_count.value = left_click_count
+            pygui.text(left_click_string.format(left_click_count))
         pygui.text("pygui.get_mouse_cursor(): {}".format(pygui.get_mouse_cursor()))
         pygui.text("pygui.get_window_content_region_max(): {}".format(pygui.get_window_content_region_max()))
         pygui.text("pygui.get_window_content_region_min(): {}".format(pygui.get_window_content_region_min()))
@@ -2377,163 +2211,7 @@ def show_random_extras():
         pygui.text("pygui.is_any_item_hovered(): {}".format(pygui.is_any_item_hovered()))
         pygui.text("pygui.is_any_mouse_down(): {}".format(pygui.is_any_mouse_down()))
         pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_item_activated()"):
-        pygui.button("is_item_activated")
-        if pygui.is_item_activated() or rand.is_activated:
-            rand.is_activated = True
-            pygui.same_line()
-            pygui.text("Is Activated!")
-            pygui.same_line()
-            if pygui.button("Reset"):
-                rand.is_activated = False
-        pygui.button("is_item_deactivated")
-        if pygui.is_item_deactivated() or rand.is_deactivated:
-            rand.is_deactivated = True
-            pygui.same_line()
-            pygui.text("Is Deactivated!")
-            pygui.same_line()
-            if pygui.button("Reset"):
-                rand.is_deactivated = False
-        pygui.set_next_item_width(200)
-        pygui.drag_float("is_item_deactivated_after_edit", rand.edit_float, 0.01)
-        if pygui.is_item_deactivated_after_edit() or rand.is_deactivated_after_edit:
-            rand.is_deactivated_after_edit = True
-            pygui.same_line()
-            pygui.text("Is Deactivated after edit!")
-            pygui.same_line()
-            if pygui.button("Reset"):
-                rand.is_deactivated_after_edit = False
-        
-        pygui.set_next_item_width(200)
-        pygui.drag_float("is_item_edited", rand.edit_float, 0.01)
-        if pygui.is_item_edited() or rand.is_edited:
-            rand.is_edited = True
-            pygui.same_line()
-            pygui.text("Is Edited!")
-            pygui.same_line()
-            if pygui.button("Reset"):
-                rand.is_edited = False
-        
-        focused = -1
-        for i, bool_ptr in enumerate(rand.checkboxes):
-            if i > 0:
-                pygui.same_line()
-            pygui.push_style_color(pygui.COL_CHECK_MARK, pygui.color_convert_hsv_to_rgb(i / 10, 0.6, 0.6))
-            pygui.checkbox(f"##{i}", bool_ptr)
-            pygui.pop_style_color()
-            if pygui.is_item_focused():
-                focused = i
-        pygui.text("is_item_focused: {}".format(focused if focused != -1 else "None"))
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_item_visible()"):
-        visible = None
-        rect_visible_from_cursor = None
-        rect_visible = None
-        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), True):
-            pygui.text("Some")
-            pygui.text("Lines")
-            pygui.text("Inside")
-            pygui.text("The")
-            pygui.text("Child")
-            pygui.text("So")
-            pygui.text("That")
-            pygui.text("The")
-            pygui.text("Scroll")
-            pygui.text("Appears")
-            pygui.text_colored((0, 1, 0, 1), "Am I visible?")
-            visible = pygui.is_item_visible()
-            pygui.text("More")
-            pygui.text("Text")
-            rect_visible_from_cursor = pygui.is_rect_visible_by_size((10, 10))
-            cursor_screen_pos = pygui.get_cursor_screen_pos()
-            draw_list = pygui.get_window_draw_list()
-            draw_list.add_rect_filled(
-                cursor_screen_pos,
-                (cursor_screen_pos[0] + 10, cursor_screen_pos[1] + 10),
-                pygui.color_convert_float4_to_u32((0, 1, 0, 1))
-            )
-            pygui.dummy((10, pygui.get_text_line_height()))
-            pygui.text("Rect above for is_rect_visible_by_size")
-            pygui.text("Rect of this be seen?")
-            rect_min = pygui.get_item_rect_min()
-            rect_max = pygui.get_item_rect_max()
-            draw_list.add_rect(rect_min, rect_max, pygui.color_convert_float4_to_u32((0, 1, 0, 1)))
-            rect_visible = pygui.is_rect_visible(pygui.get_item_rect_min(), pygui.get_item_rect_max())
-        pygui.end_child()
-        pygui.text("is_item_visible: {}".format(visible))
-        pygui.text("is_rect_visible_by_size: {}".format(rect_visible_from_cursor))
-        pygui.text("is_rect_visible: {}".format(rect_visible))
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_key_pressed(pygui.KEY_A)"):
-        pygui.text("Log for pygui.KEY_A")
-        if pygui.is_key_pressed(pygui.KEY_A):
-            rand.key_press_log.append("pygui.is_key_pressed(pygui.KEY_A)")
-        if pygui.is_key_down(pygui.KEY_A):
-            rand.key_press_log.append("pygui.is_key_down(pygui.KEY_A)")
-        if pygui.is_key_released(pygui.KEY_A):
-            rand.key_press_log.append("pygui.is_key_released(pygui.KEY_A)")
-        if pygui.begin_child("Log for pygui.KEY_A", (400, pygui.get_text_line_height_with_spacing() * 10), True):
-            for event in rand.key_press_log:
-                pygui.text(event)
-        pygui.end_child()
-        if pygui.button("Clear ##log"):
-            rand.key_press_log.clear()
-        pygui.tree_pop()
 
-    if pygui.tree_node("pygui.is_mouse_hovering_rect()"):
-        pygui.button("My button")
-        rect_min = pygui.get_item_rect_min()
-        rect_max = pygui.get_item_rect_max()
-        pygui.text("Item id above: {}".format(pygui.get_item_id()))
-        pygui.text("pygui.is_mouse_hovering_rect(): {}".format(pygui.is_mouse_hovering_rect(rect_min, rect_max)))
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_mouse_pos_valid()"):
-        pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
-        pygui.text("pygui.is_mouse_pos_valid(): {}".format(pygui.is_mouse_pos_valid()))
-        pygui.text("pygui.is_mouse_pos_valid((-100, 100)): {}".format(pygui.is_mouse_pos_valid((-100, 100))))
-        pygui.text("pygui.is_mouse_pos_valid((-MAX, -MAX)): {}".format(pygui.is_mouse_pos_valid((-pygui.FLT_MAX, -pygui.FLT_MAX))))
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_mouse_released()"):
-        if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
-            rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
-        pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
-        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), True):
-            for event in rand.mouse_press_log:
-                pygui.text(event)
-        pygui.end_child()
-        if pygui.button("Clear"):
-            rand.mouse_press_log.clear()
-        pygui.tree_pop()
-    
-    if pygui.tree_node("pygui.is_window_appearing()"):
-        pygui.checkbox("Show window", rand.show_window)
-        
-        is_collapsed = "Unknown"
-        if rand.show_window:
-            pygui.begin("Window utilities")
-            pygui.text("Hello world")
-            pygui.text("pygui.is_window_docked(): {}".format(pygui.is_window_docked()))
-            pygui.text("pygui.is_window_hovered(): {}".format(pygui.is_window_hovered()))
-            if pygui.is_window_appearing():
-                rand.window_log.append("Appearing on frame {}".format(pygui.get_frame_count()))
-            # If __ minimised
-            is_collapsed = pygui.is_window_collapsed()
-            pygui.end()
-        
-        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), True):
-            for event in rand.window_log:
-                pygui.text(event)
-        pygui.end_child()
-        pygui.text("pygui.is_window_collapsed(): {}".format(is_collapsed))
-        if pygui.button("Clear ##log"):
-            rand.window_log.clear()
-        pygui.tree_pop()
-    
     if pygui.tree_node("Various Structs"):
         def show_imfontglyph(glyph: pygui.ImFontGlyph):
             pygui.menu_item("glyph.advance_x:   {}".format(glyph.advance_x))
@@ -2901,6 +2579,381 @@ def show_random_extras():
 
         pygui.tree_pop()
 
+    if pygui.tree_node("pygui.begin_child_frame()"):
+        new_id = pygui.get_id("begin_child_frame()")
+        item_height = pygui.get_text_line_height_with_spacing()
+        if pygui.begin_child_frame(new_id, (-pygui.FLT_MIN, item_height * 5 + 5)):
+            for n in range(5):
+                pygui.text("My Item {}".format(n))
+            pygui.end_child_frame()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_child_id()"):
+        new_id = pygui.get_id("begin_child_id()")
+        pygui.begin_child_id(new_id, (0, 260), True)
+        if pygui.begin_table("split", 2, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS):
+            for i in range(30):
+                pygui.table_next_column()
+                pygui.button("{:3f}".format(i), (-pygui.FLT_MIN, 0))
+            pygui.end_table()
+        pygui.end_child()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_disabled()"):
+        pygui.checkbox("Begin Disabled", rand.begin_disabled)
+        pygui.begin_disabled(rand.begin_disabled.value)
+        pygui.checkbox("First checkbox", rand.first_checkbox)
+        pygui.checkbox("Second checkbox", rand.second_checkbox)
+        pygui.end_disabled()
+        pygui.checkbox("Ignore disabled checkbox", rand.third_checkbox)
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.begin_main_menu_bar()"):
+        if pygui.begin_main_menu_bar():
+            if pygui.begin_menu("File"):
+                pygui.menu_item("Hello world")
+                pygui.end_menu()
+            
+            if pygui.begin_menu("Test"):
+                pygui.menu_item("Content1")
+                pygui.menu_item("Content2")
+                pygui.menu_item("Content3")
+                pygui.end_menu()
+            
+            if pygui.begin_menu("About"):
+                pygui.menu_item("About me etc...")
+                pygui.end_menu()
+            pygui.end_main_menu_bar()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.begin_popup_context_void()"):
+        pygui.text_wrapped(
+            "Popup only appears when you right click on the main window."
+            " This will make the usual ImGui menu appear."
+        )
+        if pygui.begin_popup_context_void(None, pygui.POPUP_FLAGS_MOUSE_BUTTON_RIGHT):
+            show_menu_file()
+            pygui.end_popup()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.begin_popup_modal()"):
+        pygui.text_wrapped("Modal windows are like popups but the user cannot close them by clicking outside.")
+        if pygui.button("Open Modal"):
+            pygui.open_popup("Modal?")
+
+        # Always center this window when appearing
+        center = pygui.get_main_viewport().get_center()
+        pygui.set_next_window_pos(center, pygui.COND_APPEARING, (0.5, 0.5))
+
+        if pygui.begin_popup_modal("Modal?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
+            pygui.text("This opens a modal popup")
+            pygui.separator()
+            mouse_pos_on_popup = pygui.get_mouse_pos_on_opening_current_popup()
+            pygui.text("pygui.get_mouse_pos_on_opening_current_popup(): {}".format(
+                mouse_pos_on_popup
+            ))
+
+            pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (0, 0))
+            pygui.checkbox("This is a checkbox", rand.modal_checkbox)
+            pygui.pop_style_var()
+
+            if pygui.button("OK", (120, 0)):
+                pygui.close_current_popup()
+            pygui.set_item_default_focus()
+            pygui.same_line()
+            if pygui.button("Cancel", (120, 0)):
+                pygui.close_current_popup()
+            pygui.end_popup()
+        pygui.text("pygui.is_popup_open(): {}".format(pygui.is_popup_open("Modal?")))
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.combo_callback()"):
+        def combo_callback_function(data, index: int, out: pygui.StrPtr) -> bool:
+            out.value = data[index]
+            return True
+        data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
+        
+        pygui.text("pygui.combo_callback")
+        pygui.combo_callback(
+            "My Combo", rand.current_item,
+            combo_callback_function, data, len(data))
+        pygui.new_line()
+        pygui.new_line()
+        pygui.text("pygui.list_box_callback")
+        pygui.list_box_callback(
+            "My List Box", rand.current_item_list,
+            combo_callback_function, data, len(data))
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.color_convert_float4_to_u32()"):
+        draw_list = pygui.get_window_draw_list()
+
+        pygui.color_edit4("Edit rgb", rand.colour)
+        pygui.color_edit4("Edit hsv", rand.colour, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV)
+        float_to_u32 = pygui.color_convert_float4_to_u32(rand.colour.vec())
+        float_to_u32_macro = pygui.IM_COL32(*[c * 255 for c in rand.colour.vec()])
+        pygui.text("color_convert_float4_to_u32: {}".format(float_to_u32))
+        pygui.text("IM_COL32:                    {}".format(float_to_u32_macro))
+
+        gradient_size = (pygui.calc_item_width(), pygui.get_frame_height())
+
+        pygui.separator()
+        pygui.text("color_convert_u32_to_float4()")
+        u32_to_float4 = pygui.color_convert_u32_to_float4(float_to_u32)
+        pygui.text(str(u32_to_float4))
+        p0 = pygui.get_cursor_screen_pos()
+        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(u32_to_float4))
+        pygui.invisible_button("##gradient1", gradient_size)
+
+        pygui.separator()
+        pygui.text("color_convert_rgb_to_hsv()")
+        rgb_to_hsv = pygui.color_convert_rgb_to_hsv(*u32_to_float4)
+        pygui.text(str(rgb_to_hsv))
+        p0 = pygui.get_cursor_screen_pos()
+        p1 = (p0[0] + gradient_size[0], p0[1] + gradient_size[1])
+        draw_list.add_rect_filled(p0, p1, pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(*rgb_to_hsv)))
+        pygui.invisible_button("##gradient2", gradient_size)
+        
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.debug_check_version_and_data_layout()"):
+        pygui.text_wrapped(
+            "If pressing this alerts ImGui then the sizes of the structs in"
+            " cython is different to ImGui. This *might* not be an issue.")
+        try:
+            if pygui.button("Call pygui.debug_check_version_and_data_layout()"):
+                pygui.debug_check_version_and_data_layout()
+                rand.error_text = [(0, 1, 0, 1), "Passed"]
+        except pygui.ImGuiError as e:
+            rand.error_text = [(1, 0, 0, 1), str(e)]
+        
+        if rand.error_text[1] != "":
+            pygui.push_style_color(pygui.COL_TEXT, rand.error_text[0])
+            pygui.text_wrapped(rand.error_text[1])
+            pygui.pop_style_color()
+
+        if rand.error_text[1] != "":
+            if pygui.button("Clear"):
+                rand.error_text[1] = ""
+
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.debug_text_encoding()"):
+        pygui.debug_text_encoding("Demo String")
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.dock_space()"):
+        pygui.text_wrapped(
+            "This will spawn a window that can be docked inside this dockspace."
+            " This is because the dockspace is created *before* creating the"
+            " window."
+        )
+        dockspace_id = pygui.get_id("My Dockspace")
+        pygui.dock_space(dockspace_id, (500, 500))
+        pygui.begin("Dock me in the dockspace")
+        pygui.show_user_guide()
+        pygui.end()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.dock_space_over_viewport()"):
+        dockspace_id = pygui.get_id("My ViewportDockspace")
+        viewport = pygui.get_main_viewport()
+        pygui.dock_space_over_viewport(viewport, pygui.DOCK_NODE_FLAGS_NO_RESIZE)
+        pygui.begin("Dock me in the viewport")
+        pygui.show_user_guide()
+        pygui.end()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.drag_int_range2()"):
+        pygui.drag_int_range2("My drag_int2", rand.drag_min, rand.drag_max, 1, -500, 500)
+        pygui.drag_int("drag_int", rand.drag, 1, rand.drag_min.value, rand.drag_max.value)
+        pygui.drag_float_range2("My drag_float2", rand.drag_float_min, rand.drag_float_max, 0.001, -1, 1)
+        pygui.drag_float("drag_float", rand.drag_float, 0.001, rand.drag_float_min.value, rand.drag_float_max.value)
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.get_clipboard_text()"):
+        clipboard_text = pygui.get_clipboard_text()
+        pygui.text("Current clipboard below")
+        pygui.separator()
+        pygui.text_wrapped(clipboard_text)
+        pygui.separator()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.input_text_multiline()"):
+        def callback_function(callback_data, user_data):
+            print("Hello", user_data)
+        
+        pygui.input_text_multiline(
+            "My text", rand.multiline_buffer, (-pygui.FLT_MIN, 100),
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT, callback_function, "My data")
+        if pygui.button("Copy to clipboard"):
+            pygui.set_clipboard_text(rand.multiline_buffer.value)
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_item_activated()"):
+        pygui.button("is_item_activated")
+        if pygui.is_item_activated() or rand.is_activated:
+            rand.is_activated = True
+            pygui.same_line()
+            pygui.text("Is Activated!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                rand.is_activated = False
+        pygui.button("is_item_deactivated")
+        if pygui.is_item_deactivated() or rand.is_deactivated:
+            rand.is_deactivated = True
+            pygui.same_line()
+            pygui.text("Is Deactivated!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                rand.is_deactivated = False
+        pygui.set_next_item_width(200)
+        pygui.drag_float("is_item_deactivated_after_edit", rand.edit_float, 0.01)
+        if pygui.is_item_deactivated_after_edit() or rand.is_deactivated_after_edit:
+            rand.is_deactivated_after_edit = True
+            pygui.same_line()
+            pygui.text("Is Deactivated after edit!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                rand.is_deactivated_after_edit = False
+        
+        pygui.set_next_item_width(200)
+        pygui.drag_float("is_item_edited", rand.edit_float, 0.01)
+        if pygui.is_item_edited() or rand.is_edited:
+            rand.is_edited = True
+            pygui.same_line()
+            pygui.text("Is Edited!")
+            pygui.same_line()
+            if pygui.button("Reset"):
+                rand.is_edited = False
+        
+        focused = -1
+        for i, bool_ptr in enumerate(rand.checkboxes):
+            if i > 0:
+                pygui.same_line()
+            pygui.push_style_color(pygui.COL_CHECK_MARK, pygui.color_convert_hsv_to_rgb(i / 10, 0.6, 0.6))
+            pygui.checkbox(f"##{i}", bool_ptr)
+            pygui.pop_style_color()
+            if pygui.is_item_focused():
+                focused = i
+        pygui.text("is_item_focused: {}".format(focused if focused != -1 else "None"))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_item_visible()"):
+        visible = None
+        rect_visible_from_cursor = None
+        rect_visible = None
+        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), True):
+            pygui.text("Some")
+            pygui.text("Lines")
+            pygui.text("Inside")
+            pygui.text("The")
+            pygui.text("Child")
+            pygui.text("So")
+            pygui.text("That")
+            pygui.text("The")
+            pygui.text("Scroll")
+            pygui.text("Appears")
+            pygui.text_colored((0, 1, 0, 1), "Am I visible?")
+            visible = pygui.is_item_visible()
+            pygui.text("More")
+            pygui.text("Text")
+            rect_visible_from_cursor = pygui.is_rect_visible_by_size((10, 10))
+            cursor_screen_pos = pygui.get_cursor_screen_pos()
+            draw_list = pygui.get_window_draw_list()
+            draw_list.add_rect_filled(
+                cursor_screen_pos,
+                (cursor_screen_pos[0] + 10, cursor_screen_pos[1] + 10),
+                pygui.color_convert_float4_to_u32((0, 1, 0, 1))
+            )
+            pygui.dummy((10, pygui.get_text_line_height()))
+            pygui.text("Rect above for is_rect_visible_by_size")
+            pygui.text("Rect of this be seen?")
+            rect_min = pygui.get_item_rect_min()
+            rect_max = pygui.get_item_rect_max()
+            draw_list.add_rect(rect_min, rect_max, pygui.color_convert_float4_to_u32((0, 1, 0, 1)))
+            rect_visible = pygui.is_rect_visible(pygui.get_item_rect_min(), pygui.get_item_rect_max())
+        pygui.end_child()
+        pygui.text("is_item_visible: {}".format(visible))
+        pygui.text("is_rect_visible_by_size: {}".format(rect_visible_from_cursor))
+        pygui.text("is_rect_visible: {}".format(rect_visible))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_key_pressed(pygui.KEY_A)"):
+        pygui.text("Log for pygui.KEY_A and pygui.KEY_B (for repeat rate)")
+        if pygui.is_key_pressed(pygui.KEY_A):
+            rand.key_press_log.append("pygui.is_key_pressed(pygui.KEY_A)")
+        if pygui.is_key_down(pygui.KEY_A):
+            rand.key_press_log.append("pygui.is_key_down(pygui.KEY_A)")
+        if pygui.is_key_released(pygui.KEY_A):
+            rand.key_press_log.append("pygui.is_key_released(pygui.KEY_A)")
+        key_press_amount = pygui.get_key_pressed_amount(pygui.KEY_B, 1, 0.2)
+        if key_press_amount > 0:
+            rand.key_press_log.append("pygui.get_key_pressed_amount(): {} @ {}".format(
+                key_press_amount,
+                pygui.get_frame_count()
+            ))
+
+        if pygui.begin_child("##Log for keys", (400, pygui.get_text_line_height_with_spacing() * 10), True):
+            for event in rand.key_press_log:
+                pygui.text(event)
+        pygui.end_child()
+        if pygui.button("Clear ##log"):
+            rand.key_press_log.clear()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.is_mouse_hovering_rect()"):
+        pygui.button("My button")
+        rect_min = pygui.get_item_rect_min()
+        rect_max = pygui.get_item_rect_max()
+        pygui.text("Item id above: {}".format(pygui.get_item_id()))
+        pygui.text("pygui.is_mouse_hovering_rect(): {}".format(pygui.is_mouse_hovering_rect(rect_min, rect_max)))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_mouse_pos_valid()"):
+        pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
+        pygui.text("pygui.is_mouse_pos_valid(): {}".format(pygui.is_mouse_pos_valid()))
+        pygui.text("pygui.is_mouse_pos_valid((-100, 100)): {}".format(pygui.is_mouse_pos_valid((-100, 100))))
+        pygui.text("pygui.is_mouse_pos_valid((-MAX, -MAX)): {}".format(pygui.is_mouse_pos_valid((-pygui.FLT_MAX, -pygui.FLT_MAX))))
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_mouse_released()"):
+        if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
+            rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
+        pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
+        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+            for event in rand.mouse_press_log:
+                pygui.text(event)
+        pygui.end_child()
+        if pygui.button("Clear"):
+            rand.mouse_press_log.clear()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.is_window_appearing()"):
+        pygui.checkbox("Show window", rand.show_window)
+        
+        is_collapsed = "Unknown"
+        if rand.show_window:
+            pygui.begin("Window utilities")
+            pygui.text("Hello world")
+            pygui.text("pygui.is_window_docked(): {}".format(pygui.is_window_docked()))
+            pygui.text("pygui.is_window_hovered(): {}".format(pygui.is_window_hovered()))
+            if pygui.is_window_appearing():
+                rand.window_log.append("Appearing on frame {}".format(pygui.get_frame_count()))
+            # If __ minimised
+            is_collapsed = pygui.is_window_collapsed()
+            pygui.end()
+        
+        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+            for event in rand.window_log:
+                pygui.text(event)
+        pygui.end_child()
+        pygui.text("pygui.is_window_collapsed(): {}".format(is_collapsed))
+        if pygui.button("Clear ##log"):
+            rand.window_log.clear()
+        pygui.tree_pop()
+    
     if pygui.tree_node("pygui.ImDrawListSplitter"):
         pygui.text_wrapped(
             "The left column is channel 0. The right is channel 1. You can see"
@@ -2934,6 +2987,83 @@ def show_random_extras():
         pygui.dummy((10, size * 4))
         pygui.separator()
         pygui.tree_pop()
+
+    if pygui.tree_node("pygui.log_buttons()"):
+        pygui.log_buttons()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.open_popup_id()"):
+        if pygui.button("Open popup"):
+            pygui.open_popup("Popup 1")
+        
+        if pygui.begin_popup("Popup 1"):
+            pygui.text("Hello from popup 1")
+            pygui.end_popup()
+        
+        pygui.text("The next should not open")
+        if pygui.button("Open popup from nested begin"):
+            pygui.open_popup("Popup 2")
+        
+        pygui.push_id("Nested Id")
+        if pygui.begin_popup("Popup 2"):
+            pygui.text("Hello from popup 2")
+            pygui.end_popup()
+        pygui.pop_id()
+
+        
+        if pygui.button("Open with open_popup_id"):
+            popup_id = pygui.get_id("Popup 3")
+            pygui.open_popup_id(popup_id)
+        
+        if pygui.begin_popup("Popup 3"):
+            pygui.text("Hello from popup 3")
+            pygui.end_popup()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.plot_histogram_callback()"):
+        # Just performs some calculation inside the callback to show
+        # it's doing something.
+        values = [x for x in reversed(range(40))]
+        def values_getter_callback(data, index: int) -> float:
+            inc = (2 * math.pi) / (len(data) // 2)
+            return 10 * math.sin(data[index] * inc)
+        
+        pygui.plot_histogram_callback(
+            "My callback histogram", values_getter_callback,
+            values, len(values), 0, None, -10, 10, (300, 100))
+
+        # You can even use lambdas to define functions.
+        pygui.plot_lines_callback(
+            "My callback lines",
+            lambda data, idx: 10 * math.cos(data[idx] / 5),
+            values, len(values), 0, None, -10, 10, (300, 100))
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.push_tab_stop()"):
+        pygui.text("You can tab here")
+        pygui.push_id("First")
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_id()
+
+        pygui.separator()
+
+        pygui.text("You can't tab here")
+        pygui.push_id("Second")
+        pygui.push_tab_stop(False)
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_tab_stop()
+        pygui.pop_id()
+
+        pygui.separator()
+
+        pygui.text("You can tab here again")
+        pygui.push_id("Third")
+        for i, buf in enumerate(rand.text_input):
+            pygui.input_text("##{}".format(i), buf)
+        pygui.pop_id()
 
     if pygui.tree_node("pygui.set_cursor_pos()"):
         pygui.text("Hello World")
@@ -2972,6 +3102,79 @@ def show_random_extras():
             if pygui.is_item_hovered():
                 pygui.set_mouse_cursor(i)
 
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.set_next_window_bg_alpha()"):
+        pygui.text("Check pass through central node in dockspace.")
+        pygui.drag_float("Next window bg alpha", rand.next_window_alpha, 0.02, 0, 1)
+        pygui.drag_float2("Next window content size", rand.next_window_content_size.as_floatptrs(), 2, 1, 1000)
+        pygui.checkbox("Lock Size?", rand.next_window_do_size)
+        pygui.drag_float2("Next window size", rand.next_window_size.as_floatptrs(), 2, 10, 1000)
+        pygui.checkbox("Add Size Constraint?", rand.next_window_do_size_constraint)
+        if rand.next_window_do_size_constraint:
+            pygui.drag_float2(
+                "Next window x constraint",
+                rand.next_window_size_constraint_min.as_floatptrs(),
+                2, 10, 1000)
+            pygui.drag_float2(
+                "Next window y constraint",
+                rand.next_window_size_constraint_max.as_floatptrs(),
+                2, 10, 1000)
+            # It's techincally possible to make the max smaller than the min,
+            # but this makes window horribly flicker. I'm going to clamp the max
+            # to be always bigger than the min.
+            rand.next_window_size_constraint_max.x = max(
+                rand.next_window_size_constraint_max.x,
+                rand.next_window_size_constraint_min.x,
+            )
+            rand.next_window_size_constraint_max.y = max(
+                rand.next_window_size_constraint_max.y,
+                rand.next_window_size_constraint_min.y,
+            )
+            
+        pygui.drag_float2("Next window scroll", rand.next_window_scroll.as_floatptrs(), 2, -1, 1000)
+        pygui.checkbox("Next window collapsed", rand.next_window_collapsed)
+        pygui.checkbox("Next window focused", rand.next_window_focus)
+        pygui.checkbox("Next window in Main Viewport?", rand.next_window_in_main_viewport)
+        pygui.checkbox("Spawn window", rand.next_window_spawned)
+        
+        if rand.next_window_spawned:
+            if rand.next_window_do_size_constraint:
+                pygui.set_next_window_size_constraints(
+                rand.next_window_size_constraint_min.vec(),
+                rand.next_window_size_constraint_max.vec())
+            if rand.next_window_in_main_viewport:
+                main_viewport = pygui.get_main_viewport()
+                pygui.set_next_window_viewport(main_viewport.id)
+
+            pygui.set_next_window_bg_alpha(rand.next_window_alpha.value)
+            pygui.set_next_window_collapsed(rand.next_window_collapsed.value)
+            pygui.set_next_window_content_size(rand.next_window_content_size.vec())
+            if rand.next_window_do_size:
+                pygui.set_next_window_size(rand.next_window_size.vec())
+            pygui.set_next_window_scroll(rand.next_window_scroll.vec())
+            if rand.next_window_focus and rand.next_window_spawned:
+                pygui.set_next_window_focus()
+        
+            if pygui.begin("The Next Window", rand.next_window_spawned, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
+                for i in range(100):
+                    pygui.text("Adding text that is really long: Line {}".format(i))
+            pygui.end()
+        pygui.tree_pop()
+    
+    if pygui.tree_node("pygui.set_next_window_dock_id()"):
+        pygui.checkbox("Next window auto-docked?", rand.next_window_docked)
+        pygui.checkbox("Dock window spawned?", rand.next_window_dock_window_spawned)
+        dock_id = pygui.get_id("My dockspace")
+        pygui.dock_space(dock_id, (400, 200))
+            
+        if rand.next_window_dock_window_spawned:
+            if rand.next_window_docked:
+                pygui.set_next_window_dock_id(dock_id)
+            
+            if pygui.begin("Auto docked window", rand.next_window_dock_window_spawned, pygui.WINDOW_FLAGS_NO_BACKGROUND):
+                pygui.text("Hello world")
+            pygui.end()
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.table_header()"):
@@ -3017,56 +3220,9 @@ def show_random_extras():
 
         pygui.tree_pop()
 
-    if pygui.tree_node("pygui.push_tab_stop()"):
-        pygui.text("You can tab here")
-        pygui.push_id("First")
-        for i, buf in enumerate(rand.text_input):
-            pygui.input_text("##{}".format(i), buf)
-        pygui.pop_id()
-
-        pygui.separator()
-
-        pygui.text("You can't tab here")
-        pygui.push_id("Second")
-        pygui.push_tab_stop(False)
-        for i, buf in enumerate(rand.text_input):
-            pygui.input_text("##{}".format(i), buf)
-        pygui.pop_tab_stop()
-        pygui.pop_id()
-
-        pygui.separator()
-
-        pygui.text("You can tab here again")
-        pygui.push_id("Third")
-        for i, buf in enumerate(rand.text_input):
-            pygui.input_text("##{}".format(i), buf)
-        pygui.pop_id()
-
-    if pygui.tree_node("pygui.set_next_window_bg_alpha()"):
-        pygui.text("Check pass through central node in dockspace.")
-        pygui.drag_float("Next window bg alpha", rand.next_window_alpha, 0.02, 0, 1)
-        pygui.drag_int2("Next window content size", rand.next_window_content_size.as_floatptrs(), 2, 1, 1000)
-        pygui.drag_int2("Next window size", rand.next_window_size.as_floatptrs(), 2, 10, 1000)
-        pygui.drag_float2("Next window scroll", rand.next_window_scroll.as_floatptrs(), 2, -1, 1000)
-        pygui.checkbox("Next window collapsed", rand.next_window_collapsed)
-        pygui.checkbox("Next window focused", rand.next_window_focus)
-        pygui.checkbox("Spawn window", rand.next_window_spawned)
-        
-        if rand.next_window_spawned:
-            pygui.set_next_window_bg_alpha(rand.next_window_alpha.value)
-            pygui.set_next_window_collapsed(rand.next_window_collapsed.value)
-            pygui.set_next_window_content_size(rand.next_window_content_size.vec())
-            pygui.set_next_window_size(rand.next_window_size.vec())
-            pygui.set_next_window_scroll(rand.next_window_scroll.vec())
-            if rand.next_window_focus and rand.next_window_spawned:
-                pygui.set_next_window_focus()
-        
-            if pygui.begin("The Next Window", rand.next_window_spawned, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
-                for i in range(100):
-                    pygui.text("Adding text that is really long: Line {}".format(i))
-            pygui.end()
-        pygui.tree_pop()
-    
+    io = pygui.get_io()
+    pygui.text("hash(pygui.get_io()): {}".format(hash(io)))
+    pygui.text("pygui.get_io(): {}".format(io))
 
     pygui.pop_style_var()
 
@@ -3093,6 +3249,7 @@ def show_menu_bar():
             pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
             pygui.end_menu()
         if pygui.begin_menu("Tools"):
+            pygui.menu_item_bool_ptr("Debug Log", None, demo.show_debug_log_window)
             pygui.menu_item_bool_ptr("Font Selector", None, demo.show_font_selector)
             pygui.menu_item_bool_ptr("Metrics/Debugger", None, demo.show_metrics_window)
             pygui.menu_item_bool_ptr("Stack Tool", None, demo.show_stack_tool_window)
@@ -3411,10 +3568,12 @@ class ExampleAppConsole:
 
 
 class demo:
+    vsync = pygui.FloatPtr(False)
     example_app_console = ExampleAppConsole()
     show_app_console = pygui.BoolPtr(False)
     show_custom_rendering = pygui.BoolPtr(False)
     show_about_window = pygui.BoolPtr(False)
+    show_debug_log_window = pygui.BoolPtr(False)
     show_font_selector = pygui.BoolPtr(False)
     show_metrics_window = pygui.BoolPtr(False)
     show_stack_tool_window = pygui.BoolPtr(False)

@@ -25,4 +25,5 @@ CMakeFiles
 CMakeCache.txt
 CMakeSettings.json
 imgui.ini
+imgui_log.txt
 pyvenv.cfg

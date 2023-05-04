@@ -1,30 +1,29 @@
 import pygui
 import glfw
 import OpenGL.GL as gl
-
 from python_demo_window import pygui_demo_window
 
-show_another_window = pygui.BoolPtr(True)
+
+vsync_enabled = pygui.BoolPtr(False)
+show_imgui_demo = pygui.BoolPtr(True)
+show_python_demo = pygui.BoolPtr(True)
+
 
 def render():
-    global show_another_window
-
-    pygui.show_demo_window()
-    
-    pygui.begin("Hello, World!")
-    pygui.text("Some text")
+    pygui.begin("Hello from pygui!")
+    pygui.text("FPS: {}".format(round(pygui.get_io().framerate)))
+    if pygui.checkbox("Enable vsync", vsync_enabled):
+        glfw.swap_interval(int(vsync_enabled.value))
+    pygui.checkbox("Show pygui Demo", show_python_demo)
+    pygui.same_line()
+    pygui.checkbox("Show ImGui Demo", show_imgui_demo)
     pygui.end()
 
+    if show_imgui_demo:
+        pygui.show_demo_window()
 
-    if show_another_window:
-        pygui.begin("Another window", show_another_window)
-        pygui.text("Some text")
-        pygui.end()
-
-    pygui.begin("Pygui Demo Window", None, pygui.WINDOW_FLAGS_MENU_BAR)
-    # pygui.begin("Pygui Demo Window", None, pygui.IMGUI_WINDOW_FLAGS_NO_MOVE)
-    pygui_demo_window()
-    pygui.end()
+    if show_python_demo:
+        pygui_demo_window()
 
 
 def main():
@@ -48,7 +47,7 @@ def main():
     # Vsync:
     # 1: On
     # 0: Off
-    glfw.swap_interval(0)
+    glfw.swap_interval(int(vsync_enabled.value))
 
     # Setup imgui
     pygui.create_context()
@@ -61,7 +60,6 @@ def main():
     io.config_flags |= pygui.CONFIG_FLAGS_VIEWPORTS_ENABLE
 
     pygui.impl_glfw_init_for_open_gl(window, True)
-    # pygui.impl_open_gl3_init("#version 130")
     pygui.impl_open_gl3_init()
 
     # Check opengl version
@@ -77,13 +75,13 @@ def main():
 
     pygui.IM_ASSERT(True, "You should never see this")
     try:
-        pygui.IM_ASSERT(False, "You should always see this")
+        pygui.IM_ASSERT(False, "Checking pygui's IM_ASSERT. Raises ")
     except pygui.ImGuiError as e:
+        print(e, end="")
         if isinstance(e, AssertionError):
-            print("Using AssertionError as IM_ASSERT")
+            print("AssertionError")
         else:
-            print("Using pygui.ImGuiError as IM_ASSERT")
-        print(e)
+            print("pygui.ImGuiError")
 
     try:
         while not glfw.window_should_close(window):

@@ -39,6 +39,8 @@ class StrPtr:
 class Vec2Ptr:
     x: float
     y: float
+    x_ptr: FloatPtr
+    y_ptr: FloatPtr
     def __init__(self, x: float, y: float): ...
     def vec(self) -> Sequence[float, float]: ...
     def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr: ...
@@ -51,6 +53,10 @@ class Vec4Ptr:
     y: float
     z: float
     w: float
+    x_ptr: FloatPtr
+    y_ptr: FloatPtr
+    z_ptr: FloatPtr
+    w_ptr: FloatPtr
     def __init__(self, x: float, y: float, z: float, w: float): ...
     def vec(self) -> Sequence[float, float, float, float]: ...
     def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr: ...
@@ -1337,11 +1343,11 @@ def get_font_size() -> float:
     """
     pass
 
-# def get_font_tex_uv_white_pixel() -> tuple:
-#     """
-#     Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api
-#     """
-#     pass
+def get_font_tex_uv_white_pixel() -> tuple:
+    """
+    Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api
+    """
+    pass
 
 def get_foreground_draw_list(viewport: ImGuiViewport=None) -> ImDrawList:
     """
@@ -1408,11 +1414,11 @@ def get_item_rect_size() -> tuple:
     pass
 
 # def get_key_index(key: int) -> int: ...
-# def get_key_pressed_amount(key: int, repeat_delay: float, rate: float) -> int:
-#     """
-#     Uses provided repeat rate/delay. return a count, most often 0 or 1 but might be >1 if repeatrate is small enough that deltatime > repeatrate
-#     """
-#     pass
+def get_key_pressed_amount(key: int, repeat_delay: float, rate: float) -> int:
+    """
+    Uses provided repeat rate/delay. return a count, most often 0 or 1 but might be >1 if repeatrate is small enough that deltatime > repeatrate
+    """
+    pass
 
 def get_main_viewport() -> ImGuiViewport:
     """
@@ -1900,13 +1906,7 @@ def label_text(label: str, fmt: str) -> None:
     pass
 
 def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_items: int=-1) -> bool: ...
-# def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int) -> bool:
-#     """
-#     Implied height_in_items = -1
-#     """
-#     pass
-
-# def list_box_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1) -> bool: ...
+def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any, int, StrPtr], "bool"], data: Any, items_count: int, height_in_items: int=-1) -> bool: ...
 # def load_ini_settings_from_disk(ini_filename: str) -> None:
 #     """
 #     Settings/.Ini Utilities
@@ -1923,11 +1923,11 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 #     """
 #     pass
 
-# def log_buttons() -> None:
-#     """
-#     Helper to display buttons for logging to tty/file/clipboard
-#     """
-#     pass
+def log_buttons() -> None:
+    """
+    Helper to display buttons for logging to tty/file/clipboard
+    """
+    pass
 
 def log_finish() -> None:
     """
@@ -2005,11 +2005,14 @@ def open_popup(str_id: str, popup_flags: int=0) -> None:
     """
     pass
 
-# def open_popup_id(id_: int, popup_flags: int=0) -> None:
-#     """
-#     Id overload to facilitate calling from nested stacks
-#     """
-#     pass
+def open_popup_id(id_: int, popup_flags: int=0) -> None:
+    """
+    Id overload to facilitate calling from nested stacks
+    pygui note: This function really only makes sense when you also have
+    BeginPopupEx from imgui_internal.h. Otherwise you might as well use the
+    normal open_popup().
+    """
+    pass
 
 def open_popup_on_item_click(str_id: str=None, popup_flags: int=1) -> None:
     """
@@ -2023,13 +2026,7 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
     """
     pass
 
-# def plot_histogram_callback(label: str, values_getter: Callable, data: Any, values_count: int) -> None:
-#     """
-#     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0)
-#     """
-#     pass
-
-# def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
+def plot_histogram_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
 def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None:
     """
     Widgets: Data Plotting
@@ -2040,13 +2037,7 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
     """
     pass
 
-# def plot_lines_callback(label: str, values_getter: Callable, data: Any, values_count: int) -> None:
-#     """
-#     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0)
-#     """
-#     pass
-
-# def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
+def plot_lines_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
 def pop_button_repeat() -> None: ...
 # def pop_clip_rect() -> None: ...
 # def pop_font() -> None: ...
@@ -2107,7 +2098,11 @@ def push_id(obj: object) -> None:
     whereas "str_id" denote a string that is only used as an ID and not normally displayed.
     Push string into the id stack (will hash string).
 
-    pygui note: This will call python's hash() function on the parameter.
+    pygui note: This will call python's hash() function on the parameter. If you pass
+    a pygui object then the corresponding __hash__() magic method will be called. This
+    method converts the underlying _ptr to an unsigned int and then hashes that. This
+    allows for the object's hash to remain consistent as long as the underlying pointer
+    is constant.
     """
     pass
 
@@ -2357,11 +2352,11 @@ def set_next_window_content_size(size: tuple) -> None:
     """
     pass
 
-# def set_next_window_dock_id(dock_id: int, cond: int=0) -> None:
-#     """
-#     Set next window dock id
-#     """
-#     pass
+def set_next_window_dock_id(dock_id: int, cond: int=0) -> None:
+    """
+    Set next window dock id
+    """
+    pass
 
 def set_next_window_focus() -> None:
     """
@@ -2389,17 +2384,17 @@ def set_next_window_size(size: tuple, cond: int=0) -> None:
     """
     pass
 
-# def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
-#     """
-#     Set next window size limits. use -1,-1 on either x/y axis to preserve the current size. sizes will be rounded down. use callback to apply non-trivial programmatic constraints.
-#     """
-#     pass
+def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
+    """
+    Set next window size limits. use -1,-1 on either x/y axis to preserve the current size. sizes will be rounded down. use callback to apply non-trivial programmatic constraints.
+    """
+    pass
 
-# def set_next_window_viewport(viewport_id: int) -> None:
-#     """
-#     Set next window viewport
-#     """
-#     pass
+def set_next_window_viewport(viewport_id: int) -> None:
+    """
+    Set next window viewport
+    """
+    pass
 
 def set_scroll_from_pos_x(local_x: float, center_x_ratio: float=0.5) -> None:
     """
@@ -2515,11 +2510,11 @@ def show_about_window(p_open: BoolPtr=None) -> None:
     """
     pass
 
-# def show_debug_log_window(p_open: BoolPtr=None) -> None:
-#     """
-#     Create debug log window. display a simplified log of important dear imgui events.
-#     """
-#     pass
+def show_debug_log_window(p_open: BoolPtr=None) -> None:
+    """
+    Create debug log window. display a simplified log of important dear imgui events.
+    """
+    pass
 
 def show_demo_window(p_open: BoolPtr=None) -> None:
     """
@@ -2817,17 +2812,12 @@ def tree_pop() -> None:
     """
     pass
 
-def tree_push(str_id: str) -> None:
+def tree_push(obj: object) -> None:
     """
     ~ indent()+pushid(). already called by treenode() when returning true, but you can call treepush/treepop yourself if desired.
+    pygui note: Uses python's hash() function on the object passed in.
     """
     pass
-
-# def tree_push_ptr(ptr_id: Any) -> None:
-#     """
-#     '
-#     """
-#     pass
 
 def unindent(indent_w: float=0.0) -> None:
     """
@@ -2843,13 +2833,7 @@ def update_platform_windows() -> None:
 
 def vslider_float(label: str, size: tuple, v: FloatPtr, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
 def vslider_int(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-# def vslider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any) -> bool:
-#     """
-#     Implied format = null, flags = 0
-#     """
-#     pass
-
-# def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0) -> bool: ...
+def vslider_scalar(label: str, size: tuple, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0) -> bool: ...
 
 class GLFWmonitor: ...
 

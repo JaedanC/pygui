@@ -135,36 +135,36 @@ cdef class StrPtr:
 
 
 cdef class Vec2Ptr:
-    cdef public FloatPtr _x
-    cdef public FloatPtr _y
+    cdef public FloatPtr x_ptr
+    cdef public FloatPtr y_ptr
 
     def __init__(self, x: float, y: float):
-        self._x = FloatPtr(x)
-        self._y = FloatPtr(y)
+        self.x_ptr = FloatPtr(x)
+        self.y_ptr = FloatPtr(y)
 
     @property
     def x(self):
-        return self._x.value
+        return self.x_ptr.value
     @x.setter
     def x(self, x):
-        self._x.value = x
+        self.x_ptr.value = x
     @property
     def y(self):
-        return self._y.value
+        return self.y_ptr.value
     @y.setter
     def y(self, y):
-        self._y.value = y
+        self.y_ptr.value = y
 
     def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
         IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
-        self._x = float_ptrs[0]
-        self._y = float_ptrs[1]
+        self.x_ptr = float_ptrs[0]
+        self.y_ptr = float_ptrs[1]
         return self
 
     def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
         return (
-            self._x,
-            self._y,
+            self.x_ptr,
+            self.y_ptr,
         )
 
     def vec(self) -> Sequence[float, float]:
@@ -182,65 +182,65 @@ cdef class Vec2Ptr:
         return Vec2Ptr(*self.vec())
 
     cdef void from_array(self, float* array):
-        self._x.value = array[0]
-        self._y.value = array[1]
+        self.x_ptr.value = array[0]
+        self.y_ptr.value = array[1]
 
     cdef void to_array(self, float* array):
-        array[0] = self.x
-        array[1] = self.y
+        array[0] = self.x_ptr.value
+        array[1] = self.y_ptr.value
 
 
 cdef class Vec4Ptr:
-    cdef public FloatPtr _x
-    cdef public FloatPtr _y
-    cdef public FloatPtr _z
-    cdef public FloatPtr _w
+    cdef public FloatPtr x_ptr
+    cdef public FloatPtr y_ptr
+    cdef public FloatPtr z_ptr
+    cdef public FloatPtr w_ptr
 
     def __init__(self, x: float, y: float, z: float, w: float):
-        self._x = FloatPtr(x)
-        self._y = FloatPtr(y)
-        self._z = FloatPtr(z)
-        self._w = FloatPtr(w)
+        self.x_ptr = FloatPtr(x)
+        self.y_ptr = FloatPtr(y)
+        self.z_ptr = FloatPtr(z)
+        self.w_ptr = FloatPtr(w)
 
     @property
     def x(self):
-        return self._x.value
+        return self.x_ptr.value
     @x.setter
     def x(self, x):
-        self._x.value = x
+        self.x_ptr.value = x
     @property
     def y(self):
-        return self._y.value
+        return self.y_ptr.value
     @y.setter
     def y(self, y):
-        self._y.value = y
+        self.y_ptr.value = y
     @property
     def z(self):
-        return self._z.value
+        return self.z_ptr.value
     @z.setter
     def z(self, z):
-        self._z.value = z
+        self.z_ptr.value = z
     @property
     def w(self):
-        return self._w.value
+        return self.w_ptr.value
     @w.setter
     def w(self, w):
-        self._w.value = w
+        self.w_ptr.value = w
 
     def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
         IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
-        self._x = float_ptrs[0]
-        self._y = float_ptrs[1]
-        self._z = float_ptrs[2]
-        self._w = float_ptrs[3]
+        self.x_ptr = float_ptrs[0]
+        self.y_ptr = float_ptrs[1]
+        self.z_ptr = float_ptrs[2]
+        self.w_ptr = float_ptrs[3]
         return self
 
     def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
         return (
-            self._x,
-            self._y,
-            self._z,
-            self._w,
+            self.x_ptr,
+            self.y_ptr,
+            self.z_ptr,
+            self.w_ptr,
         )
 
     def vec(self) -> Sequence[float, float, float, float]:
@@ -270,16 +270,16 @@ cdef class Vec4Ptr:
         return Vec4Ptr(*self.vec())
 
     cdef void from_array(self, float* array):
-        self._x.value = array[0]
-        self._y.value = array[1]
-        self._z.value = array[2]
-        self._w.value = array[3]
+        self.x_ptr.value = array[0]
+        self.y_ptr.value = array[1]
+        self.z_ptr.value = array[2]
+        self.w_ptr.value = array[3]
 
     cdef void to_array(self, float* array):
-        array[0] = self.x
-        array[1] = self.y
-        array[2] = self.z
-        array[3] = self.w
+        array[0] = self.x_ptr.value
+        array[1] = self.y_ptr.value
+        array[2] = self.z_ptr.value
+        array[3] = self.w_ptr.value
 
 
 IM_COL32_R_SHIFT = 0
@@ -8098,6 +8098,12 @@ cdef class ImColor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -8172,6 +8178,12 @@ cdef class ImDrawChannel:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -8231,6 +8243,12 @@ cdef class ImDrawCmd:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -8397,6 +8415,12 @@ cdef class ImDrawCmdHeader:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -8469,6 +8493,12 @@ cdef class ImDrawData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -8707,6 +8737,12 @@ cdef class ImDrawList:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -10149,6 +10185,12 @@ cdef class ImDrawListSharedData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
 # [End Class]
@@ -10175,6 +10217,12 @@ cdef class ImDrawListSplitter:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -10314,6 +10362,12 @@ cdef class ImDrawVert:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -10385,6 +10439,12 @@ cdef class ImFont:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11051,6 +11111,12 @@ cdef class ImFontAtlas:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11942,6 +12008,12 @@ cdef class ImFontAtlasCustomRect:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -12123,6 +12195,12 @@ cdef class ImFontBuilderIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
 # [End Class]
@@ -12145,6 +12223,12 @@ cdef class ImFontConfig:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -12511,6 +12595,12 @@ cdef class ImFontGlyph:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -12753,6 +12843,12 @@ cdef class ImFontGlyphRangesBuilder:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -12901,6 +12997,12 @@ cdef class ImGuiContext:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
 # [End Class]
@@ -12923,6 +13025,12 @@ cdef class ImGuiIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -14979,6 +15087,12 @@ cdef class ImGuiInputTextCallbackData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -15305,6 +15419,12 @@ cdef class ImGuiKeyData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -15421,6 +15541,12 @@ cdef class ImGuiListClipper:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -15631,6 +15757,12 @@ cdef class ImGuiPayload:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -15850,6 +15982,12 @@ cdef class ImGuiPlatformIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16331,6 +16469,12 @@ cdef class ImGuiPlatformImeData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16411,6 +16555,12 @@ cdef class ImGuiPlatformMonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16545,6 +16695,12 @@ cdef class ImGuiSizeCallbackData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16649,6 +16805,12 @@ cdef class ImGuiStorage:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16906,6 +17068,12 @@ cdef class ImGuiStorage_ImGuiStoragePair:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16943,6 +17111,12 @@ cdef class ImGuiStyle:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17769,6 +17943,12 @@ cdef class ImGuiTableColumnSortSpecs:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17869,6 +18049,12 @@ cdef class ImGuiTableSortSpecs:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17949,6 +18135,12 @@ cdef class ImGuiTextBuffer:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18114,6 +18306,12 @@ cdef class ImGuiTextFilter:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18251,6 +18449,12 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18337,6 +18541,12 @@ cdef class ImGuiViewport:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18706,6 +18916,12 @@ cdef class ImGuiWindowClass:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18872,6 +19088,12 @@ cdef class ImVec2:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18927,6 +19149,12 @@ cdef class ImVec4:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19009,6 +19237,12 @@ cdef class ImVector_ImDrawChannel:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19076,6 +19310,12 @@ cdef class ImVector_ImDrawCmd:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19143,6 +19383,12 @@ cdef class ImVector_ImDrawIdx:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19210,6 +19456,12 @@ cdef class ImVector_ImDrawVert:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19277,6 +19529,12 @@ cdef class ImVector_ImFontAtlasCustomRect:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19344,6 +19602,12 @@ cdef class ImVector_ImFontConfig:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19411,6 +19675,12 @@ cdef class ImVector_ImFontGlyph:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19478,6 +19748,12 @@ cdef class ImVector_ImFontPtr:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19545,6 +19821,12 @@ cdef class ImVector_ImGuiPlatformMonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19612,6 +19894,12 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19679,6 +19967,12 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19746,6 +20040,12 @@ cdef class ImVector_ImGuiViewportPtr:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19813,6 +20113,12 @@ cdef class ImVector_ImTextureID:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19880,6 +20186,12 @@ cdef class ImVector_ImU32:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19947,6 +20259,12 @@ cdef class ImVector_ImVec2:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20014,6 +20332,12 @@ cdef class ImVector_ImVec4:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20081,6 +20405,12 @@ cdef class ImVector_ImWchar:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20148,6 +20478,12 @@ cdef class ImVector_char:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20215,6 +20551,12 @@ cdef class ImVector_float:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20479,6 +20821,12 @@ cdef class GLFWmonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
 # [End Class]
@@ -20501,6 +20849,12 @@ cdef class GLFWwindow:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
 # [End Class]

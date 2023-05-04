@@ -135,36 +135,36 @@ cdef class StrPtr:
 
 
 cdef class Vec2Ptr:
-    cdef public FloatPtr _x
-    cdef public FloatPtr _y
+    cdef public FloatPtr x_ptr
+    cdef public FloatPtr y_ptr
 
     def __init__(self, x: float, y: float):
-        self._x = FloatPtr(x)
-        self._y = FloatPtr(y)
+        self.x_ptr = FloatPtr(x)
+        self.y_ptr = FloatPtr(y)
 
     @property
     def x(self):
-        return self._x.value
+        return self.x_ptr.value
     @x.setter
     def x(self, x):
-        self._x.value = x
+        self.x_ptr.value = x
     @property
     def y(self):
-        return self._y.value
+        return self.y_ptr.value
     @y.setter
     def y(self, y):
-        self._y.value = y
+        self.y_ptr.value = y
 
     def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
         IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
-        self._x = float_ptrs[0]
-        self._y = float_ptrs[1]
+        self.x_ptr = float_ptrs[0]
+        self.y_ptr = float_ptrs[1]
         return self
 
     def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
         return (
-            self._x,
-            self._y,
+            self.x_ptr,
+            self.y_ptr,
         )
 
     def vec(self) -> Sequence[float, float]:
@@ -182,65 +182,65 @@ cdef class Vec2Ptr:
         return Vec2Ptr(*self.vec())
 
     cdef void from_array(self, float* array):
-        self._x.value = array[0]
-        self._y.value = array[1]
+        self.x_ptr.value = array[0]
+        self.y_ptr.value = array[1]
 
     cdef void to_array(self, float* array):
-        array[0] = self.x
-        array[1] = self.y
+        array[0] = self.x_ptr.value
+        array[1] = self.y_ptr.value
 
 
 cdef class Vec4Ptr:
-    cdef public FloatPtr _x
-    cdef public FloatPtr _y
-    cdef public FloatPtr _z
-    cdef public FloatPtr _w
+    cdef public FloatPtr x_ptr
+    cdef public FloatPtr y_ptr
+    cdef public FloatPtr z_ptr
+    cdef public FloatPtr w_ptr
 
     def __init__(self, x: float, y: float, z: float, w: float):
-        self._x = FloatPtr(x)
-        self._y = FloatPtr(y)
-        self._z = FloatPtr(z)
-        self._w = FloatPtr(w)
+        self.x_ptr = FloatPtr(x)
+        self.y_ptr = FloatPtr(y)
+        self.z_ptr = FloatPtr(z)
+        self.w_ptr = FloatPtr(w)
 
     @property
     def x(self):
-        return self._x.value
+        return self.x_ptr.value
     @x.setter
     def x(self, x):
-        self._x.value = x
+        self.x_ptr.value = x
     @property
     def y(self):
-        return self._y.value
+        return self.y_ptr.value
     @y.setter
     def y(self, y):
-        self._y.value = y
+        self.y_ptr.value = y
     @property
     def z(self):
-        return self._z.value
+        return self.z_ptr.value
     @z.setter
     def z(self, z):
-        self._z.value = z
+        self.z_ptr.value = z
     @property
     def w(self):
-        return self._w.value
+        return self.w_ptr.value
     @w.setter
     def w(self, w):
-        self._w.value = w
+        self.w_ptr.value = w
 
     def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
         IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
-        self._x = float_ptrs[0]
-        self._y = float_ptrs[1]
-        self._z = float_ptrs[2]
-        self._w = float_ptrs[3]
+        self.x_ptr = float_ptrs[0]
+        self.y_ptr = float_ptrs[1]
+        self.z_ptr = float_ptrs[2]
+        self.w_ptr = float_ptrs[3]
         return self
 
     def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
         return (
-            self._x,
-            self._y,
-            self._z,
-            self._w,
+            self.x_ptr,
+            self.y_ptr,
+            self.z_ptr,
+            self.w_ptr,
         )
 
     def vec(self) -> Sequence[float, float, float, float]:
@@ -270,16 +270,16 @@ cdef class Vec4Ptr:
         return Vec4Ptr(*self.vec())
 
     cdef void from_array(self, float* array):
-        self._x.value = array[0]
-        self._y.value = array[1]
-        self._z.value = array[2]
-        self._w.value = array[3]
+        self.x_ptr.value = array[0]
+        self.y_ptr.value = array[1]
+        self.z_ptr.value = array[2]
+        self.w_ptr.value = array[3]
 
     cdef void to_array(self, float* array):
-        array[0] = self.x
-        array[1] = self.y
-        array[2] = self.z
-        array[3] = self.w
+        array[0] = self.x_ptr.value
+        array[1] = self.y_ptr.value
+        array[2] = self.z_ptr.value
+        array[3] = self.w_ptr.value
 
 
 IM_COL32_R_SHIFT = 0
@@ -2017,7 +2017,7 @@ combo_callback_data = {}
 def combo_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any, int, StrPtr], "bool"], data: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bytes label_bytes = _bytes(label)
     cdef ccimgui.ImGuiID lookup_id = ccimgui.ImGui_GetID(label_bytes)
-    combo_callback_data[lookup_id] = (data, items_getter)
+    combo_callback_data[lookup_id] = (items_getter, data)
     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
         _bytes(label),
         &current_item.value,
@@ -2026,14 +2026,19 @@ def combo_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any
         items_count,
         popup_max_height_in_items
     )
+    del combo_callback_data[lookup_id]
     return res
 
-cdef bool _combo_callback_function(void* data, int index, const char** out_str):
+cdef bool _combo_callback_function(void* data, int index, const char** out_text):
     cdef ccimgui.ImGuiID lookup_id = <uintptr_t>data
-    py_data, items_getter = combo_callback_data[lookup_id]
+    if lookup_id not in combo_callback_data:
+        raise RuntimeError("Did not find lookup_id: {}".format(lookup_id))
+    items_getter, user_data = combo_callback_data[lookup_id]
+    
     cdef StrPtr out_str_ptr = StrPtr("")
-    cdef bool res = items_getter(py_data, index, out_str_ptr)
-    out_str[0] = out_str_ptr.buffer
+    cdef bool res = items_getter(user_data, index, out_str_ptr)
+    out_text[0] = out_str_ptr.buffer
+
     return res
 # [End Function]
 
@@ -3571,7 +3576,7 @@ def get_font_size():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(tuple)
 def get_font_tex_uv_white_pixel():
@@ -3791,7 +3796,7 @@ def get_key_name(key: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(int)
 def get_key_pressed_amount(key: int, repeat_delay: float, rate: float):
@@ -5902,28 +5907,45 @@ def list_box(label: str, current_item: IntPtr, items: Sequence[str], height_in_i
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int):
-    """
-    Implied height_in_items = -1
-    """
-    cdef bool res = ccimgui.ImGui_ListBoxCallback(
+list_box_callback_data = {}
+def list_box_callback(label: str, current_item: IntPtr, items_getter: Callable[[Any, int, StrPtr], "bool"], data: Any, items_count: int, height_in_items: int=-1):
+    cdef bytes label_bytes = _bytes(label)
+    cdef ccimgui.ImGuiID lookup_id = ccimgui.ImGui_GetID(label_bytes)
+    list_box_callback_data[lookup_id] = (items_getter, data)
+    cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
         _bytes(label),
         &current_item.value,
-        items_getter,
-        data,
-        items_count
+        _list_box_callback_function,
+        <void*><uintptr_t>lookup_id,
+        items_count,
+        height_in_items
     )
+    # Interesting that this still works. Clearly the callback is exhausted
+    # after calling ListBoxCallback.
+    del list_box_callback_data[lookup_id]
+    return res
+
+cdef bool _list_box_callback_function(void* data, int index, const char** out_text):
+    cdef ccimgui.ImGuiID lookup_id = <uintptr_t>data
+    if lookup_id not in list_box_callback_data:
+        raise RuntimeError("Did not find lookup_id: {}".format(lookup_id))
+    items_getter, user_data = list_box_callback_data[lookup_id]
+
+    cdef StrPtr out_str_ptr = StrPtr("")
+    cdef bool res = items_getter(user_data, index, out_str_ptr)
+    out_text[0] = out_str_ptr.buffer
+    
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def list_box_callback_ex(label: str, current_item: IntPtr, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
@@ -5972,7 +5994,7 @@ def load_ini_settings_from_memory(ini_data: str, ini_size: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def log_buttons():
@@ -6209,13 +6231,16 @@ def open_popup(str_id: str, popup_flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def open_popup_id(id_: int, popup_flags: int=0):
     """
     Id overload to facilitate calling from nested stacks
+    pygui note: This function really only makes sense when you also have
+    BeginPopupEx from imgui_internal.h. Otherwise you might as well use the
+    normal open_popup().
     """
     ccimgui.ImGui_OpenPopupID(
         id_,
@@ -6273,26 +6298,44 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def plot_histogram_callback(label: str, values_getter: Callable, data: Any, values_count: int):
-    """
-    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0)
-    """
-    ccimgui.ImGui_PlotHistogramCallback(
+plot_histogram_callback_data = {}
+def plot_histogram_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
+    cdef bytes label_bytes = _bytes(label)
+    cdef ccimgui.ImGuiID lookup_id = ccimgui.ImGui_GetID(label_bytes)
+    plot_histogram_callback_data[lookup_id] = (values_getter, data)
+    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
+    ccimgui.ImGui_PlotHistogramCallbackEx(
         _bytes(label),
-        values_getter,
-        data,
-        values_count
+        _plot_histogram_callback_function,
+        <void*>lookup_id,
+        values_count,
+        values_offset,
+        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size)
     )
+    del plot_histogram_callback_data[lookup_id]
+
+cdef float _plot_histogram_callback_function(void* data, int idx):
+    cdef ccimgui.ImGuiID lookup_id = <ccimgui.ImGuiID>data
+    if lookup_id not in plot_histogram_callback_data:
+        raise RuntimeError("Did not find lookup_id: {}".format(lookup_id))
+    values_getter, user_data = plot_histogram_callback_data[lookup_id]
+
+    cdef float res = values_getter(user_data, idx)
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -6368,26 +6411,44 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def plot_lines_callback(label: str, values_getter: Callable, data: Any, values_count: int):
-    """
-    Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0)
-    """
-    ccimgui.ImGui_PlotLinesCallback(
+plot_lines_callback_data = {}
+def plot_lines_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
+    cdef bytes label_bytes = _bytes(label)
+    cdef ccimgui.ImGuiID lookup_id = ccimgui.ImGui_GetID(label_bytes)
+    plot_lines_callback_data[lookup_id] = (values_getter, data)
+    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+
+    ccimgui.ImGui_PlotLinesCallbackEx(
         _bytes(label),
-        values_getter,
-        data,
-        values_count
+        _plot_lines_callback_function,
+        <void*>lookup_id,
+        values_count,
+        values_offset,
+        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+        scale_min,
+        scale_max,
+        _cast_tuple_ImVec2(graph_size)
     )
+    del plot_lines_callback_data[lookup_id]
+
+cdef float _plot_lines_callback_function(void* data, int idx):
+    cdef ccimgui.ImGuiID lookup_id = <ccimgui.ImGuiID>data
+    if lookup_id not in plot_lines_callback_data:
+        raise RuntimeError("Did not find lookup_id: {}".format(lookup_id))
+    values_getter, user_data = plot_lines_callback_data[lookup_id]
+
+    cdef float res = values_getter(user_data, idx)
+    return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)):
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
@@ -6623,7 +6684,11 @@ def push_id(obj: object):
     whereas "str_id" denote a string that is only used as an ID and not normally displayed.
     Push string into the id stack (will hash string).
 
-    pygui note: This will call python's hash() function on the parameter.
+    pygui note: This will call python's hash() function on the parameter. If you pass
+    a pygui object then the corresponding __hash__() magic method will be called. This
+    method converts the underlying _ptr to an unsigned int and then hashes that. This
+    allows for the object's hash to remain consistent as long as the underlying pointer
+    is constant.
     """
     ccimgui.ImGui_PushIDInt(
         hash(obj)
@@ -7403,7 +7468,7 @@ def set_next_window_content_size(size: tuple):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_dock_id(dock_id: int, cond: int=0):
@@ -7492,8 +7557,8 @@ def set_next_window_size(size: tuple, cond: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None):
@@ -7503,14 +7568,14 @@ def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_ca
     ccimgui.ImGui_SetNextWindowSizeConstraints(
         _cast_tuple_ImVec2(size_min),
         _cast_tuple_ImVec2(size_max),
-        custom_callback,
-        custom_callback_data
+        NULL,
+        NULL
     )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def set_next_window_viewport(viewport_id: int):
@@ -7810,7 +7875,7 @@ def show_about_window(p_open: BoolPtr=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
 def show_debug_log_window(p_open: BoolPtr=None):
@@ -9177,23 +9242,24 @@ def tree_pop():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def tree_push(str_id: str):
+def tree_push(obj: object):
     """
     ~ indent()+pushid(). already called by treenode() when returning true, but you can call treepush/treepop yourself if desired.
+    pygui note: Uses python's hash() function on the object passed in.
     """
-    ccimgui.ImGui_TreePush(
-        _bytes(str_id)
+    ccimgui.ImGui_TreePushPtr(
+        <void*><uintptr_t>hash(obj)
     )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(None)
 def tree_push_ptr(ptr_id: Any):
     """
@@ -9317,29 +9383,77 @@ def vslider_int_ex(label: str, size: tuple, v: IntPtr, v_min: int, v_max: int, f
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def vslider_scalar(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any):
-    """
-    Implied format = null, flags = 0
-    """
-    cdef bool res = ccimgui.ImGui_VSliderScalar(
-        _bytes(label),
-        _cast_tuple_ImVec2(size),
-        data_type,
-        p_data,
-        p_min,
-        p_max
-    )
+def vslider_scalar(label: str, size: tuple, data_type: int, p_data: "IntPtr | LongPtr | FloatPtr | DoublePtr", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0):
+    bytes_format_ = _bytes(format_) if format_ is not None else None
+    
+    cdef bool res
+    cdef long long min_int
+    cdef long long max_int
+    cdef long long value_int
+    cdef float min_float
+    cdef float max_float
+    cdef float value_float
+    cdef double min_double
+    cdef double max_double
+    cdef double value_double
+    if isinstance(p_data, IntPtr) or isinstance(p_data, LongPtr):
+        min_int = _min if _min is not None else 0
+        max_int = _max if _max is not None else 0
+        value_int = p_data.value
+
+        res = ccimgui.ImGui_VSliderScalarEx(
+            _bytes(label),
+            _cast_tuple_ImVec2(size),
+            data_type,
+            &value_int,
+            &min_int if _min is not None else NULL,
+            &max_int if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_int
+    elif isinstance(p_data, FloatPtr):
+        min_float = <float>(_min if _min is not None else 0)
+        max_float = <float>(_max if _max is not None else 0)
+        value_float = p_data.value
+        res = ccimgui.ImGui_VSliderScalarEx(
+            _bytes(label),
+            _cast_tuple_ImVec2(size),
+            data_type,
+            &value_float,
+            &min_float if _min is not None else NULL,
+            &max_float if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_float
+    else:
+        min_double = <double>(_min if _min is not None else 0)
+        max_double = <double>(_max if _max is not None else 0)
+        value_double = p_data.value
+        res = ccimgui.ImGui_VSliderScalarEx(
+            _bytes(label),
+            _cast_tuple_ImVec2(size),
+            data_type,
+            &value_double,
+            &min_double if _min is not None else NULL,
+            &max_double if _max is not None else NULL,
+            ((<char*>bytes_format_ if format_ is not None else NULL)),
+            flags
+        )
+        p_data.value = value_double
+
     return res
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?returns(bool)
 def vslider_scalar_ex(label: str, size: tuple, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
@@ -9375,6 +9489,12 @@ cdef class GLFWmonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 # [End Class]
 
@@ -9396,6 +9516,12 @@ cdef class GLFWwindow:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 # [End Class]
 
@@ -9423,6 +9549,12 @@ cdef class ImColor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -9496,6 +9628,12 @@ cdef class ImDrawChannel:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -9554,6 +9692,12 @@ cdef class ImDrawCmd:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -9719,6 +9863,12 @@ cdef class ImDrawCmdHeader:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -9790,6 +9940,12 @@ cdef class ImDrawData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -10029,6 +10185,12 @@ cdef class ImDrawList:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11471,6 +11633,12 @@ cdef class ImDrawListSharedData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 # [End Class]
 
@@ -11496,6 +11664,12 @@ cdef class ImDrawListSplitter:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11657,6 +11831,12 @@ cdef class ImDrawVert:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11727,6 +11907,12 @@ cdef class ImFont:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -12395,6 +12581,12 @@ cdef class ImFontAtlas:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -13296,6 +13488,12 @@ cdef class ImFontAtlasCustomRect:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -13476,6 +13674,12 @@ cdef class ImFontBuilderIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 # [End Class]
 
@@ -13497,6 +13701,12 @@ cdef class ImFontConfig:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -13869,6 +14079,12 @@ cdef class ImFontGlyph:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -14110,6 +14326,12 @@ cdef class ImFontGlyphRangesBuilder:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -14257,6 +14479,12 @@ cdef class ImGuiContext:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 # [End Class]
 
@@ -14284,6 +14512,12 @@ cdef class ImGuiIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16356,6 +16590,12 @@ cdef class ImGuiInputTextCallbackData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16679,6 +16919,12 @@ cdef class ImGuiKeyData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -16794,6 +17040,12 @@ cdef class ImGuiListClipper:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17038,6 +17290,12 @@ cdef class ImGuiPayload:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17256,6 +17514,12 @@ cdef class ImGuiPlatformIO:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17736,6 +18000,12 @@ cdef class ImGuiPlatformImeData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17815,6 +18085,12 @@ cdef class ImGuiPlatformMonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -17948,6 +18224,12 @@ cdef class ImGuiSizeCallbackData:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18051,6 +18333,12 @@ cdef class ImGuiStorage:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18307,6 +18595,12 @@ cdef class ImGuiStorage_ImGuiStoragePair:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -18343,6 +18637,12 @@ cdef class ImGuiStyle:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19168,6 +19468,12 @@ cdef class ImGuiTableColumnSortSpecs:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19267,6 +19573,12 @@ cdef class ImGuiTableSortSpecs:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19348,6 +19660,12 @@ cdef class ImGuiTextBuffer:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19512,6 +19830,12 @@ cdef class ImGuiTextFilter:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19648,6 +19972,12 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -19733,6 +20063,12 @@ cdef class ImGuiViewport:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20101,6 +20437,12 @@ cdef class ImGuiWindowClass:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20266,6 +20608,12 @@ cdef class ImVec2:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20320,6 +20668,12 @@ cdef class ImVec4:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20401,6 +20755,12 @@ cdef class ImVector_ImDrawChannel:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20467,6 +20827,12 @@ cdef class ImVector_ImDrawCmd:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20533,6 +20899,12 @@ cdef class ImVector_ImDrawIdx:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20599,6 +20971,12 @@ cdef class ImVector_ImDrawVert:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20665,6 +21043,12 @@ cdef class ImVector_ImFontAtlasCustomRect:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20731,6 +21115,12 @@ cdef class ImVector_ImFontConfig:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20797,6 +21187,12 @@ cdef class ImVector_ImFontGlyph:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20863,6 +21259,12 @@ cdef class ImVector_ImFontPtr:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20929,6 +21331,12 @@ cdef class ImVector_ImGuiPlatformMonitor:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -20995,6 +21403,12 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21061,6 +21475,12 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21127,6 +21547,12 @@ cdef class ImVector_ImGuiViewportPtr:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21193,6 +21619,12 @@ cdef class ImVector_ImTextureID:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21259,6 +21691,12 @@ cdef class ImVector_ImU32:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21325,6 +21763,12 @@ cdef class ImVector_ImVec2:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21391,6 +21835,12 @@ cdef class ImVector_ImVec4:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21457,6 +21907,12 @@ cdef class ImVector_ImWchar:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21523,6 +21979,12 @@ cdef class ImVector_char:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -21589,6 +22051,12 @@ cdef class ImVector_float:
     
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
