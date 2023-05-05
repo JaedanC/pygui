@@ -4254,7 +4254,7 @@ def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     ccimgui.ImGui_ImageEx(
-        <void*><uintptr_t>user_texture_id,
+        <ccimgui.ImTextureID><uintptr_t>user_texture_id,
         _cast_tuple_ImVec2(size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -4274,7 +4274,7 @@ def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 
     """
     cdef bool res = ccimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
-        <void*><uintptr_t>user_texture_id,
+        <ccimgui.ImTextureID>user_texture_id,
         _cast_tuple_ImVec2(size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -10572,17 +10572,25 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
+    def add_convex_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int):
+        cdef ccimgui.ImVec2* c_points = <ccimgui.ImVec2*>ccimgui.ImGui_MemAlloc(len(points) * sizeof(ccimgui.ImVec2))
+
+        for i, point in enumerate(points):
+            c_points[i].x = point[0]
+            c_points[i].y = point[1]
+
         ccimgui.ImDrawList_AddConvexPolyFilled(
             self._ptr,
-            points._ptr,
-            num_points,
+            c_points,
+            len(points),
             col
         )
+
+        ccimgui.ImGui_MemFree(c_points)
     # [End Method]
 
     # [Method]
@@ -10600,11 +10608,11 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_image(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple):
+    def add_image(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
         """
         Image primitives
         - Read FAQ to understand what ImTextureID is.
@@ -10612,18 +10620,21 @@ cdef class ImDrawList:
         - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
         Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
         """
-        ccimgui.ImDrawList_AddImage(
+        ccimgui.ImDrawList_AddImageEx(
             self._ptr,
-            user_texture_id,
+            <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p_min),
-            _cast_tuple_ImVec2(p_max)
+            _cast_tuple_ImVec2(p_max),
+            _cast_tuple_ImVec2(uv_min),
+            _cast_tuple_ImVec2(uv_max),
+            col
         )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
         ccimgui.ImDrawList_AddImageEx(
@@ -10638,28 +10649,30 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_image_quad(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple):
-        """
-        Implied uv1 = imvec2(0, 0), uv2 = imvec2(1, 0), uv3 = imvec2(1, 1), uv4 = imvec2(0, 1), col = im_col32_white
-        """
-        ccimgui.ImDrawList_AddImageQuad(
+    def add_image_quad(self: ImDrawList, user_texture_id: int, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
+        ccimgui.ImDrawList_AddImageQuadEx(
             self._ptr,
-            user_texture_id,
+            <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
-            _cast_tuple_ImVec2(p4)
+            _cast_tuple_ImVec2(p4),
+            _cast_tuple_ImVec2(uv1),
+            _cast_tuple_ImVec2(uv2),
+            _cast_tuple_ImVec2(uv3),
+            _cast_tuple_ImVec2(uv4),
+            col
         )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
         ccimgui.ImDrawList_AddImageQuadEx(
@@ -10678,14 +10691,14 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_image_rounded(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
+    def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
         ccimgui.ImDrawList_AddImageRounded(
             self._ptr,
-            user_texture_id,
+            <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
             _cast_tuple_ImVec2(uv_min),

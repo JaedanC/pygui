@@ -2212,7 +2212,7 @@ def show_random_extras():
         pygui.text("pygui.is_any_mouse_down(): {}".format(pygui.is_any_mouse_down()))
         pygui.tree_pop()
 
-    if pygui.tree_node("Various Structs"):
+    if pygui.tree_node("Reading Structs"):
         def show_imfontglyph(glyph: pygui.ImFontGlyph):
             pygui.menu_item("glyph.advance_x:   {}".format(glyph.advance_x))
             pygui.menu_item("glyph.codepoint:   {}".format(glyph.codepoint))
@@ -2576,6 +2576,128 @@ def show_random_extras():
         if pygui.begin_menu("pygui.get_window_draw_list()"):
             show_imdrawlist(dl)
             pygui.end_menu()
+
+        pygui.tree_pop()
+
+    if pygui.tree_node("Custom drawing"):
+        dl = pygui.get_window_draw_list()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_bezier_cubic(
+            (cx, cy),
+            (cx + 20, cy + 70),
+            (cx + 50, cy - 10),
+            (cx + 40, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0, 1, 0.8)),
+            2,
+            15
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_bezier_quadratic(
+            (cx, cy),
+            (cx + 10, cy + 50),
+            (cx + 30, cy + 10),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.05, 1, 0.8)),
+            2,
+            15
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_circle(
+            (cx + 25, cy + 25),
+            25,
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.1, 1, 0.8)),
+            15,
+            2,
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_circle_filled(
+            (cx + 25, cy + 25),
+            20,
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.15, 1, 0.8)),
+            15,
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_convex_poly_filled(
+            [
+                (cx, cy),
+                (cx + 45, cy + 4),
+                (cx + 30, cy + 20),
+                (cx + 50, cy + 50),
+                (cx + 25, cy + 40),
+                (cx + 16, cy + 45),
+                (cx, cy + 25),
+            ],
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.20, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        image =  widget.instance().widgets_image
+        texture_id =  widget.instance().widgets_image_texture
+        show_tl = (126, 30)
+        show_br = (176, 80)
+        uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
+        uv_br =   (show_br[0] / image.width, show_br[1] / image.height)
+        dl.add_image(
+            texture_id,
+            (cx, cy),
+            (cx + 50, cy + 50),
+            uv_tl,
+            uv_br
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        show_tl = (900, 277)
+        show_tr = (950, 277)
+        show_br = (970, 327)
+        show_bl = (920, 327)
+        uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
+        uv_tr = (show_tr[0] / image.width, show_tr[1] / image.height)
+        uv_br = (show_br[0] / image.width, show_br[1] / image.height)
+        uv_bl = (show_bl[0] / image.width, show_bl[1] / image.height)
+        dl.add_image_quad(
+            texture_id,
+            (cx, cy),
+            (cx + 50, cy),
+            (cx + 70, cy + 50),
+            (cx + 20, cy + 50),
+            uv_tl,
+            uv_tr,
+            uv_br,
+            uv_bl,
+        )
+        pygui.dummy((70, 50))
+        pygui.same_line()
+        
+        cx, cy = pygui.get_cursor_screen_pos()
+        show_tl = (155, 382)
+        show_br = (205, 432)
+        uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
+        uv_br = (show_br[0] / image.width, show_br[1] / image.height)
+        dl.add_image_rounded(
+            texture_id,
+            (cx, cy),
+            (cx + 50, cy + 50),
+            uv_tl,
+            uv_br,
+            pygui.color_convert_float4_to_u32((1, 1, 1, 1)),
+            10
+        )
+        pygui.dummy((50, 50))
 
         pygui.tree_pop()
 
