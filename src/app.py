@@ -4,9 +4,9 @@ import OpenGL.GL as gl
 from python_demo_window import pygui_demo_window
 
 
-vsync_enabled = pygui.BoolPtr(False)
-show_imgui_demo = pygui.BoolPtr(True)
-show_python_demo = pygui.BoolPtr(True)
+vsync_enabled = pygui.Bool(False)
+show_imgui_demo = pygui.Bool(True)
+show_python_demo = pygui.Bool(True)
 
 
 def render():

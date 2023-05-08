@@ -181,13 +181,13 @@ Quick note on options:
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
-def show_demo_window(p_open: BoolPtr=None):
+def show_demo_window(p_open: Bool=None):
     """
     Demo, Debug, Information
     Create demo window. demonstrate most imgui features. call this to learn about the library! try to make it always available in your application!
     """
     ccimgui.ImGui_ShowDemoWindow(
-        BoolPtr.ptr(p_open)
+        Bool.ptr(p_open)
     )
 # [End Function]
 ```
@@ -199,7 +199,7 @@ When `use_template` is True, the function can be editted however you like. This 
 3. Tuples and ImVec2 can be converted using `_cast_tuple_ImVec2` and `_cast_ImVec2_tuple`. Use respective functions for ImVec4.
 4. Instances of classes returned cannot store any information on them because they simply serve as wrappers for a pointer to the real instance in c. Any information required to be stored on a class should instead be written to a dictionary inside cython. See `input_text` and `get_clipboard_text_fn`.
 5. Converting to and from lists is much harder. Consider looking at `ImGuiTableSortSpecs.specs` and `ImDrawList.cmd_buffer`.
-6. Most pointers have been wrapped inside a pygui `<Type>Ptr` class. This allows for the function signatures between imgui and pygui to match very closely, without an overreliance on tuples.
+6. Most pointers have been wrapped inside a `pygui.<type>()` class (eg: `pygui.Float()`). This allows for the function signatures between imgui and pygui to match very closely, without an overreliance on tuples.
 7. Dear bindings accounts for languages without default function parameters, but since python supports them, many function calls where appropriate use the `*_ex()` variant while retaining the original name.
 
 Running `./src/model_creator.py` with no options will give you a better look into the options provided. Importantly, whenever the pyx is generated, this will read `core_template.pyx` and merge it with `core_generated.pyx` to create `core.pyx`. **If a function inside `core_template.pyx` is not marked as `use_template`, it will be reset to whatever is inside `core_generated.pyx` and `core_template.pyx` will be modified!**. This is by design.

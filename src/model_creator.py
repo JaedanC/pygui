@@ -124,19 +124,19 @@ class DearBinding:
     def as_python_type(self, _type: DearType):
         python_type_lookup = {
             "bool": "bool",
-            "bool*": "BoolPtr",
+            "bool*": "Bool",
             "char": "int",
             "size_t": "int",
             "int": "int",
-            "int*": "IntPtr",
+            "int*": "Int",
             "short": "int",
-            "short*": "IntPtr",
+            "short*": "Int",
             "long": "int",
-            "long*": "IntPtr",
+            "long*": "Int",
             "float": "float",
-            "float*": "FloatPtr",
+            "float*": "Float",
             "double": "float",
-            "double*": "DoublePtr",
+            "double*": "Double",
             "ImVec2": "tuple",
             "ImVec4": "tuple",
             "void": "None",
@@ -455,10 +455,10 @@ class DearType:
 
     def ptr_version(self):
         ptr_version_mappings = {
-            "bool*": "BoolPtr",
-            "int*": "IntPtr",
-            "float*": "FloatPtr",
-            "double*": "DoublePtr",
+            "bool*": "Bool",
+            "int*": "Int",
+            "float*": "Float",
+            "double*": "Double",
         }
         if self.with_no_const_or_sign() in ptr_version_mappings:
             return ptr_version_mappings[self.with_no_const_or_sign()]
@@ -1122,9 +1122,9 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         return vec
 
 
-    cdef class BoolPtr:
+    cdef class Bool:
         @staticmethod
-        cdef bool* ptr(ptr: BoolPtr):
+        cdef bool* ptr(ptr: Bool):
             return <bool*>(NULL if ptr is None else <void*>(&ptr.value))
         
         cdef public bool value
@@ -1136,54 +1136,54 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             return self.value
 
 
-    cdef class IntPtr:
+    cdef class Int:
         @staticmethod
-        cdef int* ptr(ptr: IntPtr):
+        cdef int* ptr(ptr: Int):
             return <int*>(NULL if ptr is None else <void*>(&ptr.value))
         
         cdef public int value
 
-        def __init__(self, initial_value: int):
+        def __init__(self, initial_value: int=0):
             self.value: int = initial_value
     
-    cdef class LongPtr:
+    cdef class Long:
         @staticmethod
-        cdef long long* ptr(ptr: LongPtr):
+        cdef long long* ptr(ptr: Long):
             return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
         
         cdef public long long value
 
-        def __init__(self, initial_value: int):
+        def __init__(self, initial_value: int=0):
             self.value: int = initial_value
 
 
-    cdef class FloatPtr:
+    cdef class Float:
         @staticmethod
-        cdef float* ptr(ptr: FloatPtr):
+        cdef float* ptr(ptr: Float):
             return <float*>(NULL if ptr is None else <void*>(&ptr.value))
         
         cdef public float value
 
-        def __init__(self, initial_value: float):
+        def __init__(self, initial_value: float=0.0):
             self.value = initial_value
 
 
-    cdef class DoublePtr:
+    cdef class Double:
         @staticmethod
-        cdef double* ptr(ptr: DoublePtr):
+        cdef double* ptr(ptr: Double):
             return <double*>(NULL if ptr is None else <void*>(&ptr.value))
         
         cdef public double value
 
-        def __init__(self, initial_value: float):
+        def __init__(self, initial_value: float=0.0):
             self.value = initial_value
 
 
-    cdef class StrPtr:
+    cdef class String:
         cdef char* buffer
         cdef public int buffer_size
 
-        def __init__(self, initial_value: str, buffer_size=256):
+        def __init__(self, initial_value: str="", buffer_size=256):
             self.buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(buffer_size)
             self.buffer_size: int = buffer_size
             self.value = initial_value
@@ -1204,13 +1204,17 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             self.buffer[min(n_bytes, self.buffer_size - 1)] = 0
 
 
-    cdef class Vec2Ptr:
-        cdef public FloatPtr x_ptr
-        cdef public FloatPtr y_ptr
+    cdef class Vec2:
+        cdef public Float x_ptr
+        cdef public Float y_ptr
 
         def __init__(self, x: float, y: float):
-            self.x_ptr = FloatPtr(x)
-            self.y_ptr = FloatPtr(y)
+            self.x_ptr = Float(x)
+            self.y_ptr = Float(y)
+        
+        @staticmethod
+        def zero():
+            return Vec2(0, 0)
 
         @property
         def x(self):
@@ -1225,31 +1229,32 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         def y(self, y):
             self.y_ptr.value = y
 
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr:
+        def from_floatptrs(self, float_ptrs: Sequence[Float, Float]) -> Vec2:
             IM_ASSERT(len(float_ptrs) >= 2, "Must be a sequence of length 2")
             self.x_ptr = float_ptrs[0]
             self.y_ptr = float_ptrs[1]
             return self
 
-        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]:
+        def as_floatptrs(self) -> Sequence[Float, Float]:
             return (
                 self.x_ptr,
                 self.y_ptr,
             )
         
-        def vec(self) -> Sequence[float, float]:
+        def tuple(self) -> Sequence[float, float]:
             return (
                 self.x,
                 self.y,
             )
 
-        def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr:
+        def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
             self.x = vec[0]
             self.y = vec[1]
             return self
 
-        def copy(self) -> Vec2Ptr:
-            return Vec2Ptr(*self.vec())
+        def copy(self) -> Vec2:
+            return Vec2(*self.tuple())
+        
 
         cdef void from_array(self, float* array):
             self.x_ptr.value = array[0]
@@ -1260,17 +1265,21 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             array[1] = self.y_ptr.value
 
 
-    cdef class Vec4Ptr:
-        cdef public FloatPtr x_ptr
-        cdef public FloatPtr y_ptr
-        cdef public FloatPtr z_ptr
-        cdef public FloatPtr w_ptr
+    cdef class Vec4:
+        cdef public Float x_ptr
+        cdef public Float y_ptr
+        cdef public Float z_ptr
+        cdef public Float w_ptr
 
         def __init__(self, x: float, y: float, z: float, w: float):
-            self.x_ptr = FloatPtr(x)
-            self.y_ptr = FloatPtr(y)
-            self.z_ptr = FloatPtr(z)
-            self.w_ptr = FloatPtr(w)
+            self.x_ptr = Float(x)
+            self.y_ptr = Float(y)
+            self.z_ptr = Float(z)
+            self.w_ptr = Float(w)
+        
+        @staticmethod
+        def zero():
+            return Vec4(0, 0, 0, 0)
 
         @property
         def x(self):
@@ -1297,7 +1306,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         def w(self, w):
             self.w_ptr.value = w
         
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr:
+        def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4:
             IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
             self.x_ptr = float_ptrs[0]
             self.y_ptr = float_ptrs[1]
@@ -1305,7 +1314,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             self.w_ptr = float_ptrs[3]
             return self
 
-        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]:
+        def as_floatptrs(self) -> Sequence[Float, Float, Float, Float]:
             return (
                 self.x_ptr,
                 self.y_ptr,
@@ -1313,7 +1322,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
                 self.w_ptr,
             )
 
-        def vec(self) -> Sequence[float, float, float, float]:
+        def tuple(self) -> Sequence[float, float, float, float]:
             return (
                 self.x,
                 self.y,
@@ -1321,7 +1330,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
                 self.w,
             )
         
-        def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr:
+        def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
             self.x = vec[0]
             self.y = vec[1]
             self.z = vec[2]
@@ -1336,8 +1345,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
                 int(self.w * 255),
             )
 
-        def copy(self) -> Vec4Ptr:
-            return Vec4Ptr(*self.vec())
+        def copy(self) -> Vec4:
+            return Vec4(*self.tuple())
 
         cdef void from_array(self, float* array):
             self.x_ptr.value = array[0]
@@ -1589,60 +1598,64 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
 
     class ImGuiError(Exception): ...
 
-    class BoolPtr:
+    class Bool:
         value: bool
         def __init__(self, initial_value: bool): ...
         def __bool__(self) -> bool: ...
 
-    class IntPtr:
+    class Int:
         value: int
-        def __init__(self, initial_value: int): ...
+        def __init__(self, initial_value: int=0): ...
 
-    class LongPtr:
+    class Long:
         value: int
-        def __init__(self, initial_value: int): ...
+        def __init__(self, initial_value: int=0): ...
 
-    class FloatPtr:
+    class Float:
         value: float
-        def __init__(self, initial_value: float): ...
+        def __init__(self, initial_value: float=0.0): ...
 
-    class DoublePtr:
+    class Double:
         value: float
-        def __init__(self, initial_value: float): ...
+        def __init__(self, initial_value: float=0.0): ...
 
-    class StrPtr:
+    class String:
         value: str
         buffer_size: int
-        def __init__(self, initial_value: str, buffer_size=256): ...
+        def __init__(self, initial_value: str="", buffer_size=256): ...
 
-    class Vec2Ptr:
+    class Vec2:
+        @staticmethod
+        def zero() -> Vec2: ...
         x: float
         y: float
-        x_ptr: FloatPtr
-        y_ptr: FloatPtr
+        x_ptr: Float
+        y_ptr: Float
         def __init__(self, x: float, y: float): ...
-        def vec(self) -> Sequence[float, float]: ...
-        def from_vec(self, vec: Sequence[float, float]) -> Vec2Ptr: ...
-        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr]: ...
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr]) -> Vec2Ptr: ...
-        def copy(self) -> Vec2Ptr: ...
+        def tuple(self) -> Sequence[float, float]: ...
+        def from_tuple(self, vec: Sequence[float, float]) -> Vec2: ...
+        def as_floatptrs(self) -> Sequence[Float, Float]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[Float, Float]) -> Vec2: ...
+        def copy(self) -> Vec2: ...
 
-    class Vec4Ptr:
+    class Vec4:
+        @staticmethod
+        def zero() -> Vec4: ...
         x: float
         y: float
         z: float
         w: float
-        x_ptr: FloatPtr
-        y_ptr: FloatPtr
-        z_ptr: FloatPtr
-        w_ptr: FloatPtr
+        x_ptr: Float
+        y_ptr: Float
+        z_ptr: Float
+        w_ptr: Float
         def __init__(self, x: float, y: float, z: float, w: float): ...
-        def vec(self) -> Sequence[float, float, float, float]: ...
-        def from_vec(self, vec: Sequence[float, float, float, float]) -> Vec4Ptr: ...
+        def tuple(self) -> Sequence[float, float, float, float]: ...
+        def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4: ...
+        def as_floatptrs(self) -> Sequence[Float, Float, Float, Float]: ...
+        def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4: ...
         def to_u32(self) -> int: ...
-        def as_floatptrs(self) -> Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]: ...
-        def from_floatptrs(self, float_ptrs: Sequence[FloatPtr, FloatPtr, FloatPtr, FloatPtr]) -> Vec4Ptr: ...
-        def copy(self) -> Vec4Ptr: ...
+        def copy(self) -> Vec4: ...
 
     def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 
