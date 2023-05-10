@@ -10805,17 +10805,42 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
+    def add_polyline(self: ImDrawList, points: Sequence[tuple], col: int, flags: int, thickness: float):
+        cdef ccimgui.ImVec2* c_points = <ccimgui.ImVec2*>ccimgui.ImGui_MemAlloc(len(points) * sizeof(ccimgui.ImVec2))
+
+        for i, point in enumerate(points):
+            c_points[i].x = point[0]
+            c_points[i].y = point[1]
+
         ccimgui.ImDrawList_AddPolyline(
             self._ptr,
-            points._ptr,
-            num_points,
+            c_points,
+            len(points),
             col,
             flags,
+            thickness
+        )
+
+        ccimgui.ImGui_MemFree(c_points)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
+        ccimgui.ImDrawList_AddQuadEx(
+            self._ptr,
+            _cast_tuple_ImVec2(p1),
+            _cast_tuple_ImVec2(p2),
+            _cast_tuple_ImVec2(p3),
+            _cast_tuple_ImVec2(p4),
+            col,
             thickness
         )
     # [End Method]
@@ -10823,26 +10848,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
-    # ?returns(None)
-    def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
-        """
-        Implied thickness = 1.0f
-        """
-        ccimgui.ImDrawList_AddQuad(
-            self._ptr,
-            _cast_tuple_ImVec2(p1),
-            _cast_tuple_ImVec2(p2),
-            _cast_tuple_ImVec2(p3),
-            _cast_tuple_ImVec2(p4),
-            col
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def add_quad_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
         ccimgui.ImDrawList_AddQuadEx(
@@ -10858,7 +10864,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
@@ -10968,26 +10974,24 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    def add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str):
-        """
-        Implied text_end = null
-        """
-        ccimgui.ImDrawList_AddText(
+    def add_text(self: ImDrawList, pos: tuple, col: int, text: str):
+        ccimgui.ImDrawList_AddTextEx(
             self._ptr,
             _cast_tuple_ImVec2(pos),
             col,
-            _bytes(text_begin)
+            _bytes(text),
+            NULL
         )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
         bytes_text_end = _bytes(text_end) if text_end is not None else None
@@ -11091,7 +11095,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(int)
     def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
         cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
@@ -11147,7 +11151,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def clear_free_memory(self: ImDrawList):
         ccimgui.ImDrawList__ClearFreeMemory(
@@ -11173,7 +11177,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(tuple)
     def get_clip_rect_max(self: ImDrawList):
         cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
@@ -11185,7 +11189,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(tuple)
     def get_clip_rect_min(self: ImDrawList):
         cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMin(
@@ -11197,7 +11201,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def on_changed_clip_rect(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedClipRect(
@@ -11208,7 +11212,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def on_changed_texture_id(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedTextureID(
@@ -11219,7 +11223,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def on_changed_vtx_offset(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedVtxOffset(
@@ -11229,7 +11233,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
@@ -11244,13 +11248,15 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_arc_to_fast(self: ImDrawList, center: tuple, radius: float, a_min_of_12: int, a_max_of_12: int):
         """
         Use precomputed angles for a 12 steps circle
+        pygui note: The _ex version of this function is a private function in imgui.h
+        This function works like a clock. But 0 and 12 is East and 6 is West.
         """
         ccimgui.ImDrawList_PathArcToFast(
             self._ptr,
@@ -11264,7 +11270,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
         ccimgui.ImDrawList__PathArcToFastEx(
@@ -11280,7 +11286,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
         ccimgui.ImDrawList__PathArcToN(
@@ -11396,7 +11402,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0):
@@ -11433,7 +11439,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def pop_unused_draw_cmd(self: ImDrawList):
         ccimgui.ImDrawList__PopUnusedDrawCmd(
@@ -11611,7 +11617,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def reset_for_new_frame(self: ImDrawList):
         """

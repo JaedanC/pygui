@@ -2172,6 +2172,7 @@ class rand:
     next_window_scroll = pygui.Vec2(-1, -1)
     next_window_focus = pygui.Bool(False)
     next_window_spawned = pygui.Bool(True)
+    frame_delta_count = 0
 
 
 def show_random_extras():
@@ -2598,8 +2599,8 @@ def show_random_extras():
         cx, cy = pygui.get_cursor_screen_pos()
         dl.add_bezier_quadratic(
             (cx, cy),
-            (cx + 10, cy + 50),
-            (cx + 30, cy + 10),
+            (cx + 10, cy + 80),
+            (cx + 45, cy + 10),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.05, 1, 0.8)),
             2,
             15
@@ -2621,7 +2622,7 @@ def show_random_extras():
         cx, cy = pygui.get_cursor_screen_pos()
         dl.add_circle_filled(
             (cx + 25, cy + 25),
-            20,
+            25,
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.15, 1, 0.8)),
             15,
         )
@@ -2630,13 +2631,16 @@ def show_random_extras():
         cx, cy = pygui.get_cursor_screen_pos()
         dl.add_convex_poly_filled(
             [
-                (cx, cy),
-                (cx + 45, cy + 4),
-                (cx + 30, cy + 20),
-                (cx + 50, cy + 50),
-                (cx + 25, cy + 40),
-                (cx + 16, cy + 45),
-                (cx, cy + 25),
+                (cx + 25 + 9  * math.cos(math.radians(18)),  cy + 25 + 9  * math.sin(math.radians(18))),
+                (cx + 25 + 25 * math.cos(math.radians(54)),  cy + 25 + 25 * math.sin(math.radians(54))),
+                (cx + 25 + 9  * math.cos(math.radians(90)),  cy + 25 + 9  * math.sin(math.radians(90))),
+                (cx + 25 + 25 * math.cos(math.radians(126)), cy + 25 + 25 * math.sin(math.radians(126))),
+                (cx + 25 + 9  * math.cos(math.radians(162)), cy + 25 + 9  * math.sin(math.radians(162))),
+                (cx + 25 + 25 * math.cos(math.radians(198)), cy + 25 + 25 * math.sin(math.radians(198))),
+                (cx + 25 + 9  * math.cos(math.radians(234)), cy + 25 + 9  * math.sin(math.radians(234))),
+                (cx + 25 + 25 * math.cos(math.radians(270)), cy + 25 + 25 * math.sin(math.radians(270))),
+                (cx + 25 + 9  * math.cos(math.radians(306)), cy + 25 + 9  * math.sin(math.radians(306))),
+                (cx + 25 + 25 * math.cos(math.radians(342)), cy + 25 + 25 * math.sin(math.radians(342))),
             ],
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.20, 1, 0.8)),
         )
@@ -2661,9 +2665,9 @@ def show_random_extras():
         pygui.same_line()
 
         cx, cy = pygui.get_cursor_screen_pos()
-        show_tl = (900, 277)
+        show_tl = (910, 277)
         show_tr = (950, 277)
-        show_br = (970, 327)
+        show_br = (960, 327)
         show_bl = (920, 327)
         uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
         uv_tr = (show_tr[0] / image.width, show_tr[1] / image.height)
@@ -2672,15 +2676,15 @@ def show_random_extras():
         dl.add_image_quad(
             texture_id,
             (cx, cy),
-            (cx + 50, cy),
-            (cx + 70, cy + 50),
-            (cx + 20, cy + 50),
+            (cx + 40, cy),
+            (cx + 50, cy + 50),
+            (cx + 10, cy + 50),
             uv_tl,
             uv_tr,
             uv_br,
             uv_bl,
         )
-        pygui.dummy((70, 50))
+        pygui.dummy((50, 50))
         pygui.same_line()
         
         cx, cy = pygui.get_cursor_screen_pos()
@@ -2696,6 +2700,178 @@ def show_random_extras():
             uv_br,
             pygui.color_convert_float4_to_u32((1, 1, 1, 1)),
             10
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_line(
+            (cx, cy),
+            (cx + 50, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.25, 1, 0.8)),
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_ngon(
+            (cx + 25, cy + 25),
+            25,
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.3, 1, 0.8)),
+            6,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_ngon_filled(
+            (cx + 25, cy + 25),
+            25,
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.35, 1, 0.8)),
+            8
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_polyline(
+            [
+                (cx, cy),
+                (cx + 50, cy),
+                (cx + 50, cy + 50),
+                (cx, cy + 50),
+                (cx, cy + 10),
+                (cx + 40, cy + 10),
+                (cx + 40, cy + 40),
+                (cx + 10, cy + 40),
+                (cx + 10, cy + 20),
+                (cx + 30, cy + 20),
+                (cx + 30, cy + 30),
+                (cx + 20, cy + 30),
+            ],
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.4, 1, 0.8)),
+            pygui.IM_DRAW_FLAGS_NONE,
+            2
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_quad(
+            (cx + 15, cy),
+            (cx + 35, cy),
+            (cx + 50, cy + 50),
+            (cx, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.45, 1, 0.8)),
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_quad_filled(
+            (cx, cy),
+            (cx + 50, cy),
+            (cx + 35, cy + 50),
+            (cx + 15, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.50, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_rect(
+            (cx, cy),
+            (cx + 50, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.55, 1, 0.8)),
+            0,
+            pygui.IM_DRAW_FLAGS_NONE,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_rect_filled(
+            (cx, cy),
+            (cx + 50, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.60, 1, 0.8)),
+            0,
+            pygui.IM_DRAW_FLAGS_NONE,
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        rand.frame_delta_count += pygui.get_io().delta_time / 10
+        dl.add_rect_filled_multi_color(
+            (cx, cy),
+            (cx + 50, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.65) % 1, 1, 0.8)),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.75) % 1, 1, 0.8)),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.85) % 1, 1, 0.8)),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.95) % 1, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_text(
+            (cx, cy),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.70, 0.4, 0.8)),
+            "Hello\nWorld"
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        # TODO: Include custom Font example.
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_triangle(
+            (cx, cy),
+            (cx + 50, cy + 25),
+            (cx, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.80, 1, 0.8)),
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_triangle_filled(
+            (cx, cy),
+            (cx + 50, cy + 25),
+            (cx, cy + 50),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.85, 1, 0.8))
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_arc_to(
+            (cx + 25, cy + 25),
+            25,
+            math.radians(45),
+            math.radians(270),
+        )
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.90, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_arc_to_fast(
+            (cx + 25, cy + 25),
+            25,
+            9,
+            int(rand.frame_delta_count * 20) % 12,
+        )
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.95, 1, 0.8)),
+            0,
+            2
         )
         pygui.dummy((50, 50))
 
