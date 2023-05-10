@@ -96,7 +96,7 @@ def main():
             glfw.make_context_current(window)
             
             gl.glViewport(0, 0, int(io.display_size[0]), int(io.display_size[1]))
-            gl.glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3])
+            gl.glClearColor(*clear_color)
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
             draw_data = pygui.get_draw_data()
@@ -111,7 +111,6 @@ def main():
             glfw.swap_buffers(window)
     except KeyboardInterrupt:
         print("Closing")
-        pass
     
     pygui.impl_open_gl3_shutdown()
     pygui.impl_glfw_shutdown()

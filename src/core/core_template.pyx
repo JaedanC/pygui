@@ -5,18 +5,25 @@
 import ctypes
 import cython
 import array
+from collections import namedtuple
 from cython.operator import dereference
-from typing import Callable, Any, Sequence, Tuple
+from typing import Callable, Any, Sequence, Tuple, NamedTuple
 
 cimport ccimgui
-
-from cython.view cimport array as cvarray
 from libcpp cimport bool
 from libc.float cimport FLT_MIN as LIBC_FLT_MIN
 from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport strncpy, memset
+
+# Used purely to allow for .x and .y notation on any of the tuples returned
+# by the _cast_ImVec2_tuple style functions. The included pygui examples does
+# not use this behaviour. It instead assumes that it is just a tuple. This
+# features mainly exists to prevent any accidents when translating ImGui code
+# to pygui.
+Vec2Tuple = namedtuple("Vec2", "x y")
+Vec4Tuple = namedtuple("Vec4", "x y z w")
 
 cdef void* _pygui_malloc(size_t sz, void* user_data):
     return malloc(sz)
@@ -31,7 +38,7 @@ cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
-    return (vec.x, vec.y)
+    return Vec2Tuple(vec.x, vec.y)
 
 cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     cdef ccimgui.ImVec2 vec
@@ -41,7 +48,7 @@ cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     return vec
 
 cdef _cast_ImVec4_tuple(ccimgui.ImVec4 vec):
-    return (vec.x, vec.y, vec.z, vec.w)
+    return Vec4Tuple(vec.x, vec.y, vec.z, vec.w)
 
 cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     cdef ccimgui.ImVec4 vec
@@ -137,10 +144,48 @@ cdef class String:
 cdef class Vec2:
     cdef public Float x_ptr
     cdef public Float y_ptr
+    cdef int _n
 
     def __init__(self, x: float, y: float):
         self.x_ptr = Float(x)
         self.y_ptr = Float(y)
+
+    def __add__(self, other: Vec2):
+        return Vec2(
+            self.x + other.x,
+            self.y + other.y,
+        )
+
+    def __sub__(self, other: Vec2):
+        return Vec2(
+            self.x - other.x,
+            self.y - other.y,
+        )
+
+    def __eq__(self, other: Vec2):
+        return self.x == other.x \
+            and self.y == other.y
+
+    def __len__(self):
+        return 2
+
+    def __getitem__(self, index: int):
+        return self.tuple()[index]
+
+    def __iter__(self):
+        self._n = -1
+        return self
+
+    def __next__(self):
+        self._n += 1
+        if self._n == 0:
+            return self.x
+        elif self._n == 1:
+            return self.y
+        raise StopIteration
+
+    def __repr__(self):
+        return f"Vec2({self.x}, {self.y})"
 
     @staticmethod
     def zero():
@@ -206,6 +251,53 @@ cdef class Vec4:
         self.y_ptr = Float(y)
         self.z_ptr = Float(z)
         self.w_ptr = Float(w)
+
+    def __add__(self, other: Vec4):
+        return Vec4(
+            self.x + other.x,
+            self.y + other.y,
+            self.z + other.z,
+            self.w + other.w,
+        )
+
+    def __sub__(self, other: Vec4):
+        return Vec2(
+            self.x - other.x,
+            self.y - other.y,
+            self.z - other.z,
+            self.w - other.w,
+        )
+
+    def __eq__(self, other: Vec2):
+        return self.x == other.x \
+            and self.y == other.y \
+            and self.z == other.z \
+            and self.w == other.w \
+
+    def __len__(self):
+        return 4
+
+    def __getitem__(self, index: int):
+        return self.tuple()[index]
+
+    def __iter__(self):
+        self._n = -1
+        return self
+
+    def __next__(self):
+        self._n += 1
+        if self._n == 0:
+            return self.x
+        elif self._n == 1:
+            return self.y
+        elif self._n == 2:
+            return self.z
+        elif self._n == 3:
+            return self.w
+        raise StopIteration
+
+    def __repr__(self):
+        return f"Vec4({self.x}, {self.y}, {self.z}, {self.w})"
 
     @staticmethod
     def zero():
@@ -6772,15 +6864,15 @@ def push_style_color(idx: int, col: "int | tuple"):
     Modify a style color. always use this if you modify the style after newframe().
     pygui note: You can pass a u32 color or a 0-1, length 4 tuple for color.
     """
-    if isinstance(col, tuple):
+    if isinstance(col, int) or isinstance(col, float):
+        ccimgui.ImGui_PushStyleColor(
+            idx,
+            int(col)
+        )
+    else:
         ccimgui.ImGui_PushStyleColorImVec4(
             idx,
             _cast_tuple_ImVec4(col)
-        )
-    else:
-        ccimgui.ImGui_PushStyleColor(
-            idx,
-            col
         )
 # [End Function]
 
@@ -6806,15 +6898,15 @@ def push_style_var(idx: int, val: "float | tuple"):
     Modify a style float variable. always use this if you modify the style after newframe().
     pygui note: You can pass a float or length 2 tuple.
     """
-    if isinstance(val, tuple):
-        ccimgui.ImGui_PushStyleVarImVec2(
-            idx,
-            _cast_tuple_ImVec2(val)
-        )
-    else:
+    if isinstance(val, float) or isinstance(val, int):
         ccimgui.ImGui_PushStyleVar(
             idx,
             val
+        )
+    else:
+        ccimgui.ImGui_PushStyleVarImVec2(
+            idx,
+            _cast_tuple_ImVec2(val)
         )
 # [End Function]
 
