@@ -1092,8 +1092,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     # not use this behaviour. It instead assumes that it is just a tuple. This
     # features mainly exists to prevent any accidents when translating ImGui code
     # to pygui.
-    Vec2Tuple = namedtuple("Vec2", "x y")
-    Vec4Tuple = namedtuple("Vec4", "x y z w")
+    # Vec2Tuple = namedtuple("Vec2", "x y")
+    # Vec4Tuple = namedtuple("Vec4", "x y z w")
 
     cdef void* _pygui_malloc(size_t sz, void* user_data):
         return malloc(sz)
@@ -1108,7 +1108,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         return <str>(text.decode('utf-8', errors='ignore'))
 
     cdef _cast_ImVec2_tuple({pxd_library_name}.ImVec2 vec):
-        return Vec2Tuple(vec.x, vec.y)
+        return (vec.x, vec.y)
 
     cdef {pxd_library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:
         cdef {pxd_library_name}.ImVec2 vec
@@ -1118,7 +1118,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         return vec
 
     cdef _cast_ImVec4_tuple({pxd_library_name}.ImVec4 vec):
-        return Vec4Tuple(vec.x, vec.y, vec.z, vec.w)
+        return (vec.x, vec.y, vec.z, vec.w)
 
     cdef {pxd_library_name}.ImVec4 _cast_tuple_ImVec4(quadruple):
         cdef {pxd_library_name}.ImVec4 vec

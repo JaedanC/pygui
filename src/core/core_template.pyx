@@ -22,8 +22,8 @@ from libc.string cimport strncpy, memset
 # not use this behaviour. It instead assumes that it is just a tuple. This
 # features mainly exists to prevent any accidents when translating ImGui code
 # to pygui.
-Vec2Tuple = namedtuple("Vec2", "x y")
-Vec4Tuple = namedtuple("Vec4", "x y z w")
+# Vec2Tuple = namedtuple("Vec2", "x y")
+# Vec4Tuple = namedtuple("Vec4", "x y z w")
 
 cdef void* _pygui_malloc(size_t sz, void* user_data):
     return malloc(sz)
@@ -38,7 +38,7 @@ cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
-    return Vec2Tuple(vec.x, vec.y)
+    return (vec.x, vec.y)
 
 cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     cdef ccimgui.ImVec2 vec
@@ -48,7 +48,7 @@ cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     return vec
 
 cdef _cast_ImVec4_tuple(ccimgui.ImVec4 vec):
-    return Vec4Tuple(vec.x, vec.y, vec.z, vec.w)
+    return (vec.x, vec.y, vec.z, vec.w)
 
 cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     cdef ccimgui.ImVec4 vec
@@ -9289,7 +9289,7 @@ def tree_node_ptr(ptr_id: Any, fmt: str):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?returns(bool)
@@ -11393,7 +11393,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0):
@@ -11411,7 +11411,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0):
@@ -11428,7 +11428,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_clear(self: ImDrawList):
@@ -11443,7 +11443,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_fill_convex(self: ImDrawList, col: int):
@@ -11455,7 +11455,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_line_to(self: ImDrawList, pos: tuple):
@@ -11467,7 +11467,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple):
@@ -11479,7 +11479,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0):
@@ -11542,7 +11542,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int):
         ccimgui.ImDrawList_PrimQuadUV(
@@ -11562,7 +11562,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_rect(self: ImDrawList, a: tuple, b: tuple, col: int):
         """
@@ -11579,7 +11579,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_rect_uv(self: ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int):
         ccimgui.ImDrawList_PrimRectUV(
@@ -11595,7 +11595,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int):
         """
@@ -11613,7 +11613,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
         ccimgui.ImDrawList_PrimUnreserve(
@@ -11626,7 +11626,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
         """
@@ -11643,7 +11643,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_write_idx(self: ImDrawList, idx: int):
         ccimgui.ImDrawList_PrimWriteIdx(
@@ -11655,7 +11655,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
         ccimgui.ImDrawList_PrimWriteVtx(
@@ -11723,7 +11723,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def try_merge_draw_cmds(self: ImDrawList):
         ccimgui.ImDrawList__TryMergeDrawCmds(
@@ -11849,7 +11849,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def clear(self: ImDrawListSplitter):
         """
@@ -11863,7 +11863,7 @@ cdef class ImDrawListSplitter:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(None)
     def clear_free_memory(self: ImDrawListSplitter):
         ccimgui.ImDrawListSplitter_ClearFreeMemory(
@@ -11889,6 +11889,9 @@ cdef class ImDrawListSplitter:
     # ?invisible(False)
     # ?returns(None)
     def destroy(self: ImDrawListSplitter):
+        """
+        Mimics the destructor of ccimgui.ImDrawListSplitter
+        """
         ccimgui.ImDrawListSplitter_ClearFreeMemory(self._ptr)
         ccimgui.ImGui_MemFree(self._ptr)
         self._ptr = NULL
@@ -17170,7 +17173,7 @@ cdef class ImGuiListClipper:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImGuiContext)
     @property
@@ -17225,7 +17228,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(int)
     @property
     def items_count(self):
@@ -17243,7 +17246,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(float)
     @property
     def items_height(self):
@@ -17261,7 +17264,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(float)
     @property
     def start_pos_y(self):
@@ -17279,7 +17282,7 @@ cdef class ImGuiListClipper:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?returns(Any)
     @property
     def temp_data(self):
@@ -17344,7 +17347,7 @@ cdef class ImGuiListClipper:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def end(self: ImGuiListClipper):

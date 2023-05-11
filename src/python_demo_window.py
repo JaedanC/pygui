@@ -2099,8 +2099,8 @@ def show_demo_tables():
 
             # This is our first example of not being able to share heap objects
             # across the dll. I need to get a pointer to a valid type that it
-            # creates, not me. This may require modifying cimgui to create a
-            # constructor function.
+            # creates, not me. This requires adding a custom constructor and 
+            # destructor for the ImGuiListClipper class.
             clipper.begin(len(table.sort_items))
             while clipper.step():
                 for row_n in range(clipper.display_start, clipper.display_end):
@@ -2173,6 +2173,7 @@ class rand:
     next_window_focus = pygui.Bool(False)
     next_window_spawned = pygui.Bool(True)
     frame_delta_count = 0
+    df = [(i, "Entry" + str(i * 43 % 100)) for i in range(30)]
 
 
 def show_random_extras():
@@ -2850,8 +2851,8 @@ def show_random_extras():
         dl.path_arc_to(
             (cx + 25, cy + 25),
             25,
-            math.radians(45),
             math.radians(270),
+            math.radians(((270 + rand.frame_delta_count * 400) % 360) + 270),
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.90, 1, 0.8)),
@@ -2866,10 +2867,118 @@ def show_random_extras():
             (cx + 25, cy + 25),
             25,
             9,
-            int(rand.frame_delta_count * 20) % 12,
+            (9 + int(rand.frame_delta_count * 20)) % 12 + 9,
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.95, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        # Creates a "point" that the bezier curve can start from
+        dl.path_line_to((cx, cy))
+        dl.path_bezier_cubic_curve_to(
+            (cx + 20, cy + 70),
+            (cx + 50, cy - 10),
+            (cx + 40, cy + 50),
+        )
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(1, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_line_to((cx, cy))
+        dl.path_bezier_quadratic_curve_to(
+            (cx + 10, cy + 80),
+            (cx + 45, cy + 10),
+        )
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.05, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        # Creates a "point" that the bezier curve can start from
+        dl.path_line_to((cx, cy + 25))
+        dl.path_line_to((cx, cy))
+        dl.path_clear()
+        dl.path_line_to((cx + 25, cy))
+        dl.path_line_to((cx + 50, cy))
+        dl.path_line_to((cx + 50, cy + 50))
+        dl.path_line_to((cx, cy + 50))
+        dl.path_line_to((cx, cy + 25))
+        dl.path_line_to((cx + 25, cy + 25))
+        dl.path_line_to((cx + 25, cy))
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.10, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_line_to_merge_duplicate((cx, cy))
+        dl.path_line_to_merge_duplicate((cx, cy))
+        dl.path_line_to_merge_duplicate((cx, cy))
+        dl.path_line_to_merge_duplicate((cx, cy))
+        dl.path_line_to_merge_duplicate((cx + 50, cy))
+        dl.path_line_to_merge_duplicate((cx + 50, cy + 50))
+        dl.path_line_to_merge_duplicate((cx + 25, cy + 50))
+        dl.path_line_to_merge_duplicate((cx + 25, cy + 25))
+        dl.path_line_to_merge_duplicate((cx, cy + 25))
+        dl.path_line_to_merge_duplicate((cx, cy))
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.15, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_line_to((cx, cy))
+        dl.path_line_to((cx + 50, cy))
+        dl.path_line_to((cx + 50, cy + 25))
+        dl.path_line_to((cx + 25, cy + 25))
+        dl.path_line_to((cx + 25, cy + 50))
+        dl.path_line_to((cx, cy + 50))
+        dl.path_line_to((cx, cy))
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.2, 1, 0.8)),
+            0,
+            2
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_line_to((cx, cy))
+        dl.path_line_to((cx + 25, cy))
+        dl.path_line_to((cx + 50, cy + 25))
+        dl.path_line_to((cx + 50, cy + 50))
+        dl.path_line_to((cx + 25, cy + 50))
+        dl.path_line_to((cx, cy + 25))
+        dl.path_fill_convex(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.25, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.path_rect((cx + 25, cy), (cx + 50, cy + 50))
+        dl.path_line_to((cx, cy + 25))
+        dl.path_line_to((cx + 25, cy))
+        dl.path_stroke(
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.30, 1, 0.8)),
             0,
             2
         )
@@ -3078,6 +3187,89 @@ def show_random_extras():
         pygui.separator()
         pygui.tree_pop()
     
+    if pygui.tree_node("pygui.ImDrawListSplitter"):
+        pygui.text_wrapped(
+            "The left column is channel 0. The right is channel 1. You can see"
+            " from this example that the right will always draw on top even"
+            " though every second draw call is the right.")
+        draw_list = pygui.get_window_draw_list()
+        splitter = pygui.ImDrawListSplitter.create()
+        splitter.split(draw_list, 2)
+
+        pygui.separator()
+        cs = pygui.get_cursor_screen_pos()
+        splitter.set_current_channel(draw_list, 0)
+        size = 60
+        gap = 40
+        for i in range(5):
+            splitter.set_current_channel(draw_list, 0)
+            draw_list.add_rect_filled(
+                (cs[0],        cs[1] + i * gap),
+                (cs[0] + size, cs[1] + i * gap + size),
+                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb(0.1 * i, 1, 0.8))
+            )
+            splitter.set_current_channel(draw_list, 1)
+            draw_list.add_rect(
+                (cs[0] + size/2,        cs[1] + i * gap + size/3),
+                (cs[0] + size/2 + size, cs[1] + i * gap + size + size/3),
+                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb((0.5 + 0.1 * i), 1, 0.8)),
+                20, 0, 8
+            )
+        splitter.merge(draw_list)
+        splitter.destroy()
+        pygui.dummy((10, size * 4))
+        pygui.separator()
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.ImGuiListClipper"):
+        flags = pygui.TABLE_FLAGS_BORDERS_OUTER | \
+                pygui.TABLE_FLAGS_BORDERS_INNER | \
+                pygui.TABLE_FLAGS_SCROLL_Y
+        if pygui.begin_table("ClipperTest", 4, flags, (0, pygui.get_text_line_height_with_spacing() * 10), 0):
+            pygui.table_setup_column("ID")
+            pygui.table_setup_column("Name")
+            pygui.table_setup_column("DisplayStart")
+            pygui.table_setup_column("DisplayEnd")
+            pygui.table_setup_scroll_freeze(0, 1) # Make row always visible
+            pygui.table_headers_row()
+
+            clipper = pygui.ImGuiListClipper.create()
+            clipper.begin(len(rand.df))
+
+            # pygui.text("clipper.ctx: {}".format(clipper.ctx))
+
+            while clipper.step():
+                exit_early = False
+                for i in range(clipper.display_start, clipper.display_end):
+                    # Display a data item
+                    _id, entry_name = rand.df[i]
+                    pygui.push_id(_id)
+                    # pygui.table_next_row()
+                    pygui.table_next_column()
+                    pygui.text(str(_id))
+                    pygui.table_next_column()
+                    pygui.text(entry_name)
+                    pygui.table_next_column()
+                    pygui.text(str(clipper.display_start))
+                    pygui.table_next_column()
+                    pygui.text(str(clipper.display_end))
+                    pygui.pop_id()
+                
+                    if _id == 25:
+                        exit_early = True
+                        break
+                
+                if exit_early:
+                    # Lets us leave early but note that the call to clipper.begin
+                    # is still defining the size of the table, so it looks weird
+                    # to exit early unless you anticipate it.
+                    clipper.end()
+                    break
+            clipper.destroy()
+            pygui.end_table()
+
+        pygui.tree_pop()
+
     if pygui.tree_node("pygui.input_text_multiline()"):
         def callback_function(callback_data, user_data):
             print("Hello", user_data)
@@ -3252,40 +3444,6 @@ def show_random_extras():
             rand.window_log.clear()
         pygui.tree_pop()
     
-    if pygui.tree_node("pygui.ImDrawListSplitter"):
-        pygui.text_wrapped(
-            "The left column is channel 0. The right is channel 1. You can see"
-            " from this example that the right will always draw on top even"
-            " though every second draw call is the right.")
-        draw_list = pygui.get_window_draw_list()
-        splitter = pygui.ImDrawListSplitter.create()
-        splitter.split(draw_list, 2)
-
-        pygui.separator()
-        cs = pygui.get_cursor_screen_pos()
-        splitter.set_current_channel(draw_list, 0)
-        size = 60
-        gap = 40
-        for i in range(5):
-            splitter.set_current_channel(draw_list, 0)
-            draw_list.add_rect_filled(
-                (cs[0],        cs[1] + i * gap),
-                (cs[0] + size, cs[1] + i * gap + size),
-                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb(0.1 * i, 1, 0.8))
-            )
-            splitter.set_current_channel(draw_list, 1)
-            draw_list.add_rect(
-                (cs[0] + size/2,        cs[1] + i * gap + size/3),
-                (cs[0] + size/2 + size, cs[1] + i * gap + size + size/3),
-                pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb((0.5 + 0.1 * i), 1, 0.8)),
-                20, 0, 8
-            )
-        splitter.merge(draw_list)
-        splitter.destroy()
-        pygui.dummy((10, size * 4))
-        pygui.separator()
-        pygui.tree_pop()
-
     if pygui.tree_node("pygui.log_buttons()"):
         pygui.log_buttons()
         pygui.tree_pop()

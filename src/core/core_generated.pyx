@@ -22,8 +22,8 @@ from libc.string cimport strncpy, memset
 # not use this behaviour. It instead assumes that it is just a tuple. This
 # features mainly exists to prevent any accidents when translating ImGui code
 # to pygui.
-Vec2Tuple = namedtuple("Vec2", "x y")
-Vec4Tuple = namedtuple("Vec4", "x y z w")
+# Vec2Tuple = namedtuple("Vec2", "x y")
+# Vec4Tuple = namedtuple("Vec4", "x y z w")
 
 cdef void* _pygui_malloc(size_t sz, void* user_data):
     return malloc(sz)
@@ -38,7 +38,7 @@ cdef str _from_bytes(bytes text):
     return <str>(text.decode('utf-8', errors='ignore'))
 
 cdef _cast_ImVec2_tuple(ccimgui.ImVec2 vec):
-    return Vec2Tuple(vec.x, vec.y)
+    return (vec.x, vec.y)
 
 cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     cdef ccimgui.ImVec2 vec
@@ -48,7 +48,7 @@ cdef ccimgui.ImVec2 _cast_tuple_ImVec2(pair) except +:
     return vec
 
 cdef _cast_ImVec4_tuple(ccimgui.ImVec4 vec):
-    return Vec4Tuple(vec.x, vec.y, vec.z, vec.w)
+    return (vec.x, vec.y, vec.z, vec.w)
 
 cdef ccimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
     cdef ccimgui.ImVec4 vec

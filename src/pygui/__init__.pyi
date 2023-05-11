@@ -3088,57 +3088,32 @@ class ImDrawList:
         """
         pass
 
-    # def path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0) -> None:
-    #     """
-    #     Cubic bezier (4 control points)
-    #     """
-    #     pass
+    def path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0) -> None:
+        """
+        Cubic bezier (4 control points)
+        """
+        pass
 
-    # def path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0) -> None:
-    #     """
-    #     Quadratic bezier (3 control points)
-    #     """
-    #     pass
+    def path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0) -> None:
+        """
+        Quadratic bezier (3 control points)
+        """
+        pass
 
-    # def path_clear(self: ImDrawList) -> None:
-    #     """
-    #     Stateful path API, add points then finish with PathFillConvex() or PathStroke()
-    #     - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
-    #     """
-    #     pass
+    def path_clear(self: ImDrawList) -> None:
+        """
+        Stateful path API, add points then finish with PathFillConvex() or PathStroke()
+        - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        """
+        pass
 
-    # def path_fill_convex(self: ImDrawList, col: int) -> None: ...
-    # def path_line_to(self: ImDrawList, pos: tuple) -> None: ...
-    # def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple) -> None: ...
-    # def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0) -> None: ...
+    def path_fill_convex(self: ImDrawList, col: int) -> None: ...
+    def path_line_to(self: ImDrawList, pos: tuple) -> None: ...
+    def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple) -> None: ...
+    def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0) -> None: ...
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0) -> None: ...
     def pop_clip_rect(self: ImDrawList) -> None: ...
     # def pop_texture_id(self: ImDrawList) -> None: ...
-    # def prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int) -> None: ...
-    # def prim_rect(self: ImDrawList, a: tuple, b: tuple, col: int) -> None:
-    #     """
-    #     Axis aligned rectangle (composed of two triangles)
-    #     """
-    #     pass
-
-    # def prim_rect_uv(self: ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int) -> None: ...
-    # def prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int) -> None:
-    #     """
-    #     Advanced: Primitives allocations
-    #     - We render triangles (three vertices)
-    #     - All primitives needs to be reserved via PrimReserve() beforehand.
-    #     """
-    #     pass
-
-    # def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int) -> None: ...
-    # def prim_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int) -> None:
-    #     """
-    #     Write vertex with unique index
-    #     """
-    #     pass
-
-    # def prim_write_idx(self: ImDrawList, idx: int) -> None: ...
-    # def prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int) -> None: ...
     def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False) -> None:
         """
         Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
@@ -3147,22 +3122,19 @@ class ImDrawList:
 
     # def push_clip_rect_full_screen(self: ImDrawList) -> None: ...
     # def push_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
-    # def try_merge_draw_cmds(self: ImDrawList) -> None: ...
 
 class ImDrawListSplitter:
     """
     Split/Merge functions are used to split the draw list into different layers which can be drawn into out of order.
     This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.
     """
-    # def clear(self: ImDrawListSplitter) -> None:
-    #     """
-    #     Do not clear channels[] so our allocations are reused next frame
-    #     """
-    #     pass
-
-    # def clear_free_memory(self: ImDrawListSplitter) -> None: ...
     def create() -> ImDrawListSplitter: ...
-    def destroy(self: ImDrawListSplitter) -> None: ...
+    def destroy(self: ImDrawListSplitter) -> None:
+        """
+        Mimics the destructor of ccimgui.ImDrawListSplitter
+        """
+        pass
+
     def merge(self: ImDrawListSplitter, draw_list: ImDrawList) -> None: ...
     def set_current_channel(self: ImDrawListSplitter, draw_list: ImDrawList, channel_idx: int) -> None: ...
     def split(self: ImDrawListSplitter, draw_list: ImDrawList, count: int) -> None: ...
@@ -4377,10 +4349,10 @@ class ImGuiListClipper:
     - User code submit visible elements.
     - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.
     """
-    # ctx: ImGuiContext
-    # """
-    # Parent ui context
-    # """
+    ctx: ImGuiContext
+    """
+    Parent ui context
+    """
     display_end: int
     """
     End of items to display (exclusive)
@@ -4389,30 +4361,14 @@ class ImGuiListClipper:
     """
     First item to display, updated by each call to step()
     """
-    # items_count: int
-    # """
-    # [internal] number of items
-    # """
-    # items_height: float
-    # """
-    # [internal] height of item after a first step and item submission can calculate it
-    # """
-    # start_pos_y: float
-    # """
-    # [internal] cursor position at the time of begin() or after table frozen rows are all processed
-    # """
-    # temp_data: Any
-    # """
-    # [internal] internal data
-    # """
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
     def create() -> ImGuiListClipper: ...
     def destroy(self: ImGuiListClipper) -> None: ...
-    # def end(self: ImGuiListClipper) -> None:
-    #     """
-    #     Automatically called on the last call of step() that returns false.
-    #     """
-    #     pass
+    def end(self: ImGuiListClipper) -> None:
+        """
+        Automatically called on the last call of step() that returns false.
+        """
+        pass
 
     # def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int) -> None:
     #     """
