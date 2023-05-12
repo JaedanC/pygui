@@ -2174,6 +2174,8 @@ class rand:
     next_window_spawned = pygui.Bool(True)
     frame_delta_count = 0
     df = [(i, "Entry" + str(i * 43 % 100)) for i in range(30)]
+    jump_to_cache = []
+    jump_to = pygui.Int(0)
 
 
 def show_random_extras():
@@ -3222,10 +3224,11 @@ def show_random_extras():
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.ImGuiListClipper"):
+        pygui.text("Normal Clipper")
         flags = pygui.TABLE_FLAGS_BORDERS_OUTER | \
                 pygui.TABLE_FLAGS_BORDERS_INNER | \
                 pygui.TABLE_FLAGS_SCROLL_Y
-        if pygui.begin_table("ClipperTest", 4, flags, (0, pygui.get_text_line_height_with_spacing() * 10), 0):
+        if pygui.begin_table("NormalClipper", 4, flags, (0, pygui.get_text_line_height_with_spacing() * 10), 0):
             pygui.table_setup_column("ID")
             pygui.table_setup_column("Name")
             pygui.table_setup_column("DisplayStart")
@@ -3268,6 +3271,60 @@ def show_random_extras():
             clipper.destroy()
             pygui.end_table()
 
+        pygui.text("Forced Display Range Clipper")
+        scroll_to = pygui.slider_int("Jump to", rand.jump_to, 0, len(rand.df) - 1, "%d", pygui.SLIDER_FLAGS_ALWAYS_CLAMP)
+        steps_showing = []
+        if pygui.begin_table("RangedClipper", 4, flags, (0, pygui.get_text_line_height_with_spacing() * 10), 0):
+            pygui.table_setup_column("ID")
+            pygui.table_setup_column("Name")
+            pygui.table_setup_column("DisplayStart")
+            pygui.table_setup_column("DisplayEnd")
+            pygui.table_setup_scroll_freeze(0, 1) # Make row always visible
+            pygui.table_headers_row()
+
+            clipper = pygui.ImGuiListClipper.create()
+            clipper.begin(len(rand.df))
+
+            if scroll_to:
+                clipper.force_display_range_by_indices(
+                    rand.jump_to.value, rand.jump_to.value + 1)
+
+            while clipper.step():
+                steps_showing.append((clipper.display_start, clipper.display_end))
+                for i in range(clipper.display_start, clipper.display_end):
+                    # Display a data item
+                    _id, entry_name = rand.df[i]
+                    pygui.push_id(_id)
+                    # pygui.table_next_row()
+                    pygui.table_next_column()
+                    pygui.text(str(_id))
+                    pygui.table_next_column()
+                    pygui.text(entry_name)
+                    pygui.table_next_column()
+                    pygui.text(str(clipper.display_start))
+                    pygui.table_next_column()
+                    pygui.text(str(clipper.display_end))
+                    pygui.pop_id()
+
+                    if scroll_to and i == rand.jump_to.value:
+                        pygui.set_scroll_here_y(0.5)
+                
+            
+            clipper.destroy()
+            pygui.end_table()
+        if scroll_to:
+            rand.jump_to_cache = steps_showing
+        pygui.text("1. Update on the frame you move the slider")
+        pygui.text("2. Update every frame")
+        if pygui.begin_child("Steps Showing", (140, pygui.get_text_line_height_with_spacing() * 4), True):
+            for step in rand.jump_to_cache:
+                pygui.text("Showing {} -> {}".format(*step))
+        pygui.end_child()
+        pygui.same_line()
+        if pygui.begin_child("Steps Showing Live", (140, pygui.get_text_line_height_with_spacing() * 4), True):
+            for step in steps_showing:
+                pygui.text("Showing {} -> {}".format(*step))
+        pygui.end_child()
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.input_text_multiline()"):

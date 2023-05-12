@@ -4370,12 +4370,14 @@ class ImGuiListClipper:
         """
         pass
 
-    # def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int) -> None:
-    #     """
-    #     Call ForceDisplayRangeByIndices() before first call to Step() if you need a range of items to be displayed regardless of visibility.
-    #     Item_max is exclusive e.g. use (42, 42+1) to make item 42 always visible but due to alignment/padding of certain items it is likely that an extra item may be included on either end of the display range.
-    #     """
-    #     pass
+    def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int) -> None:
+        """
+        Call ForceDisplayRangeByIndices() before first call to Step() if you need a range of items to be included inside one of the calls to Step() regardless of visibility.
+        This doesn't force the indices to become visible, but rather forces those indices to appear inside one of the calls to Step().
+        Can be useful for eg. calling ImGui::SetScrollHereY() on a out-of-view index so that it *does* become visible.
+        Item_max is exclusive e.g. use (42, 42+1) to make item 42 always visible but due to alignment/padding of certain items it is likely that an extra item may be included on either end of the display range.
+        """
+        pass
 
     def step(self: ImGuiListClipper) -> bool:
         """
