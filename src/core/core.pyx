@@ -1050,8 +1050,7 @@ VIEWPORT_FLAGS_IS_FOCUSED = ccimgui.ImGuiViewportFlags_IsFocused
 # ?use_template(True)
 # ?active(True)
 # ?invisible(False)
-# ?returns(Any)
-_drag_drop_payload = None
+# ?returns(ImGuiPayload)
 def accept_drag_drop_payload(type_: str, flags: int=0):
     """
     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
@@ -1060,34 +1059,7 @@ def accept_drag_drop_payload(type_: str, flags: int=0):
         _bytes(type_),
         flags
     )
-    if res == NULL:
-        return None
-
-    cdef float* colour
-    if _from_bytes(res.DataType) == PAYLOAD_TYPE_COLOR_3F:
-        colour = <float*>res.Data
-        return Vec4(
-            colour[0],
-            colour[1],
-            colour[2],
-            1
-        )
-    elif _from_bytes(res.DataType) == PAYLOAD_TYPE_COLOR_4F:
-        colour = <float*>res.Data
-        return Vec4(
-            colour[0],
-            colour[1],
-            colour[2],
-            colour[3]
-        )
-
-    if _drag_drop_payload is None:
-        return None
-    
-    payload_type, data = _drag_drop_payload
-    if payload_type == type_:
-        return data
-    return None
+    return ImGuiPayload.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -3132,7 +3104,7 @@ def end_disabled():
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
@@ -3141,7 +3113,6 @@ def end_drag_drop_source():
     Only call enddragdropsource() if begindragdropsource() returns true!
     """
     ccimgui.ImGui_EndDragDropSource()
-    _drag_drop_payload = None
 # [End Function]
 
 # [Function]
@@ -3606,19 +3577,13 @@ def get_cursor_start_pos():
 # ?use_template(True)
 # ?active(True)
 # ?invisible(False)
-# ?returns(Tuple[str, Any])
+# ?returns(ImGuiPayload)
 def get_drag_drop_payload():
     """
     Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
     """
-    if _drag_drop_payload is None:
-        return None
-    
     cdef const ccimgui.ImGuiPayload* res = ccimgui.ImGui_GetDragDropPayload()
-    if res is NULL:
-        raise ValueError("We shouldn't get here")
-    
-    return _drag_drop_payload
+    return ImGuiPayload.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -7370,18 +7335,25 @@ def set_cursor_screen_pos(pos: tuple):
 # ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def set_drag_drop_payload(type_: str, data: int, cond: int=0):
+_drag_drop_payload = {}
+# This purely exists so that we have *something* to give to the function that
+# is copyable. This is required to know if the .data is NULL or not.
+cdef int _drag_drop_constant = 0
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
     """
-    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
+    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types.
+    Return true when payload has been accepted.
+    pygui note: Data is stored by pygui so that an abitrary python object can
+    can stored.
     """
     cdef bool res = ccimgui.ImGui_SetDragDropPayload(
         _bytes(type_),
-        NULL,
-        0,
+        <void*>&_drag_drop_constant,
+        sizeof(_drag_drop_constant),
         cond
     )
     if res:
-        _drag_drop_payload = (type_, data)
+        _drag_drop_payload[<uintptr_t>ccimgui.ImGui_GetCurrentContext()] = data
     return res
 # [End Function]
 
@@ -17396,17 +17368,17 @@ cdef class ImGuiListClipper:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 cdef class ImGuiPayload:
     """
     Data payload for Drag and Drop operations: AcceptDragDropPayload(), GetDragDropPayload()
     """
-    cdef ccimgui.ImGuiPayload* _ptr
+    cdef const ccimgui.ImGuiPayload* _ptr
     
     @staticmethod
-    cdef ImGuiPayload from_ptr(ccimgui.ImGuiPayload* _ptr):
+    cdef ImGuiPayload from_ptr(const ccimgui.ImGuiPayload* _ptr):
         if _ptr == NULL:
             return None
         cdef ImGuiPayload wrapper = ImGuiPayload.__new__(ImGuiPayload)
@@ -17424,149 +17396,185 @@ cdef class ImGuiPayload:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(Any)
-    # @property
-    # def data(self):
-    #     """
-    #     Members
-    #     Data (copied and owned by dear imgui)
-    #     """
-    #     cdef void* res = dereference(self._ptr).Data
-    #     return res
-    # @data.setter
-    # def data(self, value: Any):
-    #     # dereference(self._ptr).Data = value
-    #     raise NotImplementedError
+    # ?returns(Vec4 | Any)
+    @property
+    def data(self):
+        """
+        Data (copied and owned by dear imgui)
+        pygui note: Nope, the data is owned by us :). If the payload came from
+        imgui we use that instead.
+        """
+        _type = _from_bytes(dereference(self._ptr).DataType)
+        # This check is only possible because we pass in _drag_drop_constant
+        # into set_drag_drop_payload
+        _drag_drop_constant
+        cdef void* data = dereference(self._ptr).Data
+        if data is NULL:
+            return None
+        
+        cdef float* colour
+        if _type == PAYLOAD_TYPE_COLOR_3F:
+            colour = <float*>data
+            return Vec4(
+                colour[0],
+                colour[1],
+                colour[2],
+                1
+            )
+        elif _type == PAYLOAD_TYPE_COLOR_4F:
+            colour = <float*>data
+            return Vec4(
+                colour[0],
+                colour[1],
+                colour[2],
+                colour[3]
+            )
+        cdef uintptr_t lookup = <uintptr_t>ccimgui.ImGui_GetCurrentContext()
+        if lookup in _drag_drop_payload:
+            return _drag_drop_payload[lookup]
+        return None
+    @data.setter
+    def data(self, value: Any):
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?returns(int)
-    # @property
-    # def data_frame_count(self):
-    #     """
-    #     Data timestamp
-    #     """
-    #     cdef int res = dereference(self._ptr).DataFrameCount
-    #     return res
-    # @data_frame_count.setter
-    # def data_frame_count(self, value: int):
-    #     # dereference(self._ptr).DataFrameCount = value
-    #     raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?returns(int)
-    # @property
-    # def data_size(self):
-    #     """
-    #     Data size
-    #     """
-    #     cdef int res = dereference(self._ptr).DataSize
-    #     return res
-    # @data_size.setter
-    # def data_size(self, value: int):
-    #     # dereference(self._ptr).DataSize = value
-    #     raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
-    # @property
-    # def data_type(self):
-    #     """
-    #     Data type tag (short user-supplied string, 32 characters max)
-    #     """
-    #     cdef char* res = dereference(self._ptr).DataType
-    #     return _from_bytes(res)
-    # @data_type.setter
-    # def data_type(self, value: str):
-    #     # dereference(self._ptr).DataType = _bytes(value)
-    #     raise NotImplementedError
+    @property
+    def data_frame_count(self):
+        """
+        Data timestamp
+        """
+        cdef int res = dereference(self._ptr).DataFrameCount
+        return res
+    @data_frame_count.setter
+    def data_frame_count(self, value: int):
+        # dereference(self._ptr).DataFrameCount = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(int)
+    @property
+    def data_size(self):
+        """
+        Data size.
+        pygui note: It doesn't make much sense to keep this in the API because
+        the type passed to set_drag_drop_payload is a constant integer. The data
+        passed to pygui doesn't go to imgui, but rather stays inside cython so
+        that we can accept abitrary python objects. This function then just
+        calls len(_drag_drop_payload), which is still not ideal but better than
+        returning sizeof(int) I guess.
+        """
+        cdef uintptr_t lookup = <uintptr_t>ccimgui.ImGui_GetCurrentContext()
+        if lookup in _drag_drop_payload:
+           return len(_drag_drop_payload[lookup])
+        return 0
+    @data_size.setter
+    def data_size(self, value: int):
+        # dereference(self._ptr).DataSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(int)
+    @property
+    def data_type(self):
+        """
+        Data type tag (short user-supplied string, 32 characters max)
+        """
+        cdef char* res = <char*>dereference(self._ptr).DataType
+        return _from_bytes(res)
+    @data_type.setter
+    def data_type(self, value: str):
+        # dereference(self._ptr).DataType = _bytes(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
-    # @property
-    # def delivery(self):
-    #     """
-    #     Set when acceptdragdroppayload() was called and mouse button is released over the target item.
-    #     """
-    #     cdef bool res = dereference(self._ptr).Delivery
-    #     return res
-    # @delivery.setter
-    # def delivery(self, value: bool):
-    #     # dereference(self._ptr).Delivery = value
-    #     raise NotImplementedError
+    @property
+    def delivery(self):
+        """
+        Set when acceptdragdroppayload() was called and mouse button is released over the target item.
+        """
+        cdef bool res = dereference(self._ptr).Delivery
+        return res
+    @delivery.setter
+    def delivery(self, value: bool):
+        # dereference(self._ptr).Delivery = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
-    # @property
-    # def preview(self):
-    #     """
-    #     Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
-    #     """
-    #     cdef bool res = dereference(self._ptr).Preview
-    #     return res
-    # @preview.setter
-    # def preview(self, value: bool):
-    #     # dereference(self._ptr).Preview = value
-    #     raise NotImplementedError
+    @property
+    def preview(self):
+        """
+        Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
+        """
+        cdef bool res = dereference(self._ptr).Preview
+        return res
+    @preview.setter
+    def preview(self, value: bool):
+        # dereference(self._ptr).Preview = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
-    # @property
-    # def source_id(self):
-    #     """
-    #     [Internal]
-    #     Source item id
-    #     """
-    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceId
-    #     return res
-    # @source_id.setter
-    # def source_id(self, value: int):
-    #     # dereference(self._ptr).SourceId = value
-    #     raise NotImplementedError
+    @property
+    def source_id(self):
+        """
+        [Internal]
+        Source item id
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceId
+        return res
+    @source_id.setter
+    def source_id(self, value: int):
+        # dereference(self._ptr).SourceId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
-    # @property
-    # def source_parent_id(self):
-    #     """
-    #     Source parent id (if available)
-    #     """
-    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceParentId
-    #     return res
-    # @source_parent_id.setter
-    # def source_parent_id(self, value: int):
-    #     # dereference(self._ptr).SourceParentId = value
-    #     raise NotImplementedError
+    @property
+    def source_parent_id(self):
+        """
+        Source parent id (if available)
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).SourceParentId
+        return res
+    @source_parent_id.setter
+    def source_parent_id(self, value: int):
+        # dereference(self._ptr).SourceParentId = value
+        raise NotImplementedError
     # [End Field]
 
     # [Method]

@@ -1049,18 +1049,18 @@ def show_demo_widgets():
                 # the color 3f and 4f types will return Vec4 containing the
                 # color that is being dragged.
                 if pygui.begin_drag_drop_target():
-                    payload = pygui.accept_drag_drop_payload(pygui.PAYLOAD_TYPE_COLOR_3F)
-                    payload: pygui.Vec4
+                    payload: pygui.ImGuiPayload = pygui.accept_drag_drop_payload(pygui.PAYLOAD_TYPE_COLOR_3F)
                     if payload is not None:
                         preserved_alpha = widget.colour_saved_palette[n].w
-                        widget.colour_saved_palette[n] = payload.copy()
+                        vec4: pygui.Vec4 = payload.data
+                        widget.colour_saved_palette[n] = vec4.copy()
                         widget.colour_saved_palette[n].w = preserved_alpha
                     
                     payload = pygui.accept_drag_drop_payload(pygui.PAYLOAD_TYPE_COLOR_4F)
-                    payload: pygui.Vec4
                     if payload is not None:
                         preserved_alpha = widget.colour_saved_palette[n].w
-                        widget.colour_saved_palette[n] = payload.copy()
+                        vec4: pygui.Vec4 = payload.data
+                        widget.colour_saved_palette[n] = vec4.copy()
                         widget.colour_saved_palette[n].w = preserved_alpha
                     pygui.end_drag_drop_target()
                 
@@ -2134,6 +2134,7 @@ class rand:
     second_checkbox = pygui.Bool(False)
     third_checkbox = pygui.Bool(False)
     modal_checkbox = pygui.Bool(False)
+    payload_message = None
     colour = pygui.Vec4(1, 1, 0, 1)
     current_item = pygui.Int()
     current_item_list = pygui.Int()
@@ -2986,6 +2987,41 @@ def show_random_extras():
         )
         pygui.dummy((50, 50))
 
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.accept_drag_drop_payload()"):
+        pygui.text("These buttons are drag_drop sources")
+        pygui.button("Hello world")
+        data = ("First button", "Hello World", 1, 2, 3)
+        if pygui.begin_drag_drop_source():
+            pygui.set_drag_drop_payload("Custom", data)
+            pygui.text(str(data))
+            pygui.end_drag_drop_source()
+        
+        pygui.button("Foo bar")
+        data = ("Second button", "Foo bar", 2)
+        if pygui.begin_drag_drop_source():
+            pygui.set_drag_drop_payload("Custom", data)
+            pygui.text(str(data))
+            pygui.end_drag_drop_source()
+        
+        pygui.text("Drop Here: {}".format(rand.payload_message))
+        if pygui.begin_drag_drop_target():
+            payload = pygui.accept_drag_drop_payload("Custom")
+            if payload is not None:
+                rand.payload_message = payload.data
+            pygui.end_drag_drop_target()
+        
+        current_payload = pygui.get_drag_drop_payload()
+        pygui.text("Current payload: {}".format(current_payload))
+        pygui.text("Current payload.data: {}".format(current_payload.data if current_payload is not None else "..."))
+        pygui.text("payload.data_frame_count: {}".format(current_payload.data_frame_count if current_payload is not None else "..."))
+        pygui.text("payload.data_size:        {}".format(current_payload.data_size        if current_payload is not None else "..."))
+        pygui.text("payload.data_type:        {}".format(current_payload.data_type        if current_payload is not None else "..."))
+        pygui.text("payload.delivery:         {}".format(current_payload.delivery         if current_payload is not None else "..."))
+        pygui.text("payload.preview:          {}".format(current_payload.preview          if current_payload is not None else "..."))
+        pygui.text("payload.source_id:        {}".format(current_payload.source_id        if current_payload is not None else "..."))
+        pygui.text("payload.source_parent_id: {}".format(current_payload.source_parent_id if current_payload is not None else "..."))
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.begin_child_frame()"):

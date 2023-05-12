@@ -689,7 +689,7 @@ VIEWPORT_FLAGS_IS_FOCUSED: int
 
 
 
-def accept_drag_drop_payload(type_: str, flags: int=0) -> Any:
+def accept_drag_drop_payload(type_: str, flags: int=0) -> ImGuiPayload:
     """
     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
     """
@@ -1321,7 +1321,7 @@ def get_cursor_start_pos() -> tuple:
     """
     pass
 
-def get_drag_drop_payload() -> Tuple[str, Any]:
+def get_drag_drop_payload() -> ImGuiPayload:
     """
     Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
     """
@@ -2276,9 +2276,12 @@ def set_cursor_screen_pos(pos: tuple) -> None:
     """
     pass
 
-def set_drag_drop_payload(type_: str, data: int, cond: int=0) -> bool:
+def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
     """
-    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
+    Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types.
+    Return true when payload has been accepted.
+    pygui note: Data is stored by pygui so that an abitrary python object can
+    can stored.
     """
     pass
 
@@ -4390,41 +4393,47 @@ class ImGuiPayload:
     """
     Data payload for Drag and Drop operations: AcceptDragDropPayload(), GetDragDropPayload()
     """
-    pass
-    # data: Any
-    # """
-    # Members
-    # Data (copied and owned by dear imgui)
-    # """
-    # data_frame_count: int
-    # """
-    # Data timestamp
-    # """
-    # data_size: int
-    # """
-    # Data size
-    # """
-    # data_type: int
-    # """
-    # Data type tag (short user-supplied string, 32 characters max)
-    # """
-    # delivery: bool
-    # """
-    # Set when acceptdragdroppayload() was called and mouse button is released over the target item.
-    # """
-    # preview: bool
-    # """
-    # Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
-    # """
-    # source_id: int
-    # """
-    # [Internal]
-    # Source item id
-    # """
-    # source_parent_id: int
-    # """
-    # Source parent id (if available)
-    # """
+    data: Vec4 | Any
+    """
+    Data (copied and owned by dear imgui)
+    pygui note: Nope, the data is owned by us :). If the payload came from
+    imgui we use that instead.
+    """
+    data_frame_count: int
+    """
+    Data timestamp
+    """
+    data_size: int
+    """
+    Data size.
+    pygui note: It doesn't make much sense to keep this in the API because
+    the type passed to set_drag_drop_payload is a constant integer. The data
+    passed to pygui doesn't go to imgui, but rather stays inside cython so
+    that we can accept abitrary python objects. This function then just
+    calls len(_drag_drop_payload), which is still not ideal but better than
+    returning sizeof(int) I guess.
+    """
+    data_type: int
+    """
+    Data type tag (short user-supplied string, 32 characters max)
+    """
+    delivery: bool
+    """
+    Set when acceptdragdroppayload() was called and mouse button is released over the target item.
+    """
+    preview: bool
+    """
+    Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
+    """
+    source_id: int
+    """
+    [Internal]
+    Source item id
+    """
+    source_parent_id: int
+    """
+    Source parent id (if available)
+    """
     # def clear(self: ImGuiPayload) -> None: ...
     # def is_data_type(self: ImGuiPayload, type_: str) -> bool: ...
     # def is_delivery(self: ImGuiPayload) -> bool: ...
