@@ -392,12 +392,13 @@ def show_demo_widgets():
         # Using the _simplified_ one-liner Combo() api here
         # See "Combo" section for examples of how to use the more flexible BeginCombo()/EndCombo() api.
         # I dunno man, it's pretty clean here in python...
-        items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK"]
+        # I added some extra unicode characters to test that they copy correctly.
+        items = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK", "😀😁😂"]
         pygui.combo("combo", widget.combo_item_current, items)
         pygui.same_line()
         help_marker("Using the simplified one-liner Combo API here.\nRefer to the \"Combo\" section below for an explanation of how to use the more flexible and general BeginCombo/EndCombo API.")
         
-        items_list = ["Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon"]
+        items_list = ["Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon", "😀😁😂"]
         pygui.list_box("listbox", widget.list_item_current, items_list, 4)
         pygui.same_line()
         help_marker(
@@ -2177,6 +2178,7 @@ class rand:
     df = [(i, "Entry" + str(i * 43 % 100)) for i in range(30)]
     jump_to_cache = []
     jump_to = pygui.Int(0)
+    text_filter = pygui.ImGuiTextFilter.create()
 
 
 def show_random_extras():
@@ -3363,6 +3365,26 @@ def show_random_extras():
         pygui.end_child()
         pygui.tree_pop()
 
+    if pygui.tree_node("pygui.ImGuiTextFilter"):
+        items = [
+            "Hello World",
+            "pygui says 'Hello'",
+            "What can be filtered...",
+            "Using an ImGuiTextFilter?",
+            "What about this statement",
+            "Mango Apple Passionfruit",
+        ]
+        rand.text_filter.draw()
+        pygui.text("filter.is_active(): {}".format(rand.text_filter.is_active()))
+        if pygui.begin_child("Filtered items", (200, pygui.get_text_line_height_with_spacing() * 7), True):
+            for item in items:
+                if not rand.text_filter.pass_filter(item):
+                    continue
+
+                pygui.text(item)
+        pygui.end_child()   
+        pygui.tree_pop()
+
     if pygui.tree_node("pygui.input_text_multiline()"):
         def callback_function(callback_data, user_data):
             print("Hello", user_data)
@@ -3872,9 +3894,12 @@ class ExampleAppConsole:
         self.history = []
         # -1: new line, 0..History.Size-1 browsing history.
         self.history_pos = -1
-        # Not adding filter at the moment
+        self.imgui_filter = pygui.ImGuiTextFilter.create()
         self.auto_scroll = pygui.Bool(True)
         self.scroll_to_bottom = pygui.Bool(False)
+    
+    def __del__(self):
+        self.imgui_filter.destroy()
     
     def clear_log(self):
         self.items.clear()
@@ -3925,8 +3950,8 @@ class ExampleAppConsole:
         # Options, Filter
         if pygui.button("Options"):
             pygui.open_popup("Options")
-        # pygui.same_line()
-        # Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+        pygui.same_line()
+        self.imgui_filter.draw('Filter ("incl,-excl") ("error")', 180)
         pygui.separator()
 
         # Reserve enough left-over height for 1 separator + 1 input text
@@ -3966,11 +3991,11 @@ class ExampleAppConsole:
                 pygui.log_to_clipboard()
             
             for item in self.items:
-                # TODO: Filter
+                if not self.imgui_filter.pass_filter(item):
+                    continue
 
                 # Normally you would store more information in your item than just a string.
                 # (e.g. make Items[] an array of structure, store color/type etc.)
-                
                 color = (0, 0, 0, 0)
                 has_color = False
                 if "[error]" in item:

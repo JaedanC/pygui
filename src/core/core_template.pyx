@@ -2056,17 +2056,19 @@ def columns_ex(count: int=1, id_: str=None, border: bool=True):
 # ?returns(bool)
 def combo(label: str, current_item: Int, items: Sequence[str], popup_max_height_in_items: int=-1):
     """
-    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+    Separate items with \\0 within a string, end item-list with \\0\\0. e.g. 'one\\0two\\0three\\0'
     """
-    cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(sum(len(s) + 1 for s in items) + 1)
+    cdef unsigned int buffer_length = sum(len(_bytes(b)) + 1 for b in items) + 1
+    cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(buffer_length)
     
     # Store items in array
     cdef int counter = 0
     for p_str in items:
-        strncpy(&c_strings[counter], _bytes(p_str), len(p_str))
+        n_bytes = len(_bytes(p_str))
+        strncpy(&c_strings[counter], _bytes(p_str), n_bytes)
         # Null terminated string
-        c_strings[counter + len(p_str)] = 0
-        counter += len(p_str) + 1
+        c_strings[counter + n_bytes] = 0
+        counter += n_bytes + 1
     
     # Null terminated list
     c_strings[counter] = 0
@@ -5954,9 +5956,12 @@ def list_box(label: str, current_item: Int, items: Sequence[str], height_in_item
 
     # Creates a secondary array for each element
     cdef char* array
+    cdef bytes temp_bytes
     for i, item in enumerate(items):
-        array = <char*>ccimgui.ImGui_MemAlloc(sizeof(char) * len(item) + 1)
-        strncpy(array, _bytes(item), len(item) + 1)
+        temp_bytes = _bytes(item)
+        n_bytes = len(temp_bytes)
+        array = <char*>ccimgui.ImGui_MemAlloc(sizeof(char) * n_bytes + 1)
+        strncpy(array, temp_bytes, n_bytes + 1)
         c_strings[i] = array
     
     cdef bool res = ccimgui.ImGui_ListBox(
@@ -20039,8 +20044,41 @@ cdef class ImGuiTextFilter:
     # [End Method]
 
     # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImGuiTextFilter)
+    @staticmethod
+    def create(default_filter: str=""):
+        """
+        Mimics the constructor for struct ImGuiTextFilter
+        """
+        cdef ccimgui.ImGuiTextFilter* _filter = <ccimgui.ImGuiTextFilter*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiTextFilter))
+        memset(_filter, 0, sizeof(ccimgui.ImGuiTextFilter))
+        
+        cdef bytes default_filter_bytes = _bytes(default_filter)
+        cdef unsigned int n_bytes = len(default_filter_bytes)
+        if len(default_filter) > 0:
+            strncpy(_filter.InputBuf, default_filter_bytes, 256)
+            _filter.InputBuf[min(n_bytes, 256 - 1)] = 0
+            ccimgui.ImGuiTextFilter_Build(_filter)
+
+        return ImGuiTextFilter.from_ptr(_filter)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImGuiTextFilter):
+        ccimgui.ImGui_MemFree(self._ptr)
+        self._ptr = NULL
+    # [End Method]
+
+    # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     def draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0):
@@ -20057,7 +20095,7 @@ cdef class ImGuiTextFilter:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     def is_active(self: ImGuiTextFilter):
@@ -20068,17 +20106,15 @@ cdef class ImGuiTextFilter:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
-    def pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None):
-        bytes_text_end = _bytes(text_end) if text_end is not None else None
-
+    def pass_filter(self: ImGuiTextFilter, text: str):
         cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(
             self._ptr,
             _bytes(text),
-            ((<char*>bytes_text_end if text_end is not None else NULL))
+            NULL
         )
         return res
     # [End Method]
@@ -20874,7 +20910,7 @@ cdef class ImVec4:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
     
@@ -21162,7 +21198,7 @@ cdef class ImVector_ImDrawVert:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
     
@@ -21234,7 +21270,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
     
@@ -21306,7 +21342,7 @@ cdef class ImVector_ImFontConfig:
 # [Class Constants]
 # ?use_template(True)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImFontGlyph:
     cdef const ccimgui.ImVector_ImFontGlyph* _ptr
     
@@ -21378,7 +21414,7 @@ cdef class ImVector_ImFontGlyph:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
     
@@ -21594,7 +21630,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
     
@@ -21738,7 +21774,7 @@ cdef class ImVector_ImGuiViewportPtr:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
     
@@ -22170,7 +22206,7 @@ cdef class ImVector_char:
 # [Class Constants]
 # ?use_template(True)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_float:
     cdef const ccimgui.ImVector_float* _ptr
     

@@ -999,7 +999,7 @@ def columns(count: int=1, id_: str=None, border: bool=True) -> None:
 
 def combo(label: str, current_item: Int, items: Sequence[str], popup_max_height_in_items: int=-1) -> bool:
     """
-    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+    Separate items with \\0 within a string, end item-list with \\0\\0. e.g. 'one\\0two\\0three\\0'
     """
     pass
 
@@ -4870,20 +4870,26 @@ class ImGuiTextFilter:
     """
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
     """
-    pass
     # count_grep: int
     # filters: ImVector_ImGuiTextFilter_ImGuiTextRange
     # input_buf: int
     # def build(self: ImGuiTextFilter) -> None: ...
     # def clear(self: ImGuiTextFilter) -> None: ...
-    # def draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0) -> bool:
-    #     """
-    #     Helper calling inputtext+build
-    #     """
-    #     pass
+    def create(default_filter: str="") -> ImGuiTextFilter:
+        """
+        Mimics the constructor for struct ImGuiTextFilter
+        """
+        pass
 
-    # def is_active(self: ImGuiTextFilter) -> bool: ...
-    # def pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None) -> bool: ...
+    def destroy(self: ImGuiTextFilter) -> None: ...
+    def draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0) -> bool:
+        """
+        Helper calling inputtext+build
+        """
+        pass
+
+    def is_active(self: ImGuiTextFilter) -> bool: ...
+    def pass_filter(self: ImGuiTextFilter, text: str) -> bool: ...
 
 class ImGuiTextFilter_ImGuiTextRange:
     """
@@ -5017,11 +5023,6 @@ class ImGuiWindowClass:
     # Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
     # """
 
-class ImVector_ImDrawChannel: ...
-    # capacity: int
-    # data: ImDrawChannel
-    # size: int
-
 class ImVector_ImDrawCmd: ...
     # capacity: int
     # data: ImDrawCmd
@@ -5037,44 +5038,14 @@ class ImVector_ImDrawVert:
     data: ImDrawVert
     size: int
 
-class ImVector_ImFontAtlasCustomRect: ...
-    # capacity: int
-    # data: ImFontAtlasCustomRect
-    # size: int
-
-class ImVector_ImFontConfig: ...
-    # capacity: int
-    # data: ImFontConfig
-    # size: int
-
-class ImVector_ImFontGlyph: ...
-    # capacity: int
-    # data: ImFontGlyph
-    # size: int
-
-class ImVector_ImFontPtr: ...
-    # capacity: int
-    # data: ImFont
-    # size: int
-
 class ImVector_ImGuiPlatformMonitor: ...
     # capacity: int
     # data: ImGuiPlatformMonitor
     # size: int
 
-class ImVector_ImGuiTextFilter_ImGuiTextRange: ...
-    # capacity: int
-    # data: ImGuiTextFilter_ImGuiTextRange
-    # size: int
-
 class ImVector_ImGuiViewportPtr: ...
     # capacity: int
     # data: ImGuiViewport
-    # size: int
-
-class ImVector_ImTextureID: ...
-    # capacity: int
-    # data: Any
     # size: int
 
 class ImVector_ImU32: ...
@@ -5100,10 +5071,5 @@ class ImVector_ImWchar: ...
 class ImVector_char: ...
     # capacity: int
     # data: str
-    # size: int
-
-class ImVector_float: ...
-    # capacity: int
-    # data: Float
     # size: int
 
