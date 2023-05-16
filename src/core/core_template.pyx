@@ -5248,7 +5248,6 @@ cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
         ImGuiInputTextCallbackData.from_ptr(&callback_data),
         user_data
     )
-    del _input_text_user_data[widget_id]
     if isinstance(callback_return_value, int):
         return callback_return_value
     return 0
@@ -5326,19 +5325,30 @@ def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: tuple=(0,
 # ?active(True)
 # ?invisible(False)
 # ?returns(bool)
-def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callback: Callable=None, user_data: Any=None):
-    """
-    Implied callback = null, user_data = null
-    """
-    cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
-        _bytes(label),
-        _bytes(hint),
-        buf.buffer,
-        buf.buffer_size,
-        flags,
-        NULL,
-        NULL
-    )
+def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None):
+    cdef ccimgui.ImGuiID widget_id = ccimgui.ImGui_GetID(_bytes(label))
+    cdef bool res
+    if callback is not None:
+        _input_text_user_data[widget_id] = (callback, user_data)
+        res = ccimgui.ImGui_InputTextWithHintEx(
+            _bytes(label),
+            _bytes(hint),
+            buf.buffer,
+            buf.buffer_size,
+            flags,
+            <ccimgui.ImGuiInputTextCallback>_input_text_callback,
+            <void*>widget_id
+        )
+    else:
+        res = ccimgui.ImGui_InputTextWithHintEx(
+            _bytes(label),
+            _bytes(hint),
+            buf.buffer,
+            buf.buffer_size,
+            flags,
+            NULL,
+            NULL
+        )
     return res
 # [End Function]
 
@@ -7639,16 +7649,34 @@ def set_next_window_size(size: tuple, cond: int=0):
 # ?active(True)
 # ?invisible(False)
 # ?returns(None)
+_set_next_window_size_constraints_data = {}
 def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None):
     """
     Set next window size limits. use -1,-1 on either x/y axis to preserve the current size. sizes will be rounded down. use callback to apply non-trivial programmatic constraints.
     """
-    ccimgui.ImGui_SetNextWindowSizeConstraints(
-        _cast_tuple_ImVec2(size_min),
-        _cast_tuple_ImVec2(size_max),
-        NULL,
-        NULL
-    )
+    cdef int lookup = hash(custom_callback_data)
+    if custom_callback is not None:
+        _set_next_window_size_constraints_data[lookup] = (custom_callback, custom_callback_data)
+        ccimgui.ImGui_SetNextWindowSizeConstraints(
+            _cast_tuple_ImVec2(size_min),
+            _cast_tuple_ImVec2(size_max),
+            _set_next_window_size_constraints_callback,
+            <void*><uintptr_t>lookup
+        )
+    else:
+        ccimgui.ImGui_SetNextWindowSizeConstraints(
+            _cast_tuple_ImVec2(size_min),
+            _cast_tuple_ImVec2(size_max),
+            NULL,
+            NULL
+        )
+
+cdef void _set_next_window_size_constraints_callback(ccimgui.ImGuiSizeCallbackData* data):
+    cdef int lookup = <int><uintptr_t>data.UserData
+    # We are going to retrieve the user_data in ImGuiSizeCallbackData.user_data
+    callback, user_data = _set_next_window_size_constraints_data[lookup]
+    callback(ImGuiSizeCallbackData.from_ptr(data))
+    return
 # [End Function]
 
 # [Function]
@@ -16285,21 +16313,27 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(Any)
+    _imgui_io_user_data = {}
     @property
     def user_data(self):
         """
         = null           // store your own data.
+        pygui note: Store anything in here if you need.
         """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
+        cdef uintptr_t lookup = <uintptr_t>ccimgui.ImGui_GetCurrentContext()
+        if lookup in self._imgui_io_user_data:
+            return self._imgui_io_user_data[lookup]
+        return None
     @user_data.setter
     def user_data(self, value: Any):
+        cdef uintptr_t lookup = <uintptr_t>ccimgui.ImGui_GetCurrentContext()
+        self._imgui_io_user_data[lookup] = value
         # dereference(self._ptr).UserData = value
-        raise NotImplementedError
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16709,16 +16743,16 @@ cdef class ImGuiInputTextCallbackData:
         Text buffer                          // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
         """
         cdef char* res = dereference(self._ptr).Buf
-        # return _from_bytes(res)
+        return _from_bytes(res)
     @buf.setter
     def buf(self, value: str):
         strncpy(dereference(self._ptr).Buf, _bytes(value), len(_bytes(value)))
-        raise NotImplementedError
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     @property
@@ -16730,13 +16764,13 @@ cdef class ImGuiInputTextCallbackData:
         return res
     @buf_dirty.setter
     def buf_dirty(self, value: bool):
-        # dereference(self._ptr).BufDirty = value
-        raise NotImplementedError
+        dereference(self._ptr).BufDirty = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -16772,7 +16806,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImGuiContext)
     @property
@@ -16808,7 +16842,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -16865,7 +16899,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -16883,7 +16917,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -16901,7 +16935,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
     @property
@@ -16918,8 +16952,8 @@ cdef class ImGuiInputTextCallbackData:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(Any)
     @property
@@ -16927,8 +16961,12 @@ cdef class ImGuiInputTextCallbackData:
         """
         What user passed to inputtext()      // read-only
         """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
+        cdef ccimgui.ImGuiID widget_id = <ccimgui.ImGuiID>dereference(self._ptr).UserData
+        if widget_id not in _input_text_user_data:
+            raise RuntimeError("Did not find widget_id: {}".format(widget_id))
+        
+        callback, user_data = _input_text_user_data[widget_id]
+        return user_data
     @user_data.setter
     def user_data(self, value: Any):
         # dereference(self._ptr).UserData = value
@@ -16937,7 +16975,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def clear_selection(self: ImGuiInputTextCallbackData):
@@ -16961,7 +16999,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
     def has_selection(self: ImGuiInputTextCallbackData):
@@ -16987,7 +17025,7 @@ cdef class ImGuiInputTextCallbackData:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
     def select_all(self: ImGuiInputTextCallbackData):
@@ -17661,10 +17699,10 @@ cdef class ImGuiPlatformIO:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(ImVector_ImGuiPlatformMonitor)
+    # ?returns(List[ImGuiPlatformMonitor])
     @property
     def monitors(self):
         """
@@ -17672,8 +17710,10 @@ cdef class ImGuiPlatformIO:
         - Updated by: app/backend. Update every frame to dynamically support changing monitor or DPI configuration.
         - Used by: dear imgui to query DPI info, clamp popups/tooltips within same monitor and not have them straddle monitors.
         """
-        cdef ccimgui.ImVector_ImGuiPlatformMonitor res = dereference(self._ptr).Monitors
-        return ImVector_ImGuiPlatformMonitor.from_ptr(res)
+        return [
+            ImGuiPlatformMonitor.from_ptr(&dereference(self._ptr).Monitors.Data[idx])
+            for idx in range(dereference(self._ptr).Monitors.Size)
+        ]
     @monitors.setter
     def monitors(self, value: ImVector_ImGuiPlatformMonitor):
         # dereference(self._ptr).Monitors = value._ptr
@@ -18097,10 +18137,10 @@ cdef class ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(ImVector_ImGuiViewportPtr)
+    # ?returns(List[ImGuiViewport])
     @property
     def viewports(self):
         """
@@ -18108,8 +18148,10 @@ cdef class ImGuiPlatformIO:
         (in the future we will attempt to organize this feature to remove the need for a "main viewport")
         Main viewports, followed by all secondary viewports.
         """
-        cdef ccimgui.ImVector_ImGuiViewportPtr res = dereference(self._ptr).Viewports
-        return ImVector_ImGuiViewportPtr.from_ptr(res)
+        return [
+            ImGuiViewport.from_ptr(dereference(self._ptr).Viewports.Data[idx])
+            for idx in range(dereference(self._ptr).Viewports.Size)
+        ]
     @viewports.setter
     def viewports(self, value: ImVector_ImGuiViewportPtr):
         # dereference(self._ptr).Viewports = value._ptr
@@ -18233,7 +18275,7 @@ cdef class ImGuiPlatformMonitor:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(float)
     @property
@@ -18251,7 +18293,7 @@ cdef class ImGuiPlatformMonitor:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18269,7 +18311,7 @@ cdef class ImGuiPlatformMonitor:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18305,7 +18347,7 @@ cdef class ImGuiPlatformMonitor:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18323,7 +18365,7 @@ cdef class ImGuiPlatformMonitor:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18372,7 +18414,7 @@ cdef class ImGuiSizeCallbackData:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18389,8 +18431,8 @@ cdef class ImGuiSizeCallbackData:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18402,13 +18444,13 @@ cdef class ImGuiSizeCallbackData:
         return _cast_ImVec2_tuple(res)
     @desired_size.setter
     def desired_size(self, value: tuple):
-        # dereference(self._ptr).DesiredSize = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+        dereference(self._ptr).DesiredSize = _cast_tuple_ImVec2(value)
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
     @property
@@ -18425,8 +18467,8 @@ cdef class ImGuiSizeCallbackData:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(Any)
     @property
@@ -18434,8 +18476,9 @@ cdef class ImGuiSizeCallbackData:
         """
         Read-only.   what user passed to setnextwindowsizeconstraints(). generally store an integer or float in here (need reinterpret_cast<>).
         """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
+        cdef int lookup = <int><uintptr_t>dereference(self._ptr).UserData
+        callback, user_data = _set_next_window_size_constraints_data[lookup]
+        return user_data
     @user_data.setter
     def user_data(self, value: Any):
         # dereference(self._ptr).UserData = value
@@ -19779,8 +19822,8 @@ cdef class ImGuiTableSortSpecs:
 # [Class]
 # [Class Constants]
 # ?use_template(False)
-# ?active(True)
-# ?invisible(False)
+# ?active(False)
+# ?invisible(True)
 cdef class ImGuiTextBuffer:
     """
     Helper: Growable text buffer for logging/accumulating text
@@ -21486,7 +21529,7 @@ cdef class ImVector_ImFontPtr:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImGuiPlatformMonitor:
     cdef ccimgui.ImVector_ImGuiPlatformMonitor* _ptr
     
@@ -21702,7 +21745,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
     
@@ -21918,7 +21961,7 @@ cdef class ImVector_ImU32:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
     
@@ -21990,7 +22033,7 @@ cdef class ImVector_ImVec2:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
     

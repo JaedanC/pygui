@@ -3450,18 +3450,6 @@ def get_item_rect_size():
 # ?use_template(False)
 # ?active(False)
 # ?invisible(False)
-# ?returns(int)
-def get_key_index(key: int):
-    cdef ccimgui.ImGuiKey res = ccimgui.GetKeyIndex(
-        key
-    )
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
 # ?returns(str)
 def get_key_name(key: int):
     """

@@ -2130,6 +2130,7 @@ def show_demo_tables():
 
 
 class rand:
+    string_test = pygui.String()
     begin_disabled = pygui.Bool(True)
     first_checkbox = pygui.Bool(False)
     second_checkbox = pygui.Bool(False)
@@ -2152,12 +2153,25 @@ class rand:
     is_deactivated = False
     edit_float = pygui.Float(5)
     is_deactivated_after_edit = False
+    viewport_selection = pygui.Int(0)
+    show_monitors = pygui.Bool(False)
+    monitors_visible = []
     is_edited = False
     checkboxes = [pygui.Bool(False) for _ in range(10)]
     key_press_log = []
     mouse_press_log = []
     show_window = pygui.Bool(False)
     window_log = []
+    input_type = pygui.Int(0)
+    input_buffer = pygui.String("", 32)
+    input_buffer_log = []
+    input_buffer_do_always = pygui.Bool(False)
+    input_flags = pygui.Int(
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION |\
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY |\
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER |\
+            # pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE |\
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT)
     tree_checkboxes = [pygui.Bool(False) for _ in range(3)]
     text_input = [pygui.String() for _ in range(3)]
     next_window_docked = pygui.Bool(True)
@@ -2168,6 +2182,8 @@ class rand:
     next_window_in_main_viewport = pygui.Bool(False)
     next_window_size = pygui.Vec2(500, 400)
     next_window_do_size_constraint = pygui.Bool(False)
+    next_window_do_size_constraint_do_callback = pygui.Bool(False)
+    callback_log = []
     next_window_size_constraint_min = pygui.Vec2(10, 10)
     next_window_size_constraint_max = pygui.Vec2(300, 300)
     next_window_content_size = pygui.Vec2(500, 400)
@@ -2452,6 +2468,7 @@ def show_random_extras():
             pygui.menu_item("io.nav_visible:                            {}".format(io.nav_visible))
             pygui.menu_item("io.pen_pressure:                           {}".format(io.pen_pressure))
             pygui.menu_item("io.set_clipboard_text_fn:                  {}".format(io.set_clipboard_text_fn))
+            pygui.menu_item("io.user_data:                              {}".format(io.user_data))
             pygui.menu_item("io.want_capture_keyboard:                  {}".format(io.want_capture_keyboard))
             pygui.menu_item("io.want_capture_mouse:                     {}".format(io.want_capture_mouse))
             pygui.menu_item("io.want_capture_mouse_unless_popup_close:  {}".format(io.want_capture_mouse_unless_popup_close))
@@ -2583,6 +2600,9 @@ def show_random_extras():
         if pygui.begin_menu("pygui.get_window_draw_list()"):
             show_imdrawlist(dl)
             pygui.end_menu()
+        
+        if pygui.button("Add data to ImGuiIO.user_data?"):
+            io.user_data = ("My custom", "data", 54)
 
         pygui.tree_pop()
 
@@ -2991,6 +3011,15 @@ def show_random_extras():
 
         pygui.tree_pop()
 
+    if pygui.tree_node("String() testing"):
+        pygui.input_text("String test", rand.string_test)
+        pygui.text("Length: {} Value: '{}'".format(
+            rand.string_test.buffer_size, rand.string_test.value
+        ))
+        if pygui.button("Set text to constant"):
+            rand.string_test.value = "Hello"
+        pygui.tree_pop()
+
     if pygui.tree_node("pygui.accept_drag_drop_payload()"):
         pygui.text("These buttons are drag_drop sources")
         pygui.button("Hello world")
@@ -3261,6 +3290,127 @@ def show_random_extras():
         pygui.separator()
         pygui.tree_pop()
 
+    if pygui.tree_node("pygui.ImGuiInputTextCallbackData"):
+        help_marker(
+            "Press Up/Down/Tab/k to test the callbacks."
+            "\nDown will use the existing buffer size. See the demo."
+            "\nChar 'k' is ignored by CALLBACK_CHAR_FILTER"
+            "\nUp/Down does not work with multiline input")
+        # ImGuiInputTextFlags_CallbackCompletion # Callback on pressing tab (for completion handling)
+        # ImGuiInputTextFlags_CallbackHistory    # Callback on pressing up/down arrows (for history handling)
+        # ImGuiInputTextFlags_CallbackAlways     # Callback on each iteration. user code may query cursor position, modify text buffer.
+        # ImGuiInputTextFlags_CallbackCharFilter # Callback on character inputs to replace or discard them. modify 'eventchar' to replace or discard, or return 1 in callback to discard.
+        # ImGuiInputTextFlags_CallbackResize     # Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. notify when the string wants to be resized (for string types which hold a cache of their size). you will be provided a new bufsize in the callback and need to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
+        # ImGuiInputTextFlags_CallbackEdit       # Callback on any edit (note that inputtext() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+        pygui.checkbox_flags("pygui.INPUT_TEXT_FLAGS_CALLBACK_ALWAYS", rand.input_flags, pygui.INPUT_TEXT_FLAGS_CALLBACK_ALWAYS)
+
+        rand.input_buffer_log
+        def master_callback(callback_data: pygui.ImGuiInputTextCallbackData, user_data) -> int:
+            callbacks = {
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION: input_text_completion_callback,
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY: input_text_history_callback,
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: input_text_char_filter_callback,
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE: input_text_char_resize_callback,
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT: input_text_char_edit_callback,
+                pygui.INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: input_text_always_callback,
+            }
+            ret = callbacks[callback_data.event_flag](callback_data, user_data)
+            return 0 if ret is None else ret
+
+        def input_text_completion_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION")
+            log.append("\tcb.ctx: {}".format(cb.ctx))
+            log.append("\tcb.cursor_pos: {}".format(cb.cursor_pos))
+            log.append("\tcb.buf_size: {}".format(cb.buf_size))
+            log.append("\tcb.buf_text_len: {}".format(cb.buf_text_len))
+            log.append("\tcb.selection_start: {}".format(cb.selection_start))
+            log.append("\tcb.selection_end: {}".format(cb.selection_end))
+            log.append("\tcb.flags: {}".format(cb.flags))
+            log.append("\tlen(cb.user_data): {}".format(len(cb.user_data)))
+            log.append("\tlen(log): {}".format(len(log)))
+            log.append("\tcb.has_selection(): {}".format(cb.has_selection()))
+            cb.delete_chars(0, cb.buf_text_len)
+            cb.insert_chars(0, "Auto-completed")
+
+        def input_text_history_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY")
+            # Must use the data to manipulate the string as some funky internal
+            # operation must be taking place. You can't just straight up modify
+            # the pygui.String() like in most circumstances.
+            if cb.event_key == pygui.KEY_UP_ARROW:
+                cb.delete_chars(0, cb.buf_text_len)
+                cb.insert_chars(0, "Up arrow")
+            elif cb.event_key == pygui.KEY_DOWN_ARROW:
+                # This will use the existing buffer.
+                cb.buf = "Down arrow"[:cb.buf_text_len]
+                cb.buf_dirty = True
+        
+        def input_text_char_filter_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER")
+            if cb.event_char == ord("k"):
+                return 1
+            
+            if cb.event_char == ord("-"):
+                cb.clear_selection()
+            
+            if cb.event_char == ord("="):
+                cb.select_all()
+            
+            return 0
+        
+        def input_text_char_resize_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE: {}".format(cb.buf_text_len))
+            # TODO: Have not been able to get resizing to work.
+            # rand.input_buffer.buffer_size = cb.buf_text_len + 1
+            # cb.buf = rand.input_buffer.value
+        
+        def input_text_char_edit_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT")
+    
+        def input_text_always_callback(cb: pygui.ImGuiInputTextCallbackData, log):
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_ALWAYS")
+
+        input_types = ["input_text", "input_text_multiline", "input_text_with_hint"]
+        pygui.list_box("Input box type", rand.input_type, input_types, 3)
+        selected_type = input_types[rand.input_type.value]
+        if selected_type == "input_text":
+            pygui.input_text(
+                "My text",
+                rand.input_buffer,
+                rand.input_flags.value,
+                master_callback,
+                rand.input_buffer_log)
+        elif selected_type == "input_text_multiline":
+            pygui.input_text_multiline(
+                "My text",
+                rand.input_buffer,
+                (400, 200),
+                rand.input_flags.value & ~pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY,
+                master_callback,
+                rand.input_buffer_log)
+        else:
+             pygui.input_text_with_hint(
+                "My text",
+                "Hint!",
+                rand.input_buffer,
+                rand.input_flags.value,
+                master_callback,
+                rand.input_buffer_log)
+
+        pygui.text_wrapped("Input: {}".format(rand.input_buffer.value))
+        pygui.text_wrapped("Buffer Size: {}".format(rand.input_buffer.buffer_size))
+
+        pygui.text("Events: {}".format(len(rand.input_buffer_log)))
+        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), True):
+            for i, event in enumerate(rand.input_buffer_log):
+                pygui.text("{}: {}".format(i, event))
+            pygui.set_scroll_here_y(1)
+        pygui.end_child()
+        if pygui.button("Clear log"):
+            rand.input_buffer_log = []
+
+        pygui.tree_pop()
+
     if pygui.tree_node("pygui.ImGuiListClipper"):
         pygui.text("Normal Clipper")
         flags = pygui.TABLE_FLAGS_BORDERS_OUTER | \
@@ -3383,6 +3533,55 @@ def show_random_extras():
 
                 pygui.text(item)
         pygui.end_child()   
+        pygui.tree_pop()
+
+    if pygui.tree_node("pygui.ImGuiPlaformIO"):
+        platform_io = pygui.get_platform_io()
+        pygui.list_box("##Select viewport", rand.viewport_selection, [f"Viewport({hash(v)})" for v in platform_io.viewports])
+        viewport = platform_io.viewports[rand.viewport_selection.value]
+
+        margin = 5
+        pygui.get_foreground_draw_list(viewport).add_rect(
+            (viewport.pos[0] + margin, viewport.pos[1] + margin),
+            (viewport.pos[0] + viewport.size[0] - margin, viewport.pos[1] + viewport.size[1] - margin),
+            pygui.color_convert_float4_to_u32((0, 1, 0, 1)),
+            0, 0, 2
+        )
+
+        if pygui.checkbox("Show Monitors", rand.show_monitors):
+            rand.monitors_visible = [pygui.Bool(True) for _ in range(len(platform_io.monitors))]
+
+        if rand.show_monitors:
+            for i, monitor in enumerate(platform_io.monitors):
+                if not rand.monitors_visible[i]:
+                    continue
+
+                pygui.push_id(i)
+                pygui.set_next_window_pos(
+                    (monitor.main_pos[0] + 1, monitor.main_pos[1] + 1)
+                )
+                pygui.set_next_window_size(
+                    (monitor.main_pos[0] + monitor.main_size[0] - 1, monitor.main_pos[1] + monitor.main_size[1] - 1)
+                )
+                pygui.push_style_var(pygui.STYLE_VAR_WINDOW_ROUNDING, 0)
+                if pygui.begin(f"Monitor: {i}", rand.monitors_visible[i], pygui.WINDOW_FLAGS_NO_DECORATION | pygui.WINDOW_FLAGS_NO_RESIZE):
+                    pygui.text(f"Monitor: {i}")
+                    pygui.get_window_draw_list().add_rect(
+                        (monitor.work_pos[0], monitor.work_pos[1]),
+                        (monitor.work_pos[0] + monitor.work_size[0], monitor.work_pos[1] + monitor.work_size[1]),
+                        pygui.color_convert_float4_to_u32((1, 1, 0, 1)),
+                        0, 0, 2
+                    )
+                    pygui.text("monitor.dpi_scale: {}".format(monitor.dpi_scale))
+                    pygui.text("monitor.main_pos: {}".format(monitor.main_pos))
+                    pygui.text("monitor.main_size: {}".format(monitor.main_size))
+                    pygui.text("monitor.work_pos: {}".format(monitor.work_pos))
+                    pygui.text("monitor.work_size: {}".format(monitor.work_size))
+                    if pygui.button("Close"):
+                        rand.monitors_visible[i].value = False
+                pygui.end()
+                pygui.pop_style_var()
+                pygui.pop_id()
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.input_text_multiline()"):
@@ -3684,12 +3883,14 @@ def show_random_extras():
         pygui.drag_float2("Next window size", rand.next_window_size.as_floatptrs(), 2, 10, 1000)
         pygui.checkbox("Add Size Constraint?", rand.next_window_do_size_constraint)
         if rand.next_window_do_size_constraint:
+            pygui.checkbox("Add callback? (Locks x resize)", rand.next_window_do_size_constraint_do_callback)
+                
             pygui.drag_float2(
-                "Next window x constraint",
+                "Next window TL constraint",
                 rand.next_window_size_constraint_min.as_floatptrs(),
                 2, 10, 1000)
             pygui.drag_float2(
-                "Next window y constraint",
+                "Next window BR constraint",
                 rand.next_window_size_constraint_max.as_floatptrs(),
                 2, 10, 1000)
             # It's techincally possible to make the max smaller than the min,
@@ -3703,6 +3904,7 @@ def show_random_extras():
                 rand.next_window_size_constraint_max.y,
                 rand.next_window_size_constraint_min.y,
             )
+
             
         pygui.drag_float2("Next window scroll", rand.next_window_scroll.as_floatptrs(), 2, -1, 1000)
         pygui.checkbox("Next window collapsed", rand.next_window_collapsed)
@@ -3710,11 +3912,30 @@ def show_random_extras():
         pygui.checkbox("Next window in Main Viewport?", rand.next_window_in_main_viewport)
         pygui.checkbox("Spawn window", rand.next_window_spawned)
         
+        def constraint_callback(data: pygui.ImGuiSizeCallbackData):
+            rand.callback_log = []
+            rand.callback_log.append("From callback:")
+            rand.callback_log.append("data.user_data: {}".format(data.user_data))
+            rand.callback_log.append("data.pos: {}".format(data.pos))
+            rand.callback_log.append("data.current_size: {}".format(data.current_size))
+            rand.callback_log.append("data.desired_size: {}".format(data.desired_size))
+            # Look the x axis when resizing in the callback
+            data.desired_size = (data.current_size[0], data.desired_size[1])
+
         if rand.next_window_spawned:
             if rand.next_window_do_size_constraint:
-                pygui.set_next_window_size_constraints(
-                rand.next_window_size_constraint_min.tuple(),
-                rand.next_window_size_constraint_max.tuple())
+                if rand.next_window_do_size_constraint_do_callback:
+                    pygui.set_next_window_size_constraints(
+                    rand.next_window_size_constraint_min.tuple(),
+                    rand.next_window_size_constraint_max.tuple(),
+                    constraint_callback,
+                    ("My custom", "Data", 2, "is cool"))
+                    for line in rand.callback_log:
+                        pygui.text(line)
+                else:
+                    pygui.set_next_window_size_constraints(
+                    rand.next_window_size_constraint_min.tuple(),
+                    rand.next_window_size_constraint_max.tuple())
             if rand.next_window_in_main_viewport:
                 main_viewport = pygui.get_main_viewport()
                 pygui.set_next_window_viewport(main_viewport.id)

@@ -1686,12 +1686,7 @@ def input_text(label: str, buf: String, flags: int=0, callback: "Callable[[ImGui
     pass
 
 def input_text_multiline(label: str, buf: String, size: tuple=(0, 0), flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool: ...
-def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callback: Callable=None, user_data: Any=None) -> bool:
-    """
-    Implied callback = null, user_data = null
-    """
-    pass
-
+def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool: ...
 def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
     """
     Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
@@ -4108,10 +4103,11 @@ class ImGuiIO:
     # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
     # (default to use native imm32 api on Windows)
     # """
-    # user_data: Any
-    # """
-    # = null   // store your own data.
-    # """
+    user_data: Any
+    """
+    = null   // store your own data.
+    pygui note: Store anything in here if you need.
+    """
     want_capture_keyboard: bool
     """
     Set when dear imgui will use keyboard inputs, in this case do not dispatch them to your main game/application (either way, always pass keyboard inputs to imgui). (e.g. inputtext active, or an imgui window is focused and navigation is enabled, etc.).
@@ -4250,33 +4246,33 @@ class ImGuiInputTextCallbackData:
     """
     Text buffer  // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
     """
-    # buf_dirty: bool
-    # """
-    # Set if you modify buf/buftextlen!// write// [completion,history,always]
-    # """
-    # buf_size: int
-    # """
-    # Buffer size (in bytes) = capacity+1  // read-only// [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
-    # """
+    buf_dirty: bool
+    """
+    Set if you modify buf/buftextlen!// write// [completion,history,always]
+    """
+    buf_size: int
+    """
+    Buffer size (in bytes) = capacity+1  // read-only// [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
+    """
     buf_text_len: int
     """
     Text length (in bytes)   // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
     """
-    # ctx: ImGuiContext
-    # """
-    # Parent ui context
-    # """
+    ctx: ImGuiContext
+    """
+    Parent ui context
+    """
     cursor_pos: int
     """
     Read-write   // [completion,history,always]
     """
-    # event_char: int
-    # """
-    # Arguments for the different callback events
-    # - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
-    # - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
-    # Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
-    # """
+    event_char: int
+    """
+    Arguments for the different callback events
+    - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
+    - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
+    Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
+    """
     event_flag: int
     """
     One imguiinputtextflags_callback*// read-only
@@ -4285,27 +4281,27 @@ class ImGuiInputTextCallbackData:
     """
     Key pressed (up/down/tab)// read-only// [completion,history]
     """
-    # flags: int
-    # """
-    # What user passed to inputtext()  // read-only
-    # """
-    # selection_end: int
-    # """
-    # Read-write   // [completion,history,always]
-    # """
-    # selection_start: int
-    # """
-    # Read-write   // [completion,history,always] == to selectionend when no selection)
-    # """
-    # user_data: Any
-    # """
-    # What user passed to inputtext()  // read-only
-    # """
-    # def clear_selection(self: ImGuiInputTextCallbackData) -> None: ...
+    flags: int
+    """
+    What user passed to inputtext()  // read-only
+    """
+    selection_end: int
+    """
+    Read-write   // [completion,history,always]
+    """
+    selection_start: int
+    """
+    Read-write   // [completion,history,always] == to selectionend when no selection)
+    """
+    user_data: Any
+    """
+    What user passed to inputtext()  // read-only
+    """
+    def clear_selection(self: ImGuiInputTextCallbackData) -> None: ...
     def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int) -> None: ...
-    # def has_selection(self: ImGuiInputTextCallbackData) -> bool: ...
+    def has_selection(self: ImGuiInputTextCallbackData) -> bool: ...
     def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str) -> None: ...
-    # def select_all(self: ImGuiInputTextCallbackData) -> None: ...
+    def select_all(self: ImGuiInputTextCallbackData) -> None: ...
 
 class ImGuiKeyData:
     """
@@ -4443,13 +4439,12 @@ class ImGuiPlatformIO:
     """
     (Optional) Access via ImGui::GetPlatformIO()
     """
-    pass
-    # monitors: ImVector_ImGuiPlatformMonitor
-    # """
-    # (Optional) Monitor list
-    # - Updated by: app/backend. Update every frame to dynamically support changing monitor or DPI configuration.
-    # - Used by: dear imgui to query DPI info, clamp popups/tooltips within same monitor and not have them straddle monitors.
-    # """
+    monitors: List[ImGuiPlatformMonitor]
+    """
+    (Optional) Monitor list
+    - Updated by: app/backend. Update every frame to dynamically support changing monitor or DPI configuration.
+    - Used by: dear imgui to query DPI info, clamp popups/tooltips within same monitor and not have them straddle monitors.
+    """
     # platform_create_vk_surface: Callable
     # """
     # (optional) for a vulkan renderer to call into platform code (since the surface creation needs to tie them both).
@@ -4544,12 +4539,12 @@ class ImGuiPlatformIO:
     # """
     # . . . r .  // (optional) call present/swapbuffers. 'render_arg' is the value passed to renderplatformwindowsdefault().
     # """
-    # viewports: ImVector_ImGuiViewportPtr
-    # """
-    # Viewports list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
-    # (in the future we will attempt to organize this feature to remove the need for a "main viewport")
-    # Main viewports, followed by all secondary viewports.
-    # """
+    viewports: List[ImGuiViewport]
+    """
+    Viewports list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
+    (in the future we will attempt to organize this feature to remove the need for a "main viewport")
+    Main viewports, followed by all secondary viewports.
+    """
 
 class ImGuiPlatformImeData:
     """
@@ -4574,54 +4569,52 @@ class ImGuiPlatformMonitor:
     (Optional) This is required when enabling multi-viewport. Represent the bounds of each connected monitor/display and their DPI.
     We use this information for multiple DPI support + clamping the position of popups and tooltips so they don't straddle multiple monitors.
     """
-    pass
-    # dpi_scale: float
-    # """
-    # 1.0f = 96 dpi
-    # """
-    # main_pos: tuple
-    # """
-    # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
-    # """
-    # main_size: tuple
-    # """
-    # Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
-    # """
+    dpi_scale: float
+    """
+    1.0f = 96 dpi
+    """
+    main_pos: tuple
+    """
+    Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
+    """
+    main_size: tuple
+    """
+    Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
+    """
     # platform_handle: Any
     # """
     # Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
     # """
-    # work_pos: tuple
-    # """
-    # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
-    # """
-    # work_size: tuple
-    # """
-    # Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
-    # """
+    work_pos: tuple
+    """
+    Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
+    """
+    work_size: tuple
+    """
+    Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
+    """
 
 class ImGuiSizeCallbackData:
     """
     Resizing callback data to apply custom constraint. As enabled by SetNextWindowSizeConstraints(). Callback is called during the next Begin().
     NB: For basic min/max size constraint on each axis you don't need to use the callback! The SetNextWindowSizeConstraints() parameters are enough.
     """
-    pass
-    # current_size: tuple
-    # """
-    # Read-only.   current window size.
-    # """
-    # desired_size: tuple
-    # """
-    # Read-write.  desired size, based on user's mouse position. write to this field to restrain resizing.
-    # """
-    # pos: tuple
-    # """
-    # Read-only.   window position, for reference.
-    # """
-    # user_data: Any
-    # """
-    # Read-only.   what user passed to setnextwindowsizeconstraints(). generally store an integer or float in here (need reinterpret_cast<>).
-    # """
+    current_size: tuple
+    """
+    Read-only.   current window size.
+    """
+    desired_size: tuple
+    """
+    Read-write.  desired size, based on user's mouse position. write to this field to restrain resizing.
+    """
+    pos: tuple
+    """
+    Read-only.   window position, for reference.
+    """
+    user_data: Any
+    """
+    Read-only.   what user passed to setnextwindowsizeconstraints(). generally store an integer or float in here (need reinterpret_cast<>).
+    """
 
 class ImGuiStyle:
     """
@@ -4843,29 +4836,6 @@ class ImGuiTableSortSpecs:
     Set to true when specs have changed since last time! use this to sort again, then clear the flag.
     """
 
-class ImGuiTextBuffer:
-    """
-    Helper: Growable text buffer for logging/accumulating text
-    (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
-    """
-    pass
-    # buf: ImVector_char
-    # def append(self: ImGuiTextBuffer, str_: str, str_end: str=None) -> None: ...
-    # def appendf(self: ImGuiTextBuffer, fmt: str) -> None: ...
-    # def appendfv(self: ImGuiTextBuffer, fmt: str) -> None: ...
-    # def begin(self: ImGuiTextBuffer) -> str: ...
-    # def c_str(self: ImGuiTextBuffer) -> str: ...
-    # def clear(self: ImGuiTextBuffer) -> None: ...
-    # def empty(self: ImGuiTextBuffer) -> bool: ...
-    # def end(self: ImGuiTextBuffer) -> str:
-    #     """
-    #     Buf is zero-terminated, so end() will point on the zero-terminator
-    #     """
-    #     pass
-
-    # def reserve(self: ImGuiTextBuffer, capacity: int) -> None: ...
-    # def size(self: ImGuiTextBuffer) -> int: ...
-
 class ImGuiTextFilter:
     """
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
@@ -5038,29 +5008,9 @@ class ImVector_ImDrawVert:
     data: ImDrawVert
     size: int
 
-class ImVector_ImGuiPlatformMonitor: ...
-    # capacity: int
-    # data: ImGuiPlatformMonitor
-    # size: int
-
-class ImVector_ImGuiViewportPtr: ...
-    # capacity: int
-    # data: ImGuiViewport
-    # size: int
-
 class ImVector_ImU32: ...
     # capacity: int
     # data: int
-    # size: int
-
-class ImVector_ImVec2: ...
-    # capacity: int
-    # data: ImVec2
-    # size: int
-
-class ImVector_ImVec4: ...
-    # capacity: int
-    # data: ImVec4
     # size: int
 
 class ImVector_ImWchar: ...

@@ -2091,7 +2091,6 @@ cdef extern from "cimgui.h":
 
 
 
-    ImGuiKey GetKeyIndex(ImGuiKey key) except +
 
     # Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
     const ImGuiPayload* ImGui_AcceptDragDropPayload(const char* type_, ImGuiDragDropFlags flags) except +
