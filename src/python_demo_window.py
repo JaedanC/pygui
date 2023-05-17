@@ -2141,6 +2141,7 @@ class rand:
     current_item = pygui.Int()
     current_item_list = pygui.Int()
     error_text = [(1, 0, 0, 1), ""]
+    utf8_string = pygui.String("Hello")
     drag_min = pygui.Int(1)
     drag_max = pygui.Int(100)
     drag = pygui.Int(50)
@@ -3217,6 +3218,12 @@ def show_random_extras():
     
     if pygui.tree_node("pygui.debug_text_encoding()"):
         pygui.debug_text_encoding("Demo String")
+        pygui.text("Emojis")
+        pygui.debug_text_encoding("😀😁😂")
+        pygui.text("utf-8 characters")
+        pygui.debug_text_encoding("こんにちは")
+        pygui.input_text("Custom", rand.utf8_string)
+        pygui.debug_text_encoding(rand.utf8_string.value)
         pygui.tree_pop()
     
     if pygui.tree_node("pygui.dock_space()"):
@@ -3538,7 +3545,7 @@ def show_random_extras():
     if pygui.tree_node("pygui.ImGuiPlaformIO"):
         platform_io = pygui.get_platform_io()
         pygui.list_box("##Select viewport", rand.viewport_selection, [f"Viewport({hash(v)})" for v in platform_io.viewports])
-        viewport = platform_io.viewports[rand.viewport_selection.value]
+        viewport = platform_io.viewports[rand.viewport_selection.value % len(platform_io.viewports)]
 
         margin = 5
         pygui.get_foreground_draw_list(viewport).add_rect(

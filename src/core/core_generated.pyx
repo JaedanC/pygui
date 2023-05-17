@@ -383,6 +383,39 @@ cdef class Vec4:
         array[3] = self.w_ptr.value
 
 
+cdef class ImGlyphRange:
+    cdef unsigned short* c_ranges
+    cdef public object ranges
+
+    def __init__(self, glyph_ranges: Sequence[tuple]):
+        self.ranges = glyph_ranges
+        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+        for i, g_range in enumerate(glyph_ranges):
+            self.c_ranges[i * 2] = g_range[0]
+            self.c_ranges[i * 2 + 1] = g_range[1]
+        self.c_ranges[len(glyph_ranges) * 2] = 0
+
+    def __dealloc__(self):
+        print("Deleting")
+        ccimgui.ImGui_MemFree(self.c_ranges)
+
+    @staticmethod
+    cdef from_short_array(const ccimgui.ImWchar* c_glyph_ranges):
+        cdef ccimgui.ImWchar x
+        cdef ccimgui.ImWchar y
+        cdef int i = 0
+        ranges = []
+        while True:
+            x = c_glyph_ranges[i * 2]
+            if x == 0:
+                break
+            y = c_glyph_ranges[i * 2 + 1]
+            ranges.append((x, y))
+            i += 1
+        # Owns the ranges and keeps a copy.
+        return ImGlyphRange(ranges)
+
+
 IM_COL32_R_SHIFT = 0
 IM_COL32_G_SHIFT = 8
 IM_COL32_B_SHIFT = 16
@@ -3444,6 +3477,18 @@ def get_item_rect_size():
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectSize()
     return _cast_ImVec2_tuple(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?returns(int)
+def get_key_index(key: int):
+    cdef ccimgui.ImGuiKey res = ccimgui.GetKeyIndex(
+        key
+    )
+    return res
 # [End Function]
 
 # [Function]

@@ -1451,8 +1451,41 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             array[1] = self.y_ptr.value
             array[2] = self.z_ptr.value
             array[3] = self.w_ptr.value
+    
+            
+    cdef class ImGlyphRange:
+        cdef unsigned short* c_ranges
+        cdef public object ranges
+        
+        def __init__(self, glyph_ranges: Sequence[tuple]):
+            self.ranges = glyph_ranges
+            self.c_ranges = <unsigned short*>{pxd_library_name}.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+            for i, g_range in enumerate(glyph_ranges):
+                self.c_ranges[i * 2] = g_range[0]
+                self.c_ranges[i * 2 + 1] = g_range[1]
+            self.c_ranges[len(glyph_ranges) * 2] = 0
+        
+        def __dealloc__(self):
+            print("Deleting")
+            {pxd_library_name}.ImGui_MemFree(self.c_ranges)
+        
+        @staticmethod
+        cdef from_short_array(const {pxd_library_name}.ImWchar* c_glyph_ranges):
+            cdef {pxd_library_name}.ImWchar x
+            cdef {pxd_library_name}.ImWchar y
+            cdef int i = 0
+            ranges = []
+            while True:
+                x = c_glyph_ranges[i * 2]
+                if x == 0:
+                    break
+                y = c_glyph_ranges[i * 2 + 1]
+                ranges.append((x, y))
+                i += 1
+            # Owns the ranges and keeps a copy.
+            return ImGlyphRange(ranges)
 
-
+    
     IM_COL32_R_SHIFT = 0
     IM_COL32_G_SHIFT = 8
     IM_COL32_B_SHIFT = 16
@@ -1748,6 +1781,11 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
         def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4: ...
         def to_u32(self) -> int: ...
         def copy(self) -> Vec4: ...
+    
+    class ImGlyphRange:
+        ranges: Sequence[tuple]
+        def __init__(self, glyph_ranges: Sequence[tuple]): ...
+
 
     def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 

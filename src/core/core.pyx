@@ -383,6 +383,39 @@ cdef class Vec4:
         array[3] = self.w_ptr.value
 
 
+cdef class ImGlyphRange:
+    cdef unsigned short* c_ranges
+    cdef public object ranges
+
+    def __init__(self, glyph_ranges: Sequence[tuple]):
+        self.ranges = glyph_ranges
+        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+        for i, g_range in enumerate(glyph_ranges):
+            self.c_ranges[i * 2] = g_range[0]
+            self.c_ranges[i * 2 + 1] = g_range[1]
+        self.c_ranges[len(glyph_ranges) * 2] = 0
+
+    def __dealloc__(self):
+        print("Deleting")
+        ccimgui.ImGui_MemFree(self.c_ranges)
+
+    @staticmethod
+    cdef from_short_array(const ccimgui.ImWchar* c_glyph_ranges):
+        cdef ccimgui.ImWchar x
+        cdef ccimgui.ImWchar y
+        cdef int i = 0
+        ranges = []
+        while True:
+            x = c_glyph_ranges[i * 2]
+            if x == 0:
+                break
+            y = c_glyph_ranges[i * 2 + 1]
+            ranges.append((x, y))
+            i += 1
+        # Owns the ranges and keeps a copy.
+        return ImGlyphRange(ranges)
+
+
 IM_COL32_R_SHIFT = 0
 IM_COL32_G_SHIFT = 8
 IM_COL32_B_SHIFT = 16
@@ -3616,17 +3649,18 @@ def get_draw_data():
 
 # [Function]
 # ?use_template(True)
-# ?active(True)
+# ?active(False)
 # ?invisible(False)
 # ?returns(ImFont)
-def get_font():
-    """
-    Style read access
-    - Use the ShowStyleEditor() function to interactively see/edit the colors.
-    Get current font
-    """
-    cdef const ccimgui.ImFont* res = ccimgui.ImGui_GetFont()
-    return ImFont.from_ptr(res)
+# def get_font():
+#     """
+#     Style read access
+#     - Use the ShowStyleEditor() function to interactively see/edit the colors.
+#     Get current font
+#     # TODO: Fix-me
+#     """
+#     cdef const ccimgui.ImFont* res = ccimgui.ImGui_GetFont()
+#     return ImFont.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -6588,11 +6622,11 @@ def pop_button_repeat():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
-# def pop_font():
-#     ccimgui.ImGui_PopFont()
+def pop_font():
+    ccimgui.ImGui_PopFont()
 # [End Function]
 
 # [Function]
@@ -6732,17 +6766,17 @@ def push_button_repeat(repeat: bool):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?returns(None)
-# def push_font(font: ImFont):
-#     """
-#     Parameters stacks (shared)
-#     Use null as a shortcut to push default font
-#     """
-#     ccimgui.ImGui_PushFont(
-#         font._ptr
-#     )
+def push_font(font: ImFont):
+    """
+    Parameters stacks (shared)
+    Use null as a shortcut to push default font
+    """
+    ccimgui.ImGui_PushFont(
+        font._ptr
+    )
 # [End Function]
 
 # [Function]
@@ -12015,7 +12049,7 @@ cdef class ImDrawVert:
 
 # [Class]
 # [Class Constants]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFont:
@@ -12023,10 +12057,10 @@ cdef class ImFont:
     Font runtime data and rendering
     ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
     """
-    cdef const ccimgui.ImFont* _ptr
+    cdef ccimgui.ImFont* _ptr
     
     @staticmethod
-    cdef ImFont from_ptr(const ccimgui.ImFont* _ptr):
+    cdef ImFont from_ptr(ccimgui.ImFont* _ptr):
         if _ptr == NULL:
             return None
         cdef ImFont wrapper = ImFont.__new__(ImFont)
@@ -12063,20 +12097,21 @@ cdef class ImFont:
 
     # [Field]
     # ?use_template(True)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?returns(ImFontConfig)
-    @property
-    def config_data(self):
-        """
-        4-8   // in  //            // pointer within containeratlas->configdata
-        """
-        cdef const ccimgui.ImFontConfig* res = dereference(self._ptr).ConfigData
-        return ImFontConfig.from_ptr(res)
-    @config_data.setter
-    def config_data(self, value: ImFontConfig):
-        # dereference(self._ptr).ConfigData = value._ptr
-        raise NotImplementedError
+    # @property
+    # def config_data(self):
+    #     """
+    #     4-8   // in  //            // pointer within containeratlas->configdata
+    #     # TODO: Fix me
+    #     """
+    #     cdef const ccimgui.ImFontConfig* res = dereference(self._ptr).ConfigData
+    #     return ImFontConfig.from_ptr(res)
+    # @config_data.setter
+    # def config_data(self, value: ImFontConfig):
+    #     # dereference(self._ptr).ConfigData = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -12951,9 +12986,9 @@ cdef class ImFontAtlas:
         cdef unsigned int res = <uintptr_t>dereference(self._ptr).TexID
         return res
     @tex_id.setter
-    def tex_id(self, value: Any):
-        # dereference(self._ptr).TexID = <void*>value
-        raise NotImplementedError
+    def tex_id(self, value: int):
+        dereference(self._ptr).TexID = <void*>value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13177,32 +13212,32 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFont)
-    # def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
-    #         self._ptr,
-    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr)
-    #     )
-    #     return ImFont.from_ptr(res)
+    def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
+        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
+            self._ptr,
+            <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr)
+        )
+        return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(ImFont)
-    # def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
-    #         self._ptr,
-    #         _bytes(filename),
-    #         size_pixels,
-    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
-    #         glyph_ranges
-    #     )
-    #     return ImFont.from_ptr(res)
+    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None):
+        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
+            self._ptr,
+            _bytes(filename),
+            size_pixels,
+            <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+            <ccimgui.ImWchar*>(glyph_ranges.c_ranges if glyph_ranges is not None else NULL)
+        )
+        return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -13266,22 +13301,22 @@ cdef class ImFontAtlas:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
-    # def build(self: ImFontAtlas):
-    #     """
-    #     Build atlas, retrieve pixel data.
-    #     User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
-    #     The pitch is always = Width * BytesPerPixels (1 or 4)
-    #     Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
-    #     the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
-    #     Build pixels data. this is called automatically for you by the gettexdata*** functions.
-    #     """
-    #     cdef bool res = ccimgui.ImFontAtlas_Build(
-    #         self._ptr
-    #     )
-    #     return res
+    def build(self: ImFontAtlas):
+        """
+        Build atlas, retrieve pixel data.
+        User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
+        The pitch is always = Width * BytesPerPixels (1 or 4)
+        Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
+        the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
+        Build pixels data. this is called automatically for you by the gettexdata*** functions.
+        """
+        cdef bool res = ccimgui.ImFontAtlas_Build(
+            self._ptr
+        )
+        return res
     # [End Method]
 
     # [Method]
@@ -13371,18 +13406,18 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(int)
-    # def get_glyph_ranges_chinese_full(self: ImFontAtlas):
-    #     """
-    #     Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
-    #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(
-    #         self._ptr
-    #     )
-    #     return res
+    # ?returns(ImGlyphRange)
+    def get_glyph_ranges_chinese_full(self: ImFontAtlas):
+        """
+        Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
+        """
+        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(
+            self._ptr
+        )
+        return ImGlyphRange.from_short_array(res)
     # [End Method]
 
     # [Method]
@@ -13401,18 +13436,18 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(int)
-    # def get_glyph_ranges_cyrillic(self: ImFontAtlas):
-    #     """
-    #     Default + about 400 cyrillic characters
-    #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesCyrillic(
-    #         self._ptr
-    #     )
-    #     return res
+    def get_glyph_ranges_cyrillic(self: ImFontAtlas):
+        """
+        Default + about 400 cyrillic characters
+        """
+        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesCyrillic(
+            self._ptr
+        )
+        return ImGlyphRange.from_short_array(res)
     # [End Method]
 
     # [Method]
@@ -13449,25 +13484,25 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(int)
-    # def get_glyph_ranges_japanese(self: ImFontAtlas):
-    #     """
-    #     Default + hiragana, katakana, half-width, selection of 2999 ideographs
-    #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesJapanese(
-    #         self._ptr
-    #     )
-    #     return res
+    # ?returns(ImGlyphRange)
+    def get_glyph_ranges_japanese(self: ImFontAtlas):
+        """
+        Default + hiragana, katakana, half-width, selection of 2999 ideographs
+        """
+        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesJapanese(
+            self._ptr
+        )
+        return ImGlyphRange.from_short_array(res)
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
     # ?invisible(False)
-    # ?returns(int)
+    # ?returns(ImGlyphRange)
     # def get_glyph_ranges_korean(self: ImFontAtlas):
     #     """
     #     Default + korean characters
@@ -13813,14 +13848,14 @@ cdef class ImFontBuilderIO:
 
 # [Class]
 # [Class Constants]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 cdef class ImFontConfig:
-    cdef const ccimgui.ImFontConfig* _ptr
+    cdef ccimgui.ImFontConfig* _ptr
     
     @staticmethod
-    cdef ImFontConfig from_ptr(const ccimgui.ImFontConfig* _ptr):
+    cdef ImFontConfig from_ptr(ccimgui.ImFontConfig* _ptr):
         if _ptr == NULL:
             return None
         cdef ImFontConfig wrapper = ImFontConfig.__new__(ImFontConfig)
@@ -13838,7 +13873,7 @@ cdef class ImFontConfig:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(ImFont)
@@ -13848,12 +13883,12 @@ cdef class ImFontConfig:
         return ImFont.from_ptr(res)
     @dst_font.setter
     def dst_font(self, value: ImFont):
-        # dereference(self._ptr).DstFont = value._ptr
-        raise NotImplementedError
+        dereference(self._ptr).DstFont = value._ptr
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -13866,12 +13901,12 @@ cdef class ImFontConfig:
         return res
     @ellipsis_char.setter
     def ellipsis_char(self, value: int):
-        # dereference(self._ptr).EllipsisChar = value
-        raise NotImplementedError
+        dereference(self._ptr).EllipsisChar = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -13884,8 +13919,8 @@ cdef class ImFontConfig:
         return res
     @font_builder_flags.setter
     def font_builder_flags(self, value: int):
-        # dereference(self._ptr).FontBuilderFlags = value
-        raise NotImplementedError
+        dereference(self._ptr).FontBuilderFlags = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13907,7 +13942,7 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
@@ -13920,12 +13955,12 @@ cdef class ImFontConfig:
         return res
     @font_data_owned_by_atlas.setter
     def font_data_owned_by_atlas(self, value: bool):
-        # dereference(self._ptr).FontDataOwnedByAtlas = value
-        raise NotImplementedError
+        dereference(self._ptr).FontDataOwnedByAtlas = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -13938,12 +13973,12 @@ cdef class ImFontConfig:
         return res
     @font_data_size.setter
     def font_data_size(self, value: int):
-        # dereference(self._ptr).FontDataSize = value
-        raise NotImplementedError
+        dereference(self._ptr).FontDataSize = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -13956,12 +13991,12 @@ cdef class ImFontConfig:
         return res
     @font_no.setter
     def font_no(self, value: int):
-        # dereference(self._ptr).FontNo = value
-        raise NotImplementedError
+        dereference(self._ptr).FontNo = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
@@ -13974,12 +14009,12 @@ cdef class ImFontConfig:
         return _cast_ImVec2_tuple(res)
     @glyph_extra_spacing.setter
     def glyph_extra_spacing(self, value: tuple):
-        # dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+        dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(float)
@@ -13992,12 +14027,12 @@ cdef class ImFontConfig:
         return res
     @glyph_max_advance_x.setter
     def glyph_max_advance_x(self, value: float):
-        # dereference(self._ptr).GlyphMaxAdvanceX = value
-        raise NotImplementedError
+        dereference(self._ptr).GlyphMaxAdvanceX = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(float)
@@ -14010,12 +14045,12 @@ cdef class ImFontConfig:
         return res
     @glyph_min_advance_x.setter
     def glyph_min_advance_x(self, value: float):
-        # dereference(self._ptr).GlyphMinAdvanceX = value
-        raise NotImplementedError
+        dereference(self._ptr).GlyphMinAdvanceX = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(tuple)
@@ -14028,8 +14063,8 @@ cdef class ImFontConfig:
         return _cast_ImVec2_tuple(res)
     @glyph_offset.setter
     def glyph_offset(self, value: tuple):
-        # dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+        dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14059,7 +14094,7 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
@@ -14072,8 +14107,8 @@ cdef class ImFontConfig:
         return res
     @merge_mode.setter
     def merge_mode(self, value: bool):
-        # dereference(self._ptr).MergeMode = value
-        raise NotImplementedError
+        dereference(self._ptr).MergeMode = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14095,7 +14130,7 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -14108,12 +14143,12 @@ cdef class ImFontConfig:
         return res
     @oversample_h.setter
     def oversample_h(self, value: int):
-        # dereference(self._ptr).OversampleH = value
-        raise NotImplementedError
+        dereference(self._ptr).OversampleH = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(int)
@@ -14126,12 +14161,12 @@ cdef class ImFontConfig:
         return res
     @oversample_v.setter
     def oversample_v(self, value: int):
-        # dereference(self._ptr).OversampleV = value
-        raise NotImplementedError
+        dereference(self._ptr).OversampleV = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(bool)
@@ -14144,12 +14179,12 @@ cdef class ImFontConfig:
         return res
     @pixel_snap_h.setter
     def pixel_snap_h(self, value: bool):
-        # dereference(self._ptr).PixelSnapH = value
-        raise NotImplementedError
+        dereference(self._ptr).PixelSnapH = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(float)
@@ -14162,12 +14197,12 @@ cdef class ImFontConfig:
         return res
     @rasterizer_multiply.setter
     def rasterizer_multiply(self, value: float):
-        # dereference(self._ptr).RasterizerMultiply = value
-        raise NotImplementedError
+        dereference(self._ptr).RasterizerMultiply = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?returns(float)
@@ -14180,9 +14215,50 @@ cdef class ImFontConfig:
         return res
     @size_pixels.setter
     def size_pixels(self, value: float):
-        # dereference(self._ptr).SizePixels = value
-        raise NotImplementedError
+        dereference(self._ptr).SizePixels = value
+        # raise NotImplementedError
     # [End Field]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImFontConfig)
+    @staticmethod
+    def create():
+        cdef ccimgui.ImFontConfig* config = <ccimgui.ImFontConfig*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImFontConfig))
+
+        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
+        # ImFontConfig::ImFontConfig()
+        # {
+        #     memset(this, 0, sizeof(*this));
+        #     FontDataOwnedByAtlas = true;
+        #     OversampleH = 3;
+        #     OversampleV = 1;
+        #     GlyphMaxAdvanceX = FLT_MAX;
+        #     RasterizerMultiply = 1.0f;
+        #     EllipsisChar = (ImWchar)-1;
+        # }
+
+        memset(config, 0, sizeof(ccimgui.ImFontConfig))
+        config.FontDataOwnedByAtlas = True
+        config.OversampleH = 3
+        config.OversampleV = 1
+        config.GlyphMaxAdvanceX = FLT_MAX
+        config.RasterizerMultiply = <float>1.0
+        config.EllipsisChar = -1
+        return ImFontConfig.from_ptr(config)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImFontConfig):
+        ccimgui.ImGui_MemFree(self._ptr)
+        self._ptr = NULL
+    # [End Method]
 # [End Class]
 
 # [Class]
@@ -14482,65 +14558,70 @@ cdef class ImFontGlyphRangesBuilder:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    # def add_char(self: ImFontGlyphRangesBuilder, c: int):
-    #     """
-    #     Add character
-    #     """
-    #     ccimgui.ImFontGlyphRangesBuilder_AddChar(
-    #         self._ptr,
-    #         c
-    #     )
+    def add_char(self: ImFontGlyphRangesBuilder, c: int):
+        """
+        Add character
+        """
+        ccimgui.ImFontGlyphRangesBuilder_AddChar(
+            self._ptr,
+            c
+        )
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-    # def add_ranges(self: ImFontGlyphRangesBuilder, ranges: int):
-    #     """
-    #     Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
-    #     """
-    #     ccimgui.ImFontGlyphRangesBuilder_AddRanges(
-    #         self._ptr,
-    #         ranges
-    #     )
+    def add_ranges(self: ImFontGlyphRangesBuilder, ranges: ImGlyphRange):
+        """
+        Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
+        """
+        ccimgui.ImFontGlyphRangesBuilder_AddRanges(
+            self._ptr,
+            ranges.c_ranges
+        )
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?returns(None)
-#     def add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None):
-#         """
-#         Add string (each character of the utf-8 string are added)
-#         """
-#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+    def add_text(self: ImFontGlyphRangesBuilder, text: str):
+        """
+        Add string (each character of the utf-8 string are added)
+        """
 
-#         ccimgui.ImFontGlyphRangesBuilder_AddText(
-#             self._ptr,
-#             _bytes(text),
-#             ((<char*>bytes_text_end if text_end is not None else NULL))
-#         )
+        ccimgui.ImFontGlyphRangesBuilder_AddText(
+            self._ptr,
+            _bytes(text),
+            NULL
+        )
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
-    # ?returns(None)
-    # def build_ranges(self: ImFontGlyphRangesBuilder, out_ranges: ImVector_ImWchar):
-    #     """
-    #     Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges)
-    #     """
-    #     ccimgui.ImFontGlyphRangesBuilder_BuildRanges(
-    #         self._ptr,
-    #         out_ranges._ptr
-    #     )
+    # ?returns(ImGlyphRange)
+    def build_ranges(self: ImFontGlyphRangesBuilder):
+        """
+        Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges
+        pygui note: Uses ImGlyphRange wrapper instead.
+        """
+        cdef ccimgui.ImVector_ImWchar c_out_ranges
+        ccimgui.ImVector_Construct(&c_out_ranges)
+        ccimgui.ImFontGlyphRangesBuilder_BuildRanges(
+            self._ptr,
+            &c_out_ranges
+        )
+        cdef ImGlyphRange res = ImGlyphRange.from_short_array(c_out_ranges.Data)
+        ccimgui.ImVector_Destruct(&c_out_ranges)
+        return res
     # [End Method]
 
     # [Method]
@@ -14552,6 +14633,30 @@ cdef class ImFontGlyphRangesBuilder:
     #     ccimgui.ImFontGlyphRangesBuilder_Clear(
     #         self._ptr
     #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImFontGlyphRangesBuilder)
+    @staticmethod
+    def create():
+        cdef ccimgui.ImFontGlyphRangesBuilder* builder = <ccimgui.ImFontGlyphRangesBuilder*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImFontGlyphRangesBuilder))
+        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
+        memset(builder, 0, sizeof(ccimgui.ImFontGlyphRangesBuilder))
+        ccimgui.ImFontGlyphRangesBuilder_Clear(builder)
+        return ImFontGlyphRangesBuilder.from_ptr(builder)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImFontGlyphRangesBuilder):
+        ccimgui.ImGui_MemFree(self._ptr)
+        self._ptr = NULL
     # [End Method]
 
     # [Method]

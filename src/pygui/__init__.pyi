@@ -69,6 +69,11 @@ class Vec4:
     def to_u32(self) -> int: ...
     def copy(self) -> Vec4: ...
 
+class ImGlyphRange:
+    ranges: Sequence[tuple]
+    def __init__(self, glyph_ranges: Sequence[tuple]): ...
+
+
 def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
 
 class ImGuiError(Exception): ...
@@ -1333,13 +1338,14 @@ def get_draw_data() -> ImDrawData:
     """
     pass
 
-def get_font() -> ImFont:
-    """
-    Style read access
-    - Use the ShowStyleEditor() function to interactively see/edit the colors.
-    Get current font
-    """
-    pass
+# def get_font() -> ImFont:
+#     """
+#     Style read access
+#     - Use the ShowStyleEditor() function to interactively see/edit the colors.
+#     Get current font
+#     # TODO: Fix-me
+#     """
+#     pass
 
 def get_font_size() -> float:
     """
@@ -2039,7 +2045,7 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
 def plot_lines_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
 def pop_button_repeat() -> None: ...
 # def pop_clip_rect() -> None: ...
-# def pop_font() -> None: ...
+def pop_font() -> None: ...
 def pop_id() -> None:
     """
     Pop from the id stack.
@@ -2075,12 +2081,12 @@ def push_button_repeat(repeat: bool) -> None:
 #     """
 #     pass
 
-# def push_font(font: ImFont) -> None:
-#     """
-#     Parameters stacks (shared)
-#     Use null as a shortcut to push default font
-#     """
-#     pass
+def push_font(font: ImFont) -> None:
+    """
+    Parameters stacks (shared)
+    Use null as a shortcut to push default font
+    """
+    pass
 
 def push_id(obj: object) -> None:
     """
@@ -3151,10 +3157,11 @@ class ImFont:
     """
     4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
     """
-    config_data: ImFontConfig
-    """
-    4-8   // in  //// pointer within containeratlas->configdata
-    """
+    # config_data: ImFontConfig
+    # """
+    # 4-8   // in  //// pointer within containeratlas->configdata
+    # # TODO: Fix me
+    # """
     config_data_count: int
     """
     2 // in  // ~ 1// number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
@@ -3376,8 +3383,8 @@ class ImFontAtlas:
     #     pass
 
     # def add_font(self: ImFontAtlas, font_cfg: ImFontConfig) -> ImFont: ...
-    # def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None) -> ImFont: ...
-    # def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont: ...
+    def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None) -> ImFont: ...
+    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None) -> ImFont: ...
     # def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
@@ -3396,16 +3403,16 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def build(self: ImFontAtlas) -> bool:
-    #     """
-    #     Build atlas, retrieve pixel data.
-    #     User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
-    #     The pitch is always = Width * BytesPerPixels (1 or 4)
-    #     Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
-    #     the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
-    #     Build pixels data. this is called automatically for you by the gettexdata*** functions.
-    #     """
-    #     pass
+    def build(self: ImFontAtlas) -> bool:
+        """
+        Build atlas, retrieve pixel data.
+        User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
+        The pitch is always = Width * BytesPerPixels (1 or 4)
+        Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
+        the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
+        Build pixels data. this is called automatically for you by the gettexdata*** functions.
+        """
+        pass
 
     # def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2) -> None:
     #     """
@@ -3438,11 +3445,11 @@ class ImFontAtlas:
         pass
 
     # def get_custom_rect_by_index(self: ImFontAtlas, index: int) -> ImFontAtlasCustomRect: ...
-    # def get_glyph_ranges_chinese_full(self: ImFontAtlas) -> int:
-    #     """
-    #     Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
-    #     """
-    #     pass
+    def get_glyph_ranges_chinese_full(self: ImFontAtlas) -> ImGlyphRange:
+        """
+        Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
+        """
+        pass
 
     # def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas) -> int:
     #     """
@@ -3450,11 +3457,11 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def get_glyph_ranges_cyrillic(self: ImFontAtlas) -> int:
-    #     """
-    #     Default + about 400 cyrillic characters
-    #     """
-    #     pass
+    def get_glyph_ranges_cyrillic(self: ImFontAtlas) -> int:
+        """
+        Default + about 400 cyrillic characters
+        """
+        pass
 
     # def get_glyph_ranges_default(self: ImFontAtlas) -> int:
     #     """
@@ -3471,13 +3478,13 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def get_glyph_ranges_japanese(self: ImFontAtlas) -> int:
-    #     """
-    #     Default + hiragana, katakana, half-width, selection of 2999 ideographs
-    #     """
-    #     pass
+    def get_glyph_ranges_japanese(self: ImFontAtlas) -> ImGlyphRange:
+        """
+        Default + hiragana, katakana, half-width, selection of 2999 ideographs
+        """
+        pass
 
-    # def get_glyph_ranges_korean(self: ImFontAtlas) -> int:
+    # def get_glyph_ranges_korean(self: ImFontAtlas) -> ImGlyphRange:
     #     """
     #     Default + korean characters
     #     """
@@ -3634,6 +3641,8 @@ class ImFontConfig:
     """
     Size in pixels for rasterizer (more or less maps to the resulting font height).
     """
+    def create() -> ImFontConfig: ...
+    def destroy(self: ImFontConfig) -> None: ...
 
 class ImFontGlyph:
     """
@@ -3694,36 +3703,38 @@ class ImFontGlyphRangesBuilder:
     Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
     This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
     """
-    pass
     # used_chars: ImVector_ImU32
     # """
     # Store 1-bit per unicode code point (0=unused, 1=used)
     # """
-    # def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
-    #     """
-    #     Add character
-    #     """
-    #     pass
+    def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
+        """
+        Add character
+        """
+        pass
 
-    # def add_ranges(self: ImFontGlyphRangesBuilder, ranges: int) -> None:
-    #     """
-    #     Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
-    #     """
-    #     pass
+    def add_ranges(self: ImFontGlyphRangesBuilder, ranges: ImGlyphRange) -> None:
+        """
+        Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
+        """
+        pass
 
-    # def add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None) -> None:
-    #     """
-    #     Add string (each character of the utf-8 string are added)
-    #     """
-    #     pass
+    def add_text(self: ImFontGlyphRangesBuilder, text: str) -> None:
+        """
+        Add string (each character of the utf-8 string are added)
+        """
+        pass
 
-    # def build_ranges(self: ImFontGlyphRangesBuilder, out_ranges: ImVector_ImWchar) -> None:
-    #     """
-    #     Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges)
-    #     """
-    #     pass
+    def build_ranges(self: ImFontGlyphRangesBuilder) -> ImGlyphRange:
+        """
+        Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges
+        pygui note: Uses ImGlyphRange wrapper instead.
+        """
+        pass
 
     # def clear(self: ImFontGlyphRangesBuilder) -> None: ...
+    def create() -> ImFontGlyphRangesBuilder: ...
+    def destroy(self: ImFontGlyphRangesBuilder) -> None: ...
     # def get_bit(self: ImFontGlyphRangesBuilder, n: int) -> bool:
     #     """
     #     Get bit n in the array
