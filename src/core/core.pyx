@@ -120,7 +120,7 @@ cdef class String:
     cdef char* buffer
     cdef public int buffer_size
 
-    def __init__(self, initial_value: str="", buffer_size=256):
+    def __cinit__(self, initial_value: str="", buffer_size=256):
         self.buffer = <char*>ccimgui.ImGui_MemAlloc(buffer_size)
         self.buffer_size: int = buffer_size
         self.value = initial_value
@@ -387,17 +387,27 @@ cdef class ImGlyphRange:
     cdef unsigned short* c_ranges
     cdef public object ranges
 
-    def __init__(self, glyph_ranges: Sequence[tuple]):
+    def __cinit__(self, glyph_ranges: Sequence[tuple]):
+        # First remove any tuples that contain zero, because these are
+        # considered terminators of the array in imgui.
+        glyph_ranges = [g for g in glyph_ranges if g[0] != 0]
         self.ranges = glyph_ranges
         self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+        if self.c_ranges == NULL:
+            raise MemoryError()
         for i, g_range in enumerate(glyph_ranges):
             self.c_ranges[i * 2] = g_range[0]
             self.c_ranges[i * 2 + 1] = g_range[1]
         self.c_ranges[len(glyph_ranges) * 2] = 0
 
-    def __dealloc__(self):
-        print("Deleting")
+    def destroy(self):
         ccimgui.ImGui_MemFree(self.c_ranges)
+        self.c_ranges = NULL
+
+    def __dealloc__(self):
+        if self.c_ranges:
+            ccimgui.ImGui_MemFree(self.c_ranges)
+        self.c_ranges = NULL
 
     @staticmethod
     cdef from_short_array(const ccimgui.ImWchar* c_glyph_ranges):
@@ -12609,14 +12619,14 @@ cdef class ImFont:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
-    # ?invisible(True)
+    # ?active(True)
+    # ?invisible(False)
     # ?returns(str)
-    # def get_debug_name(self: ImFont):
-    #     cdef const char* res = ccimgui.ImFont_GetDebugName(
-    #         self._ptr
-    #     )
-    #     return _from_bytes(res)
+    def get_debug_name(self: ImFont):
+        cdef const char* res = ccimgui.ImFont_GetDebugName(
+            self._ptr
+        )
+        return _from_bytes(res)
     # [End Method]
 
     # [Method]
@@ -14125,8 +14135,11 @@ cdef class ImFontConfig:
         return _from_bytes(dereference(self._ptr).Name)
     @name.setter
     def name(self, value: str):
-        # dereference(self._ptr).Name = _bytes(value)
-        raise NotImplementedError
+        cdef bytes c_string = _bytes(value)
+        cdef unsigned int string_length = min(39, len(c_string))
+        strncpy(dereference(self._ptr).Name, c_string, string_length)
+        dereference(self._ptr).Name[string_length] = 0
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -14611,7 +14624,9 @@ cdef class ImFontGlyphRangesBuilder:
     def build_ranges(self: ImFontGlyphRangesBuilder):
         """
         Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges
-        pygui note: Uses ImGlyphRange wrapper instead.
+        pygui note: Uses ImGlyphRange wrapper instead. This returns a copy of the
+        internal buffer so this instance can be freed immediately after calling
+        this function if you need.
         """
         cdef ccimgui.ImVector_ImWchar c_out_ranges
         ccimgui.ImVector_Construct(&c_out_ranges)

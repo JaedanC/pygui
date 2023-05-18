@@ -1190,7 +1190,7 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         cdef char* buffer
         cdef public int buffer_size
 
-        def __init__(self, initial_value: str="", buffer_size=256):
+        def __cinit__(self, initial_value: str="", buffer_size=256):
             self.buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(buffer_size)
             self.buffer_size: int = buffer_size
             self.value = initial_value
@@ -1457,17 +1457,27 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
         cdef unsigned short* c_ranges
         cdef public object ranges
         
-        def __init__(self, glyph_ranges: Sequence[tuple]):
+        def __cinit__(self, glyph_ranges: Sequence[tuple]):
+            # First remove any tuples that contain zero, because these are
+            # considered terminators of the array in imgui.
+            glyph_ranges = [g for g in glyph_ranges if g[0] != 0]
             self.ranges = glyph_ranges
             self.c_ranges = <unsigned short*>{pxd_library_name}.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+            if self.c_ranges == NULL:
+                raise MemoryError()
             for i, g_range in enumerate(glyph_ranges):
                 self.c_ranges[i * 2] = g_range[0]
                 self.c_ranges[i * 2 + 1] = g_range[1]
             self.c_ranges[len(glyph_ranges) * 2] = 0
         
-        def __dealloc__(self):
-            print("Deleting")
+        def destroy(self):
             {pxd_library_name}.ImGui_MemFree(self.c_ranges)
+            self.c_ranges = NULL
+
+        def __dealloc__(self):
+            if self.c_ranges:
+                {pxd_library_name}.ImGui_MemFree(self.c_ranges)
+            self.c_ranges = NULL
         
         @staticmethod
         cdef from_short_array(const {pxd_library_name}.ImWchar* c_glyph_ranges):
@@ -1785,6 +1795,7 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
     class ImGlyphRange:
         ranges: Sequence[tuple]
         def __init__(self, glyph_ranges: Sequence[tuple]): ...
+        def destroy(self): ...
 
 
     def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
