@@ -6660,10 +6660,10 @@ def open_popup(str_id: str, popup_flags: int=0):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 # ?returns(None)
 def open_popup_id(id_: int, popup_flags: int=0):
     """
@@ -6986,9 +6986,6 @@ def pop_item_width():
 # ?custom_comment_only(False)
 # ?returns(None)
 def pop_style_color(count: int=1):
-    """
-    Implied count = 1
-    """
     ccimgui.ImGui_PopStyleColorEx(
         count
     )
@@ -7013,9 +7010,6 @@ def pop_style_color_ex(count: int=1):
 # ?custom_comment_only(False)
 # ?returns(None)
 def pop_style_var(count: int=1):
-    """
-    Implied count = 1
-    """
     ccimgui.ImGui_PopStyleVarEx(
         count
     )
@@ -7374,6 +7368,7 @@ def render():
 def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None):
     """
     Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
+    TODO: Doesn't consider real inputs.
     """
     ccimgui.ImGui_RenderPlatformWindowsDefaultEx(
         NULL if platform_render_arg is None else <void*>platform_render_arg,
@@ -7604,10 +7599,10 @@ def separator_text(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(False)
 # ?invisible(True)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 # ?returns(None)
 def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
     """
@@ -9360,7 +9355,7 @@ def table_get_row_index():
 # [End Function]
 
 # [Function]
-# ?use_template(True)
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
@@ -9376,8 +9371,6 @@ def table_get_sort_specs():
     Get latest sort specs for the table (null if not sorting).  lifetime: don't hold on this pointer over multiple frames or past any subsequent call to begintable().
     """
     cdef ccimgui.ImGuiTableSortSpecs* res = ccimgui.ImGui_TableGetSortSpecs()
-    if res == NULL:
-        return None
     return ImGuiTableSortSpecs.from_ptr(res)
 # [End Function]
 
@@ -10355,7 +10348,7 @@ cdef class ImDrawCmd:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -10374,7 +10367,7 @@ cdef class ImDrawCmd:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -10535,7 +10528,7 @@ cdef class ImDrawCmdHeader:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -13648,7 +13641,7 @@ cdef class ImFontAtlas:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -13775,7 +13768,7 @@ cdef class ImFontAtlas:
         Uvs for baked anti-aliased lines
         """
         cdef ccimgui.ImVec4* res = dereference(self._ptr).TexUvLines
-        cdef Vec4 vec = Vec4(0, 0, 0, 0)
+        cdef Vec4 vec = Vec4.zero()
         vec.from_array(&res.x)
         return vec
     @tex_uv_lines.setter
@@ -13823,7 +13816,7 @@ cdef class ImFontAtlas:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -13918,7 +13911,7 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -16273,7 +16266,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18242,7 +18235,7 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18261,7 +18254,7 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18356,7 +18349,7 @@ cdef class ImGuiListClipper:
     # [End Field]
 
     # [Method]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18420,10 +18413,10 @@ cdef class ImGuiListClipper:
     # [End Method]
 
     # [Method]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
-    # ?custom_comment_only(False)
+    # ?custom_comment_only(True)
     # ?returns(None)
     def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int):
         """
@@ -18591,6 +18584,7 @@ cdef class ImGuiPayload:
         """
         Data type tag (short user-supplied string, 32 characters max)
         """
+        # Explicit cast is required
         cdef char* res = <char*>dereference(self._ptr).DataType
         return _from_bytes(res)
     @data_type.setter
@@ -20826,7 +20820,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20845,7 +20839,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20864,7 +20858,7 @@ cdef class ImGuiTableColumnSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20957,7 +20951,7 @@ cdef class ImGuiTableSortSpecs:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -21715,7 +21709,7 @@ cdef class ImGuiViewport:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -21758,7 +21752,7 @@ cdef class ImGuiViewport:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -22400,7 +22394,7 @@ cdef class ImVector_ImDrawIdx:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -22476,7 +22470,7 @@ cdef class ImVector_ImDrawVert:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)

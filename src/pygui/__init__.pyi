@@ -2054,18 +2054,8 @@ def pop_id() -> None:
     pass
 
 def pop_item_width() -> None: ...
-def pop_style_color(count: int=1) -> None:
-    """
-    Implied count = 1
-    """
-    pass
-
-def pop_style_var(count: int=1) -> None:
-    """
-    Implied count = 1
-    """
-    pass
-
+def pop_style_color(count: int=1) -> None: ...
+def pop_style_var(count: int=1) -> None: ...
 def pop_tab_stop() -> None: ...
 def pop_text_wrap_pos() -> None: ...
 def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None) -> None: ...
@@ -2166,6 +2156,7 @@ def render() -> None:
 def render_platform_windows_default(platform_render_arg: Any=None, renderer_render_arg: Any=None) -> None:
     """
     Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
+    TODO: Doesn't consider real inputs.
     """
     pass
 
