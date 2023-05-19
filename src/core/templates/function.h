@@ -1,6 +1,7 @@
 # ?use_template(False)
 # ?active(False)
 # ?invisible(False)
+# ?custom_comment_only(False)
 # ?returns({python_return_type})
 def {python_function_name}({python_function_arguments}):
     #if has_comment

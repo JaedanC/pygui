@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Any, Dict
 from io import StringIO
 from pyx_parser import *
+from helpers import Template
 import builtins
 import json
 import keyword
@@ -218,104 +219,6 @@ class DearBinding:
             output = "{name}._ptr"
         
         return output.format(name=argument_name), additional_lines
-
-
-class Template:
-    """Represents a function in a pyx file. Has a specific format to ease with
-    creating the function.
-    """
-    def __init__(self, base_template: str):
-        self.base: str = base_template
-    
-    def set_condition(self, condition: str, value: bool) -> Template:
-        """Any conditions in the file will be included or excluded based on
-        value. Example:
-        
-        --------------------
-        #if show_this
-            print("hello")
-        #else
-            print("world)
-        #endif
-        --------------------
-
-        template.set_condition("show_this", True)
-
-        ----- Results ------
-            print("hello")
-        --------------------
-        """
-        in_correct_block = False
-        in_correct_if_block = False
-        in_correct_else_block = False
-        if_block_stack = 0
-        filtered_lines = []
-        for line in self.base.split("\n"):
-            line_stripped = line.strip()
-            include_this_line = True
-
-            # Custom comments
-            if line.startswith("##"):
-                include_this_line = False
-
-            if line_stripped.startswith(f"#if {condition}"):
-                in_correct_block = True
-                in_correct_if_block = True
-                include_this_line = False
-            
-            if in_correct_block and line_stripped.startswith("#if"):
-                if_block_stack += 1 
-            elif in_correct_block and line_stripped.startswith("#endif"):
-                if_block_stack -= 1
-            
-            if line_stripped.startswith("#else") and in_correct_block and if_block_stack == 1:
-                in_correct_else_block = True
-                in_correct_if_block = False
-                include_this_line = False
-            if line_stripped.startswith("#endif") and in_correct_block and if_block_stack == 0:
-                in_correct_block = False
-                in_correct_else_block = False
-                in_correct_if_block = False
-                include_this_line = False
-
-            # If we are in the corresponding block
-            show_line = (in_correct_if_block and value) or (in_correct_else_block and not value) or not in_correct_block
-            if show_line and include_this_line:
-                filtered_lines.append(line)
-        
-        self.base = "\n".join(filtered_lines)
-        return self
-
-    def format(self, **kwargs) -> Template:
-        """Works like a normal string .format except this does not error if a
-        {placeholder} is missing a corresponding =kwargs, or a =kwarg does not match a
-        {placeholder}. It's like a "safe" .format.
-        """
-        # From https://www.programiz.com/python-programming/methods/string/format_map
-        class IgnoreMissing(dict):
-            def __missing__(self, key):
-                return "{" + key + "}"
-        try:
-            self.base = self.base.format_map(IgnoreMissing(**kwargs))
-        except ValueError:
-            print(self.base)
-            print(kwargs)
-            raise ValueError
-        return self
-
-    def compile(self, **kwargs) -> str:
-        """Compiles the resulting function based on the information provided
-        in the constructor and the conditions.
-
-        Returns:
-            str: A non-indented template string. May still contain missing
-                 {placeholders}
-        """
-        for kwarg, value in kwargs.items():
-            self.set_condition(kwarg, value)
-        
-        self.format(**kwargs)
-        return self.base
 
 
 class Comments:
@@ -1649,6 +1552,16 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     for struct in header.structs:
         class_template = Template(class_base)
 
+        # Depending on if custom_comment_only is set, we'll generate the comment
+        # twice. This will make the pyx parser only edit the first comment
+        # keeping the old comment in the implementation. This is mainly to let
+        # diff_match_patch find the old comment to apply changes to if the
+        # comment changes in cimgui.
+        # struct_comments = None
+        # if struct.comments.three_quote_all_comments() is not None:
+        #     struct_comments = struct.comments.three_quote_all_comments() + "\n" + \
+        #         comment_text(struct.comments.three_quote_all_comments())
+        
         struct_comments = struct.comments.three_quote_all_comments()
         class_template.set_condition("has_comment", struct_comments is not None)
         if struct_comments is not None:
@@ -1961,16 +1874,17 @@ def main():
     with open("config.json") as f:
         config = json.load(f)
     
-    EXTENSION_NAME =          config["EXTENSION_NAME"]
-    CIMGUI_PXD_PATH =         config["CIMGUI_PXD_PATH"]
-    CIMGUI_LIBRARY_NAME =     config["CIMGUI_LIBRARY_NAME"]
-    GENERATED_PYX_PATH =      config["GENERATED_PYX_PATH"]
-    PYX_PATH =                config["PYX_PATH"]
-    PYX_TRIAL_PATH =          config["PYX_TRIAL_PATH"]
-    TEMPLATE_PYX_PATH =       config["TEMPLATE_PYX_PATH"]
-    TEMPLATE_PYX_TRIAL_PATH = config["TEMPLATE_PYX_TRIAL_PATH"]
-    INIT_PYI_PATH =           config["INIT_PYI_PATH"]
-    INIT_PY_PATH =            config["INIT_PY_PATH"]
+    EXTENSION_NAME =           config["EXTENSION_NAME"]
+    CIMGUI_PXD_PATH =          config["CIMGUI_PXD_PATH"]
+    CIMGUI_LIBRARY_NAME =      config["CIMGUI_LIBRARY_NAME"]
+    GENERATED_PYX_PATH =       config["GENERATED_PYX_PATH"]
+    GENERATED_PYX_TRIAL_PATH = config["GENERATED_PYX_TRIAL_PATH"]
+    PYX_PATH =                 config["PYX_PATH"]
+    PYX_TRIAL_PATH =           config["PYX_TRIAL_PATH"]
+    TEMPLATE_PYX_PATH =        config["TEMPLATE_PYX_PATH"]
+    TEMPLATE_PYX_TRIAL_PATH =  config["TEMPLATE_PYX_TRIAL_PATH"]
+    INIT_PYI_PATH =            config["INIT_PYI_PATH"]
+    INIT_PY_PATH =             config["INIT_PY_PATH"]
     
     defines = [
         ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
@@ -2029,7 +1943,9 @@ def main():
         except MergeFailed:
             print("Trial: Merge failed. Aborting.")
             return
-
+        
+        with open(GENERATED_PYX_TRIAL_PATH, "w") as f:
+            f.write(merge_result.new_pyx)
         with open(PYX_TRIAL_PATH, "w") as f:
             f.write(merge_result.merged_pyx)
         with open(TEMPLATE_PYX_TRIAL_PATH, "w") as f:

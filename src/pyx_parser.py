@@ -2,6 +2,7 @@ from __future__ import annotations
 import re
 import textwrap
 import json
+from helpers import Template
 from typing import List, Tuple, Any
 from diff_match_patch import diff_match_patch
 from io import StringIO
@@ -98,34 +99,50 @@ class PyxHeader:
 
         for function in self.functions:
             output.write("# [Function]\n")
+            impl = Template(function.impl) \
+                .set_condition("has_comment", function.comment is not None) \
+                .compile().replace("__REPLACE_WITH_COMMENT__", textwrap.indent(f'"""\n{function.comment}\n"""', "    "))
+            
             output.write("{}\n{}\n".format(
                 comparable_options_to_pyx_string(function),
-                function.impl if comparable_is_active(function) or ignore_active_flag else comment_text(function.impl)
+                impl if comparable_is_active(function) or ignore_active_flag else comment_text(impl)
             ))
             output.write("# [End Function]\n\n")
     
         for class_ in self.classes:
             output.write("# [Class]\n")
             output.write("# [Class Constants]\n")
+            impl = Template(class_.impl) \
+                .set_condition("has_comment", class_.comment is not None) \
+                .compile().replace("__REPLACE_WITH_COMMENT__", textwrap.indent(f'"""\n{class_.comment}\n"""', "    "))
+            
             output.write("{}\n{}\n".format(
                 comparable_options_to_pyx_string(class_),
-                class_.impl if comparable_is_active(class_) or ignore_active_flag else comment_text(class_.impl)
+                impl if comparable_is_active(class_) or ignore_active_flag else comment_text(impl)
             ))
             output.write("    # [End Class Constants]\n")
 
             for field in class_.fields:
                 output.write("\n    # [Field]\n")
+                impl = Template(field.impl) \
+                    .set_condition("has_comment", field.comment is not None) \
+                    .compile().replace("__REPLACE_WITH_COMMENT__", textwrap.indent(f'"""\n{field.comment}\n"""', "        "))
+
                 output.write("{}\n{}\n".format(
                     textwrap.indent(comparable_options_to_pyx_string(field), "    "),
-                    field.impl if comparable_is_active(field) or ignore_active_flag else comment_text(field.impl)
+                    impl if comparable_is_active(field) or ignore_active_flag else comment_text(impl)
                 ))
                 output.write("    # [End Field]\n")
 
             for method in class_.methods:
                 output.write("\n    # [Method]\n")
+                impl = Template(method.impl) \
+                    .set_condition("has_comment", method.comment is not None) \
+                    .compile().replace("__REPLACE_WITH_COMMENT__", textwrap.indent(f'"""\n{method.comment}\n"""', "        "))
+                
                 output.write("{}\n{}\n".format(
                     textwrap.indent(comparable_options_to_pyx_string(method), "    "),
-                    method.impl if comparable_is_active(method) or ignore_active_flag else comment_text(method.impl)
+                    impl if comparable_is_active(method) or ignore_active_flag else comment_text(impl)
                 ))
                 output.write("    # [End Method]\n")
             
@@ -139,7 +156,7 @@ class PyxFunction:
         self.parameters: str = parameters
         self.options: dict = options
         self.impl: str = impl
-        self.comment: str = comment
+        self.comment: str | None = comment
     
     def copy(self):
         return PyxFunction(
@@ -157,7 +174,7 @@ class PyxClass:
             self.name: str = name
             self.options: dict = options
             self.impl: str = impl
-            self.comment: str = comment
+            self.comment: str | None = comment
         
         def copy(self):
             return PyxClass.Field(
@@ -173,7 +190,7 @@ class PyxClass:
             self.parameters: str = parameters
             self.options: dict = options
             self.impl: str = impl
-            self.comment: str = comment
+            self.comment: str | None = comment
         
         def copy(self):
             return PyxClass.Method(
@@ -191,7 +208,7 @@ class PyxClass:
         self.impl: str = impl
         self.fields: List[PyxClass.Field] = fields
         self.methods: List[PyxClass.Method] = methods
-        self.comment: str = comment
+        self.comment: str | None = comment
     
     def has_one_active_member(self):
         for comparable in self.fields + self.methods:
@@ -247,19 +264,61 @@ class HeaderComparison:
             json.dumps(old_comparable.options),
             json.dumps(new_comparable.options)
         )
-        impl_patches = self.dmp.patch_make(old_comparable.impl, new_comparable.impl)
-        self.patches_for_old_to_new[comparable_lookup] = (option_patches, impl_patches)
+        impl_patches = self.dmp.patch_make(
+            old_comparable.impl,
+            new_comparable.impl
+        )
+        comment_patches = self.dmp.patch_make(
+            old_comparable.comment if old_comparable.comment is not None else "",
+            new_comparable.comment if new_comparable.comment is not None else ""
+        )
+
+        self.patches_for_old_to_new[comparable_lookup] = (option_patches, impl_patches, comment_patches)
     
+    def apply_options_patch_to(self, comparable_lookup: str, write_to_comparable):
+        old_obj = self.old.get_comparable(comparable_lookup)
+        new_obj = self.new.get_comparable(comparable_lookup)
+        option_patches, _, _ = self.patches_for_old_to_new[comparable_lookup]
+
+        if len(option_patches) > 0:
+            # print(f"Merging: Patching options for {comparable_lookup}")
+            pass
+        
+        applied_template_options, results = self.dmp.patch_apply(
+            option_patches, json.dumps(write_to_comparable.options))
+        # print("Before")
+        # print(json.dumps(write_to_comparable.options))
+        # print(applied_template_options)
+        # print("----------------------")
+        
+        success = True
+        if not all(results):
+            print(f"Failed to apply patch to options in {comparable_lookup}:")
+            print("Old options ---------------------------")
+            print(old_obj.options)
+            print("New implementation ---------------------------")
+            print(new_obj.options)
+            print("Template implementation ----------------------")
+            print(write_to_comparable.options)
+            print("We got to ------------------------------------")
+            print(applied_template_options)
+            success = False
+        else:
+            # It should still create valid json but we will see
+            write_to_comparable.options = json.loads(applied_template_options)
+
+        return success
+
     def apply_patch_to(self, comparable_lookup: str, write_to_comparable):
         assert comparable_lookup in self.patches_for_old_to_new
-        option_patches, impl_patches = self.patches_for_old_to_new[comparable_lookup]
+        _, impl_patches, comment_patches = self.patches_for_old_to_new[comparable_lookup]
         old_obj = self.old.get_comparable(comparable_lookup)
         new_obj = self.new.get_comparable(comparable_lookup)
 
         if len(impl_patches) > 0:
             print(f"Merging: Patching {comparable_lookup}")
-        if len(option_patches) > 0:
-            print(f"Merging: Patching options for {comparable_lookup}")
+        if comment_patches is not None and len(comment_patches) > 0:
+            print(f"Merging: Patching comment for {comparable_lookup}")
         
         success = True
         applied_template_impl, results = self.dmp.patch_apply(impl_patches, write_to_comparable.impl)
@@ -277,23 +336,25 @@ class HeaderComparison:
         else:
             write_to_comparable.impl = applied_template_impl
 
-        applied_template_options, results = self.dmp.patch_apply(
-            option_patches, json.dumps(write_to_comparable.options))
-        
-        if not all(results):
-            print(f"Failed to apply patch to options in {comparable_lookup}:")
-            print("Old options ---------------------------")
-            print(old_obj.options)
-            print("New implementation ---------------------------")
-            print(new_obj.options)
-            print("Template implementation ----------------------")
-            print(write_to_comparable.options)
-            print("We got to ------------------------------------")
-            print(applied_template_options)
-            success = False
-        else:
-            # It should still create valid json but we will see
-            write_to_comparable.options = json.loads(applied_template_options)
+        if len(comment_patches) > 0:
+            applied_template_comments, results = self.dmp.patch_apply(
+                comment_patches,
+                write_to_comparable.comment if write_to_comparable.comment is not None else ""
+            )
+            
+            if not all(results):
+                print(f"Failed to apply patch to comments in {comparable_lookup}:")
+                print("Old options ---------------------------")
+                print(old_obj.comment)
+                print("New implementation ---------------------------")
+                print(new_obj.comment)
+                print("Template implementation ----------------------")
+                print(write_to_comparable.comment)
+                print("We got to ------------------------------------")
+                print(applied_template_comments)
+                success = False
+            else:
+                write_to_comparable.comment = applied_template_comments
 
         return success
 
@@ -323,6 +384,22 @@ class HeaderComparison:
             # otherwise something has gone wrong with the copy process.
             merged_obj = merged_template.get_comparable(new_c)
             assert merged_obj is not None
+
+            # We still need to apply the patches to the options so that any
+            # changes in the original source file also reflect the options.
+            # Currently, we are only patching the options if using_template is
+            # true, which doesn't make sense. If old_obj is None then no patches
+            # were made so we can keep the template's comment got now.
+            old_obj = self.old.get_comparable(new_c)
+            if old_obj is not None:
+                if not self.apply_options_patch_to(new_c, merged_obj):
+                    success = False
+            
+            # If the comparable is not using a custom_comment or use_template
+            # then we'll reset the comment.
+            if not comparable_is_using_template(tem_obj) and \
+                not comparable_is_using_custom_comment(tem_obj):
+                merged_obj.comment = new_obj.comment
             
             # If the comparable is not using the template, then reset it back to
             # the implementation in the new. Since we're not changing the options
@@ -337,7 +414,7 @@ class HeaderComparison:
                 # This means that we should just use the template implementation
                 # because no patches were created. In this case we can just do
                 # nothing.
-                print(f"Merging: No patches found for '{new_c}'. Keeping template.")
+                print(f"Merging: No impl patches found for '{new_c}'. Keeping template.")
                 continue
 
             assert old_obj is not None
@@ -384,6 +461,13 @@ def comparable_is_invisible(comparable: Any):
     return False
 
 
+def comparable_is_using_custom_comment(comparable: Any):
+    options: dict = comparable.options
+    if "custom_comment_only" in options:
+        return options["custom_comment_only"] == "True"
+    return False
+
+
 def get_sections(src: str, section_name: str) -> List[str]:
     all_sections = []
     found_section = []
@@ -420,12 +504,20 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
             options[options_found.group(1)] = options_found.group(2)
         return options
     
-    def parse_other_than_options(src: str) -> str:
+    def parse_other_than_options_and_comment(src: str) -> str:
         for i, line in enumerate(src.split("\n")):
             if not line.strip().startswith("# ?"):
                 break
         
-        return "\n".join(src.split("\n")[i:])
+        impl = "\n".join(src.split("\n")[i:])
+
+        # Remove the comment and replace it the template syntax
+        replace_with = "\n" + \
+            "#if has_comment\n" + \
+            "__REPLACE_WITH_COMMENT__\n" + \
+            "#endif"
+        no_comment_impl = re.sub(r'\s*""".*?"""', replace_with, impl, 1, re.DOTALL)
+        return no_comment_impl
     
     def parse_function(src_containing_name: str) -> Tuple[str, str]:
         for line in src_containing_name.split("\n"):
@@ -458,7 +550,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
     parsed_functions: List[PyxFunction] = []
     for function_src in get_sections(pyx_src, "Function"):
         function_options = parse_options(function_src)
-        function_body = parse_other_than_options(function_src)
+        function_body = parse_other_than_options_and_comment(function_src)
         function_name, function_parameters = parse_function(function_src)
         function_comment = parse_multiline_comment(function_src)
         parsed_functions.append(PyxFunction(
@@ -473,7 +565,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
     for class_src in get_sections(pyx_src, "Class"):
         class_constants_section = get_sections(class_src, "Class Constants")[0]
         class_constants_options = parse_options(class_constants_section)
-        class_constants_body = parse_other_than_options(class_constants_section)
+        class_constants_body = parse_other_than_options_and_comment(class_constants_section)
         class_name = parse_class(class_constants_section)
         class_comment = parse_multiline_comment(class_src)
 
@@ -481,7 +573,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         for class_field in get_sections(class_src, "Field"):
             field_options = parse_options(class_field)
             field_name, _ = parse_function(class_field)
-            field_body = parse_other_than_options(class_field)
+            field_body = parse_other_than_options_and_comment(class_field)
             field_comment = parse_multiline_comment(class_field)
             parsed_fields.append(PyxClass.Field(
                 field_name,
@@ -494,7 +586,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         for class_method in get_sections(class_src, "Method"):
             method_options = parse_options(class_method)
             method_name, method_parameters = parse_function(class_method)
-            method_body = parse_other_than_options(class_method)
+            method_body = parse_other_than_options_and_comment(class_method)
             method_comment = parse_multiline_comment(class_method)
             parsed_methods.append(PyxClass.Method(
                 method_name,

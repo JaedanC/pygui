@@ -1,15 +1,16 @@
 {
-    "EXTENSION_NAME"          : "core",
-    "CIMGUI_PXD_PATH"         : "core/ccimgui.pxd",
-    "PYX_PATH"                : "core/core.pyx",
+    "EXTENSION_NAME"           : "core",
+    "CIMGUI_PXD_PATH"          : "core/ccimgui.pxd",
+    "PYX_PATH"                 : "core/core.pyx",
 
-    "CIMGUI_LIBRARY_NAME"     : "ccimgui",
-    "GENERATED_PYX_PATH"      : "core/core_generated.pyx",
-    "PYX_TRIAL_PATH"          : "core/core_trial.pyx",
-    "TEMPLATE_PYX_PATH"       : "core/core_template.pyx",
-    "TEMPLATE_PYX_TRIAL_PATH" : "core/core_template_trial.pyx",
-    "INIT_PYI_PATH"           : "pygui/__init__.pyi",
-    "INIT_PY_PATH"            : "pygui/__init__.py",
+    "CIMGUI_LIBRARY_NAME"      : "ccimgui",
+    "GENERATED_PYX_PATH"       : "core/core_generated.pyx",
+    "GENERATED_PYX_TRIAL_PATH" : "core/core_generated_trial.pyx",
+    "PYX_TRIAL_PATH"           : "core/core_trial.pyx",
+    "TEMPLATE_PYX_PATH"        : "core/core_template.pyx",
+    "TEMPLATE_PYX_TRIAL_PATH"  : "core/core_template_trial.pyx",
+    "INIT_PYI_PATH"            : "pygui/__init__.pyi",
+    "INIT_PY_PATH"             : "pygui/__init__.py",
     "modules": [
         {
             "name": "core",

@@ -1,6 +1,7 @@
 # ?use_template(False)
 # ?active(False)
 # ?invisible(False)
+# ?custom_comment_only(False)
 # ?returns({python_type})
 @property
 def {field_name}(self):

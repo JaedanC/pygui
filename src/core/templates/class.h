@@ -1,6 +1,7 @@
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
+# ?custom_comment_only(False)
 cdef class {class_name}:
     #if has_comment
 {comment}
