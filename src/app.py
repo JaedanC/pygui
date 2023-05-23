@@ -343,6 +343,26 @@ def main():
     io.fonts.add_font_from_file_ttf("pygui/fonts/CascadiaMono.ttf", 14, config, ranges)
     config.destroy()
 
+    builder = pygui.ImFontGlyphRangesBuilder.create()
+    # Attempting to merge two fonts together only works if both the fonts are
+    # valid. Valid fonts have at least one character defined inside their range
+    # that the font has a glyph for. Attempting to add a font using a glyph not
+    # in range will cause the font to be unusable.
+    omega = ord("Ω")
+    builder.add_text("asciiASCII")
+    assert not builder.get_bit(omega)
+    builder.set_bit(omega)
+    assert builder.get_bit(omega)
+    custom_range = builder.build_ranges()
+    builder.destroy()
+
+    config = pygui.ImFontConfig.create()
+    config.name = "Added char font"
+    io.fonts.add_font_from_file_ttf("pygui/fonts/ProggyClean.ttf", 14, config, custom_range)
+    config.merge_mode = True
+    io.fonts.add_font_from_file_ttf("pygui/fonts/DroidSans.ttf", 18, config, ranges)
+    config.destroy()
+
     # More fonts
     io.fonts.add_font_from_file_ttf("pygui/fonts/Font Awesome 6 Free-Regular-400.otf", 13, None, ranges)
     io.fonts.add_font_from_file_ttf("pygui/fonts/CascadiaMono.ttf", 14, None, ranges)
@@ -360,6 +380,7 @@ def main():
     # freed memory. This is why you can defer the destruction explicitly to ensure
     # the memory is freed exactly at that point. The gc can clean up the python
     # ImFontConfig object whenever it likes after this call.
+    custom_range.destroy()
     ranges.destroy()
 
     use_index = pygui.Int(5)

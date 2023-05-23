@@ -14153,7 +14153,7 @@ cdef class ImFontAtlas:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(ImGlyphRange)
     def get_glyph_ranges_cyrillic(self: ImFontAtlas):
         """
         Default + about 400 cyrillic characters
@@ -14165,11 +14165,11 @@ cdef class ImFontAtlas:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(ImGlyphRange)
     def get_glyph_ranges_default(self: ImFontAtlas):
         """
         Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
@@ -14177,10 +14177,10 @@ cdef class ImFontAtlas:
         NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
         Basic latin, extended latin
         """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesDefault(
+        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesDefault(
             self._ptr
         )
-        return res
+        return ImGlyphRange.from_short_array(res)
     # [End Method]
 
     # [Method]
@@ -15312,18 +15312,20 @@ cdef class ImFontGlyphRangesBuilder:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImVector_ImU32)
+    # ?returns(List[int])
     @property
     def used_chars(self):
         """
-        Store 1-bit per unicode code point (0=unused, 1=used)
+        Store 1-bit per unicode code point (0=unused, 1=used).
+        pygui note: Each integer is an unsigned 4 byte integer. Each integer is
+        32 booleans. Use get_bit and set_bit to change the booleans.
         """
         cdef ccimgui.ImVector_ImU32 res = dereference(self._ptr).UsedChars
-        return ImVector_ImU32.from_ptr(res)
+        return [res.Data[i] for i in range(res.Size)]
     @used_chars.setter
     def used_chars(self, value: ImVector_ImU32):
         # dereference(self._ptr).UsedChars = value._ptr
@@ -15332,7 +15334,7 @@ cdef class ImFontGlyphRangesBuilder:
 
     # [Method]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -15424,7 +15426,7 @@ cdef class ImFontGlyphRangesBuilder:
     @staticmethod
     def create():
         cdef ccimgui.ImFontGlyphRangesBuilder* builder = <ccimgui.ImFontGlyphRangesBuilder*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImFontGlyphRangesBuilder))
-        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
+        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor. Zero init should also work for the ImVector too.
         memset(builder, 0, sizeof(ccimgui.ImFontGlyphRangesBuilder))
         ccimgui.ImFontGlyphRangesBuilder_Clear(builder)
         return ImFontGlyphRangesBuilder.from_ptr(builder)
@@ -15442,7 +15444,7 @@ cdef class ImFontGlyphRangesBuilder:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -15458,8 +15460,8 @@ cdef class ImFontGlyphRangesBuilder:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)

@@ -3450,20 +3450,20 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    def get_glyph_ranges_cyrillic(self: ImFontAtlas) -> int:
+    def get_glyph_ranges_cyrillic(self: ImFontAtlas) -> ImGlyphRange:
         """
         Default + about 400 cyrillic characters
         """
         pass
 
-    # def get_glyph_ranges_default(self: ImFontAtlas) -> int:
-    #     """
-    #     Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
-    #     NB: Make sure that your string are UTF-8 and NOT in your local code page. In C++11, you can create UTF-8 string literal using the u8"Hello world" syntax. See FAQ for details.
-    #     NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
-    #     Basic latin, extended latin
-    #     """
-    #     pass
+    def get_glyph_ranges_default(self: ImFontAtlas) -> ImGlyphRange:
+        """
+        Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
+        NB: Make sure that your string are UTF-8 and NOT in your local code page. In C++11, you can create UTF-8 string literal using the u8"Hello world" syntax. See FAQ for details.
+        NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
+        Basic latin, extended latin
+        """
+        pass
 
     # def get_glyph_ranges_greek(self: ImFontAtlas) -> int:
     #     """
@@ -3696,15 +3696,17 @@ class ImFontGlyphRangesBuilder:
     Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
     This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
     """
-    # used_chars: ImVector_ImU32
-    # """
-    # Store 1-bit per unicode code point (0=unused, 1=used)
-    # """
-    def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
-        """
-        Add character
-        """
-        pass
+    used_chars: List[int]
+    """
+    Store 1-bit per unicode code point (0=unused, 1=used).
+    pygui note: Each integer is an unsigned 4 byte integer. Each integer is
+    32 booleans. Use get_bit and set_bit to change the booleans.
+    """
+    # def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
+    #     """
+    #     Add character
+    #     """
+    #     pass
 
     def add_ranges(self: ImFontGlyphRangesBuilder, ranges: ImGlyphRange) -> None:
         """
@@ -3730,17 +3732,17 @@ class ImFontGlyphRangesBuilder:
     # def clear(self: ImFontGlyphRangesBuilder) -> None: ...
     def create() -> ImFontGlyphRangesBuilder: ...
     def destroy(self: ImFontGlyphRangesBuilder) -> None: ...
-    # def get_bit(self: ImFontGlyphRangesBuilder, n: int) -> bool:
-    #     """
-    #     Get bit n in the array
-    #     """
-    #     pass
+    def get_bit(self: ImFontGlyphRangesBuilder, n: int) -> bool:
+        """
+        Get bit n in the array
+        """
+        pass
 
-    # def set_bit(self: ImFontGlyphRangesBuilder, n: int) -> None:
-    #     """
-    #     Set bit n in the array
-    #     """
-    #     pass
+    def set_bit(self: ImFontGlyphRangesBuilder, n: int) -> None:
+        """
+        Set bit n in the array
+        """
+        pass
 
 
 class ImGuiContext:

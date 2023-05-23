@@ -87,6 +87,37 @@ int main(int argc, char* argv[])
 	clearColor.z = 0.60f;
 	clearColor.w = 1.00f;
 
+	// ImFontGlyphRangesBuilder constructor
+	//ImFontGlyphRangesBuilder builder;
+	//memset(&builder, 0, sizeof(ImFontGlyphRangesBuilder));
+	//ImFontGlyphRangesBuilder_Clear(&builder);
+	//ImFontGlyphRangesBuilder_AddText(&builder, "a∮", NULL); // 8750
+
+	//ImVector_ImWchar c_range;
+	//ImVector_Construct(&c_range);
+	//ImFontGlyphRangesBuilder_BuildRanges(&builder, &c_range);
+
+
+	//ImFontAtlas* atlas = ImGui_GetIO()->Fonts;
+	//ImFontAtlas_AddFontDefault(atlas, NULL);
+	//ImFontAtlas_AddFontFromFileTTF(atlas, "fonts/DroidSans*/.ttf", 14.0f, NULL, NULL);
+
+	// ImFontConfig constructor
+	//ImFontConfig cfg;
+	//memset(&cfg, 0, sizeof(ImFontConfig));
+    //cfg.FontDataOwnedByAtlas = true;
+    //cfg.OversampleH = 3;
+    //cfg.OversampleV = 1;
+    //cfg.GlyphMaxAdvanceX = 3.402823466e+38F; // = FLT_MAX
+    //cfg.RasterizerMultiply = 1.0f;
+    //cfg.EllipsisChar = (ImWchar)-1;
+
+	//ImFontAtlas_AddFontFromFileTTF(atlas, "fonts/ProggyClean.ttf", 14.0f, &cfg, ImFontAtlas_GetGlyphRangesDefault(atlas));
+	//ImFontAtlas_AddFontFromFileTTF(atlas, "fonts/ProggyClean.ttf", 14.0f, &cfg, c_range.Data);
+	//cfg.MergeMode = true;
+	//ImFontAtlas_AddFontFromFileTTF(atlas, "fonts/NotoSansMath-Regular.ttf", 20.0f, &cfg, c_range.Data);
+	//ImFontAtlas_Build(atlas);
+
 	// main event loop
 	bool quit = false;
 	while (!glfwWindowShouldClose(window))
@@ -112,6 +143,7 @@ int main(int argc, char* argv[])
 			ImGui_Text("This is some useful text");
 			ImGui_Checkbox("Demo window", &showDemoWindow);
 			ImGui_Checkbox("Another window", &showAnotherWindow);
+			ImGui_Text("New Char: ∮");
 
 			ImGui_SliderFloatEx("Float", &f, 0.0f, 1.0f, "%.3f", 0);
 			ImGui_ColorEdit3("clear color", (float*)&clearColor, 0);
@@ -167,6 +199,8 @@ int main(int argc, char* argv[])
 #endif
 		glfwSwapBuffers(window);
 	}
+
+	//ImVector_Destruct(&c_range);
 
 	// clean up
 	ImGui_ImplOpenGL3_Shutdown();
