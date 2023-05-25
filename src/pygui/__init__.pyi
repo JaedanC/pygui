@@ -4,84 +4,360 @@ from typing import Any, Callable, Tuple, List, Sequence
 from PIL import Image
 
 FLT_MIN: float
+"""
+Occasionally used by ImGui to mark boundaries for things. Usually used as
+`-pygui.FLT_MIN`
+"""
 FLT_MAX: float
+"""
+Occasionally used by ImGui to mark boundaries for things.
+"""
 PAYLOAD_TYPE_COLOR_3F: int
+"""
+Used by `pygui.accept_drag_drop_payload()` to retrieve colors that are
+dragged inside ImGui. No Alpha channel.
+"""
 PAYLOAD_TYPE_COLOR_4F: int
+"""
+Used by `pygui.accept_drag_drop_payload()` to retrieve colors that are
+dragged inside ImGui. Includes Alpha channel.
+"""
 
-class ImGuiError(Exception): ...
+class ImGuiError(Exception):
+    """
+    Raised by ImGui if an `IM_ASSERT()` fails *and* custom exceptions have
+    been turned on. Otherwise, this exception will be equal to
+    `AssertionError` and ImGui exceptions will be left to crash your app.
+    """
+    pass
 
 class Bool:
+    """
+    A wrapper class for a c++ boolean. `Use Bool.value` to access the
+    underlying value. This as a replacement for `bool*` in c++.
+    """
     value: bool
-    def __init__(self, initial_value: bool): ...
-    def __bool__(self) -> bool: ...
+    def __init__(self, initial_value: bool) -> Bool: ...
+    def __bool__(self) -> bool:
+        """
+        Allows this instance to be directly used a boolean in an `if` statement
+        without needing to extract the value.
+
+            ```python
+            my_boolean = pygui.Bool(True)
+            if my_boolean:
+                print("This is true")
+            ```
+        """
 
 class Int:
+    """
+    A wrapper class for a c++ int. Use `Int.value` to access the underlying
+    value. This as a replacement for `int*` in c++. The underlying `int` size
+    will be platform specific. If more bytes are required then use a
+    `pygui.Long`.
+    """
     value: int
-    def __init__(self, initial_value: int=0): ...
+    def __init__(self, initial_value: int=0) -> Int: ...
 
 class Long:
+    """
+    A wrapper class for a c++ long long. Use `Long.value` to access the
+    underlying value. This as a replacement for `long long*` in c++. The
+    underlying `long long` size will be platform specific.
+    """
     value: int
-    def __init__(self, initial_value: int=0): ...
+    def __init__(self, initial_value: int=0) -> Long: ...
 
 class Float:
+    """
+    A wrapper class for a c++ float. Use `Float.value` to access the
+    underlying value. This as a replacement for `float*` in c++. The
+    underlying `float` precision will be platform specific. If more precision
+    is required then use a `pygui.Double`.
+    """
     value: float
-    def __init__(self, initial_value: float=0.0): ...
+    def __init__(self, initial_value: float=0.0) -> Float: ...
 
 class Double:
+    """
+    A wrapper class for a c++ double. Use `Double.value` to access the
+    underlying value. This as a replacement for `double*` in c++. The
+    underlying `double` precision will be platform specific.
+    """
     value: float
-    def __init__(self, initial_value: float=0.0): ...
+    def __init__(self, initial_value: float=0.0) -> Double: ...
 
 class String:
+    """
+    A wrapper class for a c++ heap allocated `char*` string. Use
+    `String.value` to read the buffer as if it were a python string. The
+    `buffer_size` indicates how large the buffer backing this string should
+    be. Depending on the characters in the string, the `buffer_size`
+    *may not* be the same `len()` as the string.
+
+    The number of writable bytes is equal to `buffer_size - 1`, to make room
+    for the NULL byte which is automatically handled by this class.
+
+    Modifying the underling `String.value` is also supported. This will
+    automically convert the string passed into bytes and populate the buffer
+    using `strncpy` (no buffer overflow for you). Modifying the
+    `buffer_size` is *not* supported and will raise a NotImplementedError if
+    changed. `buffer_size` must be >= 0 on creation.
+
+    This as a replacement for `char*` in c++.
+    """
     value: str
     buffer_size: int
-    def __init__(self, initial_value: str="", buffer_size=256): ...
+    """
+    Read only size of the heap allocated buffer backing this string.
+    """
+    def __init__(self, initial_value: str="", buffer_size=256) -> String: ...
 
 class Vec2:
-    @staticmethod
-    def zero() -> Vec2: ...
+    """
+    A wrapper class for a c++ ImVec2. Use `Vec2.x` and `Vec2.y` to access
+    individual components of the Vector. Or use `Vec2.tuple()` to access the
+    the underlying `ImVec2` as a read-only python `tuple`. Each component of
+    this `Vec2` is a `pygui.Float`. See the methods on this class for more
+    information.
+    """
     x: float
+    """
+    Access/Modify the `x` component of the `Vec2` 
+    """
     y: float
+    """
+    Access/Modify the `y` component of the `Vec2` 
+    """
     x_ptr: Float
+    """
+    Access/Modify the `x` component of the `Vec2` as a `pygui.Float`
+    """
     y_ptr: Float
-    def __init__(self, x: float, y: float): ...
-    def tuple(self) -> Sequence[float, float]: ...
-    def from_tuple(self, vec: Sequence[float, float]) -> Vec2: ...
-    def as_floatptrs(self) -> Sequence[Float, Float]: ...
-    def from_floatptrs(self, float_ptrs: Sequence[Float, Float]) -> Vec2: ...
-    def copy(self) -> Vec2: ...
+    """
+    Access/Modify the `y` component of the `Vec2` as a `pygui.Float`
+    """
+    def __init__(self, x: float, y: float) -> Vec2: ...
+    @staticmethod
+    def zero() -> Vec2:
+        """
+        Same as `Vec2(0, 0)`
+        """
+        pass
+
+    def tuple(self) -> Sequence[float, float]:
+        """
+        Access a read-only tuple containing the `x`, `y` components of the
+        `Vec2`
+        """
+        pass
+
+    def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
+        """
+        Modify the components of the `Vec2` using a (minimum) length 2
+        Sequence. eg. tuple/list
+
+            ```python
+            vec2 = pygui.Vec2(0, 0)
+            vec2.from_tuple((50, 100))
+            ```
+
+        Returns the same Vec2 so that this method can be chained.
+        """
+        pass
+
+    def as_floatptrs(self) -> Sequence[Float, Float]:
+        """
+        Returns the internal components of the `Vec2` as a length 2 tuple of
+        `pygui.Floats`. Each `pygui.Float` can be used to modify the
+        internal state of the `Vec2` from elsewhere.
+        """
+        pass
+
+    def from_floatptrs(self, float_ptrs: Sequence[Float, Float]) -> Vec2:
+        """
+        Modify the components of the `Vec2` using a (minimum) length 2
+        Sequence of `pygui.Float`. eg. tuple/list. Returns the same Vec2 so
+        that this method can be chained.
+        """
+        pass
+
+    def copy(self) -> Vec2:
+        """
+        Returns a new deepcopied `Vec2`. The underlying `pygui.Float` are
+        also new.
+        """
+        pass
 
 class Vec4:
-    @staticmethod
-    def zero() -> Vec4: ...
+    """
+    A wrapper class for a c++ ImVec4. Use `Vec4.x`, `Vec4.y`, `Vec4.z` and
+    `Vec4.w` to access individual components of the Vector. Or use
+    `Vec4.tuple()` to access the the underlying `ImVec4` as a read-only
+    python `tuple`. Each component of this `Vec4` is a `pygui.Float`. See
+    the methods on this class for more information.
+    """
     x: float
+    """
+    Access/Modify the `x` component of the `Vec4` 
+    """
     y: float
+    """
+    Access/Modify the `y` component of the `Vec4` 
+    """
     z: float
+    """
+    Access/Modify the `z` component of the `Vec4` 
+    """
     w: float
+    """
+    Access/Modify the `w` component of the `Vec4` 
+    """
     x_ptr: Float
+    """
+    Access/Modify the `x` component of the `Vec4` as a `pygui.Float`
+    """
     y_ptr: Float
+    """
+    Access/Modify the `y` component of the `Vec4` as a `pygui.Float`
+    """
     z_ptr: Float
+    """
+    Access/Modify the `z` component of the `Vec4` as a `pygui.Float`
+    """
     w_ptr: Float
-    def __init__(self, x: float, y: float, z: float, w: float): ...
-    def tuple(self) -> Sequence[float, float, float, float]: ...
-    def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4: ...
-    def as_floatptrs(self) -> Sequence[Float, Float, Float, Float]: ...
-    def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4: ...
-    def to_u32(self) -> int: ...
-    def copy(self) -> Vec4: ...
+    """
+    Access/Modify the `w` component of the `Vec4` as a `pygui.Float`
+    """
+    def __init__(self, x: float, y: float, z: float, w: float) -> Vec4: ...
+    @staticmethod
+    def zero() -> Vec4:
+        """
+        Same as `Vec4(0, 0)`
+        """
+        pass
+
+    def tuple(self) -> Sequence[float, float, float, float]:
+        """
+        Access a read-only tuple containing the components of the `Vec4`
+        """
+        pass
+
+    def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
+        """
+        Modify the components of the `Vec4` using a (minimum)
+        length 4 Sequence. eg. tuple/list
+
+            ```python
+            vec4 = pygui.Vec4(0, 0, 0, 0)
+            vec4.from_tuple((50, 100, 150, 200))
+            ```
+
+        Returns the same Vec4 so that this method can be chained.
+        """
+        pass
+
+    def as_floatptrs(self) -> Sequence[Float, Float, Float, Float]:
+        """
+        Returns the internal components of the `Vec2` as a length 4 tuple of
+        `pygui.Floats`. Each `pygui.Float` can be used to modify the
+        internal state of the `Vec4` from elsewhere.
+        """
+        pass
+
+    def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4:
+        """
+        Modify the components of the `Vec4` using a (minimum) length 4
+        Sequence of `pygui.Float`. eg. tuple/list. Returns the same Vec4 so
+        that this method can be chained.
+        """
+        pass
+
+    def to_u32(self) -> int:
+        """
+        Converts this `Vec4` into a u32 integer. u32 integers are used in
+        ImGui for coloring.
+        """
+        pass
+
+    def copy(self) -> Vec4:
+        """
+        Returns a new deepcopied `Vec4`. The underlying `pygui.Float` are
+        also new.
+        """
+        pass
 
 class ImGlyphRange:
+    """
+    A custom wrapper around an `unsigned short*` array. This is used to back
+    the glyph range used by many of the font functions in pygui. Pass a list
+    of 2 element tuples to create a valid range.
+
+    For example:
+
+        ```python
+        range = pygui.ImGlyphRange([
+            (0x01,   0xFF),   # Extended ASCII Range,
+            (0x1F00, 0x1FFF), # Greek Extended Range
+        ])
+        ```
+
+    Unlike ImGui, you do not need to pass a 0 element to mark the end of
+    the array. This class will handle that. If any of the ranges start with
+    a 0, that range will be changed to 1.
+
+        ```python
+        range = pygui.ImGlyphRange([
+            (0x00, 0xFF) # Internally adds 1
+        ]) 
+        # Is the the same as
+        range = pygui.ImGlyphRange([
+            (0x01, 0xFF)
+        ])
+        ```
+    """
     ranges: Sequence[tuple]
+    """
+    The (read-only) list of ranges backing this object. Modifying this value
+    will raise a NotImplementedError.
+    """
     def __init__(self, glyph_ranges: Sequence[tuple]): ...
-    def destroy(self): ...
+    def destroy(self):
+        """
+        Internally, the memory backing the ImGlyphRange will be freed when
+        the python object is cleaned up by the garbage collector, but this
+        may actually free the memory backing this range before you call
+        `ImFontAtlas.build()` which requires the buffer to be valid. Hence,
+        this function exists.
+
+        Call `ImGlyphRange.destroy()` explicitly after calling
+        `ImFontAtlas.build()` to ensure Python does not garbage-collect this
+        object.
+        """
+        pass
 
 
-def IM_COL32(r: int, g: int, b: int, a: int) -> int: ...
+def IM_COL32(r: int, g: int, b: int, a: int) -> int:
+    """
+    Mimics a macro in ImGui. Each components is between 0-255. The result is
+    a u32 integer used commonly in ImGui for coloring.
+    """
 
 class ImGuiError(Exception): ...
 
-def load_image(image: Image) -> int: ...
+def load_image(image: Image) -> int:
+    """
+    Loads a PIL image into ImGui. Returns a texture handle that can be used
+    in any `pygui.image` function.
+    """
+    pass
 
-def IM_ASSERT(condition: bool, msg: str=""): ...
+def IM_ASSERT(condition: bool, msg: str=""):
+    """
+    Use like `assert`. If the condition is false an `ImGuiError` is raised.
+    """
+    pass
 
 WINDOW_FLAGS_NONE: int
 WINDOW_FLAGS_NO_TITLE_BAR: int
@@ -3123,8 +3399,15 @@ class ImDrawListSplitter:
     """
     Split/Merge functions are used to split the draw list into different layers which can be drawn into out of order.
     This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.
+    pygui note: This class is instantiable with ImGuiListClipper.create()
     """
-    def create() -> ImDrawListSplitter: ...
+    def create() -> ImDrawListSplitter:
+        """
+        Create a dynamically allocated instance of ImDrawListSplitter. Must
+        also be freed with destroy().
+        """
+        pass
+
     def destroy(self: ImDrawListSplitter) -> None:
         """
         Mimics the destructor of ccimgui.ImDrawListSplitter
@@ -3377,7 +3660,13 @@ class ImFontAtlas:
 
     # def add_font(self: ImFontAtlas, font_cfg: ImFontConfig) -> ImFont: ...
     def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None) -> ImFont: ...
-    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None) -> ImFont: ...
+    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None) -> ImFont:
+        """
+        pygui note: The ImFontConfig is copied in ImGui so there is no need to
+        keep the object alive after calling this function.
+        """
+        pass
+
     # def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
@@ -3634,8 +3923,19 @@ class ImFontConfig:
     """
     Size in pixels for rasterizer (more or less maps to the resulting font height).
     """
-    def create() -> ImFontConfig: ...
-    def destroy(self: ImFontConfig) -> None: ...
+    def create() -> ImFontConfig:
+        """
+        Create a dynamically allocated instance of ImFontConfig. Must
+        also be freed with destroy().
+        """
+        pass
+
+    def destroy(self: ImFontConfig) -> None:
+        """
+        Explicitly frees this instance.
+        """
+        pass
+
 
 class ImFontGlyph:
     """
@@ -3695,6 +3995,7 @@ class ImFontGlyphRangesBuilder:
     """
     Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
     This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
+    pygui note: This class is instantiable with ImFontGlyphRangesBuilder.create()
     """
     used_chars: List[int]
     """
@@ -3702,11 +4003,11 @@ class ImFontGlyphRangesBuilder:
     pygui note: Each integer is an unsigned 4 byte integer. Each integer is
     32 booleans. Use get_bit and set_bit to change the booleans.
     """
-    # def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
-    #     """
-    #     Add character
-    #     """
-    #     pass
+    def add_char(self: ImFontGlyphRangesBuilder, c: int) -> None:
+        """
+        Add character
+        """
+        pass
 
     def add_ranges(self: ImFontGlyphRangesBuilder, ranges: ImGlyphRange) -> None:
         """
@@ -3729,9 +4030,20 @@ class ImFontGlyphRangesBuilder:
         """
         pass
 
-    # def clear(self: ImFontGlyphRangesBuilder) -> None: ...
-    def create() -> ImFontGlyphRangesBuilder: ...
-    def destroy(self: ImFontGlyphRangesBuilder) -> None: ...
+    def clear(self: ImFontGlyphRangesBuilder) -> None: ...
+    def create() -> ImFontGlyphRangesBuilder:
+        """
+        Create a dynamically allocated instance of ImFontGlyphRangesBuilder. Must
+        also be freed with destroy().
+        """
+        pass
+
+    def destroy(self: ImFontGlyphRangesBuilder) -> None:
+        """
+        Explicitly frees this instance.
+        """
+        pass
+
     def get_bit(self: ImFontGlyphRangesBuilder, n: int) -> bool:
         """
         Get bit n in the array
@@ -4355,6 +4667,7 @@ class ImGuiListClipper:
     - Clipper calculate the actual range of elements to display based on the current clipping rectangle, position the cursor before the first visible element.
     - User code submit visible elements.
     - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.
+    pygui note: This class is instantiable with ImGuiListClipper.create()
     """
     ctx: ImGuiContext
     """
@@ -4369,8 +4682,19 @@ class ImGuiListClipper:
     First item to display, updated by each call to step()
     """
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
-    def create() -> ImGuiListClipper: ...
-    def destroy(self: ImGuiListClipper) -> None: ...
+    def create() -> ImGuiListClipper:
+        """
+        Create a dynamically allocated instance of ImGuiListClipper. Must
+        also be freed with destroy().
+        """
+        pass
+
+    def destroy(self: ImGuiListClipper) -> None:
+        """
+        Explicitly frees this instance.
+        """
+        pass
+
     def end(self: ImGuiListClipper) -> None:
         """
         Automatically called on the last call of step() that returns false.
@@ -4847,6 +5171,7 @@ class ImGuiTableSortSpecs:
 class ImGuiTextFilter:
     """
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
+    pygui note: This class is instantiable with ImGuiTextFilter.create()
     """
     # count_grep: int
     # filters: ImVector_ImGuiTextFilter_ImGuiTextRange
@@ -4859,7 +5184,12 @@ class ImGuiTextFilter:
         """
         pass
 
-    def destroy(self: ImGuiTextFilter) -> None: ...
+    def destroy(self: ImGuiTextFilter) -> None:
+        """
+        Explicitly frees this instance.
+        """
+        pass
+
     def draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0) -> bool:
         """
         Helper calling inputtext+build

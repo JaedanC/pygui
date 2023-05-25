@@ -344,23 +344,22 @@ def main():
     config.destroy()
 
     builder = pygui.ImFontGlyphRangesBuilder.create()
-    # Attempting to merge two fonts together only works if both the fonts are
-    # valid. Valid fonts have at least one character defined inside their range
-    # that the font has a glyph for. Attempting to add a font using a glyph not
-    # in range will cause the font to be unusable.
+    builder.add_text("Should not be visible")
+    builder.clear()
     omega = ord("Ω")
     builder.add_text("asciiASCII")
     assert not builder.get_bit(omega)
     builder.set_bit(omega)
     assert builder.get_bit(omega)
+    builder.add_char(ord("b"))
     custom_range = builder.build_ranges()
     builder.destroy()
 
     config = pygui.ImFontConfig.create()
-    config.name = "Added char font"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/ProggyClean.ttf", 14, config, custom_range)
+    config.name = "Proggy + Droid Minimal"
+    io.fonts.add_font_from_file_ttf("pygui/fonts/ProggyClean.ttf", 20, config, custom_range)
     config.merge_mode = True
-    io.fonts.add_font_from_file_ttf("pygui/fonts/DroidSans.ttf", 18, config, ranges)
+    io.fonts.add_font_from_file_ttf("pygui/fonts/DroidSans.ttf", 11, config, ranges)
     config.destroy()
 
     # More fonts
@@ -375,11 +374,12 @@ def main():
     # Any fonts that need to be added should call build()
     io.fonts.build()
 
-    # Since we need the ranges to be valid for the call to build, Python's gc might
-    # clean up the ImGlyphRange before the call to build, resulting in accessing
-    # freed memory. This is why you can defer the destruction explicitly to ensure
-    # the memory is freed exactly at that point. The gc can clean up the python
-    # ImFontConfig object whenever it likes after this call.
+    # Since we need the ranges to be valid for the call to build, Python's gc
+    # mightclean up the ImGlyphRange before the call to build, resulting in
+    # accessing freed memory. This is why you can defer the destruction
+    # explicitly to ensure the memory is freed exactly at that point. The gc can
+    # safetly clean up the python ImFontConfig object whenever it likes after
+    # this call.
     custom_range.destroy()
     ranges.destroy()
 

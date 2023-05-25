@@ -118,15 +118,25 @@ cdef class Double:
 
 cdef class String:
     cdef char* buffer
-    cdef public int buffer_size
+    cdef unsigned int _buffer_size
 
     def __cinit__(self, initial_value: str="", buffer_size=256):
+        IM_ASSERT(buffer_size > 0)
         self.buffer = <char*>ccimgui.ImGui_MemAlloc(buffer_size)
-        self.buffer_size: int = buffer_size
+        if self.buffer == NULL:
+            raise MemoryError()
+        self._buffer_size: int = buffer_size
         self.value = initial_value
 
     def __dealloc__(self):
         ccimgui.ImGui_MemFree(self.buffer)
+
+    @property
+    def buffer_size(self) -> int:
+        return self._buffer_size
+    @buffer_size.setter
+    def buffer_size(self, value: int):
+        raise NotImplementedError
 
     @property
     def value(self):
@@ -137,8 +147,8 @@ cdef class String:
         # So to mark the end of the string, you should use the len(bytes).
         c_bytes = _bytes(value)
         n_bytes = len(c_bytes)
-        strncpy(self.buffer, c_bytes, self.buffer_size)
-        self.buffer[min(n_bytes, self.buffer_size - 1)] = 0
+        strncpy(self.buffer, c_bytes, self._buffer_size)
+        self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
 
 
 cdef class Vec2:
@@ -223,6 +233,9 @@ cdef class Vec2:
         )
 
     def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
+        if len(vec) < 2:
+            raise IndexError
+
         self.x = vec[0]
         self.y = vec[1]
         return self
@@ -353,6 +366,9 @@ cdef class Vec4:
         )
 
     def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
+        if len(vec) < 4:
+            raise IndexError
+
         self.x = vec[0]
         self.y = vec[1]
         self.z = vec[2]
@@ -385,29 +401,50 @@ cdef class Vec4:
 
 cdef class ImGlyphRange:
     cdef unsigned short* c_ranges
-    cdef public object ranges
+    cdef object p_ranges
 
     def __cinit__(self, glyph_ranges: Sequence[tuple]):
-        # First remove any tuples that contain zero, because these are
-        # considered terminators of the array in imgui.
-        glyph_ranges = [g for g in glyph_ranges if g[0] != 0]
-        self.ranges = glyph_ranges
-        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+        # All elements passed need to be of length 2, and add 1 to any
+        # tuples that contain zero, because these are considered terminators
+        # of the array in imgui. Assert that only positive numbers were
+        # passed in.
+        safe_ranges = []
+        for glyph in glyph_ranges:
+            IM_ASSERT(len(glyph) == 2)
+            start, end = glyph
+            IM_ASSERT(start >= 0 and end >= 0)
+            start = start + 1 if start == 0 else start
+            IM_ASSERT(start <= end)
+            safe_ranges.append((start, end))
+
+        self.p_ranges = safe_ranges
+        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(safe_ranges) * 2 + 1) * sizeof(short))
         if self.c_ranges == NULL:
             raise MemoryError()
-        for i, g_range in enumerate(glyph_ranges):
+        for i, g_range in enumerate(safe_ranges):
             self.c_ranges[i * 2] = g_range[0]
             self.c_ranges[i * 2 + 1] = g_range[1]
-        self.c_ranges[len(glyph_ranges) * 2] = 0
+        self.c_ranges[len(safe_ranges) * 2] = 0
 
-    def destroy(self):
-        ccimgui.ImGui_MemFree(self.c_ranges)
-        self.c_ranges = NULL
+    @property
+    def ranges(self):
+        return self.p_ranges
+    @ranges.setter
+    def ranges(self, value):
+        raise NotImplementedError
 
-    def __dealloc__(self):
-        if self.c_ranges:
+    def destroy(self: ImGuiTextFilter):
+        """
+        Explicitly frees this instance.
+        """
+        if self.c_ranges != NULL:
             ccimgui.ImGui_MemFree(self.c_ranges)
-        self.c_ranges = NULL
+            self.c_ranges = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
 
     @staticmethod
     cdef from_short_array(const ccimgui.ImWchar* c_glyph_ranges):
@@ -460,10 +497,10 @@ def get_imgui_error():
     return python_exception
 
 def IM_ASSERT(condition: bool, error_message: str=""):
-    '''
+    """
     If cimgui exposes us a custom exception, we will use that. Otherwise,
     we will use Python's AssertionError.
-    '''
+    """
     if condition:
         return
 

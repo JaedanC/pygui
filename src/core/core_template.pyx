@@ -118,15 +118,25 @@ cdef class Double:
 
 cdef class String:
     cdef char* buffer
-    cdef public int buffer_size
+    cdef unsigned int _buffer_size
 
     def __cinit__(self, initial_value: str="", buffer_size=256):
+        IM_ASSERT(buffer_size > 0)
         self.buffer = <char*>ccimgui.ImGui_MemAlloc(buffer_size)
-        self.buffer_size: int = buffer_size
+        if self.buffer == NULL:
+            raise MemoryError()
+        self._buffer_size: int = buffer_size
         self.value = initial_value
 
     def __dealloc__(self):
         ccimgui.ImGui_MemFree(self.buffer)
+
+    @property
+    def buffer_size(self) -> int:
+        return self._buffer_size
+    @buffer_size.setter
+    def buffer_size(self, value: int):
+        raise NotImplementedError
 
     @property
     def value(self):
@@ -137,8 +147,8 @@ cdef class String:
         # So to mark the end of the string, you should use the len(bytes).
         c_bytes = _bytes(value)
         n_bytes = len(c_bytes)
-        strncpy(self.buffer, c_bytes, self.buffer_size)
-        self.buffer[min(n_bytes, self.buffer_size - 1)] = 0
+        strncpy(self.buffer, c_bytes, self._buffer_size)
+        self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
 
 
 cdef class Vec2:
@@ -223,6 +233,9 @@ cdef class Vec2:
         )
 
     def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
+        if len(vec) < 2:
+            raise IndexError
+
         self.x = vec[0]
         self.y = vec[1]
         return self
@@ -353,6 +366,9 @@ cdef class Vec4:
         )
 
     def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
+        if len(vec) < 4:
+            raise IndexError
+
         self.x = vec[0]
         self.y = vec[1]
         self.z = vec[2]
@@ -385,29 +401,50 @@ cdef class Vec4:
 
 cdef class ImGlyphRange:
     cdef unsigned short* c_ranges
-    cdef public object ranges
+    cdef object p_ranges
 
     def __cinit__(self, glyph_ranges: Sequence[tuple]):
-        # First remove any tuples that contain zero, because these are
-        # considered terminators of the array in imgui.
-        glyph_ranges = [g for g in glyph_ranges if g[0] != 0]
-        self.ranges = glyph_ranges
-        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(glyph_ranges) * 2 + 1) * sizeof(short))
+        # All elements passed need to be of length 2, and add 1 to any
+        # tuples that contain zero, because these are considered terminators
+        # of the array in imgui. Assert that only positive numbers were
+        # passed in.
+        safe_ranges = []
+        for glyph in glyph_ranges:
+            IM_ASSERT(len(glyph) == 2)
+            start, end = glyph
+            IM_ASSERT(start >= 0 and end >= 0)
+            start = start + 1 if start == 0 else start
+            IM_ASSERT(start <= end)
+            safe_ranges.append((start, end))
+
+        self.p_ranges = safe_ranges
+        self.c_ranges = <unsigned short*>ccimgui.ImGui_MemAlloc((len(safe_ranges) * 2 + 1) * sizeof(short))
         if self.c_ranges == NULL:
             raise MemoryError()
-        for i, g_range in enumerate(glyph_ranges):
+        for i, g_range in enumerate(safe_ranges):
             self.c_ranges[i * 2] = g_range[0]
             self.c_ranges[i * 2 + 1] = g_range[1]
-        self.c_ranges[len(glyph_ranges) * 2] = 0
+        self.c_ranges[len(safe_ranges) * 2] = 0
 
-    def destroy(self):
-        ccimgui.ImGui_MemFree(self.c_ranges)
-        self.c_ranges = NULL
+    @property
+    def ranges(self):
+        return self.p_ranges
+    @ranges.setter
+    def ranges(self, value):
+        raise NotImplementedError
 
-    def __dealloc__(self):
-        if self.c_ranges:
+    def destroy(self: ImGuiTextFilter):
+        """
+        Explicitly frees this instance.
+        """
+        if self.c_ranges != NULL:
             ccimgui.ImGui_MemFree(self.c_ranges)
-        self.c_ranges = NULL
+            self.c_ranges = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
 
     @staticmethod
     cdef from_short_array(const ccimgui.ImWchar* c_glyph_ranges):
@@ -460,10 +497,10 @@ def get_imgui_error():
     return python_exception
 
 def IM_ASSERT(condition: bool, error_message: str=""):
-    '''
+    """
     If cimgui exposes us a custom exception, we will use that. Otherwise,
     we will use Python's AssertionError.
-    '''
+    """
     if condition:
         return
 
@@ -12428,11 +12465,12 @@ cdef class ImDrawListSharedData:
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 cdef class ImDrawListSplitter:
     """
     Split/Merge functions are used to split the draw list into different layers which can be drawn into out of order.
     This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.
+    pygui note: This class is instantiable with ImGuiListClipper.create()
     """
     cdef ccimgui.ImDrawListSplitter* _ptr
     
@@ -12545,6 +12583,10 @@ cdef class ImDrawListSplitter:
     # ?returns(ImDrawListSplitter)
     @staticmethod
     def create():
+        """
+        Create a dynamically allocated instance of ImDrawListSplitter. Must
+        also be freed with destroy().
+        """
         cdef ccimgui.ImDrawListSplitter* clipper = <ccimgui.ImDrawListSplitter*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImDrawListSplitter))
         memset(clipper, 0, sizeof(ccimgui.ImDrawListSplitter))
         return ImDrawListSplitter.from_ptr(clipper)
@@ -12559,9 +12601,15 @@ cdef class ImDrawListSplitter:
         """
         Mimics the destructor of ccimgui.ImDrawListSplitter
         """
-        ccimgui.ImDrawListSplitter_ClearFreeMemory(self._ptr)
-        ccimgui.ImGui_MemFree(self._ptr)
-        self._ptr = NULL
+        if self._ptr != NULL:
+            ccimgui.ImDrawListSplitter_ClearFreeMemory(self._ptr)
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
     # [End Method]
 
     # [Method]
@@ -13931,6 +13979,10 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(ImFont)
     def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None):
+        """
+        pygui note: The ImFontConfig is copied in ImGui so there is no need to
+        keep the object alive after calling this function.
+        """
         cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
             self._ptr,
             _bytes(filename),
@@ -14587,7 +14639,7 @@ cdef class ImFontBuilderIO:
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 cdef class ImFontConfig:
     cdef ccimgui.ImFontConfig* _ptr
     
@@ -14985,6 +15037,10 @@ cdef class ImFontConfig:
     # ?returns(ImFontConfig)
     @staticmethod
     def create():
+        """
+        Create a dynamically allocated instance of ImFontConfig. Must
+        also be freed with destroy().
+        """
         cdef ccimgui.ImFontConfig* config = <ccimgui.ImFontConfig*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImFontConfig))
 
         # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
@@ -15015,8 +15071,17 @@ cdef class ImFontConfig:
     # ?invisible(False)
     # ?returns(None)
     def destroy(self: ImFontConfig):
-        ccimgui.ImGui_MemFree(self._ptr)
-        self._ptr = NULL
+        """
+        Explicitly frees this instance.
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
     # [End Method]
 # [End Class]
 
@@ -15285,11 +15350,12 @@ cdef class ImFontGlyph:
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 cdef class ImFontGlyphRangesBuilder:
     """
     Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().
     This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
+    pygui note: This class is instantiable with ImFontGlyphRangesBuilder.create()
     """
     cdef ccimgui.ImFontGlyphRangesBuilder* _ptr
     
@@ -15334,7 +15400,7 @@ cdef class ImFontGlyphRangesBuilder:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -15408,7 +15474,7 @@ cdef class ImFontGlyphRangesBuilder:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -15425,6 +15491,10 @@ cdef class ImFontGlyphRangesBuilder:
     # ?returns(ImFontGlyphRangesBuilder)
     @staticmethod
     def create():
+        """
+        Create a dynamically allocated instance of ImFontGlyphRangesBuilder. Must
+        also be freed with destroy().
+        """
         cdef ccimgui.ImFontGlyphRangesBuilder* builder = <ccimgui.ImFontGlyphRangesBuilder*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImFontGlyphRangesBuilder))
         # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor. Zero init should also work for the ImVector too.
         memset(builder, 0, sizeof(ccimgui.ImFontGlyphRangesBuilder))
@@ -15438,8 +15508,17 @@ cdef class ImFontGlyphRangesBuilder:
     # ?invisible(False)
     # ?returns(None)
     def destroy(self: ImFontGlyphRangesBuilder):
-        ccimgui.ImGui_MemFree(self._ptr)
-        self._ptr = NULL
+        """
+        Explicitly frees this instance.
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
     # [End Method]
 
     # [Method]
@@ -18173,7 +18252,7 @@ cdef class ImGuiKeyData:
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 cdef class ImGuiListClipper:
     """
     Helper: Manually clip large list of items.
@@ -18196,6 +18275,7 @@ cdef class ImGuiListClipper:
     - Clipper calculate the actual range of elements to display based on the current clipping rectangle, position the cursor before the first visible element.
     - User code submit visible elements.
     - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.
+    pygui note: This class is instantiable with ImGuiListClipper.create()
     """
     cdef ccimgui.ImGuiListClipper* _ptr
     
@@ -18371,6 +18451,10 @@ cdef class ImGuiListClipper:
     # ?returns(ImGuiListClipper)
     @staticmethod
     def create():
+        """
+        Create a dynamically allocated instance of ImGuiListClipper. Must
+        also be freed with destroy().
+        """
         cdef ccimgui.ImGuiListClipper* clipper = <ccimgui.ImGuiListClipper*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiListClipper))
 
         # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
@@ -18395,8 +18479,17 @@ cdef class ImGuiListClipper:
     # ?invisible(False)
     # ?returns(None)
     def destroy(self: ImGuiListClipper):
-        ccimgui.ImGui_MemFree(self._ptr)
-        self._ptr = NULL
+        """
+        Explicitly frees this instance.
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
     # [End Method]
 
     # [Method]
@@ -21179,10 +21272,11 @@ cdef class ImGuiTextBuffer:
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
-# ?custom_comment_only(False)
+# ?custom_comment_only(True)
 cdef class ImGuiTextFilter:
     """
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
+    pygui note: This class is instantiable with ImGuiTextFilter.create()
     """
     cdef ccimgui.ImGuiTextFilter* _ptr
     
@@ -21305,8 +21399,17 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?returns(None)
     def destroy(self: ImGuiTextFilter):
-        ccimgui.ImGui_MemFree(self._ptr)
-        self._ptr = NULL
+        """
+        Explicitly frees this instance.
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        self.destroy()
     # [End Method]
 
     # [Method]

@@ -3011,7 +3011,7 @@ def show_random_extras():
         pygui.dummy((50, 50))
 
         pygui.tree_pop()
-
+    
     if pygui.tree_node("String() testing"):
         pygui.input_text("String test", rand.string_test)
         pygui.text("Length: {} Value: '{}'".format(
@@ -4703,7 +4703,7 @@ def crash_imgui():
         except pygui.get_imgui_error() as e:
             # Prefer to use pygui.ImGuiError as it is safer. This value could
             # be None if cimgui is not using a custom python exception. For this
-            # example this is exavtly what we want.
+            # example this is exactly what we want.
             crash_test.catch_message = "Caught! You have custom exceptions on."
             crash_test.error_text.value = str(e)
     
