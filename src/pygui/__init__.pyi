@@ -344,18 +344,28 @@ def IM_COL32(r: int, g: int, b: int, a: int) -> int:
     a u32 integer used commonly in ImGui for coloring.
     """
 
+IM_COL32_WHITE : int
+IM_COL32_BLACK : int
+IM_COL32_BLACK_TRANS : int
+
 class ImGuiError(Exception): ...
+
+def IM_ASSERT(condition: bool, msg: str=""):
+    """
+    Use like `assert`. If the condition is false an `ImGuiError` is raised.
+    """
+    pass
+
+def IM_CLAMP(n, smallest, largest):
+    """
+    Returns n clamped to [smallest, largest]
+    """
+    pass
 
 def load_image(image: Image) -> int:
     """
     Loads a PIL image into ImGui. Returns a texture handle that can be used
     in any `pygui.image` function.
-    """
-    pass
-
-def IM_ASSERT(condition: bool, msg: str=""):
-    """
-    Use like `assert`. If the condition is false an `ImGuiError` is raised.
     """
     pass
 

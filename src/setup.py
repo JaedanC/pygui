@@ -60,34 +60,22 @@ def main():
     )
 
 
+    # Create the portible pygui installation
     if os.path.exists("../portable"):
         shutil.rmtree("../portable")
 
-    os.makedirs("../portable/pygui")
-    os.makedirs("../portable/pygui/img")
+    def verbose_copy(start, dest):
+        print(f"Created {dest}")
+        return shutil.copy2(start, dest)
 
-    to_copy = \
-        glob.glob(r"pygui/*.dll") + \
-        glob.glob(r"pygui/*.pyd") + \
-        glob.glob(r"pygui/*.py") + \
-        glob.glob(r"pygui/*.pyi")
-    to_copy.sort()
-    to_copy = [f.replace("\\", "/") for f in to_copy]
-    
-    for file_to_copy in to_copy:
-        shutil.copy(file_to_copy, "../portable/pygui")
-        print(f"Created ../portable/{file_to_copy}")
-    
-    shutil.copy("pygui/img/code.png", "../portable/pygui/img")
-    print(f"Created ../portable/pygui/img/code.png")
-
-    shutil.copy("requirements.txt", "../portable")
-    print(f"Created ../portable/requirements.txt")
-    shutil.copy("python_demo_window.py", "../portable")
-    print(f"Created ../portable/python_demo_window.txt")
-    shutil.copy("app.py", "../portable")
-    print(f"Created ../portable/app.py")
-    
+    shutil.copytree("pygui", "../portable/pygui",
+        copy_function=verbose_copy,
+        ignore=shutil.ignore_patterns(
+            "__pycache__",
+            "libs",
+            "*.ini",
+            "*.exe",
+        ))
 
 
 if __name__ == "__main__":

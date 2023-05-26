@@ -463,25 +463,23 @@ cdef class ImGlyphRange:
         return ImGlyphRange(ranges)
 
 
-IM_COL32_R_SHIFT = 0
-IM_COL32_G_SHIFT = 8
-IM_COL32_B_SHIFT = 16
-IM_COL32_A_SHIFT = 24
-
 FLT_MIN = LIBC_FLT_MIN
 FLT_MAX = LIBC_FLT_MAX
 PAYLOAD_TYPE_COLOR_3F = "_COL3F"
 PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 
 
+# IM_COL32_R_SHIFT = 0
+# IM_COL32_G_SHIFT = 8
+# IM_COL32_B_SHIFT = 16
+# IM_COL32_A_SHIFT = 24
 def IM_COL32(int r, int g, int b, int a) -> int:
     cdef unsigned long output = 0
-    output |= a << IM_COL32_A_SHIFT
-    output |= b << IM_COL32_B_SHIFT
-    output |= g << IM_COL32_G_SHIFT
-    output |= r << IM_COL32_R_SHIFT
+    output |= a << 24
+    output |= b << 16
+    output |= g << 8
+    output |= r << 0
     return output
-
 
 IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
 IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
@@ -512,6 +510,9 @@ def IM_ASSERT(condition: bool, error_message: str=""):
         raise AssertionError(error_message)
     else:
         raise ImGuiError(error_message)
+
+def IM_CLAMP(n, smallest, largest):
+    return max(smallest, min(n, largest))
 
 WINDOW_FLAGS_NONE = ccimgui.ImGuiWindowFlags_None
 WINDOW_FLAGS_NO_TITLE_BAR = ccimgui.ImGuiWindowFlags_NoTitleBar
@@ -3679,6 +3680,19 @@ def get_item_rect_size():
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetItemRectSize()
     return _cast_ImVec2_tuple(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(int)
+def get_key_index(key: int):
+    cdef ccimgui.ImGuiKey res = ccimgui.GetKeyIndex(
+        key
+    )
+    return res
 # [End Function]
 
 # [Function]

@@ -1435,11 +1435,6 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             # Owns the ranges and keeps a copy.
             return ImGlyphRange(ranges)
 
-    
-    IM_COL32_R_SHIFT = 0
-    IM_COL32_G_SHIFT = 8
-    IM_COL32_B_SHIFT = 16
-    IM_COL32_A_SHIFT = 24
 
     FLT_MIN = LIBC_FLT_MIN
     FLT_MAX = LIBC_FLT_MAX
@@ -1447,14 +1442,17 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     PAYLOAD_TYPE_COLOR_4F = "_COL4F"
 
 
+    # IM_COL32_R_SHIFT = 0
+    # IM_COL32_G_SHIFT = 8
+    # IM_COL32_B_SHIFT = 16
+    # IM_COL32_A_SHIFT = 24
     def IM_COL32(int r, int g, int b, int a) -> int:
         cdef unsigned long output = 0
-        output |= a << IM_COL32_A_SHIFT
-        output |= b << IM_COL32_B_SHIFT
-        output |= g << IM_COL32_G_SHIFT
-        output |= r << IM_COL32_R_SHIFT
+        output |= a << 24
+        output |= b << 16
+        output |= g << 8
+        output |= r << 0
         return output
-
 
     IM_COL32_WHITE        = IM_COL32(255, 255, 255, 255)   # Opaque white = 0xFFFFFFFF
     IM_COL32_BLACK        = IM_COL32(0, 0, 0, 255)         # Opaque black
@@ -1485,6 +1483,9 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             raise AssertionError(error_message)
         else:
             raise ImGuiError(error_message)
+    
+    def IM_CLAMP(n, smallest, largest):
+        return max(smallest, min(n, largest))
 
     '''
 
@@ -2016,19 +2017,29 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
         Mimics a macro in ImGui. Each components is between 0-255. The result is
         a u32 integer used commonly in ImGui for coloring.
         """
+    
+    IM_COL32_WHITE : int
+    IM_COL32_BLACK : int
+    IM_COL32_BLACK_TRANS : int
 
     class ImGuiError(Exception): ...
-
-    def load_image(image: Image) -> int:
-        """
-        Loads a PIL image into ImGui. Returns a texture handle that can be used
-        in any `pygui.image` function.
-        """
-        pass
 
     def IM_ASSERT(condition: bool, msg: str=""):
         """
         Use like `assert`. If the condition is false an `ImGuiError` is raised.
+        """
+        pass
+    
+    def IM_CLAMP(n, smallest, largest):
+        """
+        Returns n clamped to [smallest, largest]
+        """
+        pass
+        
+    def load_image(image: Image) -> int:
+        """
+        Loads a PIL image into ImGui. Returns a texture handle that can be used
+        in any `pygui.image` function.
         """
         pass
 
