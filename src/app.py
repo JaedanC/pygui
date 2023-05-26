@@ -1,12 +1,12 @@
 import pygui
 import glfw
 import OpenGL.GL as gl
-from python_demo_window import demo_fonts_init, pygui_demo_window
+from pygui_demo import demo_fonts_init, pygui_demo_window
 
 
 vsync_enabled = pygui.Bool(True)
 show_imgui_demo = pygui.Bool(True)
-show_python_demo = pygui.Bool(True)
+show_pygui_demo = pygui.Bool(True)
 
 
 def render():
@@ -14,7 +14,7 @@ def render():
     pygui.text("FPS: {}".format(round(pygui.get_io().framerate)))
     if pygui.checkbox("Enable vsync", vsync_enabled):
         glfw.swap_interval(int(vsync_enabled.value))
-    pygui.checkbox("Show pygui Demo", show_python_demo)
+    pygui.checkbox("Show pygui Demo", show_pygui_demo)
     pygui.same_line()
     pygui.checkbox("Show ImGui Demo", show_imgui_demo)
     pygui.end()
@@ -22,7 +22,7 @@ def render():
     if show_imgui_demo:
         pygui.show_demo_window()
 
-    if show_python_demo:
+    if show_pygui_demo:
         pygui_demo_window()
 
 

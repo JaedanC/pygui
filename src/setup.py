@@ -77,6 +77,10 @@ def main():
             "*.exe",
         ))
 
+    verbose_copy("requirements.txt", "../portable/requirements.txt")
+    verbose_copy("pygui_demo.py",    "../portable/pygui_demo.py")
+    verbose_copy("app.py",           "../portable/app.py")
+
 
 if __name__ == "__main__":
     main()
