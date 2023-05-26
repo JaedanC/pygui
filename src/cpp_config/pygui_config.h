@@ -77,5 +77,15 @@ CIMGUI_API PyObject* get_imgui_error();
 // compatable.
 #define CIMGUI_API      __declspec(dllimport)
 #define IMGUI_IMPL_API  __declspec(dllimport)
-
 #endif // PYGUI_COMPILING_APP
+
+// -----------------------------------------------------------------------------
+
+#ifdef PYGUI_COMPILING_CPP_APP
+#pragma message ( "Preprocessor: PYGUI_COMPILING_APP" )
+
+#ifndef GLFW_DLL
+#define GLFW_DLL
+#endif
+
+#endif // PYGUI_COMPILING_CPP_APP

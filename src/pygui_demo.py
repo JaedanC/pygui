@@ -3758,7 +3758,7 @@ def show_random_extras():
             clipper.begin(len(rand.df))
 
             if scroll_to:
-                clipper.force_display_range_by_indices(
+                clipper.include_range_by_indices(
                     rand.jump_to.value, rand.jump_to.value + 1)
 
             while clipper.step():

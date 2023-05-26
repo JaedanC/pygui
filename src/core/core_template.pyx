@@ -14226,7 +14226,8 @@ cdef class ImFontAtlas:
     def get_glyph_ranges_default(self: ImFontAtlas):
         """
         Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
-        NB: Make sure that your string are UTF-8 and NOT in your local code page. In C++11, you can create UTF-8 string literal using the u8"Hello world" syntax. See FAQ for details.
+        NB: Make sure that your string are UTF-8 and NOT in your local code page.
+        Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
         NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
         Basic latin, extended latin
         """
@@ -15836,7 +15837,7 @@ cdef class ImGuiIO:
     @property
     def config_debug_begin_return_value_loop(self):
         """
-        = false // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+        = false  // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueLoop
         return res
@@ -15857,16 +15858,38 @@ cdef class ImGuiIO:
         """
         Debug options
         - tools to test correct Begin/End and BeginChild/EndChild behaviors.
-        - presently Begn()/End() and BeginChild()EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
+        - presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
         this is inconsistent with other BeginXXX functions and create confusion for many users.
-        - we expect to update the API eventually. In the meanwhile we provided tools to facilitate checking user-code behavior.
-        = false // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
+        - we expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
+        = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueOnce
         return res
     @config_debug_begin_return_value_once.setter
     def config_debug_begin_return_value_once(self, value: bool):
         # dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_debug_ignore_focus_loss(self):
+        """
+        - option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+        - backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
+        - consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+        = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
+        return res
+    @config_debug_ignore_focus_loss.setter
+    def config_debug_ignore_focus_loss(self, value: bool):
+        # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
         raise NotImplementedError
     # [End Field]
 
@@ -18512,19 +18535,18 @@ cdef class ImGuiListClipper:
     # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
-    # ?custom_comment_only(True)
+    # ?custom_comment_only(False)
     # ?returns(None)
-    def force_display_range_by_indices(self: ImGuiListClipper, item_min: int, item_max: int):
+    def include_range_by_indices(self: ImGuiListClipper, item_begin: int, item_end: int):
         """
-        Call ForceDisplayRangeByIndices() before first call to Step() if you need a range of items to be included inside one of the calls to Step() regardless of visibility.
-        This doesn't force the indices to become visible, but rather forces those indices to appear inside one of the calls to Step().
-        Can be useful for eg. calling ImGui::SetScrollHereY() on a out-of-view index so that it *does* become visible.
-        Item_max is exclusive e.g. use (42, 42+1) to make item 42 always visible but due to alignment/padding of certain items it is likely that an extra item may be included on either end of the display range.
+        Call IncludeRangeByIndices() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+        (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+        Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
         """
-        ccimgui.ImGuiListClipper_ForceDisplayRangeByIndices(
+        ccimgui.ImGuiListClipper_IncludeRangeByIndices(
             self._ptr,
-            item_min,
-            item_max
+            item_begin,
+            item_end
         )
     # [End Method]
 

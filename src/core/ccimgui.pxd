@@ -1159,8 +1159,9 @@ cdef extern from "cimgui.h":
         bool ConfigWindowsResizeFromEdges                                                                          # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         bool ConfigWindowsMoveFromTitleBarOnly                                                                     # = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
         float ConfigMemoryCompactTimer                                                                             # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
-        bool ConfigDebugBeginReturnValueOnce                                                                       # = false         // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
-        bool ConfigDebugBeginReturnValueLoop                                                                       # = false         // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+        bool ConfigDebugBeginReturnValueOnce                                                                       # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
+        bool ConfigDebugBeginReturnValueLoop                                                                       # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+        bool ConfigDebugIgnoreFocusLoss                                                                            # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
         const char* BackendPlatformName                                                                            # = null
         const char* BackendRendererName                                                                            # = null
         void* BackendPlatformUserData                                                                              # = null           // user data for platform backend
@@ -1483,9 +1484,10 @@ cdef extern from "cimgui.h":
     # Automatically called on the last call of step() that returns false.
     void ImGuiListClipper_End(ImGuiListClipper* self) except +
 
-    # Call ForceDisplayRangeByIndices() before first call to Step() if you need a range of items to be displayed regardless of visibility.
-    # Item_max is exclusive e.g. use (42, 42+1) to make item 42 always visible but due to alignment/padding of certain items it is likely that an extra item may be included on either end of the display range.
-    void ImGuiListClipper_ForceDisplayRangeByIndices(ImGuiListClipper* self, int item_min, int item_max) except +
+    # Call IncludeRangeByIndices() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+    # (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+    # Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
+    void ImGuiListClipper_IncludeRangeByIndices(ImGuiListClipper* self, int item_begin, int item_end) except +
 
     # Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
     bool ImGuiListClipper_Step(ImGuiListClipper* self) except +
@@ -1929,7 +1931,8 @@ cdef extern from "cimgui.h":
     const ImWchar* ImFontAtlas_GetGlyphRangesCyrillic(ImFontAtlas* self) except +
 
     # Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
-    # NB: Make sure that your string are UTF-8 and NOT in your local code page. In C++11, you can create UTF-8 string literal using the u8"Hello world" syntax. See FAQ for details.
+    # NB: Make sure that your string are UTF-8 and NOT in your local code page.
+    # Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
     # NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
     # Basic latin, extended latin
     const ImWchar* ImFontAtlas_GetGlyphRangesDefault(ImFontAtlas* self) except +
