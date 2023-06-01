@@ -1625,14 +1625,14 @@ def get_draw_data() -> ImDrawData:
     """
     pass
 
-# def get_font() -> ImFont:
-#     """
-#     Style read access
-#     - Use the ShowStyleEditor() function to interactively see/edit the colors.
-#     Get current font
-#     # TODO: Fix-me
-#     """
-#     pass
+def get_font() -> ImFont:
+    """
+    Style read access
+    - Use the ShowStyleEditor() function to interactively see/edit the colors.
+    Get current font
+    pygui note: Returns a const ImFont. Fields should only be read, not modified.
+    """
+    pass
 
 def get_font_size() -> float:
     """
@@ -3442,11 +3442,12 @@ class ImFont:
     """
     4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
     """
-    # config_data: ImFontConfig
-    # """
-    # 4-8   // in  //// pointer within containeratlas->configdata
-    # # TODO: Fix me
-    # """
+    config_data: ImFontConfig
+    """
+    4-8   // in  //// pointer within containeratlas->configdata
+    pygui note: Returns a const ImFontConfig. Fields should only be read,
+    not modified.
+    """
     config_data_count: int
     """
     2 // in  // ~ 1// number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.

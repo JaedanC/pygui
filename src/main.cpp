@@ -30,6 +30,108 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+
+#include <string>
+
+
+void show_imfontconfig(ImFontConfig* config)
+{
+    char rasterizer_multiply_text[64];
+    sprintf(rasterizer_multiply_text, "config.rasterizer_multiply: %f", config->RasterizerMultiply);
+    ImGui::MenuItem(rasterizer_multiply_text);
+}
+
+
+void show_imfont_atlas(ImFontAtlas* atlas)
+{
+    if (ImGui::BeginMenu("atlas.config_data"))
+    {
+        char config_data_size[32];
+        sprintf(config_data_size, "atlas->ConfigData.size(): %d", atlas->ConfigData.size());
+        ImGui::MenuItem(config_data_size);
+        for (int i = 0; i < atlas->ConfigData.size(); i++)
+        {
+            char config_text[32];
+            sprintf(config_text, "Config %d", i);
+            if (ImGui::BeginMenu(config_text))
+            {
+                show_imfontconfig(&atlas->ConfigData[i]);
+                ImGui::EndMenu();
+            }
+        }
+        ImGui::EndMenu();
+    }
+}
+
+
+void example_function()
+{
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        show_imfont_atlas(io.Fonts);    
+    }
+}
+
+
+void demo_fonts_init()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    ImFontAtlas* atlas = io.Fonts;
+    atlas->AddFontDefault();
+
+    {
+        ImFontConfig config;
+        strcpy(config.Name, "CascadiaMono-SemiBold.otf without range");
+        atlas->AddFontFromFileTTF("fonts/CascadiaMono-SemiBold.otf", 14, &config);
+        // strcpy(config.Name, "CascadiaMono-SemiBold.otf with range");
+        // atlas->AddFontFromFileTTF("fonts/CascadiaMono-SemiBold.otf", 14, &config, atlas->GetGlyphRangesDefault());
+    }
+
+    // {
+    //     ImFontConfig config;
+    //     strcpy(config.Name, "NotoSansMath-Regular.ttf without range");
+    //     atlas->AddFontFromFileTTF("fonts/NotoSansMath-Regular.ttf", 20, &config);
+    //     strcpy(config.Name, "NotoSansMath-Regular.ttf with range");
+    //     atlas->AddFontFromFileTTF("fonts/NotoSansMath-Regular.ttf", 20, &config, atlas->GetGlyphRangesDefault());
+    // }
+
+    // {
+    //     ImFontConfig config;
+    //     strcpy(config.Name, "selawk.ttf without range");
+    //     config.GlyphMinAdvanceX = 7.15f;
+    //     config.GlyphMaxAdvanceX = 7.15f;
+    //     atlas->AddFontFromFileTTF("fonts/selawk.ttf", 15, &config);
+    //     strcpy(config.Name, "selawk.ttf with range");
+    //     atlas->AddFontFromFileTTF("fonts/NotoSansMath-Regular.ttf", 15, &config, atlas->GetGlyphRangesDefault());
+    // }
+
+    // {
+    //     ImFontConfig config;
+    //     strcpy(config.Name, "CascadiaMono + Selawk + NotoSansMath");
+    //     config.GlyphMinAdvanceX = 7.15f;
+    //     config.GlyphMaxAdvanceX = 7.15f;
+    //     atlas->AddFontFromFileTTF("fonts/CascadiaMono-SemiBold.otf", 14, &config, atlas->GetGlyphRangesDefault());
+    //     config.MergeMode = true;
+    //     atlas->AddFontFromFileTTF("fonts/NotoSansMath-Regular.ttf", 20, &config, atlas->GetGlyphRangesDefault());
+    //     atlas->AddFontFromFileTTF("fonts/selawk.ttf", 15, &config, atlas->GetGlyphRangesDefault());
+    // }
+
+    // {
+    //     ImFontConfig config;
+    //     strcpy(config.Name, "Proggy + Droid Minimal");
+    //     atlas->AddFontFromFileTTF("fonts/ProggyClean.ttf", 20, &config, atlas->GetGlyphRangesDefault());
+    //     config.MergeMode = true;
+    //     atlas->AddFontFromFileTTF("fonts/DroidSans.ttf", 11, &config, atlas->GetGlyphRangesDefault());
+    // }
+
+    // {
+    //     atlas->AddFontFromFileTTF("fonts/unifont-15.0.01.otf", 13, NULL, atlas->GetGlyphRangesDefault());
+    // }
+
+    atlas->Build();
+}
+
+
 // Main code
 int main(int, char**)
 {
@@ -110,6 +212,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != nullptr);
+    demo_fonts_init();
 
     // Our state
     bool show_demo_window = true;
@@ -155,6 +258,8 @@ int main(int, char**)
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            
+            example_function();
 
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;

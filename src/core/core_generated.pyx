@@ -8741,6 +8741,7 @@ cdef class ImColor:
     **None of the ImGui API are using ImColor directly but you can use it as a convenience to pass colors in either ImU32 or ImVec4 formats. Explicitly cast to ImU32 or ImVec4 if needed.
     """
     cdef ccimgui.ImColor* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImColor from_ptr(ccimgui.ImColor* _ptr):
@@ -8748,6 +8749,15 @@ cdef class ImColor:
             return None
         cdef ImColor wrapper = ImColor.__new__(ImColor)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImColor from_heap_ptr(ccimgui.ImColor* _ptr):
+        wrapper = ImColor.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -8825,6 +8835,7 @@ cdef class ImDrawChannel:
     [Internal] For use by ImDrawListSplitter
     """
     cdef ccimgui.ImDrawChannel* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawChannel from_ptr(ccimgui.ImDrawChannel* _ptr):
@@ -8832,6 +8843,15 @@ cdef class ImDrawChannel:
             return None
         cdef ImDrawChannel wrapper = ImDrawChannel.__new__(ImDrawChannel)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawChannel from_heap_ptr(ccimgui.ImDrawChannel* _ptr):
+        wrapper = ImDrawChannel.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -8893,6 +8913,7 @@ cdef class ImDrawCmd:
     - The ClipRect/TextureId/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
     """
     cdef ccimgui.ImDrawCmd* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawCmd from_ptr(ccimgui.ImDrawCmd* _ptr):
@@ -8900,6 +8921,15 @@ cdef class ImDrawCmd:
             return None
         cdef ImDrawCmd wrapper = ImDrawCmd.__new__(ImDrawCmd)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawCmd from_heap_ptr(ccimgui.ImDrawCmd* _ptr):
+        wrapper = ImDrawCmd.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -9074,6 +9104,7 @@ cdef class ImDrawCmdHeader:
     [Internal] For use by ImDrawList
     """
     cdef ccimgui.ImDrawCmdHeader* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawCmdHeader from_ptr(ccimgui.ImDrawCmdHeader* _ptr):
@@ -9081,6 +9112,15 @@ cdef class ImDrawCmdHeader:
             return None
         cdef ImDrawCmdHeader wrapper = ImDrawCmdHeader.__new__(ImDrawCmdHeader)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawCmdHeader from_heap_ptr(ccimgui.ImDrawCmdHeader* _ptr):
+        wrapper = ImDrawCmdHeader.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -9156,6 +9196,7 @@ cdef class ImDrawData:
     as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
     """
     cdef ccimgui.ImDrawData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawData from_ptr(ccimgui.ImDrawData* _ptr):
@@ -9163,6 +9204,15 @@ cdef class ImDrawData:
             return None
         cdef ImDrawData wrapper = ImDrawData.__new__(ImDrawData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawData from_heap_ptr(ccimgui.ImDrawData* _ptr):
+        wrapper = ImDrawData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -9413,6 +9463,7 @@ cdef class ImDrawList:
     Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.
     """
     cdef ccimgui.ImDrawList* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawList from_ptr(ccimgui.ImDrawList* _ptr):
@@ -9420,6 +9471,15 @@ cdef class ImDrawList:
             return None
         cdef ImDrawList wrapper = ImDrawList.__new__(ImDrawList)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawList from_heap_ptr(ccimgui.ImDrawList* _ptr):
+        wrapper = ImDrawList.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -10950,6 +11010,7 @@ cdef class ImDrawListSharedData:
     Data shared among multiple draw lists (typically owned by parent imgui context, but you may create one yourself)
     """
     cdef ccimgui.ImDrawListSharedData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawListSharedData from_ptr(ccimgui.ImDrawListSharedData* _ptr):
@@ -10957,6 +11018,15 @@ cdef class ImDrawListSharedData:
             return None
         cdef ImDrawListSharedData wrapper = ImDrawListSharedData.__new__(ImDrawListSharedData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawListSharedData from_heap_ptr(ccimgui.ImDrawListSharedData* _ptr):
+        wrapper = ImDrawListSharedData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -10983,6 +11053,7 @@ cdef class ImDrawListSplitter:
     This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.
     """
     cdef ccimgui.ImDrawListSplitter* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawListSplitter from_ptr(ccimgui.ImDrawListSplitter* _ptr):
@@ -10990,6 +11061,15 @@ cdef class ImDrawListSplitter:
             return None
         cdef ImDrawListSplitter wrapper = ImDrawListSplitter.__new__(ImDrawListSplitter)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawListSplitter from_heap_ptr(ccimgui.ImDrawListSplitter* _ptr):
+        wrapper = ImDrawListSplitter.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -11137,6 +11217,7 @@ cdef class ImDrawListSplitter:
 # ?custom_comment_only(False)
 cdef class ImDrawVert:
     cdef ccimgui.ImDrawVert* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImDrawVert from_ptr(ccimgui.ImDrawVert* _ptr):
@@ -11144,6 +11225,15 @@ cdef class ImDrawVert:
             return None
         cdef ImDrawVert wrapper = ImDrawVert.__new__(ImDrawVert)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawVert from_heap_ptr(ccimgui.ImDrawVert* _ptr):
+        wrapper = ImDrawVert.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -11218,6 +11308,7 @@ cdef class ImFont:
     ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
     """
     cdef ccimgui.ImFont* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFont from_ptr(ccimgui.ImFont* _ptr):
@@ -11225,6 +11316,15 @@ cdef class ImFont:
             return None
         cdef ImFont wrapper = ImFont.__new__(ImFont)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFont from_heap_ptr(ccimgui.ImFont* _ptr):
+        wrapper = ImFont.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -11928,6 +12028,7 @@ cdef class ImFontAtlas:
     - This is an old API and it is currently awkward for those and various other reasons! We will address them in the future!
     """
     cdef ccimgui.ImFontAtlas* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontAtlas from_ptr(ccimgui.ImFontAtlas* _ptr):
@@ -11935,6 +12036,15 @@ cdef class ImFontAtlas:
             return None
         cdef ImFontAtlas wrapper = ImFontAtlas.__new__(ImFontAtlas)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontAtlas from_heap_ptr(ccimgui.ImFontAtlas* _ptr):
+        wrapper = ImFontAtlas.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -12878,6 +12988,7 @@ cdef class ImFontAtlasCustomRect:
     See ImFontAtlas::AddCustomRectXXX functions.
     """
     cdef ccimgui.ImFontAtlasCustomRect* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontAtlasCustomRect from_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
@@ -12885,6 +12996,15 @@ cdef class ImFontAtlasCustomRect:
             return None
         cdef ImFontAtlasCustomRect wrapper = ImFontAtlasCustomRect.__new__(ImFontAtlasCustomRect)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
+        wrapper = ImFontAtlasCustomRect.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13075,6 +13195,7 @@ cdef class ImFontBuilderIO:
     Opaque interface to a font builder (stb_truetype or freetype).
     """
     cdef ccimgui.ImFontBuilderIO* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontBuilderIO from_ptr(ccimgui.ImFontBuilderIO* _ptr):
@@ -13082,6 +13203,15 @@ cdef class ImFontBuilderIO:
             return None
         cdef ImFontBuilderIO wrapper = ImFontBuilderIO.__new__(ImFontBuilderIO)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontBuilderIO from_heap_ptr(ccimgui.ImFontBuilderIO* _ptr):
+        wrapper = ImFontBuilderIO.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13104,6 +13234,7 @@ cdef class ImFontBuilderIO:
 # ?custom_comment_only(False)
 cdef class ImFontConfig:
     cdef ccimgui.ImFontConfig* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontConfig from_ptr(ccimgui.ImFontConfig* _ptr):
@@ -13111,6 +13242,15 @@ cdef class ImFontConfig:
             return None
         cdef ImFontConfig wrapper = ImFontConfig.__new__(ImFontConfig)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontConfig from_heap_ptr(ccimgui.ImFontConfig* _ptr):
+        wrapper = ImFontConfig.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13496,6 +13636,7 @@ cdef class ImFontGlyph:
     (Note: some language parsers may fail to convert the 31+1 bitfield members, in this case maybe drop store a single u32 or we can rework this)
     """
     cdef ccimgui.ImFontGlyph* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontGlyph from_ptr(ccimgui.ImFontGlyph* _ptr):
@@ -13503,6 +13644,15 @@ cdef class ImFontGlyph:
             return None
         cdef ImFontGlyph wrapper = ImFontGlyph.__new__(ImFontGlyph)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontGlyph from_heap_ptr(ccimgui.ImFontGlyph* _ptr):
+        wrapper = ImFontGlyph.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13757,6 +13907,7 @@ cdef class ImFontGlyphRangesBuilder:
     This is essentially a tightly packed of vector of 64k booleans = 8KB storage.
     """
     cdef ccimgui.ImFontGlyphRangesBuilder* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImFontGlyphRangesBuilder from_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
@@ -13764,6 +13915,15 @@ cdef class ImFontGlyphRangesBuilder:
             return None
         cdef ImFontGlyphRangesBuilder wrapper = ImFontGlyphRangesBuilder.__new__(ImFontGlyphRangesBuilder)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontGlyphRangesBuilder from_heap_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
+        wrapper = ImFontGlyphRangesBuilder.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13920,6 +14080,7 @@ cdef class ImGuiContext:
     Dear imgui context (opaque structure, unless including imgui_internal.h)
     """
     cdef ccimgui.ImGuiContext* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiContext from_ptr(ccimgui.ImGuiContext* _ptr):
@@ -13927,6 +14088,15 @@ cdef class ImGuiContext:
             return None
         cdef ImGuiContext wrapper = ImGuiContext.__new__(ImGuiContext)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiContext from_heap_ptr(ccimgui.ImGuiContext* _ptr):
+        wrapper = ImGuiContext.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -13949,6 +14119,7 @@ cdef class ImGuiContext:
 # ?custom_comment_only(False)
 cdef class ImGuiIO:
     cdef ccimgui.ImGuiIO* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiIO from_ptr(ccimgui.ImGuiIO* _ptr):
@@ -13956,6 +14127,15 @@ cdef class ImGuiIO:
             return None
         cdef ImGuiIO wrapper = ImGuiIO.__new__(ImGuiIO)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiIO from_heap_ptr(ccimgui.ImGuiIO* _ptr):
+        wrapper = ImGuiIO.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -16148,6 +16328,7 @@ cdef class ImGuiInputTextCallbackData:
     - ImGuiInputTextFlags_CallbackResize:      Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
     """
     cdef ccimgui.ImGuiInputTextCallbackData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiInputTextCallbackData from_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
@@ -16155,6 +16336,15 @@ cdef class ImGuiInputTextCallbackData:
             return None
         cdef ImGuiInputTextCallbackData wrapper = ImGuiInputTextCallbackData.__new__(ImGuiInputTextCallbackData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiInputTextCallbackData from_heap_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
+        wrapper = ImGuiInputTextCallbackData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -16499,6 +16689,7 @@ cdef class ImGuiKeyData:
     If prior to 1.87 you used io.KeysDownDuration[] (which was marked as internal), you should use GetKeyData(key)->DownDuration and *NOT* io.KeysData[key]->DownDuration.
     """
     cdef ccimgui.ImGuiKeyData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiKeyData from_ptr(ccimgui.ImGuiKeyData* _ptr):
@@ -16506,6 +16697,15 @@ cdef class ImGuiKeyData:
             return None
         cdef ImGuiKeyData wrapper = ImGuiKeyData.__new__(ImGuiKeyData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiKeyData from_heap_ptr(ccimgui.ImGuiKeyData* _ptr):
+        wrapper = ImGuiKeyData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -16626,6 +16826,7 @@ cdef class ImGuiListClipper:
     - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.
     """
     cdef ccimgui.ImGuiListClipper* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiListClipper from_ptr(ccimgui.ImGuiListClipper* _ptr):
@@ -16633,6 +16834,15 @@ cdef class ImGuiListClipper:
             return None
         cdef ImGuiListClipper wrapper = ImGuiListClipper.__new__(ImGuiListClipper)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiListClipper from_heap_ptr(ccimgui.ImGuiListClipper* _ptr):
+        wrapper = ImGuiListClipper.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -16855,6 +17065,7 @@ cdef class ImGuiPayload:
     Data payload for Drag and Drop operations: AcceptDragDropPayload(), GetDragDropPayload()
     """
     cdef ccimgui.ImGuiPayload* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiPayload from_ptr(ccimgui.ImGuiPayload* _ptr):
@@ -16862,6 +17073,15 @@ cdef class ImGuiPayload:
             return None
         cdef ImGuiPayload wrapper = ImGuiPayload.__new__(ImGuiPayload)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiPayload from_heap_ptr(ccimgui.ImGuiPayload* _ptr):
+        wrapper = ImGuiPayload.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -17093,6 +17313,7 @@ cdef class ImGuiPlatformIO:
     (Optional) Access via ImGui::GetPlatformIO()
     """
     cdef ccimgui.ImGuiPlatformIO* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiPlatformIO from_ptr(ccimgui.ImGuiPlatformIO* _ptr):
@@ -17100,6 +17321,15 @@ cdef class ImGuiPlatformIO:
             return None
         cdef ImGuiPlatformIO wrapper = ImGuiPlatformIO.__new__(ImGuiPlatformIO)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiPlatformIO from_heap_ptr(ccimgui.ImGuiPlatformIO* _ptr):
+        wrapper = ImGuiPlatformIO.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -17606,6 +17836,7 @@ cdef class ImGuiPlatformImeData:
     (Optional) Support for IME (Input Method Editor) via the io.SetPlatformImeDataFn() function.
     """
     cdef ccimgui.ImGuiPlatformImeData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiPlatformImeData from_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
@@ -17613,6 +17844,15 @@ cdef class ImGuiPlatformImeData:
             return None
         cdef ImGuiPlatformImeData wrapper = ImGuiPlatformImeData.__new__(ImGuiPlatformImeData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiPlatformImeData from_heap_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
+        wrapper = ImGuiPlatformImeData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -17696,6 +17936,7 @@ cdef class ImGuiPlatformMonitor:
     We use this information for multiple DPI support + clamping the position of popups and tooltips so they don't straddle multiple monitors.
     """
     cdef ccimgui.ImGuiPlatformMonitor* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiPlatformMonitor from_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
@@ -17703,6 +17944,15 @@ cdef class ImGuiPlatformMonitor:
             return None
         cdef ImGuiPlatformMonitor wrapper = ImGuiPlatformMonitor.__new__(ImGuiPlatformMonitor)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
+        wrapper = ImGuiPlatformMonitor.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -17843,6 +18093,7 @@ cdef class ImGuiSizeCallbackData:
     NB: For basic min/max size constraint on each axis you don't need to use the callback! The SetNextWindowSizeConstraints() parameters are enough.
     """
     cdef ccimgui.ImGuiSizeCallbackData* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiSizeCallbackData from_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
@@ -17850,6 +18101,15 @@ cdef class ImGuiSizeCallbackData:
             return None
         cdef ImGuiSizeCallbackData wrapper = ImGuiSizeCallbackData.__new__(ImGuiSizeCallbackData)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiSizeCallbackData from_heap_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
+        wrapper = ImGuiSizeCallbackData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -17958,6 +18218,7 @@ cdef class ImGuiStorage:
     Types are NOT stored, so it is up to you to make sure your Key don't collide with different types.
     """
     cdef ccimgui.ImGuiStorage* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiStorage from_ptr(ccimgui.ImGuiStorage* _ptr):
@@ -17965,6 +18226,15 @@ cdef class ImGuiStorage:
             return None
         cdef ImGuiStorage wrapper = ImGuiStorage.__new__(ImGuiStorage)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiStorage from_heap_ptr(ccimgui.ImGuiStorage* _ptr):
+        wrapper = ImGuiStorage.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -18238,6 +18508,7 @@ cdef class ImGuiStorage_ImGuiStoragePair:
     [Internal]
     """
     cdef ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiStorage_ImGuiStoragePair from_ptr(ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr):
@@ -18245,6 +18516,15 @@ cdef class ImGuiStorage_ImGuiStoragePair:
             return None
         cdef ImGuiStorage_ImGuiStoragePair wrapper = ImGuiStorage_ImGuiStoragePair.__new__(ImGuiStorage_ImGuiStoragePair)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiStorage_ImGuiStoragePair from_heap_ptr(ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr):
+        wrapper = ImGuiStorage_ImGuiStoragePair.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -18283,6 +18563,7 @@ cdef class ImGuiStorage_ImGuiStoragePair:
 # ?custom_comment_only(False)
 cdef class ImGuiStyle:
     cdef ccimgui.ImGuiStyle* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiStyle from_ptr(ccimgui.ImGuiStyle* _ptr):
@@ -18290,6 +18571,15 @@ cdef class ImGuiStyle:
             return None
         cdef ImGuiStyle wrapper = ImGuiStyle.__new__(ImGuiStyle)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiStyle from_heap_ptr(ccimgui.ImGuiStyle* _ptr):
+        wrapper = ImGuiStyle.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19161,6 +19451,7 @@ cdef class ImGuiTableColumnSortSpecs:
     Sorting specification for one column of a table (sizeof == 12 bytes)
     """
     cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiTableColumnSortSpecs from_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
@@ -19168,6 +19459,15 @@ cdef class ImGuiTableColumnSortSpecs:
             return None
         cdef ImGuiTableColumnSortSpecs wrapper = ImGuiTableColumnSortSpecs.__new__(ImGuiTableColumnSortSpecs)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTableColumnSortSpecs from_heap_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
+        wrapper = ImGuiTableColumnSortSpecs.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19272,6 +19572,7 @@ cdef class ImGuiTableSortSpecs:
     Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
     """
     cdef ccimgui.ImGuiTableSortSpecs* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiTableSortSpecs from_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
@@ -19279,6 +19580,15 @@ cdef class ImGuiTableSortSpecs:
             return None
         cdef ImGuiTableSortSpecs wrapper = ImGuiTableSortSpecs.__new__(ImGuiTableSortSpecs)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTableSortSpecs from_heap_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
+        wrapper = ImGuiTableSortSpecs.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19362,6 +19672,7 @@ cdef class ImGuiTextBuffer:
     (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
     """
     cdef ccimgui.ImGuiTextBuffer* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiTextBuffer from_ptr(ccimgui.ImGuiTextBuffer* _ptr):
@@ -19369,6 +19680,15 @@ cdef class ImGuiTextBuffer:
             return None
         cdef ImGuiTextBuffer wrapper = ImGuiTextBuffer.__new__(ImGuiTextBuffer)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTextBuffer from_heap_ptr(ccimgui.ImGuiTextBuffer* _ptr):
+        wrapper = ImGuiTextBuffer.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19545,6 +19865,7 @@ cdef class ImGuiTextFilter:
     Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
     """
     cdef ccimgui.ImGuiTextFilter* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiTextFilter from_ptr(ccimgui.ImGuiTextFilter* _ptr):
@@ -19552,6 +19873,15 @@ cdef class ImGuiTextFilter:
             return None
         cdef ImGuiTextFilter wrapper = ImGuiTextFilter.__new__(ImGuiTextFilter)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTextFilter from_heap_ptr(ccimgui.ImGuiTextFilter* _ptr):
+        wrapper = ImGuiTextFilter.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19697,6 +20027,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     [Internal]
     """
     cdef ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
@@ -19704,6 +20035,15 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
             return None
         cdef ImGuiTextFilter_ImGuiTextRange wrapper = ImGuiTextFilter_ImGuiTextRange.__new__(ImGuiTextFilter_ImGuiTextRange)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
+        wrapper = ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -19794,6 +20134,7 @@ cdef class ImGuiViewport:
     - Windows are generally trying to stay within the Work Area of their host viewport.
     """
     cdef ccimgui.ImGuiViewport* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiViewport from_ptr(ccimgui.ImGuiViewport* _ptr):
@@ -19801,6 +20142,15 @@ cdef class ImGuiViewport:
             return None
         cdef ImGuiViewport wrapper = ImGuiViewport.__new__(ImGuiViewport)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiViewport from_heap_ptr(ccimgui.ImGuiViewport* _ptr):
+        wrapper = ImGuiViewport.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20189,6 +20539,7 @@ cdef class ImGuiWindowClass:
     - To the docking system for various options and filtering.
     """
     cdef ccimgui.ImGuiWindowClass* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImGuiWindowClass from_ptr(ccimgui.ImGuiWindowClass* _ptr):
@@ -20196,6 +20547,15 @@ cdef class ImGuiWindowClass:
             return None
         cdef ImGuiWindowClass wrapper = ImGuiWindowClass.__new__(ImGuiWindowClass)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiWindowClass from_heap_ptr(ccimgui.ImGuiWindowClass* _ptr):
+        wrapper = ImGuiWindowClass.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20370,6 +20730,7 @@ cdef class ImGuiWindowClass:
 # ?custom_comment_only(False)
 cdef class ImVec2:
     cdef ccimgui.ImVec2* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVec2 from_ptr(ccimgui.ImVec2* _ptr):
@@ -20377,6 +20738,15 @@ cdef class ImVec2:
             return None
         cdef ImVec2 wrapper = ImVec2.__new__(ImVec2)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVec2 from_heap_ptr(ccimgui.ImVec2* _ptr):
+        wrapper = ImVec2.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20434,6 +20804,7 @@ cdef class ImVec4:
     ImVec4: 4D vector used to store clipping rectangles, colors etc. [Compile-time configurable type]
     """
     cdef ccimgui.ImVec4* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVec4 from_ptr(ccimgui.ImVec4* _ptr):
@@ -20441,6 +20812,15 @@ cdef class ImVec4:
             return None
         cdef ImVec4 wrapper = ImVec4.__new__(ImVec4)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVec4 from_heap_ptr(ccimgui.ImVec4* _ptr):
+        wrapper = ImVec4.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20527,6 +20907,7 @@ cdef class ImVec4:
 # ?custom_comment_only(False)
 cdef class ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImDrawChannel from_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
@@ -20534,6 +20915,15 @@ cdef class ImVector_ImDrawChannel:
             return None
         cdef ImVector_ImDrawChannel wrapper = ImVector_ImDrawChannel.__new__(ImVector_ImDrawChannel)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawChannel from_heap_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
+        wrapper = ImVector_ImDrawChannel.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20604,6 +20994,7 @@ cdef class ImVector_ImDrawChannel:
 # ?custom_comment_only(False)
 cdef class ImVector_ImDrawCmd:
     cdef ccimgui.ImVector_ImDrawCmd* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImDrawCmd from_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
@@ -20611,6 +21002,15 @@ cdef class ImVector_ImDrawCmd:
             return None
         cdef ImVector_ImDrawCmd wrapper = ImVector_ImDrawCmd.__new__(ImVector_ImDrawCmd)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawCmd from_heap_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
+        wrapper = ImVector_ImDrawCmd.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20681,6 +21081,7 @@ cdef class ImVector_ImDrawCmd:
 # ?custom_comment_only(False)
 cdef class ImVector_ImDrawIdx:
     cdef ccimgui.ImVector_ImDrawIdx* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImDrawIdx from_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
@@ -20688,6 +21089,15 @@ cdef class ImVector_ImDrawIdx:
             return None
         cdef ImVector_ImDrawIdx wrapper = ImVector_ImDrawIdx.__new__(ImVector_ImDrawIdx)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawIdx from_heap_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
+        wrapper = ImVector_ImDrawIdx.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20758,6 +21168,7 @@ cdef class ImVector_ImDrawIdx:
 # ?custom_comment_only(False)
 cdef class ImVector_ImDrawVert:
     cdef ccimgui.ImVector_ImDrawVert* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImDrawVert from_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
@@ -20765,6 +21176,15 @@ cdef class ImVector_ImDrawVert:
             return None
         cdef ImVector_ImDrawVert wrapper = ImVector_ImDrawVert.__new__(ImVector_ImDrawVert)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawVert from_heap_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
+        wrapper = ImVector_ImDrawVert.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20835,6 +21255,7 @@ cdef class ImVector_ImDrawVert:
 # ?custom_comment_only(False)
 cdef class ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImFontAtlasCustomRect from_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
@@ -20842,6 +21263,15 @@ cdef class ImVector_ImFontAtlasCustomRect:
             return None
         cdef ImVector_ImFontAtlasCustomRect wrapper = ImVector_ImFontAtlasCustomRect.__new__(ImVector_ImFontAtlasCustomRect)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
+        wrapper = ImVector_ImFontAtlasCustomRect.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20912,6 +21342,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
 # ?custom_comment_only(False)
 cdef class ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImFontConfig from_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
@@ -20919,6 +21350,15 @@ cdef class ImVector_ImFontConfig:
             return None
         cdef ImVector_ImFontConfig wrapper = ImVector_ImFontConfig.__new__(ImVector_ImFontConfig)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImFontConfig from_heap_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
+        wrapper = ImVector_ImFontConfig.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -20989,6 +21429,7 @@ cdef class ImVector_ImFontConfig:
 # ?custom_comment_only(False)
 cdef class ImVector_ImFontGlyph:
     cdef ccimgui.ImVector_ImFontGlyph* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImFontGlyph from_ptr(ccimgui.ImVector_ImFontGlyph* _ptr):
@@ -20996,6 +21437,15 @@ cdef class ImVector_ImFontGlyph:
             return None
         cdef ImVector_ImFontGlyph wrapper = ImVector_ImFontGlyph.__new__(ImVector_ImFontGlyph)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImFontGlyph from_heap_ptr(ccimgui.ImVector_ImFontGlyph* _ptr):
+        wrapper = ImVector_ImFontGlyph.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21066,6 +21516,7 @@ cdef class ImVector_ImFontGlyph:
 # ?custom_comment_only(False)
 cdef class ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImFontPtr from_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
@@ -21073,6 +21524,15 @@ cdef class ImVector_ImFontPtr:
             return None
         cdef ImVector_ImFontPtr wrapper = ImVector_ImFontPtr.__new__(ImVector_ImFontPtr)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImFontPtr from_heap_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
+        wrapper = ImVector_ImFontPtr.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21143,6 +21603,7 @@ cdef class ImVector_ImFontPtr:
 # ?custom_comment_only(False)
 cdef class ImVector_ImGuiPlatformMonitor:
     cdef ccimgui.ImVector_ImGuiPlatformMonitor* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImGuiPlatformMonitor from_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
@@ -21150,6 +21611,15 @@ cdef class ImVector_ImGuiPlatformMonitor:
             return None
         cdef ImVector_ImGuiPlatformMonitor wrapper = ImVector_ImGuiPlatformMonitor.__new__(ImVector_ImGuiPlatformMonitor)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
+        wrapper = ImVector_ImGuiPlatformMonitor.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21220,6 +21690,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
 # ?custom_comment_only(False)
 cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     cdef ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImGuiStorage_ImGuiStoragePair from_ptr(ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr):
@@ -21227,6 +21698,15 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
             return None
         cdef ImVector_ImGuiStorage_ImGuiStoragePair wrapper = ImVector_ImGuiStorage_ImGuiStoragePair.__new__(ImVector_ImGuiStorage_ImGuiStoragePair)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImGuiStorage_ImGuiStoragePair from_heap_ptr(ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr):
+        wrapper = ImVector_ImGuiStorage_ImGuiStoragePair.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21297,6 +21777,7 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
 # ?custom_comment_only(False)
 cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
@@ -21304,6 +21785,15 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
             return None
         cdef ImVector_ImGuiTextFilter_ImGuiTextRange wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.__new__(ImVector_ImGuiTextFilter_ImGuiTextRange)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
+        wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21374,6 +21864,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
 # ?custom_comment_only(False)
 cdef class ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImGuiViewportPtr from_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
@@ -21381,6 +21872,15 @@ cdef class ImVector_ImGuiViewportPtr:
             return None
         cdef ImVector_ImGuiViewportPtr wrapper = ImVector_ImGuiViewportPtr.__new__(ImVector_ImGuiViewportPtr)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImGuiViewportPtr from_heap_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
+        wrapper = ImVector_ImGuiViewportPtr.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21451,6 +21951,7 @@ cdef class ImVector_ImGuiViewportPtr:
 # ?custom_comment_only(False)
 cdef class ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImTextureID from_ptr(ccimgui.ImVector_ImTextureID* _ptr):
@@ -21458,6 +21959,15 @@ cdef class ImVector_ImTextureID:
             return None
         cdef ImVector_ImTextureID wrapper = ImVector_ImTextureID.__new__(ImVector_ImTextureID)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImTextureID from_heap_ptr(ccimgui.ImVector_ImTextureID* _ptr):
+        wrapper = ImVector_ImTextureID.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21528,6 +22038,7 @@ cdef class ImVector_ImTextureID:
 # ?custom_comment_only(False)
 cdef class ImVector_ImU32:
     cdef ccimgui.ImVector_ImU32* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImU32 from_ptr(ccimgui.ImVector_ImU32* _ptr):
@@ -21535,6 +22046,15 @@ cdef class ImVector_ImU32:
             return None
         cdef ImVector_ImU32 wrapper = ImVector_ImU32.__new__(ImVector_ImU32)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImU32 from_heap_ptr(ccimgui.ImVector_ImU32* _ptr):
+        wrapper = ImVector_ImU32.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21605,6 +22125,7 @@ cdef class ImVector_ImU32:
 # ?custom_comment_only(False)
 cdef class ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImVec2 from_ptr(ccimgui.ImVector_ImVec2* _ptr):
@@ -21612,6 +22133,15 @@ cdef class ImVector_ImVec2:
             return None
         cdef ImVector_ImVec2 wrapper = ImVector_ImVec2.__new__(ImVector_ImVec2)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImVec2 from_heap_ptr(ccimgui.ImVector_ImVec2* _ptr):
+        wrapper = ImVector_ImVec2.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21682,6 +22212,7 @@ cdef class ImVector_ImVec2:
 # ?custom_comment_only(False)
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImVec4 from_ptr(ccimgui.ImVector_ImVec4* _ptr):
@@ -21689,6 +22220,15 @@ cdef class ImVector_ImVec4:
             return None
         cdef ImVector_ImVec4 wrapper = ImVector_ImVec4.__new__(ImVector_ImVec4)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImVec4 from_heap_ptr(ccimgui.ImVector_ImVec4* _ptr):
+        wrapper = ImVector_ImVec4.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21759,6 +22299,7 @@ cdef class ImVector_ImVec4:
 # ?custom_comment_only(False)
 cdef class ImVector_ImWchar:
     cdef ccimgui.ImVector_ImWchar* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_ImWchar from_ptr(ccimgui.ImVector_ImWchar* _ptr):
@@ -21766,6 +22307,15 @@ cdef class ImVector_ImWchar:
             return None
         cdef ImVector_ImWchar wrapper = ImVector_ImWchar.__new__(ImVector_ImWchar)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImWchar from_heap_ptr(ccimgui.ImVector_ImWchar* _ptr):
+        wrapper = ImVector_ImWchar.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21836,6 +22386,7 @@ cdef class ImVector_ImWchar:
 # ?custom_comment_only(False)
 cdef class ImVector_char:
     cdef ccimgui.ImVector_char* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_char from_ptr(ccimgui.ImVector_char* _ptr):
@@ -21843,6 +22394,15 @@ cdef class ImVector_char:
             return None
         cdef ImVector_char wrapper = ImVector_char.__new__(ImVector_char)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_char from_heap_ptr(ccimgui.ImVector_char* _ptr):
+        wrapper = ImVector_char.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -21913,6 +22473,7 @@ cdef class ImVector_char:
 # ?custom_comment_only(False)
 cdef class ImVector_float:
     cdef ccimgui.ImVector_float* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef ImVector_float from_ptr(ccimgui.ImVector_float* _ptr):
@@ -21920,6 +22481,15 @@ cdef class ImVector_float:
             return None
         cdef ImVector_float wrapper = ImVector_float.__new__(ImVector_float)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_float from_heap_ptr(ccimgui.ImVector_float* _ptr):
+        wrapper = ImVector_float.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -22203,6 +22773,7 @@ def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
 # ?custom_comment_only(False)
 cdef class GLFWmonitor:
     cdef ccimgui.GLFWmonitor* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef GLFWmonitor from_ptr(ccimgui.GLFWmonitor* _ptr):
@@ -22210,6 +22781,15 @@ cdef class GLFWmonitor:
             return None
         cdef GLFWmonitor wrapper = GLFWmonitor.__new__(GLFWmonitor)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef GLFWmonitor from_heap_ptr(ccimgui.GLFWmonitor* _ptr):
+        wrapper = GLFWmonitor.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
@@ -22232,6 +22812,7 @@ cdef class GLFWmonitor:
 # ?custom_comment_only(False)
 cdef class GLFWwindow:
     cdef ccimgui.GLFWwindow* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef GLFWwindow from_ptr(ccimgui.GLFWwindow* _ptr):
@@ -22239,6 +22820,15 @@ cdef class GLFWwindow:
             return None
         cdef GLFWwindow wrapper = GLFWwindow.__new__(GLFWwindow)
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef GLFWwindow from_heap_ptr(ccimgui.GLFWwindow* _ptr):
+        wrapper = GLFWwindow.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):

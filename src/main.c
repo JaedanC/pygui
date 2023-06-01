@@ -20,6 +20,46 @@
 
 GLFWwindow* window;
 
+
+void show_imfontconfig(ImFontConfig* config)
+{
+    char rasterizer_multiply_text[64];
+    sprintf(rasterizer_multiply_text, "config.rasterizer_multiply: %f", config->RasterizerMultiply);
+    ImGui_MenuItem(rasterizer_multiply_text);
+}
+
+
+void show_imfont_atlas(ImFontAtlas* atlas)
+{
+    if (ImGui_BeginMenu("atlas.config_data"))
+    {
+        char config_data_size[32];
+        sprintf(config_data_size, "atlas->ConfigData.size(): %d", atlas->ConfigData.Size);
+        ImGui_MenuItem(config_data_size);
+        for (int i = 0; i < atlas->ConfigData.Size; i++)
+        {
+            char config_text[32];
+            sprintf(config_text, "Config %d", i);
+            if (ImGui_BeginMenu(config_text))
+            {
+                show_imfontconfig(&atlas->ConfigData.Data[i]);
+                ImGui_EndMenu();
+            }
+        }
+        ImGui_EndMenu();
+    }
+}
+
+
+void example_function()
+{
+	{
+		ImFont* font = ImGui_GetFont();
+		show_imfont_atlas(font->ContainerAtlas);
+	}
+}
+
+
 int main(int argc, char* argv[])
 {
 	if (!glfwInit())
@@ -144,6 +184,8 @@ int main(int argc, char* argv[])
 			ImGui_Checkbox("Demo window", &showDemoWindow);
 			ImGui_Checkbox("Another window", &showAnotherWindow);
 			ImGui_Text("New Char: ∮");
+
+			example_function();
 
 			ImGui_SliderFloatEx("Float", &f, 0.0f, 1.0f, "%.3f", 0);
 			ImGui_ColorEdit3("clear color", (float*)&clearColor, 0);

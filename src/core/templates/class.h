@@ -7,6 +7,7 @@ cdef class {class_name}:
 {comment}
     #endif
     cdef {pxd_library_name}.{class_name}* _ptr
+    cdef bool dynamically_allocated
     
     @staticmethod
     cdef {class_name} from_ptr({pxd_library_name}.{class_name}* _ptr):
@@ -14,6 +15,15 @@ cdef class {class_name}:
             return None
         cdef {class_name} wrapper = {class_name}.__new__({class_name})
         wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef {class_name} from_heap_ptr({pxd_library_name}.{class_name}* _ptr):
+        wrapper = {class_name}.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
         return wrapper
     
     def __init__(self):
