@@ -82,7 +82,7 @@ CIMGUI_API PyObject* get_imgui_error();
 // -----------------------------------------------------------------------------
 
 #ifdef PYGUI_COMPILING_CPP_APP
-#pragma message ( "Preprocessor: PYGUI_COMPILING_APP" )
+#pragma message ( "Preprocessor: PYGUI_COMPILING_CPP_APP" )
 
 #ifndef GLFW_DLL
 #define GLFW_DLL

@@ -36,7 +36,7 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 
     This makes developing with pygui much easier because many code editors recognise the `__init__.pyi` as the interface and such will do intellisense using it. No red squiggly lines, no guessing of function parameters, and no need to check imgui.h for comments.'
 
-4. An extensive pygui demo window is included (`python_demo_window.py`).
+4. An extensive pygui demo window is included (`pygui_demo.py`).
 
     Some other wrappers don't include an example. My demo window tests all the functions, methods, and fields in pygui. It even has some functions from the imgui demo done in pygui, just to show that even the most complicated of features is not only possible in python, but often much simpler too.
 
@@ -46,8 +46,8 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 
 ## Limitations
 
-1. Current build assumes windows as the platform. Some work would be required to enable linux/mac builds.
-2. glfw/cimgui/imgui_impl need to be linked at runtime which may hurt performance slightly.
+1. The current build assumes windows as the platform. Some work would be required to enable linux/mac builds.
+2. glfw/cimgui/imgui_impl need to be linked at runtime (dll) which may hurt performance slightly.
 3. Not all imgui functions are activated. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
 4. More work would be required to enable additional backends. I've attempted to make this easier though the modular nature of the CMake script and binding generator script.
 5. No `with` functionality has been added. No being lazy; your `pygui.begin()` must have a `pygui.end()`.
@@ -138,7 +138,7 @@ It will also copy the entire `pygui` python module to directory called `portable
 
 ## Developing pygui
 
-To develop pygui, it's important that setps 1-3 are completed.
+To develop pygui, it's important that steps 1-3 are completed.
 
 After that, you can then begin to modify the bindings. More on that in the next section. But for now, let's look at how you would generate the bindings:
 
@@ -167,19 +167,21 @@ Bindings are creating by reading the output of dear_binding's `cimgui.json` that
 2. `pyx`: (Located at `src/core/core.pyx`) This file contains the generated cython that will be compiled. This file can be editted if you want, but new additions should instead be put inside `src/core/core_template.pyx`. More on this later.
 3. `pyi`: (Located at `src/pygui/__init__.pyi`) This file contains the cython function definitions so that intellisense on editors work correctly with pygui. Cython does not export any symbols so this file is required if you don't want squiggly lines everywhere in your editor, (and if you want comments!).
 
-The `src/core/core_template.pyx` is the file that should be editted if you want to change any implementation between python and cimgui. This file is the go-between, needing to marshall types between python and c. **A majority of functions are disabled by default**, but then can be turned on by changing `active` to True. Example:
+The `src/core/core_template.pyx` is the file that should be editted if you want to change any implementation between python and cimgui. This file is the go-between, needing to marshall types between python and c. **Functions are disabled by default**, but then can be turned on by changing `active` to True. Example:
 
 Quick note on options:
 
-- `use_template`: When False, this function will be overridden by the generated default implementation. This can be good for resetting a function if you break it, or if the API changes.
+- `use_template`: When False, this function will be overridden by the default generated implementation. This can be good for resetting a function if you break it, or if the API changes.
 - `active`: When False, this function will be commented out in `core.pyx` when the pygui binding is created. This can be a handy way to disabling a function while also keeping a record of the existing implementation.
 - `invisible`: When True, this function will not be added to `__init__.pyi`, effectively rendering the function as invisible inside the API. It can still technically be called if the function is also `active`.
+- `custom_comment_only`: When True, the comment will use the template. This does not need to be True if `use_template` is True. This let's you modify the comment while keeping the default generated implementation.
 
 ```python
 # [Function]
 # ?use_template(False)
 # ?active(True)
 # ?invisible(False)
+# ?custom_comment_only(False)
 # ?returns(None)
 def show_demo_window(p_open: Bool=None):
     """
