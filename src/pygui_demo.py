@@ -4970,11 +4970,12 @@ def show_app_custom_rendering(p_open: pygui.Bool):
 
             # Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
             canvas_p0 = pygui.get_cursor_screen_pos()      # ImDrawList API uses screen coordinates!
-            canvas_sz = pygui.get_content_region_avail()   # Resize canvas to what's available
+            canvas_sz = list(pygui.get_content_region_avail())   # Resize canvas to what's available
             if canvas_sz[0] < 50.0:
                 canvas_sz[0] = 50.0
             if canvas_sz[1] < 50.0:
                 canvas_sz[1] = 50.0
+            canvas_sz = tuple(canvas_sz)
             canvas_p1 = (canvas_p0[0] + canvas_sz[0], canvas_p0[1] + canvas_sz[1])
 
             # Draw border and background color
