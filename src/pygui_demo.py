@@ -15,6 +15,15 @@ def help_marker(desc: str):
         pygui.end_tooltip()
 
 
+def show_docking_disabled_message():
+    io = pygui.get_io()
+    pygui.text("ERROR: Docking is not enabled! See Demo > Configuration.")
+    pygui.text("Set io.ConfigFlags |= ImGuiConfigFlags_DockingEnable in your code, or ")
+    pygui.same_line(0, 0)
+    if pygui.small_button("click here"):
+        io.config_flags |= pygui.CONFIG_FLAGS_DOCKING_ENABLE
+
+
 class ExampleAppConsole:
     def __init__(self):
         self.input_buf = pygui.String()
@@ -276,10 +285,280 @@ class ExampleAppConsole:
         return 0
 
 
+class ExampleAppDocuments:
+    class MyDocument:
+        def __init__(self, name: str, open_=True, color=(1, 1, 1, 1)):
+            self.name = name
+            self.open_ = pygui.Bool(open_)
+            self.open_prev = pygui.Bool(open_)
+            self.color = pygui.Vec4(*color)
+            self.dirty = False
+            self.want_close = False
+        
+        def do_open(self):
+            self.open_.value = True
+        
+        def do_queue_close(self):
+            self.want_close = True
+        
+        def do_force_close(self):
+            self.open_.value = False
+            self.dirty = False
+        
+        def do_save(self):
+            self.dirty = False
+        
+        def display_contents(self):
+            pygui.push_id(self)
+            pygui.text(f'Document "{self.name}"')
+            pygui.push_style_color(pygui.COL_TEXT, self.color.tuple())
+            pygui.text_wrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
+            pygui.pop_style_color()
+            if pygui.button("Modify", (100, 0)):
+                self.dirty = True
+            pygui.same_line()
+            if pygui.button("Save", (100, 0)):
+                self.do_save()
+            pygui.color_edit3("color", self.color)  # Useful to test drag and drop and hold-dragged-to-open-tab behavior.
+            pygui.pop_id()
+
+        def display_context_menu(self):
+            if not pygui.begin_popup_context_item():
+                return
+
+            buf = f"Save {self.name}"
+            if pygui.menu_item(buf, "CTRL+S", False, self.open_.value):
+                self.do_save()
+            if pygui.menu_item("Close", "CTRL+W", False, self.open_.value):
+                self.do_queue_close()
+            pygui.end_popup()
+
+    def __init__(self):
+        self.documents = []
+        self.documents.append(ExampleAppDocuments.MyDocument("Lettuce",             True,  (0.4, 0.8, 0.4, 1.0)))
+        self.documents.append(ExampleAppDocuments.MyDocument("Eggplant",            True,  (0.8, 0.5, 1.0, 1.0)))
+        self.documents.append(ExampleAppDocuments.MyDocument("Carrot",              True,  (1.0, 0.8, 0.5, 1.0)))
+        self.documents.append(ExampleAppDocuments.MyDocument("Tomato",              False, (1.0, 0.3, 0.4, 1.0)))
+        self.documents.append(ExampleAppDocuments.MyDocument("A Rather Long Title", False))
+        self.documents.append(ExampleAppDocuments.MyDocument("Some Document",       False))
+
+    def notify_of_document_closed_elsewhere(self):
+        # [Optional] Notify the system of Tabs/Windows closure that happened outside the regular tab interface.
+        # If a tab has been closed programmatically (aka closed from another source such as the Checkbox() in the demo,
+        # as opposed to clicking on the regular tab closing button) and stops being submitted, it will take a frame for
+        # the tab bar to notice its absence. During this frame there will be a gap in the tab bar, and if the tab that has
+        # disappeared was the selected one, the tab bar will report no selected tab during the frame. This will effectively
+        # give the impression of a flicker for one frame.
+        # We call SetTabItemClosed() to manually notify the Tab Bar or Docking system of removed tabs to avoid this glitch.
+        # Note that this completely optional, and only affect tab bars with the ImGuiTabBarFlags_Reorderable flag.
+        for doc in self.documents:
+            doc: ExampleAppDocuments.MyDocument
+            if not doc.open_ and doc.open_prev:
+                pygui.set_tab_item_closed(doc.name)
+            doc.open_prev.value = doc.open_.value
+    
+    class Target(Enum):
+        NONE = 0
+        TAB = 1                  # Create documents as local tab into a local tab bar
+        DOCKSPACE_AND_WINDOW = 2 # Create documents as regular windows, and create an embedded dockspace
+    
+    opt_target = pygui.Int(Target.TAB.value)
+    opt_reorderable = pygui.Bool(True)
+    opt_fitting_flags = pygui.TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT
+    close_queue = []
+
+    def show_example_app_documents(self, p_open: pygui.Bool):
+        # When (opt_target == Target_DockSpaceAndWindow) there is the possibily that one of our child Document window (e.g. "Eggplant")
+        # that we emit gets docked into the same spot as the parent window ("Example: Documents").
+        # This would create a problematic pt_target = pygui.Int(Target.TAB) loop because selecting the "Eggplant" tab would make the "Example: Documents" tab
+        # not visible, which in turn would stop submitting the "Eggplant" window.
+        # We avoid this problem by submitting our documents window even if our parent window is not currently visible.
+        # Another solution may be to make the "Example: Documents" window use the ImGuiWindowFlags_NoDocking.
+        window_contents_visible = pygui.begin("Example: Pygui Documents", p_open, pygui.WINDOW_FLAGS_MENU_BAR)
+        if not window_contents_visible and ExampleAppDocuments.opt_target.value != ExampleAppDocuments.Target.DOCKSPACE_AND_WINDOW:
+            pygui.end()
+            return
+
+        if pygui.begin_menu_bar():
+            if pygui.begin_menu("File"):
+                open_count = 0
+                for doc_n in range(len(self.documents)):
+                    open_count += 1 if self.documents[doc_n].open_ else 0
+                
+                if pygui.begin_menu("Open", open_count < len(self.documents)):
+                    for doc in self.documents:
+                        doc: ExampleAppDocuments.MyDocument
+                        if not doc.open_:
+                            if pygui.menu_item(doc.name):
+                                doc.do_open()
+                    pygui.end_menu()
+                if pygui.menu_item("Close All Documents", None, False, open_count > 0):
+                    for doc in self.documents:
+                        doc.do_queue_close()
+                if pygui.menu_item("Exit", "Ctrl+F4") and p_open:
+                    p_open.value = False
+                pygui.end_menu()
+            pygui.end_menu_bar()
+        
+        # [Debug] List documents with one checkbox for each
+        for doc_n, doc in enumerate(self.documents):
+            if doc_n > 0:
+                pygui.same_line()
+            pygui.push_id(doc)
+            if pygui.checkbox(doc.name, doc.open_):
+                if not doc.open_:
+                    doc.do_force_close()
+            pygui.pop_id()
+        pygui.push_item_width(pygui.get_font_size() * 12)
+        pygui.combo("Output", ExampleAppDocuments.opt_target, ["None", "TabBar+Tabs", "DockSpace+Window"])
+        pygui.pop_item_width()
+        redock_all = False
+        if ExampleAppDocuments.opt_target.value == ExampleAppDocuments.Target.TAB.value:
+            pygui.same_line()
+            pygui.checkbox("Reorderable Tabs", ExampleAppDocuments.opt_reorderable)
+        if ExampleAppDocuments.opt_target.value == ExampleAppDocuments.Target.DOCKSPACE_AND_WINDOW.value:
+            pygui.same_line()
+            redock_all = pygui.button("Redock all")
+        
+        pygui.separator()
+
+        # About the ImGuiWindowFlags_UnsavedDocument / ImGuiTabItemFlags_UnsavedDocument flags.
+        # They have multiple effects:
+        # - Display a dot next to the title.
+        # - Tab is selected when clicking the X close button.
+        # - Closure is not assumed (will wait for user to stop submitting the tab).
+        #   Otherwise closure is assumed when pressing the X, so if you keep submitting the tab may reappear at end of tab bar.
+        #   We need to assume closure by default otherwise waiting for "lack of submission" on the next frame would leave an empty
+        #   hole for one-frame, both in the tab-bar and in tab-contents when closing a tab/window.
+        #   The rarely used SetTabItemClosed() function is a way to notify of programmatic closure to avoid the one-frame hole.
+
+        # Tabs
+        if ExampleAppDocuments.opt_target.value == ExampleAppDocuments.Target.TAB.value:
+            tab_bar_flags = ExampleAppDocuments.opt_fitting_flags | (pygui.TAB_BAR_FLAGS_REORDERABLE if ExampleAppDocuments.opt_reorderable else 0)
+            if pygui.begin_tab_bar("##tabs", tab_bar_flags):
+                if ExampleAppDocuments.opt_reorderable:
+                    self.notify_of_document_closed_elsewhere()
+                
+                # [DEBUG] Stress tests
+                # if ((ImGui::GetFrameCount() % 30) == 0) docs[1].Open ^= 1;            // [DEBUG] Automatically show/hide a tab. Test various interactions e.g. dragging with this on.
+                # if (ImGui::GetIO().KeyCtrl) ImGui::SetTabItemSelected(docs[1].Name);  // [DEBUG] Test SetTabItemSelected(), probably not very useful as-is anyway..
+
+                # Submit Tabs
+                for doc in self.documents:
+                    if not doc.open_:
+                        continue
+
+                    tab_flags = (pygui.TAB_ITEM_FLAGS_UNSAVED_DOCUMENT if doc.dirty else 0)
+                    visible = pygui.begin_tab_item(doc.name, doc.open_, tab_flags)
+                    
+                    # Cancel attempt to close when unsaved add to save queue so we can display a popup.
+                    if not doc.open_ and doc.dirty:
+                        doc.open_.value = True
+                        doc.do_queue_close()
+                    
+                    doc.display_context_menu()
+                    if visible:
+                        doc.display_contents()
+                        pygui.end_tab_item()
+                
+                pygui.end_tab_bar()
+        elif ExampleAppDocuments.opt_target.value == ExampleAppDocuments.Target.DOCKSPACE_AND_WINDOW.value:
+            if pygui.get_io().config_flags & pygui.CONFIG_FLAGS_DOCKING_ENABLE:
+                self.notify_of_document_closed_elsewhere()
+
+                # Create a DockSpace node where any window can be docked
+                dockspace_id = pygui.get_id("MyPyguiDockSpace")
+                pygui.dock_space(dockspace_id)
+
+                # Create Windows
+                for doc in self.documents:
+                    if not doc.open_:
+                        continue
+
+                    pygui.set_next_window_dock_id(dockspace_id, pygui.COND_ALWAYS if redock_all else pygui.COND_FIRST_USE_EVER)
+                    window_flags = pygui.WINDOW_FLAGS_UNSAVED_DOCUMENT if doc.dirty else 0
+                    # pygui note: Adding the ##pygui suffix gives the window some
+                    # uniqueness so that having the imgui_demo version open at the
+                    # same time doesn't produce unpredictable behaviour.
+                    visible = pygui.begin(doc.name + "##pygui", doc.open_, window_flags)
+
+                    # Cancel attempt to close when unsaved add to save queue so we can display a popup.
+                    if not doc.open_ and doc.dirty:
+                        doc.open_.value = True
+                        doc.do_queue_close()
+                    
+                    doc.display_context_menu()
+                    if visible:
+                        doc.display_contents()
+
+                    pygui.end()
+            else:
+                show_docking_disabled_message()
+        
+        # Early out other contents
+        if not window_contents_visible:
+            pygui.end()
+            return
+    
+        # Update closing queue
+        if len(ExampleAppDocuments.close_queue) == 0:
+            # Close queue is locked once we started a popup
+            for doc in self.documents:
+                if doc.want_close:
+                    doc.want_close = False
+                    ExampleAppDocuments.close_queue.append(doc)
+        
+        # Display closing confirmation UI
+        if len(ExampleAppDocuments.close_queue) > 0:
+            closed_queue_unsaved_documents = 0
+            for n in range(len(ExampleAppDocuments.close_queue)):
+                if ExampleAppDocuments.close_queue[n].dirty:
+                    closed_queue_unsaved_documents += 1
+                
+            if closed_queue_unsaved_documents == 0:
+                # Close documents when all are unsaved
+                for n in range(len(ExampleAppDocuments.close_queue)):
+                    ExampleAppDocuments.close_queue[n].do_force_close()
+                ExampleAppDocuments.close_queue.clear()
+            else:
+                if not pygui.is_popup_open("Save?"):
+                    pygui.open_popup("Save?")
+                if pygui.begin_popup_modal("Save?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
+                    pygui.text("Save change to the following items?")
+                    item_height = pygui.get_text_line_height_with_spacing()
+                    if pygui.begin_child_frame(pygui.get_id("pygui_frame"), (-pygui.FLT_MIN, 6.25 * item_height)):
+                        for n in range(len(ExampleAppDocuments.close_queue)):
+                            if ExampleAppDocuments.close_queue[n].dirty:
+                                pygui.text(ExampleAppDocuments.close_queue[n].name)
+                        pygui.end_child_frame()
+                    button_size = (pygui.get_font_size() * 7, 0)
+                    if pygui.button("Yes", button_size):
+                        for n in range(len(ExampleAppDocuments.close_queue)):
+                            if ExampleAppDocuments.close_queue[n].dirty:
+                                ExampleAppDocuments.close_queue[n].do_save()
+                            ExampleAppDocuments.close_queue[n].do_force_close()
+                        ExampleAppDocuments.close_queue.clear()
+                        pygui.close_current_popup()
+                    pygui.same_line()
+                    if pygui.button("No", button_size):
+                        for n in range(len(ExampleAppDocuments.close_queue)):
+                            ExampleAppDocuments.close_queue[n].do_force_close()
+                        ExampleAppDocuments.close_queue.clear()
+                        pygui.close_current_popup()
+                    pygui.same_line()
+                    if pygui.button("Cancel", button_size):
+                        ExampleAppDocuments.close_queue.clear()
+                        pygui.close_current_popup()
+                    pygui.end_popup()
+        pygui.end()
+
+
 class demo:
     example_app_console = ExampleAppConsole()
+    example_app_documents = ExampleAppDocuments()
 
     show_app_console = pygui.Bool(False)
+    show_app_documents = pygui.Bool(False)
     show_custom_rendering = pygui.Bool(False)
     show_font_demo = pygui.Bool(False)
 
@@ -299,6 +578,8 @@ def pygui_demo_window():
 
     if demo.show_app_console:
         demo.example_app_console.draw("Example: Pygui Console", demo.show_app_console)
+    if demo.show_app_documents:
+        demo.example_app_documents.show_example_app_documents(demo.show_app_documents)
     if demo.show_custom_rendering:
         show_app_custom_rendering(demo.show_custom_rendering)
     if demo.show_font_demo:
@@ -436,6 +717,14 @@ class widget:
         pygui.Bool(False),
         pygui.Bool(True),
     ]
+    tab_active_tabs = []
+    tab_next_tab_id = 0
+    tab_show_leading_button = pygui.Bool(True)
+    tab_show_trailing_button = pygui.Bool(True)
+    tab_tab_bar_flags = pygui.Int(
+        pygui.TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS | \
+        pygui.TAB_BAR_FLAGS_REORDERABLE | \
+        pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
     plotting_animate = pygui.Bool(True)
     plotting_arr = [
         0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
@@ -1161,6 +1450,58 @@ def show_demo_widgets():
             pygui.separator()
             pygui.tree_pop()
 
+        if pygui.tree_node("TabItemButton & Leading/Trailing flags"):
+            if widget.tab_next_tab_id == 0: # Initialize with some default tabs
+                for i in range(3):
+                    widget.tab_active_tabs.append(widget.tab_next_tab_id)
+                    widget.tab_next_tab_id += 1
+            
+            # TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
+            # (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
+            # but they tend to make more sense together)
+            pygui.checkbox("Show Leading TabItemButton()", widget.tab_show_leading_button)
+            pygui.checkbox("Show Trailing TabItemButton()", widget.tab_show_trailing_button)
+            
+            # Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
+            pygui.checkbox_flags("ImGuiTabBarFlags_TabListPopupButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyResizeDown", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyScroll", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL)
+
+            if pygui.begin_tab_bar("MyTabBar", widget.tab_tab_bar_flags.value):
+                # Demo a Leading TabItemButton(): click the "?" button to open a menu
+                if widget.tab_show_leading_button:
+                    if pygui.tab_item_button("?", pygui.TAB_ITEM_FLAGS_LEADING | pygui.TAB_BAR_FLAGS_NO_TOOLTIP):
+                        pygui.open_popup("MyHelpMenu")
+                if pygui.begin_popup("MyHelpMenu"):
+                    pygui.selectable("Hello!")
+                    pygui.end_popup()
+
+                # Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
+                # Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
+                if widget.tab_show_trailing_button:
+                    if pygui.tab_item_button("+", pygui.TAB_ITEM_FLAGS_TRAILING | pygui.TAB_BAR_FLAGS_NO_TOOLTIP):
+                        widget.tab_active_tabs.append(widget.tab_next_tab_id) # Add new tab
+                        widget.tab_next_tab_id += 1
+                
+                # Submit our regular tabs
+                n = 0
+                while n < len(widget.tab_active_tabs):
+                    open_ = pygui.Bool(True)
+                    name = f"{widget.tab_active_tabs[n]:04d}"
+                    if pygui.begin_tab_item(name, open_, pygui.TAB_ITEM_FLAGS_NONE):
+                        pygui.text(f"This is the {name} tab!")
+                        pygui.end_tab_item()
+                    
+                    if not open_:
+                        widget.tab_active_tabs.pop(n)
+                    else:
+                        n += 1
+                
+                pygui.end_tab_bar()
+            pygui.separator()
+            pygui.tree_pop()
         pygui.tree_pop()
 
     if pygui.tree_node("Plotting"):
@@ -1432,22 +1773,16 @@ def show_demo_widgets():
         pygui.tree_pop()
 
     if pygui.tree_node("Data Types"):
-        INT_MIN = (-2147483647 - 1)
-        INT_MAX = 2147483647
-        UINT_MAX = 0xffffffff
-        LLONG_MIN = (-9223372036854775807 - 1)
-        LLONG_MAX = 9223372036854775807
-        ULLONG_MAX = 0xffffffffffffffff
         IM_PRId64 = "I64d"
         IM_PRIu64 = "I64u"
-        s8_zero  = 0;  s8_one  = 1;  s8_fifty  = 50;  s8_min  = -128;         s8_max = 127
-        u8_zero  = 0;  u8_one  = 1;  u8_fifty  = 50;  u8_min  = 0;            u8_max = 255
-        s16_zero = 0;  s16_one = 1;  s16_fifty = 50;  s16_min = -32768;       s16_max = 32767
-        u16_zero = 0;  u16_one = 1;  u16_fifty = 50;  u16_min = 0;            u16_max = 65535
-        s32_zero = 0;  s32_one = 1;  s32_fifty = 50;  s32_min = INT_MIN//2;   s32_max = INT_MAX//2;    s32_hi_a = INT_MAX//2 - 100;    s32_hi_b = INT_MAX//2
-        u32_zero = 0;  u32_one = 1;  u32_fifty = 50;  u32_min = 0;            u32_max = UINT_MAX//2;   u32_hi_a = UINT_MAX//2 - 100;   u32_hi_b = UINT_MAX//2
-        s64_zero = 0;  s64_one = 1;  s64_fifty = 50;  s64_min = LLONG_MIN//2; s64_max = LLONG_MAX//2;  s64_hi_a = LLONG_MAX//2 - 100;  s64_hi_b = LLONG_MAX//2
-        u64_zero = 0;  u64_one = 1;  u64_fifty = 50;  u64_min = 0;            u64_max = ULLONG_MAX//2; u64_hi_a = ULLONG_MAX//2 - 100; u64_hi_b = ULLONG_MAX//2
+        s8_zero  = 0;  s8_one  = 1;  s8_fifty  = 50;  s8_min  = -128;               s8_max = 127
+        u8_zero  = 0;  u8_one  = 1;  u8_fifty  = 50;  u8_min  = 0;                  u8_max = 255
+        s16_zero = 0;  s16_one = 1;  s16_fifty = 50;  s16_min = -32768;             s16_max = 32767
+        u16_zero = 0;  u16_one = 1;  u16_fifty = 50;  u16_min = 0;                  u16_max = 65535
+        s32_zero = 0;  s32_one = 1;  s32_fifty = 50;  s32_min = pygui.INT_MIN//2;   s32_max = pygui.INT_MAX//2;    s32_hi_a = pygui.INT_MAX//2 - 100;    s32_hi_b = pygui.INT_MAX//2
+        u32_zero = 0;  u32_one = 1;  u32_fifty = 50;  u32_min = 0;                  u32_max = pygui.UINT_MAX//2;   u32_hi_a = pygui.UINT_MAX//2 - 100;   u32_hi_b = pygui.UINT_MAX//2
+        s64_zero = 0;  s64_one = 1;  s64_fifty = 50;  s64_min = pygui.LLONG_MIN//2; s64_max = pygui.LLONG_MAX//2;  s64_hi_a = pygui.LLONG_MAX//2 - 100;  s64_hi_b = pygui.LLONG_MAX//2
+        u64_zero = 0;  u64_one = 1;  u64_fifty = 50;  u64_min = 0;                  u64_max = pygui.ULLONG_MAX//2; u64_hi_a = pygui.ULLONG_MAX//2 - 100; u64_hi_b = pygui.ULLONG_MAX//2
         f32_zero = 0;  f32_one = 1;  f32_lo_a = -10000000000;      f32_hi_a = +10000000000
         f64_zero = 0;  f64_one = 1;  f64_lo_a = -1000000000000000; f64_hi_a = +1000000000000000
 
@@ -3286,6 +3621,21 @@ def show_random_extras():
             2
         )
         pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        rand.frame_delta_count
+        fonts = pygui.get_io().fonts.fonts
+        font_index = math.floor(rand.frame_delta_count * 10) % len(fonts)
+        selected_font = fonts[font_index]
+        dl.add_text_imfont(
+            selected_font,
+            13,
+            (cx, cy),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.35, 1, 0.8)),
+            f"Hello\nworld\nfont: {font_index}"
+        )
+        pygui.dummy((50, 50))
 
         pygui.tree_pop()
     
@@ -4394,6 +4744,7 @@ def show_menu_bar():
         if pygui.begin_menu("Examples"):
             pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
             pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
+            pygui.menu_item_bool_ptr("Documents", None, demo.show_app_documents)
             pygui.menu_item_bool_ptr("Custom fonts", None, demo.show_font_demo)
             pygui.end_menu()
         if pygui.begin_menu("Tools"):
@@ -4715,6 +5066,15 @@ def show_app_custom_rendering(p_open: pygui.Bool):
 
 class font:
     utf8_test = """
+    Keyboard:
+        abcdefghijklmnopqrstuvwxyz
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ
+        `1234567890-=
+        ~!@#$%^&*()_+
+        []\;',./
+        {{}}|:"<>?
+        
+
     UTF-8 encoded sample plain-text file
     ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 

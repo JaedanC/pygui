@@ -11,11 +11,26 @@ from typing import Callable, Any, Sequence, Tuple, NamedTuple
 
 cimport ccimgui
 from libcpp cimport bool
-from libc.float cimport FLT_MIN as LIBC_FLT_MIN
-from libc.float cimport FLT_MAX as LIBC_FLT_MAX
 from libc.stdint cimport uintptr_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport strncpy, memset
+from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+from libc.limits cimport INT_MIN as LIBC_INT_MIN
+from libc.limits cimport INT_MAX as LIBC_INT_MAX
+from libc.limits cimport UINT_MAX as LIBC_UINT_MAX
+from libc.limits cimport LLONG_MIN as LIBC_LLONG_MIN
+from libc.limits cimport LLONG_MAX as LIBC_LLONG_MAX
+from libc.limits cimport ULLONG_MAX as LIBC_ULLONG_MAX
+
+FLT_MIN = LIBC_FLT_MIN
+FLT_MAX = LIBC_FLT_MAX
+INT_MIN = LIBC_INT_MIN
+INT_MAX = LIBC_INT_MAX
+UINT_MAX = LIBC_UINT_MAX
+LLONG_MIN = LIBC_LLONG_MIN
+LLONG_MAX = LIBC_LLONG_MAX
+ULLONG_MAX = LIBC_ULLONG_MAX
 
 # Used purely to allow for .x and .y notation on any of the tuples returned
 # by the _cast_ImVec2_tuple style functions. The included pygui examples does
@@ -463,11 +478,8 @@ cdef class ImGlyphRange:
         return ImGlyphRange(ranges)
 
 
-FLT_MIN = LIBC_FLT_MIN
-FLT_MAX = LIBC_FLT_MAX
 PAYLOAD_TYPE_COLOR_3F = "_COL3F"
 PAYLOAD_TYPE_COLOR_4F = "_COL4F"
-
 
 # IM_COL32_R_SHIFT = 0
 # IM_COL32_G_SHIFT = 8
@@ -8268,7 +8280,7 @@ def set_state_storage(storage: ImGuiStorage):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -9303,7 +9315,7 @@ def style_colors_light(dst: ImGuiStyle=None):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
@@ -11834,7 +11846,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str):
@@ -11854,7 +11866,7 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
@@ -11868,6 +11880,26 @@ cdef class ImDrawList:
             col,
             _bytes(text_begin),
             ((<char*>bytes_text_end if text_end is not None else NULL)),
+            wrap_width,
+            <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
+        ccimgui.ImDrawList_AddTextImFontPtrEx(
+            self._ptr,
+            font._ptr,
+            font_size,
+            _cast_tuple_ImVec2(pos),
+            col,
+            _bytes(text),
+            NULL,
             wrap_width,
             <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
         )

@@ -12,6 +12,13 @@ FLT_MAX: float
 """
 Occasionally used by ImGui to mark boundaries for things.
 """
+INT_MIN: int
+INT_MAX: int
+UINT_MAX: int
+LLONG_MIN: int
+LLONG_MAX: int
+ULLONG_MAX: int
+
 PAYLOAD_TYPE_COLOR_3F: int
 """
 Used by `pygui.accept_drag_drop_payload()` to retrieve colors that are
@@ -2724,11 +2731,11 @@ def set_scroll_y(scroll_y: float) -> None:
 #     """
 #     pass
 
-# def set_tab_item_closed(tab_or_docked_window_label: str) -> None:
-#     """
-#     Notify tabbar or docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). for tab-bar: call after begintabbar() and before tab submissions. otherwise call with a window name.
-#     """
-#     pass
+def set_tab_item_closed(tab_or_docked_window_label: str) -> None:
+    """
+    Notify tabbar or docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). for tab-bar: call after begintabbar() and before tab submissions. otherwise call with a window name.
+    """
+    pass
 
 def set_tooltip(fmt: str) -> None:
     """
@@ -2939,11 +2946,11 @@ def style_colors_light(dst: ImGuiStyle=None) -> None:
     """
     pass
 
-# def tab_item_button(label: str, flags: int=0) -> bool:
-#     """
-#     Create a tab behaving like a button. return true when clicked. cannot be selected in the tab bar.
-#     """
-#     pass
+def tab_item_button(label: str, flags: int=0) -> bool:
+    """
+    Create a tab behaving like a button. return true when clicked. cannot be selected in the tab bar.
+    """
+    pass
 
 # def table_get_column_count() -> int:
 #     """
@@ -3333,13 +3340,7 @@ class ImDrawList:
 
     def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
     def add_text(self: ImDrawList, pos: tuple, col: int, text: str) -> None: ...
-    # def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str) -> None:
-    #     """
-    #     Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
-    #     """
-    #     pass
-
-    # def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None) -> None: ...
+    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None) -> None: ...
     def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0) -> None: ...
     def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None: ...
     def channels_merge(self: ImDrawList) -> None: ...

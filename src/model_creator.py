@@ -982,13 +982,28 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     from cython.operator import dereference
     from typing import Callable, Any, Sequence, Tuple, NamedTuple
 
-    cimport {pxd_library_name}
+    cimport ccimgui
     from libcpp cimport bool
-    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
-    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
     from libc.stdint cimport uintptr_t
     from libc.stdlib cimport malloc, free
     from libc.string cimport strncpy, memset
+    from libc.float cimport FLT_MIN as LIBC_FLT_MIN
+    from libc.float cimport FLT_MAX as LIBC_FLT_MAX
+    from libc.limits cimport INT_MIN as LIBC_INT_MIN
+    from libc.limits cimport INT_MAX as LIBC_INT_MAX
+    from libc.limits cimport UINT_MAX as LIBC_UINT_MAX
+    from libc.limits cimport LLONG_MIN as LIBC_LLONG_MIN
+    from libc.limits cimport LLONG_MAX as LIBC_LLONG_MAX
+    from libc.limits cimport ULLONG_MAX as LIBC_ULLONG_MAX
+
+    FLT_MIN = LIBC_FLT_MIN
+    FLT_MAX = LIBC_FLT_MAX
+    INT_MIN = LIBC_INT_MIN
+    INT_MAX = LIBC_INT_MAX
+    UINT_MAX = LIBC_UINT_MAX
+    LLONG_MIN = LIBC_LLONG_MIN
+    LLONG_MAX = LIBC_LLONG_MAX
+    ULLONG_MAX = LIBC_ULLONG_MAX
 
     # Used purely to allow for .x and .y notation on any of the tuples returned
     # by the _cast_ImVec2_tuple style functions. The included pygui examples does
@@ -1436,11 +1451,8 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
             return ImGlyphRange(ranges)
 
 
-    FLT_MIN = LIBC_FLT_MIN
-    FLT_MAX = LIBC_FLT_MAX
     PAYLOAD_TYPE_COLOR_3F = "_COL3F"
     PAYLOAD_TYPE_COLOR_4F = "_COL4F"
-
 
     # IM_COL32_R_SHIFT = 0
     # IM_COL32_G_SHIFT = 8
@@ -1686,6 +1698,13 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
     """
     Occasionally used by ImGui to mark boundaries for things.
     """
+    INT_MIN: int
+    INT_MAX: int
+    UINT_MAX: int
+    LLONG_MIN: int
+    LLONG_MAX: int
+    ULLONG_MAX: int
+
     PAYLOAD_TYPE_COLOR_3F: int
     """
     Used by `pygui.accept_drag_drop_payload()` to retrieve colors that are
