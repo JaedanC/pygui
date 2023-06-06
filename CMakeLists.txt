@@ -136,7 +136,7 @@ target_link_libraries(imgui_glfw_opengl3 cimgui glfw)
 #  - include
 #       {basically everything}
 #  - src:
-#       main_db.c
+#       main.c
 #  - links:
 #       cimgui              (CIMGUI_API import)
 #       imgui_glfw_opengl3  (So that glfw function calls are found)
@@ -155,11 +155,50 @@ target_include_directories(my_program PRIVATE
 target_compile_options(my_program PRIVATE "/FI${PYGUI_CONFIG_H}")
 target_link_libraries(my_program cimgui imgui_glfw_opengl3 opengl32)
 
+
+# ------------------------------------------------------------------------------
+# my_program_cpp.exe
+# - This is compiled to test the stability of ImGui itself.
+
+# Layout:
+#  - define: PYGUI_COMPILING_CPP_APP
+# 		GLFW_DLL
+#  - include
+#       {imgui} {imgui_impl}
+#  - src:
+#       main.cpp {imgui} {imgui_impl}
+#  - links:
+#       glfw                (So that glfw function calls are found)
+#       opengl32            (So that opengl function calls are found)
+
+file(
+    GLOB
+    IMGUI_FILES
+    ${IMGUI_DIRECTORY}/*.cpp
+)
+add_executable(my_program_cpp
+    src/main.cpp
+    ${IMGUI_FILES}
+    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_glfw.cpp
+    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
+)
+target_compile_definitions(my_program_cpp PRIVATE
+    PYGUI_COMPILING_CPP_APP
+)
+target_include_directories(my_program_cpp PRIVATE
+    ${IMGUI_DIRECTORY}
+    ${IMGUI_IMPL_DIRECTORY}
+)
+# ${GLFW_INCLUDE_DIRECTORY}
+target_compile_options(my_program_cpp PRIVATE "/FI${PYGUI_CONFIG_H}")
+target_link_libraries(my_program_cpp opengl32 glfw)
+
+
 # Since we are compiling SHARED dll's, then we are mostly interesting in
 # the runtime (dll) and the archive (associated .lib). The .lib file is
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
-install(TARGETS cimgui imgui_glfw_opengl3 glfw my_program cimgui imgui_glfw_opengl3 my_program
+install(TARGETS cimgui imgui_glfw_opengl3 glfw my_program cimgui imgui_glfw_opengl3 my_program my_program_cpp
         RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui
         LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs
         ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs)

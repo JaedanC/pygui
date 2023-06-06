@@ -40,7 +40,9 @@ def main():
                 "external/dear_bindings",   # cimgui.h
                 "core/backends",            # imgui_impl_*.h
             ],
-            library_dirs=["pygui/libs"],
+            library_dirs=[
+                "pygui/libs",
+            ],
             libraries=["cimgui", "glfw3dll", "imgui_glfw_opengl3"],
             define_macros=[
                 ("IMGUI_IMPL_API", 'extern "C" __declspec(dllexport)'),

@@ -220,7 +220,7 @@ Make sure that when you compile, you have similar settings in CMake:
 # my_imgui_extension.dll
 # Layout:
 #  - define:
-# 		IMGUI_API __declspec(dllimport)
+#       IMGUI_API __declspec(dllimport)
 #  - include
 #       imgui.h directory
 #  - src:
