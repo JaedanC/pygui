@@ -1,6 +1,6 @@
+cmake_minimum_required(VERSION 3.26)
 project(pygui)
 
-cmake_minimum_required(VERSION 3.11)
 
 set(CIMGUI_DIRECTORY          src/external/dear_bindings)
 set(IMGUI_DIRECTORY           src/external/imgui)
@@ -9,15 +9,12 @@ set(IMGUILESS_IMPL_DIRECTORY  src/core/backends)
 set(GLFW_DIRECTORY            src/external/glfw)
 set(GLFW_INCLUDE_DIRECTORY    ${GLFW_DIRECTORY}/include)
 
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-
 set(PYGUI_CONFIG_H      ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.h)
 set(PYGUI_CONFIG_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.cpp)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-find_package(PythonLibs REQUIRED)
+set(Python_FIND_ABI "ANY" "ANY" "ANY")
+find_package(Python3 COMPONENTS Development)
 
 # ------------------------------------------------------------------------------
 # glfw.dll
@@ -68,10 +65,10 @@ target_compile_definitions(cimgui PRIVATE
 target_include_directories(cimgui PRIVATE
     ${CIMGUI_DIRECTORY}
     ${IMGUI_DIRECTORY}
-    ${PYTHON_INCLUDE_DIRS}
+    ${Python3_INCLUDE_DIRS}
 )
 target_link_libraries(cimgui
-    ${PYTHON_LIBRARIES}
+    ${Python3_LIBRARIES}
 )
 
 # cl specific. Force include of the config file
@@ -198,7 +195,14 @@ target_link_libraries(my_program_cpp opengl32 glfw)
 # the runtime (dll) and the archive (associated .lib). The .lib file is
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
-install(TARGETS cimgui imgui_glfw_opengl3 glfw my_program cimgui imgui_glfw_opengl3 my_program my_program_cpp
+install(TARGETS cimgui imgui_glfw_opengl3 glfw my_program my_program_cpp
         RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui
         LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs
         ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs)
+
+# For debugging my_program
+message("Installing glfw and ${Python3_RUNTIME_LIBRARY} to build dir")
+install(TARGETS glfw
+        RUNTIME DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${Python3_RUNTIME_LIBRARY}
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
