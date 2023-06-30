@@ -209,7 +209,7 @@ cdef extern from "cimgui.h":
         ImGuiTreeNodeFlags_None
         ImGuiTreeNodeFlags_Selected                 # Draw as selected
         ImGuiTreeNodeFlags_Framed                   # Draw frame with background (e.g. for collapsingheader)
-        ImGuiTreeNodeFlags_AllowItemOverlap         # Hit testing to allow subsequent widgets to overlap this one
+        ImGuiTreeNodeFlags_AllowOverlap             # Hit testing to allow subsequent widgets to overlap this one
         ImGuiTreeNodeFlags_NoTreePushOnOpen         # Don't do a treepush() when open (e.g. for collapsingheader) = no extra indent nor pushing on id stack
         ImGuiTreeNodeFlags_NoAutoOpenOnLog          # Don't automatically and temporarily open node when logging is active (by default logging will automatically open tree nodes)
         ImGuiTreeNodeFlags_DefaultOpen              # Default node to be open
@@ -251,7 +251,7 @@ cdef extern from "cimgui.h":
         ImGuiSelectableFlags_SpanAllColumns       # Selectable frame can span all columns (text will still fit in current column)
         ImGuiSelectableFlags_AllowDoubleClick     # Generate press events on double clicks too
         ImGuiSelectableFlags_Disabled             # Cannot be selected, display grayed out text
-        ImGuiSelectableFlags_AllowItemOverlap     # (wip) hit testing to allow subsequent widgets to overlap this one
+        ImGuiSelectableFlags_AllowOverlap         # (wip) hit testing to allow subsequent widgets to overlap this one
 
     # Flags for ImGui::BeginCombo()
     ctypedef enum ImGuiComboFlags_:
@@ -423,14 +423,19 @@ cdef extern from "cimgui.h":
         ImGuiHoveredFlags_DockHierarchy                    # Iswindowhovered() only: consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _childwindows or _rootwindow)
         ImGuiHoveredFlags_AllowWhenBlockedByPopup          # Return true even if a popup window is normally blocking access to this item/window
         ImGuiHoveredFlags_AllowWhenBlockedByActiveItem     # Return true even if an active item is blocking access to this item/window. useful for drag and drop patterns.
-        ImGuiHoveredFlags_AllowWhenOverlapped              # Isitemhovered() only: return true even if the position is obstructed or overlapped by another window
+        ImGuiHoveredFlags_AllowWhenOverlappedByItem        # Isitemhovered() only: return true even if the item uses allowoverlap mode and is overlapped by another hoverable item.
+        ImGuiHoveredFlags_AllowWhenOverlappedByWindow      # Isitemhovered() only: return true even if the position is obstructed or overlapped by another window.
         ImGuiHoveredFlags_AllowWhenDisabled                # Isitemhovered() only: return true even if the item is disabled
-        ImGuiHoveredFlags_NoNavOverride                    # Disable using gamepad/keyboard navigation state when active, always query mouse.
+        ImGuiHoveredFlags_NoNavOverride                    # Isitemhovered() only: disable using gamepad/keyboard navigation state when active, always query mouse
+        ImGuiHoveredFlags_AllowWhenOverlapped
         ImGuiHoveredFlags_RectOnly
         ImGuiHoveredFlags_RootAndChildWindows
-        ImGuiHoveredFlags_DelayNormal                      # Return true after io.hoverdelaynormal elapsed (~0.30 sec)
-        ImGuiHoveredFlags_DelayShort                       # Return true after io.hoverdelayshort elapsed (~0.10 sec)
-        ImGuiHoveredFlags_NoSharedDelay                    # Disable shared delay system where moving from one item to the next keeps the previous timer for a short time (standard for tooltips with long delays)
+        ImGuiHoveredFlags_ForTooltip                       # Shortcut for standard flags when using isitemhovered() + settooltip() sequence.
+        ImGuiHoveredFlags_Stationary                       # Require mouse to be stationary for style.hoverstationarydelay (~0.15 sec) _at least one time_. after this, can move on same item/window. using the stationary test tends to reduces the need for a long delay.
+        ImGuiHoveredFlags_DelayNone                        # Isitemhovered() only: return true immediately (default). as this is the default you generally ignore this.
+        ImGuiHoveredFlags_DelayShort                       # Isitemhovered() only: return true after style.hoverdelayshort elapsed (~0.15 sec) (shared between items) + requires mouse to be stationary for style.hoverstationarydelay (once per item).
+        ImGuiHoveredFlags_DelayNormal                      # Isitemhovered() only: return true after style.hoverdelaynormal elapsed (~0.40 sec) (shared between items) + requires mouse to be stationary for style.hoverstationarydelay (once per item).
+        ImGuiHoveredFlags_NoSharedDelay                    # Isitemhovered() only: disable shared delay system where moving from one item to the next keeps the previous timer for a short time (standard for tooltips with long delays)
 
     # Flags for ImGui::DockSpace(), shared/inherited by child nodes.
     # (Some flags can be applied to individual nodes directly)
@@ -1065,50 +1070,55 @@ cdef extern from "cimgui.h":
 
 
     ctypedef struct ImGuiStyle:
-        float Alpha                           # Global alpha applies to everything in dear imgui.
-        float DisabledAlpha                   # Additional alpha multiplier applied by begindisabled(). multiply over current value of alpha.
-        ImVec2 WindowPadding                  # Padding within a window.
-        float WindowRounding                  # Radius of window corners rounding. set to 0.0f to have rectangular windows. large values tend to lead to variety of artifacts and are not recommended.
-        float WindowBorderSize                # Thickness of border around windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
-        ImVec2 WindowMinSize                  # Minimum window size. this is a global setting. if you want to constrain individual windows, use setnextwindowsizeconstraints().
-        ImVec2 WindowTitleAlign               # Alignment for title bar text. defaults to (0.0f,0.5f) for left-aligned,vertically centered.
-        ImGuiDir WindowMenuButtonPosition     # Side of the collapsing/docking button in the title bar (none/left/right). defaults to imguidir_left.
-        float ChildRounding                   # Radius of child window corners rounding. set to 0.0f to have rectangular windows.
-        float ChildBorderSize                 # Thickness of border around child windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
-        float PopupRounding                   # Radius of popup window corners rounding. (note that tooltip windows use windowrounding)
-        float PopupBorderSize                 # Thickness of border around popup/tooltip windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
-        ImVec2 FramePadding                   # Padding within a framed rectangle (used by most widgets).
-        float FrameRounding                   # Radius of frame corners rounding. set to 0.0f to have rectangular frame (used by most widgets).
-        float FrameBorderSize                 # Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
-        ImVec2 ItemSpacing                    # Horizontal and vertical spacing between widgets/lines.
-        ImVec2 ItemInnerSpacing               # Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
-        ImVec2 CellPadding                    # Padding within a table cell
-        ImVec2 TouchExtraPadding              # Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
-        float IndentSpacing                   # Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
-        float ColumnsMinSpacing               # Minimum horizontal spacing between two columns. preferably > (framepadding.x + 1).
-        float ScrollbarSize                   # Width of the vertical scrollbar, height of the horizontal scrollbar.
-        float ScrollbarRounding               # Radius of grab corners for scrollbar.
-        float GrabMinSize                     # Minimum width/height of a grab box for slider/scrollbar.
-        float GrabRounding                    # Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
-        float LogSliderDeadzone               # The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
-        float TabRounding                     # Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
-        float TabBorderSize                   # Thickness of border around tabs.
-        float TabMinWidthForCloseButton       # Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
-        ImGuiDir ColorButtonPosition          # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
-        ImVec2 ButtonTextAlign                # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
-        ImVec2 SelectableTextAlign            # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
-        float SeparatorTextBorderSize         # Thickkness of border in separatortext()
-        ImVec2 SeparatorTextAlign             # Alignment of text within the separator. defaults to (0.0f, 0.5f) (left aligned, center).
-        ImVec2 SeparatorTextPadding           # Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
-        ImVec2 DisplayWindowPadding           # Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
-        ImVec2 DisplaySafeAreaPadding         # If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
-        float MouseCursorScale                # Scale software rendered mouse cursor (when io.mousedrawcursor is enabled). we apply per-monitor dpi scaling over this scale. may be removed later.
-        bool AntiAliasedLines                 # Enable anti-aliased lines/borders. disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
-        bool AntiAliasedLinesUseTex           # Enable anti-aliased lines/borders using textures where possible. require backend to render with bilinear filtering (not point/nearest filtering). latched at the beginning of the frame (copied to imdrawlist).
-        bool AntiAliasedFill                  # Enable anti-aliased edges around filled shapes (rounded rectangles, circles, etc.). disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
-        float CurveTessellationTol            # Tessellation tolerance when using pathbeziercurveto() without a specific number of segments. decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
-        float CircleTessellationMaxError      # Maximum error (in pixels) allowed when using addcircle()/addcirclefilled() or drawing rounded corner rectangles with no explicit segment count specified. decrease for higher quality but more geometry.
+        float Alpha                                     # Global alpha applies to everything in dear imgui.
+        float DisabledAlpha                             # Additional alpha multiplier applied by begindisabled(). multiply over current value of alpha.
+        ImVec2 WindowPadding                            # Padding within a window.
+        float WindowRounding                            # Radius of window corners rounding. set to 0.0f to have rectangular windows. large values tend to lead to variety of artifacts and are not recommended.
+        float WindowBorderSize                          # Thickness of border around windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
+        ImVec2 WindowMinSize                            # Minimum window size. this is a global setting. if you want to constrain individual windows, use setnextwindowsizeconstraints().
+        ImVec2 WindowTitleAlign                         # Alignment for title bar text. defaults to (0.0f,0.5f) for left-aligned,vertically centered.
+        ImGuiDir WindowMenuButtonPosition               # Side of the collapsing/docking button in the title bar (none/left/right). defaults to imguidir_left.
+        float ChildRounding                             # Radius of child window corners rounding. set to 0.0f to have rectangular windows.
+        float ChildBorderSize                           # Thickness of border around child windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
+        float PopupRounding                             # Radius of popup window corners rounding. (note that tooltip windows use windowrounding)
+        float PopupBorderSize                           # Thickness of border around popup/tooltip windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
+        ImVec2 FramePadding                             # Padding within a framed rectangle (used by most widgets).
+        float FrameRounding                             # Radius of frame corners rounding. set to 0.0f to have rectangular frame (used by most widgets).
+        float FrameBorderSize                           # Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
+        ImVec2 ItemSpacing                              # Horizontal and vertical spacing between widgets/lines.
+        ImVec2 ItemInnerSpacing                         # Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
+        ImVec2 CellPadding                              # Padding within a table cell
+        ImVec2 TouchExtraPadding                        # Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
+        float IndentSpacing                             # Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
+        float ColumnsMinSpacing                         # Minimum horizontal spacing between two columns. preferably > (framepadding.x + 1).
+        float ScrollbarSize                             # Width of the vertical scrollbar, height of the horizontal scrollbar.
+        float ScrollbarRounding                         # Radius of grab corners for scrollbar.
+        float GrabMinSize                               # Minimum width/height of a grab box for slider/scrollbar.
+        float GrabRounding                              # Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
+        float LogSliderDeadzone                         # The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
+        float TabRounding                               # Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
+        float TabBorderSize                             # Thickness of border around tabs.
+        float TabMinWidthForCloseButton                 # Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
+        ImGuiDir ColorButtonPosition                    # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
+        ImVec2 ButtonTextAlign                          # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
+        ImVec2 SelectableTextAlign                      # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
+        float SeparatorTextBorderSize                   # Thickkness of border in separatortext()
+        ImVec2 SeparatorTextAlign                       # Alignment of text within the separator. defaults to (0.0f, 0.5f) (left aligned, center).
+        ImVec2 SeparatorTextPadding                     # Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
+        ImVec2 DisplayWindowPadding                     # Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
+        ImVec2 DisplaySafeAreaPadding                   # If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
+        float MouseCursorScale                          # Scale software rendered mouse cursor (when io.mousedrawcursor is enabled). we apply per-monitor dpi scaling over this scale. may be removed later.
+        bool AntiAliasedLines                           # Enable anti-aliased lines/borders. disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
+        bool AntiAliasedLinesUseTex                     # Enable anti-aliased lines/borders using textures where possible. require backend to render with bilinear filtering (not point/nearest filtering). latched at the beginning of the frame (copied to imdrawlist).
+        bool AntiAliasedFill                            # Enable anti-aliased edges around filled shapes (rounded rectangles, circles, etc.). disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
+        float CurveTessellationTol                      # Tessellation tolerance when using pathbeziercurveto() without a specific number of segments. decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
+        float CircleTessellationMaxError                # Maximum error (in pixels) allowed when using addcircle()/addcirclefilled() or drawing rounded corner rectangles with no explicit segment count specified. decrease for higher quality but more geometry.
         ImVec4* Colors
+        float HoverStationaryDelay                      # Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
+        float HoverDelayShort                           # Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+        float HoverDelayNormal                          # Delay for isitemhovered(imguihoveredflags_delaynormal). '
+        ImGuiHoveredFlags HoverFlagsForTooltipMouse     # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
+        ImGuiHoveredFlags HoverFlagsForTooltipNav       # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
 
     void ImGuiStyle_ScaleAllSizes(ImGuiStyle* self, float scale_factor) except +
 
@@ -1129,13 +1139,6 @@ cdef extern from "cimgui.h":
         float IniSavingRate                                                                                        # = 5.0f           // minimum time between saving positions/sizes to .ini file, in seconds.
         const char* IniFilename                                                                                    # = 'imgui.ini'    // path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
         const char* LogFilename                                                                                    # = 'imgui_log.txt'// path to .log file (default parameter to imgui::logtofile when no file is specified).
-        float MouseDoubleClickTime                                                                                 # = 0.30f          // time for a double-click, in seconds.
-        float MouseDoubleClickMaxDist                                                                              # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
-        float MouseDragThreshold                                                                                   # = 6.0f           // distance threshold before considering we are dragging.
-        float KeyRepeatDelay                                                                                       # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
-        float KeyRepeatRate                                                                                        # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
-        float HoverDelayNormal                                                                                     # = 0.30 sec       // delay on hovering before isitemhovered(imguihoveredflags_delaynormal) returns true.
-        float HoverDelayShort                                                                                      # = 0.10 sec       // delay on hovering before isitemhovered(imguihoveredflags_delayshort) returns true.
         void* UserData                                                                                             # = null           // store your own data.
         ImFontAtlas* Fonts                                                                                         # <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
         float FontGlobalScale                                                                                      # = 1.0f           // global scale all fonts
@@ -1159,9 +1162,15 @@ cdef extern from "cimgui.h":
         bool ConfigWindowsResizeFromEdges                                                                          # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         bool ConfigWindowsMoveFromTitleBarOnly                                                                     # = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
         float ConfigMemoryCompactTimer                                                                             # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
+        float MouseDoubleClickTime                                                                                 # = 0.30f          // time for a double-click, in seconds.
+        float MouseDoubleClickMaxDist                                                                              # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
+        float MouseDragThreshold                                                                                   # = 6.0f           // distance threshold before considering we are dragging.
+        float KeyRepeatDelay                                                                                       # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
+        float KeyRepeatRate                                                                                        # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
         bool ConfigDebugBeginReturnValueOnce                                                                       # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         bool ConfigDebugBeginReturnValueLoop                                                                       # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         bool ConfigDebugIgnoreFocusLoss                                                                            # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
+        bool ConfigDebugIniSettings                                                                                # = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
         const char* BackendPlatformName                                                                            # = null
         const char* BackendRendererName                                                                            # = null
         void* BackendPlatformUserData                                                                              # = null           // user data for platform backend
@@ -2158,6 +2167,12 @@ cdef extern from "cimgui.h":
     # Lock horizontal starting position
     void ImGui_BeginGroup() except +
 
+    # Tooltips: helper for showing a tooltip when hovering an item
+    # - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
+    # - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    # Begin/append a tooltip window if preceding item was hovered.
+    bool ImGui_BeginItemTooltip() except +
+
     # Widgets: List Boxes
     # - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
     # - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
@@ -2252,7 +2267,7 @@ cdef extern from "cimgui.h":
     bool ImGui_BeginTableEx(const char* str_id, int column, ImGuiTableFlags flags, ImVec2 outer_size, float inner_width) except +
 
     # Tooltips
-    # - Tooltip are windows following the mouse. They do not take focus away.
+    # - Tooltips are windows following the mouse. They do not take focus away.
     # Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
     bool ImGui_BeginTooltip() except +
 
@@ -2483,7 +2498,7 @@ cdef extern from "cimgui.h":
     # Only call endtable() if begintable() returns true!
     void ImGui_EndTable() except +
 
-    # Only call endtooltip() if begintooltip() returns true!
+    # Only call endtooltip() if begintooltip()/beginitemtooltip() returns true!
     void ImGui_EndTooltip() except +
 
     # This is a helper for backends.
@@ -3162,13 +3177,14 @@ cdef extern from "cimgui.h":
     # Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types. data is copied and held by imgui. return true when payload has been accepted.
     bool ImGui_SetDragDropPayload(const char* type_, const void* data, size_t sz, ImGuiCond cond) except +
 
-    # Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
-    void ImGui_SetItemAllowOverlap() except +
-
     # Focus, Activation
     # - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
     # Make last item the default focused item of a window.
     void ImGui_SetItemDefaultFocus() except +
+
+    # Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    void ImGui_SetItemTooltip(const char* fmt) except +
+    void ImGui_SetItemTooltipV(const char* fmt) except +
 
     # Implied offset = 0
     void ImGui_SetKeyboardFocusHere() except +
@@ -3184,6 +3200,10 @@ cdef extern from "cimgui.h":
 
     # Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
     void ImGui_SetNextFrameWantCaptureMouse(bool want_capture_mouse) except +
+
+    # Overlapping mode
+    # Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
+    void ImGui_SetNextItemAllowOverlap() except +
 
     # Set next treenode/collapsingheader open state.
     void ImGui_SetNextItemOpen(bool is_open, ImGuiCond cond) except +

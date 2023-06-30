@@ -433,7 +433,7 @@ INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int
 TREE_NODE_FLAGS_NONE: int
 TREE_NODE_FLAGS_SELECTED: int
 TREE_NODE_FLAGS_FRAMED: int
-TREE_NODE_FLAGS_ALLOW_ITEM_OVERLAP: int
+TREE_NODE_FLAGS_ALLOW_OVERLAP: int
 TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN: int
 TREE_NODE_FLAGS_NO_AUTO_OPEN_ON_LOG: int
 TREE_NODE_FLAGS_DEFAULT_OPEN: int
@@ -462,7 +462,7 @@ SELECTABLE_FLAGS_DONT_CLOSE_POPUPS: int
 SELECTABLE_FLAGS_SPAN_ALL_COLUMNS: int
 SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int
 SELECTABLE_FLAGS_DISABLED: int
-SELECTABLE_FLAGS_ALLOW_ITEM_OVERLAP: int
+SELECTABLE_FLAGS_ALLOW_OVERLAP: int
 COMBO_FLAGS_NONE: int
 COMBO_FLAGS_POPUP_ALIGN_LEFT: int
 COMBO_FLAGS_HEIGHT_SMALL: int
@@ -576,13 +576,18 @@ HOVERED_FLAGS_NO_POPUP_HIERARCHY: int
 HOVERED_FLAGS_DOCK_HIERARCHY: int
 HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_POPUP: int
 HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_ACTIVE_ITEM: int
-HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED: int
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_ITEM: int
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_WINDOW: int
 HOVERED_FLAGS_ALLOW_WHEN_DISABLED: int
 HOVERED_FLAGS_NO_NAV_OVERRIDE: int
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED: int
 HOVERED_FLAGS_RECT_ONLY: int
 HOVERED_FLAGS_ROOT_AND_CHILD_WINDOWS: int
-HOVERED_FLAGS_DELAY_NORMAL: int
+HOVERED_FLAGS_FOR_TOOLTIP: int
+HOVERED_FLAGS_STATIONARY: int
+HOVERED_FLAGS_DELAY_NONE: int
 HOVERED_FLAGS_DELAY_SHORT: int
+HOVERED_FLAGS_DELAY_NORMAL: int
 HOVERED_FLAGS_NO_SHARED_DELAY: int
 DOCK_NODE_FLAGS_NONE: int
 DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY: int
@@ -1083,6 +1088,15 @@ def begin_group() -> None:
     """
     pass
 
+# def begin_item_tooltip() -> bool:
+#     """
+#     Tooltips: helper for showing a tooltip when hovering an item
+#     - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
+#     - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+#     Begin/append a tooltip window if preceding item was hovered.
+#     """
+#     pass
+
 def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
     """
     Widgets: List Boxes
@@ -1203,7 +1217,7 @@ def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 
 def begin_tooltip() -> bool:
     """
     Tooltips
-    - Tooltip are windows following the mouse. They do not take focus away.
+    - Tooltips are windows following the mouse. They do not take focus away.
     Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
     """
     pass
@@ -1506,7 +1520,7 @@ def end_table() -> None:
 
 def end_tooltip() -> None:
     """
-    Only call endtooltip() if begintooltip() returns true!
+    Only call endtooltip() if begintooltip()/beginitemtooltip() returns true!
     """
     pass
 
@@ -2571,12 +2585,6 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
     """
     pass
 
-def set_item_allow_overlap() -> None:
-    """
-    Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
-    """
-    pass
-
 def set_item_default_focus() -> None:
     """
     Focus, Activation
@@ -2584,6 +2592,12 @@ def set_item_default_focus() -> None:
     Make last item the default focused item of a window.
     """
     pass
+
+# def set_item_tooltip(fmt: str) -> None:
+#     """
+#     Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+#     """
+#     pass
 
 def set_keyboard_focus_here(offset: int=0) -> None:
     """
@@ -2606,6 +2620,13 @@ def set_mouse_cursor(cursor_type: int) -> None:
 # def set_next_frame_want_capture_mouse(want_capture_mouse: bool) -> None:
 #     """
 #     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+#     """
+#     pass
+
+# def set_next_item_allow_overlap() -> None:
+#     """
+#     Overlapping mode
+#     Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
 #     """
 #     pass
 
@@ -4115,20 +4136,24 @@ class ImGuiIO:
     """
     config_debug_begin_return_value_once: bool
     """
-    Debug options
-    - tools to test correct Begin/End and BeginChild/EndChild behaviors.
-    - presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
-    this is inconsistent with other BeginXXX functions and create confusion for many users.
-    - we expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
+    Tools to test correct Begin/End and BeginChild/EndChild behaviors.
+    Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
+    This is inconsistent with other BeginXXX functions and create confusion for many users.
+    We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
     = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
     """
     # config_debug_ignore_focus_loss: bool
     # """
-    # - option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-    # - backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    # - consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+    # Option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+    # Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
+    # Consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
     # = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
     # """
+    config_debug_ini_settings: bool
+    """
+    Option to audit .ini data
+    = false  // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
+    """
     config_docking_always_tab_bar: bool
     """
     = false  // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
@@ -4236,14 +4261,6 @@ class ImGuiIO:
     Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
     """
     get_clipboard_text_fn: Callable
-    hover_delay_normal: float
-    """
-    = 0.30 sec   // delay on hovering before isitemhovered(imguihoveredflags_delaynormal) returns true.
-    """
-    hover_delay_short: float
-    """
-    = 0.10 sec   // delay on hovering before isitemhovered(imguihoveredflags_delayshort) returns true.
-    """
     ini_filename: str
     """
     = 'imgui.ini'// path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
@@ -4347,6 +4364,8 @@ class ImGuiIO:
     """
     mouse_double_click_time: float
     """
+    Inputs Behaviors
+    (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
     = 0.30f  // time for a double-click, in seconds.
     """
     mouse_double_clicked: bool
@@ -5052,6 +5071,27 @@ class ImGuiStyle:
     """
     Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
     """
+    # hover_delay_normal: float
+    # """
+    # Delay for isitemhovered(imguihoveredflags_delaynormal). '
+    # """
+    # hover_delay_short: float
+    # """
+    # Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+    # """
+    # hover_flags_for_tooltip_mouse: int
+    # """
+    # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
+    # """
+    # hover_flags_for_tooltip_nav: int
+    # """
+    # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
+    # """
+    # hover_stationary_delay: float
+    # """
+    # Behaviors
+    # Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
+    # """
     indent_spacing: float
     """
     Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
@@ -5217,16 +5257,6 @@ class ImGuiTextFilter:
 
     def is_active(self: ImGuiTextFilter) -> bool: ...
     def pass_filter(self: ImGuiTextFilter, text: str) -> bool: ...
-
-class ImGuiTextFilter_ImGuiTextRange:
-    """
-    [Internal]
-    """
-    pass
-    # b: str
-    # e: str
-    # def empty(self: ImGuiTextFilter_ImGuiTextRange) -> bool: ...
-    # def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange) -> None: ...
 
 class ImGuiViewport:
     """

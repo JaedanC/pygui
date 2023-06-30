@@ -583,7 +583,7 @@ INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL = ccimgui.ImGuiInputTextFlags_EscapeClearsAll
 TREE_NODE_FLAGS_NONE = ccimgui.ImGuiTreeNodeFlags_None
 TREE_NODE_FLAGS_SELECTED = ccimgui.ImGuiTreeNodeFlags_Selected
 TREE_NODE_FLAGS_FRAMED = ccimgui.ImGuiTreeNodeFlags_Framed
-TREE_NODE_FLAGS_ALLOW_ITEM_OVERLAP = ccimgui.ImGuiTreeNodeFlags_AllowItemOverlap
+TREE_NODE_FLAGS_ALLOW_OVERLAP = ccimgui.ImGuiTreeNodeFlags_AllowOverlap
 TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN = ccimgui.ImGuiTreeNodeFlags_NoTreePushOnOpen
 TREE_NODE_FLAGS_NO_AUTO_OPEN_ON_LOG = ccimgui.ImGuiTreeNodeFlags_NoAutoOpenOnLog
 TREE_NODE_FLAGS_DEFAULT_OPEN = ccimgui.ImGuiTreeNodeFlags_DefaultOpen
@@ -612,7 +612,7 @@ SELECTABLE_FLAGS_DONT_CLOSE_POPUPS = ccimgui.ImGuiSelectableFlags_DontClosePopup
 SELECTABLE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImGuiSelectableFlags_SpanAllColumns
 SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK = ccimgui.ImGuiSelectableFlags_AllowDoubleClick
 SELECTABLE_FLAGS_DISABLED = ccimgui.ImGuiSelectableFlags_Disabled
-SELECTABLE_FLAGS_ALLOW_ITEM_OVERLAP = ccimgui.ImGuiSelectableFlags_AllowItemOverlap
+SELECTABLE_FLAGS_ALLOW_OVERLAP = ccimgui.ImGuiSelectableFlags_AllowOverlap
 COMBO_FLAGS_NONE = ccimgui.ImGuiComboFlags_None
 COMBO_FLAGS_POPUP_ALIGN_LEFT = ccimgui.ImGuiComboFlags_PopupAlignLeft
 COMBO_FLAGS_HEIGHT_SMALL = ccimgui.ImGuiComboFlags_HeightSmall
@@ -726,13 +726,18 @@ HOVERED_FLAGS_NO_POPUP_HIERARCHY = ccimgui.ImGuiHoveredFlags_NoPopupHierarchy
 HOVERED_FLAGS_DOCK_HIERARCHY = ccimgui.ImGuiHoveredFlags_DockHierarchy
 HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_POPUP = ccimgui.ImGuiHoveredFlags_AllowWhenBlockedByPopup
 HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_ACTIVE_ITEM = ccimgui.ImGuiHoveredFlags_AllowWhenBlockedByActiveItem
-HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED = ccimgui.ImGuiHoveredFlags_AllowWhenOverlapped
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_ITEM = ccimgui.ImGuiHoveredFlags_AllowWhenOverlappedByItem
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_WINDOW = ccimgui.ImGuiHoveredFlags_AllowWhenOverlappedByWindow
 HOVERED_FLAGS_ALLOW_WHEN_DISABLED = ccimgui.ImGuiHoveredFlags_AllowWhenDisabled
 HOVERED_FLAGS_NO_NAV_OVERRIDE = ccimgui.ImGuiHoveredFlags_NoNavOverride
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED = ccimgui.ImGuiHoveredFlags_AllowWhenOverlapped
 HOVERED_FLAGS_RECT_ONLY = ccimgui.ImGuiHoveredFlags_RectOnly
 HOVERED_FLAGS_ROOT_AND_CHILD_WINDOWS = ccimgui.ImGuiHoveredFlags_RootAndChildWindows
-HOVERED_FLAGS_DELAY_NORMAL = ccimgui.ImGuiHoveredFlags_DelayNormal
+HOVERED_FLAGS_FOR_TOOLTIP = ccimgui.ImGuiHoveredFlags_ForTooltip
+HOVERED_FLAGS_STATIONARY = ccimgui.ImGuiHoveredFlags_Stationary
+HOVERED_FLAGS_DELAY_NONE = ccimgui.ImGuiHoveredFlags_DelayNone
 HOVERED_FLAGS_DELAY_SHORT = ccimgui.ImGuiHoveredFlags_DelayShort
+HOVERED_FLAGS_DELAY_NORMAL = ccimgui.ImGuiHoveredFlags_DelayNormal
 HOVERED_FLAGS_NO_SHARED_DELAY = ccimgui.ImGuiHoveredFlags_NoSharedDelay
 DOCK_NODE_FLAGS_NONE = ccimgui.ImGuiDockNodeFlags_None
 DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY = ccimgui.ImGuiDockNodeFlags_KeepAliveOnly
@@ -1363,6 +1368,23 @@ def begin_group():
 
 # [Function]
 # ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def begin_item_tooltip():
+    """
+    Tooltips: helper for showing a tooltip when hovering an item
+    - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
+    - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    Begin/append a tooltip window if preceding item was hovered.
+    """
+    cdef bool res = ccimgui.ImGui_BeginItemTooltip()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
@@ -1715,7 +1737,7 @@ def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.
 def begin_tooltip():
     """
     Tooltips
-    - Tooltip are windows following the mouse. They do not take focus away.
+    - Tooltips are windows following the mouse. They do not take focus away.
     Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
     """
     cdef bool res = ccimgui.ImGui_BeginTooltip()
@@ -3463,7 +3485,7 @@ def end_table():
 # ?returns(None)
 def end_tooltip():
     """
-    Only call endtooltip() if begintooltip() returns true!
+    Only call endtooltip() if begintooltip()/beginitemtooltip() returns true!
     """
     ccimgui.ImGui_EndTooltip()
 # [End Function]
@@ -7835,19 +7857,6 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_item_allow_overlap():
-    """
-    Allow last item to be overlapped by a subsequent item. sometimes useful with invisible buttons, selectables, etc. to catch unused area.
-    """
-    ccimgui.ImGui_SetItemAllowOverlap()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(True)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
 def set_item_default_focus():
     """
     Focus, Activation
@@ -7855,6 +7864,33 @@ def set_item_default_focus():
     Make last item the default focused item of a window.
     """
     ccimgui.ImGui_SetItemDefaultFocus()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_item_tooltip(fmt: str):
+    """
+    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    """
+    ccimgui.ImGui_SetItemTooltip(
+        _bytes(fmt)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(True)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_item_tooltip_v(fmt: str):
+    ccimgui.ImGui_SetItemTooltipV(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -7930,6 +7966,20 @@ def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
     ccimgui.ImGui_SetNextFrameWantCaptureMouse(
         want_capture_mouse
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_next_item_allow_overlap():
+    """
+    Overlapping mode
+    Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
+    """
+    ccimgui.ImGui_SetNextItemAllowOverlap()
 # [End Function]
 
 # [Function]
@@ -16296,11 +16346,10 @@ cdef class ImGuiIO:
     @property
     def config_debug_begin_return_value_once(self):
         """
-        Debug options
-        - tools to test correct Begin/End and BeginChild/EndChild behaviors.
-        - presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
-        this is inconsistent with other BeginXXX functions and create confusion for many users.
-        - we expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
+        Tools to test correct Begin/End and BeginChild/EndChild behaviors.
+        Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
+        This is inconsistent with other BeginXXX functions and create confusion for many users.
+        We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
         = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueOnce
@@ -16320,9 +16369,9 @@ cdef class ImGuiIO:
     @property
     def config_debug_ignore_focus_loss(self):
         """
-        - option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-        - backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-        - consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+        Option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+        Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
+        Consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
         = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
@@ -16331,6 +16380,26 @@ cdef class ImGuiIO:
     def config_debug_ignore_focus_loss(self, value: bool):
         # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
         raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_debug_ini_settings(self):
+        """
+        Option to audit .ini data
+        = false  // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIniSettings
+        return res
+    @config_debug_ini_settings.setter
+    def config_debug_ini_settings(self, value: bool):
+        dereference(self._ptr).ConfigDebugIniSettings = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16859,44 +16928,6 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def hover_delay_normal(self):
-        """
-        = 0.30 sec   // delay on hovering before isitemhovered(imguihoveredflags_delaynormal) returns true.
-        """
-        cdef float res = dereference(self._ptr).HoverDelayNormal
-        return res
-    @hover_delay_normal.setter
-    def hover_delay_normal(self, value: float):
-        # dereference(self._ptr).HoverDelayNormal = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def hover_delay_short(self):
-        """
-        = 0.10 sec   // delay on hovering before isitemhovered(imguihoveredflags_delayshort) returns true.
-        """
-        cdef float res = dereference(self._ptr).HoverDelayShort
-        return res
-    @hover_delay_short.setter
-    def hover_delay_short(self, value: float):
-        # dereference(self._ptr).HoverDelayShort = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(str)
     @property
     def ini_filename(self):
@@ -17378,6 +17409,8 @@ cdef class ImGuiIO:
     @property
     def mouse_double_click_time(self):
         """
+        Inputs Behaviors
+        (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
         = 0.30f  // time for a double-click, in seconds.
         """
         cdef float res = dereference(self._ptr).MouseDoubleClickTime
@@ -18950,20 +18983,10 @@ cdef class ImGuiListClipper:
         also be freed with destroy().
         """
         cdef ccimgui.ImGuiListClipper* clipper = <ccimgui.ImGuiListClipper*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiListClipper))
-
-        # Since DearBindings doesn't expose constructors yet, we will mimic the behaviour of a constructor
-        # ImGuiListClipper::ImGuiListClipper()
-        # {
-        #     memset(this, 0, sizeof(*this));
-        #     Ctx = ImGui::GetCurrentContext();
-        #     IM_ASSERT(Ctx != NULL);
-        #     ItemsCount = -1;
-        # }
+        # DearBindings doesn't expose constructors but zero initialisation has
+        # been added for this class.
 
         memset(clipper, 0, sizeof(ccimgui.ImGuiListClipper))
-        clipper.Ctx = ccimgui.ImGui_GetCurrentContext()
-        assert clipper.Ctx != NULL
-        clipper.ItemsCount = -1
         return ImGuiListClipper.from_heap_ptr(clipper)
     # [End Method]
 
@@ -21011,6 +21034,102 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def hover_delay_normal(self):
+        """
+        Delay for isitemhovered(imguihoveredflags_delaynormal). '
+        """
+        cdef float res = dereference(self._ptr).HoverDelayNormal
+        return res
+    @hover_delay_normal.setter
+    def hover_delay_normal(self, value: float):
+        # dereference(self._ptr).HoverDelayNormal = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def hover_delay_short(self):
+        """
+        Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+        """
+        cdef float res = dereference(self._ptr).HoverDelayShort
+        return res
+    @hover_delay_short.setter
+    def hover_delay_short(self, value: float):
+        # dereference(self._ptr).HoverDelayShort = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def hover_flags_for_tooltip_mouse(self):
+        """
+        Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
+        """
+        cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipMouse
+        return res
+    @hover_flags_for_tooltip_mouse.setter
+    def hover_flags_for_tooltip_mouse(self, value: int):
+        # dereference(self._ptr).HoverFlagsForTooltipMouse = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def hover_flags_for_tooltip_nav(self):
+        """
+        Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
+        """
+        cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipNav
+        return res
+    @hover_flags_for_tooltip_nav.setter
+    def hover_flags_for_tooltip_nav(self, value: int):
+        # dereference(self._ptr).HoverFlagsForTooltipNav = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def hover_stationary_delay(self):
+        """
+        Behaviors
+        Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
+        """
+        cdef float res = dereference(self._ptr).HoverStationaryDelay
+        return res
+    @hover_stationary_delay.setter
+    def hover_stationary_delay(self, value: float):
+        # dereference(self._ptr).HoverStationaryDelay = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -22082,7 +22201,7 @@ cdef class ImGuiTextFilter:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 cdef class ImGuiTextFilter_ImGuiTextRange:
     """
