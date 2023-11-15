@@ -26,6 +26,7 @@ cdef extern from "cimgui.h":
     ctypedef struct ImVector_ImVec4
     ctypedef struct ImVector_ImTextureID
     ctypedef struct ImVector_ImVec2
+    ctypedef struct ImVector_ImDrawListPtr
     ctypedef struct ImVector_ImU32
     ctypedef struct ImVector_ImFontPtr
     ctypedef struct ImVector_ImFontAtlasCustomRect
@@ -95,6 +96,7 @@ cdef extern from "cimgui.h":
     ctypedef int ImFontAtlasFlags          # -> enum imfontatlasflags_     // flags: for imfontatlas build
     ctypedef int ImGuiBackendFlags         # -> enum imguibackendflags_    // flags: for io.backendflags
     ctypedef int ImGuiButtonFlags          # -> enum imguibuttonflags_     // flags: for invisiblebutton()
+    ctypedef int ImGuiChildFlags           # -> enum imguichildflags_      // flags: for beginchild()
     ctypedef int ImGuiColorEditFlags       # -> enum imguicoloreditflags_  // flags: for coloredit4(), colorpicker4() etc.
     ctypedef int ImGuiConfigFlags          # -> enum imguiconfigflags_     // flags: for io.configflags
     ctypedef int ImGuiComboFlags           # -> enum imguicomboflags_      // flags: for begincombo()
@@ -131,8 +133,8 @@ cdef extern from "cimgui.h":
 
     # Character types
     # (we generally use UTF-8 encoded string in the API. This is storage specifically for a decoded character used for keyboard input and display)
-    ctypedef unsigned short ImWchar16      # A single decoded u16 character/code point. we encode them as multi bytes utf-8 when used in strings.
     ctypedef unsigned int ImWchar32        # A single decoded u32 character/code point. we encode them as multi bytes utf-8 when used in strings.
+    ctypedef unsigned short ImWchar16      # A single decoded u16 character/code point. we encode them as multi bytes utf-8 when used in strings.
     ctypedef ImWchar16 ImWchar
 
     # Callback and functions types
@@ -162,7 +164,6 @@ cdef extern from "cimgui.h":
         ImGuiWindowFlags_NoBringToFrontOnFocus         # Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
         ImGuiWindowFlags_AlwaysVerticalScrollbar       # Always show vertical scrollbar (even if contentsize.y < size.y)
         ImGuiWindowFlags_AlwaysHorizontalScrollbar     # Always show horizontal scrollbar (even if contentsize.x < size.x)
-        ImGuiWindowFlags_AlwaysUseWindowPadding        # Ensure child windows without border uses style.windowpadding (ignored by default for non-bordered child windows, because more convenient)
         ImGuiWindowFlags_NoNavInputs                   # No gamepad/keyboard navigation within the window
         ImGuiWindowFlags_NoNavFocus                    # No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by ctrl+tab)
         ImGuiWindowFlags_UnsavedDocument               # Display a dot next to the title. when used in a tab/docking context, tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
@@ -177,6 +178,26 @@ cdef extern from "cimgui.h":
         ImGuiWindowFlags_Modal                         # Don't use! for internal use by beginpopupmodal()
         ImGuiWindowFlags_ChildMenu                     # Don't use! for internal use by beginmenu()
         ImGuiWindowFlags_DockNodeHost                  # Don't use! for internal use by begin()/newframe()
+
+    # Flags for ImGui::BeginChild()
+    # (Legacy: bit 0 must always correspond to ImGuiChildFlags_Border to be backward compatible with old API using 'bool border'.
+    # About using AutoResizeX/AutoResizeY flags:
+    # - May be combined with SetNextWindowSizeConstraints() to set a min/max size for each axis (see "Demo->Child->Auto-resize with Constraints").
+    # - Size measurement for a given axis is only performed when the child window is within visible boundaries, or is just appearing.
+    # - This allows BeginChild() to return false when not within boundaries (e.g. when scrolling), which is more optimal. BUT it won't update its auto-size while clipped.
+    # While not perfect, it is a better default behavior as the always-on performance gain is more valuable than the occasional "resizing after becoming visible again" glitch.
+    # - You may also use ImGuiChildFlags_AlwaysAutoResize to force an update even when child window is not in view.
+    # HOWEVER PLEASE UNDERSTAND THAT DOING SO WILL PREVENT BeginChild() FROM EVER RETURNING FALSE, disabling benefits of coarse clipping.
+    ctypedef enum ImGuiChildFlags_:
+        ImGuiChildFlags_None
+        ImGuiChildFlags_Border                     # Show an outer border and enable windowpadding. (important: this is always == 1 for legacy reason)
+        ImGuiChildFlags_AlwaysUseWindowPadding     # Pad with style.windowpadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
+        ImGuiChildFlags_ResizeX                    # Allow resize from right border (layout direction). enable .ini saving (unless imguiwindowflags_nosavedsettings passed to window flags)
+        ImGuiChildFlags_ResizeY                    # Allow resize from bottom border (layout direction). '
+        ImGuiChildFlags_AutoResizeX                # Enable auto-resizing width. read 'important: size measurement' details above.
+        ImGuiChildFlags_AutoResizeY                # Enable auto-resizing height. read 'important: size measurement' details above.
+        ImGuiChildFlags_AlwaysAutoResize           # Combined with autoresizex/autoresizey. always measure size even when child is hidden, always return true, always disable clipping optimization! not recommended.
+        ImGuiChildFlags_FrameStyle                 # Style the child window like a framed item: use framebg, framerounding, framebordersize, framepadding instead of childbg, childrounding, childbordersize, windowpadding.
 
     # Flags for ImGui::InputText()
     # (Those are per-item flags. There are shared flags in ImGuiIO: io.ConfigInputTextCursorBlink and io.ConfigInputTextEnterKeepActive)
@@ -216,10 +237,11 @@ cdef extern from "cimgui.h":
         ImGuiTreeNodeFlags_OpenOnDoubleClick        # Need double-click to open node
         ImGuiTreeNodeFlags_OpenOnArrow              # Only open when clicking on the arrow part. if imguitreenodeflags_openondoubleclick is also set, single-click arrow or double-click all box to open.
         ImGuiTreeNodeFlags_Leaf                     # No collapsing, no arrow (use as a convenience for leaf nodes).
-        ImGuiTreeNodeFlags_Bullet                   # Display a bullet instead of arrow
+        ImGuiTreeNodeFlags_Bullet                   # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
         ImGuiTreeNodeFlags_FramePadding             # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
         ImGuiTreeNodeFlags_SpanAvailWidth           # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line. in the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
         ImGuiTreeNodeFlags_SpanFullWidth            # Extend hit box to the left-most and right-most edges (bypass the indented area).
+        ImGuiTreeNodeFlags_SpanAllColumns           # Frame will span all columns of its container table (text will still fit in current column)
         ImGuiTreeNodeFlags_NavLeftJumpsBackHere     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
         ImGuiTreeNodeFlags_CollapsingHeader
 
@@ -248,7 +270,7 @@ cdef extern from "cimgui.h":
     ctypedef enum ImGuiSelectableFlags_:
         ImGuiSelectableFlags_None
         ImGuiSelectableFlags_DontClosePopups      # Clicking this doesn't close parent popup window
-        ImGuiSelectableFlags_SpanAllColumns       # Selectable frame can span all columns (text will still fit in current column)
+        ImGuiSelectableFlags_SpanAllColumns       # Frame will span all columns of its container table (text will still fit in current column)
         ImGuiSelectableFlags_AllowDoubleClick     # Generate press events on double clicks too
         ImGuiSelectableFlags_Disabled             # Cannot be selected, display grayed out text
         ImGuiSelectableFlags_AllowOverlap         # (wip) hit testing to allow subsequent widgets to overlap this one
@@ -256,13 +278,14 @@ cdef extern from "cimgui.h":
     # Flags for ImGui::BeginCombo()
     ctypedef enum ImGuiComboFlags_:
         ImGuiComboFlags_None
-        ImGuiComboFlags_PopupAlignLeft     # Align the popup toward the left by default
-        ImGuiComboFlags_HeightSmall        # Max ~4 items visible. tip: if you want your combo popup to be a specific size you can use setnextwindowsizeconstraints() prior to calling begincombo()
-        ImGuiComboFlags_HeightRegular      # Max ~8 items visible (default)
-        ImGuiComboFlags_HeightLarge        # Max ~20 items visible
-        ImGuiComboFlags_HeightLargest      # As many fitting items as possible
-        ImGuiComboFlags_NoArrowButton      # Display on the preview box without the square arrow button
-        ImGuiComboFlags_NoPreview          # Display only a square arrow button
+        ImGuiComboFlags_PopupAlignLeft      # Align the popup toward the left by default
+        ImGuiComboFlags_HeightSmall         # Max ~4 items visible. tip: if you want your combo popup to be a specific size you can use setnextwindowsizeconstraints() prior to calling begincombo()
+        ImGuiComboFlags_HeightRegular       # Max ~8 items visible (default)
+        ImGuiComboFlags_HeightLarge         # Max ~20 items visible
+        ImGuiComboFlags_HeightLargest       # As many fitting items as possible
+        ImGuiComboFlags_NoArrowButton       # Display on the preview box without the square arrow button
+        ImGuiComboFlags_NoPreview           # Display only a square arrow button
+        ImGuiComboFlags_WidthFitPreview     # Width dynamically calculated from preview contents
         ImGuiComboFlags_HeightMask_
 
     # Flags for ImGui::BeginTabBar()
@@ -349,6 +372,7 @@ cdef extern from "cimgui.h":
         ImGuiTableFlags_ScrollY                        # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
         ImGuiTableFlags_SortMulti                      # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
         ImGuiTableFlags_SortTristate                   # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
+        ImGuiTableFlags_HighlightHoveredColumn         # Highlight column headers when hovered (may evolve into a fuller highlight)
         ImGuiTableFlags_SizingMask_
 
     # Flags for ImGui::TableSetupColumn()
@@ -366,12 +390,13 @@ cdef extern from "cimgui.h":
         ImGuiTableColumnFlags_NoSort                   # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
         ImGuiTableColumnFlags_NoSortAscending          # Disable ability to sort in the ascending direction.
         ImGuiTableColumnFlags_NoSortDescending         # Disable ability to sort in the descending direction.
-        ImGuiTableColumnFlags_NoHeaderLabel            # Tableheadersrow() will not submit label for this column. convenient for some small columns. name will still appear in context menu.
+        ImGuiTableColumnFlags_NoHeaderLabel            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
         ImGuiTableColumnFlags_NoHeaderWidth            # Disable header text width contribution to automatic column width.
         ImGuiTableColumnFlags_PreferSortAscending      # Make the initial sort direction ascending when first sorting on this column (default).
         ImGuiTableColumnFlags_PreferSortDescending     # Make the initial sort direction descending when first sorting on this column.
         ImGuiTableColumnFlags_IndentEnable             # Use current indent value when entering cell (default for column 0).
         ImGuiTableColumnFlags_IndentDisable            # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
+        ImGuiTableColumnFlags_AngledHeader             # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
         ImGuiTableColumnFlags_IsEnabled                # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
         ImGuiTableColumnFlags_IsVisible                # Status: is visible == is enabled and not clipped by scrolling.
         ImGuiTableColumnFlags_IsSorted                 # Status: is currently part of the sort specs
@@ -442,12 +467,13 @@ cdef extern from "cimgui.h":
     # FIXME-DOCK: Also see ImGuiDockNodeFlagsPrivate_ which may involve using the WIP and internal DockBuilder api.
     ctypedef enum ImGuiDockNodeFlags_:
         ImGuiDockNodeFlags_None
-        ImGuiDockNodeFlags_KeepAliveOnly              # Shared       // don't display the dockspace node but keep it alive. windows docked into this dockspace node won't be undocked.
-        ImGuiDockNodeFlags_NoDockingInCentralNode     # Shared       // disable docking inside the central node, which will be always kept empty.
-        ImGuiDockNodeFlags_PassthruCentralNode        # Shared       // enable passthru dockspace: 1) dockspace() will render a imguicol_windowbg background covering everything excepted the central node when empty. meaning the host window should probably use setnextwindowbgalpha(0.0f) prior to begin() when using this. 2) when central node is empty: let inputs pass-through + won't display a dockingemptybg background. see demo for details.
-        ImGuiDockNodeFlags_NoSplit                    # Shared/local // disable splitting the node into smaller nodes. useful e.g. when embedding dockspaces into a main root one (the root one may have splitting disabled to reduce confusion). note: when turned off, existing splits will be preserved.
-        ImGuiDockNodeFlags_NoResize                   # Shared/local // disable resizing node using the splitter/separators. useful with programmatically setup dockspaces.
-        ImGuiDockNodeFlags_AutoHideTabBar             # Shared/local // tab bar will automatically hide when there is a single window in the dock node.
+        ImGuiDockNodeFlags_KeepAliveOnly                # Don't display the dockspace node but keep it alive. windows docked into this dockspace node won't be undocked.
+        ImGuiDockNodeFlags_NoDockingOverCentralNode     # Disable docking over the central node, which will be always kept empty.
+        ImGuiDockNodeFlags_PassthruCentralNode          # Enable passthru dockspace: 1) dockspace() will render a imguicol_windowbg background covering everything excepted the central node when empty. meaning the host window should probably use setnextwindowbgalpha(0.0f) prior to begin() when using this. 2) when central node is empty: let inputs pass-through + won't display a dockingemptybg background. see demo for details.
+        ImGuiDockNodeFlags_NoDockingSplit               # Disable other windows/nodes from splitting this node.
+        ImGuiDockNodeFlags_NoResize                     # Saved // disable resizing node using the splitter/separators. useful with programmatically setup dockspaces.
+        ImGuiDockNodeFlags_AutoHideTabBar               # Tab bar will automatically hide when there is a single window in the dock node.
+        ImGuiDockNodeFlags_NoUndocking                  # Disable undocking this node.
 
     # Flags for ImGui::BeginDragDropSource(), ImGui::AcceptDragDropPayload()
     ctypedef enum ImGuiDragDropFlags_:
@@ -572,6 +598,18 @@ cdef extern from "cimgui.h":
         ImGuiKey_F10
         ImGuiKey_F11
         ImGuiKey_F12
+        ImGuiKey_F13
+        ImGuiKey_F14
+        ImGuiKey_F15
+        ImGuiKey_F16
+        ImGuiKey_F17
+        ImGuiKey_F18
+        ImGuiKey_F19
+        ImGuiKey_F20
+        ImGuiKey_F21
+        ImGuiKey_F22
+        ImGuiKey_F23
+        ImGuiKey_F24
         ImGuiKey_Apostrophe              # '
         ImGuiKey_Comma                   # ,
         ImGuiKey_Minus                   # -
@@ -605,6 +643,8 @@ cdef extern from "cimgui.h":
         ImGuiKey_KeypadAdd
         ImGuiKey_KeypadEnter
         ImGuiKey_KeypadEqual
+        ImGuiKey_AppBack                 # Available on some keyboard/mouses. often referred as 'browser back'
+        ImGuiKey_AppForward
         ImGuiKey_GamepadStart            # Menu (xbox)      + (switch)   start/options (ps)
         ImGuiKey_GamepadBack             # View (xbox)      - (switch)   share (ps)
         ImGuiKey_GamepadFaceLeft         # X (xbox)         y (switch)   square (ps)        // tap: toggle menu. hold: windowing mode (focus/move/resize windows)
@@ -771,11 +811,13 @@ cdef extern from "cimgui.h":
         ImGuiStyleVar_GrabMinSize                 # Float     grabminsize
         ImGuiStyleVar_GrabRounding                # Float     grabrounding
         ImGuiStyleVar_TabRounding                 # Float     tabrounding
+        ImGuiStyleVar_TabBarBorderSize            # Float     tabbarbordersize
         ImGuiStyleVar_ButtonTextAlign             # Imvec2    buttontextalign
         ImGuiStyleVar_SelectableTextAlign         # Imvec2    selectabletextalign
         ImGuiStyleVar_SeparatorTextBorderSize     # Float  separatortextbordersize
         ImGuiStyleVar_SeparatorTextAlign          # Imvec2    separatortextalign
         ImGuiStyleVar_SeparatorTextPadding        # Imvec2    separatortextpadding
+        ImGuiStyleVar_DockingSeparatorSize        # Float     dockingseparatorsize
         ImGuiStyleVar_COUNT
 
     # Flags for InvisibleButton() [extended in imgui_internal.h]
@@ -1021,6 +1063,12 @@ cdef extern from "cimgui.h":
         ImVec2* Data
 
 
+    ctypedef struct ImVector_ImDrawListPtr:
+        int Size
+        int Capacity
+        ImDrawList** Data
+
+
     ctypedef struct ImVector_ImU32:
         int Size
         int Capacity
@@ -1087,7 +1135,7 @@ cdef extern from "cimgui.h":
         float FrameBorderSize                           # Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
         ImVec2 ItemSpacing                              # Horizontal and vertical spacing between widgets/lines.
         ImVec2 ItemInnerSpacing                         # Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
-        ImVec2 CellPadding                              # Padding within a table cell
+        ImVec2 CellPadding                              # Padding within a table cell. cellpadding.y may be altered between different rows.
         ImVec2 TouchExtraPadding                        # Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
         float IndentSpacing                             # Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
         float ColumnsMinSpacing                         # Minimum horizontal spacing between two columns. preferably > (framepadding.x + 1).
@@ -1099,6 +1147,8 @@ cdef extern from "cimgui.h":
         float TabRounding                               # Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
         float TabBorderSize                             # Thickness of border around tabs.
         float TabMinWidthForCloseButton                 # Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
+        float TabBarBorderSize                          # Thickness of tab-bar separator, which takes on the tab active color to denote focus.
+        float TableAngledHeadersAngle                   # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
         ImGuiDir ColorButtonPosition                    # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
         ImVec2 ButtonTextAlign                          # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
         ImVec2 SelectableTextAlign                      # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
@@ -1107,13 +1157,14 @@ cdef extern from "cimgui.h":
         ImVec2 SeparatorTextPadding                     # Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
         ImVec2 DisplayWindowPadding                     # Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
         ImVec2 DisplaySafeAreaPadding                   # If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
+        float DockingSeparatorSize                      # Thickness of resizing border between docked windows
         float MouseCursorScale                          # Scale software rendered mouse cursor (when io.mousedrawcursor is enabled). we apply per-monitor dpi scaling over this scale. may be removed later.
         bool AntiAliasedLines                           # Enable anti-aliased lines/borders. disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
         bool AntiAliasedLinesUseTex                     # Enable anti-aliased lines/borders using textures where possible. require backend to render with bilinear filtering (not point/nearest filtering). latched at the beginning of the frame (copied to imdrawlist).
         bool AntiAliasedFill                            # Enable anti-aliased edges around filled shapes (rounded rectangles, circles, etc.). disable if you are really tight on cpu/gpu. latched at the beginning of the frame (copied to imdrawlist).
         float CurveTessellationTol                      # Tessellation tolerance when using pathbeziercurveto() without a specific number of segments. decrease for highly tessellated curves (higher quality, more polygons), increase to reduce quality.
         float CircleTessellationMaxError                # Maximum error (in pixels) allowed when using addcircle()/addcirclefilled() or drawing rounded corner rectangles with no explicit segment count specified. decrease for higher quality but more geometry.
-        ImVec4* Colors
+        ImVec4[ImGuiCol_COUNT] Colors
         float HoverStationaryDelay                      # Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
         float HoverDelayShort                           # Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
         float HoverDelayNormal                          # Delay for isitemhovered(imguihoveredflags_delaynormal). '
@@ -1180,6 +1231,7 @@ cdef extern from "cimgui.h":
         void (*SetClipboardTextFn)(void* user_data, const char* text)
         void* ClipboardUserData
         void (*SetPlatformImeDataFn)(ImGuiViewport* viewport, ImGuiPlatformImeData* data)
+        ImWchar PlatformLocaleDecimalPoint                                                                         # '.'              // [experimental] configure decimal point e.g. '.' or ',' useful for some languages (e.g. german), generally pulled from *localeconv()->decimal_point
         bool WantCaptureMouse                                                                                      # Set when dear imgui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).
         bool WantCaptureKeyboard                                                                                   # Set when dear imgui will use keyboard inputs, in this case do not dispatch them to your main game/application (either way, always pass keyboard inputs to imgui). (e.g. inputtext active, or an imgui window is focused and navigation is enabled, etc.).
         bool WantTextInput                                                                                         # Mobile/console: when set, you may display an on-screen keyboard. this is set by dear imgui when it wants textual keyboard input to happen (e.g. when a inputtext widget is active).
@@ -1192,11 +1244,10 @@ cdef extern from "cimgui.h":
         int MetricsRenderIndices                                                                                   # Indices output during last call to render() = number of triangles * 3
         int MetricsRenderWindows                                                                                   # Number of visible windows
         int MetricsActiveWindows                                                                                   # Number of active windows
-        int MetricsActiveAllocations                                                                               # Number of active allocations, updated by memalloc/memfree based on current context. may be off if you have multiple imgui contexts.
         ImVec2 MouseDelta                                                                                          # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
         ImGuiContext* Ctx                                                                                          # Parent ui context (needs to be set explicitly by parent).
         ImVec2 MousePos                                                                                            # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
-        bool* MouseDown                                                                                            # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
+        bool[5] MouseDown                                                                                          # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
         float MouseWheel                                                                                           # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
         float MouseWheelH                                                                                          # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
         ImGuiMouseSource MouseSource                                                                               # Mouse actual input peripheral (mouse/touchscreen/pen).
@@ -1206,23 +1257,23 @@ cdef extern from "cimgui.h":
         bool KeyAlt                                                                                                # Keyboard modifier down: alt
         bool KeySuper                                                                                              # Keyboard modifier down: cmd/super/windows
         ImGuiKeyChord KeyMods                                                                                      # Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. does not contains imguimod_shortcut which is pretranslated). read-only, updated by newframe()
-        ImGuiKeyData* KeysData                                                                                     # Key state for all known keys. use iskeyxxx() functions to access this.
+        ImGuiKeyData[ImGuiKey_KeysData_SIZE] KeysData                                                              # Key state for all known keys. use iskeyxxx() functions to access this.
         bool WantCaptureMouseUnlessPopupClose                                                                      # Alternative to wantcapturemouse: (wantcapturemouse == true && wantcapturemouseunlesspopupclose == false) when a click over void is expected to close a popup.
         ImVec2 MousePosPrev                                                                                        # Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
-        ImVec2* MouseClickedPos                                                                                    # Position at time of clicking
-        double* MouseClickedTime                                                                                   # Time of last click (used to figure out double-click)
-        bool* MouseClicked                                                                                         # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
-        bool* MouseDoubleClicked                                                                                   # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
-        ImU16* MouseClickedCount                                                                                   # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
-        ImU16* MouseClickedLastCount                                                                               # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
-        bool* MouseReleased                                                                                        # Mouse button went from down to !down
-        bool* MouseDownOwned                                                                                       # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
-        bool* MouseDownOwnedUnlessPopupClose                                                                       # Track if button was clicked inside a dear imgui window.
+        ImVec2[5] MouseClickedPos                                                                                  # Position at time of clicking
+        double[5] MouseClickedTime                                                                                 # Time of last click (used to figure out double-click)
+        bool[5] MouseClicked                                                                                       # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
+        bool[5] MouseDoubleClicked                                                                                 # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
+        ImU16[5] MouseClickedCount                                                                                 # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
+        ImU16[5] MouseClickedLastCount                                                                             # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
+        bool[5] MouseReleased                                                                                      # Mouse button went from down to !down
+        bool[5] MouseDownOwned                                                                                     # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
+        bool[5] MouseDownOwnedUnlessPopupClose                                                                     # Track if button was clicked inside a dear imgui window.
         bool MouseWheelRequestAxisSwap                                                                             # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
-        float* MouseDownDuration                                                                                   # Duration the mouse button has been down (0.0f == just clicked)
-        float* MouseDownDurationPrev                                                                               # Previous time the mouse button has been down
-        ImVec2* MouseDragMaxDistanceAbs                                                                            # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
-        float* MouseDragMaxDistanceSqr                                                                             # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
+        float[5] MouseDownDuration                                                                                 # Duration the mouse button has been down (0.0f == just clicked)
+        float[5] MouseDownDurationPrev                                                                             # Previous time the mouse button has been down
+        ImVec2[5] MouseDragMaxDistanceAbs                                                                          # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
+        float[5] MouseDragMaxDistanceSqr                                                                           # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
         float PenPressure                                                                                          # Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
         bool AppFocusLost                                                                                          # Only modify via addfocusevent()
         bool AppAcceptingEvents                                                                                    # Only modify via setappacceptingevents()
@@ -1266,10 +1317,10 @@ cdef extern from "cimgui.h":
     # Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
     void ImGuiIO_AddMouseWheelEvent(ImGuiIO* self, float wheel_x, float wheel_y) except +
 
-    # [internal] clear the text input buffer manually
-    void ImGuiIO_ClearInputCharacters(ImGuiIO* self) except +
+    # Clear all incoming events.
+    void ImGuiIO_ClearEventsQueue(ImGuiIO* self) except +
 
-    # [internal] release all keys
+    # Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
     void ImGuiIO_ClearInputKeys(ImGuiIO* self) except +
 
     # Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
@@ -1345,7 +1396,7 @@ cdef extern from "cimgui.h":
         ImGuiID SourceId           # Source item id
         ImGuiID SourceParentId     # Source parent id (if available)
         int DataFrameCount         # Data timestamp
-        char* DataType             # Data type tag (short user-supplied string, 32 characters max)
+        char[32+1] DataType        # Data type tag (short user-supplied string, 32 characters max)
         bool Preview               # Set when acceptdragdroppayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)
         bool Delivery              # Set when acceptdragdroppayload() was called and mouse button is released over the target item.
 
@@ -1359,7 +1410,7 @@ cdef extern from "cimgui.h":
         ImGuiID ColumnUserID                 # User id of the column (if specified by a tablesetupcolumn() call)
         ImS16 ColumnIndex                    # Index of the column
         ImS16 SortOrder                      # Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
-        ImGuiSortDirection SortDirection     # Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
+        ImGuiSortDirection SortDirection     # Imguisortdirection_ascending or imguisortdirection_descending
 
 
     # Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
@@ -1382,7 +1433,7 @@ cdef extern from "cimgui.h":
 
     # Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"
     ctypedef struct ImGuiTextFilter:
-        char* InputBuf
+        char[256] InputBuf
         ImVector_ImGuiTextFilter_ImGuiTextRange Filters
         int CountGrep
 
@@ -1429,7 +1480,7 @@ cdef extern from "cimgui.h":
         ImVector_ImGuiStorage_ImGuiStoragePair Data
 
 
-    # For quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
+    # Advanced: for quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
     void ImGuiStorage_BuildSortByKey(ImGuiStorage* self) except +
 
     # - Get***() functions find pair, never add/allocate. Pairs are sorted so a query is O(log N)
@@ -1452,7 +1503,7 @@ cdef extern from "cimgui.h":
     void* ImGuiStorage_GetVoidPtr(const ImGuiStorage* self, ImGuiID key) except +
     void** ImGuiStorage_GetVoidPtrRef(ImGuiStorage* self, ImGuiID key, void* default_val) except +
 
-    # Use on your own storage if you know only integer are being stored (open/close all tree nodes)
+    # Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
     void ImGuiStorage_SetAllInt(ImGuiStorage* self, int val) except +
     void ImGuiStorage_SetBool(ImGuiStorage* self, ImGuiID key, bool val) except +
     void ImGuiStorage_SetFloat(ImGuiStorage* self, ImGuiID key, float val) except +
@@ -1493,10 +1544,12 @@ cdef extern from "cimgui.h":
     # Automatically called on the last call of step() that returns false.
     void ImGuiListClipper_End(ImGuiListClipper* self) except +
 
-    # Call IncludeRangeByIndices() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+    # Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
     # (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+    void ImGuiListClipper_IncludeItemByIndex(ImGuiListClipper* self, int item_index) except +
+
     # Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
-    void ImGuiListClipper_IncludeRangeByIndices(ImGuiListClipper* self, int item_begin, int item_end) except +
+    void ImGuiListClipper_IncludeItemsByIndex(ImGuiListClipper* self, int item_begin, int item_end) except +
 
     # Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
     bool ImGuiListClipper_Step(ImGuiListClipper* self) except +
@@ -1611,6 +1664,14 @@ cdef extern from "cimgui.h":
     # This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
     void ImDrawList_AddDrawCmd(ImDrawList* self) except +
 
+    # Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
+    void ImDrawList_AddEllipse(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col) except +
+    void ImDrawList_AddEllipseEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col, float rot, int num_segments, float thickness) except +
+
+    # Implied rot = 0.0f, num_segments = 0
+    void ImDrawList_AddEllipseFilled(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col) except +
+    void ImDrawList_AddEllipseFilledEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col, float rot, int num_segments) except +
+
     # Image primitives
     # - Read FAQ to understand what ImTextureID is.
     # - "p_min" and "p_max" represent the upper-left and lower-right corners of the rectangle.
@@ -1677,7 +1738,7 @@ cdef extern from "cimgui.h":
     # Advanced: Channels
     # - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
     # - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
-    # - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
+    # - This API shouldn't have been in ImDrawList in the first place!
     # Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
     # Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
     void ImDrawList_ChannelsSplit(ImDrawList* self, int count) except +
@@ -1700,6 +1761,12 @@ cdef extern from "cimgui.h":
     # Stateful path API, add points then finish with PathFillConvex() or PathStroke()
     # - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
     void ImDrawList_PathClear(ImDrawList* self) except +
+
+    # Implied num_segments = 0
+    void ImDrawList_PathEllipticalArcTo(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, float rot, float a_min, float a_max) except +
+
+    # Ellipse
+    void ImDrawList_PathEllipticalArcToEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, float rot, float a_min, float a_max, int num_segments) except +
     void ImDrawList_PathFillConvex(ImDrawList* self, ImU32 col) except +
     void ImDrawList_PathLineTo(ImDrawList* self, ImVec2 pos) except +
     void ImDrawList_PathLineToMergeDuplicate(ImDrawList* self, ImVec2 pos) except +
@@ -1745,18 +1812,19 @@ cdef extern from "cimgui.h":
     # (NB: the style and the naming convention here is a little inconsistent, we currently preserve them for backward compatibility purpose,
     # as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
     ctypedef struct ImDrawData:
-        bool Valid                       # Only valid after render() is called and before the next newframe() is called.
-        int CmdListsCount                # Number of imdrawlist* to render
-        int TotalIdxCount                # For convenience, sum of all imdrawlist's idxbuffer.size
-        int TotalVtxCount                # For convenience, sum of all imdrawlist's vtxbuffer.size
-        ImDrawList** CmdLists            # Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
-        ImVec2 DisplayPos                # Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== getmainviewport()->pos for the main viewport, == (0.0) in most single-viewport applications)
-        ImVec2 DisplaySize               # Size of the viewport to render (== getmainviewport()->size for the main viewport, == io.displaysize in most single-viewport applications)
-        ImVec2 FramebufferScale          # Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
-        ImGuiViewport* OwnerViewport     # Viewport carrying the imdrawdata instance, might be of use to the renderer (generally not).
+        bool Valid                          # Only valid after render() is called and before the next newframe() is called.
+        int CmdListsCount                   # Number of imdrawlist* to render
+        int TotalIdxCount                   # For convenience, sum of all imdrawlist's idxbuffer.size
+        int TotalVtxCount                   # For convenience, sum of all imdrawlist's vtxbuffer.size
+        ImVector_ImDrawListPtr CmdLists     # Array of imdrawlist* to render. the imdrawlists are owned by imguicontext and only pointed to from here.
+        ImVec2 DisplayPos                   # Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== getmainviewport()->pos for the main viewport, == (0.0) in most single-viewport applications)
+        ImVec2 DisplaySize                  # Size of the viewport to render (== getmainviewport()->size for the main viewport, == io.displaysize in most single-viewport applications)
+        ImVec2 FramebufferScale             # Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
+        ImGuiViewport* OwnerViewport        # Viewport carrying the imdrawdata instance, might be of use to the renderer (generally not).
 
 
-    # The imdrawlist are owned by imguicontext!
+    # Helper to add an external draw list into an existing imdrawdata.
+    void ImDrawData_AddDrawList(ImDrawData* self, ImDrawList* draw_list) except +
     void ImDrawData_Clear(ImDrawData* self) except +
 
     # Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
@@ -1771,7 +1839,7 @@ cdef extern from "cimgui.h":
         bool FontDataOwnedByAtlas         # True     // ttf/otf data ownership taken by the container imfontatlas (will delete memory itself).
         int FontNo                        # 0        // index of font within ttf/otf file
         float SizePixels                  # Size in pixels for rasterizer (more or less maps to the resulting font height).
-        int OversampleH                   # 3        // rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal so you can reduce this to 2 to save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
+        int OversampleH                   # 2        // rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
         int OversampleV                   # 1        // rasterize at higher quality for sub-pixel positioning. this is not really useful as we don't use sub-pixel positions on the y axis.
         bool PixelSnapH                   # False    // align every glyph to pixel boundary. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
         ImVec2 GlyphExtraSpacing          # 0, 0     // extra spacing (in pixels) between glyphs. only x axis is supported for now.
@@ -1783,7 +1851,7 @@ cdef extern from "cimgui.h":
         unsigned int FontBuilderFlags     # 0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
         float RasterizerMultiply          # 1.0f     // brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable.
         ImWchar EllipsisChar              # -1       // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
-        char* Name                        # Name (strictly to ease debugging)
+        char[40] Name                     # Name (strictly to ease debugging)
         ImFont* DstFont
 
 
@@ -1860,28 +1928,28 @@ cdef extern from "cimgui.h":
     # - Even though many functions are suffixed with "TTF", OTF data is supported just as well.
     # - This is an old API and it is currently awkward for those and various other reasons! We will address them in the future!
     ctypedef struct ImFontAtlas:
-        ImFontAtlasFlags Flags                         # Build flags (see imfontatlasflags_)
-        ImTextureID TexID                              # User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
-        int TexDesiredWidth                            # Texture width desired by user before build(). must be a power-of-two. if have many glyphs your graphics api have texture size restrictions you may want to increase texture width to decrease height.
-        int TexGlyphPadding                            # Padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
-        bool Locked                                    # Marked as locked by imgui::newframe() so attempt to modify the atlas will assert.
-        void* UserData                                 # Store your own atlas related user-data (if e.g. you have multiple font atlas).
-        bool TexReady                                  # Set when texture was built matching current font input
-        bool TexPixelsUseColors                        # Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format.
-        unsigned char* TexPixelsAlpha8                 # 1 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight
-        unsigned int* TexPixelsRGBA32                  # 4 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight * 4
-        int TexWidth                                   # Texture width calculated during build().
-        int TexHeight                                  # Texture height calculated during build().
-        ImVec2 TexUvScale                              # = (1.0f/texwidth, 1.0f/texheight)
-        ImVec2 TexUvWhitePixel                         # Texture coordinates to a white pixel
-        ImVector_ImFontPtr Fonts                       # Hold all the fonts returned by addfont*. fonts[0] is the default font upon calling imgui::newframe(), use imgui::pushfont()/popfont() to change the current font.
-        ImVector_ImFontAtlasCustomRect CustomRects     # Rectangles for packing custom texture data into the atlas.
-        ImVector_ImFontConfig ConfigData               # Configuration data
-        ImVec4* TexUvLines                             # Uvs for baked anti-aliased lines
-        const ImFontBuilderIO* FontBuilderIO           # Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
-        unsigned int FontBuilderFlags                  # Shared flags (for all fonts) for custom font builder. this is build implementation dependent. per-font override is also available in imfontconfig.
-        int PackIdMouseCursors                         # Custom texture rectangle id for white pixel and mouse cursors
-        int PackIdLines                                # Custom texture rectangle id for baked anti-aliased lines
+        ImFontAtlasFlags Flags                                   # Build flags (see imfontatlasflags_)
+        ImTextureID TexID                                        # User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
+        int TexDesiredWidth                                      # Texture width desired by user before build(). must be a power-of-two. if have many glyphs your graphics api have texture size restrictions you may want to increase texture width to decrease height.
+        int TexGlyphPadding                                      # Padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
+        bool Locked                                              # Marked as locked by imgui::newframe() so attempt to modify the atlas will assert.
+        void* UserData                                           # Store your own atlas related user-data (if e.g. you have multiple font atlas).
+        bool TexReady                                            # Set when texture was built matching current font input
+        bool TexPixelsUseColors                                  # Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format.
+        unsigned char* TexPixelsAlpha8                           # 1 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight
+        unsigned int* TexPixelsRGBA32                            # 4 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight * 4
+        int TexWidth                                             # Texture width calculated during build().
+        int TexHeight                                            # Texture height calculated during build().
+        ImVec2 TexUvScale                                        # = (1.0f/texwidth, 1.0f/texheight)
+        ImVec2 TexUvWhitePixel                                   # Texture coordinates to a white pixel
+        ImVector_ImFontPtr Fonts                                 # Hold all the fonts returned by addfont*. fonts[0] is the default font upon calling imgui::newframe(), use imgui::pushfont()/popfont() to change the current font.
+        ImVector_ImFontAtlasCustomRect CustomRects               # Rectangles for packing custom texture data into the atlas.
+        ImVector_ImFontConfig ConfigData                         # Configuration data
+        ImVec4[IM_DRAWLIST_TEX_LINES_WIDTH_MAX+1] TexUvLines     # Uvs for baked anti-aliased lines
+        const ImFontBuilderIO* FontBuilderIO                     # Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
+        unsigned int FontBuilderFlags                            # Shared flags (for all fonts) for custom font builder. this is build implementation dependent. per-font override is also available in imfontconfig.
+        int PackIdMouseCursors                                   # Custom texture rectangle id for white pixel and mouse cursors
+        int PackIdLines                                          # Custom texture rectangle id for baked anti-aliased lines
 
     int ImFontAtlas_AddCustomRectFontGlyph(ImFontAtlas* self, ImFont* font, ImWchar id_, int width, int height, float advance_x, ImVec2 offset) except +
 
@@ -1901,10 +1969,10 @@ cdef extern from "cimgui.h":
     ImFont* ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(ImFontAtlas* self, const char* compressed_font_data_base85, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
 
     # 'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
-    ImFont* ImFontAtlas_AddFontFromMemoryCompressedTTF(ImFontAtlas* self, const void* compressed_font_data, int compressed_font_size, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
+    ImFont* ImFontAtlas_AddFontFromMemoryCompressedTTF(ImFontAtlas* self, const void* compressed_font_data, int compressed_font_data_size, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
 
     # Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
-    ImFont* ImFontAtlas_AddFontFromMemoryTTF(ImFontAtlas* self, void* font_data, int font_size, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
+    ImFont* ImFontAtlas_AddFontFromMemoryTTF(ImFontAtlas* self, void* font_data, int font_data_size, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
 
     # Build atlas, retrieve pixel data.
     # User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
@@ -1960,7 +2028,7 @@ cdef extern from "cimgui.h":
 
     # Default + vietnamese characters
     const ImWchar* ImFontAtlas_GetGlyphRangesVietnamese(ImFontAtlas* self) except +
-    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2* out_uv_border, ImVec2* out_uv_fill) except +
+    bool ImFontAtlas_GetMouseCursorTexData(ImFontAtlas* self, ImGuiMouseCursor cursor, ImVec2* out_offset, ImVec2* out_size, ImVec2[2]* out_uv_border, ImVec2[2]* out_uv_fill) except +
 
     # 1 byte per-pixel
     void ImFontAtlas_GetTexDataAsAlpha8(ImFontAtlas* self, unsigned char** out_pixels, int* out_width, int* out_height, int* out_bytes_per_pixel) except +
@@ -1975,26 +2043,26 @@ cdef extern from "cimgui.h":
     # Font runtime data and rendering
     # ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
     ctypedef struct ImFont:
-        ImVector_float IndexAdvanceX         # 12-16 // out //            // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this this info, and are often bottleneck in large ui).
-        float FallbackAdvanceX               # 4     // out // = fallbackglyph->advancex
-        float FontSize                       # 4     // in  //            // height of characters/line, set during loading (don't change after loading)
-        ImVector_ImWchar IndexLookup         # 12-16 // out //            // sparse. index glyphs by unicode code-point.
-        ImVector_ImFontGlyph Glyphs          # 12-16 // out //            // all glyphs.
-        const ImFontGlyph* FallbackGlyph     # 4-8   // out // = findglyph(fontfallbackchar)
-        ImFontAtlas* ContainerAtlas          # 4-8   // out //            // what we has been loaded into
-        const ImFontConfig* ConfigData       # 4-8   // in  //            // pointer within containeratlas->configdata
-        short ConfigDataCount                # 2     // in  // ~ 1        // number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
-        ImWchar FallbackChar                 # 2     // out // = fffd/'?' // character used if a glyph isn't found.
-        ImWchar EllipsisChar                 # 2     // out // = '...'/'.'// character used for ellipsis rendering.
-        short EllipsisCharCount              # 1     // out // 1 or 3
-        float EllipsisWidth                  # 4     // out               // width
-        float EllipsisCharStep               # 4     // out               // step between characters when ellipsiscount > 0
-        bool DirtyLookupTables               # 1     // out //
-        float Scale                          # 4     // in  // = 1.f      // base font scale, multiplied by the per-window font scale which you can adjust with setwindowfontscale()
-        float Ascent                         # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
-        float Descent                        # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
-        int MetricsTotalSurface              # 4     // out //            // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
-        ImU8* Used4kPagesMap                 # 2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+        ImVector_float IndexAdvanceX                                  # 12-16 // out //            // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this this info, and are often bottleneck in large ui).
+        float FallbackAdvanceX                                        # 4     // out // = fallbackglyph->advancex
+        float FontSize                                                # 4     // in  //            // height of characters/line, set during loading (don't change after loading)
+        ImVector_ImWchar IndexLookup                                  # 12-16 // out //            // sparse. index glyphs by unicode code-point.
+        ImVector_ImFontGlyph Glyphs                                   # 12-16 // out //            // all glyphs.
+        const ImFontGlyph* FallbackGlyph                              # 4-8   // out // = findglyph(fontfallbackchar)
+        ImFontAtlas* ContainerAtlas                                   # 4-8   // out //            // what we has been loaded into
+        const ImFontConfig* ConfigData                                # 4-8   // in  //            // pointer within containeratlas->configdata
+        short ConfigDataCount                                         # 2     // in  // ~ 1        // number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
+        ImWchar FallbackChar                                          # 2     // out // = fffd/'?' // character used if a glyph isn't found.
+        ImWchar EllipsisChar                                          # 2     // out // = '...'/'.'// character used for ellipsis rendering.
+        short EllipsisCharCount                                       # 1     // out // 1 or 3
+        float EllipsisWidth                                           # 4     // out               // width
+        float EllipsisCharStep                                        # 4     // out               // step between characters when ellipsiscount > 0
+        bool DirtyLookupTables                                        # 1     // out //
+        float Scale                                                   # 4     // in  // = 1.f      // base font scale, multiplied by the per-window font scale which you can adjust with setwindowfontscale()
+        float Ascent                                                  # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+        float Descent                                                 # 4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+        int MetricsTotalSurface                                       # 4     // out //            // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+        ImU8[(IM_UNICODE_CODEPOINT_MAX +1)/4096/8] Used4kPagesMap     # 2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
 
     void ImFont_AddGlyph(ImFont* self, const ImFontConfig* src_cfg, ImWchar c, float x0, float y0, float x1, float y1, float u0, float v0, float u1, float v1, float advance_x) except +
 
@@ -2103,7 +2171,6 @@ cdef extern from "cimgui.h":
 
 
 
-    ImGuiKey GetKeyIndex(ImGuiKey key) except +
 
     # Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
     const ImGuiPayload* ImGui_AcceptDragDropPayload(const char* type_, ImGuiDragDropFlags flags) except +
@@ -2122,25 +2189,30 @@ cdef extern from "cimgui.h":
     # Some information such as 'flags' or 'p_open' will only be considered by the first call to Begin().
     # - Begin() return false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
     # anything to the window. Always call a matching End() for each Begin() call, regardless of its return value!
-    # [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-    # BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-    # returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    # [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
+    # such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
+    # BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     # - Note that the bottom of window stack always contains a window called "Debug".
     bool ImGui_Begin(const char* name, bool* p_open, ImGuiWindowFlags flags) except +
 
     # Child Windows
     # - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
-    # - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
-    # - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
-    # Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
-    # [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-    # BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-    # returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
-    bool ImGui_BeginChild(const char* str_id, ImVec2 size, bool border, ImGuiWindowFlags flags) except +
+    # - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
+    # == 0.0f: use remaining parent window size for this axis.
+    # > 0.0f: use specified size for this axis.
+    # < 0.0f: right/bottom-align to specified distance from available content boundaries.
+    # - Specifying ImGuiChildFlags_AutoResizeX or ImGuiChildFlags_AutoResizeY makes the sizing automatic based on child contents.
+    # Combining both ImGuiChildFlags_AutoResizeX _and_ ImGuiChildFlags_AutoResizeY defeats purpose of a scrolling region and is NOT recommended.
+    # - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
+    # anything to the window. Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
+    # [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
+    # such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
+    # BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    bool ImGui_BeginChild(const char* str_id, ImVec2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) except +
 
-    # Helper to create a child window / scrolling region that looks like a normal widget frame
-    bool ImGui_BeginChildFrame(ImGuiID id_, ImVec2 size, ImGuiWindowFlags flags) except +
-    bool ImGui_BeginChildID(ImGuiID id_, ImVec2 size, bool border, ImGuiWindowFlags flags) except +
+    # Implied size = imvec2(0, 0), child_flags = 0, window_flags = 0
+    bool ImGui_BeginChildIDImVec2ImGuiChildFlags(ImGuiID id_) except +
+    bool ImGui_BeginChildIDImVec2ImGuiChildFlagsEx(ImGuiID id_, ImVec2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) except +
 
     # Widgets: Combo Box (Dropdown)
     # - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.
@@ -2167,15 +2239,16 @@ cdef extern from "cimgui.h":
     # Lock horizontal starting position
     void ImGui_BeginGroup() except +
 
-    # Tooltips: helper for showing a tooltip when hovering an item
-    # - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
-    # - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    # Tooltips: helpers for showing a tooltip when hovering an item
+    # - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
+    # - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
+    # - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
     # Begin/append a tooltip window if preceding item was hovered.
     bool ImGui_BeginItemTooltip() except +
 
     # Widgets: List Boxes
-    # - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
-    # - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
+    # - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
+    # - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.
     # - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
     # - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
     # - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
@@ -2268,7 +2341,8 @@ cdef extern from "cimgui.h":
 
     # Tooltips
     # - Tooltips are windows following the mouse. They do not take focus away.
-    # Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
+    # - A tooltip window can contain items of any types. SetTooltip() is a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom.
+    # Begin/append a tooltip window.
     bool ImGui_BeginTooltip() except +
 
     # Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
@@ -2322,10 +2396,10 @@ cdef extern from "cimgui.h":
     # Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)
     # - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.
     # - You can pass the address of a first float element out of a contiguous structure, e.g. &myvector.x
-    bool ImGui_ColorEdit3(const char* label, float* col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorEdit4(const char* label, float* col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorPicker3(const char* label, float* col, ImGuiColorEditFlags flags) except +
-    bool ImGui_ColorPicker4(const char* label, float* col, ImGuiColorEditFlags flags, const float* ref_col) except +
+    bool ImGui_ColorEdit3(const char* label, float[3]* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorEdit4(const char* label, float[4]* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorPicker3(const char* label, float[3]* col, ImGuiColorEditFlags flags) except +
+    bool ImGui_ColorPicker4(const char* label, float[4]* col, ImGuiColorEditFlags flags, const float* ref_col) except +
 
     # Legacy Columns API (prefer using Tables!)
     # - You can also use SameLine(pos_x) to mimic simplified columns.
@@ -2337,12 +2411,12 @@ cdef extern from "cimgui.h":
     bool ImGui_Combo(const char* label, int* current_item, const char* items_separated_by_zeros) except +
 
     # Implied popup_max_height_in_items = -1
-    bool ImGui_ComboCallback(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count) except +
-    bool ImGui_ComboCallbackEx(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int popup_max_height_in_items) except +
+    bool ImGui_ComboCallback(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count) except +
+    bool ImGui_ComboCallbackEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int popup_max_height_in_items) except +
 
     # Implied popup_max_height_in_items = -1
-    bool ImGui_ComboChar(const char* label, int* current_item, const char** items, int items_count) except +
-    bool ImGui_ComboCharEx(const char* label, int* current_item, const char** items, int items_count, int popup_max_height_in_items) except +
+    bool ImGui_ComboChar(const char* label, int* current_item, const char*const[]* items, int items_count) except +
+    bool ImGui_ComboCharEx(const char* label, int* current_item, const char*const[]* items, int items_count, int popup_max_height_in_items) except +
 
     # Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
     bool ImGui_ComboEx(const char* label, int* current_item, const char* items_separated_by_zeros, int popup_max_height_in_items) except +
@@ -2368,13 +2442,13 @@ cdef extern from "cimgui.h":
     # Docking
     # [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
     # Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
-    # - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking/undocking.
+    # - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
     # - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-    # - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to _enable_ docking/undocking.
+    # - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
     # About dockspaces:
-    # - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     # - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
-    # This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
+    # This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
+    # - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     # - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
     # - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
     # e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
@@ -2402,16 +2476,16 @@ cdef extern from "cimgui.h":
     bool ImGui_DragFloat(const char* label, float* v) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat2(const char* label, float* v) except +
-    bool ImGui_DragFloat2Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat2(const char* label, float[2]* v) except +
+    bool ImGui_DragFloat2Ex(const char* label, float[2]* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat3(const char* label, float* v) except +
-    bool ImGui_DragFloat3Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat3(const char* label, float[3]* v) except +
+    bool ImGui_DragFloat3Ex(const char* label, float[3]* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = '%.3f', flags = 0
-    bool ImGui_DragFloat4(const char* label, float* v) except +
-    bool ImGui_DragFloat4Ex(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragFloat4(const char* label, float[4]* v) except +
+    bool ImGui_DragFloat4Ex(const char* label, float[4]* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # If v_min >= v_max we have no bound
     bool ImGui_DragFloatEx(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -2424,16 +2498,16 @@ cdef extern from "cimgui.h":
     bool ImGui_DragInt(const char* label, int* v) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt2(const char* label, int* v) except +
-    bool ImGui_DragInt2Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt2(const char* label, int[2]* v) except +
+    bool ImGui_DragInt2Ex(const char* label, int[2]* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt3(const char* label, int* v) except +
-    bool ImGui_DragInt3Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt3(const char* label, int[3]* v) except +
+    bool ImGui_DragInt3Ex(const char* label, int[3]* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = '%d', flags = 0
-    bool ImGui_DragInt4(const char* label, int* v) except +
-    bool ImGui_DragInt4Ex(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_DragInt4(const char* label, int[4]* v) except +
+    bool ImGui_DragInt4Ex(const char* label, int[4]* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # If v_min >= v_max we have no bound
     bool ImGui_DragIntEx(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -2454,9 +2528,6 @@ cdef extern from "cimgui.h":
     void ImGui_Dummy(ImVec2 size) except +
     void ImGui_End() except +
     void ImGui_EndChild() except +
-
-    # Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)
-    void ImGui_EndChildFrame() except +
 
     # Only call endcombo() if begincombo() returns true!
     void ImGui_EndCombo() except +
@@ -2551,22 +2622,30 @@ cdef extern from "cimgui.h":
     ImVec2 ImGui_GetContentRegionMax() except +
     ImGuiContext* ImGui_GetCurrentContext() except +
 
-    # Cursor position in window coordinates (relative to window position)
+    # [window-local] cursor position in window coordinates (relative to window position)
     ImVec2 ImGui_GetCursorPos() except +
 
-    # (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc.
+    # [window-local] '
     float ImGui_GetCursorPosX() except +
 
-    # Other functions such as getcursorscreenpos or everything in imdrawlist::
+    # [window-local] '
     float ImGui_GetCursorPosY() except +
 
-    # Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
+    # Layout cursor positioning
+    # - By "cursor" we mean the current output position.
+    # - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
+    # - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    # - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
+    # - Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
+    # - Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
+    # - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates.
+    # Cursor position in absolute coordinates (prefer using this, also more useful to work with imdrawlist api).
     ImVec2 ImGui_GetCursorScreenPos() except +
 
-    # Initial cursor position in window coordinates
+    # [window-local] initial cursor position, in window coordinates
     ImVec2 ImGui_GetCursorStartPos() except +
 
-    # Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
+    # Peek directly into the current payload from anywhere. returns null when drag and drop is finished or inactive. use imguipayload::isdatatype() to test for the payload type.
     const ImGuiPayload* ImGui_GetDragDropPayload() except +
 
     # Valid after render() and until the next call to newframe(). this is what you have to render.
@@ -2621,6 +2700,7 @@ cdef extern from "cimgui.h":
 
     # Get size of last item
     ImVec2 ImGui_GetItemRectSize() except +
+    ImGuiKey ImGui_GetKeyIndex(ImGuiKey key) except +
 
     # [debug] returns english name of the key. those names a provided for debugging purpose and are not meant to be saved persistently not compared.
     const char* ImGui_GetKeyName(ImGuiKey key) except +
@@ -2712,10 +2792,10 @@ cdef extern from "cimgui.h":
     # Get current window height (shortcut for getwindowsize().y)
     float ImGui_GetWindowHeight() except +
 
-    # Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)
+    # Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
     ImVec2 ImGui_GetWindowPos() except +
 
-    # Get current window size
+    # Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
     ImVec2 ImGui_GetWindowSize() except +
 
     # Get viewport currently associated to the current window.
@@ -2726,12 +2806,13 @@ cdef extern from "cimgui.h":
 
     # Widgets: Images
     # - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+    # - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     void ImGui_Image(ImTextureID user_texture_id, ImVec2 size) except +
 
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
-    bool ImGui_ImageButton(const char* str_id, ImTextureID user_texture_id, ImVec2 size) except +
-    bool ImGui_ImageButtonEx(const char* str_id, ImTextureID user_texture_id, ImVec2 size, ImVec2 uv0, ImVec2 uv1, ImVec4 bg_col, ImVec4 tint_col) except +
+    bool ImGui_ImageButton(const char* str_id, ImTextureID user_texture_id, ImVec2 image_size) except +
+    bool ImGui_ImageButtonEx(const char* str_id, ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 bg_col, ImVec4 tint_col) except +
     void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col) except +
 
     # Implied indent_w = 0.0f
@@ -2748,23 +2829,23 @@ cdef extern from "cimgui.h":
     bool ImGui_InputFloat(const char* label, float* v) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat2(const char* label, float* v) except +
-    bool ImGui_InputFloat2Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat2(const char* label, float[2]* v) except +
+    bool ImGui_InputFloat2Ex(const char* label, float[2]* v, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat3(const char* label, float* v) except +
-    bool ImGui_InputFloat3Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat3(const char* label, float[3]* v) except +
+    bool ImGui_InputFloat3Ex(const char* label, float[3]* v, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_InputFloat4(const char* label, float* v) except +
-    bool ImGui_InputFloat4Ex(const char* label, float* v, const char* format_, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputFloat4(const char* label, float[4]* v) except +
+    bool ImGui_InputFloat4Ex(const char* label, float[4]* v, const char* format_, ImGuiInputTextFlags flags) except +
     bool ImGui_InputFloatEx(const char* label, float* v, float step, float step_fast, const char* format_, ImGuiInputTextFlags flags) except +
 
     # Implied step = 1, step_fast = 100, flags = 0
     bool ImGui_InputInt(const char* label, int* v) except +
-    bool ImGui_InputInt2(const char* label, int* v, ImGuiInputTextFlags flags) except +
-    bool ImGui_InputInt3(const char* label, int* v, ImGuiInputTextFlags flags) except +
-    bool ImGui_InputInt4(const char* label, int* v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt2(const char* label, int[2]* v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt3(const char* label, int[3]* v, ImGuiInputTextFlags flags) except +
+    bool ImGui_InputInt4(const char* label, int[4]* v, ImGuiInputTextFlags flags) except +
     bool ImGui_InputIntEx(const char* label, int* v, int step, int step_fast, ImGuiInputTextFlags flags) except +
 
     # Implied p_step = null, p_step_fast = null, format = null, flags = 0
@@ -2840,6 +2921,9 @@ cdef extern from "cimgui.h":
 
     # Is the last item visible? (items may be out of sight because of clipping/scrolling)
     bool ImGui_IsItemVisible() except +
+
+    # Was key chord (mods + key) pressed, e.g. you can pass 'imguimod_ctrl | imguikey_s' as a key-chord. this doesn't do any routing or focus check, please consider using shortcut() function instead.
+    bool ImGui_IsKeyChordPressed(ImGuiKeyChord key_chord) except +
 
     # Inputs Utilities: Keyboard/Mouse/Gamepad
     # - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
@@ -2920,11 +3004,11 @@ cdef extern from "cimgui.h":
     # Display text+label aligned the same way as value+label widgets
     void ImGui_LabelText(const char* label, const char* fmt) except +
     void ImGui_LabelTextV(const char* label, const char* fmt) except +
-    bool ImGui_ListBox(const char* label, int* current_item, const char** items, int items_count, int height_in_items) except +
+    bool ImGui_ListBox(const char* label, int* current_item, const char*const[]* items, int items_count, int height_in_items) except +
 
     # Implied height_in_items = -1
-    bool ImGui_ListBoxCallback(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count) except +
-    bool ImGui_ListBoxCallbackEx(const char* label, int* current_item, bool (*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int height_in_items) except +
+    bool ImGui_ListBoxCallback(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count) except +
+    bool ImGui_ListBoxCallbackEx(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int height_in_items) except +
 
     # Settings/.Ini Utilities
     # - The disk functions are automatically called if io.IniFilename != NULL (default is "imgui.ini").
@@ -3084,7 +3168,7 @@ cdef extern from "cimgui.h":
     # Push word-wrapping position for text*() commands. < 0.0f: no wrapping; 0.0f: wrap to end of window (or column); > 0.0f: wrap at 'wrap_pos_x' position in window local space
     void ImGui_PushTextWrapPos(float wrap_local_pos_x) except +
 
-    # Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
+    # Use with e.g. if (radiobutton('one', my_value==1)) ( my_value = 1; )
     bool ImGui_RadioButton(const char* label, bool active) except +
 
     # Shortcut to handle the above pattern when value is an integer
@@ -3132,13 +3216,7 @@ cdef extern from "cimgui.h":
     # 'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
     bool ImGui_SelectableEx(const char* label, bool selected, ImGuiSelectableFlags flags, ImVec2 size) except +
 
-    # Cursor / Layout
-    # - By "cursor" we mean the current output position.
-    # - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-    # - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
-    # - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-    # Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-    # Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
+    # Other layout functions
     # Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
     void ImGui_Separator() except +
 
@@ -3162,13 +3240,13 @@ cdef extern from "cimgui.h":
     void ImGui_SetColumnWidth(int column_index, float width) except +
     void ImGui_SetCurrentContext(ImGuiContext* ctx) except +
 
-    # Are using the main, absolute coordinate system.
+    # [window-local] '
     void ImGui_SetCursorPos(ImVec2 local_pos) except +
 
-    # Getwindowpos() + getcursorpos() == getcursorscreenpos() etc.)
+    # [window-local] '
     void ImGui_SetCursorPosX(float local_x) except +
 
-    # 
+    # [window-local] '
     void ImGui_SetCursorPosY(float local_y) except +
 
     # Cursor position in absolute coordinates
@@ -3273,7 +3351,7 @@ cdef extern from "cimgui.h":
     # Notify tabbar or docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). for tab-bar: call after begintabbar() and before tab submissions. otherwise call with a window name.
     void ImGui_SetTabItemClosed(const char* tab_or_docked_window_label) except +
 
-    # Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
+    # Set a text-only tooltip. often used after a imgui::isitemhovered() check. override any previous call to settooltip().
     void ImGui_SetTooltip(const char* fmt) except +
     void ImGui_SetTooltipV(const char* fmt) except +
 
@@ -3317,11 +3395,14 @@ cdef extern from "cimgui.h":
     # Add font selector block (not a window), essentially a combo listing the loaded fonts.
     void ImGui_ShowFontSelector(const char* label) except +
 
-    # Create metrics/debugger window. display dear imgui internals: windows, draw commands, various internal state, etc.
-    void ImGui_ShowMetricsWindow(bool* p_open) except +
+    # Implied p_open = null
+    void ImGui_ShowIDStackToolWindow() except +
 
     # Create stack tool window. hover items with mouse to query information about the source of their unique id.
-    void ImGui_ShowStackToolWindow(bool* p_open) except +
+    void ImGui_ShowIDStackToolWindowEx(bool* p_open) except +
+
+    # Create metrics/debugger window. display dear imgui internals: windows, draw commands, various internal state, etc.
+    void ImGui_ShowMetricsWindow(bool* p_open) except +
 
     # Add style editor block (not a window). you can pass in a reference imguistyle structure to compare to, revert to and save to (else it uses the default style)
     void ImGui_ShowStyleEditor(ImGuiStyle* ref) except +
@@ -3346,16 +3427,16 @@ cdef extern from "cimgui.h":
     bool ImGui_SliderFloat(const char* label, float* v, float v_min, float v_max) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat2(const char* label, float* v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat2Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat2(const char* label, float[2]* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat2Ex(const char* label, float[2]* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat3(const char* label, float* v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat3Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat3(const char* label, float[3]* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat3Ex(const char* label, float[3]* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%.3f', flags = 0
-    bool ImGui_SliderFloat4(const char* label, float* v, float v_min, float v_max) except +
-    bool ImGui_SliderFloat4Ex(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderFloat4(const char* label, float[4]* v, float v_min, float v_max) except +
+    bool ImGui_SliderFloat4Ex(const char* label, float[4]* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
     bool ImGui_SliderFloatEx(const char* label, float* v, float v_min, float v_max, const char* format_, ImGuiSliderFlags flags) except +
@@ -3364,16 +3445,16 @@ cdef extern from "cimgui.h":
     bool ImGui_SliderInt(const char* label, int* v, int v_min, int v_max) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt2(const char* label, int* v, int v_min, int v_max) except +
-    bool ImGui_SliderInt2Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt2(const char* label, int[2]* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt2Ex(const char* label, int[2]* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt3(const char* label, int* v, int v_min, int v_max) except +
-    bool ImGui_SliderInt3Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt3(const char* label, int[3]* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt3Ex(const char* label, int[3]* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = '%d', flags = 0
-    bool ImGui_SliderInt4(const char* label, int* v, int v_min, int v_max) except +
-    bool ImGui_SliderInt4Ex(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
+    bool ImGui_SliderInt4(const char* label, int[4]* v, int v_min, int v_max) except +
+    bool ImGui_SliderInt4Ex(const char* label, int[4]* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
     bool ImGui_SliderIntEx(const char* label, int* v, int v_min, int v_max, const char* format_, ImGuiSliderFlags flags) except +
 
     # Implied format = null, flags = 0
@@ -3384,7 +3465,7 @@ cdef extern from "cimgui.h":
     bool ImGui_SliderScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_min, const void* p_max) except +
     bool ImGui_SliderScalarNEx(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_min, const void* p_max, const char* format_, ImGuiSliderFlags flags) except +
 
-    # Button with framepadding=(0,0) to easily embed within text
+    # Button with (framepadding.y == 0) to easily embed within text
     bool ImGui_SmallButton(const char* label) except +
 
     # Add vertical spacing.
@@ -3402,6 +3483,9 @@ cdef extern from "cimgui.h":
 
     # Create a tab behaving like a button. return true when clicked. cannot be selected in the tab bar.
     bool ImGui_TabItemButton(const char* label, ImGuiTabItemFlags flags) except +
+
+    # Submit a row with angled headers for every column with the imguitablecolumnflags_angledheader flag. must be first row.
+    void ImGui_TableAngledHeadersRow() except +
 
     # Return number of columns (value passed to begintable)
     int ImGui_TableGetColumnCount() except +
@@ -3430,7 +3514,7 @@ cdef extern from "cimgui.h":
     # Submit one header cell manually (rarely used)
     void ImGui_TableHeader(const char* label) except +
 
-    # Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
+    # Submit a row with headers cells based on data provided to tablesetupcolumn() + submit context menu
     void ImGui_TableHeadersRow() except +
 
     # Append into the next column (or first column of next row if currently in last column). return true when column is visible.
@@ -3541,50 +3625,4 @@ cdef extern from "cimgui.h":
 
     # Destruct an imvector<> (of any type). important: frees the vector memory but does not call destructors on contained objects (if they have them)
     void ImVector_Destruct(void* vector) except +
-
-cdef extern from "imgui_impl_glfw.h":
-    ctypedef struct GLFWwindow
-    ctypedef struct GLFWmonitor
-
-
-
-    ctypedef struct GLFWwindow:
-        pass
-
-
-    ctypedef struct GLFWmonitor:
-        pass
-
-
-
-    void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c) except +
-    void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, int entered) except +
-    void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y) except +
-    bool ImGui_ImplGlfw_InitForOpenGL(GLFWwindow* window, bool install_callbacks) except +
-    bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window, bool install_callbacks) except +
-    bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window, bool install_callbacks) except +
-    void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window) except +
-    void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) except +
-    void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor, int event) except +
-    void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) except +
-    void ImGui_ImplGlfw_NewFrame() except +
-    void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window) except +
-    void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) except +
-    void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows) except +
-    void ImGui_ImplGlfw_Shutdown() except +
-    void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused) except +
-
-cdef extern from "imgui_impl_opengl3.h":
-
-
-
-
-    bool ImGui_ImplOpenGL3_CreateDeviceObjects() except +
-    bool ImGui_ImplOpenGL3_CreateFontsTexture() except +
-    void ImGui_ImplOpenGL3_DestroyDeviceObjects() except +
-    void ImGui_ImplOpenGL3_DestroyFontsTexture() except +
-    bool ImGui_ImplOpenGL3_Init(const char* glsl_version) except +
-    void ImGui_ImplOpenGL3_NewFrame() except +
-    void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data) except +
-    void ImGui_ImplOpenGL3_Shutdown() except +
 

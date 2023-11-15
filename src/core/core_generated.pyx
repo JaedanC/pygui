@@ -2056,7 +2056,7 @@ def color_edit3(label: str, col: Sequence[Float], flags: int=0):
     """
     cdef bool res = ccimgui.ImGui_ColorEdit3(
         _bytes(label),
-        &col.value,
+        col,
         flags
     )
     return res

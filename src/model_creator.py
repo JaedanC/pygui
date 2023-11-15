@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 from io import StringIO
 from pyx_parser import *
 from helpers import Template
@@ -228,9 +228,13 @@ class Comments:
 
         if self.comment_attached is not None:
             self.comment_attached = self.comment_attached.replace('"', "'")
+            self.comment_attached = self.comment_attached.replace('{', "(")
+            self.comment_attached = self.comment_attached.replace('}', ")")
             self.comment_attached = self.comment_attached.lstrip("// ").capitalize()
         
         self.comment_proceeding = [line.lstrip("// ") for line in self.comment_proceeding]
+        self.comment_proceeding = [line.replace("{", "(") for line in self.comment_proceeding]
+        self.comment_proceeding = [line.replace("}", ")") for line in self.comment_proceeding]
         
     def three_quote_all_comments(self):
         if len(self.comment_proceeding) == 0 and self.comment_attached is None:
@@ -295,8 +299,595 @@ class Comments:
         return "# " + self.comment_attached
 
 
+def parse_comment(json_containing_comment) -> Comments:
+    proceeding = []
+    attached = None
+    if "comments" not in json_containing_comment:
+        return Comments(proceeding, attached)
+    
+    if "attached" in json_containing_comment["comments"]:
+        attached = json_containing_comment["comments"]["attached"]
+    
+    if "preceding" in json_containing_comment["comments"]:
+        proceeding = json_containing_comment["comments"]["preceding"]
+    return Comments(proceeding, attached)
+
+
+class DearBindingNew:
+    def __init__(self, enums, typedefs, structs, functions):
+        self.enums: List[DearBindingsEnumNew] = enums
+        self.typedefs: List[DearBindingsTypedefNew] = typedefs
+        self.structs: List[DearBindingsStructNew] = structs
+        self.functions: List[DearBindingsFunctionNew] = functions
+
+        # methods: List[DearBindingsFunctionNew] = []
+        # for function in functions:
+        #     function: DearBindingsFunctionNew
+        #     if len(function.arguments) > 0 and function.arguments[0].name == "self":
+        #         methods.append(function)
+        #         continue
+        #     self.functions.append(function)
+        
+        # struct_lookup = {s.name: s for s in self.structs}
+        # for method in methods:
+        #     method: DearBindingsFunctionNew
+            # class_name = method.arguments[0].type.with_no_const_or_asterisk()
+            # Modify the name of the function so that it looks more like a 
+            # method.
+            # method.python_name = method.python_name.replace(class_name + "_", "", 1)
+            # struct_lookup[class_name].add_method(method)
+    
+    def __repr__(self):
+        return \
+            "Enums:\n{}\n\n".format("\n".join([str(e) for e in self.enums])) + \
+            "Typedefs:\n{}\n\n".format("\n".join([str(e) for e in self.typedefs])) + \
+            "Structs:\n{}\n\n".format("\n".join([str(e) for e in self.structs])) + \
+            "Functions:\n{}\n".format("\n".join([str(e) for e in self.functions]))
+
+
+class DearBindingsTypedefNew:
+    def __init__(self, typedef_json: dict):
+        """Typedef
+        {
+            "name": "ImGuiMouseSource",
+            "type": {
+                "declaration": "int",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "int"
+                }
+            },
+            "comments": {
+                "attached": "// -> enum ImGuiMouseSource      // Enum; A mouse input source identifier (Mouse, TouchScreen, Pen)"
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h"
+            }
+        },
+        """
+        self.name: str = typedef_json["name"]
+        self._type: DearBindingsTypeNew = DearBindingsTypeNew(typedef_json["type"])
+        self.comments: Comments = parse_comment(typedef_json)
+        self.is_internal: bool = typedef_json["is_internal"]
+        self.source_location: dict = typedef_json["source_location"]
+
+        self.base = self._type
+        self.definition = self.name
+    
+    def __repr__(self):
+        return "Typedef({} <- {})".format(self.base, self.definition)
+
+
+class DearBindingsEnumNew:
+    class Element:
+        def __init__(self, element_json: dict):
+            self.name: str = element_json["name"]
+            self.value_expression: Optional[str] = element_json.get("value_expression")
+            self.value: int = element_json["value"]
+            self.is_count: bool = element_json["is_count"]
+            self.is_internal: bool = element_json["is_internal"]
+            self.source_location: dict = element_json["source_location"]
+        
+        def name_omitted_imgui_prefix(self):
+            return self.name.replace("ImGui", "", 1)
+        
+    def __init__(self, enum_json: dict):
+        self.name: str = enum_json["name"]
+        self.original_fully_qualified_name: str = enum_json["original_fully_qualified_name"]
+        self.is_flags_enum: bool = enum_json["is_flags_enum"]
+        self.elements: List[DearBindingsEnumNew.Element] = [DearBindingsEnumNew.Element(e) for e in enum_json["elements"]]
+        self.comments: Comments = parse_comment(enum_json)
+        self.is_internal: bool = enum_json["is_internal"]
+        self.source_location: dict = enum_json["source_location"]
+    
+    def __repr__(self):
+        verbose = False
+        if verbose:
+            return "{}:{}{}".format(
+                self.name,
+                "\n    " if len(self.elements) > 0 else "",
+                "\n    ".join((a.name for a in self.elements)),
+            )
+        return "Enum({} -> {} elements)".format(self.name, len(self.elements))
+
+
+class DearBindingsArgumentNew:
+    def __init__(self, argument_json: dict):
+        """Argument
+        {
+            "name": "ctx",
+            "type": {
+                "declaration": "ImGuiContext*",
+                "description": {
+                    "kind": "Pointer",
+                    "inner_type": {
+                        "kind": "User",
+                        "name": "ImGuiContext"
+                    }
+                }
+            },
+            "is_array": false,
+            "is_varargs": false,
+            "default_value": "NULL",
+            "is_instance_pointer": false
+        }
+        """
+        self.name: str = argument_json["name"]
+        self.is_array: bool = argument_json["is_array"]
+        self.is_varargs: bool = argument_json["is_varargs"]
+        assert not self.is_varargs, "Python does not support is_varargs: {}".format(self.name)
+        self.is_instance_pointer: bool = argument_json["is_instance_pointer"]
+        self.default_value: Optional[str] = argument_json.get("default_value")
+        self._type: DearBindingsTypeNew = DearBindingsTypeNew(argument_json["type"])
+        self.comments: Comments = parse_comment(argument_json)
+    
+    def __repr__(self):
+        return "{}: {}{}".format(
+            self.name,
+            self._type,
+            f"={self.default_value}" if self.default_value is not None else "")
+
+
+class DearBindingsFunctionNew:
+    def __init__(self, function_json: dict):
+        """Function
+        {
+            "name": "ImGui_DestroyContext",
+            "original_fully_qualified_name": "ImGui::DestroyContext",
+            "return_type": {
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
+            },
+            "arguments": [
+                {
+                    "name": "ctx",
+                    "type": {
+                        "declaration": "ImGuiContext*",
+                        "description": {
+                            "kind": "Pointer",
+                            "inner_type": {
+                                "kind": "User",
+                                "name": "ImGuiContext"
+                            }
+                        }
+                    },
+                    "is_array": false,
+                    "is_varargs": false,
+                    "default_value": "NULL",
+                    "is_instance_pointer": false
+                }
+            ],
+            "is_default_argument_helper": false,
+            "is_manual_helper": false,
+            "is_imstr_helper": false,
+            "has_imstr_helper": false,
+            "is_unformatted_helper": false,
+            "comments": {
+                "attached": "// NULL = destroy current context"
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h",
+                "line": 300
+            }
+        },
+        """
+        self.name: str = function_json["name"]
+        self.original_fully_qualified_name: str = function_json["original_fully_qualified_name"]
+        self.return_type: DearBindingsTypeNew = DearBindingsTypeNew(function_json["return_type"])
+        # Ignore any Cython unsupported arguments
+        self.arguments: List[DearBindingsArgumentNew] = []
+        for argument in function_json["arguments"]:
+            if argument["is_varargs"] or argument.get("type", {}).get("declaration") == "va_list":
+                continue
+            self.arguments.append(DearBindingsArgumentNew(argument))
+        self.comments: Comments = parse_comment(function_json)
+    
+    def __repr__(self):
+        return "{}() -> {}{}{}".format(
+            self.name,
+            self.return_type,
+            "\n    " if len(self.arguments) > 0 else "",
+            "\n    ".join((str(a) for a in self.arguments)),
+        )
+
+
+class DearBindingsTypeNew:
+    class Kind:
+        def __init__(self, kind_json: dict, is_function_pointer: bool=False):
+            """Kind
+            {
+                "kind": "Builtin",
+                "builtin_type": "char",
+                "storage_classes": [
+                    "const"
+                ]
+            }
+            """
+            self.kind: str = kind_json["kind"]
+            self.is_nullable: Optional[bool] = kind_json.get("is_nullable")
+            self.is_const: bool = "const" in kind_json.get("storage_classes", [])
+            self.bounds: int = kind_json.get("bounds")
+            self.name = kind_json.get("name") or kind_json.get("builtin_type")
+            
+            self._type = None
+            if is_function_pointer:
+                self._type = DearBindingsTypeNew.FunctionPointer(kind_json["inner_type"], self.name)
+            elif "inner_type" in kind_json:
+                self._type = DearBindingsTypeNew.Kind(kind_json["inner_type"])
+            else:
+                self._type = self.name
+
+        def __repr__(self):
+            const = "const " if self.is_const else ""
+            if self.kind == "Array":
+                return "{}{}[{}]".format(
+                    const,
+                    self._type,
+                    self.bounds
+                )
+            elif self.kind == "Pointer":
+                return "{}{}*".format(
+                    const,
+                    self._type
+                )
+            else:
+                return "{}{}".format(
+                    const,
+                    self._type
+                )
+
+    class FunctionPointer:
+        def __init__(self, function_ptr_json: dict, function_ptr_name: str):
+            function_ptr_json = function_ptr_json["inner_type"]
+            self.function_ptr_name = function_ptr_name
+            self.return_type = DearBindingsTypeNew.Kind(function_ptr_json["return_type"])
+            self.parameters = [DearBindingsTypeNew.Kind(a) for a in function_ptr_json["parameters"]]
+        
+        def __repr__(self):
+            return "{} (*{})({})".format(
+                self.return_type,
+                self.function_ptr_name,
+                ", ".join((map(lambda x: f"{x} {x.name}", self.parameters))),
+            )
+
+    def __init__(self, type_json: dict):
+        """Pointer
+        {
+            "declaration": "const char*",
+            "description": {
+                "kind": "Pointer",
+                "is_nullable": false,
+                "inner_type": {
+                    "kind": "Builtin",
+                    "builtin_type": "char",
+                    "storage_classes": [
+                        "const"
+                    ]
+                }
+            }
+        }
+        """
+        """User
+        {
+            "declaration": "ImVec2",
+            "description": {
+                "kind": "User",
+                "name": "ImVec2"
+            }
+        }
+        """
+        """Builtin
+        {
+            "declaration": "int",
+            "description": {
+                "kind": "Builtin",
+                "builtin_type": "int"
+            }
+        }
+        """
+        """Inner User w/const
+        {
+            "declaration": "const ImDrawList*",
+            "description": {
+                "kind": "Pointer",
+                "inner_type": {
+                    "kind": "User",
+                    "name": "ImDrawList",
+                    "storage_classes": [
+                        "const"
+                    ]
+                }
+            }
+        }
+        """
+        """Array
+        {
+            "declaration": "float[2]",
+            "description": {
+                "kind": "Array",
+                "bounds": "2",
+                "inner_type": {
+                    "kind": "Builtin",
+                    "builtin_type": "float"
+                }
+            }
+        }
+        """
+        """Function Pointer
+        {
+            "declaration": "const char* (*GetClipboardTextFn)(void* user_data)",
+            "type_details": {
+                "flavour": "function_pointer",
+                "return_type": {
+                    "declaration": "const char*",
+                    "description": {
+                        "kind": "Pointer",
+                        "inner_type": {
+                            "kind": "Builtin",
+                            "builtin_type": "char",
+                            "storage_classes": [
+                                "const"
+                            ]
+                        }
+                    }
+                },
+                "arguments": [
+                    {
+                        "name": "user_data",
+                        "type": {
+                            "declaration": "void*",
+                            "description": {
+                                "kind": "Pointer",
+                                "inner_type": {
+                                    "kind": "Builtin",
+                                    "builtin_type": "void"
+                                }
+                            }
+                        },
+                        "is_array": false,
+                        "is_varargs": false,
+                        "is_instance_pointer": false
+                    }
+                ]
+            },
+            "description": {
+                "kind": "Type",
+                "name": "GetClipboardTextFn",
+                "inner_type": {
+                    "kind": "Pointer",
+                    "inner_type": {
+                        "kind": "Function",
+                        "return_type": {
+                            "kind": "Pointer",
+                            "inner_type": {
+                                "kind": "Builtin",
+                                "builtin_type": "char",
+                                "storage_classes": [
+                                    "const"
+                                ]
+                            }
+                        },
+                        "parameters": [
+                            {
+                                "kind": "Type",
+                                "name": "user_data",
+                                "inner_type": {
+                                    "kind": "Pointer",
+                                    "inner_type": {
+                                        "kind": "Builtin",
+                                        "builtin_type": "void"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        """
+        self.type_json = type_json
+        self.declaration: str = type_json["declaration"]
+        self.kind: DearBindingsTypeNew.Kind = DearBindingsTypeNew.Kind(type_json["description"], self.is_function_ptr())
+    
+    def __repr__(self):
+        return str(self.kind)
+
+    def is_function_ptr(self) -> bool:
+        return "type_details" in self.type_json
+
+
+class DearBindingsStructNew:
+    """Struct
+    {
+        "name": "ImGuiStyle",
+        "original_fully_qualified_name": "ImGuiStyle",
+        "kind": "struct",
+        "by_value": false,
+        "forward_declaration": false,
+        "is_anonymous": false,
+        "fields": [],
+        "is_internal": false,
+        "source_location": {
+            "filename": "imgui.h",
+            "line": 2015
+        }
+    """
+    class Field:
+        """Field
+        {
+            "name": "BackendLanguageUserData",
+            "is_array": false,
+            "is_anonymous": false,
+            "type": {
+                "declaration": "void*",
+                "description": {
+                    "kind": "Pointer",
+                    "inner_type": {
+                        "kind": "Builtin",
+                        "builtin_type": "void"
+                    }
+                }
+            },
+            "comments": {
+                "attached": "// = NULL           // User data for non C++ programming language backend"
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h",
+                "line": 2175
+            }
+        }
+        """
+        """Function Pointer
+        {
+            "name": "GetClipboardTextFn",
+            "is_array": false,
+            "is_anonymous": false,
+            "type": {
+                "declaration": "const char* (*GetClipboardTextFn)(void* user_data)",
+                "type_details": {
+                    "flavour": "function_pointer",
+                    "return_type": {
+                        "declaration": "const char*",
+                        "description": {
+                            "kind": "Pointer",
+                            "inner_type": {
+                                "kind": "Builtin",
+                                "builtin_type": "char",
+                                "storage_classes": [
+                                    "const"
+                                ]
+                            }
+                        }
+                    },
+                    "arguments": [
+                        {
+                            "name": "user_data",
+                            "type": {
+                                "declaration": "void*",
+                                "description": {
+                                    "kind": "Pointer",
+                                    "inner_type": {
+                                        "kind": "Builtin",
+                                        "builtin_type": "void"
+                                    }
+                                }
+                            },
+                            "is_array": false,
+                            "is_varargs": false,
+                            "is_instance_pointer": false
+                        }
+                    ]
+                },
+                "description": {
+                    "kind": "Type",
+                    "name": "GetClipboardTextFn",
+                    "inner_type": {
+                        "kind": "Pointer",
+                        "inner_type": {
+                            "kind": "Function",
+                            "return_type": {
+                                "kind": "Pointer",
+                                "inner_type": {
+                                    "kind": "Builtin",
+                                    "builtin_type": "char",
+                                    "storage_classes": [
+                                        "const"
+                                    ]
+                                }
+                            },
+                            "parameters": [
+                                {
+                                    "kind": "Type",
+                                    "name": "user_data",
+                                    "inner_type": {
+                                        "kind": "Pointer",
+                                        "inner_type": {
+                                            "kind": "Builtin",
+                                            "builtin_type": "void"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "comments": {
+                "preceding": [
+                    "// Optional: Access OS clipboard",
+                    "// (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)"
+                ]
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h"
+            }
+        """
+        def __init__(self, field_json: dict):
+            self.name: str = field_json["name"]
+            self.is_array: bool = field_json["is_array"]
+            self.is_anonymous: bool = field_json["is_anonymous"]
+            self._type: DearBindingsTypeNew = DearBindingsTypeNew(field_json["type"])
+            self.is_internal: bool = field_json["is_internal"]
+            self.source_location: dict = field_json.get("source_location")
+            self.comments: Comments = parse_comment(field_json)
+        
+        def __repr__(self):
+            return "{}{}".format(
+                self._type,
+                "" if self._type.is_function_ptr() else " " + self.name
+            )
+
+    def __init__(self, struct_json: dict):
+        self.name: str = struct_json["name"]
+        self.original_fully_qualified_name: str = struct_json["original_fully_qualified_name"]
+        self.kind: str = struct_json["kind"]
+        self.by_value: bool = struct_json["by_value"]
+        self.forward_declaration: bool = struct_json["forward_declaration"]
+        self.is_anonymous: bool = struct_json["is_anonymous"]
+        self.fields: List[DearBindingsStructNew.Field] = [DearBindingsStructNew.Field(f) for f in struct_json["fields"]]
+        self.is_internal: bool = struct_json["is_internal"]
+        self.source_location: dict = struct_json["source_location"]
+        self.comments: Comments = parse_comment(struct_json)
+
+    def __repr__(self):
+        # return "Struct({}({}))".format(self.name, ", ".join((str(f) for f in self.fields)))
+    
+        return "struct {}:{}{}".format(
+            self.name,
+            "\n    " if len(self.fields) > 0 else "",
+            "\n    ".join((str(a) for a in self.fields)),
+        )
+
+
 class DearEnum:
-    class Value:
+    class Element:
         def __init__(self, name: str, value: int, comments: Comments):
             self.name: str          = name
             self.value: int         = value
@@ -306,9 +897,9 @@ class DearEnum:
             return self.name.replace("ImGui", "", 1)
         
 
-    def __init__(self, name: str, elements: List[Value], comments: Comments):
+    def __init__(self, name: str, elements: List[Element], comments: Comments):
         self.name: str                      = name
-        self.elements: List[DearEnum.Value] = elements
+        self.elements: List[DearEnum.Element] = elements
         self.comments: Comments             = comments
     
     def __repr__(self):
@@ -549,20 +1140,24 @@ def wrap_text(text, to_size=60) -> str:
     return output
 
 
-def parse_binding_json(cimgui_json, definitions) -> DearBinding:
-    def parse_comment(json_containing_comment) -> Comments:
-        proceeding = []
-        attached = None
-        if "comments" not in json_containing_comment:
-            return Comments(proceeding, attached)
-        
-        if "attached" in json_containing_comment["comments"]:
-            attached = json_containing_comment["comments"]["attached"]
-        
-        if "preceding" in json_containing_comment["comments"]:
-            proceeding = json_containing_comment["comments"]["preceding"]
-        return Comments(proceeding, attached)
+def parse_binding_new_json(cimgui_json, definitions) -> DearBindingNew:
+    parsed_enums = [DearBindingsEnumNew(e) for e in cimgui_json["enums"]]
+    parsed_typedefs = [DearBindingsTypedefNew(e) for e in cimgui_json["typedefs"]]
+    parsed_structs = [DearBindingsStructNew(e) for e in cimgui_json["structs"]]
+    parsed_functions = [DearBindingsFunctionNew(e) for e in cimgui_json["functions"]]
 
+    parsed_functions.sort(key=lambda x: x.name)
+
+    db = DearBindingNew(
+        parsed_enums,
+        parsed_typedefs,
+        parsed_structs,
+        parsed_functions
+    )
+    print(db)
+
+
+def parse_binding_json(cimgui_json, definitions) -> DearBinding:
     def passes_conditional(obj_containing_conditional, definitions, verbose=False):
         def is_defined(expression, definitions):
             for define, _ in definitions:
@@ -610,6 +1205,8 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
         if not passes_conditional(enum_obj, definitions):
             continue
 
+        DearBindingsEnumNew(enum_obj)
+
         enum_name = enum_obj["name"]
 
         parsed_enums_values = []
@@ -618,12 +1215,12 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
                 continue
 
             enum_element_name = enum_element_obj["name"]
-            if "value" in enum_element_obj:
-                enum_element_value = enum_element_obj["value"]
-            else:
-                enum_element_value = None
+            enum_element_value = enum_element_obj["value"]
+            # if "value" in enum_element_obj:
+            # else:
+            #     enum_element_value = None
             enum_element_comment = parse_comment(enum_element_obj)
-            parsed_enums_values.append(DearEnum.Value(
+            parsed_enums_values.append(DearEnum.Element(
                 enum_element_name,
                 enum_element_value,
                 enum_element_comment,
@@ -637,9 +1234,15 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
         if not passes_conditional(typedef_obj, definitions):
             continue
 
+        DearBindingsTypedefNew(typedef_obj)
+
         typedef_name = typedef_obj["name"]
         typedef_type = typedef_obj["type"]["declaration"]
         typedef_comments = parse_comment(typedef_obj)
+        # TODO: Use typedef_obj["type"]["declaration"]["description"]
+        # and do a lookup to the builtins table from:
+        # https://github.com/dearimgui/dear_bindings/blob/04e531be9a2115ebe2c746cb2bfb9aa139f1d400/docs/MetadataFormat.md?plain=1#L136
+
         parsed_typedefs.append(DearTypedef(
             DearType(typedef_type),
             DearType(typedef_name),
@@ -652,9 +1255,12 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
         if not passes_conditional(struct_obj, definitions):
             continue
 
+
         # Ignore any anonymous structs
         if struct_obj["is_anonymous"]:
             continue
+        
+        DearBindingsStructNew(struct_obj)
 
         struct_name = struct_obj["name"]
         struct_original_fully_qualified_name = struct_obj["original_fully_qualified_name"]
@@ -668,32 +1274,40 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             if struct_field_obj["is_anonymous"]:
                 continue
 
+            struct_field_name = safe_python_name(struct_field_obj["name"])
+            # struct_field_name_is_array = struct_field_obj["is_array"]
+            
+            
+            # TODO Review this
+            DearBindingsTypeNew(struct_field_obj["type"])
             struct_field_type: str = struct_field_obj["type"]["declaration"]
-
             # Weird edge case where instances of:
             #       const int array[2]
             # ...gets converted to
             #       const int* const array
             # Which Cython cannot handle. Here we remove the second const
-            if struct_field_type.count("const") >= 2:
-                struct_field_type = struct_field_type.replace("const", "__keeping__first__", 1)
-                struct_field_type = struct_field_type.replace("const", "")
-                struct_field_type = struct_field_type.replace("__keeping__first__", "const")
+            # if struct_field_type.count("const") >= 2:
+            #     struct_field_type = struct_field_type.replace("const", "__keeping__first__", 1)
+            #     struct_field_type = struct_field_type.replace("const", "")
+            #     struct_field_type = struct_field_type.replace("__keeping__first__", "const")
 
             struct_field_comments = parse_comment(struct_field_obj)
-            for struct_field_name_obj in struct_field_obj["names"]:
-                struct_field_name = safe_python_name(struct_field_name_obj["name"])
+            # for struct_field_name_obj in struct_field_obj["name"]:
 
-                struct_field_name_is_array = False
-                if "is_array" in struct_field_name_obj:
-                    struct_field_name_is_array = struct_field_name_obj["is_array"]
+            # struct_field_name_is_array = False
+            # if "is_array" in struct_field_obj:
 
-                local_struct_field_type = struct_field_type + ("*" if struct_field_name_is_array else "")
-                struct_fields.append(DearStruct.Field(
-                    struct_field_name,
-                    DearType(local_struct_field_type),
-                    struct_field_comments,
-                ))
+            # local_struct_field_type = struct_field_type + ("*" if struct_field_name_is_array else "")
+            # struct_fields.append(DearStruct.Field(
+            #     struct_field_name,
+            #     DearType(local_struct_field_type),
+            #     struct_field_comments,
+            # ))
+            struct_fields.append(DearStruct.Field(
+                struct_field_name,
+                DearType(struct_field_type),
+                struct_field_comments,
+            ))
         
         struct_comments = parse_comment(struct_obj)
         parsed_structs.append(DearStruct(
@@ -712,6 +1326,10 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
 
         function_name = function_obj["name"]
         function_original_fully_qualified_name = function_obj["original_fully_qualified_name"]
+        
+        # TODO Review
+        DearBindingsTypeNew(function_obj["return_type"])
+
         function_return_type = function_obj["return_type"]["declaration"]
         function_arguments = []
         for function_argument_obj in function_obj["arguments"]:
@@ -729,13 +1347,16 @@ def parse_binding_json(cimgui_json, definitions) -> DearBinding:
             # ...gets converted to
             #       const int* const array
             # Which Cython cannot handle. Here we remove the second const
-            if function_argument_type.count("const") >= 2:
-                function_argument_type = function_argument_type.replace("const", "__keeping__first__", 1)
-                function_argument_type = function_argument_type.replace("const", "")
-                function_argument_type = function_argument_type.replace("__keeping__first__", "const")
+            # if function_argument_type.count("const") >= 2:
+            #     function_argument_type = function_argument_type.replace("const", "__keeping__first__", 1)
+            #     function_argument_type = function_argument_type.replace("const", "")
+            #     function_argument_type = function_argument_type.replace("__keeping__first__", "const")
             
             # I'm also not interested in keeping va_list since Cython cannot
             # handle this.
+
+            DearBindingsArgumentNew(function_argument_obj)
+
             if function_argument_type == "va_list":
                 continue
 
@@ -2240,7 +2861,9 @@ def main():
     for module in config["modules"]:
         header_files.append(module["header"])
         with open(module["binding_json"]) as f:
-            headers.append(parse_binding_json(json.load(f), defines))
+            json_content = json.load(f)
+            headers.append(parse_binding_json(json_content, defines))
+            parse_binding_new_json(json_content, defines)
 
     def _help():
         print(textwrap.dedent("""
