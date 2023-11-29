@@ -543,7 +543,6 @@ WINDOW_FLAGS_NO_FOCUS_ON_APPEARING = ccimgui.ImGuiWindowFlags_NoFocusOnAppearing
 WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS = ccimgui.ImGuiWindowFlags_NoBringToFrontOnFocus
 WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR = ccimgui.ImGuiWindowFlags_AlwaysVerticalScrollbar
 WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR = ccimgui.ImGuiWindowFlags_AlwaysHorizontalScrollbar
-WINDOW_FLAGS_ALWAYS_USE_WINDOW_PADDING = ccimgui.ImGuiWindowFlags_AlwaysUseWindowPadding
 WINDOW_FLAGS_NO_NAV_INPUTS = ccimgui.ImGuiWindowFlags_NoNavInputs
 WINDOW_FLAGS_NO_NAV_FOCUS = ccimgui.ImGuiWindowFlags_NoNavFocus
 WINDOW_FLAGS_UNSAVED_DOCUMENT = ccimgui.ImGuiWindowFlags_UnsavedDocument
@@ -558,6 +557,15 @@ WINDOW_FLAGS_POPUP = ccimgui.ImGuiWindowFlags_Popup
 WINDOW_FLAGS_MODAL = ccimgui.ImGuiWindowFlags_Modal
 WINDOW_FLAGS_CHILD_MENU = ccimgui.ImGuiWindowFlags_ChildMenu
 WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
+CHILD_FLAGS_NONE = ccimgui.ImGuiChildFlags_None
+CHILD_FLAGS_BORDER = ccimgui.ImGuiChildFlags_Border
+CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING = ccimgui.ImGuiChildFlags_AlwaysUseWindowPadding
+CHILD_FLAGS_RESIZE_X = ccimgui.ImGuiChildFlags_ResizeX
+CHILD_FLAGS_RESIZE_Y = ccimgui.ImGuiChildFlags_ResizeY
+CHILD_FLAGS_AUTO_RESIZE_X = ccimgui.ImGuiChildFlags_AutoResizeX
+CHILD_FLAGS_AUTO_RESIZE_Y = ccimgui.ImGuiChildFlags_AutoResizeY
+CHILD_FLAGS_ALWAYS_AUTO_RESIZE = ccimgui.ImGuiChildFlags_AlwaysAutoResize
+CHILD_FLAGS_FRAME_STYLE = ccimgui.ImGuiChildFlags_FrameStyle
 INPUT_TEXT_FLAGS_NONE = ccimgui.ImGuiInputTextFlags_None
 INPUT_TEXT_FLAGS_CHARS_DECIMAL = ccimgui.ImGuiInputTextFlags_CharsDecimal
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL = ccimgui.ImGuiInputTextFlags_CharsHexadecimal
@@ -594,6 +602,7 @@ TREE_NODE_FLAGS_BULLET = ccimgui.ImGuiTreeNodeFlags_Bullet
 TREE_NODE_FLAGS_FRAME_PADDING = ccimgui.ImGuiTreeNodeFlags_FramePadding
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanAvailWidth
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanFullWidth
+TREE_NODE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImGuiTreeNodeFlags_SpanAllColumns
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE = ccimgui.ImGuiTreeNodeFlags_NavLeftJumpsBackHere
 TREE_NODE_FLAGS_COLLAPSING_HEADER = ccimgui.ImGuiTreeNodeFlags_CollapsingHeader
 POPUP_FLAGS_NONE = ccimgui.ImGuiPopupFlags_None
@@ -621,6 +630,7 @@ COMBO_FLAGS_HEIGHT_LARGE = ccimgui.ImGuiComboFlags_HeightLarge
 COMBO_FLAGS_HEIGHT_LARGEST = ccimgui.ImGuiComboFlags_HeightLargest
 COMBO_FLAGS_NO_ARROW_BUTTON = ccimgui.ImGuiComboFlags_NoArrowButton
 COMBO_FLAGS_NO_PREVIEW = ccimgui.ImGuiComboFlags_NoPreview
+COMBO_FLAGS_WIDTH_FIT_PREVIEW = ccimgui.ImGuiComboFlags_WidthFitPreview
 COMBO_FLAGS_HEIGHT_MASK = ccimgui.ImGuiComboFlags_HeightMask_
 TAB_BAR_FLAGS_NONE = ccimgui.ImGuiTabBarFlags_None
 TAB_BAR_FLAGS_REORDERABLE = ccimgui.ImGuiTabBarFlags_Reorderable
@@ -677,6 +687,7 @@ TABLE_FLAGS_SCROLL_X = ccimgui.ImGuiTableFlags_ScrollX
 TABLE_FLAGS_SCROLL_Y = ccimgui.ImGuiTableFlags_ScrollY
 TABLE_FLAGS_SORT_MULTI = ccimgui.ImGuiTableFlags_SortMulti
 TABLE_FLAGS_SORT_TRISTATE = ccimgui.ImGuiTableFlags_SortTristate
+TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN = ccimgui.ImGuiTableFlags_HighlightHoveredColumn
 TABLE_FLAGS_SIZING_MASK = ccimgui.ImGuiTableFlags_SizingMask_
 TABLE_COLUMN_FLAGS_NONE = ccimgui.ImGuiTableColumnFlags_None
 TABLE_COLUMN_FLAGS_DISABLED = ccimgui.ImGuiTableColumnFlags_Disabled
@@ -697,6 +708,7 @@ TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING = ccimgui.ImGuiTableColumnFlags_PreferS
 TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING = ccimgui.ImGuiTableColumnFlags_PreferSortDescending
 TABLE_COLUMN_FLAGS_INDENT_ENABLE = ccimgui.ImGuiTableColumnFlags_IndentEnable
 TABLE_COLUMN_FLAGS_INDENT_DISABLE = ccimgui.ImGuiTableColumnFlags_IndentDisable
+TABLE_COLUMN_FLAGS_ANGLED_HEADER = ccimgui.ImGuiTableColumnFlags_AngledHeader
 TABLE_COLUMN_FLAGS_IS_ENABLED = ccimgui.ImGuiTableColumnFlags_IsEnabled
 TABLE_COLUMN_FLAGS_IS_VISIBLE = ccimgui.ImGuiTableColumnFlags_IsVisible
 TABLE_COLUMN_FLAGS_IS_SORTED = ccimgui.ImGuiTableColumnFlags_IsSorted
@@ -741,11 +753,12 @@ HOVERED_FLAGS_DELAY_NORMAL = ccimgui.ImGuiHoveredFlags_DelayNormal
 HOVERED_FLAGS_NO_SHARED_DELAY = ccimgui.ImGuiHoveredFlags_NoSharedDelay
 DOCK_NODE_FLAGS_NONE = ccimgui.ImGuiDockNodeFlags_None
 DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY = ccimgui.ImGuiDockNodeFlags_KeepAliveOnly
-DOCK_NODE_FLAGS_NO_DOCKING_IN_CENTRAL_NODE = ccimgui.ImGuiDockNodeFlags_NoDockingInCentralNode
+DOCK_NODE_FLAGS_NO_DOCKING_OVER_CENTRAL_NODE = ccimgui.ImGuiDockNodeFlags_NoDockingOverCentralNode
 DOCK_NODE_FLAGS_PASSTHRU_CENTRAL_NODE = ccimgui.ImGuiDockNodeFlags_PassthruCentralNode
-DOCK_NODE_FLAGS_NO_SPLIT = ccimgui.ImGuiDockNodeFlags_NoSplit
+DOCK_NODE_FLAGS_NO_DOCKING_SPLIT = ccimgui.ImGuiDockNodeFlags_NoDockingSplit
 DOCK_NODE_FLAGS_NO_RESIZE = ccimgui.ImGuiDockNodeFlags_NoResize
 DOCK_NODE_FLAGS_AUTO_HIDE_TAB_BAR = ccimgui.ImGuiDockNodeFlags_AutoHideTabBar
+DOCK_NODE_FLAGS_NO_UNDOCKING = ccimgui.ImGuiDockNodeFlags_NoUndocking
 DRAG_DROP_FLAGS_NONE = ccimgui.ImGuiDragDropFlags_None
 DRAG_DROP_FLAGS_SOURCE_NO_PREVIEW_TOOLTIP = ccimgui.ImGuiDragDropFlags_SourceNoPreviewTooltip
 DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER = ccimgui.ImGuiDragDropFlags_SourceNoDisableHover
@@ -850,6 +863,18 @@ KEY_F9 = ccimgui.ImGuiKey_F9
 KEY_F10 = ccimgui.ImGuiKey_F10
 KEY_F11 = ccimgui.ImGuiKey_F11
 KEY_F12 = ccimgui.ImGuiKey_F12
+KEY_F13 = ccimgui.ImGuiKey_F13
+KEY_F14 = ccimgui.ImGuiKey_F14
+KEY_F15 = ccimgui.ImGuiKey_F15
+KEY_F16 = ccimgui.ImGuiKey_F16
+KEY_F17 = ccimgui.ImGuiKey_F17
+KEY_F18 = ccimgui.ImGuiKey_F18
+KEY_F19 = ccimgui.ImGuiKey_F19
+KEY_F20 = ccimgui.ImGuiKey_F20
+KEY_F21 = ccimgui.ImGuiKey_F21
+KEY_F22 = ccimgui.ImGuiKey_F22
+KEY_F23 = ccimgui.ImGuiKey_F23
+KEY_F24 = ccimgui.ImGuiKey_F24
 KEY_APOSTROPHE = ccimgui.ImGuiKey_Apostrophe
 KEY_COMMA = ccimgui.ImGuiKey_Comma
 KEY_MINUS = ccimgui.ImGuiKey_Minus
@@ -883,6 +908,8 @@ KEY_KEYPAD_SUBTRACT = ccimgui.ImGuiKey_KeypadSubtract
 KEY_KEYPAD_ADD = ccimgui.ImGuiKey_KeypadAdd
 KEY_KEYPAD_ENTER = ccimgui.ImGuiKey_KeypadEnter
 KEY_KEYPAD_EQUAL = ccimgui.ImGuiKey_KeypadEqual
+KEY_APP_BACK = ccimgui.ImGuiKey_AppBack
+KEY_APP_FORWARD = ccimgui.ImGuiKey_AppForward
 KEY_GAMEPAD_START = ccimgui.ImGuiKey_GamepadStart
 KEY_GAMEPAD_BACK = ccimgui.ImGuiKey_GamepadBack
 KEY_GAMEPAD_FACE_LEFT = ccimgui.ImGuiKey_GamepadFaceLeft
@@ -1031,11 +1058,13 @@ STYLE_VAR_SCROLLBAR_ROUNDING = ccimgui.ImGuiStyleVar_ScrollbarRounding
 STYLE_VAR_GRAB_MIN_SIZE = ccimgui.ImGuiStyleVar_GrabMinSize
 STYLE_VAR_GRAB_ROUNDING = ccimgui.ImGuiStyleVar_GrabRounding
 STYLE_VAR_TAB_ROUNDING = ccimgui.ImGuiStyleVar_TabRounding
+STYLE_VAR_TAB_BAR_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBarBorderSize
 STYLE_VAR_BUTTON_TEXT_ALIGN = ccimgui.ImGuiStyleVar_ButtonTextAlign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN = ccimgui.ImGuiStyleVar_SelectableTextAlign
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE = ccimgui.ImGuiStyleVar_SeparatorTextBorderSize
 STYLE_VAR_SEPARATOR_TEXT_ALIGN = ccimgui.ImGuiStyleVar_SeparatorTextAlign
 STYLE_VAR_SEPARATOR_TEXT_PADDING = ccimgui.ImGuiStyleVar_SeparatorTextPadding
+STYLE_VAR_DOCKING_SEPARATOR_SIZE = ccimgui.ImGuiStyleVar_DockingSeparatorSize
 STYLE_VAR_COUNT = ccimgui.ImGuiStyleVar_COUNT
 BUTTON_FLAGS_NONE = ccimgui.ImGuiButtonFlags_None
 BUTTON_FLAGS_MOUSE_BUTTON_LEFT = ccimgui.ImGuiButtonFlags_MouseButtonLeft
@@ -1207,9 +1236,9 @@ def begin(name: str, p_open: Bool=None, flags: int=0):
     Some information such as 'flags' or 'p_open' will only be considered by the first call to Begin().
     - Begin() return false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
     anything to the window. Always call a matching End() for each Begin() call, regardless of its return value!
-    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
+    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
+    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     - Note that the bottom of window stack always contains a window called "Debug".
     """
     cdef bool res = ccimgui.ImGui_Begin(
@@ -1226,22 +1255,27 @@ def begin(name: str, p_open: Bool=None, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0):
+def begin_child(str_id: str, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0):
     """
     Child Windows
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
-    - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
-    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
-    Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
-    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
-    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
-    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
+    == 0.0f: use remaining parent window size for this axis.
+    > 0.0f: use specified size for this axis.
+    < 0.0f: right/bottom-align to specified distance from available content boundaries.
+    - Specifying ImGuiChildFlags_AutoResizeX or ImGuiChildFlags_AutoResizeY makes the sizing automatic based on child contents.
+    Combining both ImGuiChildFlags_AutoResizeX _and_ ImGuiChildFlags_AutoResizeY defeats purpose of a scrolling region and is NOT recommended.
+    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
+    anything to the window. Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
+    [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
+    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
+    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     """
     cdef bool res = ccimgui.ImGui_BeginChild(
         _bytes(str_id),
         _cast_tuple_ImVec2(size),
-        border,
-        flags
+        child_flags,
+        window_flags
     )
     return res
 # [End Function]
@@ -1278,6 +1312,38 @@ def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=
         flags
     )
     return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+# def begin_child_id_im_vec2_imgui_child_flags(id_: int):
+#     """
+#     Implied size = imvec2(0, 0), child_flags = 0, window_flags = 0
+#     """
+#     cdef bool res = ccimgui.ImGui_BeginChildIDImVec2ImGuiChildFlags(
+#         id_
+#     )
+#     return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+# def begin_child_id_im_vec2_imgui_child_flags_ex(id_: int, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0):
+#     cdef bool res = ccimgui.ImGui_BeginChildIDImVec2ImGuiChildFlagsEx(
+#         id_,
+#         _cast_tuple_ImVec2(size),
+#         child_flags,
+#         window_flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1374,9 +1440,10 @@ def begin_group():
 # ?returns(bool)
 # def begin_item_tooltip():
 #     """
-#     Tooltips: helper for showing a tooltip when hovering an item
-#     - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
-#     - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+#     Tooltips: helpers for showing a tooltip when hovering an item
+#     - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
+#     - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
+#     - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
 #     Begin/append a tooltip window if preceding item was hovered.
 #     """
 #     cdef bool res = ccimgui.ImGui_BeginItemTooltip()
@@ -1392,8 +1459,8 @@ def begin_group():
 def begin_list_box(label: str, size: tuple=(0, 0)):
     """
     Widgets: List Boxes
-    - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
-    - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
+    - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
+    - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.
     - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
@@ -1738,7 +1805,8 @@ def begin_tooltip():
     """
     Tooltips
     - Tooltips are windows following the mouse. They do not take focus away.
-    Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
+    - A tooltip window can contain items of any types. SetTooltip() is a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom.
+    Begin/append a tooltip window.
     """
     cdef bool res = ccimgui.ImGui_BeginTooltip()
     return res
@@ -2108,7 +2176,7 @@ def color_edit3(label: str, colour: Vec4, flags: int=0):
     colour.to_array(c_floats)
     cdef bool res = ccimgui.ImGui_ColorEdit3(
         _bytes(label),
-        c_floats,
+        &c_floats.value,
         flags
     )
     colour.from_array(c_floats)
@@ -2296,12 +2364,12 @@ cdef bool _combo_callback_function(void* data, int index, const char** out_text)
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def combo_callback_ex(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1):
+# def combo_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, popup_max_height_in_items: int=-1):
 #     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
 #         _bytes(label),
 #         &current_item.value,
-#         items_getter,
-#         data,
+#         getter,
+#         user_data,
 #         items_count,
 #         popup_max_height_in_items
 #     )
@@ -2461,13 +2529,13 @@ def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWi
     Docking
     [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
     Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
-    - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking/undocking.
+    - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-    - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to _enable_ docking/undocking.
+    - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
     About dockspaces:
-    - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
-    This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
+    This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
+    - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
     - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
     e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
@@ -3764,7 +3832,7 @@ def get_current_context():
 # ?returns(tuple)
 def get_cursor_pos():
     """
-    Cursor position in window coordinates (relative to window position)
+    [window-local] cursor position in window coordinates (relative to window position)
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorPos()
     return _cast_ImVec2_tuple(res)
@@ -3778,7 +3846,7 @@ def get_cursor_pos():
 # ?returns(float)
 def get_cursor_pos_x():
     """
-    (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc.
+    [window-local] '
     """
     cdef float res = ccimgui.ImGui_GetCursorPosX()
     return res
@@ -3792,7 +3860,7 @@ def get_cursor_pos_x():
 # ?returns(float)
 def get_cursor_pos_y():
     """
-    Other functions such as getcursorscreenpos or everything in imdrawlist::
+    [window-local] '
     """
     cdef float res = ccimgui.ImGui_GetCursorPosY()
     return res
@@ -3806,7 +3874,15 @@ def get_cursor_pos_y():
 # ?returns(tuple)
 def get_cursor_screen_pos():
     """
-    Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
+    Layout cursor positioning
+    - By "cursor" we mean the current output position.
+    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
+    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
+    - Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
+    - Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
+    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates.
+    Cursor position in absolute coordinates (prefer using this, also more useful to work with imdrawlist api).
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorScreenPos()
     return _cast_ImVec2_tuple(res)
@@ -3820,7 +3896,7 @@ def get_cursor_screen_pos():
 # ?returns(tuple)
 def get_cursor_start_pos():
     """
-    Initial cursor position in window coordinates
+    [window-local] initial cursor position, in window coordinates
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorStartPos()
     return _cast_ImVec2_tuple(res)
@@ -3834,7 +3910,7 @@ def get_cursor_start_pos():
 # ?returns(ImGuiPayload)
 def get_drag_drop_payload():
     """
-    Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
+    Peek directly into the current payload from anywhere. returns null when drag and drop is finished or inactive. use imguipayload::isdatatype() to test for the payload type.
     """
     cdef const ccimgui.ImGuiPayload* res = ccimgui.ImGui_GetDragDropPayload()
     return ImGuiPayload.from_ptr(res)
@@ -4112,7 +4188,7 @@ def get_item_rect_size():
 # ?invisible(False)
 # ?returns(int)
 # def get_key_index(key: int):
-#     cdef ccimgui.ImGuiKey res = ccimgui.GetKeyIndex(
+#     cdef ccimgui.ImGuiKey res = ccimgui.ImGui_GetKeyIndex(
 #         key
 #     )
 #     return res
@@ -4537,7 +4613,7 @@ def get_window_height():
 # ?returns(tuple)
 def get_window_pos():
     """
-    Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)
+    Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowPos()
     return _cast_ImVec2_tuple(res)
@@ -4551,7 +4627,7 @@ def get_window_pos():
 # ?returns(tuple)
 def get_window_size():
     """
-    Get current window size
+    Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowSize()
     return _cast_ImVec2_tuple(res)
@@ -4625,6 +4701,7 @@ def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+    - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     ccimgui.ImGui_ImageEx(
@@ -4643,14 +4720,14 @@ def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+def image_button(str_id: str, user_texture_id: int, image_size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
     cdef bool res = ccimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
         <ccimgui.ImTextureID>user_texture_id,
-        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
         _cast_tuple_ImVec4(bg_col),
@@ -4665,11 +4742,11 @@ def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def image_button_ex(str_id: str, user_texture_id: Any, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+# def image_button_ex(str_id: str, user_texture_id: Any, image_size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
 #     cdef bool res = ccimgui.ImGui_ImageButtonEx(
 #         _bytes(str_id),
 #         user_texture_id,
-#         _cast_tuple_ImVec2(size),
+#         _cast_tuple_ImVec2(image_size),
 #         _cast_tuple_ImVec2(uv0),
 #         _cast_tuple_ImVec2(uv1),
 #         _cast_tuple_ImVec4(bg_col),
@@ -5969,6 +6046,22 @@ def is_item_visible():
 
 # [Function]
 # ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+# def is_key_chord_pressed(key_chord: int):
+#     """
+#     Was key chord (mods + key) pressed, e.g. you can pass 'imguimod_ctrl | imguikey_s' as a key-chord. this doesn't do any routing or focus check, please consider using shortcut() function instead.
+#     """
+#     cdef bool res = ccimgui.ImGui_IsKeyChordPressed(
+#         key_chord
+#     )
+#     return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
@@ -6430,12 +6523,12 @@ cdef bool _list_box_callback_function(void* data, int index, const char** out_te
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def list_box_callback_ex(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1):
+# def list_box_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, height_in_items: int=-1):
 #     cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
 #         _bytes(label),
 #         &current_item.value,
-#         items_getter,
-#         data,
+#         getter,
+#         user_data,
 #         items_count,
 #         height_in_items
 #     )
@@ -7391,7 +7484,7 @@ def push_text_wrap_pos(wrap_local_pos_x: float=0.0):
 # ?returns(bool)
 def radio_button(label: str, active: bool):
     """
-    Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
+    Use with e.g. if (radiobutton('one', my_value==1)) ( my_value = 1; )
     """
     cdef bool res = ccimgui.ImGui_RadioButton(
         _bytes(label),
@@ -7643,13 +7736,7 @@ def selectable_bool_ptr(label: str, p_selected: Bool, flags: int=0, size: tuple=
 # ?returns(None)
 def separator():
     """
-    Cursor / Layout
-    - By "cursor" we mean the current output position.
-    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
-    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-    Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-    Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
+    Other layout functions
     Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
     """
     ccimgui.ImGui_Separator()
@@ -7771,7 +7858,7 @@ def set_color_edit_options(flags: int):
 # ?returns(None)
 def set_cursor_pos(local_pos: tuple):
     """
-    Are using the main, absolute coordinate system.
+    [window-local] '
     """
     ccimgui.ImGui_SetCursorPos(
         _cast_tuple_ImVec2(local_pos)
@@ -7786,7 +7873,7 @@ def set_cursor_pos(local_pos: tuple):
 # ?returns(None)
 def set_cursor_pos_x(local_x: float):
     """
-    Getwindowpos() + getcursorpos() == getcursorscreenpos() etc.)
+    [window-local] '
     """
     ccimgui.ImGui_SetCursorPosX(
         local_x
@@ -7801,7 +7888,7 @@ def set_cursor_pos_x(local_x: float):
 # ?returns(None)
 def set_cursor_pos_y(local_y: float):
     """
-
+    [window-local] '
     """
     ccimgui.ImGui_SetCursorPosY(
         local_y
@@ -8351,7 +8438,7 @@ def set_tab_item_closed(tab_or_docked_window_label: str):
 # ?returns(None)
 def set_tooltip(fmt: str):
     """
-    Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
+    Set a text-only tooltip. often used after a imgui::isitemhovered() check. override any previous call to settooltip().
     """
     ccimgui.ImGui_SetTooltip(
         _bytes(fmt)
@@ -8571,6 +8658,34 @@ def show_font_selector(label: str):
     ccimgui.ImGui_ShowFontSelector(
         _bytes(label)
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+# def show_id_stack_tool_window():
+#     """
+#     Implied p_open = null
+#     """
+#     ccimgui.ImGui_ShowIDStackToolWindow()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+# def show_id_stack_tool_window_ex(p_open: Bool=None):
+#     """
+#     Create stack tool window. hover items with mouse to query information about the source of their unique id.
+#     """
+#     ccimgui.ImGui_ShowIDStackToolWindowEx(
+#         Bool.ptr(p_open)
+#     )
 # [End Function]
 
 # [Function]
@@ -9296,7 +9411,7 @@ def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | F
 # ?returns(bool)
 def small_button(label: str):
     """
-    Button with framepadding=(0,0) to easily embed within text
+    Button with (framepadding.y == 0) to easily embed within text
     """
     cdef bool res = ccimgui.ImGui_SmallButton(
         _bytes(label)
@@ -9378,6 +9493,19 @@ def tab_item_button(label: str, flags: int=0):
         flags
     )
     return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+# def table_angled_headers_row():
+#     """
+#     Submit a row with angled headers for every column with the imguitablecolumnflags_angledheader flag. must be first row.
+#     """
+#     ccimgui.ImGui_TableAngledHeadersRow()
 # [End Function]
 
 # [Function]
@@ -9497,7 +9625,7 @@ def table_header(label: str):
 # ?returns(None)
 def table_headers_row():
     """
-    Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
+    Submit a row with headers cells based on data provided to tablesetupcolumn() + submit context menu
     """
     ccimgui.ImGui_TableHeadersRow()
 # [End Function]
@@ -10350,6 +10478,23 @@ cdef class GLFWwindow:
     # ?custom_comment_only(False)
     # ?returns(ImColor)
     # def hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
+    #     cdef ccimgui.ImColor res = ccimgui.HSV(
+    #         self._ptr,
+    #         h,
+    #         s,
+    #         v,
+    #         a
+    #     )
+    #     return ImColor.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImColor)
+    # def im_color_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
     #     cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
     #         self._ptr,
     #         h,
@@ -10366,11 +10511,30 @@ cdef class GLFWwindow:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
+    # def im_color_set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
     #     """
     #     FIXME-OBSOLETE: May need to obsolete/cleanup those helpers.
     #     """
     #     ccimgui.ImColor_SetHSV(
+    #         self._ptr,
+    #         h,
+    #         s,
+    #         v,
+    #         a
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
+    #     """
+    #     FIXME-OBSOLETE: May need to obsolete/cleanup those helpers.
+    #     """
+    #     ccimgui.SetHSV(
     #         self._ptr,
     #         h,
     #         s,
@@ -10640,6 +10804,22 @@ cdef class ImDrawCmd:
     #     """
     #     Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
     #     """
+    #     cdef ccimgui.ImTextureID res = ccimgui.GetTexID(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # def im_draw_cmd_get_tex_id(self: ImDrawCmd):
+    #     """
+    #     Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
+    #     """
     #     cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(
     #         self._ptr
     #     )
@@ -10783,18 +10963,18 @@ cdef class ImDrawData:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(List[ImDrawList])
+    # ?returns(List[ImVector_ImDrawList]Ptr)
     @property
     def cmd_lists(self):
         """
-        Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
+        Array of imdrawlist* to render. the imdrawlists are owned by imguicontext and only pointed to from here.
         """
-        cdef ccimgui.ImDrawList** cmd_lists = dereference(self._ptr).CmdLists
+        cdef ccimgui.ImVector_ImDrawListPtr cmd_lists = dereference(self._ptr).CmdLists
         return [
-            ImDrawList.from_ptr(cmd_lists[idx]) for idx in range(self.cmd_lists_count)
+            ImVector_ImDrawListPtr.from_ptr(cmd_lists[idx]) for idx in range(self.cmd_lists_count)
         ]
     @cmd_lists.setter
-    def cmd_lists(self, value: ImDrawList):
+    def cmd_lists(self, value: ImVector_ImDrawListPtr):
         # dereference(self._ptr).CmdLists = value._ptr
         raise NotImplementedError
     # [End Field]
@@ -10957,11 +11137,24 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
+    # def add_draw_list(self: ImDrawData, draw_list: ImDrawList):
+    #     """
+    #     Helper to add an external draw list into an existing imdrawdata.
+    #     """
+    #     ccimgui.AddDrawList(
+    #         self._ptr,
+    #         draw_list._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
     # def clear(self: ImDrawData):
-    #     """
-    #     The imdrawlist are owned by imguicontext!
-    #     """
-    #     ccimgui.ImDrawData_Clear(
+    #     ccimgui.Clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -10976,8 +11169,67 @@ cdef class ImDrawData:
     #     """
     #     Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
     #     """
+    #     ccimgui.DeIndexAllBuffers(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_data_add_draw_list(self: ImDrawData, draw_list: ImDrawList):
+    #     """
+    #     Helper to add an external draw list into an existing imdrawdata.
+    #     """
+    #     ccimgui.ImDrawData_AddDrawList(
+    #         self._ptr,
+    #         draw_list._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_data_clear(self: ImDrawData):
+    #     ccimgui.ImDrawData_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_data_de_index_all_buffers(self: ImDrawData):
+    #     """
+    #     Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
+    #     """
     #     ccimgui.ImDrawData_DeIndexAllBuffers(
     #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_data_scale_clip_rects(self: ImDrawData, fb_scale: tuple):
+    #     """
+    #     Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
+    #     """
+    #     ccimgui.ImDrawData_ScaleClipRects(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(fb_scale)
     #     )
     # [End Method]
 
@@ -10991,7 +11243,7 @@ cdef class ImDrawData:
         """
         Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
         """
-        ccimgui.ImDrawData_ScaleClipRects(
+        ccimgui.ScaleClipRects(
             self._ptr,
             _cast_tuple_ImVec2(fb_scale)
         )
@@ -11344,7 +11596,7 @@ cdef class ImDrawList:
         """
         Cubic bezier (4 control points)
         """
-        ccimgui.ImDrawList_AddBezierCubic(
+        ccimgui.AddBezierCubic(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11366,7 +11618,7 @@ cdef class ImDrawList:
         """
         Quadratic bezier (3 control points)
         """
-        ccimgui.ImDrawList_AddBezierQuadratic(
+        ccimgui.AddBezierQuadratic(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11388,7 +11640,7 @@ cdef class ImDrawList:
     #     Advanced
     #     Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
     #     """
-    #     ccimgui.ImDrawList_AddCallback(
+    #     ccimgui.AddCallback(
     #         self._ptr,
     #         callback,
     #         callback_data
@@ -11402,7 +11654,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_circle(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
-        ccimgui.ImDrawList_AddCircleEx(
+        ccimgui.AddCircleEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -11419,7 +11671,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_circle_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
-    #     ccimgui.ImDrawList_AddCircleEx(
+    #     ccimgui.AddCircleEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(center),
     #         radius,
@@ -11436,7 +11688,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0):
-        ccimgui.ImDrawList_AddCircleFilled(
+        ccimgui.AddCircleFilled(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -11458,7 +11710,7 @@ cdef class ImDrawList:
             c_points[i].x = point[0]
             c_points[i].y = point[1]
 
-        ccimgui.ImDrawList_AddConvexPolyFilled(
+        ccimgui.AddConvexPolyFilled(
             self._ptr,
             c_points,
             len(points),
@@ -11478,8 +11730,83 @@ cdef class ImDrawList:
     #     """
     #     This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
     #     """
-    #     ccimgui.ImDrawList_AddDrawCmd(
+    #     ccimgui.AddDrawCmd(
     #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def add_ellipse(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int):
+    #     """
+    #     Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
+    #     """
+    #     ccimgui.AddEllipse(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def add_ellipse_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
+    #     ccimgui.AddEllipseEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col,
+    #         rot,
+    #         num_segments,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def add_ellipse_filled(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int):
+    #     """
+    #     Implied rot = 0.0f, num_segments = 0
+    #     """
+    #     ccimgui.AddEllipseFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def add_ellipse_filled_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0):
+    #     ccimgui.AddEllipseFilledEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col,
+    #         rot,
+    #         num_segments
     #     )
     # [End Method]
 
@@ -11497,7 +11824,7 @@ cdef class ImDrawList:
         - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
         Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
         """
-        ccimgui.ImDrawList_AddImageEx(
+        ccimgui.AddImageEx(
             self._ptr,
             <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p_min),
@@ -11515,7 +11842,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
-    #     ccimgui.ImDrawList_AddImageEx(
+    #     ccimgui.AddImageEx(
     #         self._ptr,
     #         user_texture_id,
     #         _cast_tuple_ImVec2(p_min),
@@ -11533,7 +11860,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_image_quad(self: ImDrawList, user_texture_id: int, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
-        ccimgui.ImDrawList_AddImageQuadEx(
+        ccimgui.AddImageQuadEx(
             self._ptr,
             <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p1),
@@ -11555,7 +11882,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
-    #     ccimgui.ImDrawList_AddImageQuadEx(
+    #     ccimgui.AddImageQuadEx(
     #         self._ptr,
     #         user_texture_id,
     #         _cast_tuple_ImVec2(p1),
@@ -11577,7 +11904,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
-        ccimgui.ImDrawList_AddImageRounded(
+        ccimgui.AddImageRounded(
             self._ptr,
             <ccimgui.ImTextureID><uintptr_t>user_texture_id,
             _cast_tuple_ImVec2(p_min),
@@ -11606,7 +11933,7 @@ cdef class ImDrawList:
         In future versions we will use textures to provide cheaper and higher-quality circles.
         Use AddNgon() and AddNgonFilled() functions if you need to guarantee a specific number of sides.
         """
-        ccimgui.ImDrawList_AddLineEx(
+        ccimgui.AddLineEx(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11622,7 +11949,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_line_ex(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0):
-    #     ccimgui.ImDrawList_AddLineEx(
+    #     ccimgui.AddLineEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(p1),
     #         _cast_tuple_ImVec2(p2),
@@ -11638,7 +11965,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddNgonEx(
+        ccimgui.AddNgonEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -11655,7 +11982,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_ngon_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
-    #     ccimgui.ImDrawList_AddNgonEx(
+    #     ccimgui.AddNgonEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(center),
     #         radius,
@@ -11672,7 +11999,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
-        ccimgui.ImDrawList_AddNgonFilled(
+        ccimgui.AddNgonFilled(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -11694,7 +12021,7 @@ cdef class ImDrawList:
             c_points[i].x = point[0]
             c_points[i].y = point[1]
 
-        ccimgui.ImDrawList_AddPolyline(
+        ccimgui.AddPolyline(
             self._ptr,
             c_points,
             len(points),
@@ -11713,7 +12040,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddQuadEx(
+        ccimgui.AddQuadEx(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11731,7 +12058,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_quad_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
-    #     ccimgui.ImDrawList_AddQuadEx(
+    #     ccimgui.AddQuadEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(p1),
     #         _cast_tuple_ImVec2(p2),
@@ -11749,7 +12076,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
-        ccimgui.ImDrawList_AddQuadFilled(
+        ccimgui.AddQuadFilled(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11769,7 +12096,7 @@ cdef class ImDrawList:
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
-        ccimgui.ImDrawList_AddRectEx(
+        ccimgui.AddRectEx(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
@@ -11790,7 +12117,7 @@ cdef class ImDrawList:
     #     """
     #     A: upper-left, b: lower-right (== upper-left + size)
     #     """
-    #     ccimgui.ImDrawList_AddRectEx(
+    #     ccimgui.AddRectEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(p_min),
     #         _cast_tuple_ImVec2(p_max),
@@ -11811,7 +12138,7 @@ cdef class ImDrawList:
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
-        ccimgui.ImDrawList_AddRectFilledEx(
+        ccimgui.AddRectFilledEx(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
@@ -11831,7 +12158,7 @@ cdef class ImDrawList:
     #     """
     #     A: upper-left, b: lower-right (== upper-left + size)
     #     """
-    #     ccimgui.ImDrawList_AddRectFilledEx(
+    #     ccimgui.AddRectFilledEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(p_min),
     #         _cast_tuple_ImVec2(p_max),
@@ -11848,7 +12175,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
-        ccimgui.ImDrawList_AddRectFilledMultiColor(
+        ccimgui.AddRectFilledMultiColor(
             self._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
@@ -11866,7 +12193,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_text(self: ImDrawList, pos: tuple, col: int, text: str):
-        ccimgui.ImDrawList_AddTextEx(
+        ccimgui.AddTextEx(
             self._ptr,
             _cast_tuple_ImVec2(pos),
             col,
@@ -11884,7 +12211,7 @@ cdef class ImDrawList:
 #     def add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
 #         bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-#         ccimgui.ImDrawList_AddTextEx(
+#         ccimgui.AddTextEx(
 #             self._ptr,
 #             _cast_tuple_ImVec2(pos),
 #             col,
@@ -11903,7 +12230,7 @@ cdef class ImDrawList:
     #     """
     #     Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
     #     """
-    #     ccimgui.ImDrawList_AddTextImFontPtr(
+    #     ccimgui.AddTextImFontPtr(
     #         self._ptr,
     #         font._ptr,
     #         font_size,
@@ -11922,7 +12249,7 @@ cdef class ImDrawList:
 #     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
 #         bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-#         ccimgui.ImDrawList_AddTextImFontPtrEx(
+#         ccimgui.AddTextImFontPtrEx(
 #             self._ptr,
 #             font._ptr,
 #             font_size,
@@ -11962,7 +12289,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddTriangleEx(
+        ccimgui.AddTriangleEx(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -11979,7 +12306,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_triangle_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
-    #     ccimgui.ImDrawList_AddTriangleEx(
+    #     ccimgui.AddTriangleEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(p1),
     #         _cast_tuple_ImVec2(p2),
@@ -11996,7 +12323,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
-        ccimgui.ImDrawList_AddTriangleFilled(
+        ccimgui.AddTriangleFilled(
             self._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
@@ -12012,7 +12339,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(int)
     # def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
-    #     cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
+    #     cdef int res = ccimgui._CalcCircleAutoSegmentCount(
     #         self._ptr,
     #         radius
     #     )
@@ -12026,7 +12353,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def channels_merge(self: ImDrawList):
-        ccimgui.ImDrawList_ChannelsMerge(
+        ccimgui.ChannelsMerge(
             self._ptr
         )
     # [End Method]
@@ -12038,7 +12365,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def channels_set_current(self: ImDrawList, n: int):
-        ccimgui.ImDrawList_ChannelsSetCurrent(
+        ccimgui.ChannelsSetCurrent(
             self._ptr,
             n
         )
@@ -12055,11 +12382,11 @@ cdef class ImDrawList:
         Advanced: Channels
         - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
         - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
-        - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
+        - This API shouldn't have been in ImDrawList in the first place!
         Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
         Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
         """
-        ccimgui.ImDrawList_ChannelsSplit(
+        ccimgui.ChannelsSplit(
             self._ptr,
             count
         )
@@ -12072,7 +12399,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def clear_free_memory(self: ImDrawList):
-    #     ccimgui.ImDrawList__ClearFreeMemory(
+    #     ccimgui._ClearFreeMemory(
     #         self._ptr
     #     )
     # [End Method]
@@ -12087,7 +12414,7 @@ cdef class ImDrawList:
     #     """
     #     Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
     #     """
-    #     cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(
+    #     cdef ccimgui.ImDrawList* res = ccimgui.CloneOutput(
     #         self._ptr
     #     )
     #     return ImDrawList.from_ptr(res)
@@ -12100,7 +12427,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(tuple)
     # def get_clip_rect_max(self: ImDrawList):
-    #     cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
+    #     cdef ccimgui.ImVec2 res = ccimgui.GetClipRectMax(
     #         self._ptr
     #     )
     #     return _cast_ImVec2_tuple(res)
@@ -12113,6 +12440,938 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(tuple)
     # def get_clip_rect_min(self: ImDrawList):
+    #     cdef ccimgui.ImVec2 res = ccimgui.GetClipRectMin(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_draw_list__calc_circle_auto_segment_count(self: ImDrawList, radius: float):
+    #     cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
+    #         self._ptr,
+    #         radius
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__clear_free_memory(self: ImDrawList):
+    #     ccimgui.ImDrawList__ClearFreeMemory(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__on_changed_clip_rect(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedClipRect(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__on_changed_texture_id(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedTextureID(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__on_changed_vtx_offset(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedVtxOffset(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
+    #     ccimgui.ImDrawList__PathArcToFastEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min_sample,
+    #         a_max_sample,
+    #         a_step
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
+    #     ccimgui.ImDrawList__PathArcToN(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__pop_unused_draw_cmd(self: ImDrawList):
+    #     ccimgui.ImDrawList__PopUnusedDrawCmd(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__reset_for_new_frame(self: ImDrawList):
+    #     """
+    #     [Internal helpers]
+    #     """
+    #     ccimgui.ImDrawList__ResetForNewFrame(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list__try_merge_draw_cmds(self: ImDrawList):
+    #     ccimgui.ImDrawList__TryMergeDrawCmds(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0):
+    #     """
+    #     Cubic bezier (4 control points)
+    #     """
+    #     ccimgui.ImDrawList_AddBezierCubic(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         col,
+    #         thickness,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0):
+    #     """
+    #     Quadratic bezier (3 control points)
+    #     """
+    #     ccimgui.ImDrawList_AddBezierQuadratic(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         col,
+    #         thickness,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_callback(self: ImDrawList, callback: Callable, callback_data: Any):
+    #     """
+    #     Advanced
+    #     Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
+    #     """
+    #     ccimgui.ImDrawList_AddCallback(
+    #         self._ptr,
+    #         callback,
+    #         callback_data
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_circle(self: ImDrawList, center: tuple, radius: float, col: int):
+    #     """
+    #     Implied num_segments = 0, thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddCircle(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_circle_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddCircleEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0):
+    #     ccimgui.ImDrawList_AddCircleFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
+    #     ccimgui.ImDrawList_AddConvexPolyFilled(
+    #         self._ptr,
+    #         points._ptr,
+    #         num_points,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_draw_cmd(self: ImDrawList):
+    #     """
+    #     This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
+    #     """
+    #     ccimgui.ImDrawList_AddDrawCmd(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ellipse(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int):
+    #     """
+    #     Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddEllipse(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ellipse_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddEllipseEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col,
+    #         rot,
+    #         num_segments,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ellipse_filled(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int):
+    #     """
+    #     Implied rot = 0.0f, num_segments = 0
+    #     """
+    #     ccimgui.ImDrawList_AddEllipseFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ellipse_filled_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0):
+    #     ccimgui.ImDrawList_AddEllipseFilledEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         col,
+    #         rot,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_image(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple):
+    #     """
+    #     Image primitives
+    #     - Read FAQ to understand what ImTextureID is.
+    #     - "p_min" and "p_max" represent the upper-left and lower-right corners of the rectangle.
+    #     - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
+    #     Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
+    #     """
+    #     ccimgui.ImDrawList_AddImage(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
+    #     ccimgui.ImDrawList_AddImageEx(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         _cast_tuple_ImVec2(uv_min),
+    #         _cast_tuple_ImVec2(uv_max),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_image_quad(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple):
+    #     """
+    #     Implied uv1 = imvec2(0, 0), uv2 = imvec2(1, 0), uv3 = imvec2(1, 1), uv4 = imvec2(0, 1), col = im_col32_white
+    #     """
+    #     ccimgui.ImDrawList_AddImageQuad(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
+    #     ccimgui.ImDrawList_AddImageQuadEx(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         _cast_tuple_ImVec2(uv1),
+    #         _cast_tuple_ImVec2(uv2),
+    #         _cast_tuple_ImVec2(uv3),
+    #         _cast_tuple_ImVec2(uv4),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_image_rounded(self: ImDrawList, user_texture_id: Any, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0):
+    #     ccimgui.ImDrawList_AddImageRounded(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         _cast_tuple_ImVec2(uv_min),
+    #         _cast_tuple_ImVec2(uv_max),
+    #         col,
+    #         rounding,
+    #         flags
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int):
+    #     """
+    #     Primitives
+    #     - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+    #     - For rectangular primitives, "p_min" and "p_max" represent the upper-left and lower-right corners.
+    #     - For circle primitives, use "num_segments == 0" to automatically calculate tessellation (preferred).
+    #     In older versions (until Dear ImGui 1.77) the AddCircle functions defaulted to num_segments == 12.
+    #     In future versions we will use textures to provide cheaper and higher-quality circles.
+    #     Use AddNgon() and AddNgonFilled() functions if you need to guarantee a specific number of sides.
+    #     Implied thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddLine(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_line_ex(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddLineEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         col,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
+    #     """
+    #     Implied thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddNgon(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ngon_ex(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddNgonEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int):
+    #     ccimgui.ImDrawList_AddNgonFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
+    #     ccimgui.ImDrawList_AddPolyline(
+    #         self._ptr,
+    #         points._ptr,
+    #         num_points,
+    #         col,
+    #         flags,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
+    #     """
+    #     Implied thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddQuad(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_quad_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddQuadEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         col,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int):
+    #     ccimgui.ImDrawList_AddQuadFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
+    #     """
+    #     Implied rounding = 0.0f, flags = 0, thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddRect(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_rect_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
+    #     """
+    #     A: upper-left, b: lower-right (== upper-left + size)
+    #     """
+    #     ccimgui.ImDrawList_AddRectEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col,
+    #         rounding,
+    #         flags,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int):
+    #     """
+    #     Implied rounding = 0.0f, flags = 0
+    #     """
+    #     ccimgui.ImDrawList_AddRectFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_rect_filled_ex(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0):
+    #     """
+    #     A: upper-left, b: lower-right (== upper-left + size)
+    #     """
+    #     ccimgui.ImDrawList_AddRectFilledEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col,
+    #         rounding,
+    #         flags
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int):
+    #     ccimgui.ImDrawList_AddRectFilledMultiColor(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col_upr_left,
+    #         col_upr_right,
+    #         col_bot_right,
+    #         col_bot_left
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_text(self: ImDrawList, pos: tuple, col: int, text_begin: str):
+    #     """
+    #     Implied text_end = null
+    #     """
+    #     ccimgui.ImDrawList_AddText(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         _bytes(text_begin)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+#     def im_draw_list_add_text_ex(self: ImDrawList, pos: tuple, col: int, text_begin: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImDrawList_AddTextEx(
+#             self._ptr,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str):
+    #     """
+    #     Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
+    #     """
+    #     ccimgui.ImDrawList_AddTextImFontPtr(
+    #         self._ptr,
+    #         font._ptr,
+    #         font_size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         _bytes(text_begin)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+#     def im_draw_list_add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImDrawList_AddTextImFontPtrEx(
+#             self._ptr,
+#             font._ptr,
+#             font_size,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             wrap_width,
+#             <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
+#         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
+    #     """
+    #     Implied thickness = 1.0f
+    #     """
+    #     ccimgui.ImDrawList_AddTriangle(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_triangle_ex(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddTriangleEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         col,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int):
+    #     ccimgui.ImDrawList_AddTriangleFilled(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_channels_merge(self: ImDrawList):
+    #     ccimgui.ImDrawList_ChannelsMerge(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_channels_set_current(self: ImDrawList, n: int):
+    #     ccimgui.ImDrawList_ChannelsSetCurrent(
+    #         self._ptr,
+    #         n
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_channels_split(self: ImDrawList, count: int):
+    #     """
+    #     Advanced: Channels
+    #     - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
+    #     - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
+    #     - This API shouldn't have been in ImDrawList in the first place!
+    #     Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
+    #     Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
+    #     """
+    #     ccimgui.ImDrawList_ChannelsSplit(
+    #         self._ptr,
+    #         count
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImDrawList)
+    # def im_draw_list_clone_output(self: ImDrawList):
+    #     """
+    #     Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
+    #     """
+    #     cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(
+    #         self._ptr
+    #     )
+    #     return ImDrawList.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+    # def im_draw_list_get_clip_rect_max(self: ImDrawList):
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+    # def im_draw_list_get_clip_rect_min(self: ImDrawList):
     #     cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMin(
     #         self._ptr
     #     )
@@ -12122,11 +13381,415 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
+    #     ccimgui.ImDrawList_PathArcTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_arc_to_fast(self: ImDrawList, center: tuple, radius: float, a_min_of_12: int, a_max_of_12: int):
+    #     """
+    #     Use precomputed angles for a 12 steps circle
+    #     """
+    #     ccimgui.ImDrawList_PathArcToFast(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min_of_12,
+    #         a_max_of_12
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0):
+    #     """
+    #     Cubic bezier (4 control points)
+    #     """
+    #     ccimgui.ImDrawList_PathBezierCubicCurveTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0):
+    #     """
+    #     Quadratic bezier (3 control points)
+    #     """
+    #     ccimgui.ImDrawList_PathBezierQuadraticCurveTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_clear(self: ImDrawList):
+    #     """
+    #     Stateful path API, add points then finish with PathFillConvex() or PathStroke()
+    #     - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+    #     """
+    #     ccimgui.ImDrawList_PathClear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_elliptical_arc_to(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float):
+    #     """
+    #     Implied num_segments = 0
+    #     """
+    #     ccimgui.ImDrawList_PathEllipticalArcTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         rot,
+    #         a_min,
+    #         a_max
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_elliptical_arc_to_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0):
+    #     """
+    #     Ellipse
+    #     """
+    #     ccimgui.ImDrawList_PathEllipticalArcToEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         rot,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_fill_convex(self: ImDrawList, col: int):
+    #     ccimgui.ImDrawList_PathFillConvex(
+    #         self._ptr,
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_line_to(self: ImDrawList, pos: tuple):
+    #     ccimgui.ImDrawList_PathLineTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_line_to_merge_duplicate(self: ImDrawList, pos: tuple):
+    #     ccimgui.ImDrawList_PathLineToMergeDuplicate(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0):
+    #     ccimgui.ImDrawList_PathRect(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(rect_min),
+    #         _cast_tuple_ImVec2(rect_max),
+    #         rounding,
+    #         flags
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0):
+    #     ccimgui.ImDrawList_PathStroke(
+    #         self._ptr,
+    #         col,
+    #         flags,
+    #         thickness
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_pop_clip_rect(self: ImDrawList):
+    #     ccimgui.ImDrawList_PopClipRect(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_pop_texture_id(self: ImDrawList):
+    #     ccimgui.ImDrawList_PopTextureID(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int):
+    #     ccimgui.ImDrawList_PrimQuadUV(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         _cast_tuple_ImVec2(c),
+    #         _cast_tuple_ImVec2(d),
+    #         _cast_tuple_ImVec2(uv_a),
+    #         _cast_tuple_ImVec2(uv_b),
+    #         _cast_tuple_ImVec2(uv_c),
+    #         _cast_tuple_ImVec2(uv_d),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_rect(self: ImDrawList, a: tuple, b: tuple, col: int):
+    #     """
+    #     Axis aligned rectangle (composed of two triangles)
+    #     """
+    #     ccimgui.ImDrawList_PrimRect(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_rect_uv(self: ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int):
+    #     ccimgui.ImDrawList_PrimRectUV(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         _cast_tuple_ImVec2(uv_a),
+    #         _cast_tuple_ImVec2(uv_b),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int):
+    #     """
+    #     Advanced: Primitives allocations
+    #     - We render triangles (three vertices)
+    #     - All primitives needs to be reserved via PrimReserve() beforehand.
+    #     """
+    #     ccimgui.ImDrawList_PrimReserve(
+    #         self._ptr,
+    #         idx_count,
+    #         vtx_count
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
+    #     ccimgui.ImDrawList_PrimUnreserve(
+    #         self._ptr,
+    #         idx_count,
+    #         vtx_count
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
+    #     """
+    #     Write vertex with unique index
+    #     """
+    #     ccimgui.ImDrawList_PrimVtx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos),
+    #         _cast_tuple_ImVec2(uv),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_write_idx(self: ImDrawList, idx: int):
+    #     ccimgui.ImDrawList_PrimWriteIdx(
+    #         self._ptr,
+    #         idx
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
+    #     ccimgui.ImDrawList_PrimWriteVtx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos),
+    #         _cast_tuple_ImVec2(uv),
+    #         col
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False):
+    #     """
+    #     Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
+    #     """
+    #     ccimgui.ImDrawList_PushClipRect(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(clip_rect_min),
+    #         _cast_tuple_ImVec2(clip_rect_max),
+    #         intersect_with_current_clip_rect
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_push_clip_rect_full_screen(self: ImDrawList):
+    #     ccimgui.ImDrawList_PushClipRectFullScreen(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_push_texture_id(self: ImDrawList, texture_id: Any):
+    #     ccimgui.ImDrawList_PushTextureID(
+    #         self._ptr,
+    #         texture_id
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
     # def on_changed_clip_rect(self: ImDrawList):
-    #     ccimgui.ImDrawList__OnChangedClipRect(
+    #     ccimgui._OnChangedClipRect(
     #         self._ptr
     #     )
     # [End Method]
@@ -12138,7 +13801,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def on_changed_texture_id(self: ImDrawList):
-    #     ccimgui.ImDrawList__OnChangedTextureID(
+    #     ccimgui._OnChangedTextureID(
     #         self._ptr
     #     )
     # [End Method]
@@ -12150,7 +13813,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def on_changed_vtx_offset(self: ImDrawList):
-    #     ccimgui.ImDrawList__OnChangedVtxOffset(
+    #     ccimgui._OnChangedVtxOffset(
     #         self._ptr
     #     )
     # [End Method]
@@ -12162,7 +13825,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0):
-        ccimgui.ImDrawList_PathArcTo(
+        ccimgui.PathArcTo(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -12184,7 +13847,7 @@ cdef class ImDrawList:
         pygui note: The _ex version of this function is a private function in imgui.h
         This function works like a clock. But 0 and 12 is East and 6 is West.
         """
-        ccimgui.ImDrawList_PathArcToFast(
+        ccimgui.PathArcToFast(
             self._ptr,
             _cast_tuple_ImVec2(center),
             radius,
@@ -12200,7 +13863,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def path_arc_to_fast_ex(self: ImDrawList, center: tuple, radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
-    #     ccimgui.ImDrawList__PathArcToFastEx(
+    #     ccimgui._PathArcToFastEx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(center),
     #         radius,
@@ -12217,7 +13880,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def path_arc_to_n(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int):
-    #     ccimgui.ImDrawList__PathArcToN(
+    #     ccimgui._PathArcToN(
     #         self._ptr,
     #         _cast_tuple_ImVec2(center),
     #         radius,
@@ -12237,7 +13900,7 @@ cdef class ImDrawList:
         """
         Cubic bezier (4 control points)
         """
-        ccimgui.ImDrawList_PathBezierCubicCurveTo(
+        ccimgui.PathBezierCubicCurveTo(
             self._ptr,
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
@@ -12256,7 +13919,7 @@ cdef class ImDrawList:
         """
         Quadratic bezier (3 control points)
         """
-        ccimgui.ImDrawList_PathBezierQuadraticCurveTo(
+        ccimgui.PathBezierQuadraticCurveTo(
             self._ptr,
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
@@ -12275,9 +13938,52 @@ cdef class ImDrawList:
         Stateful path API, add points then finish with PathFillConvex() or PathStroke()
         - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
         """
-        ccimgui.ImDrawList_PathClear(
+        ccimgui.PathClear(
             self._ptr
         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def path_elliptical_arc_to(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float):
+    #     """
+    #     Implied num_segments = 0
+    #     """
+    #     ccimgui.PathEllipticalArcTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         rot,
+    #         a_min,
+    #         a_max
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def path_elliptical_arc_to_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0):
+    #     """
+    #     Ellipse
+    #     """
+    #     ccimgui.PathEllipticalArcToEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius_x,
+    #         radius_y,
+    #         rot,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
     # [End Method]
 
     # [Method]
@@ -12287,7 +13993,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_fill_convex(self: ImDrawList, col: int):
-        ccimgui.ImDrawList_PathFillConvex(
+        ccimgui.PathFillConvex(
             self._ptr,
             col
         )
@@ -12300,7 +14006,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_line_to(self: ImDrawList, pos: tuple):
-        ccimgui.ImDrawList_PathLineTo(
+        ccimgui.PathLineTo(
             self._ptr,
             _cast_tuple_ImVec2(pos)
         )
@@ -12313,7 +14019,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple):
-        ccimgui.ImDrawList_PathLineToMergeDuplicate(
+        ccimgui.PathLineToMergeDuplicate(
             self._ptr,
             _cast_tuple_ImVec2(pos)
         )
@@ -12326,7 +14032,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0):
-        ccimgui.ImDrawList_PathRect(
+        ccimgui.PathRect(
             self._ptr,
             _cast_tuple_ImVec2(rect_min),
             _cast_tuple_ImVec2(rect_max),
@@ -12342,7 +14048,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0):
-        ccimgui.ImDrawList_PathStroke(
+        ccimgui.PathStroke(
             self._ptr,
             col,
             flags,
@@ -12357,7 +14063,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def pop_clip_rect(self: ImDrawList):
-        ccimgui.ImDrawList_PopClipRect(
+        ccimgui.PopClipRect(
             self._ptr
         )
     # [End Method]
@@ -12369,7 +14075,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def pop_texture_id(self: ImDrawList):
-    #     ccimgui.ImDrawList_PopTextureID(
+    #     ccimgui.PopTextureID(
     #         self._ptr
     #     )
     # [End Method]
@@ -12381,7 +14087,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def pop_unused_draw_cmd(self: ImDrawList):
-    #     ccimgui.ImDrawList__PopUnusedDrawCmd(
+    #     ccimgui._PopUnusedDrawCmd(
     #         self._ptr
     #     )
     # [End Method]
@@ -12393,7 +14099,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def prim_quad_uv(self: ImDrawList, a: tuple, b: tuple, c: tuple, d: tuple, uv_a: tuple, uv_b: tuple, uv_c: tuple, uv_d: tuple, col: int):
-    #     ccimgui.ImDrawList_PrimQuadUV(
+    #     ccimgui.PrimQuadUV(
     #         self._ptr,
     #         _cast_tuple_ImVec2(a),
     #         _cast_tuple_ImVec2(b),
@@ -12417,7 +14123,7 @@ cdef class ImDrawList:
     #     """
     #     Axis aligned rectangle (composed of two triangles)
     #     """
-    #     ccimgui.ImDrawList_PrimRect(
+    #     ccimgui.PrimRect(
     #         self._ptr,
     #         _cast_tuple_ImVec2(a),
     #         _cast_tuple_ImVec2(b),
@@ -12432,7 +14138,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def prim_rect_uv(self: ImDrawList, a: tuple, b: tuple, uv_a: tuple, uv_b: tuple, col: int):
-    #     ccimgui.ImDrawList_PrimRectUV(
+    #     ccimgui.PrimRectUV(
     #         self._ptr,
     #         _cast_tuple_ImVec2(a),
     #         _cast_tuple_ImVec2(b),
@@ -12454,7 +14160,7 @@ cdef class ImDrawList:
     #     - We render triangles (three vertices)
     #     - All primitives needs to be reserved via PrimReserve() beforehand.
     #     """
-    #     ccimgui.ImDrawList_PrimReserve(
+    #     ccimgui.PrimReserve(
     #         self._ptr,
     #         idx_count,
     #         vtx_count
@@ -12468,7 +14174,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
-    #     ccimgui.ImDrawList_PrimUnreserve(
+    #     ccimgui.PrimUnreserve(
     #         self._ptr,
     #         idx_count,
     #         vtx_count
@@ -12485,7 +14191,7 @@ cdef class ImDrawList:
     #     """
     #     Write vertex with unique index
     #     """
-    #     ccimgui.ImDrawList_PrimVtx(
+    #     ccimgui.PrimVtx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(pos),
     #         _cast_tuple_ImVec2(uv),
@@ -12500,7 +14206,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def prim_write_idx(self: ImDrawList, idx: int):
-    #     ccimgui.ImDrawList_PrimWriteIdx(
+    #     ccimgui.PrimWriteIdx(
     #         self._ptr,
     #         idx
     #     )
@@ -12513,7 +14219,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def prim_write_vtx(self: ImDrawList, pos: tuple, uv: tuple, col: int):
-    #     ccimgui.ImDrawList_PrimWriteVtx(
+    #     ccimgui.PrimWriteVtx(
     #         self._ptr,
     #         _cast_tuple_ImVec2(pos),
     #         _cast_tuple_ImVec2(uv),
@@ -12531,7 +14237,7 @@ cdef class ImDrawList:
         """
         Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
         """
-        ccimgui.ImDrawList_PushClipRect(
+        ccimgui.PushClipRect(
             self._ptr,
             _cast_tuple_ImVec2(clip_rect_min),
             _cast_tuple_ImVec2(clip_rect_max),
@@ -12546,7 +14252,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def push_clip_rect_full_screen(self: ImDrawList):
-    #     ccimgui.ImDrawList_PushClipRectFullScreen(
+    #     ccimgui.PushClipRectFullScreen(
     #         self._ptr
     #     )
     # [End Method]
@@ -12558,7 +14264,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def push_texture_id(self: ImDrawList, texture_id: Any):
-    #     ccimgui.ImDrawList_PushTextureID(
+    #     ccimgui.PushTextureID(
     #         self._ptr,
     #         texture_id
     #     )
@@ -12574,7 +14280,7 @@ cdef class ImDrawList:
     #     """
     #     [Internal helpers]
     #     """
-    #     ccimgui.ImDrawList__ResetForNewFrame(
+    #     ccimgui._ResetForNewFrame(
     #         self._ptr
     #     )
     # [End Method]
@@ -12586,7 +14292,7 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def try_merge_draw_cmds(self: ImDrawList):
-    #     ccimgui.ImDrawList__TryMergeDrawCmds(
+    #     ccimgui._TryMergeDrawCmds(
     #         self._ptr
     #     )
     # [End Method]
@@ -12742,7 +14448,7 @@ cdef class ImDrawListSplitter:
     #     """
     #     Do not clear channels[] so our allocations are reused next frame
     #     """
-    #     ccimgui.ImDrawListSplitter_Clear(
+    #     ccimgui.Clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -12754,7 +14460,7 @@ cdef class ImDrawListSplitter:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def clear_free_memory(self: ImDrawListSplitter):
-    #     ccimgui.ImDrawListSplitter_ClearFreeMemory(
+    #     ccimgui.ClearFreeMemory(
     #         self._ptr
     #     )
     # [End Method]
@@ -12800,12 +14506,80 @@ cdef class ImDrawListSplitter:
 
     # [Method]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_splitter_clear(self: ImDrawListSplitter):
+    #     """
+    #     Do not clear channels[] so our allocations are reused next frame
+    #     """
+    #     ccimgui.ImDrawListSplitter_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_splitter_clear_free_memory(self: ImDrawListSplitter):
+    #     ccimgui.ImDrawListSplitter_ClearFreeMemory(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_splitter_merge(self: ImDrawListSplitter, draw_list: ImDrawList):
+    #     ccimgui.ImDrawListSplitter_Merge(
+    #         self._ptr,
+    #         draw_list._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_splitter_set_current_channel(self: ImDrawListSplitter, draw_list: ImDrawList, channel_idx: int):
+    #     ccimgui.ImDrawListSplitter_SetCurrentChannel(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         channel_idx
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_draw_list_splitter_split(self: ImDrawListSplitter, draw_list: ImDrawList, count: int):
+    #     ccimgui.ImDrawListSplitter_Split(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         count
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
     def merge(self: ImDrawListSplitter, draw_list: ImDrawList):
-        ccimgui.ImDrawListSplitter_Merge(
+        ccimgui.Merge(
             self._ptr,
             draw_list._ptr
         )
@@ -12818,7 +14592,7 @@ cdef class ImDrawListSplitter:
     # ?custom_comment_only(False)
     # ?returns(None)
     def set_current_channel(self: ImDrawListSplitter, draw_list: ImDrawList, channel_idx: int):
-        ccimgui.ImDrawListSplitter_SetCurrentChannel(
+        ccimgui.SetCurrentChannel(
             self._ptr,
             draw_list._ptr,
             channel_idx
@@ -12832,7 +14606,7 @@ cdef class ImDrawListSplitter:
     # ?custom_comment_only(False)
     # ?returns(None)
     def split(self: ImDrawListSplitter, draw_list: ImDrawList, count: int):
-        ccimgui.ImDrawListSplitter_Split(
+        ccimgui.Split(
             self._ptr,
             draw_list._ptr,
             count
@@ -13445,7 +15219,7 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
-    #     ccimgui.ImFont_AddGlyph(
+    #     ccimgui.AddGlyph(
     #         self._ptr,
     #         src_cfg._ptr,
     #         c,
@@ -13471,7 +15245,7 @@ cdef class ImFont:
     #     """
     #     Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built.
     #     """
-    #     ccimgui.ImFont_AddRemapChar(
+    #     ccimgui.AddRemapChar(
     #         self._ptr,
     #         dst,
     #         src,
@@ -13489,7 +15263,7 @@ cdef class ImFont:
     #     """
     #     [Internal] Don't use!
     #     """
-    #     ccimgui.ImFont_BuildLookupTable(
+    #     ccimgui.BuildLookupTable(
     #         self._ptr
     #     )
     # [End Method]
@@ -13501,6 +15275,208 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(tuple)
     # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
+    #     """
+    #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
+    #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
+    #     Implied text_end = null, remaining = null
+    #     """
+    #     cdef ccimgui.ImVec2 res = ccimgui.CalcTextSizeA(
+    #         self._ptr,
+    #         size,
+    #         max_width,
+    #         wrap_width,
+    #         _bytes(text_begin)
+    #     )
+    #     return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+#     def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
+#         """
+#         Utf8
+#         """
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         cdef ccimgui.ImVec2 res = ccimgui.CalcTextSizeAEx(
+#             self._ptr,
+#             size,
+#             max_width,
+#             wrap_width,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             remaining
+#         )
+#         return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    # def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
+    #     cdef const char* res = ccimgui.CalcWordWrapPositionA(
+    #         self._ptr,
+    #         scale,
+    #         _bytes(text),
+    #         _bytes(text_end),
+    #         wrap_width
+    #     )
+    #     return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(True)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def clear_output_data(self: ImFont):
+    #     ccimgui.ClearOutputData(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    # def find_glyph(self: ImFont, c: int):
+    #     cdef ccimgui.ImFontGlyph* res = ccimgui.FindGlyph(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    # def find_glyph_no_fallback(self: ImFont, c: int):
+    #     cdef ccimgui.ImFontGlyph* res = ccimgui.FindGlyphNoFallback(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(True)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # def get_char_advance(self: ImFont, c: int):
+    #     cdef float res = ccimgui.GetCharAdvance(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    def get_debug_name(self: ImFont):
+        if self._const_ptr != NULL:
+            raise NotImplementedError
+        
+        cdef const char* res = ccimgui.GetDebugName(
+            self._ptr,
+        )
+        return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(True)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def grow_index(self: ImFont, new_size: int):
+    #     ccimgui.GrowIndex(
+    #         self._ptr,
+    #         new_size
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
+    #     ccimgui.ImFont_AddGlyph(
+    #         self._ptr,
+    #         src_cfg._ptr,
+    #         c,
+    #         x0,
+    #         y0,
+    #         x1,
+    #         y1,
+    #         u0,
+    #         v0,
+    #         u1,
+    #         v1,
+    #         advance_x
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_add_remap_char(self: ImFont, dst: int, src: int, overwrite_dst: bool=True):
+    #     """
+    #     Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built.
+    #     """
+    #     ccimgui.ImFont_AddRemapChar(
+    #         self._ptr,
+    #         dst,
+    #         src,
+    #         overwrite_dst
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_build_lookup_table(self: ImFont):
+    #     """
+    #     [Internal] Don't use!
+    #     """
+    #     ccimgui.ImFont_BuildLookupTable(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+    # def im_font_calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
     #     """
     #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
     #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
@@ -13522,7 +15498,7 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(tuple)
-#     def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
+#     def im_font_calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
 #         """
 #         Utf8
 #         """
@@ -13546,7 +15522,7 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    # def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
+    # def im_font_calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
     #     cdef const char* res = ccimgui.ImFont_CalcWordWrapPositionA(
     #         self._ptr,
     #         scale,
@@ -13560,10 +15536,10 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def clear_output_data(self: ImFont):
+    # def im_font_clear_output_data(self: ImFont):
     #     ccimgui.ImFont_ClearOutputData(
     #         self._ptr
     #     )
@@ -13575,7 +15551,7 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontGlyph)
-    # def find_glyph(self: ImFont, c: int):
+    # def im_font_find_glyph(self: ImFont, c: int):
     #     cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(
     #         self._ptr,
     #         c
@@ -13589,7 +15565,7 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontGlyph)
-    # def find_glyph_no_fallback(self: ImFont, c: int):
+    # def im_font_find_glyph_no_fallback(self: ImFont, c: int):
     #     cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(
     #         self._ptr,
     #         c
@@ -13600,10 +15576,10 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # def get_char_advance(self: ImFont, c: int):
+    # def im_font_get_char_advance(self: ImFont, c: int):
     #     cdef float res = ccimgui.ImFont_GetCharAdvance(
     #         self._ptr,
     #         c
@@ -13612,28 +15588,25 @@ cdef class ImFont:
     # [End Method]
 
     # [Method]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def get_debug_name(self: ImFont):
-        if self._const_ptr != NULL:
-            raise NotImplementedError
-        
-        cdef const char* res = ccimgui.ImFont_GetDebugName(
-            self._ptr,
-        )
-        return _from_bytes(res)
+    # def im_font_get_debug_name(self: ImFont):
+    #     cdef const char* res = ccimgui.ImFont_GetDebugName(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def grow_index(self: ImFont, new_size: int):
+    # def im_font_grow_index(self: ImFont, new_size: int):
     #     ccimgui.ImFont_GrowIndex(
     #         self._ptr,
     #         new_size
@@ -13643,10 +15616,10 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
+    # def im_font_is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
     #     cdef bool res = ccimgui.ImFont_IsGlyphRangeUnused(
     #         self._ptr,
     #         c_begin,
@@ -13658,10 +15631,10 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_loaded(self: ImFont):
+    # def im_font_is_loaded(self: ImFont):
     #     cdef bool res = ccimgui.ImFont_IsLoaded(
     #         self._ptr
     #     )
@@ -13674,7 +15647,7 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int):
+    # def im_font_render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int):
     #     ccimgui.ImFont_RenderChar(
     #         self._ptr,
     #         draw_list._ptr,
@@ -13691,8 +15664,88 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
+    # def im_font_render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
     #     ccimgui.ImFont_RenderText(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         _cast_tuple_ImVec4(clip_rect),
+    #         _bytes(text_begin),
+    #         _bytes(text_end),
+    #         wrap_width,
+    #         cpu_fine_clip
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_set_glyph_visible(self: ImFont, c: int, visible: bool):
+    #     ccimgui.ImFont_SetGlyphVisible(
+    #         self._ptr,
+    #         c,
+    #         visible
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(True)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
+    #     cdef bool res = ccimgui.IsGlyphRangeUnused(
+    #         self._ptr,
+    #         c_begin,
+    #         c_last
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(True)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_loaded(self: ImFont):
+    #     cdef bool res = ccimgui.IsLoaded(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int):
+    #     ccimgui.RenderChar(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         c
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
+    #     ccimgui.RenderText(
     #         self._ptr,
     #         draw_list._ptr,
     #         size,
@@ -13713,7 +15766,7 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def set_glyph_visible(self: ImFont, c: int, visible: bool):
-    #     ccimgui.ImFont_SetGlyphVisible(
+    #     ccimgui.SetGlyphVisible(
     #         self._ptr,
     #         c,
     #         visible
@@ -14211,7 +16264,7 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(int)
     # def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)):
-    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
+    #     cdef int res = ccimgui.AddCustomRectFontGlyph(
     #         self._ptr,
     #         font._ptr,
     #         id_,
@@ -14239,7 +16292,7 @@ cdef class ImFontAtlas:
     #     - Read docs/FONTS.md for more details about using colorful icons.
     #     - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
     #     """
-    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(
+    #     cdef int res = ccimgui.AddCustomRectRegular(
     #         self._ptr,
     #         width,
     #         height
@@ -14254,7 +16307,7 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(ImFont)
     # def add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(
+    #     cdef ccimgui.ImFont* res = ccimgui.AddFont(
     #         self._ptr,
     #         font_cfg._ptr
     #     )
@@ -14268,7 +16321,7 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(ImFont)
     def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
+        cdef ccimgui.ImFont* res = ccimgui.AddFontDefault(
             self._ptr,
             <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr)
         )
@@ -14286,7 +16339,7 @@ cdef class ImFontAtlas:
         pygui note: The ImFontConfig is copied in ImGui so there is no need to
         keep the object alive after calling this function.
         """
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
+        cdef ccimgui.ImFont* res = ccimgui.AddFontFromFileTTF(
             self._ptr,
             _bytes(filename),
             size_pixels,
@@ -14306,7 +16359,7 @@ cdef class ImFontAtlas:
     #     """
     #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
     #     """
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(
+    #     cdef ccimgui.ImFont* res = ccimgui.AddFontFromMemoryCompressedBase85TTF(
     #         self._ptr,
     #         _bytes(compressed_font_data_base85),
     #         size_pixels,
@@ -14322,14 +16375,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
     #     """
     #     'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
     #     """
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedTTF(
+    #     cdef ccimgui.ImFont* res = ccimgui.AddFontFromMemoryCompressedTTF(
     #         self._ptr,
     #         compressed_font_data,
-    #         compressed_font_size,
+    #         compressed_font_data_size,
     #         size_pixels,
     #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
@@ -14343,14 +16396,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
     #     """
     #     Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
     #     """
-    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryTTF(
+    #     cdef ccimgui.ImFont* res = ccimgui.AddFontFromMemoryTTF(
     #         self._ptr,
     #         font_data,
-    #         font_size,
+    #         font_data_size,
     #         size_pixels,
     #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
     #         glyph_ranges
@@ -14373,7 +16426,7 @@ cdef class ImFontAtlas:
         the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
         Build pixels data. this is called automatically for you by the gettexdata*** functions.
         """
-        cdef bool res = ccimgui.ImFontAtlas_Build(
+        cdef bool res = ccimgui.Build(
             self._ptr
         )
         return res
@@ -14389,7 +16442,7 @@ cdef class ImFontAtlas:
     #     """
     #     [Internal]
     #     """
-    #     ccimgui.ImFontAtlas_CalcCustomRectUV(
+    #     ccimgui.CalcCustomRectUV(
     #         self._ptr,
     #         rect._ptr,
     #         out_uv_min._ptr,
@@ -14407,7 +16460,7 @@ cdef class ImFontAtlas:
     #     """
     #     Clear all input and output.
     #     """
-    #     ccimgui.ImFontAtlas_Clear(
+    #     ccimgui.Clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -14422,7 +16475,7 @@ cdef class ImFontAtlas:
     #     """
     #     Clear output font data (glyphs storage, uv coordinates).
     #     """
-    #     ccimgui.ImFontAtlas_ClearFonts(
+    #     ccimgui.ClearFonts(
     #         self._ptr
     #     )
     # [End Method]
@@ -14437,7 +16490,7 @@ cdef class ImFontAtlas:
     #     """
     #     Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
     #     """
-    #     ccimgui.ImFontAtlas_ClearInputData(
+    #     ccimgui.ClearInputData(
     #         self._ptr
     #     )
     # [End Method]
@@ -14452,7 +16505,7 @@ cdef class ImFontAtlas:
         """
         Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
         """
-        ccimgui.ImFontAtlas_ClearTexData(
+        ccimgui.ClearTexData(
             self._ptr
         )
     # [End Method]
@@ -14464,7 +16517,7 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(ImFontAtlasCustomRect)
     # def get_custom_rect_by_index(self: ImFontAtlas, index: int):
-    #     cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(
+    #     cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.GetCustomRectByIndex(
     #         self._ptr,
     #         index
     #     )
@@ -14481,7 +16534,7 @@ cdef class ImFontAtlas:
         """
         Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
         """
-        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(
+        cdef const ccimgui.ImWchar* res = ccimgui.GetGlyphRangesChineseFull(
             self._ptr
         )
         return ImGlyphRange.from_short_array(res)
@@ -14497,7 +16550,7 @@ cdef class ImFontAtlas:
     #     """
     #     Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
     #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(
+    #     cdef ccimgui.ImWchar* res = ccimgui.GetGlyphRangesChineseSimplifiedCommon(
     #         self._ptr
     #     )
     #     return res
@@ -14513,7 +16566,7 @@ cdef class ImFontAtlas:
         """
         Default + about 400 cyrillic characters
         """
-        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesCyrillic(
+        cdef const ccimgui.ImWchar* res = ccimgui.GetGlyphRangesCyrillic(
             self._ptr
         )
         return ImGlyphRange.from_short_array(res)
@@ -14533,7 +16586,7 @@ cdef class ImFontAtlas:
         NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
         Basic latin, extended latin
         """
-        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesDefault(
+        cdef const ccimgui.ImWchar* res = ccimgui.GetGlyphRangesDefault(
             self._ptr
         )
         return ImGlyphRange.from_short_array(res)
@@ -14549,7 +16602,7 @@ cdef class ImFontAtlas:
     #     """
     #     Default + greek and coptic
     #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesGreek(
+    #     cdef ccimgui.ImWchar* res = ccimgui.GetGlyphRangesGreek(
     #         self._ptr
     #     )
     #     return res
@@ -14565,7 +16618,7 @@ cdef class ImFontAtlas:
         """
         Default + hiragana, katakana, half-width, selection of 2999 ideographs
         """
-        cdef const ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesJapanese(
+        cdef const ccimgui.ImWchar* res = ccimgui.GetGlyphRangesJapanese(
             self._ptr
         )
         return ImGlyphRange.from_short_array(res)
@@ -14581,7 +16634,7 @@ cdef class ImFontAtlas:
     #     """
     #     Default + korean characters
     #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesKorean(
+    #     cdef ccimgui.ImWchar* res = ccimgui.GetGlyphRangesKorean(
     #         self._ptr
     #     )
     #     return res
@@ -14597,7 +16650,7 @@ cdef class ImFontAtlas:
     #     """
     #     Default + thai characters
     #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesThai(
+    #     cdef ccimgui.ImWchar* res = ccimgui.GetGlyphRangesThai(
     #         self._ptr
     #     )
     #     return res
@@ -14613,7 +16666,7 @@ cdef class ImFontAtlas:
     #     """
     #     Default + vietnamese characters
     #     """
-    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesVietnamese(
+    #     cdef ccimgui.ImWchar* res = ccimgui.GetGlyphRangesVietnamese(
     #         self._ptr
     #     )
     #     return res
@@ -14626,7 +16679,7 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(bool)
     # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
-    #     cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
+    #     cdef bool res = ccimgui.GetMouseCursorTexData(
     #         self._ptr,
     #         cursor,
     #         out_offset._ptr,
@@ -14649,7 +16702,7 @@ cdef class ImFontAtlas:
         """
         cdef unsigned char* pixels
 
-        ccimgui.ImFontAtlas_GetTexDataAsAlpha8(
+        ccimgui.GetTexDataAsAlpha8(
             self._ptr,
             &pixels,
             &out_width.value,
@@ -14671,7 +16724,7 @@ cdef class ImFontAtlas:
         """
         cdef unsigned char* pixels
 
-        ccimgui.ImFontAtlas_GetTexDataAsRGBA32(
+        ccimgui.GetTexDataAsRGBA32(
             self._ptr,
             &pixels,
             &out_width.value,
@@ -14686,8 +16739,475 @@ cdef class ImFontAtlas:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)):
+    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
+    #         self._ptr,
+    #         font._ptr,
+    #         id_,
+    #         width,
+    #         height,
+    #         advance_x,
+    #         _cast_tuple_ImVec2(offset)
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_add_custom_rect_regular(self: ImFontAtlas, width: int, height: int):
+    #     """
+    #     You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
+    #     - After calling Build(), you can query the rectangle position and render your pixels.
+    #     - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of prefered texture format.
+    #     - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
+    #     so you can render e.g. custom colorful icons and use them as regular glyphs.
+    #     - Read docs/FONTS.md for more details about using colorful icons.
+    #     - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
+    #     """
+    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(
+    #         self._ptr,
+    #         width,
+    #         height
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(
+    #         self._ptr,
+    #         font_cfg._ptr
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None):
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontDefault(
+    #         self._ptr,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr)
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromFileTTF(
+    #         self._ptr,
+    #         _bytes(filename),
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(
+    #         self._ptr,
+    #         _bytes(compressed_font_data_base85),
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedTTF(
+    #         self._ptr,
+    #         compressed_font_data,
+    #         compressed_font_data_size,
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    # def im_font_atlas_add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryTTF(
+    #         self._ptr,
+    #         font_data,
+    #         font_data_size,
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_built(self: ImFontAtlas):
+    # def im_font_atlas_build(self: ImFontAtlas):
+    #     """
+    #     Build atlas, retrieve pixel data.
+    #     User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
+    #     The pitch is always = Width * BytesPerPixels (1 or 4)
+    #     Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
+    #     the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
+    #     Build pixels data. this is called automatically for you by the gettexdata*** functions.
+    #     """
+    #     cdef bool res = ccimgui.ImFontAtlas_Build(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2):
+    #     """
+    #     [Internal]
+    #     """
+    #     ccimgui.ImFontAtlas_CalcCustomRectUV(
+    #         self._ptr,
+    #         rect._ptr,
+    #         out_uv_min._ptr,
+    #         out_uv_max._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_clear(self: ImFontAtlas):
+    #     """
+    #     Clear all input and output.
+    #     """
+    #     ccimgui.ImFontAtlas_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_clear_fonts(self: ImFontAtlas):
+    #     """
+    #     Clear output font data (glyphs storage, uv coordinates).
+    #     """
+    #     ccimgui.ImFontAtlas_ClearFonts(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_clear_input_data(self: ImFontAtlas):
+    #     """
+    #     Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+    #     """
+    #     ccimgui.ImFontAtlas_ClearInputData(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_clear_tex_data(self: ImFontAtlas):
+    #     """
+    #     Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
+    #     """
+    #     ccimgui.ImFontAtlas_ClearTexData(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontAtlasCustomRect)
+    # def im_font_atlas_get_custom_rect_by_index(self: ImFontAtlas, index: int):
+    #     cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(
+    #         self._ptr,
+    #         index
+    #     )
+    #     return ImFontAtlasCustomRect.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_chinese_full(self: ImFontAtlas):
+    #     """
+    #     Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseFull(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas):
+    #     """
+    #     Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_cyrillic(self: ImFontAtlas):
+    #     """
+    #     Default + about 400 cyrillic characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesCyrillic(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_default(self: ImFontAtlas):
+    #     """
+    #     Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
+    #     NB: Make sure that your string are UTF-8 and NOT in your local code page.
+    #     Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
+    #     NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
+    #     Basic latin, extended latin
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesDefault(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_greek(self: ImFontAtlas):
+    #     """
+    #     Default + greek and coptic
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesGreek(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_japanese(self: ImFontAtlas):
+    #     """
+    #     Default + hiragana, katakana, half-width, selection of 2999 ideographs
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesJapanese(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_korean(self: ImFontAtlas):
+    #     """
+    #     Default + korean characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesKorean(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_thai(self: ImFontAtlas):
+    #     """
+    #     Default + thai characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesThai(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def im_font_atlas_get_glyph_ranges_vietnamese(self: ImFontAtlas):
+    #     """
+    #     Default + vietnamese characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesVietnamese(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def im_font_atlas_get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
+    #     cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
+    #         self._ptr,
+    #         cursor,
+    #         out_offset._ptr,
+    #         out_size._ptr,
+    #         out_uv_border._ptr,
+    #         out_uv_fill._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_get_tex_data_as_alpha8(self: ImFontAtlas, out_pixels: Any, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None):
+    #     """
+    #     1 byte per-pixel
+    #     """
+    #     ccimgui.ImFontAtlas_GetTexDataAsAlpha8(
+    #         self._ptr,
+    #         out_pixels,
+    #         &out_width.value,
+    #         &out_height.value,
+    #         Int.ptr(out_bytes_per_pixel)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_atlas_get_tex_data_as_rgba_32(self: ImFontAtlas, out_pixels: Any, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None):
+    #     """
+    #     4 bytes-per-pixel
+    #     """
+    #     ccimgui.ImFontAtlas_GetTexDataAsRGBA32(
+    #         self._ptr,
+    #         out_pixels,
+    #         &out_width.value,
+    #         &out_height.value,
+    #         Int.ptr(out_bytes_per_pixel)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def im_font_atlas_is_built(self: ImFontAtlas):
     #     """
     #     Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
     #     """
@@ -14703,8 +17223,37 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_tex_id(self: ImFontAtlas, id_: Any):
+    # def im_font_atlas_set_tex_id(self: ImFontAtlas, id_: Any):
     #     ccimgui.ImFontAtlas_SetTexID(
+    #         self._ptr,
+    #         id_
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_built(self: ImFontAtlas):
+    #     """
+    #     Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
+    #     """
+    #     cdef bool res = ccimgui.IsBuilt(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_tex_id(self: ImFontAtlas, id_: Any):
+    #     ccimgui.SetTexID(
     #         self._ptr,
     #         id_
     #     )
@@ -14905,12 +17454,25 @@ cdef class ImFontAtlasCustomRect:
 
     # [Method]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def im_font_atlas_custom_rect_is_packed(self: ImFontAtlasCustomRect):
+    #     cdef bool res = ccimgui.ImFontAtlasCustomRect_IsPacked(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
     def is_packed(self: ImFontAtlasCustomRect):
-        cdef bool res = ccimgui.ImFontAtlasCustomRect_IsPacked(
+        cdef bool res = ccimgui.IsPacked(
             self._ptr
         )
         return res
@@ -15360,7 +17922,7 @@ cdef class ImFontConfig:
     @property
     def oversample_h(self):
         """
-        3// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal so you can reduce this to 2 to save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
+        2// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
         """
         cdef int res
         if self._ptr != NULL:
@@ -15877,7 +18439,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         Add character
         """
-        ccimgui.ImFontGlyphRangesBuilder_AddChar(
+        ccimgui.AddChar(
             self._ptr,
             c
         )
@@ -15893,7 +18455,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
         """
-        ccimgui.ImFontGlyphRangesBuilder_AddRanges(
+        ccimgui.AddRanges(
             self._ptr,
             ranges.c_ranges
         )
@@ -15910,7 +18472,7 @@ cdef class ImFontGlyphRangesBuilder:
         Add string (each character of the utf-8 string are added)
         """
 
-        ccimgui.ImFontGlyphRangesBuilder_AddText(
+        ccimgui.AddText(
             self._ptr,
             _bytes(text),
             NULL
@@ -15932,7 +18494,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         cdef ccimgui.ImVector_ImWchar c_out_ranges
         ccimgui.ImVector_Construct(&c_out_ranges)
-        ccimgui.ImFontGlyphRangesBuilder_BuildRanges(
+        ccimgui.BuildRanges(
             self._ptr,
             &c_out_ranges
         )
@@ -15948,7 +18510,7 @@ cdef class ImFontGlyphRangesBuilder:
     # ?custom_comment_only(False)
     # ?returns(None)
     def clear(self: ImFontGlyphRangesBuilder):
-        ccimgui.ImFontGlyphRangesBuilder_Clear(
+        ccimgui.Clear(
             self._ptr
         )
     # [End Method]
@@ -16003,11 +18565,123 @@ cdef class ImFontGlyphRangesBuilder:
         """
         Get bit n in the array
         """
-        cdef bool res = ccimgui.ImFontGlyphRangesBuilder_GetBit(
+        cdef bool res = ccimgui.GetBit(
             self._ptr,
             n
         )
         return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_glyph_ranges_builder_add_char(self: ImFontGlyphRangesBuilder, c: int):
+    #     """
+    #     Add character
+    #     """
+    #     ccimgui.ImFontGlyphRangesBuilder_AddChar(
+    #         self._ptr,
+    #         c
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_glyph_ranges_builder_add_ranges(self: ImFontGlyphRangesBuilder, ranges: int):
+    #     """
+    #     Add ranges, e.g. builder.addranges(imfontatlas::getglyphrangesdefault()) to force add all of ascii/latin+ext
+    #     """
+    #     ccimgui.ImFontGlyphRangesBuilder_AddRanges(
+    #         self._ptr,
+    #         ranges
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+#     def im_font_glyph_ranges_builder_add_text(self: ImFontGlyphRangesBuilder, text: str, text_end: str=None):
+#         """
+#         Add string (each character of the utf-8 string are added)
+#         """
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImFontGlyphRangesBuilder_AddText(
+#             self._ptr,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_glyph_ranges_builder_build_ranges(self: ImFontGlyphRangesBuilder, out_ranges: ImVector_ImWchar):
+    #     """
+    #     Output new ranges (imvector_construct()/imvector_destruct() can be used to safely construct out_ranges)
+    #     """
+    #     ccimgui.ImFontGlyphRangesBuilder_BuildRanges(
+    #         self._ptr,
+    #         out_ranges._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_glyph_ranges_builder_clear(self: ImFontGlyphRangesBuilder):
+    #     ccimgui.ImFontGlyphRangesBuilder_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def im_font_glyph_ranges_builder_get_bit(self: ImFontGlyphRangesBuilder, n: int):
+    #     """
+    #     Get bit n in the array
+    #     """
+    #     cdef bool res = ccimgui.ImFontGlyphRangesBuilder_GetBit(
+    #         self._ptr,
+    #         n
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def im_font_glyph_ranges_builder_set_bit(self: ImFontGlyphRangesBuilder, n: int):
+    #     """
+    #     Set bit n in the array
+    #     """
+    #     ccimgui.ImFontGlyphRangesBuilder_SetBit(
+    #         self._ptr,
+    #         n
+    #     )
     # [End Method]
 
     # [Method]
@@ -16020,7 +18694,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         Set bit n in the array
         """
-        ccimgui.ImFontGlyphRangesBuilder_SetBit(
+        ccimgui.SetBit(
             self._ptr,
             n
         )
@@ -17272,7 +19946,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_clicked(self):
         """
@@ -17281,7 +19955,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseClicked
         return dereference(res)
     @mouse_clicked.setter
-    def mouse_clicked(self, value: Bool):
+    def mouse_clicked(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseClicked = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17344,22 +20018,22 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def mouse_clicked_time(self):
-        """
-        Time of last click (used to figure out double-click)
-        """
-        cdef double* res = dereference(self._ptr).MouseClickedTime
-        return dereference(res)
-    @mouse_clicked_time.setter
-    def mouse_clicked_time(self, value: Double):
-        # dereference(self._ptr).MouseClickedTime = &value.value
-        raise NotImplementedError
+    # ?returns(Sequence[Double])
+    # @property
+    # def mouse_clicked_time(self):
+    #     """
+    #     Time of last click (used to figure out double-click)
+    #     """
+    #     cdef double* res = dereference(self._ptr).MouseClickedTime
+    #     return Double(dereference(res))
+    # @mouse_clicked_time.setter
+    # def mouse_clicked_time(self, value: Sequence[Double]):
+    #     # dereference(self._ptr).MouseClickedTime = &value.value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17426,7 +20100,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_double_clicked(self):
         """
@@ -17435,7 +20109,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseDoubleClicked
         return dereference(res)
     @mouse_double_clicked.setter
-    def mouse_double_clicked(self, value: Bool):
+    def mouse_double_clicked(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDoubleClicked = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17445,7 +20119,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_down(self):
         """
@@ -17454,7 +20128,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseDown
         return dereference(res)
     @mouse_down.setter
-    def mouse_down(self, value: Bool):
+    def mouse_down(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDown = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17464,7 +20138,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
+    # ?returns(Sequence[float])
     @property
     def mouse_down_duration(self):
         """
@@ -17473,7 +20147,7 @@ cdef class ImGuiIO:
         cdef float* res = dereference(self._ptr).MouseDownDuration
         return dereference(res)
     @mouse_down_duration.setter
-    def mouse_down_duration(self, value: Float):
+    def mouse_down_duration(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDownDuration = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17483,7 +20157,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
+    # ?returns(Sequence[float])
     @property
     def mouse_down_duration_prev(self):
         """
@@ -17492,7 +20166,7 @@ cdef class ImGuiIO:
         cdef float* res = dereference(self._ptr).MouseDownDurationPrev
         return dereference(res)
     @mouse_down_duration_prev.setter
-    def mouse_down_duration_prev(self, value: Float):
+    def mouse_down_duration_prev(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDownDurationPrev = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17502,7 +20176,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_down_owned(self):
         """
@@ -17511,7 +20185,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseDownOwned
         return dereference(res)
     @mouse_down_owned.setter
-    def mouse_down_owned(self, value: Bool):
+    def mouse_down_owned(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDownOwned = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17521,7 +20195,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_down_owned_unless_popup_close(self):
         """
@@ -17530,7 +20204,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
         return dereference(res)
     @mouse_down_owned_unless_popup_close.setter
-    def mouse_down_owned_unless_popup_close(self, value: Bool):
+    def mouse_down_owned_unless_popup_close(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDownOwnedUnlessPopupClose = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17559,7 +20233,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
+    # ?returns(Sequence[float])
     @property
     def mouse_drag_max_distance_sqr(self):
         """
@@ -17568,7 +20242,7 @@ cdef class ImGuiIO:
         cdef float* res = dereference(self._ptr).MouseDragMaxDistanceSqr
         return dereference(res)
     @mouse_drag_max_distance_sqr.setter
-    def mouse_drag_max_distance_sqr(self, value: Float):
+    def mouse_drag_max_distance_sqr(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDragMaxDistanceSqr = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17682,7 +20356,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Sequence[bool])
     @property
     def mouse_released(self):
         """
@@ -17691,7 +20365,7 @@ cdef class ImGuiIO:
         cdef bool* res = dereference(self._ptr).MouseReleased
         return dereference(res)
     @mouse_released.setter
-    def mouse_released(self, value: Bool):
+    def mouse_released(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseReleased = &value.value
         raise NotImplementedError
     # [End Field]
@@ -17827,6 +20501,26 @@ cdef class ImGuiIO:
     def pen_pressure(self, value: float):
         # dereference(self._ptr).PenPressure = value
         raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def platform_locale_decimal_point(self):
+    #     """
+    #     Optional: Platform locale
+    #     '.'  // [experimental] configure decimal point e.g. '.' or ',' useful for some languages (e.g. german), generally pulled from *localeconv()->decimal_point
+    #     """
+    #     cdef ccimgui.ImWchar res = dereference(self._ptr).PlatformLocaleDecimalPoint
+    #     return res
+    # @platform_locale_decimal_point.setter
+    # def platform_locale_decimal_point(self, value: int):
+    #     # dereference(self._ptr).PlatformLocaleDecimalPoint = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18020,7 +20714,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a gain/loss of focus for the application (generally based on os/platform focus of your window)
     #     """
-    #     ccimgui.ImGuiIO_AddFocusEvent(
+    #     ccimgui.AddFocusEvent(
     #         self._ptr,
     #         focused
     #     )
@@ -18036,7 +20730,7 @@ cdef class ImGuiIO:
         """
         Queue a new character input
         """
-        ccimgui.ImGuiIO_AddInputCharacter(
+        ccimgui.AddInputCharacter(
             self._ptr,
             c
         )
@@ -18052,7 +20746,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a new character input from a utf-16 character, it can be a surrogate
     #     """
-    #     ccimgui.ImGuiIO_AddInputCharacterUTF16(
+    #     ccimgui.AddInputCharacterUTF16(
     #         self._ptr,
     #         c
     #     )
@@ -18068,7 +20762,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a new characters input from a utf-8 string
     #     """
-    #     ccimgui.ImGuiIO_AddInputCharactersUTF8(
+    #     ccimgui.AddInputCharactersUTF8(
     #         self._ptr,
     #         _bytes(str_)
     #     )
@@ -18084,7 +20778,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a new key down/up event for analog values (e.g. imguikey_gamepad_ values). dead-zones should be handled by the backend.
     #     """
-    #     ccimgui.ImGuiIO_AddKeyAnalogEvent(
+    #     ccimgui.AddKeyAnalogEvent(
     #         self._ptr,
     #         key,
     #         down,
@@ -18103,7 +20797,7 @@ cdef class ImGuiIO:
         Input Functions
         Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
         """
-        ccimgui.ImGuiIO_AddKeyEvent(
+        ccimgui.AddKeyEvent(
             self._ptr,
             key,
             down
@@ -18120,7 +20814,7 @@ cdef class ImGuiIO:
         """
         Queue a mouse button change
         """
-        ccimgui.ImGuiIO_AddMouseButtonEvent(
+        ccimgui.AddMouseButtonEvent(
             self._ptr,
             button,
             down
@@ -18137,7 +20831,7 @@ cdef class ImGuiIO:
         """
         Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
         """
-        ccimgui.ImGuiIO_AddMousePosEvent(
+        ccimgui.AddMousePosEvent(
             self._ptr,
             x,
             y
@@ -18154,7 +20848,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a mouse source change (mouse/touchscreen/pen)
     #     """
-    #     ccimgui.ImGuiIO_AddMouseSourceEvent(
+    #     ccimgui.AddMouseSourceEvent(
     #         self._ptr,
     #         source
     #     )
@@ -18170,7 +20864,7 @@ cdef class ImGuiIO:
     #     """
     #     Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport to call this (for multi-viewport support).
     #     """
-    #     ccimgui.ImGuiIO_AddMouseViewportEvent(
+    #     ccimgui.AddMouseViewportEvent(
     #         self._ptr,
     #         id_
     #     )
@@ -18186,11 +20880,26 @@ cdef class ImGuiIO:
         """
         Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
         """
-        ccimgui.ImGuiIO_AddMouseWheelEvent(
+        ccimgui.AddMouseWheelEvent(
             self._ptr,
             wheel_x,
             wheel_y
         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def clear_events_queue(self: ImGuiIO):
+    #     """
+    #     Clear all incoming events.
+    #     """
+    #     ccimgui.ClearEventsQueue(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -18216,7 +20925,220 @@ cdef class ImGuiIO:
     # ?returns(None)
     # def clear_input_keys(self: ImGuiIO):
     #     """
-    #     [internal] release all keys
+    #     Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+    #     """
+    #     ccimgui.ClearInputKeys(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_focus_event(self: ImGuiIO, focused: bool):
+    #     """
+    #     Queue a gain/loss of focus for the application (generally based on os/platform focus of your window)
+    #     """
+    #     ccimgui.ImGuiIO_AddFocusEvent(
+    #         self._ptr,
+    #         focused
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_input_character(self: ImGuiIO, c: int):
+    #     """
+    #     Queue a new character input
+    #     """
+    #     ccimgui.ImGuiIO_AddInputCharacter(
+    #         self._ptr,
+    #         c
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_input_character_utf_16(self: ImGuiIO, c: int):
+    #     """
+    #     Queue a new character input from a utf-16 character, it can be a surrogate
+    #     """
+    #     ccimgui.ImGuiIO_AddInputCharacterUTF16(
+    #         self._ptr,
+    #         c
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_input_characters_utf_8(self: ImGuiIO, str_: str):
+    #     """
+    #     Queue a new characters input from a utf-8 string
+    #     """
+    #     ccimgui.ImGuiIO_AddInputCharactersUTF8(
+    #         self._ptr,
+    #         _bytes(str_)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_key_analog_event(self: ImGuiIO, key: int, down: bool, v: float):
+    #     """
+    #     Queue a new key down/up event for analog values (e.g. imguikey_gamepad_ values). dead-zones should be handled by the backend.
+    #     """
+    #     ccimgui.ImGuiIO_AddKeyAnalogEvent(
+    #         self._ptr,
+    #         key,
+    #         down,
+    #         v
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_key_event(self: ImGuiIO, key: int, down: bool):
+    #     """
+    #     Input Functions
+    #     Queue a new key down/up event. key should be 'translated' (as in, generally imguikey_a matches the key end-user would use to emit an 'a' character)
+    #     """
+    #     ccimgui.ImGuiIO_AddKeyEvent(
+    #         self._ptr,
+    #         key,
+    #         down
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_mouse_button_event(self: ImGuiIO, button: int, down: bool):
+    #     """
+    #     Queue a mouse button change
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseButtonEvent(
+    #         self._ptr,
+    #         button,
+    #         down
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_mouse_pos_event(self: ImGuiIO, x: float, y: float):
+    #     """
+    #     Queue a mouse position update. use -flt_max,-flt_max to signify no mouse (e.g. app not focused and not hovered)
+    #     """
+    #     ccimgui.ImGuiIO_AddMousePosEvent(
+    #         self._ptr,
+    #         x,
+    #         y
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_mouse_source_event(self: ImGuiIO, source: int):
+    #     """
+    #     Queue a mouse source change (mouse/touchscreen/pen)
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseSourceEvent(
+    #         self._ptr,
+    #         source
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_mouse_viewport_event(self: ImGuiIO, id_: int):
+    #     """
+    #     Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport to call this (for multi-viewport support).
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseViewportEvent(
+    #         self._ptr,
+    #         id_
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_add_mouse_wheel_event(self: ImGuiIO, wheel_x: float, wheel_y: float):
+    #     """
+    #     Queue a mouse wheel update. wheel_y<0: scroll down, wheel_y>0: scroll up, wheel_x<0: scroll right, wheel_x>0: scroll left.
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseWheelEvent(
+    #         self._ptr,
+    #         wheel_x,
+    #         wheel_y
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_clear_events_queue(self: ImGuiIO):
+    #     """
+    #     Clear all incoming events.
+    #     """
+    #     ccimgui.ImGuiIO_ClearEventsQueue(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_io_clear_input_keys(self: ImGuiIO):
+    #     """
+    #     Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
     #     """
     #     ccimgui.ImGuiIO_ClearInputKeys(
     #         self._ptr
@@ -18229,7 +21151,7 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
+    # def imgui_io_set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
     #     """
     #     Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
     #     """
@@ -18245,7 +21167,7 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
+    # def imgui_io_set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
     #     """
     #     Implied native_legacy_index = -1
     #     """
@@ -18263,11 +21185,64 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
+    # def imgui_io_set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
     #     """
     #     [optional] specify index for legacy <1.87 iskeyxxx() functions with native indices + specify native keycode, scancode.
     #     """
     #     ccimgui.ImGuiIO_SetKeyEventNativeDataEx(
+    #         self._ptr,
+    #         key,
+    #         native_keycode,
+    #         native_scancode,
+    #         native_legacy_index
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
+    #     """
+    #     Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
+    #     """
+    #     ccimgui.SetAppAcceptingEvents(
+    #         self._ptr,
+    #         accepting_events
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
+    #     """
+    #     Implied native_legacy_index = -1
+    #     """
+    #     ccimgui.SetKeyEventNativeData(
+    #         self._ptr,
+    #         key,
+    #         native_keycode,
+    #         native_scancode
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
+    #     """
+    #     [optional] specify index for legacy <1.87 iskeyxxx() functions with native indices + specify native keycode, scancode.
+    #     """
+    #     ccimgui.SetKeyEventNativeDataEx(
     #         self._ptr,
     #         key,
     #         native_keycode,
@@ -18586,7 +21561,7 @@ cdef class ImGuiInputTextCallbackData:
     # ?custom_comment_only(False)
     # ?returns(None)
     def clear_selection(self: ImGuiInputTextCallbackData):
-        ccimgui.ImGuiInputTextCallbackData_ClearSelection(
+        ccimgui.ClearSelection(
             self._ptr
         )
     # [End Method]
@@ -18598,7 +21573,7 @@ cdef class ImGuiInputTextCallbackData:
     # ?custom_comment_only(False)
     # ?returns(None)
     def delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int):
-        ccimgui.ImGuiInputTextCallbackData_DeleteChars(
+        ccimgui.DeleteChars(
             self._ptr,
             pos,
             bytes_count
@@ -18612,10 +21587,78 @@ cdef class ImGuiInputTextCallbackData:
     # ?custom_comment_only(False)
     # ?returns(bool)
     def has_selection(self: ImGuiInputTextCallbackData):
-        cdef bool res = ccimgui.ImGuiInputTextCallbackData_HasSelection(
+        cdef bool res = ccimgui.HasSelection(
             self._ptr
         )
         return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_input_text_callback_data_clear_selection(self: ImGuiInputTextCallbackData):
+    #     ccimgui.ImGuiInputTextCallbackData_ClearSelection(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_input_text_callback_data_delete_chars(self: ImGuiInputTextCallbackData, pos: int, bytes_count: int):
+    #     ccimgui.ImGuiInputTextCallbackData_DeleteChars(
+    #         self._ptr,
+    #         pos,
+    #         bytes_count
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_input_text_callback_data_has_selection(self: ImGuiInputTextCallbackData):
+    #     cdef bool res = ccimgui.ImGuiInputTextCallbackData_HasSelection(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+#     def imgui_input_text_callback_data_insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         ccimgui.ImGuiInputTextCallbackData_InsertChars(
+#             self._ptr,
+#             pos,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_input_text_callback_data_select_all(self: ImGuiInputTextCallbackData):
+    #     ccimgui.ImGuiInputTextCallbackData_SelectAll(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -18625,7 +21668,7 @@ cdef class ImGuiInputTextCallbackData:
     # ?custom_comment_only(False)
     # ?returns(None)
     def insert_chars(self: ImGuiInputTextCallbackData, pos: int, text: str):
-        ccimgui.ImGuiInputTextCallbackData_InsertChars(
+        ccimgui.InsertChars(
             self._ptr,
             pos,
             _bytes(text),
@@ -18640,7 +21683,7 @@ cdef class ImGuiInputTextCallbackData:
     # ?custom_comment_only(False)
     # ?returns(None)
     def select_all(self: ImGuiInputTextCallbackData):
-        ccimgui.ImGuiInputTextCallbackData_SelectAll(
+        ccimgui.SelectAll(
             self._ptr
         )
     # [End Method]
@@ -18964,7 +22007,7 @@ cdef class ImGuiListClipper:
     # ?custom_comment_only(False)
     # ?returns(None)
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
-        ccimgui.ImGuiListClipper_Begin(
+        ccimgui.Begin(
             self._ptr,
             items_count,
             items_height
@@ -19022,9 +22065,122 @@ cdef class ImGuiListClipper:
         """
         Automatically called on the last call of step() that returns false.
         """
-        ccimgui.ImGuiListClipper_End(
+        ccimgui.End(
             self._ptr
         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_list_clipper_begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0):
+    #     ccimgui.ImGuiListClipper_Begin(
+    #         self._ptr,
+    #         items_count,
+    #         items_height
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_list_clipper_end(self: ImGuiListClipper):
+    #     """
+    #     Automatically called on the last call of step() that returns false.
+    #     """
+    #     ccimgui.ImGuiListClipper_End(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_list_clipper_include_item_by_index(self: ImGuiListClipper, item_index: int):
+    #     """
+    #     Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+    #     (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+    #     """
+    #     ccimgui.ImGuiListClipper_IncludeItemByIndex(
+    #         self._ptr,
+    #         item_index
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_list_clipper_include_items_by_index(self: ImGuiListClipper, item_begin: int, item_end: int):
+    #     """
+    #     Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
+    #     """
+    #     ccimgui.ImGuiListClipper_IncludeItemsByIndex(
+    #         self._ptr,
+    #         item_begin,
+    #         item_end
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_list_clipper_step(self: ImGuiListClipper):
+    #     """
+    #     Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
+    #     """
+    #     cdef bool res = ccimgui.ImGuiListClipper_Step(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def include_item_by_index(self: ImGuiListClipper, item_index: int):
+    #     """
+    #     Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+    #     (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+    #     """
+    #     ccimgui.IncludeItemByIndex(
+    #         self._ptr,
+    #         item_index
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def include_items_by_index(self: ImGuiListClipper, item_begin: int, item_end: int):
+    #     """
+    #     Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
+    #     """
+    #     ccimgui.IncludeItemsByIndex(
+    #         self._ptr,
+    #         item_begin,
+    #         item_end
+    #     )
     # [End Method]
 
     # [Method]
@@ -19056,7 +22212,7 @@ cdef class ImGuiListClipper:
         """
         Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
         """
-        cdef bool res = ccimgui.ImGuiListClipper_Step(
+        cdef bool res = ccimgui.Step(
             self._ptr
         )
         return res
@@ -19301,6 +22457,18 @@ cdef class ImGuiPayload:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def clear(self: ImGuiPayload):
+    #     ccimgui.Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_payload_clear(self: ImGuiPayload):
     #     ccimgui.ImGuiPayload_Clear(
     #         self._ptr
     #     )
@@ -19312,7 +22480,7 @@ cdef class ImGuiPayload:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_data_type(self: ImGuiPayload, type_: str):
+    # def imgui_payload_is_data_type(self: ImGuiPayload, type_: str):
     #     cdef bool res = ccimgui.ImGuiPayload_IsDataType(
     #         self._ptr,
     #         _bytes(type_)
@@ -19326,7 +22494,7 @@ cdef class ImGuiPayload:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_delivery(self: ImGuiPayload):
+    # def imgui_payload_is_delivery(self: ImGuiPayload):
     #     cdef bool res = ccimgui.ImGuiPayload_IsDelivery(
     #         self._ptr
     #     )
@@ -19339,8 +22507,48 @@ cdef class ImGuiPayload:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_preview(self: ImGuiPayload):
+    # def imgui_payload_is_preview(self: ImGuiPayload):
     #     cdef bool res = ccimgui.ImGuiPayload_IsPreview(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_data_type(self: ImGuiPayload, type_: str):
+    #     cdef bool res = ccimgui.IsDataType(
+    #         self._ptr,
+    #         _bytes(type_)
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_delivery(self: ImGuiPayload):
+    #     cdef bool res = ccimgui.IsDelivery(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def is_preview(self: ImGuiPayload):
+    #     cdef bool res = ccimgui.IsPreview(
     #         self._ptr
     #     )
     #     return res
@@ -20317,9 +23525,9 @@ cdef class ImGuiSizeCallbackData:
     # ?returns(None)
     # def build_sort_by_key(self: ImGuiStorage):
     #     """
-    #     For quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
+    #     Advanced: for quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
     #     """
-    #     ccimgui.ImGuiStorage_BuildSortByKey(
+    #     ccimgui.BuildSortByKey(
     #         self._ptr
     #     )
     # [End Method]
@@ -20336,7 +23544,7 @@ cdef class ImGuiSizeCallbackData:
     #     - Set***() functions find pair, insertion on demand if missing.
     #     - Sorted insertion is costly, paid once. A typical frame shouldn't need to insert any new pair.
     #     """
-    #     ccimgui.ImGuiStorage_Clear(
+    #     ccimgui.Clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -20348,7 +23556,7 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(bool)
     # def get_bool(self: ImGuiStorage, key: int, default_val: bool=False):
-    #     cdef bool res = ccimgui.ImGuiStorage_GetBool(
+    #     cdef bool res = ccimgui.GetBool(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20363,7 +23571,7 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(Bool)
     # def get_bool_ref(self: ImGuiStorage, key: int, default_val: bool=False):
-    #     cdef bool* res = ccimgui.ImGuiStorage_GetBoolRef(
+    #     cdef bool* res = ccimgui.GetBoolRef(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20378,7 +23586,7 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(float)
     # def get_float(self: ImGuiStorage, key: int, default_val: float=0.0):
-    #     cdef float res = ccimgui.ImGuiStorage_GetFloat(
+    #     cdef float res = ccimgui.GetFloat(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20393,7 +23601,7 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(Float)
     # def get_float_ref(self: ImGuiStorage, key: int, default_val: float=0.0):
-    #     cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(
+    #     cdef float* res = ccimgui.GetFloatRef(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20408,7 +23616,7 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(int)
     # def get_int(self: ImGuiStorage, key: int, default_val: int=0):
-    #     cdef int res = ccimgui.ImGuiStorage_GetInt(
+    #     cdef int res = ccimgui.GetInt(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20429,7 +23637,7 @@ cdef class ImGuiSizeCallbackData:
     #     - A typical use case where this is convenient for quick hacking (e.g. add storage during a live Edit&Continue session if you can't modify existing struct)
     #     float* pvar = ImGui::GetFloatRef(key); ImGui::SliderFloat("var", pvar, 0, 100.0f); some_var += *pvar;
     #     """
-    #     cdef int* res = ccimgui.ImGuiStorage_GetIntRef(
+    #     cdef int* res = ccimgui.GetIntRef(
     #         self._ptr,
     #         key,
     #         default_val
@@ -20447,7 +23655,7 @@ cdef class ImGuiSizeCallbackData:
     #     """
     #     Default_val is null
     #     """
-    #     cdef void* res = ccimgui.ImGuiStorage_GetVoidPtr(
+    #     cdef void* res = ccimgui.GetVoidPtr(
     #         self._ptr,
     #         key
     #     )
@@ -20461,6 +23669,166 @@ cdef class ImGuiSizeCallbackData:
     # ?custom_comment_only(False)
     # ?returns(Any)
     # def get_void_ptr_ref(self: ImGuiStorage, key: int, default_val: Any=None):
+    #     cdef void** res = ccimgui.GetVoidPtrRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_storage_build_sort_by_key(self: ImGuiStorage):
+    #     """
+    #     Advanced: for quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
+    #     """
+    #     ccimgui.ImGuiStorage_BuildSortByKey(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_storage_clear(self: ImGuiStorage):
+    #     """
+    #     - Get***() functions find pair, never add/allocate. Pairs are sorted so a query is O(log N)
+    #     - Set***() functions find pair, insertion on demand if missing.
+    #     - Sorted insertion is costly, paid once. A typical frame shouldn't need to insert any new pair.
+    #     """
+    #     ccimgui.ImGuiStorage_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_storage_get_bool(self: ImGuiStorage, key: int, default_val: bool=False):
+    #     cdef bool res = ccimgui.ImGuiStorage_GetBool(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Bool)
+    # def imgui_storage_get_bool_ref(self: ImGuiStorage, key: int, default_val: bool=False):
+    #     cdef bool* res = ccimgui.ImGuiStorage_GetBoolRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Bool(dereference(res))
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # def imgui_storage_get_float(self: ImGuiStorage, key: int, default_val: float=0.0):
+    #     cdef float res = ccimgui.ImGuiStorage_GetFloat(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Float)
+    # def imgui_storage_get_float_ref(self: ImGuiStorage, key: int, default_val: float=0.0):
+    #     cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Float(dereference(res))
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def imgui_storage_get_int(self: ImGuiStorage, key: int, default_val: int=0):
+    #     cdef int res = ccimgui.ImGuiStorage_GetInt(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Int)
+    # def imgui_storage_get_int_ref(self: ImGuiStorage, key: int, default_val: int=0):
+    #     """
+    #     - Get***Ref() functions finds pair, insert on demand if missing, return pointer. Useful if you intend to do Get+Set.
+    #     - References are only valid until a new value is added to the storage. Calling a Set***() function or a Get***Ref() function invalidates the pointer.
+    #     - A typical use case where this is convenient for quick hacking (e.g. add storage during a live Edit&Continue session if you can't modify existing struct)
+    #     float* pvar = ImGui::GetFloatRef(key); ImGui::SliderFloat("var", pvar, 0, 100.0f); some_var += *pvar;
+    #     """
+    #     cdef int* res = ccimgui.ImGuiStorage_GetIntRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Int(dereference(res))
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # def imgui_storage_get_void_ptr(self: ImGuiStorage, key: int):
+    #     """
+    #     Default_val is null
+    #     """
+    #     cdef void* res = ccimgui.ImGuiStorage_GetVoidPtr(
+    #         self._ptr,
+    #         key
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # def imgui_storage_get_void_ptr_ref(self: ImGuiStorage, key: int, default_val: Any=None):
     #     cdef void** res = ccimgui.ImGuiStorage_GetVoidPtrRef(
     #         self._ptr,
     #         key,
@@ -20475,9 +23843,9 @@ cdef class ImGuiSizeCallbackData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_all_int(self: ImGuiStorage, val: int):
+    # def imgui_storage_set_all_int(self: ImGuiStorage, val: int):
     #     """
-    #     Use on your own storage if you know only integer are being stored (open/close all tree nodes)
+    #     Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
     #     """
     #     ccimgui.ImGuiStorage_SetAllInt(
     #         self._ptr,
@@ -20491,7 +23859,7 @@ cdef class ImGuiSizeCallbackData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_bool(self: ImGuiStorage, key: int, val: bool):
+    # def imgui_storage_set_bool(self: ImGuiStorage, key: int, val: bool):
     #     ccimgui.ImGuiStorage_SetBool(
     #         self._ptr,
     #         key,
@@ -20505,7 +23873,7 @@ cdef class ImGuiSizeCallbackData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_float(self: ImGuiStorage, key: int, val: float):
+    # def imgui_storage_set_float(self: ImGuiStorage, key: int, val: float):
     #     ccimgui.ImGuiStorage_SetFloat(
     #         self._ptr,
     #         key,
@@ -20519,7 +23887,7 @@ cdef class ImGuiSizeCallbackData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_int(self: ImGuiStorage, key: int, val: int):
+    # def imgui_storage_set_int(self: ImGuiStorage, key: int, val: int):
     #     ccimgui.ImGuiStorage_SetInt(
     #         self._ptr,
     #         key,
@@ -20533,8 +23901,80 @@ cdef class ImGuiSizeCallbackData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_void_ptr(self: ImGuiStorage, key: int, val: Any):
+    # def imgui_storage_set_void_ptr(self: ImGuiStorage, key: int, val: Any):
     #     ccimgui.ImGuiStorage_SetVoidPtr(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_all_int(self: ImGuiStorage, val: int):
+    #     """
+    #     Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
+    #     """
+    #     ccimgui.SetAllInt(
+    #         self._ptr,
+    #         val
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_bool(self: ImGuiStorage, key: int, val: bool):
+    #     ccimgui.SetBool(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_float(self: ImGuiStorage, key: int, val: float):
+    #     ccimgui.SetFloat(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_int(self: ImGuiStorage, key: int, val: int):
+    #     ccimgui.SetInt(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def set_void_ptr(self: ImGuiStorage, key: int, val: Any):
+    #     ccimgui.SetVoidPtr(
     #         self._ptr,
     #         key,
     #         val
@@ -20581,6 +24021,22 @@ cdef class ImGuiSizeCallbackData:
 #         cdef unsigned int ptr_int = <uintptr_t>self._ptr
 #         return hash(ptr_int)
     # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(__anonymous_type0)
+    # @property
+    # def anonymous_type0(self):
+    #     cdef ccimgui.__anonymous_type0 res = dereference(self._ptr).__anonymous_type0
+    #     return __anonymous_type0.from_ptr(res)
+    # @anonymous_type0.setter
+    # def anonymous_type0(self, value: __anonymous_type0):
+    #     # dereference(self._ptr).__anonymous_type0 = value._ptr
+    #     raise NotImplementedError
+    # [End Field]
 
     # [Field]
     # ?use_template(False)
@@ -20740,7 +24196,7 @@ cdef class ImGuiStyle:
     @property
     def cell_padding(self):
         """
-        Padding within a table cell
+        Padding within a table cell. cellpadding.y may be altered between different rows.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).CellPadding
         return _cast_ImVec2_tuple(res)
@@ -20939,6 +24395,25 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # @property
+    # def docking_separator_size(self):
+    #     """
+    #     Thickness of resizing border between docked windows
+    #     """
+    #     cdef float res = dereference(self._ptr).DockingSeparatorSize
+    #     return res
+    # @docking_separator_size.setter
+    # def docking_separator_size(self, value: float):
+    #     # dereference(self._ptr).DockingSeparatorSize = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -21118,6 +24593,7 @@ cdef class ImGuiStyle:
     # def hover_stationary_delay(self):
     #     """
     #     Behaviors
+    #     (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
     #     Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
     #     """
     #     cdef float res = dereference(self._ptr).HoverStationaryDelay
@@ -21377,6 +24853,25 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # @property
+    # def tab_bar_border_size(self):
+    #     """
+    #     Thickness of tab-bar separator, which takes on the tab active color to denote focus.
+    #     """
+    #     cdef float res = dereference(self._ptr).TabBarBorderSize
+    #     return res
+    # @tab_bar_border_size.setter
+    # def tab_bar_border_size(self, value: float):
+    #     # dereference(self._ptr).TabBarBorderSize = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -21430,6 +24925,25 @@ cdef class ImGuiStyle:
     def tab_rounding(self, value: float):
         # dereference(self._ptr).TabRounding = value
         raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # @property
+    # def table_angled_headers_angle(self):
+    #     """
+    #     Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
+    #     """
+    #     cdef float res = dereference(self._ptr).TableAngledHeadersAngle
+    #     return res
+    # @table_angled_headers_angle.setter
+    # def table_angled_headers_angle(self, value: float):
+    #     # dereference(self._ptr).TableAngledHeadersAngle = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21571,8 +25085,21 @@ cdef class ImGuiStyle:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
+    # def imgui_style_scale_all_sizes(self: ImGuiStyle, scale_factor: float):
     #     ccimgui.ImGuiStyle_ScaleAllSizes(
+    #         self._ptr,
+    #         scale_factor
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
+    #     ccimgui.ScaleAllSizes(
     #         self._ptr,
     #         scale_factor
     #     )
@@ -21666,7 +25193,7 @@ cdef class ImGuiTableColumnSortSpecs:
     @property
     def sort_direction(self):
         """
-        Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
+        Imguisortdirection_ascending or imguisortdirection_descending
         """
         cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
         return res
@@ -21865,7 +25392,7 @@ cdef class ImGuiTableSortSpecs:
 #     def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
 #         bytes_str_end = _bytes(str_end) if str_end is not None else None
 
-#         ccimgui.ImGuiTextBuffer_append(
+#         ccimgui.append(
 #             self._ptr,
 #             _bytes(str_),
 #             ((<char*>bytes_str_end if str_end is not None else NULL))
@@ -21879,7 +25406,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def appendf(self: ImGuiTextBuffer, fmt: str):
-    #     ccimgui.ImGuiTextBuffer_appendf(
+    #     ccimgui.appendf(
     #         self._ptr,
     #         _bytes(fmt)
     #     )
@@ -21892,7 +25419,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def appendfv(self: ImGuiTextBuffer, fmt: str):
-    #     ccimgui.ImGuiTextBuffer_appendfv(
+    #     ccimgui.appendfv(
     #         self._ptr,
     #         _bytes(fmt)
     #     )
@@ -21905,7 +25432,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(str)
     # def begin(self: ImGuiTextBuffer):
-    #     cdef const char* res = ccimgui.ImGuiTextBuffer_begin(
+    #     cdef const char* res = ccimgui.begin(
     #         self._ptr
     #     )
     #     return _from_bytes(res)
@@ -21918,7 +25445,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(str)
     # def c_str(self: ImGuiTextBuffer):
-    #     cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
+    #     cdef const char* res = ccimgui.c_str(
     #         self._ptr
     #     )
     #     return _from_bytes(res)
@@ -21931,7 +25458,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def clear(self: ImGuiTextBuffer):
-    #     ccimgui.ImGuiTextBuffer_clear(
+    #     ccimgui.clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -21943,7 +25470,7 @@ cdef class ImGuiTableSortSpecs:
     # ?custom_comment_only(False)
     # ?returns(bool)
     # def empty(self: ImGuiTextBuffer):
-    #     cdef bool res = ccimgui.ImGuiTextBuffer_empty(
+    #     cdef bool res = ccimgui.empty(
     #         self._ptr
     #     )
     #     return res
@@ -21959,6 +25486,115 @@ cdef class ImGuiTableSortSpecs:
     #     """
     #     Buf is zero-terminated, so end() will point on the zero-terminator
     #     """
+    #     cdef const char* res = ccimgui.end(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+#     def imgui_text_buffer_append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
+#         bytes_str_end = _bytes(str_end) if str_end is not None else None
+
+#         ccimgui.ImGuiTextBuffer_append(
+#             self._ptr,
+#             _bytes(str_),
+#             ((<char*>bytes_str_end if str_end is not None else NULL))
+#         )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_text_buffer_appendf(self: ImGuiTextBuffer, fmt: str):
+    #     ccimgui.ImGuiTextBuffer_appendf(
+    #         self._ptr,
+    #         _bytes(fmt)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_text_buffer_appendfv(self: ImGuiTextBuffer, fmt: str):
+    #     ccimgui.ImGuiTextBuffer_appendfv(
+    #         self._ptr,
+    #         _bytes(fmt)
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    # def imgui_text_buffer_begin(self: ImGuiTextBuffer):
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_begin(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    # def imgui_text_buffer_c_str(self: ImGuiTextBuffer):
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_text_buffer_clear(self: ImGuiTextBuffer):
+    #     ccimgui.ImGuiTextBuffer_clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_text_buffer_empty(self: ImGuiTextBuffer):
+    #     cdef bool res = ccimgui.ImGuiTextBuffer_empty(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    # def imgui_text_buffer_end(self: ImGuiTextBuffer):
+    #     """
+    #     Buf is zero-terminated, so end() will point on the zero-terminator
+    #     """
     #     cdef const char* res = ccimgui.ImGuiTextBuffer_end(
     #         self._ptr
     #     )
@@ -21971,7 +25607,7 @@ cdef class ImGuiTableSortSpecs:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def reserve(self: ImGuiTextBuffer, capacity: int):
+    # def imgui_text_buffer_reserve(self: ImGuiTextBuffer, capacity: int):
     #     ccimgui.ImGuiTextBuffer_reserve(
     #         self._ptr,
     #         capacity
@@ -21984,8 +25620,34 @@ cdef class ImGuiTableSortSpecs:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # def size(self: ImGuiTextBuffer):
+    # def imgui_text_buffer_size(self: ImGuiTextBuffer):
     #     cdef int res = ccimgui.ImGuiTextBuffer_size(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def reserve(self: ImGuiTextBuffer, capacity: int):
+    #     ccimgui.reserve(
+    #         self._ptr,
+    #         capacity
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # def size(self: ImGuiTextBuffer):
+    #     cdef int res = ccimgui.size(
     #         self._ptr
     #     )
     #     return res
@@ -22088,7 +25750,7 @@ cdef class ImGuiTextFilter:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def build(self: ImGuiTextFilter):
-    #     ccimgui.ImGuiTextFilter_Build(
+    #     ccimgui.Build(
     #         self._ptr
     #     )
     # [End Method]
@@ -22100,7 +25762,7 @@ cdef class ImGuiTextFilter:
     # ?custom_comment_only(False)
     # ?returns(None)
     # def clear(self: ImGuiTextFilter):
-    #     ccimgui.ImGuiTextFilter_Clear(
+    #     ccimgui.Clear(
     #         self._ptr
     #     )
     # [End Method]
@@ -22160,7 +25822,7 @@ cdef class ImGuiTextFilter:
         """
         Helper calling inputtext+build
         """
-        cdef bool res = ccimgui.ImGuiTextFilter_Draw(
+        cdef bool res = ccimgui.Draw(
             self._ptr,
             _bytes(label),
             width
@@ -22170,12 +25832,84 @@ cdef class ImGuiTextFilter:
 
     # [Method]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_text_filter_build(self: ImGuiTextFilter):
+    #     ccimgui.ImGuiTextFilter_Build(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def imgui_text_filter_clear(self: ImGuiTextFilter):
+    #     ccimgui.ImGuiTextFilter_Clear(
+    #         self._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_text_filter_draw(self: ImGuiTextFilter, label: str="Filter (inc,-exc)", width: float=0.0):
+    #     """
+    #     Helper calling inputtext+build
+    #     """
+    #     cdef bool res = ccimgui.ImGuiTextFilter_Draw(
+    #         self._ptr,
+    #         _bytes(label),
+    #         width
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_text_filter_is_active(self: ImGuiTextFilter):
+    #     cdef bool res = ccimgui.ImGuiTextFilter_IsActive(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+#     def imgui_text_filter_pass_filter(self: ImGuiTextFilter, text: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
+
+#         cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(
+#             self._ptr,
+#             _bytes(text),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
+#         return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
     def is_active(self: ImGuiTextFilter):
-        cdef bool res = ccimgui.ImGuiTextFilter_IsActive(
+        cdef bool res = ccimgui.IsActive(
             self._ptr
         )
         return res
@@ -22188,7 +25922,7 @@ cdef class ImGuiTextFilter:
     # ?custom_comment_only(False)
     # ?returns(bool)
     def pass_filter(self: ImGuiTextFilter, text: str):
-        cdef bool res = ccimgui.ImGuiTextFilter_PassFilter(
+        cdef bool res = ccimgui.PassFilter(
             self._ptr,
             _bytes(text),
             NULL
@@ -22276,6 +26010,19 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?custom_comment_only(False)
     # ?returns(bool)
     # def empty(self: ImGuiTextFilter_ImGuiTextRange):
+    #     cdef bool res = ccimgui.empty(
+    #         self._ptr
+    #     )
+    #     return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # def imgui_text_filter_imgui_text_range_empty(self: ImGuiTextFilter_ImGuiTextRange):
     #     cdef bool res = ccimgui.ImGuiTextFilter_ImGuiTextRange_empty(
     #         self._ptr
     #     )
@@ -22288,8 +26035,22 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    # def imgui_text_filter_imgui_text_range_split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
     #     ccimgui.ImGuiTextFilter_ImGuiTextRange_split(
+    #         self._ptr,
+    #         separator,
+    #         out._ptr
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    #     ccimgui.split(
     #         self._ptr,
     #         separator,
     #         out._ptr
@@ -22681,7 +26442,7 @@ cdef class ImGuiViewport:
         """
         Helpers
         """
-        cdef ccimgui.ImVec2 res = ccimgui.ImGuiViewport_GetCenter(
+        cdef ccimgui.ImVec2 res = ccimgui.GetCenter(
             self._ptr
         )
         return _cast_ImVec2_tuple(res)
@@ -22694,10 +26455,39 @@ cdef class ImGuiViewport:
     # ?custom_comment_only(False)
     # ?returns(tuple)
     def get_work_center(self: ImGuiViewport):
-        cdef ccimgui.ImVec2 res = ccimgui.ImGuiViewport_GetWorkCenter(
+        cdef ccimgui.ImVec2 res = ccimgui.GetWorkCenter(
             self._ptr
         )
         return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+    # def imgui_viewport_get_center(self: ImGuiViewport):
+    #     """
+    #     Helpers
+    #     """
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImGuiViewport_GetCenter(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(tuple)
+    # def imgui_viewport_get_work_center(self: ImGuiViewport):
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImGuiViewport_GetWorkCenter(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
     # [End Method]
 # [End Class]
 
@@ -23330,6 +27120,140 @@ cdef class ImVector_ImDrawIdx:
     def size(self, value: int):
         # dereference(self._ptr).Size = value
         raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImDrawListPtr:
+    cdef ccimgui.ImVector_ImDrawListPtr* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImDrawListPtr from_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImDrawListPtr wrapper = ImVector_ImDrawListPtr.__new__(ImVector_ImDrawListPtr)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawListPtr from_heap_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
+        wrapper = ImVector_ImDrawListPtr.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImDrawList)
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImDrawList** res = dereference(self._ptr).Data
+    #     return ImDrawList.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImDrawList):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImDrawList)
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImDrawList** res = dereference(self._ptr).Data
+    #     return ImDrawList.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImDrawList):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -24705,6 +28629,140 @@ cdef class ImVector_float:
     # @size.setter
     # def size(self, value: int):
     #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class __anonymous_type0:
+    cdef ccimgui.__anonymous_type0* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef __anonymous_type0 from_ptr(ccimgui.__anonymous_type0* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef __anonymous_type0 wrapper = __anonymous_type0.__new__(__anonymous_type0)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef __anonymous_type0 from_heap_ptr(ccimgui.__anonymous_type0* _ptr):
+        wrapper = __anonymous_type0.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # @property
+    # def val_f(self):
+    #     cdef float res = dereference(self._ptr).val_f
+    #     return res
+    # @val_f.setter
+    # def val_f(self, value: float):
+    #     # dereference(self._ptr).val_f = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    # @property
+    # def val_f(self):
+    #     cdef float res = dereference(self._ptr).val_f
+    #     return res
+    # @val_f.setter
+    # def val_f(self, value: float):
+    #     # dereference(self._ptr).val_f = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def val_i(self):
+    #     cdef int res = dereference(self._ptr).val_i
+    #     return res
+    # @val_i.setter
+    # def val_i(self, value: int):
+    #     # dereference(self._ptr).val_i = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def val_i(self):
+    #     cdef int res = dereference(self._ptr).val_i
+    #     return res
+    # @val_i.setter
+    # def val_i(self, value: int):
+    #     # dereference(self._ptr).val_i = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # @property
+    # def val_p(self):
+    #     cdef void* res = dereference(self._ptr).val_p
+    #     return res
+    # @val_p.setter
+    # def val_p(self, value: Any):
+    #     # dereference(self._ptr).val_p = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # @property
+    # def val_p(self):
+    #     cdef void* res = dereference(self._ptr).val_p
+    #     return res
+    # @val_p.setter
+    # def val_p(self, value: Any):
+    #     # dereference(self._ptr).val_p = value
     #     raise NotImplementedError
     # [End Field]
 # [End Class]

@@ -2,7 +2,7 @@ from __future__ import annotations
 import re
 import textwrap
 import json
-from helpers import Template
+from model.template import Template
 from typing import List, Tuple, Any
 from diff_match_patch import diff_match_patch
 from io import StringIO
@@ -237,11 +237,10 @@ class HeaderComparison:
         self.new = new
         self.dmp = diff_match_patch()
 
-
         for old_c in self.old.get_all_comparable_lookups():
             new_c = new.get_comparable(old_c)
             if new_c is None:
-                print(f"Could not find {old_c} in the new. Perhaps the API removed a function")
+                print(f"- Could not find {old_c} in the new. Perhaps the API removed a function")
                 self.in_old_missing_in_new.append(old_c)
             else:
                 self.in_both.append(old_c)
@@ -249,7 +248,7 @@ class HeaderComparison:
         for new_c in self.new.get_all_comparable_lookups():
             old_c = old.get_comparable(new_c)
             if old_c is None:
-                print(f"Could not find {new_c} in the old. Perhaps the API added a function")
+                print(f"+ Could not find {new_c} in the old. Perhaps the API added a function")
                 self.in_new_missing_in_old.append(new_c)
         
         for both_c in self.in_both:
@@ -304,6 +303,12 @@ class HeaderComparison:
             print(applied_template_options)
             success = False
         else:
+            # print("----------------------")
+            # print(applied_template_options, comparable_lookup)
+            # print(option_patches)
+            # print(write_to_comparable.options)
+            # print(old_obj.options)
+            # print(new_obj.options)
             # It should still create valid json but we will see
             write_to_comparable.options = json.loads(applied_template_options)
 

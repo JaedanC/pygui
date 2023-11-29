@@ -2163,15 +2163,15 @@ def combo(label: str, current_item: Int, items_separated_by_zeros: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_callback(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int):
+def combo_callback(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int):
     """
     Implied popup_max_height_in_items = -1
     """
     cdef bool res = ccimgui.ImGui_ComboCallback(
         _bytes(label),
         &current_item.value,
-        getter,
-        user_data,
+        items_getter,
+        data,
         items_count
     )
     return res
@@ -2183,12 +2183,12 @@ def combo_callback(label: str, current_item: Int, getter: Callable, user_data: A
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, popup_max_height_in_items: int=-1):
+def combo_callback_ex(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int, popup_max_height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
         _bytes(label),
         &current_item.value,
-        getter,
-        user_data,
+        items_getter,
+        data,
         items_count,
         popup_max_height_in_items
     )
@@ -5407,15 +5407,15 @@ def list_box(label: str, current_item: Int, items: Any, items_count: int, height
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def list_box_callback(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int):
+def list_box_callback(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int):
     """
     Implied height_in_items = -1
     """
     cdef bool res = ccimgui.ImGui_ListBoxCallback(
         _bytes(label),
         &current_item.value,
-        getter,
-        user_data,
+        items_getter,
+        data,
         items_count
     )
     return res
@@ -5427,12 +5427,12 @@ def list_box_callback(label: str, current_item: Int, getter: Callable, user_data
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def list_box_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, height_in_items: int=-1):
+def list_box_callback_ex(label: str, current_item: Int, items_getter: Callable, data: Any, items_count: int, height_in_items: int=-1):
     cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
         _bytes(label),
         &current_item.value,
-        getter,
-        user_data,
+        items_getter,
+        data,
         items_count,
         height_in_items
     )
