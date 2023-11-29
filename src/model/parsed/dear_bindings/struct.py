@@ -163,14 +163,7 @@ class DearBindingsStructNew(Struct):
     """
     def __init__(self, struct_json: dict):
         self.name: str = struct_json["name"]
-        self.original_fully_qualified_name: str = struct_json["original_fully_qualified_name"]
-        self.kind: str = struct_json["kind"]
-        self.by_value: bool = struct_json["by_value"]
-        self.forward_declaration: bool = struct_json["forward_declaration"]
-        self.is_anonymous: bool = struct_json["is_anonymous"]
         self.fields: List[Field] = [DearBindingsStructField(f) for f in struct_json["fields"]]
-        self.is_internal: bool = struct_json["is_internal"]
-        self.source_location: dict = struct_json["source_location"]
         self.comments: Comments = parse_comment(struct_json)
         self.methods: List[Function] = []
     

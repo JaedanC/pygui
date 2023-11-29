@@ -56,6 +56,15 @@ def passes_conditional(json_with_conditional, definitions, verbose=False):
     return True
 
 
+def ignore_anonymous(json_: dict | str):
+    if not isinstance(json_, dict):
+        return True
+
+    if json_.get("is_anonymous"):
+        return False
+    return True
+
+
 def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
     def __recurse_dict(_dict: dict, func: Callable, *args, **kwargs):
         # Go through each key and run deep_json_filter on it
@@ -80,6 +89,8 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
 class DearBindingNew(Binding):
     def __init__(self, cimgui_json, definitions):
         cimgui_json = deep_json_filter(cimgui_json, passes_conditional, definitions)
+        cimgui_json = deep_json_filter(cimgui_json, ignore_anonymous)
+
         self.enums = [DearBindingsEnumNew(e) for e in cimgui_json["enums"]]
         self.typedefs = [DearBindingsTypedefNew(e) for e in cimgui_json["typedefs"]]
         self.structs = [DearBindingsStructNew(e) for e in cimgui_json["structs"]]

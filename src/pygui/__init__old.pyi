@@ -393,6 +393,7 @@ WINDOW_FLAGS_NO_FOCUS_ON_APPEARING: int
 WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS: int
 WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR: int
 WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR: int
+WINDOW_FLAGS_ALWAYS_USE_WINDOW_PADDING: int
 WINDOW_FLAGS_NO_NAV_INPUTS: int
 WINDOW_FLAGS_NO_NAV_FOCUS: int
 WINDOW_FLAGS_UNSAVED_DOCUMENT: int
@@ -407,15 +408,6 @@ WINDOW_FLAGS_POPUP: int
 WINDOW_FLAGS_MODAL: int
 WINDOW_FLAGS_CHILD_MENU: int
 WINDOW_FLAGS_DOCK_NODE_HOST: int
-CHILD_FLAGS_NONE: int
-CHILD_FLAGS_BORDER: int
-CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING: int
-CHILD_FLAGS_RESIZE_X: int
-CHILD_FLAGS_RESIZE_Y: int
-CHILD_FLAGS_AUTO_RESIZE_X: int
-CHILD_FLAGS_AUTO_RESIZE_Y: int
-CHILD_FLAGS_ALWAYS_AUTO_RESIZE: int
-CHILD_FLAGS_FRAME_STYLE: int
 INPUT_TEXT_FLAGS_NONE: int
 INPUT_TEXT_FLAGS_CHARS_DECIMAL: int
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL: int
@@ -452,7 +444,6 @@ TREE_NODE_FLAGS_BULLET: int
 TREE_NODE_FLAGS_FRAME_PADDING: int
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int
-TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
 POPUP_FLAGS_NONE: int
@@ -480,7 +471,6 @@ COMBO_FLAGS_HEIGHT_LARGE: int
 COMBO_FLAGS_HEIGHT_LARGEST: int
 COMBO_FLAGS_NO_ARROW_BUTTON: int
 COMBO_FLAGS_NO_PREVIEW: int
-COMBO_FLAGS_WIDTH_FIT_PREVIEW: int
 COMBO_FLAGS_HEIGHT_MASK: int
 TAB_BAR_FLAGS_NONE: int
 TAB_BAR_FLAGS_REORDERABLE: int
@@ -537,7 +527,6 @@ TABLE_FLAGS_SCROLL_X: int
 TABLE_FLAGS_SCROLL_Y: int
 TABLE_FLAGS_SORT_MULTI: int
 TABLE_FLAGS_SORT_TRISTATE: int
-TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN: int
 TABLE_FLAGS_SIZING_MASK: int
 TABLE_COLUMN_FLAGS_NONE: int
 TABLE_COLUMN_FLAGS_DISABLED: int
@@ -558,7 +547,6 @@ TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int
 TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int
 TABLE_COLUMN_FLAGS_INDENT_ENABLE: int
 TABLE_COLUMN_FLAGS_INDENT_DISABLE: int
-TABLE_COLUMN_FLAGS_ANGLED_HEADER: int
 TABLE_COLUMN_FLAGS_IS_ENABLED: int
 TABLE_COLUMN_FLAGS_IS_VISIBLE: int
 TABLE_COLUMN_FLAGS_IS_SORTED: int
@@ -603,12 +591,11 @@ HOVERED_FLAGS_DELAY_NORMAL: int
 HOVERED_FLAGS_NO_SHARED_DELAY: int
 DOCK_NODE_FLAGS_NONE: int
 DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY: int
-DOCK_NODE_FLAGS_NO_DOCKING_OVER_CENTRAL_NODE: int
+DOCK_NODE_FLAGS_NO_DOCKING_IN_CENTRAL_NODE: int
 DOCK_NODE_FLAGS_PASSTHRU_CENTRAL_NODE: int
-DOCK_NODE_FLAGS_NO_DOCKING_SPLIT: int
+DOCK_NODE_FLAGS_NO_SPLIT: int
 DOCK_NODE_FLAGS_NO_RESIZE: int
 DOCK_NODE_FLAGS_AUTO_HIDE_TAB_BAR: int
-DOCK_NODE_FLAGS_NO_UNDOCKING: int
 DRAG_DROP_FLAGS_NONE: int
 DRAG_DROP_FLAGS_SOURCE_NO_PREVIEW_TOOLTIP: int
 DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER: int
@@ -713,18 +700,6 @@ KEY_F9: int
 KEY_F10: int
 KEY_F11: int
 KEY_F12: int
-KEY_F13: int
-KEY_F14: int
-KEY_F15: int
-KEY_F16: int
-KEY_F17: int
-KEY_F18: int
-KEY_F19: int
-KEY_F20: int
-KEY_F21: int
-KEY_F22: int
-KEY_F23: int
-KEY_F24: int
 KEY_APOSTROPHE: int
 KEY_COMMA: int
 KEY_MINUS: int
@@ -758,8 +733,6 @@ KEY_KEYPAD_SUBTRACT: int
 KEY_KEYPAD_ADD: int
 KEY_KEYPAD_ENTER: int
 KEY_KEYPAD_EQUAL: int
-KEY_APP_BACK: int
-KEY_APP_FORWARD: int
 KEY_GAMEPAD_START: int
 KEY_GAMEPAD_BACK: int
 KEY_GAMEPAD_FACE_LEFT: int
@@ -908,13 +881,11 @@ STYLE_VAR_SCROLLBAR_ROUNDING: int
 STYLE_VAR_GRAB_MIN_SIZE: int
 STYLE_VAR_GRAB_ROUNDING: int
 STYLE_VAR_TAB_ROUNDING: int
-STYLE_VAR_TAB_BAR_BORDER_SIZE: int
 STYLE_VAR_BUTTON_TEXT_ALIGN: int
 STYLE_VAR_SELECTABLE_TEXT_ALIGN: int
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int
 STYLE_VAR_SEPARATOR_TEXT_ALIGN: int
 STYLE_VAR_SEPARATOR_TEXT_PADDING: int
-STYLE_VAR_DOCKING_SEPARATOR_SIZE: int
 STYLE_VAR_COUNT: int
 BUTTON_FLAGS_NONE: int
 BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int
@@ -1050,37 +1021,33 @@ def begin(name: str, p_open: Bool=None, flags: int=0) -> bool:
     Some information such as 'flags' or 'p_open' will only be considered by the first call to Begin().
     - Begin() return false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
     anything to the window. Always call a matching End() for each Begin() call, regardless of its return value!
-    [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
-    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
-    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
+    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
+    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     - Note that the bottom of window stack always contains a window called "Debug".
     """
     pass
 
-def begin_child(str_id: str, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0) -> bool:
+def begin_child(str_id: str, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool:
     """
     Child Windows
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
-    - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
-    This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
-    Consider updating your old call sites:
-    BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
-    BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Border);
-    - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
-    == 0.0f: use remaining parent window size for this axis.
-    > 0.0f: use specified size for this axis.
-    < 0.0f: right/bottom-align to specified distance from available content boundaries.
-    - Specifying ImGuiChildFlags_AutoResizeX or ImGuiChildFlags_AutoResizeY makes the sizing automatic based on child contents.
-    Combining both ImGuiChildFlags_AutoResizeX _and_ ImGuiChildFlags_AutoResizeY defeats purpose of a scrolling region and is NOT recommended.
-    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting
-    anything to the window. Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
-    [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions
-    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
-    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
+    - For each independent axis of 'size': ==0.0f: use remaining host window size / >0.0f: fixed size / <0.0f: use remaining window size minus abs(size) / Each axis can use a different mode, e.g. ImVec2(0,400).
+    - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting anything to the window.
+    Always call a matching EndChild() for each BeginChild() call, regardless of its return value.
+    [Important: due to legacy reason, this is inconsistent with most other functions such as BeginMenu/EndMenu,
+    BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding BeginXXX function
+    returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     """
     pass
 
-def begin_child_id(id_: int, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0) -> bool: ...
+def begin_child_frame(id_: int, size: tuple, flags: int=0) -> bool:
+    """
+    Helper to create a child window / scrolling region that looks like a normal widget frame
+    """
+    pass
+
+def begin_child_id(id_: int, size: tuple=(0, 0), border: bool=False, flags: int=0) -> bool: ...
 def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
     """
     Widgets: Combo Box (Dropdown)
@@ -1123,10 +1090,9 @@ def begin_group() -> None:
 
 # def begin_item_tooltip() -> bool:
 #     """
-#     Tooltips: helpers for showing a tooltip when hovering an item
-#     - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
-#     - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
-#     - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+#     Tooltips: helper for showing a tooltip when hovering an item
+#     - BeginItemTooltip(), SetItemTooltip() are shortcuts for the 'if (IsItemHovered(ImGuiHoveredFlags_Tooltip)) { BeginTooltip() or SetTooltip() }' idiom.
+#     - Where 'ImGuiHoveredFlags_Tooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav'. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
 #     Begin/append a tooltip window if preceding item was hovered.
 #     """
 #     pass
@@ -1134,8 +1100,8 @@ def begin_group() -> None:
 def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
     """
     Widgets: List Boxes
-    - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
-    - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.
+    - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
+    - The BeginListBox()/EndListBox() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() or any items.
     - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
@@ -1252,8 +1218,7 @@ def begin_tooltip() -> bool:
     """
     Tooltips
     - Tooltips are windows following the mouse. They do not take focus away.
-    - A tooltip window can contain items of any types. SetTooltip() is a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom.
-    Begin/append a tooltip window.
+    Begin/append a tooltip window. to create full-featured tooltip (with any kind of items).
     """
     pass
 
@@ -1351,7 +1316,7 @@ def combo(label: str, current_item: Int, items: Sequence[str], popup_max_height_
     """
     pass
 
-def combo_callback(label: str, current_item: Int, items_getter: Callable[[Any, int], str], data: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
+def combo_callback(label: str, current_item: Int, items_getter: Callable[[Any, int, String], "bool"], data: Any, items_count: int, popup_max_height_in_items: int=-1) -> bool: ...
 def create_context(shared_font_atlas: ImFontAtlas=None) -> ImGuiContext:
     """
     Context creation and access
@@ -1390,13 +1355,13 @@ def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWi
     Docking
     [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
     Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
-    - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
+    - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking/undocking.
     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-    - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
+    - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to _enable_ docking/undocking.
     About dockspaces:
-    - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
-    This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
     - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
+    - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
+    This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
     - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
     - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
     e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
@@ -1468,6 +1433,12 @@ def dummy(size: tuple) -> None:
 
 def end() -> None: ...
 def end_child() -> None: ...
+def end_child_frame() -> None:
+    """
+    Always call endchildframe() regardless of beginchildframe() return values (which indicates a collapsed/clipped window)
+    """
+    pass
+
 def end_combo() -> None:
     """
     Only call endcombo() if begincombo() returns true!
@@ -1635,45 +1606,37 @@ def get_content_region_max() -> tuple:
 def get_current_context() -> ImGuiContext: ...
 def get_cursor_pos() -> tuple:
     """
-    [window-local] cursor position in window coordinates (relative to window position)
+    Cursor position in window coordinates (relative to window position)
     """
     pass
 
 def get_cursor_pos_x() -> float:
     """
-    [window-local] '
+    (some functions are using window-relative coordinates, such as: getcursorpos, getcursorstartpos, getcontentregionmax, getwindowcontentregion* etc.
     """
     pass
 
 def get_cursor_pos_y() -> float:
     """
-    [window-local] '
+    Other functions such as getcursorscreenpos or everything in imdrawlist::
     """
     pass
 
 def get_cursor_screen_pos() -> tuple:
     """
-    Layout cursor positioning
-    - By "cursor" we mean the current output position.
-    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
-    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
-    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-    - Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
-    - Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates.
-    Cursor position in absolute coordinates (prefer using this, also more useful to work with imdrawlist api).
+    Cursor position in absolute coordinates (useful to work with imdrawlist api). generally top-left == getmainviewport()->pos == (0,0) in single viewport mode, and bottom-right == getmainviewport()->pos+size == io.displaysize in single-viewport mode.
     """
     pass
 
 def get_cursor_start_pos() -> tuple:
     """
-    [window-local] initial cursor position, in window coordinates
+    Initial cursor position in window coordinates
     """
     pass
 
 def get_drag_drop_payload() -> ImGuiPayload:
     """
-    Peek directly into the current payload from anywhere. returns null when drag and drop is finished or inactive. use imguipayload::isdatatype() to test for the payload type.
+    Peek directly into the current payload from anywhere. may return null. use imguipayload::isdatatype() to test for the payload type.
     """
     pass
 
@@ -1933,13 +1896,13 @@ def get_window_height() -> float:
 
 def get_window_pos() -> tuple:
     """
-    Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
+    Get current window position in screen space (useful if you want to do your own drawing via the drawlist api)
     """
     pass
 
 def get_window_size() -> tuple:
     """
-    Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
+    Get current window size
     """
     pass
 
@@ -1971,27 +1934,26 @@ def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-    - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     pass
 
-def image_button(str_id: str, user_texture_id: int, image_size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
+def image_button(str_id: str, user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
     pass
 
 # def impl_glfw_char_callback(window: GLFWwindow, c: int) -> None: ...
-# def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: float) -> None: ...
+# def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int) -> None: ...
 # def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float) -> None: ...
 def impl_glfw_init_for_open_gl(window, install_callbacks: bool) -> bool: ...
 # def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool) -> bool: ...
 # def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool) -> bool: ...
 # def impl_glfw_install_callbacks(window: GLFWwindow) -> None: ...
 # def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int) -> None: ...
-# def impl_glfw_monitor_callback(monitor: GLFWwindow, event: int) -> None: ...
-# def impl_glfw_mouse_button_callback(window: GLFWwindow, button: float, action: float, mods: float) -> None: ...
+# def impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int) -> None: ...
+# def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int) -> None: ...
 def impl_glfw_new_frame() -> None: ...
 # def impl_glfw_restore_callbacks(window: GLFWwindow) -> None: ...
 # def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float) -> None: ...
@@ -2132,12 +2094,6 @@ def is_item_visible() -> bool:
     """
     pass
 
-# def is_key_chord_pressed(key_chord: int) -> bool:
-#     """
-#     Was key chord (mods + key) pressed, e.g. you can pass 'imguimod_ctrl | imguikey_s' as a key-chord. this doesn't do any routing or focus check, please consider using shortcut() function instead.
-#     """
-#     pass
-
 def is_key_down(key: int) -> bool:
     """
     Inputs Utilities: Keyboard/Mouse/Gamepad
@@ -2252,7 +2208,7 @@ def is_window_focused(flags: int=0) -> bool:
 
 def is_window_hovered(flags: int=0) -> bool:
     """
-    Is current window hovered and hoverable (e.g. not blocked by a popup/modal)? see imguihoveredflags_ for options. important: if you are trying to check whether your mouse should be dispatched to dear imgui or to your underlying app, you should not use this function! use the 'io.wantcapturemouse' boolean for that! refer to faq entry 'how can i tell whether to dispatch mouse/keyboard to dear imgui or my application?' for details.
+    Is current window hovered (and typically: not blocked by a popup/modal)? see flags for options. nb: if you are trying to check whether your mouse should be dispatched to imgui or to your app, you should use the 'io.wantcapturemouse' boolean for that! please read the faq!
     """
     pass
 
@@ -2263,7 +2219,7 @@ def label_text(label: str, fmt: str) -> None:
     pass
 
 def list_box(label: str, current_item: Int, items: Sequence[str], height_in_items: int=-1) -> bool: ...
-def list_box_callback(label: str, current_item: Int, items_getter: Callable[[Any, int], str], data: Any, items_count: int, height_in_items: int=-1) -> bool: ...
+def list_box_callback(label: str, current_item: Int, items_getter: Callable[[Any, int, String], "bool"], data: Any, items_count: int, height_in_items: int=-1) -> bool: ...
 # def load_ini_settings_from_disk(ini_filename: str) -> None:
 #     """
 #     Settings/.Ini Utilities
@@ -2488,7 +2444,7 @@ def push_text_wrap_pos(wrap_local_pos_x: float=0.0) -> None:
 
 def radio_button(label: str, active: bool) -> bool:
     """
-    Use with e.g. if (radiobutton('one', my_value==1)) ( my_value = 1; )
+    Use with e.g. if (radiobutton('one', my_value==1)) { my_value = 1; }
     """
     pass
 
@@ -2559,7 +2515,13 @@ def selectable_bool_ptr(label: str, p_selected: Bool, flags: int=0, size: tuple=
 
 def separator() -> None:
     """
-    Other layout functions
+    Cursor / Layout
+    - By "cursor" we mean the current output position.
+    - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
+    - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
+    Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
+    Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions.
     Separator, generally horizontal. inside a menu bar or in horizontal layout mode, this becomes a vertical separator.
     """
     pass
@@ -2592,19 +2554,19 @@ def set_color_edit_options(flags: int) -> None:
 # def set_current_context(ctx: ImGuiContext) -> None: ...
 def set_cursor_pos(local_pos: tuple) -> None:
     """
-    [window-local] '
+    Are using the main, absolute coordinate system.
     """
     pass
 
 def set_cursor_pos_x(local_x: float) -> None:
     """
-    [window-local] '
+    Getwindowpos() + getcursorpos() == getcursorscreenpos() etc.)
     """
     pass
 
 def set_cursor_pos_y(local_y: float) -> None:
     """
-    [window-local] '
+
     """
     pass
 
@@ -2738,7 +2700,7 @@ def set_next_window_size(size: tuple, cond: int=0) -> None:
 
 def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
     """
-    Set next window size limits. use 0.0f or flt_max if you don't want limits. use -1 for both min and max of same axis to preserve current size (which itself is a constraint). use callback to apply non-trivial programmatic constraints.
+    Set next window size limits. use -1,-1 on either x/y axis to preserve the current size. sizes will be rounded down. use callback to apply non-trivial programmatic constraints.
     """
     pass
 
@@ -2798,7 +2760,7 @@ def set_tab_item_closed(tab_or_docked_window_label: str) -> None:
 
 def set_tooltip(fmt: str) -> None:
     """
-    Set a text-only tooltip. often used after a imgui::isitemhovered() check. override any previous call to settooltip().
+    Set a text-only tooltip, typically use with imgui::isitemhovered(). override any previous call to settooltip().
     """
     pass
 
@@ -2881,21 +2843,15 @@ def show_font_selector(label: str) -> None:
     """
     pass
 
-# def show_id_stack_tool_window() -> None:
-#     """
-#     Implied p_open = null
-#     """
-#     pass
-
-def show_id_stack_tool_window_ex(p_open: Bool=None) -> None:
-    """
-    Create stack tool window. hover items with mouse to query information about the source of their unique id.
-    """
-    pass
-
 def show_metrics_window(p_open: Bool=None) -> None:
     """
     Create metrics/debugger window. display dear imgui internals: windows, draw commands, various internal state, etc.
+    """
+    pass
+
+def show_stack_tool_window(p_open: Bool=None) -> None:
+    """
+    Create stack tool window. hover items with mouse to query information about the source of their unique id.
     """
     pass
 
@@ -2982,7 +2938,7 @@ def slider_scalar(label: str, data_type: int, p_data: "Int | Long | Float | Doub
 def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Float | Double]", components: int, p_min: "int | float", p_max: "int | float", format_: str=None, flags: int=0) -> bool: ...
 def small_button(label: str) -> bool:
     """
-    Button with (framepadding.y == 0) to easily embed within text
+    Button with framepadding=(0,0) to easily embed within text
     """
     pass
 
@@ -3016,12 +2972,6 @@ def tab_item_button(label: str, flags: int=0) -> bool:
     Create a tab behaving like a button. return true when clicked. cannot be selected in the tab bar.
     """
     pass
-
-# def table_angled_headers_row() -> None:
-#     """
-#     Submit a row with angled headers for every column with the imguitablecolumnflags_angledheader flag. must be first row.
-#     """
-#     pass
 
 # def table_get_column_count() -> int:
 #     """
@@ -3073,7 +3023,7 @@ def table_header(label: str) -> None:
 
 def table_headers_row() -> None:
     """
-    Submit a row with headers cells based on data provided to tablesetupcolumn() + submit context menu
+    Submit all headers cells based on data provided to tablesetupcolumn() + submit context menu
     """
     pass
 
@@ -3252,9 +3202,9 @@ class ImDrawData:
     (NB: the style and the naming convention here is a little inconsistent, we currently preserve them for backward compatibility purpose,
     as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
     """
-    cmd_lists: List[ImVector_ImDrawListPtr]
+    cmd_lists: List[ImDrawList]
     """
-    Array of imdrawlist* to render. the imdrawlists are owned by imguicontext and only pointed to from here.
+    Array of imdrawlist* to render. the imdrawlist are owned by imguicontext and only pointed to from here.
     """
     cmd_lists_count: int
     """
@@ -3288,13 +3238,12 @@ class ImDrawData:
     # """
     # Only valid after render() is called and before the next newframe() is called.
     # """
-    # def add_draw_list(self: ImDrawData, draw_list: ImDrawList) -> None:
+    # def clear(self: ImDrawData) -> None:
     #     """
-    #     Helper to add an external draw list into an existing imdrawdata.
+    #     The imdrawlist are owned by imguicontext!
     #     """
     #     pass
 
-    # def clear(self: ImDrawData) -> None: ...
     # def de_index_all_buffers(self: ImDrawData) -> None:
     #     """
     #     Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
@@ -3369,20 +3318,6 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_ellipse(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int) -> None:
-    #     """
-    #     Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
-    #     """
-    #     pass
-
-    # def add_ellipse_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
-    # def add_ellipse_filled(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int) -> None:
-    #     """
-    #     Implied rot = 0.0f, num_segments = 0
-    #     """
-    #     pass
-
-    # def add_ellipse_filled_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0) -> None: ...
     def add_image(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
         """
         Image primitives
@@ -3436,7 +3371,7 @@ class ImDrawList:
         Advanced: Channels
         - Use to split render into layers. By switching channels to can render out-of-order (e.g. submit FG primitives before BG primitives)
         - Use to minimize draw calls (e.g. if going back-and-forth between multiple clipping rectangles, prefer to append into separate channels then merge at the end)
-        - This API shouldn't have been in ImDrawList in the first place!
+        - FIXME-OBSOLETE: This API shouldn't have been in ImDrawList in the first place!
         Prefer using your own persistent instance of ImDrawListSplitter as you can stack them.
         Using the ImDrawList::ChannelsXXXX you cannot stack a split over another.
         """
@@ -3475,18 +3410,6 @@ class ImDrawList:
         - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
         """
         pass
-
-    # def path_elliptical_arc_to(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float) -> None:
-    #     """
-    #     Implied num_segments = 0
-    #     """
-    #     pass
-
-    # def path_elliptical_arc_to_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
-    #     """
-    #     Ellipse
-    #     """
-    #     pass
 
     def path_fill_convex(self: ImDrawList, col: int) -> None: ...
     def path_line_to(self: ImDrawList, pos: tuple) -> None: ...
@@ -3783,13 +3706,13 @@ class ImFontAtlas:
     #     """
     #     pass
 
-    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
+    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
     #     """
     #     pass
 
-    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
+    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
     #     """
@@ -4016,7 +3939,7 @@ class ImFontConfig:
     """
     oversample_h: int
     """
-    2// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
+    3// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal so you can reduce this to 2 to save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
     """
     oversample_v: int
     """
@@ -4026,13 +3949,9 @@ class ImFontConfig:
     """
     False// align every glyph to pixel boundary. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
     """
-    # rasterizer_density: float
-    # """
-    # 1.0f // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
-    # """
     rasterizer_multiply: float
     """
-    1.0f // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
+    1.0f // brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable.
     """
     size_pixels: float
     """
@@ -4395,6 +4314,10 @@ class ImGuiIO:
     """
     = 'imgui_log.txt'// path to .log file (default parameter to imgui::logtofile when no file is specified).
     """
+    metrics_active_allocations: int
+    """
+    Number of active allocations, updated by memalloc/memfree based on current context. may be off if you have multiple imgui contexts.
+    """
     metrics_active_windows: int
     """
     Number of active windows
@@ -4411,7 +4334,7 @@ class ImGuiIO:
     """
     Number of visible windows
     """
-    mouse_clicked: Sequence[bool]
+    mouse_clicked: bool
     """
     Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
     """
@@ -4427,10 +4350,10 @@ class ImGuiIO:
     """
     Position at time of clicking
     """
-    # mouse_clicked_time: Sequence[Double]
-    # """
-    # Time of last click (used to figure out double-click)
-    # """
+    mouse_clicked_time: float
+    """
+    Time of last click (used to figure out double-click)
+    """
     mouse_delta: tuple
     """
     Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
@@ -4445,27 +4368,27 @@ class ImGuiIO:
     (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
     = 0.30f  // time for a double-click, in seconds.
     """
-    mouse_double_clicked: Sequence[bool]
+    mouse_double_clicked: bool
     """
     Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
     """
-    mouse_down: Sequence[bool]
+    mouse_down: bool
     """
     Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
     """
-    mouse_down_duration: Sequence[float]
+    mouse_down_duration: float
     """
     Duration the mouse button has been down (0.0f == just clicked)
     """
-    mouse_down_duration_prev: Sequence[float]
+    mouse_down_duration_prev: float
     """
     Previous time the mouse button has been down
     """
-    mouse_down_owned: Sequence[bool]
+    mouse_down_owned: bool
     """
     Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
     """
-    mouse_down_owned_unless_popup_close: Sequence[bool]
+    mouse_down_owned_unless_popup_close: bool
     """
     Track if button was clicked inside a dear imgui window.
     """
@@ -4473,7 +4396,7 @@ class ImGuiIO:
     """
     Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
     """
-    mouse_drag_max_distance_sqr: Sequence[float]
+    mouse_drag_max_distance_sqr: float
     """
     Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
     """
@@ -4501,7 +4424,7 @@ class ImGuiIO:
     """
     Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
     """
-    mouse_released: Sequence[bool]
+    mouse_released: bool
     """
     Mouse button went from down to !down
     """
@@ -4533,18 +4456,12 @@ class ImGuiIO:
     """
     Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
     """
-    # platform_locale_decimal_point: int
-    # """
-    # Optional: Platform locale
-    # '.'  // [experimental] configure decimal point e.g. '.' or ',' useful for some languages (e.g. german), generally pulled from *localeconv()->decimal_point
-    # """
     set_clipboard_text_fn: Callable
     # set_platform_ime_data_fn: Callable
     # """
     # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
     # (default to use native imm32 api on Windows)
     # """
-    # unused_padding: Any
     user_data: Any
     """
     = null   // store your own data.
@@ -4641,12 +4558,6 @@ class ImGuiIO:
         """
         pass
 
-    # def clear_events_queue(self: ImGuiIO) -> None:
-    #     """
-    #     Clear all incoming events.
-    #     """
-    #     pass
-
     # def clear_input_characters(self: ImGuiIO) -> None:
     #     """
     #     [internal] clear the text input buffer manually
@@ -4655,7 +4566,7 @@ class ImGuiIO:
 
     # def clear_input_keys(self: ImGuiIO) -> None:
     #     """
-    #     Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+    #     [internal] release all keys
     #     """
     #     pass
 
@@ -4829,15 +4740,10 @@ class ImGuiListClipper:
         """
         pass
 
-    # def include_item_by_index(self: ImGuiListClipper, item_index: int) -> None:
-    #     """
-    #     Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
-    #     (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
-    #     """
-    #     pass
-
-    def include_items_by_index(self: ImGuiListClipper, item_begin: int, item_end: int) -> None:
+    def include_range_by_indices(self: ImGuiListClipper, item_begin: int, item_end: int) -> None:
         """
+        Call IncludeRangeByIndices() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+        (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
         Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
         """
         pass
@@ -5106,7 +5012,7 @@ class ImGuiStyle:
     """
     cell_padding: tuple
     """
-    Padding within a table cell. cellpadding.y may be altered between different rows.
+    Padding within a table cell
     """
     child_border_size: float
     """
@@ -5145,10 +5051,6 @@ class ImGuiStyle:
     """
     Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
     """
-    # docking_separator_size: float
-    # """
-    # Thickness of resizing border between docked windows
-    # """
     frame_border_size: float
     """
     Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -5188,7 +5090,6 @@ class ImGuiStyle:
     # hover_stationary_delay: float
     # """
     # Behaviors
-    # (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
     # Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
     # """
     indent_spacing: float
@@ -5243,10 +5144,6 @@ class ImGuiStyle:
     """
     Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
     """
-    # tab_bar_border_size: float
-    # """
-    # Thickness of tab-bar separator, which takes on the tab active color to denote focus.
-    # """
     tab_border_size: float
     """
     Thickness of border around tabs.
@@ -5259,10 +5156,6 @@ class ImGuiStyle:
     """
     Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
     """
-    # table_angled_headers_angle: float
-    # """
-    # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
-    # """
     touch_extra_padding: tuple
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
@@ -5307,7 +5200,7 @@ class ImGuiTableColumnSortSpecs:
     """
     sort_direction: int
     """
-    Imguisortdirection_ascending or imguisortdirection_descending
+    Imguisortdirection_ascending or imguisortdirection_descending (you can use this or sortsign, whichever is more convenient for your sort function)
     """
     # sort_order: int
     # """
@@ -5496,14 +5389,6 @@ class ImVector_ImDrawIdx:
     # capacity: int
     data: int
     size: int
-
-class ImVector_ImDrawListPtr: ...
-    # capacity: int
-    # capacity: int
-    # data: ImDrawList
-    # data: ImDrawList
-    # size: int
-    # size: int
 
 class ImVector_ImDrawVert:
     # capacity: int

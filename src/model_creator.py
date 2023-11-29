@@ -2382,7 +2382,7 @@ def main():
         return
     
     if "--all" in sys.argv:
-        write_pxd(headers, header_files)
+        write_pxd_new(headers, header_files)
         write_pyx(headers, CIMGUI_LIBRARY_NAME)
         write_pyi(headers, EXTENSION_NAME, show_comments)
         return

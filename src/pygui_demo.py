@@ -1254,9 +1254,9 @@ def show_demo_widgets():
         pygui.combo("combo 3 (array)", widget.combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
-        def item_getter(data, n: int, out_str: pygui.String) -> bool:
-            out_str.value = data[n]
-            return True
+        def item_getter(data: list[str], n: int) -> str:
+            return data[n]
+        
         pygui.combo_callback("combo 4 (function)", widget.combo_item_current_4, item_getter, items, len(items))
         pygui.tree_pop()
 
@@ -3045,7 +3045,6 @@ def show_random_extras():
                 show_imguikeydata(io.keys_data)
                 pygui.end_menu()
             pygui.menu_item("io.log_filename:                           {}".format(io.log_filename))
-            pygui.menu_item("io.metrics_active_allocations:             {}".format(io.metrics_active_allocations))
             pygui.menu_item("io.metrics_active_windows:                 {}".format(io.metrics_active_windows))
             pygui.menu_item("io.metrics_render_indices:                 {}".format(io.metrics_render_indices))
             pygui.menu_item("io.metrics_render_vertices:                {}".format(io.metrics_render_vertices))
@@ -3054,7 +3053,6 @@ def show_random_extras():
             pygui.menu_item("io.mouse_clicked_count:                    {}".format(io.mouse_clicked_count))
             pygui.menu_item("io.mouse_clicked_last_count:               {}".format(io.mouse_clicked_last_count))
             pygui.menu_item("io.mouse_clicked_pos:                      {}".format(io.mouse_clicked_pos))
-            pygui.menu_item("io.mouse_clicked_time:                     {}".format(io.mouse_clicked_time))
             pygui.menu_item("io.mouse_delta:                            {}".format(io.mouse_delta))
             pygui.menu_item("io.mouse_double_click_max_dist:            {}".format(io.mouse_double_click_max_dist))
             pygui.menu_item("io.mouse_double_click_time:                {}".format(io.mouse_double_click_time))
@@ -3682,15 +3680,6 @@ def show_random_extras():
         pygui.text("payload.source_parent_id: {}".format(current_payload.source_parent_id if current_payload is not None else "..."))
         pygui.tree_pop()
 
-    if pygui.tree_node("pygui.begin_child_frame()"):
-        new_id = pygui.get_id("begin_child_frame()")
-        item_height = pygui.get_text_line_height_with_spacing()
-        if pygui.begin_child_frame(new_id, (-pygui.FLT_MIN, item_height * 5 + 5)):
-            for n in range(5):
-                pygui.text("My Item {}".format(n))
-            pygui.end_child_frame()
-        pygui.tree_pop()
-
     if pygui.tree_node("pygui.begin_child_id()"):
         new_id = pygui.get_id("begin_child_id()")
         pygui.begin_child_id(new_id, (0, 260), True)
@@ -3771,9 +3760,9 @@ def show_random_extras():
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.combo_callback()"):
-        def combo_callback_function(data, index: int, out: pygui.String) -> bool:
-            out.value = data[index]
-            return True
+        def combo_callback_function(data: list[str], index: int) -> str:
+            return data[index]
+        
         data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
         
         pygui.text("pygui.combo_callback")
@@ -4107,7 +4096,7 @@ def show_random_extras():
             clipper.begin(len(rand.df))
 
             if scroll_to:
-                clipper.include_range_by_indices(
+                clipper.include_items_by_index(
                     rand.jump_to.value, rand.jump_to.value + 1)
 
             while clipper.step():

@@ -31,7 +31,6 @@ class DearBindingsArgumentNew(Argument):
         self.is_array: bool = argument_json["is_array"]
         self.is_varargs: bool = argument_json["is_varargs"]
         assert not self.is_varargs, "Python does not support is_varargs: {}".format(self.name)
-        self.is_instance_pointer: bool = argument_json["is_instance_pointer"]
         self._type: _Type = DearBindingsTypeNew(argument_json["type"])
         self.comments: Comments = parse_comment(argument_json)
 

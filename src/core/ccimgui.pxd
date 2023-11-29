@@ -48,7 +48,6 @@ cdef extern from "cimgui.h":
     ctypedef struct ImGuiTextFilter
     ctypedef struct ImGuiTextBuffer
     ctypedef struct ImGuiStorage_ImGuiStoragePair
-    ctypedef struct __anonymous_type0
     ctypedef struct ImGuiStorage
     ctypedef struct ImGuiListClipper
     ctypedef struct ImColor
@@ -180,7 +179,7 @@ cdef extern from "cimgui.h":
 
     ctypedef enum ImGuiChildFlags_:
         ImGuiChildFlags_None
-        ImGuiChildFlags_Border                     # Show an outer border and enable windowpadding. (important: this is always == 1 for legacy reason)
+        ImGuiChildFlags_Border                     # Show an outer border and enable windowpadding. (important: this is always == 1 == true for legacy reason)
         ImGuiChildFlags_AlwaysUseWindowPadding     # Pad with style.windowpadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
         ImGuiChildFlags_ResizeX                    # Allow resize from right border (layout direction). enable .ini saving (unless imguiwindowflags_nosavedsettings passed to window flags)
         ImGuiChildFlags_ResizeY                    # Allow resize from bottom border (layout direction). '
@@ -1158,6 +1157,7 @@ cdef extern from "cimgui.h":
         int MetricsRenderWindows                                                              # Number of visible windows
         int MetricsActiveWindows                                                              # Number of active windows
         ImVec2 MouseDelta                                                                     # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
+        void* _UnusedPadding
         ImGuiContext* Ctx                                                                     # Parent ui context (needs to be set explicitly by parent).
         ImVec2 MousePos                                                                       # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
         bool* MouseDown                                                                       # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
@@ -1389,14 +1389,6 @@ cdef extern from "cimgui.h":
     # [Internal]
     ctypedef struct ImGuiStorage_ImGuiStoragePair:
         ImGuiID key
-        __anonymous_type0 __anonymous_type0
-
-
-
-    ctypedef struct __anonymous_type0:
-        int val_i
-        float val_f
-        void* val_p
 
 
 
@@ -1791,7 +1783,8 @@ cdef extern from "cimgui.h":
         float GlyphMaxAdvanceX            # Flt_max  // maximum advancex for glyphs
         bool MergeMode                    # False    // merge into previous imfont, so you can combine multiple inputs font into one imfont (e.g. ascii font + icons + japanese glyphs). you may want to use glyphoffset.y when merge font of different heights.
         unsigned int FontBuilderFlags     # 0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
-        float RasterizerMultiply          # 1.0f     // brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable.
+        float RasterizerMultiply          # 1.0f     // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
+        float RasterizerDensity           # 1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
         ImWchar EllipsisChar              # -1       // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
         char* Name                        # Name (strictly to ease debugging)
         ImFont* DstFont
@@ -2215,6 +2208,11 @@ cdef extern from "cimgui.h":
 
     # Child Windows
     # - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
+    # - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
+    # This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
+    # Consider updating your old call sites:
+    # BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
+    # BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Border);
     # - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
     # == 0.0f: use remaining parent window size for this axis.
     # > 0.0f: use specified size for this axis.
@@ -2227,10 +2225,7 @@ cdef extern from "cimgui.h":
     # such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding
     # BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]
     bool ImGui_BeginChild(const char* str_id, ImVec2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) except +
-
-    # Implied size = imvec2(0, 0), child_flags = 0, window_flags = 0
-    bool ImGui_BeginChildIDImVec2ImGuiChildFlags(ImGuiID id_) except +
-    bool ImGui_BeginChildIDImVec2ImGuiChildFlagsEx(ImGuiID id_, ImVec2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) except +
+    bool ImGui_BeginChildID(ImGuiID id_, ImVec2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) except +
     void ImGui_EndChild() except +
 
     # Windows Utilities
@@ -2241,7 +2236,7 @@ cdef extern from "cimgui.h":
     # Is current window focused? or its root/child, depending on flags. see flags for options.
     bool ImGui_IsWindowFocused(ImGuiFocusedFlags flags) except +
 
-    # Is current window hovered (and typically: not blocked by a popup/modal)? see flags for options. nb: if you are trying to check whether your mouse should be dispatched to imgui or to your app, you should use the 'io.wantcapturemouse' boolean for that! please read the faq!
+    # Is current window hovered and hoverable (e.g. not blocked by a popup/modal)? see imguihoveredflags_ for options. important: if you are trying to check whether your mouse should be dispatched to dear imgui or to your underlying app, you should not use this function! use the 'io.wantcapturemouse' boolean for that! refer to faq entry 'how can i tell whether to dispatch mouse/keyboard to dear imgui or my application?' for details.
     bool ImGui_IsWindowHovered(ImGuiHoveredFlags flags) except +
 
     # Get draw list associated to the current window, to append your own drawing primitives
@@ -2276,7 +2271,7 @@ cdef extern from "cimgui.h":
     # Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
     void ImGui_SetNextWindowSize(ImVec2 size, ImGuiCond cond) except +
 
-    # Set next window size limits. use -1,-1 on either x/y axis to preserve the current size. sizes will be rounded down. use callback to apply non-trivial programmatic constraints.
+    # Set next window size limits. use 0.0f or flt_max if you don't want limits. use -1 for both min and max of same axis to preserve current size (which itself is a constraint). use callback to apply non-trivial programmatic constraints.
     void ImGui_SetNextWindowSizeConstraints(ImVec2 size_min, ImVec2 size_max, ImGuiSizeCallback custom_callback, void* custom_callback_data) except +
 
     # Set next window content size (~ scrollable client area, which enforce the range of scrollbars). not including window decorations (title bar, menu bar, etc.) nor windowpadding. set an axis to 0.0f to leave it automatic. call before begin()
@@ -3577,4 +3572,48 @@ cdef extern from "cimgui.h":
     # Destruct an imvector<> (of any type). important: frees the vector memory but does not call destructors on contained objects (if they have them)
     void ImVector_Destruct(void* vector) except +
     ImGuiKey ImGui_GetKeyIndex(ImGuiKey key) except +
+
+cdef extern from "imgui_impl_glfw.h":
+    ctypedef struct GLFWwindow
+    ctypedef struct GLFWmonitor
+
+
+
+    ctypedef struct GLFWwindow:
+        pass
+
+    ctypedef struct GLFWmonitor:
+        pass
+
+
+    bool ImGui_ImplGlfw_InitForOpenGL(GLFWwindow* window, bool install_callbacks) except +
+    bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window, bool install_callbacks) except +
+    bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window, bool install_callbacks) except +
+    void ImGui_ImplGlfw_Shutdown() except +
+    void ImGui_ImplGlfw_NewFrame() except +
+    void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window) except +
+    void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window) except +
+    void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows) except +
+    void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused) except +
+    void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, double entered) except +
+    void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y) except +
+    void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, double button, double action, double mods) except +
+    void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) except +
+    void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) except +
+    void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c) except +
+    void ImGui_ImplGlfw_MonitorCallback(GLFWwindow* monitor, int event) except +
+
+cdef extern from "imgui_impl_opengl3.h":
+
+
+
+
+    bool ImGui_ImplOpenGL3_Init(const char* glsl_version) except +
+    void ImGui_ImplOpenGL3_Shutdown() except +
+    void ImGui_ImplOpenGL3_NewFrame() except +
+    void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data) except +
+    bool ImGui_ImplOpenGL3_CreateFontsTexture() except +
+    void ImGui_ImplOpenGL3_DestroyFontsTexture() except +
+    bool ImGui_ImplOpenGL3_CreateDeviceObjects() except +
+    void ImGui_ImplOpenGL3_DestroyDeviceObjects() except +
 

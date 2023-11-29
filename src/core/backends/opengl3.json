@@ -8,13 +8,27 @@
             "name": "ImGui_ImplOpenGL3_Init",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_Init",
             "return_type": {
-                "declaration": "bool"
+                "declaration": "bool",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "bool"
+                }
             },
             "arguments": [
                 {
                     "name": "glsl_version",
                     "type": {
-                        "declaration": "const char*"
+                        "declaration": "const char*",
+                        "description": {
+                            "kind": "Pointer",
+                            "inner_type": {
+                                "kind": "Builtin",
+                                "builtin_type": "char",
+                                "storage_classes": [
+                                    "const"
+                                ]
+                            }
+                        }
                     },
                     "is_array": false,
                     "is_varargs": false,
@@ -30,7 +44,11 @@
             "name": "ImGui_ImplOpenGL3_Shutdown",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_Shutdown",
             "return_type": {
-                "declaration": "void"
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
@@ -42,7 +60,11 @@
             "name": "ImGui_ImplOpenGL3_NewFrame",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_NewFrame",
             "return_type": {
-                "declaration": "void"
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
@@ -54,13 +76,24 @@
             "name": "ImGui_ImplOpenGL3_RenderDrawData",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_RenderDrawData",
             "return_type": {
-                "declaration": "void"
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
             },
             "arguments": [
                 {
                     "name": "draw_data",
                     "type": {
-                        "declaration": "ImDrawData*"
+                        "declaration": "ImDrawData*",
+                        "description": {
+                            "kind": "Pointer",
+                            "inner_type": {
+                                "kind": "User",
+                                "name": "ImDrawData"
+                            }
+                        }
                     },
                     "is_array": false,
                     "is_varargs": false
@@ -75,7 +108,11 @@
             "name": "ImGui_ImplOpenGL3_CreateFontsTexture",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_CreateFontsTexture",
             "return_type": {
-                "declaration": "bool"
+                "declaration": "bool",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "bool"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
@@ -87,7 +124,11 @@
             "name": "ImGui_ImplOpenGL3_DestroyFontsTexture",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_DestroyFontsTexture",
             "return_type": {
-                "declaration": "void"
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
@@ -99,7 +140,11 @@
             "name": "ImGui_ImplOpenGL3_CreateDeviceObjects",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_CreateDeviceObjects",
             "return_type": {
-                "declaration": "bool"
+                "declaration": "bool",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "bool"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
@@ -111,7 +156,11 @@
             "name": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
             "original_fully_qualified_name": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
             "return_type": {
-                "declaration": "void"
+                "declaration": "void",
+                "description": {
+                    "kind": "Builtin",
+                    "builtin_type": "void"
+                }
             },
             "arguments": [],
             "is_default_argument_helper": false,
