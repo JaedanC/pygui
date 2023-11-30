@@ -2,13 +2,13 @@ from __future__ import annotations
 import re
 import textwrap
 import json
-from helpers import Template
+from model.template import Template
 from typing import List, Tuple, Any
 from diff_match_patch import diff_match_patch
 from io import StringIO
 
 
-def comment_text(text: str):
+def comment_out_text(text: str):
     """
     Adds a python comment to each line of the string. It tries to insert the
     comment as far to the right as possible in a line, such that no content is
@@ -105,7 +105,7 @@ class PyxHeader:
             
             output.write("{}\n{}\n".format(
                 comparable_options_to_pyx_string(function),
-                impl if comparable_is_active(function) or ignore_active_flag else comment_text(impl)
+                impl if comparable_is_active(function) or ignore_active_flag else comment_out_text(impl)
             ))
             output.write("# [End Function]\n\n")
     
@@ -118,7 +118,7 @@ class PyxHeader:
             
             output.write("{}\n{}\n".format(
                 comparable_options_to_pyx_string(class_),
-                impl if comparable_is_active(class_) or ignore_active_flag else comment_text(impl)
+                impl if comparable_is_active(class_) or ignore_active_flag else comment_out_text(impl)
             ))
             output.write("    # [End Class Constants]\n")
 
@@ -130,7 +130,7 @@ class PyxHeader:
 
                 output.write("{}\n{}\n".format(
                     textwrap.indent(comparable_options_to_pyx_string(field), "    "),
-                    impl if comparable_is_active(field) or ignore_active_flag else comment_text(impl)
+                    impl if comparable_is_active(field) or ignore_active_flag else comment_out_text(impl)
                 ))
                 output.write("    # [End Field]\n")
 
@@ -142,12 +142,93 @@ class PyxHeader:
                 
                 output.write("{}\n{}\n".format(
                     textwrap.indent(comparable_options_to_pyx_string(method), "    "),
-                    impl if comparable_is_active(method) or ignore_active_flag else comment_text(impl)
+                    impl if comparable_is_active(method) or ignore_active_flag else comment_out_text(impl)
                 ))
                 output.write("    # [End Method]\n")
             
             output.write("# [End Class]\n\n")
         return output.getvalue()
+
+    def to_pyi(
+            self,
+            function_template_base: str,
+            class_template_base: str,
+            field_template_base: str,
+            show_comments: bool,
+        ) -> str: 
+        pyi = StringIO()
+
+        for function in self.functions:
+            if comparable_is_invisible(function):
+                continue
+
+            function_template = Template(function_template_base)
+            function_template.set_condition("has_comment", function.comment is not None and show_comments)
+            function_template.format(
+                function_name=function.name,
+                function_parameters=function.parameters,
+                function_returns=function.options["returns"],
+                function_comment=textwrap.indent(f'"""\n{function.comment}\n"""', "    ")
+            )
+
+            if comparable_is_active(function):
+                pyi.write(function_template.compile())
+            else:
+                pyi.write(comment_out_text(function_template.compile()))
+        
+        pyi.write("\n")
+
+        for class_ in self.classes:
+            if comparable_is_invisible(class_):
+                continue
+
+            class_template = Template(class_template_base)
+            class_template.set_condition("has_content", class_.has_one_active_member() or class_.comment is not None)
+            class_template.set_condition("has_one_member", class_.has_one_active_member())
+            class_template.set_condition("has_comment", class_.comment is not None and show_comments)
+
+            class_template.format(
+                class_name=class_.name,
+                class_comment=textwrap.indent(f'"""\n{class_.comment}\n"""', "    "),
+            )
+            pyi.write(class_template.compile())
+
+            for field in class_.fields:
+                if comparable_is_invisible(field):
+                    continue
+
+                field_template = Template(field_template_base)
+                field_template.set_condition("has_comment", field.comment is not None and show_comments)
+                field_template.format(
+                    field_name=field.name,
+                    field_type=field.options["returns"],
+                    field_comment=f'"""\n{field.comment}\n"""'
+                )
+                if comparable_is_active(field):
+                    pyi.write(textwrap.indent(field_template.compile(), "    "))
+                else:
+                    pyi.write(textwrap.indent(comment_out_text(field_template.compile()), "    "))
+
+            for method in class_.methods:
+                if comparable_is_invisible(method):
+                    continue
+
+                method_template = Template(function_template_base)
+                method_template.set_condition("has_comment", method.comment is not None and show_comments)
+                method_template.format(
+                    function_name=method.name,
+                    function_parameters=method.parameters,
+                    function_returns=method.options["returns"],
+                    function_comment=textwrap.indent(f'"""\n{method.comment}\n"""', "    ")
+                )
+
+                if comparable_is_active(method):
+                    pyi.write(textwrap.indent(method_template.compile(), "    "))
+                else:
+                    pyi.write(textwrap.indent(comment_out_text(method_template.compile()), "    "))
+            pyi.write("\n")
+        
+        return pyi.getvalue()
 
 
 class PyxFunction:
@@ -237,11 +318,10 @@ class HeaderComparison:
         self.new = new
         self.dmp = diff_match_patch()
 
-
         for old_c in self.old.get_all_comparable_lookups():
             new_c = new.get_comparable(old_c)
             if new_c is None:
-                print(f"Could not find {old_c} in the new. Perhaps the API removed a function")
+                print(f"- Could not find {old_c} in the new. Perhaps the API removed a function")
                 self.in_old_missing_in_new.append(old_c)
             else:
                 self.in_both.append(old_c)
@@ -249,7 +329,7 @@ class HeaderComparison:
         for new_c in self.new.get_all_comparable_lookups():
             old_c = old.get_comparable(new_c)
             if old_c is None:
-                print(f"Could not find {new_c} in the old. Perhaps the API added a function")
+                print(f"+ Could not find {new_c} in the old. Perhaps the API added a function")
                 self.in_new_missing_in_old.append(new_c)
         
         for both_c in self.in_both:
@@ -304,6 +384,12 @@ class HeaderComparison:
             print(applied_template_options)
             success = False
         else:
+            # print("----------------------")
+            # print(applied_template_options, comparable_lookup)
+            # print(option_patches)
+            # print(write_to_comparable.options)
+            # print(old_obj.options)
+            # print(new_obj.options)
             # It should still create valid json but we will see
             write_to_comparable.options = json.loads(applied_template_options)
 

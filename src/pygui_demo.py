@@ -753,8 +753,8 @@ class widget:
     colour_side_preview = pygui.Bool(True)
     colour_ref_color = pygui.Bool(False)
     colour_ref_color_v = pygui.Vec4(1, 0, 1, 0.5)
-    colour_display_mode = pygui.Int(False)
-    colour_picker_mode = pygui.Int(False)
+    colour_display_mode = pygui.Int(0)
+    colour_picker_mode = pygui.Int(0)
     colour_color_hsv = pygui.Vec4(0.23, 1, 1, 1)
     data_drag_clamp = pygui.Bool(False)
     data_s8_v = pygui.Int(127)
@@ -1254,9 +1254,9 @@ def show_demo_widgets():
         pygui.combo("combo 3 (array)", widget.combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
-        def item_getter(data, n: int, out_str: pygui.String) -> bool:
-            out_str.value = data[n]
-            return True
+        def item_getter(data: list[str], n: int) -> str:
+            return data[n]
+        
         pygui.combo_callback("combo 4 (function)", widget.combo_item_current_4, item_getter, items, len(items))
         pygui.tree_pop()
 
@@ -2995,6 +2995,7 @@ def show_random_extras():
             pygui.menu_item("io.backend_using_legacy_nav_input_array:   {}".format(io.backend_using_legacy_nav_input_array))
             pygui.menu_item("io.config_debug_begin_return_value_loop:   {}".format(io.config_debug_begin_return_value_loop))
             pygui.menu_item("io.config_debug_begin_return_value_once:   {}".format(io.config_debug_begin_return_value_once))
+            pygui.menu_item("io.config_debug_ini_settings:              {}".format(io.config_debug_ini_settings))
             pygui.menu_item("io.config_docking_always_tab_bar:          {}".format(io.config_docking_always_tab_bar))
             pygui.menu_item("io.config_docking_no_split:                {}".format(io.config_docking_no_split))
             pygui.menu_item("io.config_docking_transparent_payload:     {}".format(io.config_docking_transparent_payload))
@@ -3029,8 +3030,6 @@ def show_random_extras():
                 pygui.end_menu()
             pygui.menu_item("io.framerate:                              {}".format(io.framerate))
             pygui.menu_item("io.get_clipboard_text_fn:                  {}".format(io.get_clipboard_text_fn))
-            pygui.menu_item("io.hover_delay_normal:                     {}".format(io.hover_delay_normal))
-            pygui.menu_item("io.hover_delay_short:                      {}".format(io.hover_delay_short))
             pygui.menu_item("io.ini_filename:                           {}".format(io.ini_filename))
             pygui.menu_item("io.ini_saving_rate:                        {}".format(io.ini_saving_rate))
             pygui.menu_item("io.input_queue_characters:                 {}".format(io.input_queue_characters))
@@ -3046,7 +3045,6 @@ def show_random_extras():
                 show_imguikeydata(io.keys_data)
                 pygui.end_menu()
             pygui.menu_item("io.log_filename:                           {}".format(io.log_filename))
-            pygui.menu_item("io.metrics_active_allocations:             {}".format(io.metrics_active_allocations))
             pygui.menu_item("io.metrics_active_windows:                 {}".format(io.metrics_active_windows))
             pygui.menu_item("io.metrics_render_indices:                 {}".format(io.metrics_render_indices))
             pygui.menu_item("io.metrics_render_vertices:                {}".format(io.metrics_render_vertices))
@@ -3055,7 +3053,6 @@ def show_random_extras():
             pygui.menu_item("io.mouse_clicked_count:                    {}".format(io.mouse_clicked_count))
             pygui.menu_item("io.mouse_clicked_last_count:               {}".format(io.mouse_clicked_last_count))
             pygui.menu_item("io.mouse_clicked_pos:                      {}".format(io.mouse_clicked_pos))
-            pygui.menu_item("io.mouse_clicked_time:                     {}".format(io.mouse_clicked_time))
             pygui.menu_item("io.mouse_delta:                            {}".format(io.mouse_delta))
             pygui.menu_item("io.mouse_double_click_max_dist:            {}".format(io.mouse_double_click_max_dist))
             pygui.menu_item("io.mouse_double_click_time:                {}".format(io.mouse_double_click_time))
@@ -3683,15 +3680,6 @@ def show_random_extras():
         pygui.text("payload.source_parent_id: {}".format(current_payload.source_parent_id if current_payload is not None else "..."))
         pygui.tree_pop()
 
-    if pygui.tree_node("pygui.begin_child_frame()"):
-        new_id = pygui.get_id("begin_child_frame()")
-        item_height = pygui.get_text_line_height_with_spacing()
-        if pygui.begin_child_frame(new_id, (-pygui.FLT_MIN, item_height * 5 + 5)):
-            for n in range(5):
-                pygui.text("My Item {}".format(n))
-            pygui.end_child_frame()
-        pygui.tree_pop()
-
     if pygui.tree_node("pygui.begin_child_id()"):
         new_id = pygui.get_id("begin_child_id()")
         pygui.begin_child_id(new_id, (0, 260), True)
@@ -3772,9 +3760,9 @@ def show_random_extras():
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.combo_callback()"):
-        def combo_callback_function(data, index: int, out: pygui.String) -> bool:
-            out.value = data[index]
-            return True
+        def combo_callback_function(data: list[str], index: int) -> str:
+            return data[index]
+        
         data = ["Apples", "Oranges", "Mango", "Passionfruit", "Strawberry"]
         
         pygui.text("pygui.combo_callback")
@@ -4108,7 +4096,7 @@ def show_random_extras():
             clipper.begin(len(rand.df))
 
             if scroll_to:
-                clipper.include_range_by_indices(
+                clipper.include_items_by_index(
                     rand.jump_to.value, rand.jump_to.value + 1)
 
             while clipper.step():
