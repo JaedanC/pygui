@@ -105,6 +105,16 @@ class IFunction(ABC, HasComment):
         pass
 
 
+class IEnumElement(ABC, HasComment):
+    @abstractmethod
+    def get_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def to_pyi(self) -> str:
+        pass
+
+
 class IEnum(ABC, HasComment):
     @abstractmethod
     def to_pxd(self) -> str:
@@ -120,6 +130,10 @@ class IEnum(ABC, HasComment):
 
     @abstractmethod
     def get_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def get_elements(self) -> List[IEnumElement]:
         pass
 
 
@@ -188,6 +202,10 @@ class IBinding(ABC):
 
     @abstractmethod
     def to_pyx(self, pxd_library_name: str, include_base: bool) -> str:
+        pass
+
+    @abstractmethod
+    def get_enums(self) -> List[IEnum]:
         pass
 
     @abstractmethod

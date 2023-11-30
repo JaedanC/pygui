@@ -1,37 +1,41 @@
 from io import StringIO
 from typing import List, Optional
-from ...parsed import pythonise_string
-from ...comments import Comments, parse_comment
-from ..interfaces import IEnum, HasComment
+from ..comments import Comments, parse_comment
+from . import pythonise_string
+from .interfaces import IEnum, IEnumElement
+
+
+class Element(IEnumElement):
+    def from_json(element_json: dict):
+        name = element_json["name"]
+        comments = parse_comment(element_json)
+        return Element(name, comments)
+
+    def __init__(self, name: str, comments: Comments):
+        self.name = name
+        self.comments = comments
+    
+    def get_name(self) -> str:
+        return self.name
+
+    def get_comment(self) -> Comments:
+        return self.comments
+
+    def name_omitted_imgui_prefix(self):
+        return self.name.replace("ImGui", "", 1)
+
+    def to_pyi(self) -> str:
+        return pythonise_string(self.name_omitted_imgui_prefix()).upper()
 
 
 class DearBindingsEnumNew(IEnum):
-    class Element(HasComment):
-        def from_json(element_json: dict):
-            name = element_json["name"]
-            comments = parse_comment(element_json)
-            return DearBindingsEnumNew.Element(name, comments)
-
-        def __init__(self, name: str, comments: Comments):
-            self.name = name
-            self.comments = comments
-        
-        def get_name(self) -> str:
-            return self.name
-
-        def get_comment(self) -> Comments:
-            return self.comments
-
-        def name_omitted_imgui_prefix(self):
-            return self.name.replace("ImGui", "", 1)
-
     def from_json(enum_json: dict) -> IEnum:
         name = enum_json["name"]
-        elements = [DearBindingsEnumNew.Element.from_json(e) for e in enum_json["elements"]]
+        elements = [Element.from_json(e) for e in enum_json["elements"]]
         comments = parse_comment(enum_json)
         return DearBindingsEnumNew(name, elements, comments)
 
-    def __init__(self, name: str, elements: List[Element], comments: Comments):
+    def __init__(self, name: str, elements: List[IEnumElement], comments: Comments):
         self.name = name
         self.elements = elements
         self.comments = comments
@@ -78,3 +82,6 @@ class DearBindingsEnumNew(IEnum):
 
     def get_name(self) -> str:
         return self.name
+
+    def get_elements(self) -> List[IEnumElement]:
+        return self.elements

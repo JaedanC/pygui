@@ -1,8 +1,8 @@
 import textwrap
 from io import StringIO
 from .db_type import DearBindingsTypeNew
-from ..interfaces import ITypedef, HasComment, IType
-from ...comments import Comments, parse_comment
+from .interfaces import ITypedef, HasComment, IType
+from ..comments import Comments, parse_comment
 
 
 class DearBindingsTypedefNew(ITypedef, HasComment):

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from ...comments import Comments, parse_comment
-from ...parsed import safe_python_name
-from ..interfaces import IArgument, IType
+from ..comments import Comments, parse_comment
+from . import safe_python_name
+from .interfaces import IArgument, IType
 from .db_type import DearBindingsTypeNew
 
 

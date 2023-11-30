@@ -1,9 +1,9 @@
 import textwrap
 from typing import List, Callable, Optional, Tuple
 from io import StringIO
-from ...parsed import pythonise_string
-from ...template import Template
-from ..interfaces import *
+from ..template import Template
+from . import pythonise_string
+from .interfaces import *
 from .db_type import DearBindingsTypeNew, Kinds, Kind
 from .enum import DearBindingsEnumNew
 from .function import DearBindingsFunctionNew
@@ -114,7 +114,6 @@ class DearBindingNew(IBinding):
         
         return DearBindingNew(enums, typedefs, structs, functions, pxd_header)
 
-
     def __init__(
             self,
             enums: List[IEnum],
@@ -129,7 +128,6 @@ class DearBindingNew(IBinding):
         self.functions: List[IFunction] = functions
         self.pxd_header: str = pxd_header
     
-
     def to_pxd(self, include_base: bool) -> str:
         base = """
         # -*- coding: utf-8 -*-
@@ -204,7 +202,6 @@ class DearBindingNew(IBinding):
         dynamic_content.write("\n")
 
         return dynamic_content.getvalue()
-
 
     def to_pyx(self, pxd_library_name: str, include_base: bool) -> str:
         # TODO: Sort?
@@ -850,6 +847,8 @@ class DearBindingNew(IBinding):
 
         return pyx.getvalue()
 
+    def get_enums(self) -> List[IEnum]:
+        return self.enums
 
     def function_to_pyx(self, pxd_library_name: str, function_template: Template, function: IFunction) -> str:
         # Python return type
@@ -918,7 +917,6 @@ class DearBindingNew(IBinding):
             res=res,
         ).compile()
     
-
     def as_python_type(self, _type: IType) -> str:
         python_type_lookup = {
             "bool": "bool",
@@ -958,7 +956,6 @@ class DearBindingNew(IBinding):
 
         return "Any"
 
-
     def marshall_c_to_python(self, _type: IType) -> str:
         _type = self.follow_type(_type)
         
@@ -979,7 +976,6 @@ class DearBindingNew(IBinding):
         
         return "{}"
     
-
     def marshall_python_to_c(
             self,
             _type: IType,
@@ -1024,7 +1020,6 @@ class DearBindingNew(IBinding):
         
         return output.format(name=argument_name), additional_lines
 
-
     def follow_type(self, _type: IType) -> IType:
         if not self.is_cimgui_type(_type):
             return _type
@@ -1042,7 +1037,6 @@ class DearBindingNew(IBinding):
         
         return _type
 
-
     def as_name_type_default_parameter(self, argument: IArgument) -> str:
         parameter_format = "{}: {}{}".format(
             argument.get_name(),
@@ -1050,7 +1044,6 @@ class DearBindingNew(IBinding):
             "={}".format(argument.get_default_value()) if argument.get_default_value() is not None else ""
         )
         return parameter_format
-
 
     def is_cimgui_type(self, _type: IType) -> bool:
         for enum in self.enums:
@@ -1068,7 +1061,6 @@ class DearBindingNew(IBinding):
                 return True
         
         return False
-
 
     def __repr__(self):
         return \

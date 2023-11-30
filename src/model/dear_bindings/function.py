@@ -1,7 +1,7 @@
 from io import StringIO
 from typing import List
-from ...comments import Comments, parse_comment
-from ..interfaces import IFunction, IType, IArgument
+from ..comments import Comments, parse_comment
+from .interfaces import IFunction, IType, IArgument
 from .db_type import DearBindingsTypeNew
 from .argument import DearBindingsArgumentNew
 

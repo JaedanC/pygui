@@ -10,9 +10,8 @@ import sys
 import textwrap
 
 from model.comments import Comments
-from model.parsed.dear_bindings import *
-from model.parsed.dear_bindings.binding import DearBindingNew
-from model.parsed.interfaces import IBinding
+from model.dear_bindings.interfaces import IBinding
+from model.dear_bindings.binding import DearBindingNew
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
@@ -1627,11 +1626,14 @@ def to_pyx(header: DearBinding, pxd_library_name: str, include_base: bool) -> st
     return pyx.getvalue()
 
 
-def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
-           show_comments: bool):
+def to_pyi(
+        headers: List[IBinding],
+        model: PyxHeader,
+        show_comments: bool
+    ):
     base = textwrap.dedent('''
     # This file is auto-generated. If you need to edit this file then edit the
-    # template that this is created from instead.
+    # template this is created from instead.
     from typing import Any, Callable, Tuple, List, Sequence
     from PIL import Image
 
@@ -2012,98 +2014,47 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
 
     # __init__.pyi ------------------------------------
 
-    pyi_output = StringIO()
-    pyi_output.write(base)
+    pyi = StringIO()
+    pyi.write(base)
     
-    with open("core/templates/function.pyi") as f:
-        function_template_src = f.read()
-    
-    with open("core/templates/class.pyi") as f:
-        class_template_src = f.read()
-    
-    with open("core/templates/field.pyi") as f:
-        field_template_src = f.read()
 
     for header in headers:
-        for enum in header.enums:
-            for enum_value in enum.elements:
-                pyi_output.write("{}: int\n".format(pythonise_string(enum_value.name_omitted_imgui_prefix(), make_upper=True)))
-        pyi_output.write("\n")
+        for enum in header.get_enums():
+            longest_enum = 0
+            for enum_value in enum.get_elements():
+                longest_enum = max(longest_enum, len(enum_value.to_pyi()))
+            
+            for enum_value in enum.get_elements():
+                pyi.write("{}: int".format(enum_value.to_pyi()))
+                
+                comment_text = enum_value.get_comment().hash_attached_only()
+                if comment_text is not None and show_comments:
+                    pyi.write(" " * (longest_enum - len(enum_value.to_pyi()) + 5) + comment_text)
 
-    for function in model.functions:
-        if comparable_is_invisible(function):
-            continue
-
-        function_template = Template(function_template_src)
-
-        function_template.set_condition("has_comment", function.comment is not None and show_comments)
-        function_template.format(
-            function_name=function.name,
-            function_parameters=function.parameters,
-            function_returns=function.options["returns"],
-            function_comment=textwrap.indent(f'"""\n{function.comment}\n"""', "    ")
-        )
-
-        if comparable_is_active(function):
-            pyi_output.write(function_template.compile())
-        else:
-            pyi_output.write(comment_text(function_template.compile()))
+                pyi.write("\n")
+        pyi.write("\n")
     
-    pyi_output.write("\n")
-
-    for class_ in model.classes:
-        if comparable_is_invisible(class_):
-            continue
-
-        class_template = Template(class_template_src)
-        class_template.set_condition("has_content", class_.has_one_active_member() or class_.comment is not None)
-        class_template.set_condition("has_one_member", class_.has_one_active_member())
-        class_template.set_condition("has_comment", class_.comment is not None and show_comments)
-
-        class_template.format(
-            class_name=class_.name,
-            class_comment=textwrap.indent(f'"""\n{class_.comment}\n"""', "    "),
-        )
-        pyi_output.write(class_template.compile())
-
-        for field in class_.fields:
-            if comparable_is_invisible(field):
-                continue
-
-            field_template = Template(field_template_src)
-            field_template.set_condition("has_comment", field.comment is not None and show_comments)
-            field_template.format(
-                field_name=field.name,
-                field_type=field.options["returns"],
-                field_comment=f'"""\n{field.comment}\n"""'
-            )
-            if comparable_is_active(field):
-                pyi_output.write(textwrap.indent(field_template.compile(), "    "))
-            else:
-                pyi_output.write(textwrap.indent(comment_text(field_template.compile()), "    "))
-
-        for method in class_.methods:
-            if comparable_is_invisible(method):
-                continue
-
-            method_template = Template(function_template_src)
-            method_template.set_condition("has_comment", method.comment is not None and show_comments)
-            method_template.format(
-                function_name=method.name,
-                function_parameters=method.parameters,
-                function_returns=method.options["returns"],
-                function_comment=textwrap.indent(f'"""\n{method.comment}\n"""', "    ")
-            )
-
-            if comparable_is_active(method):
-                pyi_output.write(textwrap.indent(method_template.compile(), "    "))
-            else:
-                pyi_output.write(textwrap.indent(comment_text(method_template.compile()), "    "))
-        pyi_output.write("\n")
+    with open("core/templates/function.pyi") as f:
+        function_template_base = f.read()
     
+    with open("core/templates/class.pyi") as f:
+        class_template_base = f.read()
+    
+    with open("core/templates/field.pyi") as f:
+        field_template_base = f.read()
+    
+    pyi.write(model.to_pyi(
+        function_template_base,
+        class_template_base,
+        field_template_base,
+        show_comments
+    ))
 
-    # __init__.py ------------------------------------
-    py = textwrap.dedent("""
+    return pyi.getvalue()
+
+
+def to_py(extension_name: str):
+    return textwrap.dedent(f"""
     from .{extension_name} import *
 
     ImGuiError = {extension_name}.get_imgui_error()
@@ -2154,9 +2105,7 @@ def to_pyi(headers: List[DearBinding], model: PyxHeader, extension_name: str,
         # clean up afterwards
         gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
         return texture
-    """.format(extension_name=extension_name).lstrip("\n"))
-
-    return pyi_output.getvalue(), py
+    """.lstrip("\n"))
 
 
 def main():
@@ -2181,7 +2130,7 @@ def main():
         ("IMGUI_HAS_IMSTR", False),
     ]
 
-    headers: List[Binding] = []
+    headers: List[IBinding] = []
     for module in config["modules"]:
         with open(module["binding_json"]) as f:
             headers.append(DearBindingNew.from_json(json.load(f), module["header"], defines))
@@ -2327,6 +2276,25 @@ def main():
         print(f"Created {PYX_PATH}")
         print(f"Created {TEMPLATE_PYX_PATH}")
     
+    def write_pyi_new(headers: List[IBinding], extension_name: str, show_comments: bool):
+        try:
+            with open(TEMPLATE_PYX_PATH) as f:
+                model = create_pyx_model(f.read())
+        except FileNotFoundError:
+            print(f"'{TEMPLATE_PYX_PATH}' not found. This is required to create the pyi file")
+            return
+        
+        pyi = to_pyi(headers, model, show_comments)
+        py = to_py(extension_name)
+
+        with open(INIT_PYI_PATH, "w") as f:
+            f.write(pyi)
+        with open(INIT_PY_PATH, "w") as f:
+            f.write(py)
+        print(f"Created {INIT_PYI_PATH}")
+        print(f"Created {INIT_PY_PATH}")
+        pass
+
     def write_pyi(headers: List[DearBinding], extension_name: str, show_comments: bool):
         try:
             with open(TEMPLATE_PYX_PATH) as f:
@@ -2373,13 +2341,13 @@ def main():
         return
 
     if "--pyi" in sys.argv:
-        write_pyi(headers, EXTENSION_NAME, show_comments)
+        write_pyi_new(headers, EXTENSION_NAME, show_comments)
         return
     
     if "--all" in sys.argv:
         write_pxd_new(headers)
         write_pyx(headers, CIMGUI_LIBRARY_NAME)
-        write_pyi(headers, EXTENSION_NAME, show_comments)
+        write_pyi_new(headers, EXTENSION_NAME, show_comments)
         return
 
 

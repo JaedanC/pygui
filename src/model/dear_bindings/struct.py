@@ -1,9 +1,9 @@
 import textwrap
 from io import StringIO
 from typing import List
-from ...comments import Comments, parse_comment
-from ...parsed import safe_python_name
-from ..interfaces import IStruct, IType, IField, IFunction
+from ..comments import Comments, parse_comment
+from . import safe_python_name
+from .interfaces import IStruct, IType, IField, IFunction
 from .db_type import DearBindingsTypeNew
 
 

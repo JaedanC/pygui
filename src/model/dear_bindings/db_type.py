@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional
-from ..interfaces import IType
+from .interfaces import IType
 from enum import Enum, auto
 
 

@@ -1,5 +1,5 @@
 # This file is auto-generated. If you need to edit this file then edit the
-# template that this is created from instead.
+# template this is created from instead.
 from typing import Any, Callable, Tuple, List, Sequence
 from PIL import Image
 
@@ -377,259 +377,259 @@ def load_image(image: Image) -> int:
     pass
 
 WINDOW_FLAGS_NONE: int
-WINDOW_FLAGS_NO_TITLE_BAR: int
-WINDOW_FLAGS_NO_RESIZE: int
-WINDOW_FLAGS_NO_MOVE: int
-WINDOW_FLAGS_NO_SCROLLBAR: int
-WINDOW_FLAGS_NO_SCROLL_WITH_MOUSE: int
-WINDOW_FLAGS_NO_COLLAPSE: int
-WINDOW_FLAGS_ALWAYS_AUTO_RESIZE: int
-WINDOW_FLAGS_NO_BACKGROUND: int
-WINDOW_FLAGS_NO_SAVED_SETTINGS: int
-WINDOW_FLAGS_NO_MOUSE_INPUTS: int
-WINDOW_FLAGS_MENU_BAR: int
-WINDOW_FLAGS_HORIZONTAL_SCROLLBAR: int
-WINDOW_FLAGS_NO_FOCUS_ON_APPEARING: int
-WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS: int
-WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR: int
-WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR: int
-WINDOW_FLAGS_NO_NAV_INPUTS: int
-WINDOW_FLAGS_NO_NAV_FOCUS: int
-WINDOW_FLAGS_UNSAVED_DOCUMENT: int
-WINDOW_FLAGS_NO_DOCKING: int
+WINDOW_FLAGS_NO_TITLE_BAR: int                    # Disable title-bar
+WINDOW_FLAGS_NO_RESIZE: int                       # Disable user resizing with the lower-right grip
+WINDOW_FLAGS_NO_MOVE: int                         # Disable user moving the window
+WINDOW_FLAGS_NO_SCROLLBAR: int                    # Disable scrollbars (window can still scroll with mouse or programmatically)
+WINDOW_FLAGS_NO_SCROLL_WITH_MOUSE: int            # Disable user vertically scrolling with mouse wheel. on child window, mouse wheel will be forwarded to the parent unless noscrollbar is also set.
+WINDOW_FLAGS_NO_COLLAPSE: int                     # Disable user collapsing window by double-clicking on it. also referred to as window menu button (e.g. within a docking node).
+WINDOW_FLAGS_ALWAYS_AUTO_RESIZE: int              # Resize every window to its content every frame
+WINDOW_FLAGS_NO_BACKGROUND: int                   # Disable drawing background color (windowbg, etc.) and outside border. similar as using setnextwindowbgalpha(0.0f).
+WINDOW_FLAGS_NO_SAVED_SETTINGS: int               # Never load/save settings in .ini file
+WINDOW_FLAGS_NO_MOUSE_INPUTS: int                 # Disable catching mouse, hovering test with pass through.
+WINDOW_FLAGS_MENU_BAR: int                        # Has a menu-bar
+WINDOW_FLAGS_HORIZONTAL_SCROLLBAR: int            # Allow horizontal scrollbar to appear (off by default). you may use setnextwindowcontentsize(imvec2(width,0.0f)); prior to calling begin() to specify width. read code in imgui_demo in the 'horizontal scrolling' section.
+WINDOW_FLAGS_NO_FOCUS_ON_APPEARING: int           # Disable taking focus when transitioning from hidden to visible state
+WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS: int      # Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
+WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR: int       # Always show vertical scrollbar (even if contentsize.y < size.y)
+WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR: int     # Always show horizontal scrollbar (even if contentsize.x < size.x)
+WINDOW_FLAGS_NO_NAV_INPUTS: int                   # No gamepad/keyboard navigation within the window
+WINDOW_FLAGS_NO_NAV_FOCUS: int                    # No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by ctrl+tab)
+WINDOW_FLAGS_UNSAVED_DOCUMENT: int                # Display a dot next to the title. when used in a tab/docking context, tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
+WINDOW_FLAGS_NO_DOCKING: int                      # Disable docking of this window
 WINDOW_FLAGS_NO_NAV: int
 WINDOW_FLAGS_NO_DECORATION: int
 WINDOW_FLAGS_NO_INPUTS: int
-WINDOW_FLAGS_NAV_FLATTENED: int
-WINDOW_FLAGS_CHILD_WINDOW: int
-WINDOW_FLAGS_TOOLTIP: int
-WINDOW_FLAGS_POPUP: int
-WINDOW_FLAGS_MODAL: int
-WINDOW_FLAGS_CHILD_MENU: int
-WINDOW_FLAGS_DOCK_NODE_HOST: int
+WINDOW_FLAGS_NAV_FLATTENED: int                   # [beta] on child window: allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+WINDOW_FLAGS_CHILD_WINDOW: int                    # Don't use! for internal use by beginchild()
+WINDOW_FLAGS_TOOLTIP: int                         # Don't use! for internal use by begintooltip()
+WINDOW_FLAGS_POPUP: int                           # Don't use! for internal use by beginpopup()
+WINDOW_FLAGS_MODAL: int                           # Don't use! for internal use by beginpopupmodal()
+WINDOW_FLAGS_CHILD_MENU: int                      # Don't use! for internal use by beginmenu()
+WINDOW_FLAGS_DOCK_NODE_HOST: int                  # Don't use! for internal use by begin()/newframe()
 CHILD_FLAGS_NONE: int
-CHILD_FLAGS_BORDER: int
-CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING: int
-CHILD_FLAGS_RESIZE_X: int
-CHILD_FLAGS_RESIZE_Y: int
-CHILD_FLAGS_AUTO_RESIZE_X: int
-CHILD_FLAGS_AUTO_RESIZE_Y: int
-CHILD_FLAGS_ALWAYS_AUTO_RESIZE: int
-CHILD_FLAGS_FRAME_STYLE: int
+CHILD_FLAGS_BORDER: int                        # Show an outer border and enable windowpadding. (important: this is always == 1 == true for legacy reason)
+CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING: int     # Pad with style.windowpadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
+CHILD_FLAGS_RESIZE_X: int                      # Allow resize from right border (layout direction). enable .ini saving (unless imguiwindowflags_nosavedsettings passed to window flags)
+CHILD_FLAGS_RESIZE_Y: int                      # Allow resize from bottom border (layout direction). '
+CHILD_FLAGS_AUTO_RESIZE_X: int                 # Enable auto-resizing width. read 'important: size measurement' details above.
+CHILD_FLAGS_AUTO_RESIZE_Y: int                 # Enable auto-resizing height. read 'important: size measurement' details above.
+CHILD_FLAGS_ALWAYS_AUTO_RESIZE: int            # Combined with autoresizex/autoresizey. always measure size even when child is hidden, always return true, always disable clipping optimization! not recommended.
+CHILD_FLAGS_FRAME_STYLE: int                   # Style the child window like a framed item: use framebg, framerounding, framebordersize, framepadding instead of childbg, childrounding, childbordersize, windowpadding.
 INPUT_TEXT_FLAGS_NONE: int
-INPUT_TEXT_FLAGS_CHARS_DECIMAL: int
-INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL: int
-INPUT_TEXT_FLAGS_CHARS_UPPERCASE: int
-INPUT_TEXT_FLAGS_CHARS_NO_BLANK: int
-INPUT_TEXT_FLAGS_AUTO_SELECT_ALL: int
-INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE: int
-INPUT_TEXT_FLAGS_CALLBACK_COMPLETION: int
-INPUT_TEXT_FLAGS_CALLBACK_HISTORY: int
-INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int
-INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: int
-INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT: int
-INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE: int
-INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL: int
-INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE: int
-INPUT_TEXT_FLAGS_READ_ONLY: int
-INPUT_TEXT_FLAGS_PASSWORD: int
-INPUT_TEXT_FLAGS_NO_UNDO_REDO: int
-INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC: int
-INPUT_TEXT_FLAGS_CALLBACK_RESIZE: int
-INPUT_TEXT_FLAGS_CALLBACK_EDIT: int
-INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int
+INPUT_TEXT_FLAGS_CHARS_DECIMAL: int               # Allow 0123456789.+-*/
+INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL: int           # Allow 0123456789abcdefabcdef
+INPUT_TEXT_FLAGS_CHARS_UPPERCASE: int             # Turn a..z into a..z
+INPUT_TEXT_FLAGS_CHARS_NO_BLANK: int              # Filter out spaces, tabs
+INPUT_TEXT_FLAGS_AUTO_SELECT_ALL: int             # Select entire text when first taking mouse focus
+INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE: int          # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider looking at the isitemdeactivatedafteredit() function.
+INPUT_TEXT_FLAGS_CALLBACK_COMPLETION: int         # Callback on pressing tab (for completion handling)
+INPUT_TEXT_FLAGS_CALLBACK_HISTORY: int            # Callback on pressing up/down arrows (for history handling)
+INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int             # Callback on each iteration. user code may query cursor position, modify text buffer.
+INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: int        # Callback on character inputs to replace or discard them. modify 'eventchar' to replace or discard, or return 1 in callback to discard.
+INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT: int             # Pressing tab input a '\t' character into the text field
+INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE: int     # In multi-line mode, unfocus with enter, add new line with ctrl+enter (default is opposite: unfocus with ctrl+enter, add line with enter).
+INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL: int        # Disable following the cursor horizontally
+INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE: int            # Overwrite mode
+INPUT_TEXT_FLAGS_READ_ONLY: int                   # Read-only mode
+INPUT_TEXT_FLAGS_PASSWORD: int                    # Password mode, display all characters as '*'
+INPUT_TEXT_FLAGS_NO_UNDO_REDO: int                # Disable undo/redo. note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call clearactiveid().
+INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC: int            # Allow 0123456789.+-*/ee (scientific notation input)
+INPUT_TEXT_FLAGS_CALLBACK_RESIZE: int             # Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. notify when the string wants to be resized (for string types which hold a cache of their size). you will be provided a new bufsize in the callback and need to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
+INPUT_TEXT_FLAGS_CALLBACK_EDIT: int               # Callback on any edit (note that inputtext() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int           # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
 TREE_NODE_FLAGS_NONE: int
-TREE_NODE_FLAGS_SELECTED: int
-TREE_NODE_FLAGS_FRAMED: int
-TREE_NODE_FLAGS_ALLOW_OVERLAP: int
-TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN: int
-TREE_NODE_FLAGS_NO_AUTO_OPEN_ON_LOG: int
-TREE_NODE_FLAGS_DEFAULT_OPEN: int
-TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK: int
-TREE_NODE_FLAGS_OPEN_ON_ARROW: int
-TREE_NODE_FLAGS_LEAF: int
-TREE_NODE_FLAGS_BULLET: int
-TREE_NODE_FLAGS_FRAME_PADDING: int
-TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int
-TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int
-TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int
-TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int
+TREE_NODE_FLAGS_SELECTED: int                     # Draw as selected
+TREE_NODE_FLAGS_FRAMED: int                       # Draw frame with background (e.g. for collapsingheader)
+TREE_NODE_FLAGS_ALLOW_OVERLAP: int                # Hit testing to allow subsequent widgets to overlap this one
+TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN: int         # Don't do a treepush() when open (e.g. for collapsingheader) = no extra indent nor pushing on id stack
+TREE_NODE_FLAGS_NO_AUTO_OPEN_ON_LOG: int          # Don't automatically and temporarily open node when logging is active (by default logging will automatically open tree nodes)
+TREE_NODE_FLAGS_DEFAULT_OPEN: int                 # Default node to be open
+TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK: int         # Need double-click to open node
+TREE_NODE_FLAGS_OPEN_ON_ARROW: int                # Only open when clicking on the arrow part. if imguitreenodeflags_openondoubleclick is also set, single-click arrow or double-click all box to open.
+TREE_NODE_FLAGS_LEAF: int                         # No collapsing, no arrow (use as a convenience for leaf nodes).
+TREE_NODE_FLAGS_BULLET: int                       # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
+TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
+TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line. in the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
+TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (bypass the indented area).
+TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (text will still fit in current column)
+TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
 POPUP_FLAGS_NONE: int
-POPUP_FLAGS_MOUSE_BUTTON_LEFT: int
-POPUP_FLAGS_MOUSE_BUTTON_RIGHT: int
-POPUP_FLAGS_MOUSE_BUTTON_MIDDLE: int
+POPUP_FLAGS_MOUSE_BUTTON_LEFT: int               # For beginpopupcontext*(): open on left mouse release. guaranteed to always be == 0 (same as imguimousebutton_left)
+POPUP_FLAGS_MOUSE_BUTTON_RIGHT: int              # For beginpopupcontext*(): open on right mouse release. guaranteed to always be == 1 (same as imguimousebutton_right)
+POPUP_FLAGS_MOUSE_BUTTON_MIDDLE: int             # For beginpopupcontext*(): open on middle mouse release. guaranteed to always be == 2 (same as imguimousebutton_middle)
 POPUP_FLAGS_MOUSE_BUTTON_MASK: int
 POPUP_FLAGS_MOUSE_BUTTON_DEFAULT: int
-POPUP_FLAGS_NO_OPEN_OVER_EXISTING_POPUP: int
-POPUP_FLAGS_NO_OPEN_OVER_ITEMS: int
-POPUP_FLAGS_ANY_POPUP_ID: int
-POPUP_FLAGS_ANY_POPUP_LEVEL: int
+POPUP_FLAGS_NO_OPEN_OVER_EXISTING_POPUP: int     # For openpopup*(), beginpopupcontext*(): don't open if there's already a popup at the same level of the popup stack
+POPUP_FLAGS_NO_OPEN_OVER_ITEMS: int              # For beginpopupcontextwindow(): don't return true when hovering items, only when hovering empty space
+POPUP_FLAGS_ANY_POPUP_ID: int                    # For ispopupopen(): ignore the imguiid parameter and test for any popup.
+POPUP_FLAGS_ANY_POPUP_LEVEL: int                 # For ispopupopen(): search/test at any level of the popup stack (default test in the current level)
 POPUP_FLAGS_ANY_POPUP: int
 SELECTABLE_FLAGS_NONE: int
-SELECTABLE_FLAGS_DONT_CLOSE_POPUPS: int
-SELECTABLE_FLAGS_SPAN_ALL_COLUMNS: int
-SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int
-SELECTABLE_FLAGS_DISABLED: int
-SELECTABLE_FLAGS_ALLOW_OVERLAP: int
+SELECTABLE_FLAGS_DONT_CLOSE_POPUPS: int      # Clicking this doesn't close parent popup window
+SELECTABLE_FLAGS_SPAN_ALL_COLUMNS: int       # Frame will span all columns of its container table (text will still fit in current column)
+SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int     # Generate press events on double clicks too
+SELECTABLE_FLAGS_DISABLED: int               # Cannot be selected, display grayed out text
+SELECTABLE_FLAGS_ALLOW_OVERLAP: int          # (wip) hit testing to allow subsequent widgets to overlap this one
 COMBO_FLAGS_NONE: int
-COMBO_FLAGS_POPUP_ALIGN_LEFT: int
-COMBO_FLAGS_HEIGHT_SMALL: int
-COMBO_FLAGS_HEIGHT_REGULAR: int
-COMBO_FLAGS_HEIGHT_LARGE: int
-COMBO_FLAGS_HEIGHT_LARGEST: int
-COMBO_FLAGS_NO_ARROW_BUTTON: int
-COMBO_FLAGS_NO_PREVIEW: int
-COMBO_FLAGS_WIDTH_FIT_PREVIEW: int
+COMBO_FLAGS_POPUP_ALIGN_LEFT: int      # Align the popup toward the left by default
+COMBO_FLAGS_HEIGHT_SMALL: int          # Max ~4 items visible. tip: if you want your combo popup to be a specific size you can use setnextwindowsizeconstraints() prior to calling begincombo()
+COMBO_FLAGS_HEIGHT_REGULAR: int        # Max ~8 items visible (default)
+COMBO_FLAGS_HEIGHT_LARGE: int          # Max ~20 items visible
+COMBO_FLAGS_HEIGHT_LARGEST: int        # As many fitting items as possible
+COMBO_FLAGS_NO_ARROW_BUTTON: int       # Display on the preview box without the square arrow button
+COMBO_FLAGS_NO_PREVIEW: int            # Display only a square arrow button
+COMBO_FLAGS_WIDTH_FIT_PREVIEW: int     # Width dynamically calculated from preview contents
 COMBO_FLAGS_HEIGHT_MASK: int
 TAB_BAR_FLAGS_NONE: int
-TAB_BAR_FLAGS_REORDERABLE: int
-TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS: int
-TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON: int
-TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int
-TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS: int
-TAB_BAR_FLAGS_NO_TOOLTIP: int
-TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN: int
-TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int
+TAB_BAR_FLAGS_REORDERABLE: int                           # Allow manually dragging tabs to re-order them + new tabs are appended at the end of list
+TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS: int                  # Automatically select new tabs when they appear
+TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON: int                 # Disable buttons to open the tab list popup
+TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS: int         # Disable scrolling buttons (apply when fitting policy is imguitabbarflags_fittingpolicyscroll)
+TAB_BAR_FLAGS_NO_TOOLTIP: int                            # Disable tooltips when hovering a tab
+TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN: int            # Resize tabs when they don't fit
+TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int                 # Add scroll buttons when tabs don't fit
 TAB_BAR_FLAGS_FITTING_POLICY_MASK: int
 TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT: int
 TAB_ITEM_FLAGS_NONE: int
-TAB_ITEM_FLAGS_UNSAVED_DOCUMENT: int
-TAB_ITEM_FLAGS_SET_SELECTED: int
-TAB_ITEM_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int
-TAB_ITEM_FLAGS_NO_PUSH_ID: int
-TAB_ITEM_FLAGS_NO_TOOLTIP: int
-TAB_ITEM_FLAGS_NO_REORDER: int
-TAB_ITEM_FLAGS_LEADING: int
-TAB_ITEM_FLAGS_TRAILING: int
+TAB_ITEM_FLAGS_UNSAVED_DOCUMENT: int                      # Display a dot next to the title + tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
+TAB_ITEM_FLAGS_SET_SELECTED: int                          # Trigger flag to programmatically make the tab selected when calling begintabitem()
+TAB_ITEM_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+TAB_ITEM_FLAGS_NO_PUSH_ID: int                            # Don't call pushid(tab->id)/popid() on begintabitem()/endtabitem()
+TAB_ITEM_FLAGS_NO_TOOLTIP: int                            # Disable tooltip for the given tab
+TAB_ITEM_FLAGS_NO_REORDER: int                            # Disable reordering this tab or having another tab cross over this tab
+TAB_ITEM_FLAGS_LEADING: int                               # Enforce the tab position to the left of the tab bar (after the tab list popup button)
+TAB_ITEM_FLAGS_TRAILING: int                              # Enforce the tab position to the right of the tab bar (before the scrolling buttons)
 TABLE_FLAGS_NONE: int
-TABLE_FLAGS_RESIZABLE: int
-TABLE_FLAGS_REORDERABLE: int
-TABLE_FLAGS_HIDEABLE: int
-TABLE_FLAGS_SORTABLE: int
-TABLE_FLAGS_NO_SAVED_SETTINGS: int
-TABLE_FLAGS_CONTEXT_MENU_IN_BODY: int
-TABLE_FLAGS_ROW_BG: int
-TABLE_FLAGS_BORDERS_INNER_H: int
-TABLE_FLAGS_BORDERS_OUTER_H: int
-TABLE_FLAGS_BORDERS_INNER_V: int
-TABLE_FLAGS_BORDERS_OUTER_V: int
-TABLE_FLAGS_BORDERS_H: int
-TABLE_FLAGS_BORDERS_V: int
-TABLE_FLAGS_BORDERS_INNER: int
-TABLE_FLAGS_BORDERS_OUTER: int
-TABLE_FLAGS_BORDERS: int
-TABLE_FLAGS_NO_BORDERS_IN_BODY: int
-TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE: int
-TABLE_FLAGS_SIZING_FIXED_FIT: int
-TABLE_FLAGS_SIZING_FIXED_SAME: int
-TABLE_FLAGS_SIZING_STRETCH_PROP: int
-TABLE_FLAGS_SIZING_STRETCH_SAME: int
-TABLE_FLAGS_NO_HOST_EXTEND_X: int
-TABLE_FLAGS_NO_HOST_EXTEND_Y: int
-TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE: int
-TABLE_FLAGS_PRECISE_WIDTHS: int
-TABLE_FLAGS_NO_CLIP: int
-TABLE_FLAGS_PAD_OUTER_X: int
-TABLE_FLAGS_NO_PAD_OUTER_X: int
-TABLE_FLAGS_NO_PAD_INNER_X: int
-TABLE_FLAGS_SCROLL_X: int
-TABLE_FLAGS_SCROLL_Y: int
-TABLE_FLAGS_SORT_MULTI: int
-TABLE_FLAGS_SORT_TRISTATE: int
-TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN: int
+TABLE_FLAGS_RESIZABLE: int                           # Enable resizing columns.
+TABLE_FLAGS_REORDERABLE: int                         # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
+TABLE_FLAGS_HIDEABLE: int                            # Enable hiding/disabling columns in context menu.
+TABLE_FLAGS_SORTABLE: int                            # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
+TABLE_FLAGS_NO_SAVED_SETTINGS: int                   # Disable persisting columns order, width and sort settings in the .ini file.
+TABLE_FLAGS_CONTEXT_MENU_IN_BODY: int                # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
+TABLE_FLAGS_ROW_BG: int                              # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
+TABLE_FLAGS_BORDERS_INNER_H: int                     # Draw horizontal borders between rows.
+TABLE_FLAGS_BORDERS_OUTER_H: int                     # Draw horizontal borders at the top and bottom.
+TABLE_FLAGS_BORDERS_INNER_V: int                     # Draw vertical borders between columns.
+TABLE_FLAGS_BORDERS_OUTER_V: int                     # Draw vertical borders on the left and right sides.
+TABLE_FLAGS_BORDERS_H: int                           # Draw horizontal borders.
+TABLE_FLAGS_BORDERS_V: int                           # Draw vertical borders.
+TABLE_FLAGS_BORDERS_INNER: int                       # Draw inner borders.
+TABLE_FLAGS_BORDERS_OUTER: int                       # Draw outer borders.
+TABLE_FLAGS_BORDERS: int                             # Draw all borders.
+TABLE_FLAGS_NO_BORDERS_IN_BODY: int                  # [alpha] disable vertical borders in columns body (borders will always appear in headers). -> may move to style
+TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE: int     # [alpha] disable vertical borders in columns body until hovered for resize (borders will always appear in headers). -> may move to style
+TABLE_FLAGS_SIZING_FIXED_FIT: int                    # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching contents width.
+TABLE_FLAGS_SIZING_FIXED_SAME: int                   # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching the maximum contents width of all columns. implicitly enable imguitableflags_nokeepcolumnsvisible.
+TABLE_FLAGS_SIZING_STRETCH_PROP: int                 # Columns default to _widthstretch with default weights proportional to each columns contents widths.
+TABLE_FLAGS_SIZING_STRETCH_SAME: int                 # Columns default to _widthstretch with default weights all equal, unless overridden by tablesetupcolumn().
+TABLE_FLAGS_NO_HOST_EXTEND_X: int                    # Make outer width auto-fit to columns, overriding outer_size.x value. only available when scrollx/scrolly are disabled and stretch columns are not used.
+TABLE_FLAGS_NO_HOST_EXTEND_Y: int                    # Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). only available when scrollx/scrolly are disabled. data below the limit will be clipped and not visible.
+TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE: int             # Disable keeping column always minimally visible when scrollx is off and table gets too small. not recommended if columns are resizable.
+TABLE_FLAGS_PRECISE_WIDTHS: int                      # Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: without this flag: 33,33,34. with this flag: 33,33,33). with larger number of columns, resizing will appear to be less smooth.
+TABLE_FLAGS_NO_CLIP: int                             # Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). generally incompatible with tablesetupscrollfreeze().
+TABLE_FLAGS_PAD_OUTER_X: int                         # Default if bordersouterv is on. enable outermost padding. generally desirable if you have headers.
+TABLE_FLAGS_NO_PAD_OUTER_X: int                      # Default if bordersouterv is off. disable outermost padding.
+TABLE_FLAGS_NO_PAD_INNER_X: int                      # Disable inner padding between columns (double inner padding if bordersouterv is on, single inner padding if bordersouterv is off).
+TABLE_FLAGS_SCROLL_X: int                            # Enable horizontal scrolling. require 'outer_size' parameter of begintable() to specify the container size. changes default sizing policy. because this creates a child window, scrolly is currently generally recommended when using scrollx.
+TABLE_FLAGS_SCROLL_Y: int                            # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
+TABLE_FLAGS_SORT_MULTI: int                          # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
+TABLE_FLAGS_SORT_TRISTATE: int                       # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
+TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN: int            # Highlight column headers when hovered (may evolve into a fuller highlight)
 TABLE_FLAGS_SIZING_MASK: int
 TABLE_COLUMN_FLAGS_NONE: int
-TABLE_COLUMN_FLAGS_DISABLED: int
-TABLE_COLUMN_FLAGS_DEFAULT_HIDE: int
-TABLE_COLUMN_FLAGS_DEFAULT_SORT: int
-TABLE_COLUMN_FLAGS_WIDTH_STRETCH: int
-TABLE_COLUMN_FLAGS_WIDTH_FIXED: int
-TABLE_COLUMN_FLAGS_NO_RESIZE: int
-TABLE_COLUMN_FLAGS_NO_REORDER: int
-TABLE_COLUMN_FLAGS_NO_HIDE: int
-TABLE_COLUMN_FLAGS_NO_CLIP: int
-TABLE_COLUMN_FLAGS_NO_SORT: int
-TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING: int
-TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING: int
-TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int
-TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH: int
-TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int
-TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int
-TABLE_COLUMN_FLAGS_INDENT_ENABLE: int
-TABLE_COLUMN_FLAGS_INDENT_DISABLE: int
-TABLE_COLUMN_FLAGS_ANGLED_HEADER: int
-TABLE_COLUMN_FLAGS_IS_ENABLED: int
-TABLE_COLUMN_FLAGS_IS_VISIBLE: int
-TABLE_COLUMN_FLAGS_IS_SORTED: int
-TABLE_COLUMN_FLAGS_IS_HOVERED: int
+TABLE_COLUMN_FLAGS_DISABLED: int                   # Overriding/master disable flag: hide column, won't show in context menu (unlike calling tablesetcolumnenabled() which manipulates the user accessible state)
+TABLE_COLUMN_FLAGS_DEFAULT_HIDE: int               # Default as a hidden/disabled column.
+TABLE_COLUMN_FLAGS_DEFAULT_SORT: int               # Default as a sorting column.
+TABLE_COLUMN_FLAGS_WIDTH_STRETCH: int              # Column will stretch. preferable with horizontal scrolling disabled (default if table sizing policy is _sizingstretchsame or _sizingstretchprop).
+TABLE_COLUMN_FLAGS_WIDTH_FIXED: int                # Column will not stretch. preferable with horizontal scrolling enabled (default if table sizing policy is _sizingfixedfit and table is resizable).
+TABLE_COLUMN_FLAGS_NO_RESIZE: int                  # Disable manual resizing.
+TABLE_COLUMN_FLAGS_NO_REORDER: int                 # Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+TABLE_COLUMN_FLAGS_NO_HIDE: int                    # Disable ability to hide/disable this column.
+TABLE_COLUMN_FLAGS_NO_CLIP: int                    # Disable clipping for this column (all noclip columns will render in a same draw command).
+TABLE_COLUMN_FLAGS_NO_SORT: int                    # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
+TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING: int          # Disable ability to sort in the ascending direction.
+TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING: int         # Disable ability to sort in the descending direction.
+TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
+TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH: int            # Disable header text width contribution to automatic column width.
+TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int      # Make the initial sort direction ascending when first sorting on this column (default).
+TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int     # Make the initial sort direction descending when first sorting on this column.
+TABLE_COLUMN_FLAGS_INDENT_ENABLE: int              # Use current indent value when entering cell (default for column 0).
+TABLE_COLUMN_FLAGS_INDENT_DISABLE: int             # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
+TABLE_COLUMN_FLAGS_ANGLED_HEADER: int              # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
+TABLE_COLUMN_FLAGS_IS_ENABLED: int                 # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
+TABLE_COLUMN_FLAGS_IS_VISIBLE: int                 # Status: is visible == is enabled and not clipped by scrolling.
+TABLE_COLUMN_FLAGS_IS_SORTED: int                  # Status: is currently part of the sort specs
+TABLE_COLUMN_FLAGS_IS_HOVERED: int                 # Status: is hovered by mouse
 TABLE_COLUMN_FLAGS_WIDTH_MASK: int
 TABLE_COLUMN_FLAGS_INDENT_MASK: int
 TABLE_COLUMN_FLAGS_STATUS_MASK: int
-TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE: int
+TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE: int           # [internal] disable user resizing this column directly (it may however we resized indirectly from its left edge)
 TABLE_ROW_FLAGS_NONE: int
-TABLE_ROW_FLAGS_HEADERS: int
+TABLE_ROW_FLAGS_HEADERS: int     # Identify header row (set default background color + width of its contents accounted differently for auto column width)
 TABLE_BG_TARGET_NONE: int
-TABLE_BG_TARGET_ROW_BG0: int
-TABLE_BG_TARGET_ROW_BG1: int
-TABLE_BG_TARGET_CELL_BG: int
+TABLE_BG_TARGET_ROW_BG0: int     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
+TABLE_BG_TARGET_ROW_BG1: int     # Set row background color 1 (generally used for selection marking)
+TABLE_BG_TARGET_CELL_BG: int     # Set cell background color (top-most color)
 FOCUSED_FLAGS_NONE: int
-FOCUSED_FLAGS_CHILD_WINDOWS: int
-FOCUSED_FLAGS_ROOT_WINDOW: int
-FOCUSED_FLAGS_ANY_WINDOW: int
-FOCUSED_FLAGS_NO_POPUP_HIERARCHY: int
-FOCUSED_FLAGS_DOCK_HIERARCHY: int
+FOCUSED_FLAGS_CHILD_WINDOWS: int              # Return true if any children of the window is focused
+FOCUSED_FLAGS_ROOT_WINDOW: int                # Test from root window (top most parent of the current hierarchy)
+FOCUSED_FLAGS_ANY_WINDOW: int                 # Return true if any window is focused. important: if you are trying to tell how to dispatch your low-level inputs, do not use this. use 'io.wantcapturemouse' instead! please read the faq!
+FOCUSED_FLAGS_NO_POPUP_HIERARCHY: int         # Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _childwindows or _rootwindow)
+FOCUSED_FLAGS_DOCK_HIERARCHY: int             # Consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _childwindows or _rootwindow)
 FOCUSED_FLAGS_ROOT_AND_CHILD_WINDOWS: int
-HOVERED_FLAGS_NONE: int
-HOVERED_FLAGS_CHILD_WINDOWS: int
-HOVERED_FLAGS_ROOT_WINDOW: int
-HOVERED_FLAGS_ANY_WINDOW: int
-HOVERED_FLAGS_NO_POPUP_HIERARCHY: int
-HOVERED_FLAGS_DOCK_HIERARCHY: int
-HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_POPUP: int
-HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_ACTIVE_ITEM: int
-HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_ITEM: int
-HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_WINDOW: int
-HOVERED_FLAGS_ALLOW_WHEN_DISABLED: int
-HOVERED_FLAGS_NO_NAV_OVERRIDE: int
+HOVERED_FLAGS_NONE: int                                  # Return true if directly over the item/window, not obstructed by another window, not obstructed by an active popup or modal blocking inputs under them.
+HOVERED_FLAGS_CHILD_WINDOWS: int                         # Iswindowhovered() only: return true if any children of the window is hovered
+HOVERED_FLAGS_ROOT_WINDOW: int                           # Iswindowhovered() only: test from root window (top most parent of the current hierarchy)
+HOVERED_FLAGS_ANY_WINDOW: int                            # Iswindowhovered() only: return true if any window is hovered
+HOVERED_FLAGS_NO_POPUP_HIERARCHY: int                    # Iswindowhovered() only: do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _childwindows or _rootwindow)
+HOVERED_FLAGS_DOCK_HIERARCHY: int                        # Iswindowhovered() only: consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _childwindows or _rootwindow)
+HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_POPUP: int           # Return true even if a popup window is normally blocking access to this item/window
+HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_ACTIVE_ITEM: int     # Return true even if an active item is blocking access to this item/window. useful for drag and drop patterns.
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_ITEM: int         # Isitemhovered() only: return true even if the item uses allowoverlap mode and is overlapped by another hoverable item.
+HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_WINDOW: int       # Isitemhovered() only: return true even if the position is obstructed or overlapped by another window.
+HOVERED_FLAGS_ALLOW_WHEN_DISABLED: int                   # Isitemhovered() only: return true even if the item is disabled
+HOVERED_FLAGS_NO_NAV_OVERRIDE: int                       # Isitemhovered() only: disable using gamepad/keyboard navigation state when active, always query mouse
 HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED: int
 HOVERED_FLAGS_RECT_ONLY: int
 HOVERED_FLAGS_ROOT_AND_CHILD_WINDOWS: int
-HOVERED_FLAGS_FOR_TOOLTIP: int
-HOVERED_FLAGS_STATIONARY: int
-HOVERED_FLAGS_DELAY_NONE: int
-HOVERED_FLAGS_DELAY_SHORT: int
-HOVERED_FLAGS_DELAY_NORMAL: int
-HOVERED_FLAGS_NO_SHARED_DELAY: int
+HOVERED_FLAGS_FOR_TOOLTIP: int                           # Shortcut for standard flags when using isitemhovered() + settooltip() sequence.
+HOVERED_FLAGS_STATIONARY: int                            # Require mouse to be stationary for style.hoverstationarydelay (~0.15 sec) _at least one time_. after this, can move on same item/window. using the stationary test tends to reduces the need for a long delay.
+HOVERED_FLAGS_DELAY_NONE: int                            # Isitemhovered() only: return true immediately (default). as this is the default you generally ignore this.
+HOVERED_FLAGS_DELAY_SHORT: int                           # Isitemhovered() only: return true after style.hoverdelayshort elapsed (~0.15 sec) (shared between items) + requires mouse to be stationary for style.hoverstationarydelay (once per item).
+HOVERED_FLAGS_DELAY_NORMAL: int                          # Isitemhovered() only: return true after style.hoverdelaynormal elapsed (~0.40 sec) (shared between items) + requires mouse to be stationary for style.hoverstationarydelay (once per item).
+HOVERED_FLAGS_NO_SHARED_DELAY: int                       # Isitemhovered() only: disable shared delay system where moving from one item to the next keeps the previous timer for a short time (standard for tooltips with long delays)
 DOCK_NODE_FLAGS_NONE: int
-DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY: int
-DOCK_NODE_FLAGS_NO_DOCKING_OVER_CENTRAL_NODE: int
-DOCK_NODE_FLAGS_PASSTHRU_CENTRAL_NODE: int
-DOCK_NODE_FLAGS_NO_DOCKING_SPLIT: int
-DOCK_NODE_FLAGS_NO_RESIZE: int
-DOCK_NODE_FLAGS_AUTO_HIDE_TAB_BAR: int
-DOCK_NODE_FLAGS_NO_UNDOCKING: int
+DOCK_NODE_FLAGS_KEEP_ALIVE_ONLY: int                  # Don't display the dockspace node but keep it alive. windows docked into this dockspace node won't be undocked.
+DOCK_NODE_FLAGS_NO_DOCKING_OVER_CENTRAL_NODE: int     # Disable docking over the central node, which will be always kept empty.
+DOCK_NODE_FLAGS_PASSTHRU_CENTRAL_NODE: int            # Enable passthru dockspace: 1) dockspace() will render a imguicol_windowbg background covering everything excepted the central node when empty. meaning the host window should probably use setnextwindowbgalpha(0.0f) prior to begin() when using this. 2) when central node is empty: let inputs pass-through + won't display a dockingemptybg background. see demo for details.
+DOCK_NODE_FLAGS_NO_DOCKING_SPLIT: int                 # Disable other windows/nodes from splitting this node.
+DOCK_NODE_FLAGS_NO_RESIZE: int                        # Saved // disable resizing node using the splitter/separators. useful with programmatically setup dockspaces.
+DOCK_NODE_FLAGS_AUTO_HIDE_TAB_BAR: int                # Tab bar will automatically hide when there is a single window in the dock node.
+DOCK_NODE_FLAGS_NO_UNDOCKING: int                     # Disable undocking this node.
 DRAG_DROP_FLAGS_NONE: int
-DRAG_DROP_FLAGS_SOURCE_NO_PREVIEW_TOOLTIP: int
-DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER: int
-DRAG_DROP_FLAGS_SOURCE_NO_HOLD_TO_OPEN_OTHERS: int
-DRAG_DROP_FLAGS_SOURCE_ALLOW_NULL_ID: int
-DRAG_DROP_FLAGS_SOURCE_EXTERN: int
-DRAG_DROP_FLAGS_SOURCE_AUTO_EXPIRE_PAYLOAD: int
-DRAG_DROP_FLAGS_ACCEPT_BEFORE_DELIVERY: int
-DRAG_DROP_FLAGS_ACCEPT_NO_DRAW_DEFAULT_RECT: int
-DRAG_DROP_FLAGS_ACCEPT_NO_PREVIEW_TOOLTIP: int
-DRAG_DROP_FLAGS_ACCEPT_PEEK_ONLY: int
-DATA_TYPE_S8: int
-DATA_TYPE_U8: int
-DATA_TYPE_S16: int
-DATA_TYPE_U16: int
-DATA_TYPE_S32: int
-DATA_TYPE_U32: int
-DATA_TYPE_S64: int
-DATA_TYPE_U64: int
-DATA_TYPE_FLOAT: int
-DATA_TYPE_DOUBLE: int
+DRAG_DROP_FLAGS_SOURCE_NO_PREVIEW_TOOLTIP: int         # Disable preview tooltip. by default, a successful call to begindragdropsource opens a tooltip so you can display a preview or description of the source contents. this flag disables this behavior.
+DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER: int           # By default, when dragging we clear data so that isitemhovered() will return false, to avoid subsequent user code submitting tooltips. this flag disables this behavior so you can still call isitemhovered() on the source item.
+DRAG_DROP_FLAGS_SOURCE_NO_HOLD_TO_OPEN_OTHERS: int     # Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+DRAG_DROP_FLAGS_SOURCE_ALLOW_NULL_ID: int              # Allow items such as text(), image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. this is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+DRAG_DROP_FLAGS_SOURCE_EXTERN: int                     # External source (from outside of dear imgui), won't attempt to read current item/window info. will always return true. only one extern source can be active simultaneously.
+DRAG_DROP_FLAGS_SOURCE_AUTO_EXPIRE_PAYLOAD: int        # Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+DRAG_DROP_FLAGS_ACCEPT_BEFORE_DELIVERY: int            # Acceptdragdroppayload() will returns true even before the mouse button is released. you can then call isdelivery() to test if the payload needs to be delivered.
+DRAG_DROP_FLAGS_ACCEPT_NO_DRAW_DEFAULT_RECT: int       # Do not draw the default highlight rectangle when hovering over target.
+DRAG_DROP_FLAGS_ACCEPT_NO_PREVIEW_TOOLTIP: int         # Request hiding the begindragdropsource tooltip from the begindragdroptarget site.
+DRAG_DROP_FLAGS_ACCEPT_PEEK_ONLY: int                  # For peeking ahead and inspecting the payload before delivery.
+DATA_TYPE_S8: int         # Signed char / char (with sensible compilers)
+DATA_TYPE_U8: int         # Unsigned char
+DATA_TYPE_S16: int        # Short
+DATA_TYPE_U16: int        # Unsigned short
+DATA_TYPE_S32: int        # Int
+DATA_TYPE_U32: int        # Unsigned int
+DATA_TYPE_S64: int        # Long long / __int64
+DATA_TYPE_U64: int        # Unsigned long long / unsigned __int64
+DATA_TYPE_FLOAT: int      # Float
+DATA_TYPE_DOUBLE: int     # Double
 DATA_TYPE_COUNT: int
 DIR_NONE: int
 DIR_LEFT: int
@@ -638,10 +638,10 @@ DIR_UP: int
 DIR_DOWN: int
 DIR_COUNT: int
 SORT_DIRECTION_NONE: int
-SORT_DIRECTION_ASCENDING: int
-SORT_DIRECTION_DESCENDING: int
+SORT_DIRECTION_ASCENDING: int      # Ascending = 0->9, a->z etc.
+SORT_DIRECTION_DESCENDING: int     # Descending = 9->0, z->a etc.
 KEY_NONE: int
-KEY_TAB: int
+KEY_TAB: int                        # == imguikey_namedkey_begin
 KEY_LEFT_ARROW: int
 KEY_RIGHT_ARROW: int
 KEY_UP_ARROW: int
@@ -725,17 +725,17 @@ KEY_F21: int
 KEY_F22: int
 KEY_F23: int
 KEY_F24: int
-KEY_APOSTROPHE: int
-KEY_COMMA: int
-KEY_MINUS: int
-KEY_PERIOD: int
-KEY_SLASH: int
-KEY_SEMICOLON: int
-KEY_EQUAL: int
-KEY_LEFT_BRACKET: int
-KEY_BACKSLASH: int
-KEY_RIGHT_BRACKET: int
-KEY_GRAVE_ACCENT: int
+KEY_APOSTROPHE: int                 # '
+KEY_COMMA: int                      # ,
+KEY_MINUS: int                      # -
+KEY_PERIOD: int                     # .
+KEY_SLASH: int                      # 
+KEY_SEMICOLON: int                  # ;
+KEY_EQUAL: int                      # =
+KEY_LEFT_BRACKET: int               # [
+KEY_BACKSLASH: int                  # \ (this text inhibit multiline comment caused by backslash)
+KEY_RIGHT_BRACKET: int              # ]
+KEY_GRAVE_ACCENT: int               # `
 KEY_CAPS_LOCK: int
 KEY_SCROLL_LOCK: int
 KEY_NUM_LOCK: int
@@ -758,32 +758,32 @@ KEY_KEYPAD_SUBTRACT: int
 KEY_KEYPAD_ADD: int
 KEY_KEYPAD_ENTER: int
 KEY_KEYPAD_EQUAL: int
-KEY_APP_BACK: int
+KEY_APP_BACK: int                   # Available on some keyboard/mouses. often referred as 'browser back'
 KEY_APP_FORWARD: int
-KEY_GAMEPAD_START: int
-KEY_GAMEPAD_BACK: int
-KEY_GAMEPAD_FACE_LEFT: int
-KEY_GAMEPAD_FACE_RIGHT: int
-KEY_GAMEPAD_FACE_UP: int
-KEY_GAMEPAD_FACE_DOWN: int
-KEY_GAMEPAD_DPAD_LEFT: int
-KEY_GAMEPAD_DPAD_RIGHT: int
-KEY_GAMEPAD_DPAD_UP: int
-KEY_GAMEPAD_DPAD_DOWN: int
-KEY_GAMEPAD_L1: int
-KEY_GAMEPAD_R1: int
-KEY_GAMEPAD_L2: int
-KEY_GAMEPAD_R2: int
-KEY_GAMEPAD_L3: int
-KEY_GAMEPAD_R3: int
-KEY_GAMEPAD_LSTICK_LEFT: int
-KEY_GAMEPAD_LSTICK_RIGHT: int
-KEY_GAMEPAD_LSTICK_UP: int
-KEY_GAMEPAD_LSTICK_DOWN: int
-KEY_GAMEPAD_RSTICK_LEFT: int
-KEY_GAMEPAD_RSTICK_RIGHT: int
-KEY_GAMEPAD_RSTICK_UP: int
-KEY_GAMEPAD_RSTICK_DOWN: int
+KEY_GAMEPAD_START: int              # Menu (xbox)      + (switch)   start/options (ps)
+KEY_GAMEPAD_BACK: int               # View (xbox)      - (switch)   share (ps)
+KEY_GAMEPAD_FACE_LEFT: int          # X (xbox)         y (switch)   square (ps)        // tap: toggle menu. hold: windowing mode (focus/move/resize windows)
+KEY_GAMEPAD_FACE_RIGHT: int         # B (xbox)         a (switch)   circle (ps)        // cancel / close / exit
+KEY_GAMEPAD_FACE_UP: int            # Y (xbox)         x (switch)   triangle (ps)      // text input / on-screen keyboard
+KEY_GAMEPAD_FACE_DOWN: int          # A (xbox)         b (switch)   cross (ps)         // activate / open / toggle / tweak
+KEY_GAMEPAD_DPAD_LEFT: int          # D-pad left                                       // move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_RIGHT: int         # D-pad right                                      // move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_UP: int            # D-pad up                                         // move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_DOWN: int          # D-pad down                                       // move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_L1: int                 # L bumper (xbox)  l (switch)   l1 (ps)            // tweak slower / focus previous (in windowing mode)
+KEY_GAMEPAD_R1: int                 # R bumper (xbox)  r (switch)   r1 (ps)            // tweak faster / focus next (in windowing mode)
+KEY_GAMEPAD_L2: int                 # L trig. (xbox)   zl (switch)  l2 (ps) [analog]
+KEY_GAMEPAD_R2: int                 # R trig. (xbox)   zr (switch)  r2 (ps) [analog]
+KEY_GAMEPAD_L3: int                 # L stick (xbox)   l3 (switch)  l3 (ps)
+KEY_GAMEPAD_R3: int                 # R stick (xbox)   r3 (switch)  r3 (ps)
+KEY_GAMEPAD_LSTICK_LEFT: int        # [analog]                                         // move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_RIGHT: int       # [analog]                                         // move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_UP: int          # [analog]                                         // move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_DOWN: int        # [analog]                                         // move window (in windowing mode)
+KEY_GAMEPAD_RSTICK_LEFT: int        # [analog]
+KEY_GAMEPAD_RSTICK_RIGHT: int       # [analog]
+KEY_GAMEPAD_RSTICK_UP: int          # [analog]
+KEY_GAMEPAD_RSTICK_DOWN: int        # [analog]
 KEY_MOUSE_LEFT: int
 KEY_MOUSE_RIGHT: int
 KEY_MOUSE_MIDDLE: int
@@ -797,46 +797,46 @@ KEY_RESERVED_FOR_MOD_ALT: int
 KEY_RESERVED_FOR_MOD_SUPER: int
 KEY_COUNT: int
 MOD_NONE: int
-MOD_CTRL: int
-MOD_SHIFT: int
-MOD_ALT: int
-MOD_SUPER: int
-MOD_SHORTCUT: int
-MOD_MASK: int
+MOD_CTRL: int                       # Ctrl
+MOD_SHIFT: int                      # Shift
+MOD_ALT: int                        # Option/menu
+MOD_SUPER: int                      # Cmd/super/windows
+MOD_SHORTCUT: int                   # Alias for ctrl (non-macos) _or_ super (macos).
+MOD_MASK: int                       # 5-bits
 KEY_NAMED_KEY_BEGIN: int
 KEY_NAMED_KEY_END: int
 KEY_NAMED_KEY_COUNT: int
-KEY_KEYS_DATA_SIZE: int
-KEY_KEYS_DATA_OFFSET: int
+KEY_KEYS_DATA_SIZE: int             # Size of keysdata[]: only hold named keys
+KEY_KEYS_DATA_OFFSET: int           # Accesses to io.keysdata[] must use (key - imguikey_keysdata_offset) index.
 CONFIG_FLAGS_NONE: int
-CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int
-CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int
-CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS: int
-CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD: int
-CONFIG_FLAGS_NO_MOUSE: int
-CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int
-CONFIG_FLAGS_DOCKING_ENABLE: int
-CONFIG_FLAGS_VIEWPORTS_ENABLE: int
-CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS: int
-CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS: int
-CONFIG_FLAGS_IS_S_RGB: int
-CONFIG_FLAGS_IS_TOUCH_SCREEN: int
+CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int            # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
+CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int             # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
+CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS: int       # Instruct navigation to move the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is awkward. will update io.mousepos and set io.wantsetmousepos=true. if enabled you must honor io.wantsetmousepos requests in your backend, otherwise imgui will react as if the mouse is jumping around back and forth.
+CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD: int        # Instruct navigation to not set the io.wantcapturekeyboard flag when io.navactive is set.
+CONFIG_FLAGS_NO_MOUSE: int                       # Instruct imgui to clear mouse position/buttons in newframe(). this allows ignoring the mouse information set by the backend.
+CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int         # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
+CONFIG_FLAGS_DOCKING_ENABLE: int                 # Docking enable flags.
+CONFIG_FLAGS_VIEWPORTS_ENABLE: int               # Viewport enable flags (require both imguibackendflags_platformhasviewports + imguibackendflags_rendererhasviewports set by the respective backends)
+CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS: int     # [beta: don't use] fixme-dpi: reposition and resize imgui windows when the dpiscale of a viewport changed (mostly useful for the main viewport hosting other window). note that resizing the main window itself is up to your application.
+CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS: int         # [beta: don't use] fixme-dpi: request bitmap-scaled fonts to match dpiscale. this is a very low-quality workaround. the correct way to handle dpi is _currently_ to replace the atlas and/or fonts in the platform_onchangedviewport callback, but this is all early work in progress.
+CONFIG_FLAGS_IS_S_RGB: int                       # Application is srgb-aware.
+CONFIG_FLAGS_IS_TOUCH_SCREEN: int                # Application is using a touch screen instead of a mouse.
 BACKEND_FLAGS_NONE: int
-BACKEND_FLAGS_HAS_GAMEPAD: int
-BACKEND_FLAGS_HAS_MOUSE_CURSORS: int
-BACKEND_FLAGS_HAS_SET_MOUSE_POS: int
-BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: int
-BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: int
-BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int
-BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int
+BACKEND_FLAGS_HAS_GAMEPAD: int                    # Backend platform supports gamepad and currently has one connected.
+BACKEND_FLAGS_HAS_MOUSE_CURSORS: int              # Backend platform supports honoring getmousecursor() value to change the os cursor shape.
+BACKEND_FLAGS_HAS_SET_MOUSE_POS: int              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if imguiconfigflags_navenablesetmousepos is set).
+BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: int        # Backend renderer supports imdrawcmd::vtxoffset. this enables output of large meshes (64k+ vertices) while still using 16-bit indices.
+BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: int         # Backend platform supports multiple viewports.
+BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int     # Backend platform supports calling io.addmouseviewportevent() with the viewport under the mouse. if possible, ignore viewports with the imguiviewportflags_noinputs flag (win32 backend, glfw 3.30+ backend can do this, sdl backend cannot). if this cannot be done, dear imgui needs to use a flawed heuristic to find the viewport under.
+BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int         # Backend renderer supports multiple viewports.
 COL_TEXT: int
 COL_TEXT_DISABLED: int
-COL_WINDOW_BG: int
-COL_CHILD_BG: int
-COL_POPUP_BG: int
+COL_WINDOW_BG: int                   # Background of normal windows
+COL_CHILD_BG: int                    # Background of child windows
+COL_POPUP_BG: int                    # Background of popups, menus, tooltips windows
 COL_BORDER: int
 COL_BORDER_SHADOW: int
-COL_FRAME_BG: int
+COL_FRAME_BG: int                    # Background of checkbox, radio button, plot, slider, text input
 COL_FRAME_BG_HOVERED: int
 COL_FRAME_BG_ACTIVE: int
 COL_TITLE_BG: int
@@ -853,172 +853,172 @@ COL_SLIDER_GRAB_ACTIVE: int
 COL_BUTTON: int
 COL_BUTTON_HOVERED: int
 COL_BUTTON_ACTIVE: int
-COL_HEADER: int
+COL_HEADER: int                      # Header* colors are used for collapsingheader, treenode, selectable, menuitem
 COL_HEADER_HOVERED: int
 COL_HEADER_ACTIVE: int
 COL_SEPARATOR: int
 COL_SEPARATOR_HOVERED: int
 COL_SEPARATOR_ACTIVE: int
-COL_RESIZE_GRIP: int
+COL_RESIZE_GRIP: int                 # Resize grip in lower-right and lower-left corners of windows.
 COL_RESIZE_GRIP_HOVERED: int
 COL_RESIZE_GRIP_ACTIVE: int
-COL_TAB: int
+COL_TAB: int                         # Tabitem in a tabbar
 COL_TAB_HOVERED: int
 COL_TAB_ACTIVE: int
 COL_TAB_UNFOCUSED: int
 COL_TAB_UNFOCUSED_ACTIVE: int
-COL_DOCKING_PREVIEW: int
-COL_DOCKING_EMPTY_BG: int
+COL_DOCKING_PREVIEW: int             # Preview overlay color when about to docking something
+COL_DOCKING_EMPTY_BG: int            # Background color for empty node (e.g. centralnode with no window docked into it)
 COL_PLOT_LINES: int
 COL_PLOT_LINES_HOVERED: int
 COL_PLOT_HISTOGRAM: int
 COL_PLOT_HISTOGRAM_HOVERED: int
-COL_TABLE_HEADER_BG: int
-COL_TABLE_BORDER_STRONG: int
-COL_TABLE_BORDER_LIGHT: int
-COL_TABLE_ROW_BG: int
-COL_TABLE_ROW_BG_ALT: int
+COL_TABLE_HEADER_BG: int             # Table header background
+COL_TABLE_BORDER_STRONG: int         # Table outer and header borders (prefer using alpha=1.0 here)
+COL_TABLE_BORDER_LIGHT: int          # Table inner borders (prefer using alpha=1.0 here)
+COL_TABLE_ROW_BG: int                # Table row background (even rows)
+COL_TABLE_ROW_BG_ALT: int            # Table row background (odd rows)
 COL_TEXT_SELECTED_BG: int
-COL_DRAG_DROP_TARGET: int
-COL_NAV_HIGHLIGHT: int
-COL_NAV_WINDOWING_HIGHLIGHT: int
-COL_NAV_WINDOWING_DIM_BG: int
-COL_MODAL_WINDOW_DIM_BG: int
+COL_DRAG_DROP_TARGET: int            # Rectangle highlighting a drop target
+COL_NAV_HIGHLIGHT: int               # Gamepad/keyboard: current highlighted item
+COL_NAV_WINDOWING_HIGHLIGHT: int     # Highlight window when using ctrl+tab
+COL_NAV_WINDOWING_DIM_BG: int        # Darken/colorize entire screen behind the ctrl+tab window list, when active
+COL_MODAL_WINDOW_DIM_BG: int         # Darken/colorize entire screen behind a modal window, when one is active
 COL_COUNT: int
-STYLE_VAR_ALPHA: int
-STYLE_VAR_DISABLED_ALPHA: int
-STYLE_VAR_WINDOW_PADDING: int
-STYLE_VAR_WINDOW_ROUNDING: int
-STYLE_VAR_WINDOW_BORDER_SIZE: int
-STYLE_VAR_WINDOW_MIN_SIZE: int
-STYLE_VAR_WINDOW_TITLE_ALIGN: int
-STYLE_VAR_CHILD_ROUNDING: int
-STYLE_VAR_CHILD_BORDER_SIZE: int
-STYLE_VAR_POPUP_ROUNDING: int
-STYLE_VAR_POPUP_BORDER_SIZE: int
-STYLE_VAR_FRAME_PADDING: int
-STYLE_VAR_FRAME_ROUNDING: int
-STYLE_VAR_FRAME_BORDER_SIZE: int
-STYLE_VAR_ITEM_SPACING: int
-STYLE_VAR_ITEM_INNER_SPACING: int
-STYLE_VAR_INDENT_SPACING: int
-STYLE_VAR_CELL_PADDING: int
-STYLE_VAR_SCROLLBAR_SIZE: int
-STYLE_VAR_SCROLLBAR_ROUNDING: int
-STYLE_VAR_GRAB_MIN_SIZE: int
-STYLE_VAR_GRAB_ROUNDING: int
-STYLE_VAR_TAB_ROUNDING: int
-STYLE_VAR_TAB_BAR_BORDER_SIZE: int
-STYLE_VAR_BUTTON_TEXT_ALIGN: int
-STYLE_VAR_SELECTABLE_TEXT_ALIGN: int
-STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int
-STYLE_VAR_SEPARATOR_TEXT_ALIGN: int
-STYLE_VAR_SEPARATOR_TEXT_PADDING: int
-STYLE_VAR_DOCKING_SEPARATOR_SIZE: int
+STYLE_VAR_ALPHA: int                          # Float     alpha
+STYLE_VAR_DISABLED_ALPHA: int                 # Float     disabledalpha
+STYLE_VAR_WINDOW_PADDING: int                 # Imvec2    windowpadding
+STYLE_VAR_WINDOW_ROUNDING: int                # Float     windowrounding
+STYLE_VAR_WINDOW_BORDER_SIZE: int             # Float     windowbordersize
+STYLE_VAR_WINDOW_MIN_SIZE: int                # Imvec2    windowminsize
+STYLE_VAR_WINDOW_TITLE_ALIGN: int             # Imvec2    windowtitlealign
+STYLE_VAR_CHILD_ROUNDING: int                 # Float     childrounding
+STYLE_VAR_CHILD_BORDER_SIZE: int              # Float     childbordersize
+STYLE_VAR_POPUP_ROUNDING: int                 # Float     popuprounding
+STYLE_VAR_POPUP_BORDER_SIZE: int              # Float     popupbordersize
+STYLE_VAR_FRAME_PADDING: int                  # Imvec2    framepadding
+STYLE_VAR_FRAME_ROUNDING: int                 # Float     framerounding
+STYLE_VAR_FRAME_BORDER_SIZE: int              # Float     framebordersize
+STYLE_VAR_ITEM_SPACING: int                   # Imvec2    itemspacing
+STYLE_VAR_ITEM_INNER_SPACING: int             # Imvec2    iteminnerspacing
+STYLE_VAR_INDENT_SPACING: int                 # Float     indentspacing
+STYLE_VAR_CELL_PADDING: int                   # Imvec2    cellpadding
+STYLE_VAR_SCROLLBAR_SIZE: int                 # Float     scrollbarsize
+STYLE_VAR_SCROLLBAR_ROUNDING: int             # Float     scrollbarrounding
+STYLE_VAR_GRAB_MIN_SIZE: int                  # Float     grabminsize
+STYLE_VAR_GRAB_ROUNDING: int                  # Float     grabrounding
+STYLE_VAR_TAB_ROUNDING: int                   # Float     tabrounding
+STYLE_VAR_TAB_BAR_BORDER_SIZE: int            # Float     tabbarbordersize
+STYLE_VAR_BUTTON_TEXT_ALIGN: int              # Imvec2    buttontextalign
+STYLE_VAR_SELECTABLE_TEXT_ALIGN: int          # Imvec2    selectabletextalign
+STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int     # Float  separatortextbordersize
+STYLE_VAR_SEPARATOR_TEXT_ALIGN: int           # Imvec2    separatortextalign
+STYLE_VAR_SEPARATOR_TEXT_PADDING: int         # Imvec2    separatortextpadding
+STYLE_VAR_DOCKING_SEPARATOR_SIZE: int         # Float     dockingseparatorsize
 STYLE_VAR_COUNT: int
 BUTTON_FLAGS_NONE: int
-BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int
-BUTTON_FLAGS_MOUSE_BUTTON_RIGHT: int
-BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE: int
+BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int        # React on left mouse button (default)
+BUTTON_FLAGS_MOUSE_BUTTON_RIGHT: int       # React on right mouse button
+BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE: int      # React on center mouse button
 BUTTON_FLAGS_MOUSE_BUTTON_MASK: int
 BUTTON_FLAGS_MOUSE_BUTTON_DEFAULT: int
 COLOR_EDIT_FLAGS_NONE: int
-COLOR_EDIT_FLAGS_NO_ALPHA: int
-COLOR_EDIT_FLAGS_NO_PICKER: int
-COLOR_EDIT_FLAGS_NO_OPTIONS: int
-COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW: int
-COLOR_EDIT_FLAGS_NO_INPUTS: int
-COLOR_EDIT_FLAGS_NO_TOOLTIP: int
-COLOR_EDIT_FLAGS_NO_LABEL: int
-COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW: int
-COLOR_EDIT_FLAGS_NO_DRAG_DROP: int
-COLOR_EDIT_FLAGS_NO_BORDER: int
-COLOR_EDIT_FLAGS_ALPHA_BAR: int
-COLOR_EDIT_FLAGS_ALPHA_PREVIEW: int
-COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF: int
-COLOR_EDIT_FLAGS_HDR: int
-COLOR_EDIT_FLAGS_DISPLAY_RGB: int
-COLOR_EDIT_FLAGS_DISPLAY_HSV: int
-COLOR_EDIT_FLAGS_DISPLAY_HEX: int
-COLOR_EDIT_FLAGS_UINT8: int
-COLOR_EDIT_FLAGS_FLOAT: int
-COLOR_EDIT_FLAGS_PICKER_HUE_BAR: int
-COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL: int
-COLOR_EDIT_FLAGS_INPUT_RGB: int
-COLOR_EDIT_FLAGS_INPUT_HSV: int
+COLOR_EDIT_FLAGS_NO_ALPHA: int               # Coloredit, colorpicker, colorbutton: ignore alpha component (will only read 3 components from the input pointer).
+COLOR_EDIT_FLAGS_NO_PICKER: int              # Coloredit: disable picker when clicking on color square.
+COLOR_EDIT_FLAGS_NO_OPTIONS: int             # Coloredit: disable toggling options menu when right-clicking on inputs/small preview.
+COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW: int       # Coloredit, colorpicker: disable color square preview next to the inputs. (e.g. to show only the inputs)
+COLOR_EDIT_FLAGS_NO_INPUTS: int              # Coloredit, colorpicker: disable inputs sliders/text widgets (e.g. to show only the small preview color square).
+COLOR_EDIT_FLAGS_NO_TOOLTIP: int             # Coloredit, colorpicker, colorbutton: disable tooltip when hovering the preview.
+COLOR_EDIT_FLAGS_NO_LABEL: int               # Coloredit, colorpicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW: int        # Colorpicker: disable bigger color preview on right side of the picker, use small color square preview instead.
+COLOR_EDIT_FLAGS_NO_DRAG_DROP: int           # Coloredit: disable drag and drop target. colorbutton: disable drag and drop source.
+COLOR_EDIT_FLAGS_NO_BORDER: int              # Colorbutton: disable border (which is enforced by default)
+COLOR_EDIT_FLAGS_ALPHA_BAR: int              # Coloredit, colorpicker: show vertical alpha bar/gradient in picker.
+COLOR_EDIT_FLAGS_ALPHA_PREVIEW: int          # Coloredit, colorpicker, colorbutton: display preview as a transparent color over a checkerboard, instead of opaque.
+COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF: int     # Coloredit, colorpicker, colorbutton: display half opaque / half checkerboard, instead of opaque.
+COLOR_EDIT_FLAGS_HDR: int                    # (wip) coloredit: currently only disable 0.0f..1.0f limits in rgba edition (note: you probably want to use imguicoloreditflags_float flag as well).
+COLOR_EDIT_FLAGS_DISPLAY_RGB: int            # [display]    // coloredit: override _display_ type among rgb/hsv/hex. colorpicker: select any combination using one or more of rgb/hsv/hex.
+COLOR_EDIT_FLAGS_DISPLAY_HSV: int            # [display]    // '
+COLOR_EDIT_FLAGS_DISPLAY_HEX: int            # [display]    // '
+COLOR_EDIT_FLAGS_UINT8: int                  # [datatype]   // coloredit, colorpicker, colorbutton: _display_ values formatted as 0..255.
+COLOR_EDIT_FLAGS_FLOAT: int                  # [datatype]   // coloredit, colorpicker, colorbutton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. no round-trip of value via integers.
+COLOR_EDIT_FLAGS_PICKER_HUE_BAR: int         # [picker]     // colorpicker: bar for hue, rectangle for sat/value.
+COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL: int       # [picker]     // colorpicker: wheel for hue, triangle for sat/value.
+COLOR_EDIT_FLAGS_INPUT_RGB: int              # [input]      // coloredit, colorpicker: input and output data in rgb format.
+COLOR_EDIT_FLAGS_INPUT_HSV: int              # [input]      // coloredit, colorpicker: input and output data in hsv format.
 COLOR_EDIT_FLAGS_DEFAULT_OPTIONS: int
 COLOR_EDIT_FLAGS_DISPLAY_MASK: int
 COLOR_EDIT_FLAGS_DATA_TYPE_MASK: int
 COLOR_EDIT_FLAGS_PICKER_MASK: int
 COLOR_EDIT_FLAGS_INPUT_MASK: int
 SLIDER_FLAGS_NONE: int
-SLIDER_FLAGS_ALWAYS_CLAMP: int
-SLIDER_FLAGS_LOGARITHMIC: int
-SLIDER_FLAGS_NO_ROUND_TO_FORMAT: int
-SLIDER_FLAGS_NO_INPUT: int
-SLIDER_FLAGS_INVALID_MASK: int
+SLIDER_FLAGS_ALWAYS_CLAMP: int           # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
+SLIDER_FLAGS_LOGARITHMIC: int            # Make the widget logarithmic (linear otherwise). consider using imguisliderflags_noroundtoformat with this if using a format-string with small amount of digits.
+SLIDER_FLAGS_NO_ROUND_TO_FORMAT: int     # Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits)
+SLIDER_FLAGS_NO_INPUT: int               # Disable ctrl+click or enter key allowing to input text directly into the widget
+SLIDER_FLAGS_INVALID_MASK: int           # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
 MOUSE_BUTTON_LEFT: int
 MOUSE_BUTTON_RIGHT: int
 MOUSE_BUTTON_MIDDLE: int
 MOUSE_BUTTON_COUNT: int
 MOUSE_CURSOR_NONE: int
 MOUSE_CURSOR_ARROW: int
-MOUSE_CURSOR_TEXT_INPUT: int
-MOUSE_CURSOR_RESIZE_ALL: int
-MOUSE_CURSOR_RESIZE_NS: int
-MOUSE_CURSOR_RESIZE_EW: int
-MOUSE_CURSOR_RESIZE_NESW: int
-MOUSE_CURSOR_RESIZE_NWSE: int
-MOUSE_CURSOR_HAND: int
-MOUSE_CURSOR_NOT_ALLOWED: int
+MOUSE_CURSOR_TEXT_INPUT: int      # When hovering over inputtext, etc.
+MOUSE_CURSOR_RESIZE_ALL: int      # (unused by dear imgui functions)
+MOUSE_CURSOR_RESIZE_NS: int       # When hovering over a horizontal border
+MOUSE_CURSOR_RESIZE_EW: int       # When hovering over a vertical border or a column
+MOUSE_CURSOR_RESIZE_NESW: int     # When hovering over the bottom-left corner of a window
+MOUSE_CURSOR_RESIZE_NWSE: int     # When hovering over the bottom-right corner of a window
+MOUSE_CURSOR_HAND: int            # (unused by dear imgui functions. use for e.g. hyperlinks)
+MOUSE_CURSOR_NOT_ALLOWED: int     # When hovering something with disallowed interaction. usually a crossed circle.
 MOUSE_CURSOR_COUNT: int
-MOUSE_SOURCE_MOUSE: int
-MOUSE_SOURCE_TOUCH_SCREEN: int
-MOUSE_SOURCE_PEN: int
+MOUSE_SOURCE_MOUSE: int            # Input is coming from an actual mouse.
+MOUSE_SOURCE_TOUCH_SCREEN: int     # Input is coming from a touch screen (no hovering prior to initial press, less precise initial press aiming, dual-axis wheeling possible).
+MOUSE_SOURCE_PEN: int              # Input is coming from a pressure/magnetic pen (often used in conjunction with high-sampling rates).
 MOUSE_SOURCE_COUNT: int
-COND_NONE: int
-COND_ALWAYS: int
-COND_ONCE: int
-COND_FIRST_USE_EVER: int
-COND_APPEARING: int
+COND_NONE: int               # No condition (always set the variable), same as _always
+COND_ALWAYS: int             # No condition (always set the variable), same as _none
+COND_ONCE: int               # Set the variable once per runtime session (only the first call will succeed)
+COND_FIRST_USE_EVER: int     # Set the variable if the object/window has no persistently saved data (no entry in .ini file)
+COND_APPEARING: int          # Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
 IM_DRAW_FLAGS_NONE: int
-IM_DRAW_FLAGS_CLOSED: int
-IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT: int
-IM_DRAW_FLAGS_ROUND_CORNERS_TOP_RIGHT: int
-IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_LEFT: int
-IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT: int
-IM_DRAW_FLAGS_ROUND_CORNERS_NONE: int
+IM_DRAW_FLAGS_CLOSED: int                         # Pathstroke(), addpolyline(): specify that shape should be closed (important: this is always == 1 for legacy reason)
+IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT: int         # Addrect(), addrectfilled(), pathrect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). was 0x01.
+IM_DRAW_FLAGS_ROUND_CORNERS_TOP_RIGHT: int        # Addrect(), addrectfilled(), pathrect(): enable rounding top-right corner only (when rounding > 0.0f, we default to all corners). was 0x02.
+IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_LEFT: int      # Addrect(), addrectfilled(), pathrect(): enable rounding bottom-left corner only (when rounding > 0.0f, we default to all corners). was 0x04.
+IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT: int     # Addrect(), addrectfilled(), pathrect(): enable rounding bottom-right corner only (when rounding > 0.0f, we default to all corners). wax 0x08.
+IM_DRAW_FLAGS_ROUND_CORNERS_NONE: int             # Addrect(), addrectfilled(), pathrect(): disable rounding on all corners (when rounding > 0.0f). this is not zero, not an implicit flag!
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP: int
 IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM: int
 IM_DRAW_FLAGS_ROUND_CORNERS_LEFT: int
 IM_DRAW_FLAGS_ROUND_CORNERS_RIGHT: int
 IM_DRAW_FLAGS_ROUND_CORNERS_ALL: int
-IM_DRAW_FLAGS_ROUND_CORNERS_DEFAULT: int
+IM_DRAW_FLAGS_ROUND_CORNERS_DEFAULT: int          # Default to all corners if none of the _roundcornersxx flags are specified.
 IM_DRAW_FLAGS_ROUND_CORNERS_MASK: int
 IM_DRAW_LIST_FLAGS_NONE: int
-IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES: int
-IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES_USE_TEX: int
-IM_DRAW_LIST_FLAGS_ANTI_ALIASED_FILL: int
-IM_DRAW_LIST_FLAGS_ALLOW_VTX_OFFSET: int
+IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES: int             # Enable anti-aliased lines/borders (*2 the number of triangles for 1.0f wide line or lines thin enough to be drawn using textures, otherwise *3 the number of triangles)
+IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES_USE_TEX: int     # Enable anti-aliased lines/borders using textures when possible. require backend to render with bilinear filtering (not point/nearest filtering).
+IM_DRAW_LIST_FLAGS_ANTI_ALIASED_FILL: int              # Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
+IM_DRAW_LIST_FLAGS_ALLOW_VTX_OFFSET: int               # Can emit 'vtxoffset > 0' to allow large meshes. set when 'imguibackendflags_rendererhasvtxoffset' is enabled.
 IM_FONT_ATLAS_FLAGS_NONE: int
-IM_FONT_ATLAS_FLAGS_NO_POWER_OF_TWO_HEIGHT: int
-IM_FONT_ATLAS_FLAGS_NO_MOUSE_CURSORS: int
-IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES: int
+IM_FONT_ATLAS_FLAGS_NO_POWER_OF_TWO_HEIGHT: int     # Don't round the height to next power of two
+IM_FONT_ATLAS_FLAGS_NO_MOUSE_CURSORS: int           # Don't build software mouse cursors into the atlas (save a little texture memory)
+IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES: int             # Don't build thick line textures into the atlas (save a little texture memory, allow support for point/nearest filtering). the antialiasedlinesusetex features uses them, otherwise they will be rendered using polygons (more expensive for cpu/gpu).
 VIEWPORT_FLAGS_NONE: int
-VIEWPORT_FLAGS_IS_PLATFORM_WINDOW: int
-VIEWPORT_FLAGS_IS_PLATFORM_MONITOR: int
-VIEWPORT_FLAGS_OWNED_BY_APP: int
-VIEWPORT_FLAGS_NO_DECORATION: int
-VIEWPORT_FLAGS_NO_TASK_BAR_ICON: int
-VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING: int
-VIEWPORT_FLAGS_NO_FOCUS_ON_CLICK: int
-VIEWPORT_FLAGS_NO_INPUTS: int
-VIEWPORT_FLAGS_NO_RENDERER_CLEAR: int
-VIEWPORT_FLAGS_NO_AUTO_MERGE: int
-VIEWPORT_FLAGS_TOP_MOST: int
-VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS: int
-VIEWPORT_FLAGS_IS_MINIMIZED: int
-VIEWPORT_FLAGS_IS_FOCUSED: int
+VIEWPORT_FLAGS_IS_PLATFORM_WINDOW: int         # Represent a platform window
+VIEWPORT_FLAGS_IS_PLATFORM_MONITOR: int        # Represent a platform monitor (unused yet)
+VIEWPORT_FLAGS_OWNED_BY_APP: int               # Platform window: was created/managed by the user application? (rather than our backend)
+VIEWPORT_FLAGS_NO_DECORATION: int              # Platform window: disable platform decorations: title bar, borders, etc. (generally set all windows, but if imguiconfigflags_viewportsdecoration is set we only set this on popups/tooltips)
+VIEWPORT_FLAGS_NO_TASK_BAR_ICON: int           # Platform window: disable platform task bar icon (generally set on popups/tooltips, or all windows if imguiconfigflags_viewportsnotaskbaricon is set)
+VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING: int      # Platform window: don't take focus when created.
+VIEWPORT_FLAGS_NO_FOCUS_ON_CLICK: int          # Platform window: don't take focus when clicked on.
+VIEWPORT_FLAGS_NO_INPUTS: int                  # Platform window: make mouse pass through so we can drag this window while peaking behind it.
+VIEWPORT_FLAGS_NO_RENDERER_CLEAR: int          # Platform window: renderer doesn't need to clear the framebuffer ahead (because we will fill it entirely).
+VIEWPORT_FLAGS_NO_AUTO_MERGE: int              # Platform window: avoid merging this window into another host window. this can only be set via imguiwindowclass viewport flags override (because we need to now ahead if we are going to create a viewport in the first place!).
+VIEWPORT_FLAGS_TOP_MOST: int                   # Platform window: display on top (for tooltips only).
+VIEWPORT_FLAGS_CAN_HOST_OTHER_WINDOWS: int     # Viewport can host multiple imgui windows (secondary viewports are associated to a single window). // fixme: in practice there's still probably code making the assumption that this is always and only on the mainviewport. will fix once we add support for 'no main viewport'.
+VIEWPORT_FLAGS_IS_MINIMIZED: int               # Platform window: window is minimized, can skip render. when minimized we tend to avoid using the viewport pos/size for clipping window or testing if they are contained in the viewport.
+VIEWPORT_FLAGS_IS_FOCUSED: int                 # Platform window: window is focused (last call to platform_getwindowfocus() returned true)
 
 
 
