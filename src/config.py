@@ -1,12 +1,12 @@
 import json
 from typing import List
-from .model.parsed.interfaces import IBinding
-from .model.parsed.dear_bindings.binding import DearBindingNew
-from .model.parsed.dear_bindings.struct import DearBindingsStructNew
-from .model.parsed.dear_bindings.function import DearBindingsFunctionNew
-from .model.parsed.dear_bindings.db_type import DearBindingsTypeNew, Kind, Kinds
-from .model.parsed.dear_bindings.argument import DearBindingsArgumentNew
-from .model.comments import Comments
+from model.dear_bindings.interfaces import IBinding
+from model.dear_bindings.binding import DearBindingNew
+from model.dear_bindings.struct import DearBindingsStructNew
+from model.dear_bindings.function import DearBindingsFunctionNew
+from model.dear_bindings.db_type import DearBindingsTypeNew, Kind, Kinds
+from model.dear_bindings.argument import DearBindingsArgumentNew
+from model.comments import Comments
 
 
 EXTENSION_NAME =           "core"
@@ -93,7 +93,7 @@ with open("core/backends/glfw.json") as f:
                     DearBindingsArgumentNew("chain_for_all_windows", DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
+            DearBindingsFunctionNew("ImGui_ImplGlfw_WindowFocusCallback",
                 DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
                 [
                     DearBindingsArgumentNew("window",  DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
@@ -119,9 +119,9 @@ with open("core/backends/glfw.json") as f:
                 DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
                 [
                     DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("button", DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
-                    DearBindingsArgumentNew("action", DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
-                    DearBindingsArgumentNew("mods",   DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
+                    DearBindingsArgumentNew("button", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    DearBindingsArgumentNew("action", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    DearBindingsArgumentNew("mods",   DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
             DearBindingsFunctionNew("ImGui_ImplGlfw_ScrollCallback",
@@ -156,14 +156,56 @@ with open("core/backends/glfw.json") as f:
                     DearBindingsArgumentNew("event",  DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
-
-        ]
+        ],
+        pxd_header="imgui_impl_glfw.h"
     )
     modules.append(glfw)
 
 
 # opengl3
 with open("core/backends/opengl3.json") as f:
-    modules.append(
-        DearBindingNew.from_json(json.load(f), "imgui_impl_opengl3.h", defines)
+    opengl3 = DearBindingNew(
+        enums=[],
+        typedefs=[],
+        structs=[],
+        functions=[
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_Init",
+                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+                [
+                    DearBindingsArgumentNew("glsl_version", DearBindingsTypeNew("const char*", Kind(Kinds.Pointer, Kind(Kinds.Builtin, "char", is_const=True))), default_value="None"),
+                ],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_Shutdown",
+                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+                [],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_NewFrame",
+                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+                [],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_RenderDrawData",
+                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+                [
+                    DearBindingsArgumentNew("draw_data", DearBindingsTypeNew("ImDrawData*", Kind(Kinds.Pointer, Kind(Kinds.User, "ImDrawData")))),
+                ],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_CreateFontsTexture",
+                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+                [],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_DestroyFontsTexture",
+                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+                [],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_CreateDeviceObjects",
+                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+                [],
+            ),
+            DearBindingsFunctionNew("ImGui_ImplOpenGL3_DestroyDeviceObjects",
+                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+                [],
+            ),
+        ],
+        pxd_header="imgui_impl_opengl3.h"
     )
+    modules.append(opengl3)

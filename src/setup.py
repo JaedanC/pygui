@@ -1,11 +1,9 @@
-import json
-import glob
 import os
 import sys
 import shutil
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
-
+from config import *
 
 
 def main():
@@ -13,11 +11,7 @@ def main():
         print("python setup.py clean build_ext --build-lib pygui [--dev]")
         return
     
-    with open("config.json") as f:
-        config = json.load(f)
-
-    extension_name = config["EXTENSION_NAME"]
-    sources = [config["PYX_PATH"]]
+    sources = [PYX_PATH]
 
     # For speeding up developer builds
     if "--dev" in sys.argv:
@@ -28,7 +22,7 @@ def main():
     
     extensions = [
         Extension(
-            extension_name,
+            EXTENSION_NAME,
             sources=sources,
             # Any header files expected by implementations should have their
             # directory added here. Cython will attempt to statically compile

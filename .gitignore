@@ -1,12 +1,11 @@
 __pycache__
 .vscode
 .vs
+/venv
 
-/Include/
-/Lib/
+
 /out/
 /portable/
-/Scripts/
 
 build/
 

@@ -48,3 +48,4 @@ def load_image(image: Image) -> int:
     # clean up afterwards
     gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
     return texture
+

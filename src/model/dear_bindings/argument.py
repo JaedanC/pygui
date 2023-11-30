@@ -4,6 +4,7 @@ from ..comments import Comments, parse_comment
 from . import safe_python_name
 from .interfaces import IArgument, IType
 from .db_type import DearBindingsTypeNew
+import re
 
 
 class DearBindingsArgumentNew(IArgument):
@@ -47,6 +48,10 @@ class DearBindingsArgumentNew(IArgument):
             elif "ImVec4" in default_value:
                 default_value = default_value.replace("ImVec4", "")
                 default_value = default_value.replace("f", "")
+            
+            found = re.match("sizeof\((.*)\)", default_value)
+            if found:
+                default_value = "4"
             
             if _type.with_no_const_or_sign() == "float":
                 default_value = default_value.replace("f", "")

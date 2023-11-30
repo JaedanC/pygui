@@ -3597,11 +3597,11 @@ cdef extern from "imgui_impl_glfw.h":
     void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused) except +
     void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, double entered) except +
     void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y) except +
-    void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, double button, double action, double mods) except +
+    void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) except +
     void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) except +
     void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) except +
     void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c) except +
-    void ImGui_ImplGlfw_MonitorCallback(GLFWwindow* monitor, int event) except +
+    void ImGui_ImplGlfw_MonitorCallback(GLFWwindow* window, int event) except +
 
 cdef extern from "imgui_impl_opengl3.h":
 

@@ -351,9 +351,9 @@ def IM_COL32(r: int, g: int, b: int, a: int) -> int:
     a u32 integer used commonly in ImGui for coloring.
     """
 
-IM_COL32_WHITE : int
-IM_COL32_BLACK : int
-IM_COL32_BLACK_TRANS : int
+IM_COL32_WHITE: int
+IM_COL32_BLACK: int
+IM_COL32_BLACK_TRANS: int
 
 class ImGuiError(Exception): ...
 
@@ -375,6 +375,13 @@ def load_image(image: Image) -> int:
     in any `pygui.image` function.
     """
     pass
+
+# def sizeof(_type) -> int:
+#     """
+#     Placeholder to make the pyi not get upset about sizeof() in cython.
+#     Do not use.
+#     """
+#     pass
 
 WINDOW_FLAGS_NONE: int
 WINDOW_FLAGS_NO_TITLE_BAR: int                    # Disable title-bar
@@ -1057,7 +1064,7 @@ def begin(name: str, p_open: Bool=None, flags: int=0) -> bool:
     """
     pass
 
-def begin_child(str_id: str, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0) -> bool:
+def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=0, window_flags: int=0) -> bool:
     """
     Child Windows
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
@@ -1080,7 +1087,7 @@ def begin_child(str_id: str, size: tuple=(0, 0), child_flags: int=0, window_flag
     """
     pass
 
-def begin_child_id(id_: int, size: tuple=(0, 0), child_flags: int=0, window_flags: int=0) -> bool: ...
+def begin_child_id(id_: int, size: Tuple[float, float]=(0, 0), child_flags: int=0, window_flags: int=0) -> bool: ...
 def begin_combo(label: str, preview_value: str, flags: int=0) -> bool:
     """
     Widgets: Combo Box (Dropdown)
@@ -1131,7 +1138,7 @@ def begin_group() -> None:
 #     """
 #     pass
 
-def begin_list_box(label: str, size: tuple=(0, 0)) -> bool:
+def begin_list_box(label: str, size: Tuple[float, float]=(0, 0)) -> bool:
     """
     Widgets: List Boxes
     - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
@@ -1284,7 +1291,7 @@ def calc_item_width() -> float:
     """
     pass
 
-def calc_text_size(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> tuple:
+def calc_text_size(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0) -> Tuple[float, float]:
     """
     Text Utilities
     Implied text_end = null, hide_text_after_double_hash = false, wrap_width = -1.0f
@@ -1311,16 +1318,16 @@ def collapsing_header_bool_ptr(label: str, p_visible: Bool, flags: int=0) -> boo
     """
     pass
 
-def color_button(desc_id: str, col: tuple, flags: int=0, size: tuple=(0, 0)) -> bool:
+def color_button(desc_id: str, col: Tuple[float, float, float, float], flags: int=0, size: tuple=(0, 0)) -> bool:
     """
     Display a color square/button, hover for details, return true when pressed.
     """
     pass
 
-def color_convert_float4_to_u32(in_: tuple) -> int: ...
+def color_convert_float4_to_u32(in_: Tuple[float, float, float, float]) -> int: ...
 def color_convert_hsv_to_rgb(h: float, s: float, value: float, a: float=1) -> tuple: ...
 def color_convert_rgb_to_hsv(r: float, g: float, b: float, a: float=1) -> tuple: ...
-def color_convert_u32_to_float4(in_: int) -> tuple:
+def color_convert_u32_to_float4(in_: int) -> Tuple[float, float, float, float]:
     """
     Color Utilities
     """
@@ -1460,7 +1467,7 @@ def drag_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Flo
     """
     pass
 
-def dummy(size: tuple) -> None:
+def dummy(size: Tuple[float, float]) -> None:
     """
     Add a dummy item of given size. unlike invisiblebutton(), dummy() won't take the mouse click or be navigable into.
     """
@@ -1592,7 +1599,7 @@ def get_color_u32_im_u32(col: int) -> int:
     """
     pass
 
-def get_color_u32_im_vec4(col: tuple) -> int:
+def get_color_u32_im_vec4(col: Tuple[float, float, float, float]) -> int:
     """
     Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
     """
@@ -1617,7 +1624,7 @@ def get_color_u32_im_vec4(col: tuple) -> int:
 #     pass
 
 # def get_columns_count() -> int: ...
-def get_content_region_avail() -> tuple:
+def get_content_region_avail() -> Tuple[float, float]:
     """
     Content region
     - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
@@ -1626,14 +1633,14 @@ def get_content_region_avail() -> tuple:
     """
     pass
 
-def get_content_region_max() -> tuple:
+def get_content_region_max() -> Tuple[float, float]:
     """
     Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates
     """
     pass
 
 def get_current_context() -> ImGuiContext: ...
-def get_cursor_pos() -> tuple:
+def get_cursor_pos() -> Tuple[float, float]:
     """
     [window-local] cursor position in window coordinates (relative to window position)
     """
@@ -1651,7 +1658,7 @@ def get_cursor_pos_y() -> float:
     """
     pass
 
-def get_cursor_screen_pos() -> tuple:
+def get_cursor_screen_pos() -> Tuple[float, float]:
     """
     Layout cursor positioning
     - By "cursor" we mean the current output position.
@@ -1665,7 +1672,7 @@ def get_cursor_screen_pos() -> tuple:
     """
     pass
 
-def get_cursor_start_pos() -> tuple:
+def get_cursor_start_pos() -> Tuple[float, float]:
     """
     [window-local] initial cursor position, in window coordinates
     """
@@ -1698,7 +1705,7 @@ def get_font_size() -> float:
     """
     pass
 
-def get_font_tex_uv_white_pixel() -> tuple:
+def get_font_tex_uv_white_pixel() -> Tuple[float, float]:
     """
     Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api
     """
@@ -1750,19 +1757,19 @@ def get_item_id() -> int:
     """
     pass
 
-def get_item_rect_max() -> tuple:
+def get_item_rect_max() -> Tuple[float, float]:
     """
     Get lower-right bounding rectangle of the last item (screen space)
     """
     pass
 
-def get_item_rect_min() -> tuple:
+def get_item_rect_min() -> Tuple[float, float]:
     """
     Get upper-left bounding rectangle of the last item (screen space)
     """
     pass
 
-def get_item_rect_size() -> tuple:
+def get_item_rect_size() -> Tuple[float, float]:
     """
     Get size of last item
     """
@@ -1797,19 +1804,19 @@ def get_mouse_cursor() -> int:
     """
     pass
 
-def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0) -> tuple:
+def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0) -> Tuple[float, float]:
     """
     Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
     """
     pass
 
-def get_mouse_pos() -> tuple:
+def get_mouse_pos() -> Tuple[float, float]:
     """
     Shortcut to imgui::getio().mousepos provided by user, to be consistent with other calls
     """
     pass
 
-def get_mouse_pos_on_opening_current_popup() -> tuple:
+def get_mouse_pos_on_opening_current_popup() -> Tuple[float, float]:
     """
     Retrieve mouse position at the time of opening popup we have beginpopup() into (helper to avoid user backing that value themselves)
     """
@@ -1900,13 +1907,13 @@ def get_version() -> str:
     """
     pass
 
-def get_window_content_region_max() -> tuple:
+def get_window_content_region_max() -> Tuple[float, float]:
     """
     Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates
     """
     pass
 
-def get_window_content_region_min() -> tuple:
+def get_window_content_region_min() -> Tuple[float, float]:
     """
     Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates
     """
@@ -1931,13 +1938,13 @@ def get_window_height() -> float:
     """
     pass
 
-def get_window_pos() -> tuple:
+def get_window_pos() -> Tuple[float, float]:
     """
     Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
     """
     pass
 
-def get_window_size() -> tuple:
+def get_window_size() -> Tuple[float, float]:
     """
     Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
     """
@@ -1967,7 +1974,7 @@ def get_window_width() -> float:
 #     """
 #     pass
 
-def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
+def image(user_texture_id: int, size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
@@ -1976,7 +1983,7 @@ def image(user_texture_id: int, size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1
     """
     pass
 
-def image_button(str_id: str, user_texture_id: int, image_size: tuple, uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
+def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
@@ -1990,8 +1997,8 @@ def impl_glfw_init_for_open_gl(window, install_callbacks: bool) -> bool: ...
 # def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool) -> bool: ...
 # def impl_glfw_install_callbacks(window: GLFWwindow) -> None: ...
 # def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int) -> None: ...
-# def impl_glfw_monitor_callback(monitor: GLFWwindow, event: int) -> None: ...
-# def impl_glfw_mouse_button_callback(window: GLFWwindow, button: float, action: float, mods: float) -> None: ...
+# def impl_glfw_monitor_callback(window: GLFWwindow, event: int) -> None: ...
+# def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int) -> None: ...
 def impl_glfw_new_frame() -> None: ...
 # def impl_glfw_restore_callbacks(window: GLFWwindow) -> None: ...
 # def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float) -> None: ...
@@ -2039,7 +2046,7 @@ def input_text(label: str, buf: String, flags: int=0, callback: "Callable[[ImGui
 
 def input_text_multiline(label: str, buf: String, size: tuple=(0, 0), flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool: ...
 def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool: ...
-def invisible_button(str_id: str, size: tuple, flags: int=0) -> bool:
+def invisible_button(str_id: str, size: Tuple[float, float], flags: int=0) -> bool:
     """
     Flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with isitemactive, isitemhovered, etc.)
     """
@@ -2189,7 +2196,7 @@ def is_mouse_dragging(button: int, lock_threshold: float=-1.0) -> bool:
     """
     pass
 
-def is_mouse_hovering_rect(r_min: tuple, r_max: tuple, clip: bool=True) -> bool:
+def is_mouse_hovering_rect(r_min: Tuple[float, float], r_max: Tuple[float, float], clip: bool=True) -> bool:
     """
     Is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
     """
@@ -2217,13 +2224,13 @@ def is_popup_open(str_id: str, flags: int=0) -> bool:
     """
     pass
 
-def is_rect_visible(rect_min: tuple, rect_max: tuple) -> bool:
+def is_rect_visible(rect_min: Tuple[float, float], rect_max: Tuple[float, float]) -> bool:
     """
     Test if rectangle (in screen space) is visible / not clipped. to perform coarse clipping on user's side.
     """
     pass
 
-def is_rect_visible_by_size(size: tuple) -> bool:
+def is_rect_visible_by_size(size: Tuple[float, float]) -> bool:
     """
     Miscellaneous Utilities
     Test if rectangle (of given size, starting from cursor position) is visible / not clipped.
@@ -2377,7 +2384,7 @@ def open_popup_on_item_click(str_id: str=None, popup_flags: int=1) -> None:
     """
     pass
 
-def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=sizeof(float)) -> None:
+def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0), stride: int=4) -> None:
     """
     Implied values_offset = 0, overlay_text = null, scale_min = flt_max, scale_max = flt_max, graph_size = imvec2(0, 0), stride = sizeof(float)
     """
@@ -2409,14 +2416,14 @@ def pop_style_color(count: int=1) -> None: ...
 def pop_style_var(count: int=1) -> None: ...
 def pop_tab_stop() -> None: ...
 def pop_text_wrap_pos() -> None: ...
-def progress_bar(fraction: float, size_arg: tuple=(-FLT_MIN, 0), overlay: str=None) -> None: ...
+def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), overlay: str=None) -> None: ...
 def push_button_repeat(repeat: bool) -> None:
     """
     In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
     """
     pass
 
-# def push_clip_rect(clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool) -> None:
+# def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool) -> None:
 #     """
 #     Clipping
 #     - Mouse hovering is affected by ImGui::PushClipRect() calls, unlike direct calls to ImDrawList::PushClipRect() which are render only.
@@ -2590,7 +2597,7 @@ def set_color_edit_options(flags: int) -> None:
 #     pass
 
 # def set_current_context(ctx: ImGuiContext) -> None: ...
-def set_cursor_pos(local_pos: tuple) -> None:
+def set_cursor_pos(local_pos: Tuple[float, float]) -> None:
     """
     [window-local] '
     """
@@ -2608,7 +2615,7 @@ def set_cursor_pos_y(local_y: float) -> None:
     """
     pass
 
-def set_cursor_screen_pos(pos: tuple) -> None:
+def set_cursor_screen_pos(pos: Tuple[float, float]) -> None:
     """
     Cursor position in absolute coordinates
     """
@@ -2698,7 +2705,7 @@ def set_next_window_collapsed(collapsed: bool, cond: int=0) -> None:
     """
     pass
 
-def set_next_window_content_size(size: tuple) -> None:
+def set_next_window_content_size(size: Tuple[float, float]) -> None:
     """
     Set next window content size (~ scrollable client area, which enforce the range of scrollbars). not including window decorations (title bar, menu bar, etc.) nor windowpadding. set an axis to 0.0f to leave it automatic. call before begin()
     """
@@ -2716,7 +2723,7 @@ def set_next_window_focus() -> None:
     """
     pass
 
-def set_next_window_pos(pos: tuple, cond: int=0, pivot: tuple=(0, 0)) -> None:
+def set_next_window_pos(pos: Tuple[float, float], cond: int=0, pivot: tuple=(0, 0)) -> None:
     """
     Window manipulation
     - Prefer using SetNextXXX functions (before Begin) rather that SetXXX functions (after Begin).
@@ -2724,19 +2731,19 @@ def set_next_window_pos(pos: tuple, cond: int=0, pivot: tuple=(0, 0)) -> None:
     """
     pass
 
-def set_next_window_scroll(scroll: tuple) -> None:
+def set_next_window_scroll(scroll: Tuple[float, float]) -> None:
     """
     Set next window scrolling value (use < 0.0f to not affect a given axis).
     """
     pass
 
-def set_next_window_size(size: tuple, cond: int=0) -> None:
+def set_next_window_size(size: Tuple[float, float], cond: int=0) -> None:
     """
     Set next window size. set axis to 0.0f to force an auto-fit on this axis. call before begin()
     """
     pass
 
-def set_next_window_size_constraints(size_min: tuple, size_max: tuple, custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
+def set_next_window_size_constraints(size_min: Tuple[float, float], size_max: Tuple[float, float], custom_callback: Callable=None, custom_callback_data: Any=None) -> None:
     """
     Set next window size limits. use 0.0f or flt_max if you don't want limits. use -1 for both min and max of same axis to preserve current size (which itself is a constraint). use callback to apply non-trivial programmatic constraints.
     """
@@ -2832,25 +2839,25 @@ def set_tooltip(fmt: str) -> None:
 #     """
 #     pass
 
-# def set_window_pos(pos: tuple, cond: int=0) -> None:
+# def set_window_pos(pos: Tuple[float, float], cond: int=0) -> None:
 #     """
 #     (not recommended) set current window position - call within begin()/end(). prefer using setnextwindowpos(), as this may incur tearing and side-effects.
 #     """
 #     pass
 
-# def set_window_pos_str(name: str, pos: tuple, cond: int=0) -> None:
+# def set_window_pos_str(name: str, pos: Tuple[float, float], cond: int=0) -> None:
 #     """
 #     Set named window position.
 #     """
 #     pass
 
-# def set_window_size(size: tuple, cond: int=0) -> None:
+# def set_window_size(size: Tuple[float, float], cond: int=0) -> None:
 #     """
 #     (not recommended) set current window size - call within begin()/end(). set to imvec2(0, 0) to force an auto-fit. prefer using setnextwindowsize(), as this may incur tearing and minor side-effects.
 #     """
 #     pass
 
-# def set_window_size_str(name: str, size: tuple, cond: int=0) -> None:
+# def set_window_size_str(name: str, size: Tuple[float, float], cond: int=0) -> None:
 #     """
 #     Set named window size. set axis to 0.0f to force an auto-fit on this axis.
 #     """
@@ -3133,7 +3140,7 @@ def text(fmt: str) -> None:
     """
     pass
 
-def text_colored(col: tuple, fmt: str) -> None:
+def text_colored(col: Tuple[float, float, float, float], fmt: str) -> None:
     """
     Shortcut for pushstylecolor(imguicol_text, col); text(fmt, ...); popstylecolor();
     """
@@ -3195,9 +3202,9 @@ def update_platform_windows() -> None:
     """
     pass
 
-def vslider_float(label: str, size: tuple, v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
-def vslider_int(label: str, size: tuple, v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
-def vslider_scalar(label: str, size: tuple, data_type: int, p_data: "Int | Long | Float | Double", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0) -> bool: ...
+def vslider_float(label: str, size: Tuple[float, float], v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool: ...
+def vslider_int(label: str, size: Tuple[float, float], v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0) -> bool: ...
+def vslider_scalar(label: str, size: Tuple[float, float], data_type: int, p_data: "Int | Long | Float | Double", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0) -> bool: ...
 
 class GLFWmonitor: ...
 
@@ -3211,7 +3218,7 @@ class ImDrawCmd:
     Backends made for <1.71. will typically ignore the VtxOffset fields.
     - The ClipRect/TextureId/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
     """
-    clip_rect: tuple
+    clip_rect: Tuple[float, float, float, float]
     """
     4*4  // clipping rectangle (x1, y1, x2, y2). subtract imdrawdata->displaypos to get clipping rectangle in 'viewport' coordinates
     """
@@ -3260,15 +3267,15 @@ class ImDrawData:
     """
     Number of imdrawlist* to render
     """
-    # display_pos: tuple
+    # display_pos: Tuple[float, float]
     # """
     # Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== getmainviewport()->pos for the main viewport, == (0.0) in most single-viewport applications)
     # """
-    # display_size: tuple
+    # display_size: Tuple[float, float]
     # """
     # Size of the viewport to render (== getmainviewport()->size for the main viewport, == io.displaysize in most single-viewport applications)
     # """
-    # framebuffer_scale: tuple
+    # framebuffer_scale: Tuple[float, float]
     # """
     # Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
     # """
@@ -3301,7 +3308,7 @@ class ImDrawData:
     #     """
     #     pass
 
-    def scale_clip_rects(self: ImDrawData, fb_scale: tuple) -> None:
+    def scale_clip_rects(self: ImDrawData, fb_scale: Tuple[float, float]) -> None:
         """
         Helper to scale the cliprect field of each imdrawcmd. use if your final output buffer is at a different scale than dear imgui expects, or if there is a difference between your window resolution and framebuffer resolution.
         """
@@ -3341,13 +3348,13 @@ class ImDrawList:
     """
     Vertex buffer.
     """
-    def add_bezier_cubic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float, num_segments: int=0) -> None:
+    def add_bezier_cubic(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float, num_segments: int=0) -> None:
         """
         Cubic bezier (4 control points)
         """
         pass
 
-    def add_bezier_quadratic(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float, num_segments: int=0) -> None:
+    def add_bezier_quadratic(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float, num_segments: int=0) -> None:
         """
         Quadratic bezier (3 control points)
         """
@@ -3360,8 +3367,8 @@ class ImDrawList:
     #     """
     #     pass
 
-    def add_circle(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
-    def add_circle_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int=0) -> None: ...
+    def add_circle(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
+    def add_circle_filled(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0) -> None: ...
     def add_convex_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int) -> None: ...
     # def add_draw_cmd(self: ImDrawList) -> None:
     #     """
@@ -3369,21 +3376,21 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_ellipse(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int) -> None:
+    # def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int) -> None:
     #     """
     #     Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
     #     """
     #     pass
 
-    # def add_ellipse_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
-    # def add_ellipse_filled(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int) -> None:
+    # def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
+    # def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int) -> None:
     #     """
     #     Implied rot = 0.0f, num_segments = 0
     #     """
     #     pass
 
-    # def add_ellipse_filled_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0) -> None: ...
-    def add_image(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
+    # def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0) -> None: ...
+    def add_image(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
         """
         Image primitives
         - Read FAQ to understand what ImTextureID is.
@@ -3393,9 +3400,9 @@ class ImDrawList:
         """
         pass
 
-    def add_image_quad(self: ImDrawList, user_texture_id: int, p1: tuple, p2: tuple, p3: tuple, p4: tuple, uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
-    def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: tuple, p_max: tuple, uv_min: tuple, uv_max: tuple, col: int, rounding: float, flags: int=0) -> None: ...
-    def add_line(self: ImDrawList, p1: tuple, p2: tuple, col: int, thickness: float=1.0) -> None:
+    def add_image_quad(self: ImDrawList, user_texture_id: int, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
+    def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0) -> None: ...
+    def add_line(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], col: int, thickness: float=1.0) -> None:
         """
         Primitives
         - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
@@ -3407,28 +3414,28 @@ class ImDrawList:
         """
         pass
 
-    def add_ngon(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int, thickness: float=1.0) -> None: ...
-    def add_ngon_filled(self: ImDrawList, center: tuple, radius: float, col: int, num_segments: int) -> None: ...
+    def add_ngon(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int, thickness: float=1.0) -> None: ...
+    def add_ngon_filled(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int) -> None: ...
     def add_polyline(self: ImDrawList, points: Sequence[tuple], col: int, flags: int, thickness: float) -> None: ...
-    def add_quad(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int, thickness: float=1.0) -> None: ...
-    def add_quad_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, p4: tuple, col: int) -> None: ...
-    def add_rect(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0) -> None:
+    def add_quad(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float=1.0) -> None: ...
+    def add_quad_filled(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int) -> None: ...
+    def add_rect(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0) -> None:
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
         pass
 
-    def add_rect_filled(self: ImDrawList, p_min: tuple, p_max: tuple, col: int, rounding: float=0.0, flags: int=0) -> None:
+    def add_rect_filled(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0) -> None:
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
         pass
 
-    def add_rect_filled_multi_color(self: ImDrawList, p_min: tuple, p_max: tuple, col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
-    def add_text(self: ImDrawList, pos: tuple, col: int, text: str) -> None: ...
-    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None) -> None: ...
-    def add_triangle(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int, thickness: float=1.0) -> None: ...
-    def add_triangle_filled(self: ImDrawList, p1: tuple, p2: tuple, p3: tuple, col: int) -> None: ...
+    def add_rect_filled_multi_color(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
+    def add_text(self: ImDrawList, pos: Tuple[float, float], col: int, text: str) -> None: ...
+    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: Tuple[float, float, float, float]=None) -> None: ...
+    def add_triangle(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float=1.0) -> None: ...
+    def add_triangle_filled(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int) -> None: ...
     def channels_merge(self: ImDrawList) -> None: ...
     def channels_set_current(self: ImDrawList, n: int) -> None: ...
     def channels_split(self: ImDrawList, count: int) -> None:
@@ -3448,8 +3455,8 @@ class ImDrawList:
     #     """
     #     pass
 
-    def path_arc_to(self: ImDrawList, center: tuple, radius: float, a_min: float, a_max: float, num_segments: int=0) -> None: ...
-    def path_arc_to_fast(self: ImDrawList, center: tuple, radius: float, a_min_of_12: int, a_max_of_12: int) -> None:
+    def path_arc_to(self: ImDrawList, center: Tuple[float, float], radius: float, a_min: float, a_max: float, num_segments: int=0) -> None: ...
+    def path_arc_to_fast(self: ImDrawList, center: Tuple[float, float], radius: float, a_min_of_12: int, a_max_of_12: int) -> None:
         """
         Use precomputed angles for a 12 steps circle
         pygui note: The _ex version of this function is a private function in imgui.h
@@ -3457,13 +3464,13 @@ class ImDrawList:
         """
         pass
 
-    def path_bezier_cubic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, p4: tuple, num_segments: int=0) -> None:
+    def path_bezier_cubic_curve_to(self: ImDrawList, p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], num_segments: int=0) -> None:
         """
         Cubic bezier (4 control points)
         """
         pass
 
-    def path_bezier_quadratic_curve_to(self: ImDrawList, p2: tuple, p3: tuple, num_segments: int=0) -> None:
+    def path_bezier_quadratic_curve_to(self: ImDrawList, p2: Tuple[float, float], p3: Tuple[float, float], num_segments: int=0) -> None:
         """
         Quadratic bezier (3 control points)
         """
@@ -3476,26 +3483,26 @@ class ImDrawList:
         """
         pass
 
-    # def path_elliptical_arc_to(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float) -> None:
+    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float) -> None:
     #     """
     #     Implied num_segments = 0
     #     """
     #     pass
 
-    # def path_elliptical_arc_to_ex(self: ImDrawList, center: tuple, radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
+    # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
     #     """
     #     Ellipse
     #     """
     #     pass
 
     def path_fill_convex(self: ImDrawList, col: int) -> None: ...
-    def path_line_to(self: ImDrawList, pos: tuple) -> None: ...
-    def path_line_to_merge_duplicate(self: ImDrawList, pos: tuple) -> None: ...
-    def path_rect(self: ImDrawList, rect_min: tuple, rect_max: tuple, rounding: float=0.0, flags: int=0) -> None: ...
+    def path_line_to(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
+    def path_line_to_merge_duplicate(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
+    def path_rect(self: ImDrawList, rect_min: Tuple[float, float], rect_max: Tuple[float, float], rounding: float=0.0, flags: int=0) -> None: ...
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0) -> None: ...
     def pop_clip_rect(self: ImDrawList) -> None: ...
     # def pop_texture_id(self: ImDrawList) -> None: ...
-    def push_clip_rect(self: ImDrawList, clip_rect_min: tuple, clip_rect_max: tuple, intersect_with_current_clip_rect: bool=False) -> None:
+    def push_clip_rect(self: ImDrawList, clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool=False) -> None:
         """
         Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
         """
@@ -3529,8 +3536,8 @@ class ImDrawListSplitter:
 
 class ImDrawVert:
     col: int
-    pos: tuple
-    uv: tuple
+    pos: Tuple[float, float]
+    uv: Tuple[float, float]
 
 class ImFont:
     """
@@ -3622,7 +3629,7 @@ class ImFont:
     """
     2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
     """
-    # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str) -> tuple:
+    # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str) -> Tuple[float, float]:
     #     """
     #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
     #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
@@ -3630,7 +3637,7 @@ class ImFont:
     #     """
     #     pass
 
-    # def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None) -> tuple:
+    # def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None) -> Tuple[float, float]:
     #     """
     #     Utf8
     #     """
@@ -3640,8 +3647,8 @@ class ImFont:
     # def find_glyph(self: ImFont, c: int) -> ImFontGlyph: ...
     # def find_glyph_no_fallback(self: ImFont, c: int) -> ImFontGlyph: ...
     def get_debug_name(self: ImFont) -> str: ...
-    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, c: int) -> None: ...
-    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: tuple, col: int, clip_rect: tuple, text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False) -> None: ...
+    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int) -> None: ...
+    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False) -> None: ...
 
 class ImFontAtlas:
     """
@@ -3739,11 +3746,11 @@ class ImFontAtlas:
     """
     Uvs for baked anti-aliased lines
     """
-    tex_uv_scale: tuple
+    tex_uv_scale: Tuple[float, float]
     """
     = (1.0f/texwidth, 1.0f/texheight)
     """
-    tex_uv_white_pixel: tuple
+    tex_uv_white_pixel: Tuple[float, float]
     """
     Texture coordinates to a white pixel
     """
@@ -3755,7 +3762,7 @@ class ImFontAtlas:
     # """
     # Store your own atlas related user-data (if e.g. you have multiple font atlas).
     # """
-    # def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: tuple=(0, 0)) -> int: ...
+    # def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: Tuple[float, float]=(0, 0)) -> int: ...
     # def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int) -> int:
     #     """
     #     You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
@@ -3932,7 +3939,7 @@ class ImFontAtlasCustomRect:
     """
     Input// for custom font glyphs only (id < 0x110000)
     """
-    glyph_offset: tuple
+    glyph_offset: Tuple[float, float]
     """
     Input// for custom font glyphs only: glyph display offset
     """
@@ -3985,7 +3992,7 @@ class ImFontConfig:
     """
     0// index of font within ttf/otf file
     """
-    glyph_extra_spacing: tuple
+    glyph_extra_spacing: Tuple[float, float]
     """
     0, 0 // extra spacing (in pixels) between glyphs. only x axis is supported for now.
     """
@@ -3997,7 +4004,7 @@ class ImFontConfig:
     """
     0// minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font
     """
-    glyph_offset: tuple
+    glyph_offset: Tuple[float, float]
     """
     0, 0 // offset all glyphs from this font input.
     """
@@ -4313,11 +4320,11 @@ class ImGuiIO:
     """
     = 1.0f/60.0f // time elapsed since last frame, in seconds. may change every frame.
     """
-    display_framebuffer_scale: tuple
+    display_framebuffer_scale: Tuple[float, float]
     """
     = (1, 1) // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
     """
-    display_size: tuple
+    display_size: Tuple[float, float]
     """
     <unset>  // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
     """
@@ -4431,7 +4438,7 @@ class ImGuiIO:
     # """
     # Time of last click (used to figure out double-click)
     # """
-    mouse_delta: tuple
+    mouse_delta: Tuple[float, float]
     """
     Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
     """
@@ -4490,14 +4497,14 @@ class ImGuiIO:
     """
     (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
     """
-    mouse_pos: tuple
+    mouse_pos: Tuple[float, float]
     """
     Main Input State
     (this block used to be written by backend, since 1.87 it is best to NOT write to those directly, call the AddXXX functions above instead)
     (reading from those variables is fair game, as they are extremely unlikely to be moving anywhere)
     Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
     """
-    mouse_pos_prev: tuple
+    mouse_pos_prev: Tuple[float, float]
     """
     Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
     """
@@ -5019,7 +5026,7 @@ class ImGuiPlatformImeData:
     # """
     # Line height
     # """
-    # input_pos: tuple
+    # input_pos: Tuple[float, float]
     # """
     # Position of the input cursor
     # """
@@ -5037,11 +5044,11 @@ class ImGuiPlatformMonitor:
     """
     1.0f = 96 dpi
     """
-    main_pos: tuple
+    main_pos: Tuple[float, float]
     """
     Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
     """
-    main_size: tuple
+    main_size: Tuple[float, float]
     """
     Coordinates of the area displayed on this monitor (min = upper left, max = bottom right)
     """
@@ -5049,11 +5056,11 @@ class ImGuiPlatformMonitor:
     # """
     # Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
     # """
-    work_pos: tuple
+    work_pos: Tuple[float, float]
     """
     Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
     """
-    work_size: tuple
+    work_size: Tuple[float, float]
     """
     Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
     """
@@ -5063,15 +5070,15 @@ class ImGuiSizeCallbackData:
     Resizing callback data to apply custom constraint. As enabled by SetNextWindowSizeConstraints(). Callback is called during the next Begin().
     NB: For basic min/max size constraint on each axis you don't need to use the callback! The SetNextWindowSizeConstraints() parameters are enough.
     """
-    current_size: tuple
+    current_size: Tuple[float, float]
     """
     Read-only.   current window size.
     """
-    desired_size: tuple
+    desired_size: Tuple[float, float]
     """
     Read-write.  desired size, based on user's mouse position. write to this field to restrain resizing.
     """
-    pos: tuple
+    pos: Tuple[float, float]
     """
     Read-only.   window position, for reference.
     """
@@ -5100,11 +5107,11 @@ class ImGuiStyle:
     """
     Enable anti-aliased lines/borders using textures where possible. require backend to render with bilinear filtering (not point/nearest filtering). latched at the beginning of the frame (copied to imdrawlist).
     """
-    button_text_align: tuple
+    button_text_align: Tuple[float, float]
     """
     Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
     """
-    cell_padding: tuple
+    cell_padding: Tuple[float, float]
     """
     Padding within a table cell. cellpadding.y may be altered between different rows.
     """
@@ -5137,11 +5144,11 @@ class ImGuiStyle:
     """
     Additional alpha multiplier applied by begindisabled(). multiply over current value of alpha.
     """
-    display_safe_area_padding: tuple
+    display_safe_area_padding: Tuple[float, float]
     """
     If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
     """
-    display_window_padding: tuple
+    display_window_padding: Tuple[float, float]
     """
     Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
     """
@@ -5153,7 +5160,7 @@ class ImGuiStyle:
     """
     Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
     """
-    frame_padding: tuple
+    frame_padding: Tuple[float, float]
     """
     Padding within a framed rectangle (used by most widgets).
     """
@@ -5195,11 +5202,11 @@ class ImGuiStyle:
     """
     Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
     """
-    item_inner_spacing: tuple
+    item_inner_spacing: Tuple[float, float]
     """
     Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
     """
-    item_spacing: tuple
+    item_spacing: Tuple[float, float]
     """
     Horizontal and vertical spacing between widgets/lines.
     """
@@ -5227,11 +5234,11 @@ class ImGuiStyle:
     """
     Width of the vertical scrollbar, height of the horizontal scrollbar.
     """
-    selectable_text_align: tuple
+    selectable_text_align: Tuple[float, float]
     """
     Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
     """
-    separator_text_align: tuple
+    separator_text_align: Tuple[float, float]
     """
     Alignment of text within the separator. defaults to (0.0f, 0.5f) (left aligned, center).
     """
@@ -5239,7 +5246,7 @@ class ImGuiStyle:
     """
     Thickkness of border in separatortext()
     """
-    separator_text_padding: tuple
+    separator_text_padding: Tuple[float, float]
     """
     Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
     """
@@ -5263,7 +5270,7 @@ class ImGuiStyle:
     # """
     # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
     # """
-    touch_extra_padding: tuple
+    touch_extra_padding: Tuple[float, float]
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
     """
@@ -5275,11 +5282,11 @@ class ImGuiStyle:
     """
     Side of the collapsing/docking button in the title bar (none/left/right). defaults to imguidir_left.
     """
-    window_min_size: tuple
+    window_min_size: Tuple[float, float]
     """
     Minimum window size. this is a global setting. if you want to constrain individual windows, use setnextwindowsizeconstraints().
     """
-    window_padding: tuple
+    window_padding: Tuple[float, float]
     """
     Padding within a window.
     """
@@ -5287,7 +5294,7 @@ class ImGuiStyle:
     """
     Radius of window corners rounding. set to 0.0f to have rectangular windows. large values tend to lead to variety of artifacts and are not recommended.
     """
-    window_title_align: tuple
+    window_title_align: Tuple[float, float]
     """
     Alignment for title bar text. defaults to (0.0f,0.5f) for left-aligned,vertically centered.
     """
@@ -5419,29 +5426,29 @@ class ImGuiViewport:
     """
     Platform window has been created (platform_createwindow() has been called). this is false during the first frame where a viewport is being created.
     """
-    pos: tuple
+    pos: Tuple[float, float]
     """
     Main area: position of the viewport (dear imgui coordinates are the same as os desktop/native coordinates)
     """
-    size: tuple
+    size: Tuple[float, float]
     """
     Main area: size of the viewport.
     """
-    work_pos: tuple
+    work_pos: Tuple[float, float]
     """
     Work area: position of the viewport minus task bars, menus bars, status bars (>= pos)
     """
-    work_size: tuple
+    work_size: Tuple[float, float]
     """
     Work area: size of the viewport minus task bars, menu bars, status bars (<= size)
     """
-    def get_center(self: ImGuiViewport) -> tuple:
+    def get_center(self: ImGuiViewport) -> Tuple[float, float]:
         """
         Helpers
         """
         pass
 
-    def get_work_center(self: ImGuiViewport) -> tuple: ...
+    def get_work_center(self: ImGuiViewport) -> Tuple[float, float]: ...
 
 class ImGuiWindowClass:
     """
@@ -5499,10 +5506,7 @@ class ImVector_ImDrawIdx:
 
 class ImVector_ImDrawListPtr: ...
     # capacity: int
-    # capacity: int
     # data: ImDrawList
-    # data: ImDrawList
-    # size: int
     # size: int
 
 class ImVector_ImDrawVert:

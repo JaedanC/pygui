@@ -248,10 +248,10 @@ class DearBindingNew(IBinding):
         # Vec2Tuple = namedtuple("Vec2", "x y")
         # Vec4Tuple = namedtuple("Vec4", "x y z w")
 
-        cdef void* _pygui_malloc(size_t sz, void* user_data):
+        cdef void* _pygui_malloc(size_t sz, void* user_data) noexcept:
             return malloc(sz)
         
-        cdef void _pygui_free(void* ptr, void* user_data):
+        cdef void _pygui_free(void* ptr, void* user_data) noexcept:
             free(ptr)
 
         cdef bytes _bytes(str text):
@@ -263,7 +263,7 @@ class DearBindingNew(IBinding):
         cdef _cast_ImVec2_tuple({pxd_library_name}.ImVec2 vec):
             return (vec.x, vec.y)
 
-        cdef {pxd_library_name}.ImVec2 _cast_tuple_ImVec2(pair) except +:
+        cdef {pxd_library_name}.ImVec2 _cast_tuple_ImVec2(pair):
             cdef {pxd_library_name}.ImVec2 vec
             if len(pair) != 2:
                 raise ValueError('pair param must be length of 2')
@@ -933,8 +933,8 @@ class DearBindingNew(IBinding):
             "float*": "Float",
             "double": "float",
             "double*": "Double",
-            "ImVec2": "tuple",
-            "ImVec4": "tuple",
+            "ImVec2": "Tuple[float, float]",
+            "ImVec4": "Tuple[float, float, float, float]",
             "void": "None",
             "char*": "str",
         }
@@ -947,8 +947,8 @@ class DearBindingNew(IBinding):
             return python_type_lookup[_type.with_no_const_or_sign()]
         
         for struct in self.structs:
-            if struct.name == _type.with_no_const_or_asterisk():
-                return struct.name
+            if struct.get_name() == _type.with_no_const_or_asterisk():
+                return struct.get_name()
         
         if _type.is_function_pointer():
             return "Callable"
