@@ -7,7 +7,7 @@ import cython
 import array
 from collections import namedtuple
 from cython.operator import dereference
-from typing import Callable, Any, Sequence, Tuple, NamedTuple
+from typing import Callable, Any, Sequence, Tuple, NamedTuple, Optional
 
 cimport ccimgui
 from libcpp cimport bool

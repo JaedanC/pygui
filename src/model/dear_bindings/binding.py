@@ -4,11 +4,11 @@ from io import StringIO
 from ..template import Template
 from . import pythonise_string
 from .interfaces import *
-from .db_type import DearBindingsTypeNew, Kinds, Kind
-from .enum import DearBindingsEnumNew
-from .function import DearBindingsFunctionNew
-from .struct import DearBindingsStructNew
-from .typedef import DearBindingsTypedefNew
+from .db_type import _Type, Kinds, Kind
+from .enum import _Enum
+from .function import Function
+from .struct import Struct
+from .typedef import Typedef
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
@@ -85,19 +85,19 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
     return _json
 
 
-class DearBindingNew(IBinding):
+class Binding(IBinding):
     def from_json(cimgui_json, pxd_header: str, definitions: List[Tuple[str, bool]]):
         cimgui_json = deep_json_filter(cimgui_json, passes_conditional, definitions)
         cimgui_json = deep_json_filter(cimgui_json, ignore_anonymous)
 
-        enums = [DearBindingsEnumNew.from_json(e) for e in cimgui_json["enums"]]
-        typedefs = [DearBindingsTypedefNew.from_json(e) for e in cimgui_json["typedefs"]]
-        structs = [DearBindingsStructNew.from_json(e) for e in cimgui_json["structs"]]
+        enums = [_Enum.from_json(e) for e in cimgui_json["enums"]]
+        typedefs = [Typedef.from_json(e) for e in cimgui_json["typedefs"]]
+        structs = [Struct.from_json(e) for e in cimgui_json["structs"]]
         functions = []
 
         methods: List[IFunction] = []
         for function in cimgui_json["functions"]:
-            function = DearBindingsFunctionNew.from_json(function)
+            function = Function.from_json(function)
             if len(function.get_arguments()) > 0 and function.get_arguments()[0].get_name() == "self":
                 methods.append(function)
                 continue
@@ -112,7 +112,7 @@ class DearBindingNew(IBinding):
             method.set_python_name(method.get_python_name().replace(class_name + "_", "", 1))
             struct_lookup[class_name].add_method(method)
         
-        return DearBindingNew(enums, typedefs, structs, functions, pxd_header)
+        return Binding(enums, typedefs, structs, functions, pxd_header)
 
     def __init__(
             self,
@@ -215,7 +215,7 @@ class DearBindingNew(IBinding):
         import array
         from collections import namedtuple
         from cython.operator import dereference
-        from typing import Callable, Any, Sequence, Tuple, NamedTuple
+        from typing import Callable, Any, Sequence, Tuple, NamedTuple, Optional
 
         cimport ccimgui
         from libcpp cimport bool
@@ -1026,7 +1026,7 @@ class DearBindingNew(IBinding):
         
         for enum in self.enums:
             if enum.get_name() == _type.with_no_const_or_asterisk():
-                return DearBindingsTypeNew(
+                return _Type(
                     "int",
                     Kind(Kinds.Builtin, "int")
                 )

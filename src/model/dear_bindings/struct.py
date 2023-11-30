@@ -4,11 +4,11 @@ from typing import List
 from ..comments import Comments, parse_comment
 from . import safe_python_name
 from .interfaces import IStruct, IType, IField, IFunction
-from .db_type import DearBindingsTypeNew
+from .db_type import _Type
 
 
 
-class DearBindingsStructField(IField):
+class Field(IField):
     def from_json(field_json: dict) -> IField:
         """Field
         {
@@ -118,9 +118,9 @@ class DearBindingsStructField(IField):
             }
         """
         name: str = safe_python_name(field_json["name"])
-        _type: IType = DearBindingsTypeNew.from_json(field_json["type"])
+        _type: IType = _Type.from_json(field_json["type"])
         comments: Comments = parse_comment(field_json)
-        return DearBindingsStructField(name, _type, comments)
+        return Field(name, _type, comments)
 
     def __init__(self, name: str, _type: IType, comments: Comments = None):
         self.name = name
@@ -145,7 +145,7 @@ class DearBindingsStructField(IField):
         return self._type
 
 
-class DearBindingsStructNew(IStruct):
+class Struct(IStruct):
     def from_json(struct_json: dict) -> IStruct:
         """Struct
         {
@@ -154,9 +154,9 @@ class DearBindingsStructNew(IStruct):
         }
         """
         name: str = struct_json["name"]
-        fields: List[IField] = [DearBindingsStructField.from_json(f) for f in struct_json["fields"]]
+        fields: List[IField] = [Field.from_json(f) for f in struct_json["fields"]]
         comments: Comments = parse_comment(struct_json)
-        return DearBindingsStructNew(name, fields, comments)
+        return Struct(name, fields, comments)
 
     def __init__(self, name: str, fields: List[IField], comments: Comments = None):
         self.name = name

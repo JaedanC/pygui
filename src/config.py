@@ -1,11 +1,11 @@
 import json
 from typing import List
 from model.dear_bindings.interfaces import IBinding
-from model.dear_bindings.binding import DearBindingNew
-from model.dear_bindings.struct import DearBindingsStructNew
-from model.dear_bindings.function import DearBindingsFunctionNew
-from model.dear_bindings.db_type import DearBindingsTypeNew, Kind, Kinds
-from model.dear_bindings.argument import DearBindingsArgumentNew
+from model.dear_bindings.binding import Binding
+from model.dear_bindings.struct import Struct
+from model.dear_bindings.function import Function
+from model.dear_bindings.db_type import _Type, Kind, Kinds
+from model.dear_bindings.argument import Argument
 from model.comments import Comments
 
 
@@ -32,128 +32,128 @@ modules: List[IBinding] = []
 # core
 with open("external/dear_bindings/cimgui.json") as f:
     modules.append(
-        DearBindingNew.from_json(json.load(f), "cimgui.h", defines)
+        Binding.from_json(json.load(f), "cimgui.h", defines)
     )
 
 # glfw
 with open("core/backends/glfw.json") as f:
-    glfw = DearBindingNew(
+    glfw = Binding(
         enums=[],
         typedefs=[],
         structs=[
-            DearBindingsStructNew("GLFWwindow",  []),
-            DearBindingsStructNew("GLFWmonitor", []),
+            Struct("GLFWwindow",  []),
+            Struct("GLFWmonitor", []),
         ],
         functions=[
-            DearBindingsFunctionNew("ImGui_ImplGlfw_InitForOpenGL",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplGlfw_InitForOpenGL",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [
-                    DearBindingsArgumentNew("window",            DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("install_callbacks", DearBindingsTypeNew("bool",        Kind(Kinds.Builtin, "bool"))),
+                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_InitForVulkan",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplGlfw_InitForVulkan",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [
-                    DearBindingsArgumentNew("window",            DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("install_callbacks", DearBindingsTypeNew("bool",        Kind(Kinds.Builtin, "bool"))),
+                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
                 ],
                 Comments([], None)
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_InitForOther",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplGlfw_InitForOther",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [
-                    DearBindingsArgumentNew("window",            DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("install_callbacks", DearBindingsTypeNew("bool",        Kind(Kinds.Builtin, "bool"))),
+                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_Shutdown",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_Shutdown",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_NewFrame",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_NewFrame",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_InstallCallbacks",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_InstallCallbacks",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_RestoreCallbacks",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_RestoreCallbacks",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("chain_for_all_windows", DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool"))),
+                    Argument("chain_for_all_windows", _Type("bool", Kind(Kinds.Builtin, "bool"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_WindowFocusCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_WindowFocusCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window",  DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("focused", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("focused", _Type("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_CursorEnterCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_CursorEnterCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window",  DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("entered", DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
+                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("entered", _Type("double",      Kind(Kinds.Builtin, "double"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_CursorPosCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_CursorPosCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("x",      DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
-                    DearBindingsArgumentNew("y",      DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
+                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("x",      _Type("double",      Kind(Kinds.Builtin, "double"))),
+                    Argument("y",      _Type("double",      Kind(Kinds.Builtin, "double"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_MouseButtonCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_MouseButtonCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("button", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
-                    DearBindingsArgumentNew("action", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
-                    DearBindingsArgumentNew("mods",   DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("button", _Type("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("action", _Type("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("mods",   _Type("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_ScrollCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_ScrollCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window",  DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("xoffset", DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
-                    DearBindingsArgumentNew("yoffset", DearBindingsTypeNew("double",      Kind(Kinds.Builtin, "double"))),
+                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("xoffset", _Type("double",      Kind(Kinds.Builtin, "double"))),
+                    Argument("yoffset", _Type("double",      Kind(Kinds.Builtin, "double"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_KeyCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_KeyCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window",   DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("key",      DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
-                    DearBindingsArgumentNew("scancode", DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
-                    DearBindingsArgumentNew("action",   DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
-                    DearBindingsArgumentNew("mods",     DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("window",   _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("key",      _Type("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("scancode", _Type("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("action",   _Type("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("mods",     _Type("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_CharCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_CharCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*",  Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("c",      DearBindingsTypeNew("unsigned int", Kind(Kinds.Builtin, "unsigned int"))),
+                    Argument("window", _Type("GLFWwindow*",  Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("c",      _Type("unsigned int", Kind(Kinds.Builtin, "unsigned int"))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplGlfw_MonitorCallback",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplGlfw_MonitorCallback",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("window", DearBindingsTypeNew("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    DearBindingsArgumentNew("event",  DearBindingsTypeNew("int",         Kind(Kinds.Builtin, "int"))),
+                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
+                    Argument("event",  _Type("int",         Kind(Kinds.Builtin, "int"))),
                 ],
             ),
         ],
@@ -164,45 +164,45 @@ with open("core/backends/glfw.json") as f:
 
 # opengl3
 with open("core/backends/opengl3.json") as f:
-    opengl3 = DearBindingNew(
+    opengl3 = Binding(
         enums=[],
         typedefs=[],
         structs=[],
         functions=[
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_Init",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplOpenGL3_Init",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [
-                    DearBindingsArgumentNew("glsl_version", DearBindingsTypeNew("const char*", Kind(Kinds.Pointer, Kind(Kinds.Builtin, "char", is_const=True))), default_value="None"),
+                    Argument("glsl_version", _Type("const char*", Kind(Kinds.Pointer, Kind(Kinds.Builtin, "char", is_const=True))), default_value="None"),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_Shutdown",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplOpenGL3_Shutdown",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_NewFrame",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplOpenGL3_NewFrame",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_RenderDrawData",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplOpenGL3_RenderDrawData",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [
-                    DearBindingsArgumentNew("draw_data", DearBindingsTypeNew("ImDrawData*", Kind(Kinds.Pointer, Kind(Kinds.User, "ImDrawData")))),
+                    Argument("draw_data", _Type("ImDrawData*", Kind(Kinds.Pointer, Kind(Kinds.User, "ImDrawData")))),
                 ],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_CreateFontsTexture",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplOpenGL3_CreateFontsTexture",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_DestroyFontsTexture",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplOpenGL3_DestroyFontsTexture",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_CreateDeviceObjects",
-                DearBindingsTypeNew("bool", Kind(Kinds.Builtin, "bool")),
+            Function("ImGui_ImplOpenGL3_CreateDeviceObjects",
+                _Type("bool", Kind(Kinds.Builtin, "bool")),
                 [],
             ),
-            DearBindingsFunctionNew("ImGui_ImplOpenGL3_DestroyDeviceObjects",
-                DearBindingsTypeNew("void", Kind(Kinds.Builtin, "void")),
+            Function("ImGui_ImplOpenGL3_DestroyDeviceObjects",
+                _Type("void", Kind(Kinds.Builtin, "void")),
                 [],
             ),
         ],

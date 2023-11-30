@@ -1,6 +1,6 @@
 # This file is auto-generated. If you need to edit this file then edit the
 # template this is created from instead.
-from typing import Any, Callable, Tuple, List, Sequence
+from typing import Any, Callable, Tuple, List, Sequence, Optional
 from PIL import Image
 
 FLT_MIN: float
@@ -2888,13 +2888,7 @@ def show_font_selector(label: str) -> None:
     """
     pass
 
-# def show_id_stack_tool_window() -> None:
-#     """
-#     Implied p_open = null
-#     """
-#     pass
-
-def show_id_stack_tool_window_ex(p_open: Bool=None) -> None:
+def show_id_stack_tool_window(p_open: Bool=None) -> None:
     """
     Create stack tool window. hover items with mouse to query information about the source of their unique id.
     """
@@ -4654,12 +4648,6 @@ class ImGuiIO:
     #     """
     #     pass
 
-    # def clear_input_characters(self: ImGuiIO) -> None:
-    #     """
-    #     [internal] clear the text input buffer manually
-    #     """
-    #     pass
-
     # def clear_input_keys(self: ImGuiIO) -> None:
     #     """
     #     Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
@@ -4836,16 +4824,18 @@ class ImGuiListClipper:
         """
         pass
 
-    # def include_item_by_index(self: ImGuiListClipper, item_index: int) -> None:
-    #     """
-    #     Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
-    #     (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
-    #     """
-    #     pass
+    def include_item_by_index(self: ImGuiListClipper, item_index: int) -> None:
+        """
+        Call IncludeItemByIndex() or IncludeItemsByIndex() *BEFORE* first call to Step() if you need a range of items to not be clipped, regardless of their visibility.
+        (Due to alignment / padding of certain items it is possible that an extra item may be included on either end of the display range).
+        """
+        pass
 
     def include_items_by_index(self: ImGuiListClipper, item_begin: int, item_end: int) -> None:
         """
         Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
+
+        [#6424](https://github.com/ocornut/imgui/issues/6424) JaedanC Easteregg. This is my suggestion!
         """
         pass
 

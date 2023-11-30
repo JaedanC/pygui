@@ -2,11 +2,11 @@ from io import StringIO
 from typing import List
 from ..comments import Comments, parse_comment
 from .interfaces import IFunction, IType, IArgument
-from .db_type import DearBindingsTypeNew
-from .argument import DearBindingsArgumentNew
+from .db_type import _Type
+from .argument import Argument
 
 
-class DearBindingsFunctionNew(IFunction):
+class Function(IFunction):
     def from_json(function_json: dict) -> IFunction:
         """Function
         {
@@ -53,15 +53,15 @@ class DearBindingsFunctionNew(IFunction):
         },
         """
         name: str = function_json["name"]
-        return_type: IType = DearBindingsTypeNew.from_json(function_json["return_type"])
+        return_type: IType = _Type.from_json(function_json["return_type"])
         # Ignore any Cython unsupported arguments
         arguments: List[IArgument] = []
         for argument in function_json["arguments"]:
             if argument["is_varargs"] or argument.get("type", {}).get("declaration") == "va_list":
                 continue
-            arguments.append(DearBindingsArgumentNew.from_json(argument))
+            arguments.append(Argument.from_json(argument))
         comments: Comments = parse_comment(function_json)
-        return DearBindingsFunctionNew(name, return_type, arguments, comments)
+        return Function(name, return_type, arguments, comments)
 
     def __init__(self, name: str, return_type: IType, arguments: List[IArgument], comments: Comments = None):
         self.name = name

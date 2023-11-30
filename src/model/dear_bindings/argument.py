@@ -3,11 +3,11 @@ from typing import Optional
 from ..comments import Comments, parse_comment
 from . import safe_python_name
 from .interfaces import IArgument, IType
-from .db_type import DearBindingsTypeNew
+from .db_type import _Type
 import re
 
 
-class DearBindingsArgumentNew(IArgument):
+class Argument(IArgument):
     def from_json(argument_json: dict) -> IArgument:
         """Argument
         {
@@ -28,7 +28,7 @@ class DearBindingsArgumentNew(IArgument):
         """
         name = safe_python_name(argument_json["name"])
         assert not argument_json.get("is_varargs"), "Python does not support is_varargs: {}".format(name)
-        _type: IType = DearBindingsTypeNew.from_json(argument_json["type"])
+        _type: IType = _Type.from_json(argument_json["type"])
         comments: Comments = parse_comment(argument_json)
 
         default_lookup = {
@@ -56,7 +56,7 @@ class DearBindingsArgumentNew(IArgument):
             if _type.with_no_const_or_sign() == "float":
                 default_value = default_value.replace("f", "")
         
-        return DearBindingsArgumentNew(name, _type, comments, default_value)
+        return Argument(name, _type, comments, default_value)
 
     def __init__(self, name: str, _type: IType, comments: Comments = None, default_value=None):
         self.name = name

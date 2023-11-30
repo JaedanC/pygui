@@ -28,12 +28,12 @@ class Element(IEnumElement):
         return pythonise_string(self.name_omitted_imgui_prefix()).upper()
 
 
-class DearBindingsEnumNew(IEnum):
+class _Enum(IEnum):
     def from_json(enum_json: dict) -> IEnum:
         name = enum_json["name"]
         elements = [Element.from_json(e) for e in enum_json["elements"]]
         comments = parse_comment(enum_json)
-        return DearBindingsEnumNew(name, elements, comments)
+        return _Enum(name, elements, comments)
 
     def __init__(self, name: str, elements: List[IEnumElement], comments: Comments):
         self.name = name
