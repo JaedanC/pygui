@@ -17,7 +17,7 @@ def load_image(image: Image) -> int:
     h = image.height
 
     # create the texture in VRAM
-    texture: int = gl.glGenTextures(1)
+    texture: int = int(gl.glGenTextures(1))
     gl.glBindTexture(gl.GL_TEXTURE_2D, texture)
 
     # configure some texture settings

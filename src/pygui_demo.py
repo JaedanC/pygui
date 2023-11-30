@@ -99,7 +99,7 @@ class ExampleAppConsole:
 
         # Reserve enough left-over height for 1 separator + 1 input text
         footer_height_to_reserve = pygui.get_style().item_spacing[1] + pygui.get_frame_height_with_spacing()
-        if pygui.begin_child("ScrollingRegion", (0, -footer_height_to_reserve), False, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
+        if pygui.begin_child("ScrollingRegion", (0, -footer_height_to_reserve), 0, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR):
             if pygui.begin_popup_context_window():
                 if pygui.selectable("Clear"):
                     self.clear_log()
@@ -526,11 +526,11 @@ class ExampleAppDocuments:
                 if pygui.begin_popup_modal("Save?", None, pygui.WINDOW_FLAGS_ALWAYS_AUTO_RESIZE):
                     pygui.text("Save change to the following items?")
                     item_height = pygui.get_text_line_height_with_spacing()
-                    if pygui.begin_child_frame(pygui.get_id("pygui_frame"), (-pygui.FLT_MIN, 6.25 * item_height)):
+                    if pygui.begin_child(pygui.get_id("pygui_frame"), (-pygui.FLT_MIN, 6.25 * item_height), pygui.CHILD_FLAGS_FRAME_STYLE):
                         for n in range(len(ExampleAppDocuments.close_queue)):
                             if ExampleAppDocuments.close_queue[n].dirty:
                                 pygui.text(ExampleAppDocuments.close_queue[n].name)
-                        pygui.end_child_frame()
+                        pygui.end_child()
                     button_size = (pygui.get_font_size() * 7, 0)
                     if pygui.button("Yes", button_size):
                         for n in range(len(ExampleAppDocuments.close_queue)):
@@ -566,7 +566,7 @@ class demo:
     show_debug_log_window = pygui.Bool(False)
     show_font_selector = pygui.Bool(False)
     show_metrics_window = pygui.Bool(False)
-    show_stack_tool_window = pygui.Bool(False)
+    show_id_stack_tool_window = pygui.Bool(False)
     show_style_editor = pygui.Bool(False)
     show_style_selector = pygui.Bool(False)
     show_user_guide = pygui.Bool(False)
@@ -595,8 +595,8 @@ def pygui_demo_window():
         pygui.end()
     if demo.show_metrics_window:
         pygui.show_metrics_window(demo.show_metrics_window)
-    if demo.show_stack_tool_window:
-        pygui.show_stack_tool_window(demo.show_stack_tool_window)
+    if demo.show_id_stack_tool_window:
+        pygui.show_id_stack_tool_window(demo.show_id_stack_tool_window)
     if demo.show_style_editor:
         if pygui.begin("Style Editor", demo.show_style_editor):
             pygui.show_style_editor()
@@ -2052,9 +2052,9 @@ def show_demo_window_layout():
             names = ["Top", "25%", "Center", "75%", "Bottom"]
             pygui.text_unformatted(names[i])
 
-            child_flags = pygui.WINDOW_FLAGS_MENU_BAR if layout.enable_extra_decorations else 0
+            child_flags = pygui.CHILD_FLAGS_BORDER | (pygui.WINDOW_FLAGS_MENU_BAR if layout.enable_extra_decorations else 0)
             child_id = pygui.get_id(str(i))
-            child_is_visible = pygui.begin_child(str(child_id), (child_w, 200), True, child_flags)
+            child_is_visible = pygui.begin_child(str(child_id), (child_w, 200), child_flags)
             if pygui.begin_menu_bar():
                 pygui.text_unformatted("abc")
                 pygui.end_menu_bar()
@@ -2086,9 +2086,12 @@ def show_demo_window_layout():
         pygui.push_id("##HorizontalScrolling")
         for i in range(5):
             child_height = pygui.get_text_line_height() + style.scrollbar_size + style.window_padding[1] * 2
-            child_flags = pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.enable_extra_decorations else 0)
+            child_flags = pygui.CHILD_FLAGS_BORDER
+            window_flags = \
+                pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | \
+                (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.enable_extra_decorations else 0)
             child_id = pygui.get_id(str(i))
-            child_is_visible = pygui.begin_child(str(child_id), (-100, child_height), True, child_flags)
+            child_is_visible = pygui.begin_child(str(child_id), (-100, child_height), child_flags, window_flags)
             if scroll_to_off:
                 pygui.set_scroll_x(layout.scroll_to_off_px.value)
             if scroll_to_pos:
@@ -2119,7 +2122,7 @@ def show_demo_window_layout():
         pygui.push_style_var(pygui.STYLE_VAR_FRAME_ROUNDING, 3)
         pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (2, 1))
         scrolling_child_size = (0, pygui.get_frame_height_with_spacing() * 7 + 30)
-        pygui.begin_child("scrolling", scrolling_child_size, True, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
+        pygui.begin_child("scrolling", scrolling_child_size, pygui.CHILD_FLAGS_BORDER, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
         for line in range(layout.lines.value):
             # Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
             # If you want to create your own time line for a real application you may be better off manipulating
@@ -3682,7 +3685,7 @@ def show_random_extras():
 
     if pygui.tree_node("pygui.begin_child_id()"):
         new_id = pygui.get_id("begin_child_id()")
-        pygui.begin_child_id(new_id, (0, 260), True)
+        pygui.begin_child_id(new_id, (0, 260), pygui.CHILD_FLAGS_BORDER)
         if pygui.begin_table("split", 2, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS):
             for i in range(30):
                 pygui.table_next_column()
@@ -4023,7 +4026,7 @@ def show_random_extras():
         pygui.text_wrapped("Buffer Size: {}".format(rand.input_buffer.buffer_size))
 
         pygui.text("Events: {}".format(len(rand.input_buffer_log)))
-        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), True):
+        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDER):
             for i, event in enumerate(rand.input_buffer_log):
                 pygui.text("{}: {}".format(i, event))
             pygui.set_scroll_here_y(1)
@@ -4126,12 +4129,12 @@ def show_random_extras():
             rand.jump_to_cache = steps_showing
         pygui.text("1. Update on the frame you move the slider")
         pygui.text("2. Update every frame")
-        if pygui.begin_child("Steps Showing", (140, pygui.get_text_line_height_with_spacing() * 4), True):
+        if pygui.begin_child("Steps Showing", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDER):
             for step in rand.jump_to_cache:
                 pygui.text("Showing {} -> {}".format(*step))
         pygui.end_child()
         pygui.same_line()
-        if pygui.begin_child("Steps Showing Live", (140, pygui.get_text_line_height_with_spacing() * 4), True):
+        if pygui.begin_child("Steps Showing Live", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDER):
             for step in steps_showing:
                 pygui.text("Showing {} -> {}".format(*step))
         pygui.end_child()
@@ -4148,7 +4151,7 @@ def show_random_extras():
         ]
         rand.text_filter.draw()
         pygui.text("filter.is_active(): {}".format(rand.text_filter.is_active()))
-        if pygui.begin_child("Filtered items", (200, pygui.get_text_line_height_with_spacing() * 7), True):
+        if pygui.begin_child("Filtered items", (200, pygui.get_text_line_height_with_spacing() * 7), pygui.CHILD_FLAGS_BORDER):
             for item in items:
                 if not rand.text_filter.pass_filter(item):
                     continue
@@ -4270,7 +4273,7 @@ def show_random_extras():
         visible = None
         rect_visible_from_cursor = None
         rect_visible = None
-        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), True):
+        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), pygui.CHILD_FLAGS_BORDER):
             pygui.text("Some")
             pygui.text("Lines")
             pygui.text("Inside")
@@ -4321,7 +4324,7 @@ def show_random_extras():
                 pygui.get_frame_count()
             ))
 
-        if pygui.begin_child("##Log for keys", (400, pygui.get_text_line_height_with_spacing() * 10), True):
+        if pygui.begin_child("##Log for keys", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDER):
             for event in rand.key_press_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4348,7 +4351,7 @@ def show_random_extras():
         if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
             rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
         pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
-        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDER):
             for event in rand.mouse_press_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4371,7 +4374,7 @@ def show_random_extras():
             is_collapsed = pygui.is_window_collapsed()
             pygui.end()
         
-        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), True):
+        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDER):
             for event in rand.window_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4728,6 +4731,7 @@ def show_menu_bar():
             if pygui.menu_item("Cut", "CTRL+X"): pass
             if pygui.menu_item("Copy", "CTRL+C"): pass
             if pygui.menu_item("Paste", "CTRL+V"): pass
+            if pygui.menu_item("No Shortcut", None): pass
             pygui.end_menu()
         if pygui.begin_menu("Examples"):
             pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
@@ -4739,7 +4743,7 @@ def show_menu_bar():
             pygui.menu_item_bool_ptr("Debug Log", None, demo.show_debug_log_window)
             pygui.menu_item_bool_ptr("Font Selector", None, demo.show_font_selector)
             pygui.menu_item_bool_ptr("Metrics/Debugger", None, demo.show_metrics_window)
-            pygui.menu_item_bool_ptr("Stack Tool", None, demo.show_stack_tool_window)
+            pygui.menu_item_bool_ptr("Stack Tool", None, demo.show_id_stack_tool_window)
             pygui.menu_item_bool_ptr("Style Editor", None, demo.show_style_editor)
             pygui.menu_item_bool_ptr("Style Selector", None, demo.show_style_selector)
             pygui.menu_item_bool_ptr("User guide", None, demo.show_user_guide)

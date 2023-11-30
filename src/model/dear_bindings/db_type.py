@@ -144,7 +144,7 @@ class FunctionPointer:
         )
 
 
-class DearBindingsTypeNew(IType):
+class _Type(IType):
     def from_json(type_json: dict):
         """Pointer
         {
@@ -282,7 +282,7 @@ class DearBindingsTypeNew(IType):
         declaration: str = type_json["declaration"]
         is_function_pointer = "type_details" in type_json
         kind: Kind = Kind.from_json(type_json["description"], is_function_pointer)
-        return DearBindingsTypeNew(declaration, kind)
+        return _Type(declaration, kind)
 
     def __init__(self, declaration: str, kind: Kind):
         self.declaration = declaration

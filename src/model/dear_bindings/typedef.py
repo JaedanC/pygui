@@ -1,11 +1,11 @@
 import textwrap
 from io import StringIO
-from .db_type import DearBindingsTypeNew
+from .db_type import _Type
 from .interfaces import ITypedef, HasComment, IType
 from ..comments import Comments, parse_comment
 
 
-class DearBindingsTypedefNew(ITypedef, HasComment):
+class Typedef(ITypedef, HasComment):
     def from_json(typedef_json: dict) -> ITypedef:
         """Typedef
         {
@@ -22,10 +22,10 @@ class DearBindingsTypedefNew(ITypedef, HasComment):
             }
         },
         """
-        base: IType = DearBindingsTypeNew.from_json(typedef_json["type"])
+        base: IType = _Type.from_json(typedef_json["type"])
         definition: str = typedef_json["name"]
         comments: Comments = parse_comment(typedef_json)
-        return DearBindingsTypedefNew(base, definition, comments)
+        return Typedef(base, definition, comments)
 
     def __init__(self, base: IType, definition: str, comments: Comments):
         self.base = base

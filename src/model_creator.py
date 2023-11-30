@@ -78,7 +78,7 @@ def to_pyi(
     base = textwrap.dedent('''
     # This file is auto-generated. If you need to edit this file then edit the
     # template this is created from instead.
-    from typing import Any, Callable, Tuple, List, Sequence
+    from typing import Any, Callable, Tuple, List, Sequence, Optional
     from PIL import Image
 
     FLT_MIN: float
@@ -525,7 +525,7 @@ def to_py(extension_name: str):
         h = image.height
 
         # create the texture in VRAM
-        texture: int = gl.glGenTextures(1)
+        texture: int = int(gl.glGenTextures(1))
         gl.glBindTexture(gl.GL_TEXTURE_2D, texture)
 
         # configure some texture settings

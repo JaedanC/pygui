@@ -7,7 +7,7 @@ import cython
 import array
 from collections import namedtuple
 from cython.operator import dereference
-from typing import Callable, Any, Sequence, Tuple, NamedTuple
+from typing import Callable, Any, Sequence, Tuple, NamedTuple, Optional
 
 cimport ccimgui
 from libcpp cimport bool
@@ -8594,22 +8594,24 @@ def show_font_selector(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def show_id_stack_tool_window():
+def show_id_stack_tool_window(p_open: Bool=None):
     """
-    Implied p_open = null
+    Create stack tool window. hover items with mouse to query information about the source of their unique id.
     """
-    ccimgui.ImGui_ShowIDStackToolWindow()
+    ccimgui.ImGui_ShowIDStackToolWindowEx(
+        Bool.ptr(p_open)
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
-# ?invisible(False)
+# ?active(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
 def show_id_stack_tool_window_ex(p_open: Bool=None):
@@ -18434,21 +18436,6 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_input_characters(self: ImGuiIO):
-        """
-        [internal] clear the text input buffer manually
-        """
-        ccimgui.ImGuiIO_ClearInputCharacters(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
     def clear_input_keys(self: ImGuiIO):
         """
         Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
@@ -19264,9 +19251,9 @@ cdef class ImGuiListClipper:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
-    # ?custom_comment_only(False)
+    # ?custom_comment_only(True)
     # ?returns(None)
     def include_item_by_index(self: ImGuiListClipper, item_index: int):
         """
@@ -19283,11 +19270,13 @@ cdef class ImGuiListClipper:
     # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
-    # ?custom_comment_only(False)
+    # ?custom_comment_only(True)
     # ?returns(None)
     def include_items_by_index(self: ImGuiListClipper, item_begin: int, item_end: int):
         """
         Item_end is exclusive e.g. use (42, 42+1) to make item 42 never clipped.
+
+        [#6424](https://github.com/ocornut/imgui/issues/6424) JaedanC Easteregg. This is my suggestion!
         """
         ccimgui.ImGuiListClipper_IncludeItemsByIndex(
             self._ptr,
