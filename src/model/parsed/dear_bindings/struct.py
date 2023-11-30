@@ -3,86 +3,46 @@ from io import StringIO
 from typing import List
 from ...comments import Comments, parse_comment
 from ...parsed import safe_python_name
-from ..interfaces import Struct, _Type, Field, Function
+from ..interfaces import IStruct, IType, IField, IFunction
 from .db_type import DearBindingsTypeNew
 
 
 
-class DearBindingsStructField(Field):
-    """Field
-    {
-        "name": "BackendLanguageUserData",
-        "is_array": false,
-        "is_anonymous": false,
-        "type": {
-            "declaration": "void*",
-            "description": {
-                "kind": "Pointer",
-                "inner_type": {
-                    "kind": "Builtin",
-                    "builtin_type": "void"
-                }
-            }
-        },
-        "comments": {
-            "attached": "// = NULL           // User data for non C++ programming language backend"
-        },
-        "is_internal": false,
-        "source_location": {
-            "filename": "imgui.h",
-            "line": 2175
-        }
-    }
-    """
-    """Function Pointer
-    {
-        "name": "GetClipboardTextFn",
-        "is_array": false,
-        "is_anonymous": false,
-        "type": {
-            "declaration": "const char* (*GetClipboardTextFn)(void* user_data)",
-            "type_details": {
-                "flavour": "function_pointer",
-                "return_type": {
-                    "declaration": "const char*",
-                    "description": {
-                        "kind": "Pointer",
-                        "inner_type": {
-                            "kind": "Builtin",
-                            "builtin_type": "char",
-                            "storage_classes": [
-                                "const"
-                            ]
-                        }
-                    }
-                },
-                "arguments": [
-                    {
-                        "name": "user_data",
-                        "type": {
-                            "declaration": "void*",
-                            "description": {
-                                "kind": "Pointer",
-                                "inner_type": {
-                                    "kind": "Builtin",
-                                    "builtin_type": "void"
-                                }
-                            }
-                        },
-                        "is_array": false,
-                        "is_varargs": false,
-                        "is_instance_pointer": false
-                    }
-                ]
-            },
-            "description": {
-                "kind": "Type",
-                "name": "GetClipboardTextFn",
-                "inner_type": {
+class DearBindingsStructField(IField):
+    def from_json(field_json: dict) -> IField:
+        """Field
+        {
+            "name": "BackendLanguageUserData",
+            "type": {
+                "declaration": "void*",
+                "description": {
                     "kind": "Pointer",
                     "inner_type": {
-                        "kind": "Function",
-                        "return_type": {
+                        "kind": "Builtin",
+                        "builtin_type": "void"
+                    }
+                }
+            },
+            "comments": {
+                "attached": "// = NULL           // User data for non C++ programming language backend"
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h",
+                "line": 2175
+            }
+        }
+        """
+        """Function Pointer
+        {
+            "name": "GetClipboardTextFn",
+            "type": {
+                "declaration": "const char* (*GetClipboardTextFn)(void* user_data)",
+                "type_details": {
+                    "flavour": "function_pointer",
+                    "return_type": {
+                        "declaration": "const char*",
+                        "description": {
                             "kind": "Pointer",
                             "inner_type": {
                                 "kind": "Builtin",
@@ -91,43 +51,83 @@ class DearBindingsStructField(Field):
                                     "const"
                                 ]
                             }
-                        },
-                        "parameters": [
-                            {
-                                "kind": "Type",
-                                "name": "user_data",
-                                "inner_type": {
+                        }
+                    },
+                    "arguments": [
+                        {
+                            "name": "user_data",
+                            "type": {
+                                "declaration": "void*",
+                                "description": {
                                     "kind": "Pointer",
                                     "inner_type": {
                                         "kind": "Builtin",
                                         "builtin_type": "void"
                                     }
                                 }
-                            }
-                        ]
+                            },
+                            "is_array": false,
+                            "is_varargs": false,
+                            "is_instance_pointer": false
+                        }
+                    ]
+                },
+                "description": {
+                    "kind": "Type",
+                    "name": "GetClipboardTextFn",
+                    "inner_type": {
+                        "kind": "Pointer",
+                        "inner_type": {
+                            "kind": "Function",
+                            "return_type": {
+                                "kind": "Pointer",
+                                "inner_type": {
+                                    "kind": "Builtin",
+                                    "builtin_type": "char",
+                                    "storage_classes": [
+                                        "const"
+                                    ]
+                                }
+                            },
+                            "parameters": [
+                                {
+                                    "kind": "Type",
+                                    "name": "user_data",
+                                    "inner_type": {
+                                        "kind": "Pointer",
+                                        "inner_type": {
+                                            "kind": "Builtin",
+                                            "builtin_type": "void"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
+            },
+            "comments": {
+                "preceding": [
+                    "// Optional: Access OS clipboard",
+                    "// (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)"
+                ]
+            },
+            "is_internal": false,
+            "source_location": {
+                "filename": "imgui.h"
             }
-        },
-        "comments": {
-            "preceding": [
-                "// Optional: Access OS clipboard",
-                "// (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)"
-            ]
-        },
-        "is_internal": false,
-        "source_location": {
-            "filename": "imgui.h"
-        }
-    """
-    def __init__(self, field_json: dict):
-        self.name: str = safe_python_name(field_json["name"])
-        self.is_array: bool = field_json["is_array"]
-        self.is_anonymous: bool = field_json["is_anonymous"]
-        self._type: _Type = DearBindingsTypeNew(field_json["type"])
-        self.is_internal: bool = field_json["is_internal"]
-        self.source_location: dict = field_json.get("source_location")
-        self.comments: Comments = parse_comment(field_json)
+        """
+        name: str = safe_python_name(field_json["name"])
+        _type: IType = DearBindingsTypeNew.from_json(field_json["type"])
+        comments: Comments = parse_comment(field_json)
+        return DearBindingsStructField(name, _type, comments)
+
+    def __init__(self, name: str, _type: IType, comments: Comments = None):
+        self.name = name
+        self._type = _type
+        self.comments = comments
+        if self.comments is None:
+            self.comments = Comments([], None)
     
     def to_pxd(self):
         return "{}{}".format(
@@ -141,31 +141,30 @@ class DearBindingsStructField(Field):
     def get_comment(self) -> Comments:
         return self.comments
     
-    def get_type(self) -> _Type:
+    def get_type(self) -> IType:
         return self._type
 
 
-class DearBindingsStructNew(Struct):
-    """Struct
-    {
-        "name": "ImGuiStyle",
-        "original_fully_qualified_name": "ImGuiStyle",
-        "kind": "struct",
-        "by_value": false,
-        "forward_declaration": false,
-        "is_anonymous": false,
-        "fields": [],
-        "is_internal": false,
-        "source_location": {
-            "filename": "imgui.h",
-            "line": 2015
+class DearBindingsStructNew(IStruct):
+    def from_json(struct_json: dict) -> IStruct:
+        """Struct
+        {
+            "name": "ImGuiStyle",
+            "fields": []
         }
-    """
-    def __init__(self, struct_json: dict):
-        self.name: str = struct_json["name"]
-        self.fields: List[Field] = [DearBindingsStructField(f) for f in struct_json["fields"]]
-        self.comments: Comments = parse_comment(struct_json)
-        self.methods: List[Function] = []
+        """
+        name: str = struct_json["name"]
+        fields: List[IField] = [DearBindingsStructField.from_json(f) for f in struct_json["fields"]]
+        comments: Comments = parse_comment(struct_json)
+        return DearBindingsStructNew(name, fields, comments)
+
+    def __init__(self, name: str, fields: List[IField], comments: Comments = None):
+        self.name = name
+        self.fields = fields
+        self.comments = comments
+        if self.comments is None:
+            self.comments = Comments([], None)
+        self.methods: List[IFunction] = []
     
     def get_name(self) -> str:
         return self.name
@@ -228,11 +227,11 @@ class DearBindingsStructNew(Struct):
     def get_comment(self) -> Comments:
         return self.comments
 
-    def get_fields(self) -> List[Field]:
+    def get_fields(self) -> List[IField]:
         return self.fields
 
-    def add_method(self, method: Function):
+    def add_method(self, method: IFunction):
         self.methods.append(method)
 
-    def get_methods(self) -> List[Function]:
+    def get_methods(self) -> List[IFunction]:
         return self.methods

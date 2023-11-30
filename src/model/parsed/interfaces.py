@@ -9,7 +9,7 @@ class HasComment:
         pass
 
 
-class _Type(ABC):
+class IType(ABC):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -56,13 +56,13 @@ class _Type(ABC):
         }.get(self.with_no_const_or_sign())
 
 
-class Argument(ABC):
+class IArgument(ABC):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
 
     @abstractmethod
-    def get_type(self) -> _Type:
+    def get_type(self) -> IType:
         pass
 
     @abstractmethod
@@ -74,7 +74,7 @@ class Argument(ABC):
         pass
 
 
-class Function(ABC, HasComment):
+class IFunction(ABC, HasComment):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -93,7 +93,7 @@ class Function(ABC, HasComment):
 
 
     @abstractmethod
-    def get_return_type(self) -> _Type:
+    def get_return_type(self) -> IType:
         pass
 
     @abstractmethod
@@ -101,11 +101,11 @@ class Function(ABC, HasComment):
         pass
 
     @abstractmethod
-    def get_arguments(self) -> List[Argument]:
+    def get_arguments(self) -> List[IArgument]:
         pass
 
 
-class Enum(ABC, HasComment):
+class IEnum(ABC, HasComment):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -118,8 +118,12 @@ class Enum(ABC, HasComment):
     def has_element(self, element: str) -> bool:
         pass
 
+    @abstractmethod
+    def get_name(self) -> str:
+        pass
 
-class Field(ABC, HasComment):
+
+class IField(ABC, HasComment):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -129,11 +133,11 @@ class Field(ABC, HasComment):
         pass
 
     @abstractmethod
-    def get_type(self) -> _Type:
+    def get_type(self) -> IType:
         pass
 
 
-class Struct(ABC, HasComment):
+class IStruct(ABC, HasComment):
     @abstractmethod
     def get_name(self) -> str:
         pass
@@ -147,19 +151,19 @@ class Struct(ABC, HasComment):
         pass
 
     @abstractmethod
-    def get_fields(self) -> List[Field]:
+    def get_fields(self) -> List[IField]:
         pass
 
     @abstractmethod
-    def add_method(self, method: Function):
+    def add_method(self, method: IFunction):
         pass
 
     @abstractmethod
-    def get_methods(self) -> List[Function]:
+    def get_methods(self) -> List[IFunction]:
         pass
 
 
-class Typedef(ABC, HasComment):
+class ITypedef(ABC, HasComment):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -169,7 +173,7 @@ class Typedef(ABC, HasComment):
         pass
 
     @abstractmethod
-    def get_base(self) -> _Type:
+    def get_base(self) -> IType:
         pass
 
     @abstractmethod
@@ -177,7 +181,7 @@ class Typedef(ABC, HasComment):
         pass
 
 
-class Binding(ABC):
+class IBinding(ABC):
     @abstractmethod
     def to_pxd(self) -> str:
         pass
@@ -187,33 +191,33 @@ class Binding(ABC):
         pass
 
     @abstractmethod
-    def function_to_pyx(self, template: Template, function: Function) -> str:
+    def function_to_pyx(self, template: Template, function: IFunction) -> str:
         pass
 
     @abstractmethod
-    def follow_type(self, _type: _Type) -> _Type:
+    def follow_type(self, _type: IType) -> IType:
         pass
 
     @abstractmethod
-    def as_python_type(self, _type: _Type) -> str:
+    def as_python_type(self, _type: IType) -> str:
         pass
 
     @abstractmethod
-    def as_name_type_default_parameter(self, argument: Argument) -> str:
+    def as_name_type_default_parameter(self, argument: IArgument) -> str:
         pass
 
     @abstractmethod
-    def is_cimgui_type(self, _type: _Type) -> bool:
+    def is_cimgui_type(self, _type: IType) -> bool:
         pass
 
     @abstractmethod
-    def marshall_c_to_python(self, _type: _Type):
+    def marshall_c_to_python(self, _type: IType):
         pass
 
     @abstractmethod
     def marshall_python_to_c(
             self,
-            _type: _Type,
+            _type: IType,
             argument_name: str,
             pxd_library_name: str,
             default_value: Optional[str] = None

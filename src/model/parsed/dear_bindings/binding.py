@@ -1,15 +1,14 @@
 import textwrap
-from typing import List, Callable, Optional
+from typing import List, Callable, Optional, Tuple
 from io import StringIO
 from ...parsed import pythonise_string
-from ...comments import Comments, parse_comment
-from ..interfaces import Enum, Typedef, Struct, Function, Binding, _Type, Argument
 from ...template import Template
+from ..interfaces import *
+from .db_type import DearBindingsTypeNew, Kinds, Kind
 from .enum import DearBindingsEnumNew
-from .typedef import DearBindingsTypedefNew
 from .function import DearBindingsFunctionNew
 from .struct import DearBindingsStructNew
-from .db_type import DearBindingsTypeNew
+from .typedef import DearBindingsTypedefNew
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
@@ -86,35 +85,52 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
     return _json
 
 
-class DearBindingNew(Binding):
-    def __init__(self, cimgui_json, definitions):
+class DearBindingNew(IBinding):
+    def from_json(cimgui_json, pxd_header: str, definitions: List[Tuple[str, bool]]):
         cimgui_json = deep_json_filter(cimgui_json, passes_conditional, definitions)
         cimgui_json = deep_json_filter(cimgui_json, ignore_anonymous)
 
-        self.enums = [DearBindingsEnumNew(e) for e in cimgui_json["enums"]]
-        self.typedefs = [DearBindingsTypedefNew(e) for e in cimgui_json["typedefs"]]
-        self.structs = [DearBindingsStructNew(e) for e in cimgui_json["structs"]]
-        self.functions = []
+        enums = [DearBindingsEnumNew.from_json(e) for e in cimgui_json["enums"]]
+        typedefs = [DearBindingsTypedefNew.from_json(e) for e in cimgui_json["typedefs"]]
+        structs = [DearBindingsStructNew.from_json(e) for e in cimgui_json["structs"]]
+        functions = []
 
-        methods: List[Function] = []
+        methods: List[IFunction] = []
         for function in cimgui_json["functions"]:
-            function = DearBindingsFunctionNew(function)
+            function = DearBindingsFunctionNew.from_json(function)
             if len(function.get_arguments()) > 0 and function.get_arguments()[0].get_name() == "self":
                 methods.append(function)
                 continue
-            self.functions.append(function)
+            functions.append(function)
         
-        struct_lookup = {s.name: s for s in self.structs}
+        struct_lookup = {s.get_name(): s for s in structs}
         for method in methods:
-            method: Function
+            method: IFunction
             class_name = method.get_arguments()[0].get_type().with_no_const_or_asterisk()
             # Modify the name of the function so that it looks more like a 
             # method.
             method.set_python_name(method.get_python_name().replace(class_name + "_", "", 1))
             struct_lookup[class_name].add_method(method)
+        
+        return DearBindingNew(enums, typedefs, structs, functions, pxd_header)
+
+
+    def __init__(
+            self,
+            enums: List[IEnum],
+            typedefs: List[ITypedef],
+            structs: List[IStruct],
+            functions: List[IFunction],
+            pxd_header: str
+        ):
+        self.enums: List[IEnum] = enums
+        self.typedefs: List[ITypedef] = typedefs
+        self.structs: List[IStruct] = structs
+        self.functions: List[IFunction] = functions
+        self.pxd_header: str = pxd_header
     
 
-    def to_pxd(self, pxd_library_name: str, include_base: bool) -> str:
+    def to_pxd(self, include_base: bool) -> str:
         base = """
         # -*- coding: utf-8 -*-
         # distutils: language = c++
@@ -132,7 +148,7 @@ class DearBindingNew(Binding):
         if include_base:
             dynamic_content.write(textwrap.dedent(base.lstrip("\n")))
 
-        dynamic_content.write('cdef extern from "{}":\n'.format(pxd_library_name))
+        dynamic_content.write('cdef extern from "{}":\n'.format(self.pxd_header))
 
         # Struct forward declaration
         # You might think you could use this value but some typedefs require all
@@ -835,7 +851,7 @@ class DearBindingNew(Binding):
         return pyx.getvalue()
 
 
-    def function_to_pyx(self, pxd_library_name: str, function_template: Template, function: Function) -> str:
+    def function_to_pyx(self, pxd_library_name: str, function_template: Template, function: IFunction) -> str:
         # Python return type
         python_return_type = self.as_python_type(function.get_return_type())
 
@@ -903,7 +919,7 @@ class DearBindingNew(Binding):
         ).compile()
     
 
-    def as_python_type(self, _type: _Type) -> str:
+    def as_python_type(self, _type: IType) -> str:
         python_type_lookup = {
             "bool": "bool",
             "bool*": "Bool",
@@ -943,7 +959,7 @@ class DearBindingNew(Binding):
         return "Any"
 
 
-    def marshall_c_to_python(self, _type: _Type) -> str:
+    def marshall_c_to_python(self, _type: IType) -> str:
         _type = self.follow_type(_type)
         
         if _type.is_string():
@@ -966,7 +982,7 @@ class DearBindingNew(Binding):
 
     def marshall_python_to_c(
             self,
-            _type: _Type,
+            _type: IType,
             argument_name: str,
             pxd_library_name: str,
             default_value: Optional[str] = None
@@ -1009,28 +1025,25 @@ class DearBindingNew(Binding):
         return output.format(name=argument_name), additional_lines
 
 
-    def follow_type(self, _type: _Type) -> _Type:
+    def follow_type(self, _type: IType) -> IType:
         if not self.is_cimgui_type(_type):
             return _type
         
         for enum in self.enums:
-            if enum.name == _type.with_no_const_or_asterisk():
-                return DearBindingsTypeNew({
-                    "declaration": "int",
-                    "description": {
-                        "kind": "Builtin",
-                        "builtin_type": "int"
-                    }
-                })
+            if enum.get_name() == _type.with_no_const_or_asterisk():
+                return DearBindingsTypeNew(
+                    "int",
+                    Kind(Kinds.Builtin, "int")
+                )
 
         for typedef in self.typedefs:
             if _type.with_no_const_or_asterisk() == typedef.get_definition():
-                return self.follow_type(typedef.base)
+                return self.follow_type(typedef.get_base())
         
         return _type
 
 
-    def as_name_type_default_parameter(self, argument: Argument) -> str:
+    def as_name_type_default_parameter(self, argument: IArgument) -> str:
         parameter_format = "{}: {}{}".format(
             argument.get_name(),
             self.as_python_type(self.follow_type(argument.get_type())),
@@ -1039,7 +1052,7 @@ class DearBindingNew(Binding):
         return parameter_format
 
 
-    def is_cimgui_type(self, _type: _Type) -> bool:
+    def is_cimgui_type(self, _type: IType) -> bool:
         for enum in self.enums:
             if _type.with_no_const_or_asterisk() == enum:
                 return True

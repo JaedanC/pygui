@@ -1,17 +1,16 @@
 from io import StringIO
 from typing import List
 from ...comments import Comments, parse_comment
-from ..interfaces import Function, _Type, Argument
+from ..interfaces import IFunction, IType, IArgument
 from .db_type import DearBindingsTypeNew
 from .argument import DearBindingsArgumentNew
 
 
-class DearBindingsFunctionNew(Function):
-    def __init__(self, function_json: dict):
+class DearBindingsFunctionNew(IFunction):
+    def from_json(function_json: dict) -> IFunction:
         """Function
         {
             "name": "ImGui_DestroyContext",
-            "original_fully_qualified_name": "ImGui::DestroyContext",
             "return_type": {
                 "declaration": "void",
                 "description": {
@@ -53,17 +52,25 @@ class DearBindingsFunctionNew(Function):
             }
         },
         """
-        self.name: str = function_json["name"]
-        self.python_name: str = self.name
-        self.original_fully_qualified_name: str = function_json["original_fully_qualified_name"]
-        self.return_type: _Type = DearBindingsTypeNew(function_json["return_type"])
+        name: str = function_json["name"]
+        return_type: IType = DearBindingsTypeNew.from_json(function_json["return_type"])
         # Ignore any Cython unsupported arguments
-        self.arguments: List[Argument] = []
+        arguments: List[IArgument] = []
         for argument in function_json["arguments"]:
             if argument["is_varargs"] or argument.get("type", {}).get("declaration") == "va_list":
                 continue
-            self.arguments.append(DearBindingsArgumentNew(argument))
-        self.comments: Comments = parse_comment(function_json)
+            arguments.append(DearBindingsArgumentNew.from_json(argument))
+        comments: Comments = parse_comment(function_json)
+        return DearBindingsFunctionNew(name, return_type, arguments, comments)
+
+    def __init__(self, name: str, return_type: IType, arguments: List[IArgument], comments: Comments = None):
+        self.name = name
+        self.python_name = self.name
+        self.return_type = return_type
+        self.arguments = arguments
+        self.comments = comments
+        if self.comments is None:
+            self.comments = Comments([], None)
     
     def __repr__(self):
         return "{}() -> {}{}{}".format(
@@ -90,7 +97,7 @@ class DearBindingsFunctionNew(Function):
 
         return content.getvalue()
 
-    def get_return_type(self) -> _Type:
+    def get_return_type(self) -> IType:
         return self.return_type
 
     def get_name(self) -> str:
@@ -105,7 +112,7 @@ class DearBindingsFunctionNew(Function):
     def get_function_name_no_imgui_prefix(self) -> str:
         return self.python_name.replace("ImGui_", "", 1)
 
-    def get_arguments(self) -> List[Argument]:
+    def get_arguments(self) -> List[IArgument]:
         return self.arguments
 
     def get_comment(self) -> Comments:

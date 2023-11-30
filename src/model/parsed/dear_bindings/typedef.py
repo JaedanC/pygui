@@ -1,12 +1,12 @@
 import textwrap
 from io import StringIO
 from .db_type import DearBindingsTypeNew
-from ..interfaces import Typedef, HasComment, _Type
+from ..interfaces import ITypedef, HasComment, IType
 from ...comments import Comments, parse_comment
 
 
-class DearBindingsTypedefNew(Typedef, HasComment):
-    def __init__(self, typedef_json: dict):
+class DearBindingsTypedefNew(ITypedef, HasComment):
+    def from_json(typedef_json: dict) -> ITypedef:
         """Typedef
         {
             "name": "ImGuiMouseSource",
@@ -19,22 +19,18 @@ class DearBindingsTypedefNew(Typedef, HasComment):
             },
             "comments": {
                 "attached": "// -> enum ImGuiMouseSource      // Enum; A mouse input source identifier (Mouse, TouchScreen, Pen)"
-            },
-            "is_internal": false,
-            "source_location": {
-                "filename": "imgui.h"
             }
         },
         """
-        self.name: str = typedef_json["name"]
-        self._type: _Type = DearBindingsTypeNew(typedef_json["type"])
-        self.comments: Comments = parse_comment(typedef_json)
-        self.is_internal: bool = typedef_json["is_internal"]
-        self.source_location: dict = typedef_json["source_location"]
+        base: IType = DearBindingsTypeNew.from_json(typedef_json["type"])
+        definition: str = typedef_json["name"]
+        comments: Comments = parse_comment(typedef_json)
+        return DearBindingsTypedefNew(base, definition, comments)
 
-        self.base: _Type = self._type
-        self.definition: str = self.name
-    
+    def __init__(self, base: IType, definition: str, comments: Comments):
+        self.base = base
+        self.definition = definition
+        self.comments = comments
 
     def to_pxd(self) -> str:
         contents = StringIO("")
@@ -49,15 +45,13 @@ class DearBindingsTypedefNew(Typedef, HasComment):
         
         return contents.getvalue()
 
-
     def is_function_pointer(self) -> bool:
         return self.base.is_function_pointer()
-
 
     def get_comment(self):
         return self.comments
 
-    def get_base(self) -> _Type:
+    def get_base(self) -> IType:
         return self.base
 
     def get_definition(self) -> str:

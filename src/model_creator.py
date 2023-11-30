@@ -9,10 +9,10 @@ import keyword
 import sys
 import textwrap
 
-from model.comments import Comments, parse_comment
+from model.comments import Comments
 from model.parsed.dear_bindings import *
 from model.parsed.dear_bindings.binding import DearBindingNew
-from model.parsed.interfaces import Binding
+from model.parsed.interfaces import IBinding
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
@@ -2182,13 +2182,9 @@ def main():
     ]
 
     headers: List[Binding] = []
-    header_files: List[str] = []
     for module in config["modules"]:
-        header_files.append(module["header"])
         with open(module["binding_json"]) as f:
-            json_content = json.load(f)
-            # headers.append(parse_binding_json(json_content, defines))
-            headers.append(DearBindingNew(json_content, defines))
+            headers.append(DearBindingNew.from_json(json.load(f), module["header"], defines))
 
     def _help():
         print(textwrap.dedent("""
@@ -2286,17 +2282,16 @@ def main():
     #         f.write(pxd)
     #     print(f"Created {CIMGUI_PXD_PATH}")
     
-    def write_pxd_new(headers: List[Binding], header_files: List[str]):
+    def write_pxd_new(headers: List[IBinding]):
         pxd = ""
-        for i, (header, header_file) in enumerate(zip(headers, header_files)):
-            # pxd += to_pxd(header, header_file, i == 0)
-            pxd += header.to_pxd(header_file, i == 0)
+        for i, header in enumerate(headers):
+            pxd += header.to_pxd(i == 0)
         
         with open(CIMGUI_PXD_PATH, "w") as f:
             f.write(pxd)
         print(f"Created {CIMGUI_PXD_PATH}")
     
-    def write_pyx(headers: List[Binding], pxd_libary_name: str):
+    def write_pyx(headers: List[IBinding], pxd_libary_name: str):
         new_pyx = ""
         for i, header in enumerate(headers):
             # new_pyx += to_pyx(header, pxd_libary_name, i == 0)
@@ -2370,7 +2365,7 @@ def main():
         return
 
     if "--pxd" in sys.argv:
-        write_pxd_new(headers, header_files)
+        write_pxd_new(headers)
         return
     
     if "--pyx" in sys.argv:
@@ -2382,7 +2377,7 @@ def main():
         return
     
     if "--all" in sys.argv:
-        write_pxd_new(headers, header_files)
+        write_pxd_new(headers)
         write_pyx(headers, CIMGUI_LIBRARY_NAME)
         write_pyi(headers, EXTENSION_NAME, show_comments)
         return
