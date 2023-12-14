@@ -574,7 +574,6 @@ class demo:
 
 def pygui_demo_window():
     pygui.begin("Pygui Demo Window", None, pygui.WINDOW_FLAGS_MENU_BAR)
-    show_menu_bar()
 
     if demo.show_app_console:
         demo.example_app_console.draw("Example: Pygui Console", demo.show_app_console)
@@ -610,11 +609,14 @@ def pygui_demo_window():
             pygui.show_user_guide()
         pygui.end()
 
+    pygui.push_item_width(pygui.get_font_size() * -12)
+    show_menu_bar()
     show_demo_widgets()
     show_demo_window_layout()
     show_demo_tables()
     show_random_extras()
     show_crash_test()
+    pygui.pop_item_width()
     pygui.end()
 
 
@@ -660,6 +662,7 @@ class widget:
     picker_col2 = pygui.Vec4(0.4, 0.7, 0, 0.5)
     combo_item_current = pygui.Int()
     list_item_current = pygui.Int()
+    tooltip_always_on = pygui.Int()
     tree_base_flags = pygui.Int(
         pygui.TREE_NODE_FLAGS_OPEN_ON_ARROW | \
         pygui.TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK | \
@@ -738,7 +741,6 @@ class widget:
     plotting_progress = 0
     plotting_progress_dir = 1
     colour_color = pygui.Vec4(114 / 255, 144 / 255, 154 / 255, 200 / 255)
-    colour_flags = pygui.Int()
     colour_alpha_preview = pygui.Bool(True)
     colour_alpha_half_preview = pygui.Bool(False)
     colour_drag_and_drop = pygui.Bool(True)
@@ -861,28 +863,8 @@ def show_demo_widgets():
 
         # Tooltips
 
-        pygui.text("Tooltips:")
-        pygui.same_line()
-        pygui.small_button("Button")
-        if pygui.is_item_hovered():
-            pygui.set_tooltip("I am a tooltip")
-        
-        pygui.same_line()
-        pygui.small_button("Fancy")
-        if pygui.is_item_hovered() and pygui.begin_tooltip():
-            pygui.text("I am a fancy tooltip")
-            arr = [0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2]
-            pygui.plot_lines("Curve", arr)
-            pygui.text("Sin(time) = {}".format(math.sin(time.time())))
-            pygui.end_tooltip()
-        
-        pygui.same_line()
-        pygui.small_button("Delayed")
-        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_DELAY_NORMAL):
-            pygui.set_tooltip("I am a tooltip with a delay")
-        
-        pygui.same_line()
-        help_marker("Tooltip are created by using the IsItemHovered() function over any kind of item.")
+        pygui.button("Tooltip")
+        pygui.set_item_tooltip("I am a tooltip")
 
         pygui.label_text("label", "Value")
 
@@ -973,7 +955,91 @@ def show_demo_widgets():
 
         pygui.tree_pop()
     
-    if pygui.tree_node("Trees"):
+    if pygui.tree_node("Tooltips"):
+        # Tooltips are windows following the mouse. They do not take focus away.
+        pygui.separator_text("General")
+
+        # Typical use cases:
+        # - Short-form (text only):      SetItemTooltip("Hello");
+        # - Short-form (any contents):   if (BeginItemTooltip()) { Text("Hello"); EndTooltip(); }
+
+        # - Full-form (text only):       if (IsItemHovered(...)) { SetTooltip("Hello"); }
+        # - Full-form (any contents):    if (IsItemHovered(...) && BeginTooltip()) { Text("Hello"); EndTooltip(); }
+        help_marker(
+            "Tooltip are typically created by using a IsItemHovered() + SetTooltip() sequence.\n\n"
+            "We provide a helper SetItemTooltip() function to perform the two with standards flags.")
+        
+        sz = (-pygui.FLT_MIN, 0.0)
+        pygui.button("Basic", sz)
+        pygui.set_item_tooltip("I am a tooltip")
+
+        pygui.button("Fancy", sz)
+        if pygui.begin_item_tooltip():
+            pygui.text("I am a fancy tooltip")
+            arr = [0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2]
+            pygui.plot_lines("Curve", arr)
+            pygui.text("Sin(time) = {}".format(math.sin(time.time())))
+            pygui.end_tooltip()
+
+        pygui.separator_text("Always On")
+
+        # Showcase NOT relying on a IsItemHovered() to emit a tooltip.
+        # Here the tooltip is always emitted when 'always_on == true'.
+        pygui.radio_button_int_ptr("Off", widget.tooltip_always_on, 0)
+        pygui.same_line()
+        pygui.radio_button_int_ptr("Always On (Simple)", widget.tooltip_always_on, 1)
+        pygui.same_line()
+        pygui.radio_button_int_ptr("Always On (Advanced)", widget.tooltip_always_on, 2)
+
+        if widget.tooltip_always_on.value == 1:
+            pygui.set_tooltip("I am following you around.")
+        elif widget.tooltip_always_on.value == 2 and pygui.begin_tooltip():
+            pygui.progress_bar(math.sin(pygui.get_time()) * 0.5 + 0.5, (pygui.get_font_size() * 25, 0))
+            pygui.end_tooltip()
+        
+        pygui.separator_text("Custom")
+
+        help_marker(
+            "Passing ImGuiHoveredFlags_ForTooltip to IsItemHovered() is the preferred way to standardize"
+            "tooltip activation details across your application. You may however decide to use custom"
+            "flags for a specific tooltip instance.")
+
+        # The following examples are passed for documentation purpose but may not be useful to most users.
+        # Passing ImGuiHoveredFlags_ForTooltip to IsItemHovered() will pull ImGuiHoveredFlags flags values from
+        # 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on whether mouse or gamepad/keyboard is being used.
+        # With default settings, ImGuiHoveredFlags_ForTooltip is equivalent to ImGuiHoveredFlags_DelayShort + ImGuiHoveredFlags_Stationary.
+        pygui.button("Manual", sz)
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_FOR_TOOLTIP):
+            pygui.set_tooltip("I am a manually emitted tooltip.")
+
+        pygui.button("DelayNone", sz)
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_DELAY_NONE):
+            pygui.set_tooltip("I am a tooltip with no delay.")
+
+        pygui.button("DelayShort", sz)
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_DELAY_SHORT | pygui.HOVERED_FLAGS_NO_SHARED_DELAY):
+            pygui.set_tooltip("I am a tooltip with a short delay ({:.2f} sec).".format(pygui.get_style().hover_delay_short))
+
+        pygui.button("DelayLong", sz)
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_DELAY_NORMAL | pygui.HOVERED_FLAGS_NO_SHARED_DELAY):
+            pygui.set_tooltip("I am a tooltip with a long delay ({:.2f} sec).".format(pygui.get_style().hover_delay_normal))
+
+        pygui.button("Stationary", sz)
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_STATIONARY):
+            pygui.set_tooltip("I am a tooltip requiring mouse to be stationary before activating.")
+
+        # Using ImGuiHoveredFlags_ForTooltip will pull flags from 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav',
+        # which default value include the ImGuiHoveredFlags_AllowWhenDisabled flag.
+        # As a result, Set
+        pygui.begin_disabled()
+        pygui.button("Disabled item", sz)
+        pygui.end_disabled()
+        if pygui.is_item_hovered(pygui.HOVERED_FLAGS_FOR_TOOLTIP):
+            pygui.set_tooltip("I am a a tooltip for a disabled item.")
+
+        pygui.tree_pop()
+    
+    if pygui.tree_node("Tree Nodes"):
         if pygui.tree_node("Basic trees"):
             for i in range(5):
                 if i == 0:
@@ -1226,6 +1292,17 @@ def show_demo_widgets():
         if pygui.checkbox_flags("ImGuiComboFlags_NoPreview", widget.combo_flags, pygui.COMBO_FLAGS_NO_PREVIEW):
             widget.combo_flags.value &= ~pygui.COMBO_FLAGS_NO_ARROW_BUTTON
         
+        if pygui.checkbox_flags("ImGuiComboFlags_WidthFitPreview", widget.combo_flags, pygui.COMBO_FLAGS_WIDTH_FIT_PREVIEW):
+            widget.combo_flags.value &= ~pygui.COMBO_FLAGS_NO_PREVIEW
+
+        # Override default popup height
+        if pygui.checkbox_flags("ImGuiComboFlags_HeightSmall", widget.combo_flags, pygui.COMBO_FLAGS_HEIGHT_SMALL):
+            widget.combo_flags.value &= ~(pygui.COMBO_FLAGS_HEIGHT_MASK & ~pygui.COMBO_FLAGS_HEIGHT_SMALL)
+        if pygui.checkbox_flags("ImGuiComboFlags_HeightRegular", widget.combo_flags, pygui.COMBO_FLAGS_HEIGHT_REGULAR):
+            widget.combo_flags.value &= ~(pygui.COMBO_FLAGS_HEIGHT_MASK & ~pygui.COMBO_FLAGS_HEIGHT_REGULAR)
+        if pygui.checkbox_flags("ImGuiComboFlags_HeightLargest", widget.combo_flags, pygui.COMBO_FLAGS_HEIGHT_LARGEST):
+            widget.combo_flags.value &= ~(pygui.COMBO_FLAGS_HEIGHT_MASK & ~pygui.COMBO_FLAGS_HEIGHT_LARGEST)
+        
         # Using the generic BeginCombo() API, you have full control over how to display the combo contents.
         # (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
         # stored in the object itself, etc.)
@@ -1243,6 +1320,10 @@ def show_demo_widgets():
             
             pygui.end_combo()
         
+        pygui.spacing()
+        pygui.separator_text("One-liner variants")
+        help_marker("Flags above don't apply to this section.")
+        
         # Simplified one-liner Combo() API, using values packed in a single constant string
         # This is a convenience for when the selection set is small and known at compile-time.
         # Pygui note: Obviously this doesn't really make sense in pygui. Just use a list.
@@ -1254,10 +1335,9 @@ def show_demo_widgets():
         pygui.combo("combo 3 (array)", widget.combo_item_current_3, items)
 
         # Simplified one-liner Combo() using an accessor function
-        def item_getter(data: list[str], n: int) -> str:
-            return data[n]
+        # Pygui note: With the new item_getter syntax it is now possible to use a lambda :)
+        pygui.combo_callback("combo 4 (function)", widget.combo_item_current_4, lambda data, n: data[n], items, len(items))
         
-        pygui.combo_callback("combo 4 (function)", widget.combo_item_current_4, item_getter, items, len(items))
         pygui.tree_pop()
 
     if pygui.tree_node("List boxes"):
@@ -1295,7 +1375,6 @@ def show_demo_widgets():
         if pygui.tree_node("Basic"):
             pygui.selectable_bool_ptr("1. I am selectable", widget.select_selection[0])
             pygui.selectable_bool_ptr("2. I am selectable", widget.select_selection[1])
-            pygui.text("(I am not selectable)")
             pygui.selectable_bool_ptr("4. I am selectable", widget.select_selection[3])
             if pygui.selectable("5. I am double clickable", widget.select_selection[4], pygui.SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK):
                 if pygui.is_mouse_double_clicked(pygui.MOUSE_BUTTON_LEFT):
@@ -1319,16 +1398,16 @@ def show_demo_widgets():
         
         if pygui.tree_node("Rendering more text into the same line"):
             pygui.selectable_bool_ptr("main.c", widget.select_render_selected[0])
-            pygui.same_line(300)
-            pygui.text(" 2,345 bytes")
+            pygui.same_line()
+            pygui.small_button("Link 1")
 
             pygui.selectable_bool_ptr("Hello.cpp", widget.select_render_selected[1])
-            pygui.same_line(300)
-            pygui.text("12,245 bytes")
+            pygui.same_line()
+            pygui.small_button("Link 2")
             
             pygui.selectable_bool_ptr("Hello.h", widget.select_render_selected[2])
-            pygui.same_line(300)
-            pygui.text(" 2,345 bytes")
+            pygui.same_line()
+            pygui.small_button("Link 3")
             pygui.tree_pop()
         
         if pygui.tree_node("In columns"):
@@ -1515,9 +1594,9 @@ def show_demo_widgets():
         # Tip: If your float aren't contiguous but part of a structure, you can pass a pointer to your first float
         # and the sizeof() of your structure in the "stride" parameter.
         if not widget.plotting_animate or widget.plotting_refresh_time == 0:
-            widget.plotting_refresh_time = time.time()
+            widget.plotting_refresh_time = pygui.get_time()
         
-        while widget.plotting_refresh_time < time.time():
+        while widget.plotting_refresh_time < pygui.get_time():
             widget.plotting_values[widget.plotting_values_offset] = math.cos(
                 widget.plotting_phase
             )
@@ -1526,8 +1605,8 @@ def show_demo_widgets():
             widget.plotting_refresh_time += 1 / 60
 
         average = 0
-        for n in range(len(widget.plotting_values)):
-            average += widget.plotting_values[n]
+        for value in widget.plotting_values:
+            average += value
         average /= len(widget.plotting_values)
         pygui.plot_lines(
             "Lines",
@@ -1539,8 +1618,7 @@ def show_demo_widgets():
             (0, 80)
         )
 
-        # This section has been modified to use pythonic functions and methods
-        # rather than the values_getter moethod in the demo.
+        # Use functions to generate output
         pygui.separator_text("Functions")
         pygui.set_next_item_width(pygui.get_font_size() * 8)
         pygui.combo("func", widget.plotting_func_type, ["Sin", "Saw"])
@@ -1551,12 +1629,12 @@ def show_demo_widgets():
             return 1 if value & 1 == 0 else -1
 
         if widget.plotting_func_type.value == 0:
-            values = [math.sin(i / 10) for i in range(widget.plotting_display_count.value)]
+            func = lambda _, n: math.sin(n / 10)
         else:
-            values = [saw(i) for i in range(widget.plotting_display_count.value)]
-        
-        pygui.plot_lines("Lines", values, 0, None, -1, 1, (0, 80))
-        pygui.plot_histogram("Histogram", values, 0, None, -1, 1, (0, 80))
+            func = lambda _, n: saw(n)
+
+        pygui.plot_lines_callback("Lines", func, None, widget.plotting_display_count.value, 0, None, -1, 1, (0, 80))
+        pygui.plot_histogram_callback("Histogram", func, None, widget.plotting_display_count.value, 0, None, -1, 1, (0, 80))
         pygui.separator()
 
         if widget.plotting_animate:
@@ -1582,17 +1660,22 @@ def show_demo_widgets():
 
     if pygui.tree_node("Color/Picker Widgets"):
         pygui.separator_text("Options")
-        pygui.checkbox_flags("With Alpha Preview", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW)
-        pygui.checkbox_flags("With Half Alpha Preview", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
-        pygui.checkbox_flags("No Drag and Drop", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_NO_DRAG_DROP)
-        pygui.checkbox_flags("No Options Menu", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_NO_OPTIONS)
+        pygui.checkbox("With Alpha Preview", widget.colour_alpha_preview)
+        pygui.checkbox("With Half Alpha Preview", widget.colour_alpha_half_preview)
+        pygui.checkbox("With Drag and Drop", widget.colour_drag_and_drop)
+        pygui.checkbox("With Options Menu", widget.colour_options_menu)
         pygui.same_line()
         help_marker("Right-click on the individual color widget to show options.")
-        pygui.checkbox_flags("With HDR", widget.colour_flags, pygui.COLOR_EDIT_FLAGS_HDR)
+        pygui.checkbox("With HDR", widget.colour_hdr)
         pygui.same_line()
         help_marker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
-        misc_flags = widget.colour_flags.value
-        
+        misc_flags = \
+            (pygui.COLOR_EDIT_FLAGS_HDR if widget.colour_hdr else 0) | \
+            (0 if widget.colour_drag_and_drop else pygui.COLOR_EDIT_FLAGS_NO_DRAG_DROP) | \
+            (pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF if widget.colour_alpha_half_preview else \
+                (pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW if widget.colour_alpha_preview else 0)) | \
+            (0 if widget.colour_options_menu else pygui.COLOR_EDIT_FLAGS_NO_OPTIONS)
+
         pygui.separator_text("Inline color editor")
         pygui.text("Color widget:")
         pygui.same_line()
@@ -2502,6 +2585,9 @@ def show_demo_tables():
     if open_action != -1:
         pygui.set_next_item_open(open_action != 0)
     if pygui.tree_node("Reorderable, hideable, with headers"):
+        help_marker(
+            "Click and drag column headers to reorder columns.\n\n"
+            "Right-click on a header to open a context menu.")
         push_style_compact()
         pygui.checkbox_flags("ImGuiTableFlags_Resizable", table.hidable_flags, pygui.TABLE_FLAGS_RESIZABLE)
         pygui.checkbox_flags("ImGuiTableFlags_Reorderable", table.hidable_flags, pygui.TABLE_FLAGS_REORDERABLE)

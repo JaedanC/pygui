@@ -1389,20 +1389,20 @@ def begin_group():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def begin_item_tooltip():
-#     """
-#     Tooltips: helpers for showing a tooltip when hovering an item
-#     - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
-#     - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
-#     - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
-#     Begin/append a tooltip window if preceding item was hovered.
-#     """
-#     cdef bool res = ccimgui.ImGui_BeginItemTooltip()
-#     return res
+def begin_item_tooltip():
+    """
+    Tooltips: helpers for showing a tooltip when hovering an item
+    - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
+    - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
+    - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    Begin/append a tooltip window if preceding item was hovered.
+    """
+    cdef bool res = ccimgui.ImGui_BeginItemTooltip()
+    return res
 # [End Function]
 
 # [Function]
@@ -6658,7 +6658,7 @@ def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: boo
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def menu_item_bool_ptr(label: str, shortcut: str, p_selected: Bool, enabled: bool=True):
+def menu_item_bool_ptr(label: str, shortcut: Optional[str], p_selected: Bool, enabled: bool=True):
     """
     Return true when activated + toggle (*p_selected) if p_selected != null
     """
@@ -7888,17 +7888,17 @@ def set_item_default_focus():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def set_item_tooltip(fmt: str):
-#     """
-#     Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
-#     """
-#     ccimgui.ImGui_SetItemTooltip(
-#         _bytes(fmt)
-#     )
+def set_item_tooltip(fmt: str):
+    """
+    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    """
+    ccimgui.ImGui_SetItemTooltip(
+        _bytes(fmt)
+    )
 # [End Function]
 
 # [Function]
@@ -21292,40 +21292,40 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def hover_delay_normal(self):
-    #     """
-    #     Delay for isitemhovered(imguihoveredflags_delaynormal). '
-    #     """
-    #     cdef float res = dereference(self._ptr).HoverDelayNormal
-    #     return res
-    # @hover_delay_normal.setter
-    # def hover_delay_normal(self, value: float):
-    #     # dereference(self._ptr).HoverDelayNormal = value
-    #     raise NotImplementedError
+    @property
+    def hover_delay_normal(self):
+        """
+        Delay for isitemhovered(imguihoveredflags_delaynormal). '
+        """
+        cdef float res = dereference(self._ptr).HoverDelayNormal
+        return res
+    @hover_delay_normal.setter
+    def hover_delay_normal(self, value: float):
+        # dereference(self._ptr).HoverDelayNormal = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def hover_delay_short(self):
-    #     """
-    #     Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
-    #     """
-    #     cdef float res = dereference(self._ptr).HoverDelayShort
-    #     return res
-    # @hover_delay_short.setter
-    # def hover_delay_short(self, value: float):
-    #     # dereference(self._ptr).HoverDelayShort = value
-    #     raise NotImplementedError
+    @property
+    def hover_delay_short(self):
+        """
+        Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+        """
+        cdef float res = dereference(self._ptr).HoverDelayShort
+        return res
+    @hover_delay_short.setter
+    def hover_delay_short(self, value: float):
+        # dereference(self._ptr).HoverDelayShort = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]

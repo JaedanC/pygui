@@ -1128,15 +1128,15 @@ def begin_group() -> None:
     """
     pass
 
-# def begin_item_tooltip() -> bool:
-#     """
-#     Tooltips: helpers for showing a tooltip when hovering an item
-#     - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
-#     - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
-#     - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
-#     Begin/append a tooltip window if preceding item was hovered.
-#     """
-#     pass
+def begin_item_tooltip() -> bool:
+    """
+    Tooltips: helpers for showing a tooltip when hovering an item
+    - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
+    - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
+    - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    Begin/append a tooltip window if preceding item was hovered.
+    """
+    pass
 
 def begin_list_box(label: str, size: Tuple[float, float]=(0, 0)) -> bool:
     """
@@ -2331,7 +2331,7 @@ def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: boo
     """
     pass
 
-def menu_item_bool_ptr(label: str, shortcut: str, p_selected: Bool, enabled: bool=True) -> bool:
+def menu_item_bool_ptr(label: str, shortcut: Optional[str], p_selected: Bool, enabled: bool=True) -> bool:
     """
     Return true when activated + toggle (*p_selected) if p_selected != null
     """
@@ -2638,11 +2638,11 @@ def set_item_default_focus() -> None:
     """
     pass
 
-# def set_item_tooltip(fmt: str) -> None:
-#     """
-#     Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
-#     """
-#     pass
+def set_item_tooltip(fmt: str) -> None:
+    """
+    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    """
+    pass
 
 def set_keyboard_focus_here(offset: int=0) -> None:
     """
@@ -5166,14 +5166,14 @@ class ImGuiStyle:
     """
     Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
     """
-    # hover_delay_normal: float
-    # """
-    # Delay for isitemhovered(imguihoveredflags_delaynormal). '
-    # """
-    # hover_delay_short: float
-    # """
-    # Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
-    # """
+    hover_delay_normal: float
+    """
+    Delay for isitemhovered(imguihoveredflags_delaynormal). '
+    """
+    hover_delay_short: float
+    """
+    Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+    """
     # hover_flags_for_tooltip_mouse: int
     # """
     # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.

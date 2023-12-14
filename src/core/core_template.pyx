@@ -1389,7 +1389,7 @@ def begin_group():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
@@ -6658,7 +6658,7 @@ def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: boo
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def menu_item_bool_ptr(label: str, shortcut: str, p_selected: Bool, enabled: bool=True):
+def menu_item_bool_ptr(label: str, shortcut: Optional[str], p_selected: Bool, enabled: bool=True):
     """
     Return true when activated + toggle (*p_selected) if p_selected != null
     """
@@ -7888,7 +7888,7 @@ def set_item_default_focus():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -21292,7 +21292,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -21311,7 +21311,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
