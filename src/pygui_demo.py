@@ -3525,9 +3525,9 @@ def show_random_extras():
             pygui.IM_DRAW_FLAGS_NONE,
         )
         pygui.dummy((50, 50))
-        pygui.same_line()
 
         rand.frame_delta_count += pygui.get_io().delta_time / 10
+        cx, cy = pygui.get_cursor_screen_pos()
         dl.add_rect_filled_multi_color(
             (cx, cy),
             (cx + 50, cy + 50),
@@ -3535,6 +3535,27 @@ def show_random_extras():
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.75) % 1, 1, 0.8)),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.85) % 1, 1, 0.8)),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.95) % 1, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_ellipse_filled(
+            (cx + 25, cy + 25),
+            (25, math.sin(rand.frame_delta_count) * 25),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.95) % 1, 1, 0.8)),
+        )
+        pygui.dummy((50, 50))
+        pygui.same_line()
+
+        cx, cy = pygui.get_cursor_screen_pos()
+        dl.add_ellipse(
+            (cx + 25, cy + 25),
+            (math.sin(rand.frame_delta_count) * 25, 25),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb((rand.frame_delta_count + 0.65) % 1, 1, 0.8)),
+            0,
+            0,
+            2
         )
         pygui.dummy((50, 50))
 

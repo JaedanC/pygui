@@ -73,9 +73,13 @@ cd src/external/imgui
 git checkout docking
 ```
 
-## Running ImGui
+## Running Pygui
 
-To compile pygui you will first need to complete a few steps. These are broadly the steps I will take you through.
+The easiest way to get started with pygui is to download the release. This includes pygui and imgui precompiled into a python package that can be imported. Just extract the contacts to your python project folder. I recommend starting with `app.py` and modifying it for your project.
+
+## Compiling Pygui
+
+To compile pygui you will need to complete these steps.
 
 1. Install python dependecies.
 2. Run `dear_bindings`'s binding generation script.

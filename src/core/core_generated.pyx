@@ -611,6 +611,7 @@ POPUP_FLAGS_MOUSE_BUTTON_RIGHT = ccimgui.ImGuiPopupFlags_MouseButtonRight
 POPUP_FLAGS_MOUSE_BUTTON_MIDDLE = ccimgui.ImGuiPopupFlags_MouseButtonMiddle
 POPUP_FLAGS_MOUSE_BUTTON_MASK = ccimgui.ImGuiPopupFlags_MouseButtonMask_
 POPUP_FLAGS_MOUSE_BUTTON_DEFAULT = ccimgui.ImGuiPopupFlags_MouseButtonDefault_
+POPUP_FLAGS_NO_REOPEN = ccimgui.ImGuiPopupFlags_NoReopen
 POPUP_FLAGS_NO_OPEN_OVER_EXISTING_POPUP = ccimgui.ImGuiPopupFlags_NoOpenOverExistingPopup
 POPUP_FLAGS_NO_OPEN_OVER_ITEMS = ccimgui.ImGuiPopupFlags_NoOpenOverItems
 POPUP_FLAGS_ANY_POPUP_ID = ccimgui.ImGuiPopupFlags_AnyPopupId
@@ -652,77 +653,7 @@ TAB_ITEM_FLAGS_NO_TOOLTIP = ccimgui.ImGuiTabItemFlags_NoTooltip
 TAB_ITEM_FLAGS_NO_REORDER = ccimgui.ImGuiTabItemFlags_NoReorder
 TAB_ITEM_FLAGS_LEADING = ccimgui.ImGuiTabItemFlags_Leading
 TAB_ITEM_FLAGS_TRAILING = ccimgui.ImGuiTabItemFlags_Trailing
-TABLE_FLAGS_NONE = ccimgui.ImGuiTableFlags_None
-TABLE_FLAGS_RESIZABLE = ccimgui.ImGuiTableFlags_Resizable
-TABLE_FLAGS_REORDERABLE = ccimgui.ImGuiTableFlags_Reorderable
-TABLE_FLAGS_HIDEABLE = ccimgui.ImGuiTableFlags_Hideable
-TABLE_FLAGS_SORTABLE = ccimgui.ImGuiTableFlags_Sortable
-TABLE_FLAGS_NO_SAVED_SETTINGS = ccimgui.ImGuiTableFlags_NoSavedSettings
-TABLE_FLAGS_CONTEXT_MENU_IN_BODY = ccimgui.ImGuiTableFlags_ContextMenuInBody
-TABLE_FLAGS_ROW_BG = ccimgui.ImGuiTableFlags_RowBg
-TABLE_FLAGS_BORDERS_INNER_H = ccimgui.ImGuiTableFlags_BordersInnerH
-TABLE_FLAGS_BORDERS_OUTER_H = ccimgui.ImGuiTableFlags_BordersOuterH
-TABLE_FLAGS_BORDERS_INNER_V = ccimgui.ImGuiTableFlags_BordersInnerV
-TABLE_FLAGS_BORDERS_OUTER_V = ccimgui.ImGuiTableFlags_BordersOuterV
-TABLE_FLAGS_BORDERS_H = ccimgui.ImGuiTableFlags_BordersH
-TABLE_FLAGS_BORDERS_V = ccimgui.ImGuiTableFlags_BordersV
-TABLE_FLAGS_BORDERS_INNER = ccimgui.ImGuiTableFlags_BordersInner
-TABLE_FLAGS_BORDERS_OUTER = ccimgui.ImGuiTableFlags_BordersOuter
-TABLE_FLAGS_BORDERS = ccimgui.ImGuiTableFlags_Borders
-TABLE_FLAGS_NO_BORDERS_IN_BODY = ccimgui.ImGuiTableFlags_NoBordersInBody
-TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE = ccimgui.ImGuiTableFlags_NoBordersInBodyUntilResize
-TABLE_FLAGS_SIZING_FIXED_FIT = ccimgui.ImGuiTableFlags_SizingFixedFit
-TABLE_FLAGS_SIZING_FIXED_SAME = ccimgui.ImGuiTableFlags_SizingFixedSame
-TABLE_FLAGS_SIZING_STRETCH_PROP = ccimgui.ImGuiTableFlags_SizingStretchProp
-TABLE_FLAGS_SIZING_STRETCH_SAME = ccimgui.ImGuiTableFlags_SizingStretchSame
-TABLE_FLAGS_NO_HOST_EXTEND_X = ccimgui.ImGuiTableFlags_NoHostExtendX
-TABLE_FLAGS_NO_HOST_EXTEND_Y = ccimgui.ImGuiTableFlags_NoHostExtendY
-TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE = ccimgui.ImGuiTableFlags_NoKeepColumnsVisible
-TABLE_FLAGS_PRECISE_WIDTHS = ccimgui.ImGuiTableFlags_PreciseWidths
-TABLE_FLAGS_NO_CLIP = ccimgui.ImGuiTableFlags_NoClip
-TABLE_FLAGS_PAD_OUTER_X = ccimgui.ImGuiTableFlags_PadOuterX
-TABLE_FLAGS_NO_PAD_OUTER_X = ccimgui.ImGuiTableFlags_NoPadOuterX
-TABLE_FLAGS_NO_PAD_INNER_X = ccimgui.ImGuiTableFlags_NoPadInnerX
-TABLE_FLAGS_SCROLL_X = ccimgui.ImGuiTableFlags_ScrollX
-TABLE_FLAGS_SCROLL_Y = ccimgui.ImGuiTableFlags_ScrollY
-TABLE_FLAGS_SORT_MULTI = ccimgui.ImGuiTableFlags_SortMulti
-TABLE_FLAGS_SORT_TRISTATE = ccimgui.ImGuiTableFlags_SortTristate
-TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN = ccimgui.ImGuiTableFlags_HighlightHoveredColumn
-TABLE_FLAGS_SIZING_MASK = ccimgui.ImGuiTableFlags_SizingMask_
-TABLE_COLUMN_FLAGS_NONE = ccimgui.ImGuiTableColumnFlags_None
-TABLE_COLUMN_FLAGS_DISABLED = ccimgui.ImGuiTableColumnFlags_Disabled
-TABLE_COLUMN_FLAGS_DEFAULT_HIDE = ccimgui.ImGuiTableColumnFlags_DefaultHide
-TABLE_COLUMN_FLAGS_DEFAULT_SORT = ccimgui.ImGuiTableColumnFlags_DefaultSort
-TABLE_COLUMN_FLAGS_WIDTH_STRETCH = ccimgui.ImGuiTableColumnFlags_WidthStretch
-TABLE_COLUMN_FLAGS_WIDTH_FIXED = ccimgui.ImGuiTableColumnFlags_WidthFixed
-TABLE_COLUMN_FLAGS_NO_RESIZE = ccimgui.ImGuiTableColumnFlags_NoResize
-TABLE_COLUMN_FLAGS_NO_REORDER = ccimgui.ImGuiTableColumnFlags_NoReorder
-TABLE_COLUMN_FLAGS_NO_HIDE = ccimgui.ImGuiTableColumnFlags_NoHide
-TABLE_COLUMN_FLAGS_NO_CLIP = ccimgui.ImGuiTableColumnFlags_NoClip
-TABLE_COLUMN_FLAGS_NO_SORT = ccimgui.ImGuiTableColumnFlags_NoSort
-TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING = ccimgui.ImGuiTableColumnFlags_NoSortAscending
-TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING = ccimgui.ImGuiTableColumnFlags_NoSortDescending
-TABLE_COLUMN_FLAGS_NO_HEADER_LABEL = ccimgui.ImGuiTableColumnFlags_NoHeaderLabel
-TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH = ccimgui.ImGuiTableColumnFlags_NoHeaderWidth
-TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING = ccimgui.ImGuiTableColumnFlags_PreferSortAscending
-TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING = ccimgui.ImGuiTableColumnFlags_PreferSortDescending
-TABLE_COLUMN_FLAGS_INDENT_ENABLE = ccimgui.ImGuiTableColumnFlags_IndentEnable
-TABLE_COLUMN_FLAGS_INDENT_DISABLE = ccimgui.ImGuiTableColumnFlags_IndentDisable
-TABLE_COLUMN_FLAGS_ANGLED_HEADER = ccimgui.ImGuiTableColumnFlags_AngledHeader
-TABLE_COLUMN_FLAGS_IS_ENABLED = ccimgui.ImGuiTableColumnFlags_IsEnabled
-TABLE_COLUMN_FLAGS_IS_VISIBLE = ccimgui.ImGuiTableColumnFlags_IsVisible
-TABLE_COLUMN_FLAGS_IS_SORTED = ccimgui.ImGuiTableColumnFlags_IsSorted
-TABLE_COLUMN_FLAGS_IS_HOVERED = ccimgui.ImGuiTableColumnFlags_IsHovered
-TABLE_COLUMN_FLAGS_WIDTH_MASK = ccimgui.ImGuiTableColumnFlags_WidthMask_
-TABLE_COLUMN_FLAGS_INDENT_MASK = ccimgui.ImGuiTableColumnFlags_IndentMask_
-TABLE_COLUMN_FLAGS_STATUS_MASK = ccimgui.ImGuiTableColumnFlags_StatusMask_
-TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE = ccimgui.ImGuiTableColumnFlags_NoDirectResize_
-TABLE_ROW_FLAGS_NONE = ccimgui.ImGuiTableRowFlags_None
-TABLE_ROW_FLAGS_HEADERS = ccimgui.ImGuiTableRowFlags_Headers
-TABLE_BG_TARGET_NONE = ccimgui.ImGuiTableBgTarget_None
-TABLE_BG_TARGET_ROW_BG0 = ccimgui.ImGuiTableBgTarget_RowBg0
-TABLE_BG_TARGET_ROW_BG1 = ccimgui.ImGuiTableBgTarget_RowBg1
-TABLE_BG_TARGET_CELL_BG = ccimgui.ImGuiTableBgTarget_CellBg
+TAB_ITEM_FLAGS_NO_ASSUMED_CLOSURE = ccimgui.ImGuiTabItemFlags_NoAssumedClosure
 FOCUSED_FLAGS_NONE = ccimgui.ImGuiFocusedFlags_None
 FOCUSED_FLAGS_CHILD_WINDOWS = ccimgui.ImGuiFocusedFlags_ChildWindows
 FOCUSED_FLAGS_ROOT_WINDOW = ccimgui.ImGuiFocusedFlags_RootWindow
@@ -1131,6 +1062,77 @@ COND_ALWAYS = ccimgui.ImGuiCond_Always
 COND_ONCE = ccimgui.ImGuiCond_Once
 COND_FIRST_USE_EVER = ccimgui.ImGuiCond_FirstUseEver
 COND_APPEARING = ccimgui.ImGuiCond_Appearing
+TABLE_FLAGS_NONE = ccimgui.ImGuiTableFlags_None
+TABLE_FLAGS_RESIZABLE = ccimgui.ImGuiTableFlags_Resizable
+TABLE_FLAGS_REORDERABLE = ccimgui.ImGuiTableFlags_Reorderable
+TABLE_FLAGS_HIDEABLE = ccimgui.ImGuiTableFlags_Hideable
+TABLE_FLAGS_SORTABLE = ccimgui.ImGuiTableFlags_Sortable
+TABLE_FLAGS_NO_SAVED_SETTINGS = ccimgui.ImGuiTableFlags_NoSavedSettings
+TABLE_FLAGS_CONTEXT_MENU_IN_BODY = ccimgui.ImGuiTableFlags_ContextMenuInBody
+TABLE_FLAGS_ROW_BG = ccimgui.ImGuiTableFlags_RowBg
+TABLE_FLAGS_BORDERS_INNER_H = ccimgui.ImGuiTableFlags_BordersInnerH
+TABLE_FLAGS_BORDERS_OUTER_H = ccimgui.ImGuiTableFlags_BordersOuterH
+TABLE_FLAGS_BORDERS_INNER_V = ccimgui.ImGuiTableFlags_BordersInnerV
+TABLE_FLAGS_BORDERS_OUTER_V = ccimgui.ImGuiTableFlags_BordersOuterV
+TABLE_FLAGS_BORDERS_H = ccimgui.ImGuiTableFlags_BordersH
+TABLE_FLAGS_BORDERS_V = ccimgui.ImGuiTableFlags_BordersV
+TABLE_FLAGS_BORDERS_INNER = ccimgui.ImGuiTableFlags_BordersInner
+TABLE_FLAGS_BORDERS_OUTER = ccimgui.ImGuiTableFlags_BordersOuter
+TABLE_FLAGS_BORDERS = ccimgui.ImGuiTableFlags_Borders
+TABLE_FLAGS_NO_BORDERS_IN_BODY = ccimgui.ImGuiTableFlags_NoBordersInBody
+TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE = ccimgui.ImGuiTableFlags_NoBordersInBodyUntilResize
+TABLE_FLAGS_SIZING_FIXED_FIT = ccimgui.ImGuiTableFlags_SizingFixedFit
+TABLE_FLAGS_SIZING_FIXED_SAME = ccimgui.ImGuiTableFlags_SizingFixedSame
+TABLE_FLAGS_SIZING_STRETCH_PROP = ccimgui.ImGuiTableFlags_SizingStretchProp
+TABLE_FLAGS_SIZING_STRETCH_SAME = ccimgui.ImGuiTableFlags_SizingStretchSame
+TABLE_FLAGS_NO_HOST_EXTEND_X = ccimgui.ImGuiTableFlags_NoHostExtendX
+TABLE_FLAGS_NO_HOST_EXTEND_Y = ccimgui.ImGuiTableFlags_NoHostExtendY
+TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE = ccimgui.ImGuiTableFlags_NoKeepColumnsVisible
+TABLE_FLAGS_PRECISE_WIDTHS = ccimgui.ImGuiTableFlags_PreciseWidths
+TABLE_FLAGS_NO_CLIP = ccimgui.ImGuiTableFlags_NoClip
+TABLE_FLAGS_PAD_OUTER_X = ccimgui.ImGuiTableFlags_PadOuterX
+TABLE_FLAGS_NO_PAD_OUTER_X = ccimgui.ImGuiTableFlags_NoPadOuterX
+TABLE_FLAGS_NO_PAD_INNER_X = ccimgui.ImGuiTableFlags_NoPadInnerX
+TABLE_FLAGS_SCROLL_X = ccimgui.ImGuiTableFlags_ScrollX
+TABLE_FLAGS_SCROLL_Y = ccimgui.ImGuiTableFlags_ScrollY
+TABLE_FLAGS_SORT_MULTI = ccimgui.ImGuiTableFlags_SortMulti
+TABLE_FLAGS_SORT_TRISTATE = ccimgui.ImGuiTableFlags_SortTristate
+TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN = ccimgui.ImGuiTableFlags_HighlightHoveredColumn
+TABLE_FLAGS_SIZING_MASK = ccimgui.ImGuiTableFlags_SizingMask_
+TABLE_COLUMN_FLAGS_NONE = ccimgui.ImGuiTableColumnFlags_None
+TABLE_COLUMN_FLAGS_DISABLED = ccimgui.ImGuiTableColumnFlags_Disabled
+TABLE_COLUMN_FLAGS_DEFAULT_HIDE = ccimgui.ImGuiTableColumnFlags_DefaultHide
+TABLE_COLUMN_FLAGS_DEFAULT_SORT = ccimgui.ImGuiTableColumnFlags_DefaultSort
+TABLE_COLUMN_FLAGS_WIDTH_STRETCH = ccimgui.ImGuiTableColumnFlags_WidthStretch
+TABLE_COLUMN_FLAGS_WIDTH_FIXED = ccimgui.ImGuiTableColumnFlags_WidthFixed
+TABLE_COLUMN_FLAGS_NO_RESIZE = ccimgui.ImGuiTableColumnFlags_NoResize
+TABLE_COLUMN_FLAGS_NO_REORDER = ccimgui.ImGuiTableColumnFlags_NoReorder
+TABLE_COLUMN_FLAGS_NO_HIDE = ccimgui.ImGuiTableColumnFlags_NoHide
+TABLE_COLUMN_FLAGS_NO_CLIP = ccimgui.ImGuiTableColumnFlags_NoClip
+TABLE_COLUMN_FLAGS_NO_SORT = ccimgui.ImGuiTableColumnFlags_NoSort
+TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING = ccimgui.ImGuiTableColumnFlags_NoSortAscending
+TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING = ccimgui.ImGuiTableColumnFlags_NoSortDescending
+TABLE_COLUMN_FLAGS_NO_HEADER_LABEL = ccimgui.ImGuiTableColumnFlags_NoHeaderLabel
+TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH = ccimgui.ImGuiTableColumnFlags_NoHeaderWidth
+TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING = ccimgui.ImGuiTableColumnFlags_PreferSortAscending
+TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING = ccimgui.ImGuiTableColumnFlags_PreferSortDescending
+TABLE_COLUMN_FLAGS_INDENT_ENABLE = ccimgui.ImGuiTableColumnFlags_IndentEnable
+TABLE_COLUMN_FLAGS_INDENT_DISABLE = ccimgui.ImGuiTableColumnFlags_IndentDisable
+TABLE_COLUMN_FLAGS_ANGLED_HEADER = ccimgui.ImGuiTableColumnFlags_AngledHeader
+TABLE_COLUMN_FLAGS_IS_ENABLED = ccimgui.ImGuiTableColumnFlags_IsEnabled
+TABLE_COLUMN_FLAGS_IS_VISIBLE = ccimgui.ImGuiTableColumnFlags_IsVisible
+TABLE_COLUMN_FLAGS_IS_SORTED = ccimgui.ImGuiTableColumnFlags_IsSorted
+TABLE_COLUMN_FLAGS_IS_HOVERED = ccimgui.ImGuiTableColumnFlags_IsHovered
+TABLE_COLUMN_FLAGS_WIDTH_MASK = ccimgui.ImGuiTableColumnFlags_WidthMask_
+TABLE_COLUMN_FLAGS_INDENT_MASK = ccimgui.ImGuiTableColumnFlags_IndentMask_
+TABLE_COLUMN_FLAGS_STATUS_MASK = ccimgui.ImGuiTableColumnFlags_StatusMask_
+TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE = ccimgui.ImGuiTableColumnFlags_NoDirectResize_
+TABLE_ROW_FLAGS_NONE = ccimgui.ImGuiTableRowFlags_None
+TABLE_ROW_FLAGS_HEADERS = ccimgui.ImGuiTableRowFlags_Headers
+TABLE_BG_TARGET_NONE = ccimgui.ImGuiTableBgTarget_None
+TABLE_BG_TARGET_ROW_BG0 = ccimgui.ImGuiTableBgTarget_RowBg0
+TABLE_BG_TARGET_ROW_BG1 = ccimgui.ImGuiTableBgTarget_RowBg1
+TABLE_BG_TARGET_CELL_BG = ccimgui.ImGuiTableBgTarget_CellBg
 IM_DRAW_FLAGS_NONE = ccimgui.ImDrawFlags_None
 IM_DRAW_FLAGS_CLOSED = ccimgui.ImDrawFlags_Closed
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT = ccimgui.ImDrawFlags_RoundCornersTopLeft
@@ -1253,7 +1255,7 @@ def get_io():
 # ?returns(ImGuiStyle)
 def get_style():
     """
-    Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
+    Access the style structure (colors, sizes). always use pushstylecolor(), pushstylevar() to modify style mid-frame!
     """
     cdef ccimgui.ImGuiStyle* res = ccimgui.ImGui_GetStyle()
     return ImGuiStyle.from_ptr(res)
@@ -1571,7 +1573,7 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
     - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
     This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
-    Consider updating your old call sites:
+    Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
     BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Border);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
@@ -2655,10 +2657,27 @@ def get_color_u32_im_vec4(col: Tuple[float, float, float, float]):
 # ?returns(int)
 def get_color_u32_im_u32(col: int):
     """
-    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    Implied alpha_mul = 1.0f
     """
     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImU32(
         col
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(int)
+def get_color_u32_im_u32_ex(col: int, alpha_mul: float=1.0):
+    """
+    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    """
+    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImU32Ex(
+        col,
+        alpha_mul
     )
     return res
 # [End Function]
@@ -3596,16 +3615,17 @@ def bullet():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image(user_texture_id: Any, size: Tuple[float, float]):
+def image(user_texture_id: Any, image_size: Tuple[float, float]):
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-    - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
+    - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
+    - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     ccimgui.ImGui_Image(
         user_texture_id,
-        _cast_tuple_ImVec2(size)
+        _cast_tuple_ImVec2(image_size)
     )
 # [End Function]
 
@@ -3615,10 +3635,10 @@ def image(user_texture_id: Any, size: Tuple[float, float]):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image_ex(user_texture_id: Any, size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1), border_col: Tuple[float, float, float, float]=(0, 0, 0, 0)):
+def image_ex(user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1), border_col: Tuple[float, float, float, float]=(0, 0, 0, 0)):
     ccimgui.ImGui_ImageEx(
         user_texture_id,
-        _cast_tuple_ImVec2(size),
+        _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
         _cast_tuple_ImVec4(tint_col),
@@ -6242,8 +6262,15 @@ def set_item_tooltip_v(fmt: str):
 # ?returns(bool)
 def begin_popup(str_id: str, flags: int=0):
     """
-    Popups: begin/end functions
-    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
+    Popups, Modals
+    - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.
+    - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.
+    - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.
+    - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().
+    - IMPORTANT: Popup identifiers are relative to the current ID stack, so OpenPopup and BeginPopup generally needs to be at the same level of the stack.
+    This is sometimes leading to confusing mistakes. May rework this in the future.
+    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards if returned true. ImGuiWindowFlags are forwarded to the window.
     - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
     Return true if the popup is open, and you can start outputting to it.
     """
@@ -6505,12 +6532,10 @@ def begin_table(str_id: str, column: int, flags: int=0):
     TableNextColumn() will automatically wrap-around into the next row if needed.
     - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
     - Summary of possible call flow:
-    --------------------------------------------------------------------------------------------------------
-    TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
-    TableNextRow() -> TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK
-    TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
-    TableNextRow()                           -> Text("Hello 0")                                               // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
-    --------------------------------------------------------------------------------------------------------
+    - TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
+    - TableNextRow() -> TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK
+    -                   TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
+    - TableNextRow()                           -> Text("Hello 0")                                               // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
     - 5. Call EndTable()
     Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
     """
@@ -8610,10 +8635,33 @@ def save_ini_settings_to_memory(out_ini_size: Any=None):
 def debug_text_encoding(text: str):
     """
     Debug Utilities
+    - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo->Tools->Metrics Debugger
     """
     ccimgui.ImGui_DebugTextEncoding(
         _bytes(text)
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def debug_flash_style_color(idx: int):
+    ccimgui.ImGui_DebugFlashStyleColor(
+        idx
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def debug_start_item_picker():
+    ccimgui.ImGui_DebugStartItemPicker()
 # [End Function]
 
 # [Function]
@@ -8829,19 +8877,6 @@ def im_vector_destruct(vector: Any):
     ccimgui.ImVector_Destruct(
         vector
     )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(int)
-def get_key_index(key: int):
-    cdef ccimgui.ImGuiKey res = ccimgui.ImGui_GetKeyIndex(
-        key
-    )
-    return res
 # [End Function]
 
 # [Class]
@@ -9142,6 +9177,226 @@ cdef class ImVec4:
     @w.setter
     def w(self, value: float):
         # dereference(self._ptr).w = value
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiTableSortSpecs:
+    """
+    Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
+    Obtained by calling TableGetSortSpecs().
+    When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
+    Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
+    """
+    cdef ccimgui.ImGuiTableSortSpecs* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiTableSortSpecs from_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiTableSortSpecs wrapper = ImGuiTableSortSpecs.__new__(ImGuiTableSortSpecs)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTableSortSpecs from_heap_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
+        wrapper = ImGuiTableSortSpecs.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImGuiTableColumnSortSpecs)
+    @property
+    def specs(self):
+        """
+        Pointer to sort spec array.
+        """
+        cdef ccimgui.ImGuiTableColumnSortSpecs* res = dereference(self._ptr).Specs
+        return ImGuiTableColumnSortSpecs.from_ptr(res)
+    @specs.setter
+    def specs(self, value: ImGuiTableColumnSortSpecs):
+        # dereference(self._ptr).Specs = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def specs_count(self):
+        """
+        Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
+        """
+        cdef int res = dereference(self._ptr).SpecsCount
+        return res
+    @specs_count.setter
+    def specs_count(self, value: int):
+        # dereference(self._ptr).SpecsCount = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def specs_dirty(self):
+        """
+        Set to true when specs have changed since last time! use this to sort again, then clear the flag.
+        """
+        cdef bool res = dereference(self._ptr).SpecsDirty
+        return res
+    @specs_dirty.setter
+    def specs_dirty(self, value: bool):
+        # dereference(self._ptr).SpecsDirty = value
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiTableColumnSortSpecs:
+    """
+    Sorting specification for one column of a table (sizeof == 12 bytes)
+    """
+    cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiTableColumnSortSpecs from_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiTableColumnSortSpecs wrapper = ImGuiTableColumnSortSpecs.__new__(ImGuiTableColumnSortSpecs)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiTableColumnSortSpecs from_heap_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
+        wrapper = ImGuiTableColumnSortSpecs.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def column_user_id(self):
+        """
+        User id of the column (if specified by a tablesetupcolumn() call)
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
+        return res
+    @column_user_id.setter
+    def column_user_id(self, value: int):
+        # dereference(self._ptr).ColumnUserID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def column_index(self):
+        """
+        Index of the column
+        """
+        cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
+        return res
+    @column_index.setter
+    def column_index(self, value: int):
+        # dereference(self._ptr).ColumnIndex = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def sort_order(self):
+        """
+        Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
+        """
+        cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
+        return res
+    @sort_order.setter
+    def sort_order(self, value: int):
+        # dereference(self._ptr).SortOrder = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def sort_direction(self):
+        """
+        Imguisortdirection_ascending or imguisortdirection_descending
+        """
+        cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
+        return res
+    @sort_direction.setter
+    def sort_direction(self, value: int):
+        # dereference(self._ptr).SortDirection = value
         raise NotImplementedError
     # [End Field]
 
@@ -12759,12 +13014,35 @@ cdef class ImGuiIO:
     # ?custom_comment_only(False)
     # ?returns(bool)
     @property
+    def config_debug_is_debugger_present(self):
+        """
+        Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
+        - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
+        - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
+        e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+        = false          // enable various tools calling im_debug_break().
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIsDebuggerPresent
+        return res
+    @config_debug_is_debugger_present.setter
+    def config_debug_is_debugger_present(self, value: bool):
+        # dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
     def config_debug_begin_return_value_once(self):
         """
         Tools to test correct Begin/End and BeginChild/EndChild behaviors.
-        Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
-        This is inconsistent with other BeginXXX functions and create confusion for many users.
-        We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
+        - Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
+        - This is inconsistent with other BeginXXX functions and create confusion for many users.
+        - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
         = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueOnce
@@ -12803,9 +13081,9 @@ cdef class ImGuiIO:
     @property
     def config_debug_ignore_focus_loss(self):
         """
-        Option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-        Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-        Consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+        Option to deactivate io.AddFocusEvent(false) handling.
+        - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+        - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
         = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
@@ -13268,22 +13546,6 @@ cdef class ImGuiIO:
     @mouse_delta.setter
     def mouse_delta(self, value: Tuple[float, float]):
         # dereference(self._ptr).MouseDelta = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def unused_padding(self):
-        cdef void* res = dereference(self._ptr)._UnusedPadding
-        return res
-    @unused_padding.setter
-    def unused_padding(self, value: Any):
-        # dereference(self._ptr)._UnusedPadding = value
         raise NotImplementedError
     # [End Field]
 
@@ -14377,6 +14639,8 @@ cdef class ImGuiInputTextCallbackData:
     def event_char(self):
         """
         Arguments for the different callback events
+        - During Resize callback, Buf will be same as your input buffer.
+        - However, during Completion/History/Always callback, Buf always points to our own internal data (it is not the same as your buffer)! Changes to it will be reflected into your own buffer shortly after the callback.
         - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
         - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
         Character input                      // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
@@ -14821,6 +15085,25 @@ cdef class ImGuiWindowClass:
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
+    def focus_route_parent_window_id(self):
+        """
+        Id of parent window for shortcut focus route evaluation, e.g. shortcut() call from parent window will succeed when this window is focused.
+        """
+        cdef ccimgui.ImGuiID res = dereference(self._ptr).FocusRouteParentWindowId
+        return res
+    @focus_route_parent_window_id.setter
+    def focus_route_parent_window_id(self, value: int):
+        # dereference(self._ptr).FocusRouteParentWindowId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
     def viewport_flags_override_set(self):
         """
         Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
@@ -15175,226 +15458,6 @@ cdef class ImGuiPayload:
         )
         return res
     # [End Method]
-
-# [End Class]
-
-# [Class]
-# [Class Constants]
-# ?use_template(False)
-# ?active(True)
-# ?invisible(False)
-# ?custom_comment_only(False)
-cdef class ImGuiTableColumnSortSpecs:
-    """
-    Sorting specification for one column of a table (sizeof == 12 bytes)
-    """
-    cdef ccimgui.ImGuiTableColumnSortSpecs* _ptr
-    cdef bool dynamically_allocated
-    
-    @staticmethod
-    cdef ImGuiTableColumnSortSpecs from_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImGuiTableColumnSortSpecs wrapper = ImGuiTableColumnSortSpecs.__new__(ImGuiTableColumnSortSpecs)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
-    
-    @staticmethod
-    cdef ImGuiTableColumnSortSpecs from_heap_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
-        wrapper = ImGuiTableColumnSortSpecs.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
-    
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
-    # [End Class Constants]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def column_user_id(self):
-        """
-        User id of the column (if specified by a tablesetupcolumn() call)
-        """
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
-        return res
-    @column_user_id.setter
-    def column_user_id(self, value: int):
-        # dereference(self._ptr).ColumnUserID = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def column_index(self):
-        """
-        Index of the column
-        """
-        cdef ccimgui.ImS16 res = dereference(self._ptr).ColumnIndex
-        return res
-    @column_index.setter
-    def column_index(self, value: int):
-        # dereference(self._ptr).ColumnIndex = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def sort_order(self):
-        """
-        Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
-        """
-        cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
-        return res
-    @sort_order.setter
-    def sort_order(self, value: int):
-        # dereference(self._ptr).SortOrder = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def sort_direction(self):
-        """
-        Imguisortdirection_ascending or imguisortdirection_descending
-        """
-        cdef ccimgui.ImGuiSortDirection res = dereference(self._ptr).SortDirection
-        return res
-    @sort_direction.setter
-    def sort_direction(self, value: int):
-        # dereference(self._ptr).SortDirection = value
-        raise NotImplementedError
-    # [End Field]
-
-# [End Class]
-
-# [Class]
-# [Class Constants]
-# ?use_template(False)
-# ?active(True)
-# ?invisible(False)
-# ?custom_comment_only(False)
-cdef class ImGuiTableSortSpecs:
-    """
-    Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
-    Obtained by calling TableGetSortSpecs().
-    When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
-    Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
-    """
-    cdef ccimgui.ImGuiTableSortSpecs* _ptr
-    cdef bool dynamically_allocated
-    
-    @staticmethod
-    cdef ImGuiTableSortSpecs from_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImGuiTableSortSpecs wrapper = ImGuiTableSortSpecs.__new__(ImGuiTableSortSpecs)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
-    
-    @staticmethod
-    cdef ImGuiTableSortSpecs from_heap_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
-        wrapper = ImGuiTableSortSpecs.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
-    
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
-    # [End Class Constants]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGuiTableColumnSortSpecs)
-    @property
-    def specs(self):
-        """
-        Pointer to sort spec array.
-        """
-        cdef ccimgui.ImGuiTableColumnSortSpecs* res = dereference(self._ptr).Specs
-        return ImGuiTableColumnSortSpecs.from_ptr(res)
-    @specs.setter
-    def specs(self, value: ImGuiTableColumnSortSpecs):
-        # dereference(self._ptr).Specs = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def specs_count(self):
-        """
-        Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
-        """
-        cdef int res = dereference(self._ptr).SpecsCount
-        return res
-    @specs_count.setter
-    def specs_count(self, value: int):
-        # dereference(self._ptr).SpecsCount = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def specs_dirty(self):
-        """
-        Set to true when specs have changed since last time! use this to sort again, then clear the flag.
-        """
-        cdef bool res = dereference(self._ptr).SpecsDirty
-        return res
-    @specs_dirty.setter
-    def specs_dirty(self, value: bool):
-        # dereference(self._ptr).SpecsDirty = value
-        raise NotImplementedError
-    # [End Field]
 
 # [End Class]
 
@@ -17974,15 +18037,14 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int):
+    def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int):
         """
         Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
         """
         ccimgui.ImDrawList_AddEllipse(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             col
         )
     # [End Method]
@@ -17993,12 +18055,11 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
+    def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
         ccimgui.ImDrawList_AddEllipseEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             col,
             rot,
             num_segments,
@@ -18012,15 +18073,14 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int):
+    def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int):
         """
         Implied rot = 0.0f, num_segments = 0
         """
         ccimgui.ImDrawList_AddEllipseFilled(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             col
         )
     # [End Method]
@@ -18031,12 +18091,11 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0):
+    def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0):
         ccimgui.ImDrawList_AddEllipseFilledEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             col,
             rot,
             num_segments
@@ -18127,38 +18186,6 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
-        ccimgui.ImDrawList_AddPolyline(
-            self._ptr,
-            points._ptr,
-            num_points,
-            col,
-            flags,
-            thickness
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
-        ccimgui.ImDrawList_AddConvexPolyFilled(
-            self._ptr,
-            points._ptr,
-            num_points,
-            col
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
     def add_bezier_cubic(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float, num_segments: int=0):
         """
         Cubic bezier (4 control points)
@@ -18193,6 +18220,58 @@ cdef class ImDrawList:
             col,
             thickness,
             num_segments
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
+        """
+        General polygon
+        - Only simple polygons are supported by filling functions (no self-intersections, no holes).
+        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience fo user but not used by main library.
+        """
+        ccimgui.ImDrawList_AddPolyline(
+            self._ptr,
+            points._ptr,
+            num_points,
+            col,
+            flags,
+            thickness
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_convex_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
+        ccimgui.ImDrawList_AddConvexPolyFilled(
+            self._ptr,
+            points._ptr,
+            num_points,
+            col
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_concave_poly_filled(self: ImDrawList, points: ImVec2, num_points: int, col: int):
+        ccimgui.ImDrawList_AddConcavePolyFilled(
+            self._ptr,
+            points._ptr,
+            num_points,
+            col
         )
     # [End Method]
 
@@ -18307,7 +18386,8 @@ cdef class ImDrawList:
     def path_clear(self: ImDrawList):
         """
         Stateful path API, add points then finish with PathFillConvex() or PathStroke()
-        - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        - Important: filled shapes must always use clockwise winding order! The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        so e.g. 'PathArcTo(center, radius, PI * -0.5f, PI)' is ok, whereas 'PathArcTo(center, radius, PI, PI * -0.5f)' won't have correct anti-aliasing when followed by PathFillConvex().
         """
         ccimgui.ImDrawList_PathClear(
             self._ptr
@@ -18348,6 +18428,19 @@ cdef class ImDrawList:
     # ?returns(None)
     def path_fill_convex(self: ImDrawList, col: int):
         ccimgui.ImDrawList_PathFillConvex(
+            self._ptr,
+            col
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def path_fill_concave(self: ImDrawList, col: int):
+        ccimgui.ImDrawList_PathFillConcave(
             self._ptr,
             col
         )
@@ -18410,15 +18503,14 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float):
+    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float):
         """
         Implied num_segments = 0
         """
         ccimgui.ImDrawList_PathEllipticalArcTo(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             rot,
             a_min,
             a_max
@@ -18431,15 +18523,14 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0):
+    def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
         """
         Ellipse
         """
         ccimgui.ImDrawList_PathEllipticalArcToEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
-            radius_x,
-            radius_y,
+            _cast_tuple_ImVec2(radius),
             rot,
             a_min,
             a_max,

@@ -15,6 +15,8 @@ cdef extern from "cimgui.h":
     ctypedef struct ImGuiContext
     ctypedef struct ImVec2
     ctypedef struct ImVec4
+    ctypedef struct ImGuiTableSortSpecs
+    ctypedef struct ImGuiTableColumnSortSpecs
     ctypedef struct ImVector_ImWchar
     ctypedef struct ImVector_ImGuiTextFilter_ImGuiTextRange
     ctypedef struct ImVector_char
@@ -42,8 +44,6 @@ cdef extern from "cimgui.h":
     ctypedef struct ImGuiSizeCallbackData
     ctypedef struct ImGuiWindowClass
     ctypedef struct ImGuiPayload
-    ctypedef struct ImGuiTableColumnSortSpecs
-    ctypedef struct ImGuiTableSortSpecs
     ctypedef struct ImGuiTextFilter_ImGuiTextRange
     ctypedef struct ImGuiTextFilter
     ctypedef struct ImGuiTextBuffer
@@ -87,7 +87,7 @@ cdef extern from "cimgui.h":
     ctypedef int ImGuiStyleVar             # -> enum imguistylevar_        // enum: a variable identifier for styling
     ctypedef int ImGuiTableBgTarget        # -> enum imguitablebgtarget_   // enum: a color target for tablesetbgcolor()
 
-    # Flags (declared as int for compatibility with old C++, to allow using as flags without overhead, and to not pollute the top of this file)
+    # Flags (declared as int to allow using as flags without overhead, and to not pollute the top of this file)
     # - Tip: Use your programming IDE navigation facilities on the names in the _central column_ below to find the actual flags/enum lists!
     # In Visual Studio IDE: CTRL+comma ("Edit.GoToAll") can follow symbols in comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
     # With Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols in comments.
@@ -105,7 +105,7 @@ cdef extern from "cimgui.h":
     ctypedef int ImGuiFocusedFlags         # -> enum imguifocusedflags_    // flags: for iswindowfocused()
     ctypedef int ImGuiHoveredFlags         # -> enum imguihoveredflags_    // flags: for isitemhovered(), iswindowhovered() etc.
     ctypedef int ImGuiInputTextFlags       # -> enum imguiinputtextflags_  // flags: for inputtext(), inputtextmultiline()
-    ctypedef int ImGuiKeyChord             # -> imguikey | imguimod_xxx    // flags: for storage only for now: an imguikey optionally or-ed with one or more imguimod_xxx values.
+    ctypedef int ImGuiKeyChord             # -> imguikey | imguimod_xxx    // flags: for iskeychordpressed(), shortcut() etc. an imguikey optionally or-ed with one or more imguimod_xxx values.
     ctypedef int ImGuiPopupFlags           # -> enum imguipopupflags_      // flags: for openpopup*(), beginpopupcontext*(), ispopupopen()
     ctypedef int ImGuiSelectableFlags      # -> enum imguiselectableflags_ // flags: for selectable()
     ctypedef int ImGuiSliderFlags          # -> enum imguisliderflags_     // flags: for dragfloat(), dragint(), sliderfloat(), sliderint() etc.
@@ -169,7 +169,7 @@ cdef extern from "cimgui.h":
         ImGuiWindowFlags_NoNav
         ImGuiWindowFlags_NoDecoration
         ImGuiWindowFlags_NoInputs
-        ImGuiWindowFlags_NavFlattened                  # [beta] on child window: allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+        ImGuiWindowFlags_NavFlattened                  # [beta] on child window: share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
         ImGuiWindowFlags_ChildWindow                   # Don't use! for internal use by beginchild()
         ImGuiWindowFlags_Tooltip                       # Don't use! for internal use by begintooltip()
         ImGuiWindowFlags_Popup                         # Don't use! for internal use by beginpopup()
@@ -238,6 +238,7 @@ cdef extern from "cimgui.h":
         ImGuiPopupFlags_MouseButtonMiddle           # For beginpopupcontext*(): open on middle mouse release. guaranteed to always be == 2 (same as imguimousebutton_middle)
         ImGuiPopupFlags_MouseButtonMask_
         ImGuiPopupFlags_MouseButtonDefault_
+        ImGuiPopupFlags_NoReopen                    # For openpopup*(), beginpopupcontext*(): don't reopen same popup if already open (won't reposition, won't reinitialize navigation)
         ImGuiPopupFlags_NoOpenOverExistingPopup     # For openpopup*(), beginpopupcontext*(): don't open if there's already a popup at the same level of the popup stack
         ImGuiPopupFlags_NoOpenOverItems             # For beginpopupcontextwindow(): don't return true when hovering items, only when hovering empty space
         ImGuiPopupFlags_AnyPopupId                  # For ispopupopen(): ignore the imguiid parameter and test for any popup.
@@ -269,7 +270,7 @@ cdef extern from "cimgui.h":
         ImGuiTabBarFlags_Reorderable                      # Allow manually dragging tabs to re-order them + new tabs are appended at the end of list
         ImGuiTabBarFlags_AutoSelectNewTabs                # Automatically select new tabs when they appear
         ImGuiTabBarFlags_TabListPopupButton               # Disable buttons to open the tab list popup
-        ImGuiTabBarFlags_NoCloseWithMiddleMouseButton     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+        ImGuiTabBarFlags_NoCloseWithMiddleMouseButton     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you may handle this behavior manually on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
         ImGuiTabBarFlags_NoTabListScrollingButtons        # Disable scrolling buttons (apply when fitting policy is imguitabbarflags_fittingpolicyscroll)
         ImGuiTabBarFlags_NoTooltip                        # Disable tooltips when hovering a tab
         ImGuiTabBarFlags_FittingPolicyResizeDown          # Resize tabs when they don't fit
@@ -279,93 +280,15 @@ cdef extern from "cimgui.h":
 
     ctypedef enum ImGuiTabItemFlags_:
         ImGuiTabItemFlags_None
-        ImGuiTabItemFlags_UnsavedDocument                  # Display a dot next to the title + tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
+        ImGuiTabItemFlags_UnsavedDocument                  # Display a dot next to the title + set imguitabitemflags_noassumedclosure.
         ImGuiTabItemFlags_SetSelected                      # Trigger flag to programmatically make the tab selected when calling begintabitem()
-        ImGuiTabItemFlags_NoCloseWithMiddleMouseButton     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
-        ImGuiTabItemFlags_NoPushId                         # Don't call pushid(tab->id)/popid() on begintabitem()/endtabitem()
+        ImGuiTabItemFlags_NoCloseWithMiddleMouseButton     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you may handle this behavior manually on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+        ImGuiTabItemFlags_NoPushId                         # Don't call pushid()/popid() on begintabitem()/endtabitem()
         ImGuiTabItemFlags_NoTooltip                        # Disable tooltip for the given tab
         ImGuiTabItemFlags_NoReorder                        # Disable reordering this tab or having another tab cross over this tab
         ImGuiTabItemFlags_Leading                          # Enforce the tab position to the left of the tab bar (after the tab list popup button)
         ImGuiTabItemFlags_Trailing                         # Enforce the tab position to the right of the tab bar (before the scrolling buttons)
-
-    ctypedef enum ImGuiTableFlags_:
-        ImGuiTableFlags_None
-        ImGuiTableFlags_Resizable                      # Enable resizing columns.
-        ImGuiTableFlags_Reorderable                    # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
-        ImGuiTableFlags_Hideable                       # Enable hiding/disabling columns in context menu.
-        ImGuiTableFlags_Sortable                       # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
-        ImGuiTableFlags_NoSavedSettings                # Disable persisting columns order, width and sort settings in the .ini file.
-        ImGuiTableFlags_ContextMenuInBody              # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
-        ImGuiTableFlags_RowBg                          # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
-        ImGuiTableFlags_BordersInnerH                  # Draw horizontal borders between rows.
-        ImGuiTableFlags_BordersOuterH                  # Draw horizontal borders at the top and bottom.
-        ImGuiTableFlags_BordersInnerV                  # Draw vertical borders between columns.
-        ImGuiTableFlags_BordersOuterV                  # Draw vertical borders on the left and right sides.
-        ImGuiTableFlags_BordersH                       # Draw horizontal borders.
-        ImGuiTableFlags_BordersV                       # Draw vertical borders.
-        ImGuiTableFlags_BordersInner                   # Draw inner borders.
-        ImGuiTableFlags_BordersOuter                   # Draw outer borders.
-        ImGuiTableFlags_Borders                        # Draw all borders.
-        ImGuiTableFlags_NoBordersInBody                # [alpha] disable vertical borders in columns body (borders will always appear in headers). -> may move to style
-        ImGuiTableFlags_NoBordersInBodyUntilResize     # [alpha] disable vertical borders in columns body until hovered for resize (borders will always appear in headers). -> may move to style
-        ImGuiTableFlags_SizingFixedFit                 # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching contents width.
-        ImGuiTableFlags_SizingFixedSame                # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching the maximum contents width of all columns. implicitly enable imguitableflags_nokeepcolumnsvisible.
-        ImGuiTableFlags_SizingStretchProp              # Columns default to _widthstretch with default weights proportional to each columns contents widths.
-        ImGuiTableFlags_SizingStretchSame              # Columns default to _widthstretch with default weights all equal, unless overridden by tablesetupcolumn().
-        ImGuiTableFlags_NoHostExtendX                  # Make outer width auto-fit to columns, overriding outer_size.x value. only available when scrollx/scrolly are disabled and stretch columns are not used.
-        ImGuiTableFlags_NoHostExtendY                  # Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). only available when scrollx/scrolly are disabled. data below the limit will be clipped and not visible.
-        ImGuiTableFlags_NoKeepColumnsVisible           # Disable keeping column always minimally visible when scrollx is off and table gets too small. not recommended if columns are resizable.
-        ImGuiTableFlags_PreciseWidths                  # Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: without this flag: 33,33,34. with this flag: 33,33,33). with larger number of columns, resizing will appear to be less smooth.
-        ImGuiTableFlags_NoClip                         # Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). generally incompatible with tablesetupscrollfreeze().
-        ImGuiTableFlags_PadOuterX                      # Default if bordersouterv is on. enable outermost padding. generally desirable if you have headers.
-        ImGuiTableFlags_NoPadOuterX                    # Default if bordersouterv is off. disable outermost padding.
-        ImGuiTableFlags_NoPadInnerX                    # Disable inner padding between columns (double inner padding if bordersouterv is on, single inner padding if bordersouterv is off).
-        ImGuiTableFlags_ScrollX                        # Enable horizontal scrolling. require 'outer_size' parameter of begintable() to specify the container size. changes default sizing policy. because this creates a child window, scrolly is currently generally recommended when using scrollx.
-        ImGuiTableFlags_ScrollY                        # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
-        ImGuiTableFlags_SortMulti                      # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
-        ImGuiTableFlags_SortTristate                   # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
-        ImGuiTableFlags_HighlightHoveredColumn         # Highlight column headers when hovered (may evolve into a fuller highlight)
-        ImGuiTableFlags_SizingMask_
-
-    ctypedef enum ImGuiTableColumnFlags_:
-        ImGuiTableColumnFlags_None
-        ImGuiTableColumnFlags_Disabled                 # Overriding/master disable flag: hide column, won't show in context menu (unlike calling tablesetcolumnenabled() which manipulates the user accessible state)
-        ImGuiTableColumnFlags_DefaultHide              # Default as a hidden/disabled column.
-        ImGuiTableColumnFlags_DefaultSort              # Default as a sorting column.
-        ImGuiTableColumnFlags_WidthStretch             # Column will stretch. preferable with horizontal scrolling disabled (default if table sizing policy is _sizingstretchsame or _sizingstretchprop).
-        ImGuiTableColumnFlags_WidthFixed               # Column will not stretch. preferable with horizontal scrolling enabled (default if table sizing policy is _sizingfixedfit and table is resizable).
-        ImGuiTableColumnFlags_NoResize                 # Disable manual resizing.
-        ImGuiTableColumnFlags_NoReorder                # Disable manual reordering this column, this will also prevent other columns from crossing over this column.
-        ImGuiTableColumnFlags_NoHide                   # Disable ability to hide/disable this column.
-        ImGuiTableColumnFlags_NoClip                   # Disable clipping for this column (all noclip columns will render in a same draw command).
-        ImGuiTableColumnFlags_NoSort                   # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
-        ImGuiTableColumnFlags_NoSortAscending          # Disable ability to sort in the ascending direction.
-        ImGuiTableColumnFlags_NoSortDescending         # Disable ability to sort in the descending direction.
-        ImGuiTableColumnFlags_NoHeaderLabel            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
-        ImGuiTableColumnFlags_NoHeaderWidth            # Disable header text width contribution to automatic column width.
-        ImGuiTableColumnFlags_PreferSortAscending      # Make the initial sort direction ascending when first sorting on this column (default).
-        ImGuiTableColumnFlags_PreferSortDescending     # Make the initial sort direction descending when first sorting on this column.
-        ImGuiTableColumnFlags_IndentEnable             # Use current indent value when entering cell (default for column 0).
-        ImGuiTableColumnFlags_IndentDisable            # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
-        ImGuiTableColumnFlags_AngledHeader             # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
-        ImGuiTableColumnFlags_IsEnabled                # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
-        ImGuiTableColumnFlags_IsVisible                # Status: is visible == is enabled and not clipped by scrolling.
-        ImGuiTableColumnFlags_IsSorted                 # Status: is currently part of the sort specs
-        ImGuiTableColumnFlags_IsHovered                # Status: is hovered by mouse
-        ImGuiTableColumnFlags_WidthMask_
-        ImGuiTableColumnFlags_IndentMask_
-        ImGuiTableColumnFlags_StatusMask_
-        ImGuiTableColumnFlags_NoDirectResize_          # [internal] disable user resizing this column directly (it may however we resized indirectly from its left edge)
-
-    ctypedef enum ImGuiTableRowFlags_:
-        ImGuiTableRowFlags_None
-        ImGuiTableRowFlags_Headers     # Identify header row (set default background color + width of its contents accounted differently for auto column width)
-
-    ctypedef enum ImGuiTableBgTarget_:
-        ImGuiTableBgTarget_None
-        ImGuiTableBgTarget_RowBg0     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
-        ImGuiTableBgTarget_RowBg1     # Set row background color 1 (generally used for selection marking)
-        ImGuiTableBgTarget_CellBg     # Set cell background color (top-most color)
+        ImGuiTabItemFlags_NoAssumedClosure                 # Tab is selected when trying to close + closure is not immediately assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
 
     ctypedef enum ImGuiFocusedFlags_:
         ImGuiFocusedFlags_None
@@ -654,15 +577,15 @@ cdef extern from "cimgui.h":
         ImGuiCol_FrameBg                   # Background of checkbox, radio button, plot, slider, text input
         ImGuiCol_FrameBgHovered
         ImGuiCol_FrameBgActive
-        ImGuiCol_TitleBg
-        ImGuiCol_TitleBgActive
-        ImGuiCol_TitleBgCollapsed
+        ImGuiCol_TitleBg                   # Title bar
+        ImGuiCol_TitleBgActive             # Title bar when focused
+        ImGuiCol_TitleBgCollapsed          # Title bar when collapsed
         ImGuiCol_MenuBarBg
         ImGuiCol_ScrollbarBg
         ImGuiCol_ScrollbarGrab
         ImGuiCol_ScrollbarGrabHovered
         ImGuiCol_ScrollbarGrabActive
-        ImGuiCol_CheckMark
+        ImGuiCol_CheckMark                 # Checkbox tick and radiobutton circle
         ImGuiCol_SliderGrab
         ImGuiCol_SliderGrabActive
         ImGuiCol_Button
@@ -813,6 +736,85 @@ cdef extern from "cimgui.h":
         ImGuiCond_FirstUseEver     # Set the variable if the object/window has no persistently saved data (no entry in .ini file)
         ImGuiCond_Appearing        # Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
 
+    ctypedef enum ImGuiTableFlags_:
+        ImGuiTableFlags_None
+        ImGuiTableFlags_Resizable                      # Enable resizing columns.
+        ImGuiTableFlags_Reorderable                    # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
+        ImGuiTableFlags_Hideable                       # Enable hiding/disabling columns in context menu.
+        ImGuiTableFlags_Sortable                       # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
+        ImGuiTableFlags_NoSavedSettings                # Disable persisting columns order, width and sort settings in the .ini file.
+        ImGuiTableFlags_ContextMenuInBody              # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
+        ImGuiTableFlags_RowBg                          # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
+        ImGuiTableFlags_BordersInnerH                  # Draw horizontal borders between rows.
+        ImGuiTableFlags_BordersOuterH                  # Draw horizontal borders at the top and bottom.
+        ImGuiTableFlags_BordersInnerV                  # Draw vertical borders between columns.
+        ImGuiTableFlags_BordersOuterV                  # Draw vertical borders on the left and right sides.
+        ImGuiTableFlags_BordersH                       # Draw horizontal borders.
+        ImGuiTableFlags_BordersV                       # Draw vertical borders.
+        ImGuiTableFlags_BordersInner                   # Draw inner borders.
+        ImGuiTableFlags_BordersOuter                   # Draw outer borders.
+        ImGuiTableFlags_Borders                        # Draw all borders.
+        ImGuiTableFlags_NoBordersInBody                # [alpha] disable vertical borders in columns body (borders will always appear in headers). -> may move to style
+        ImGuiTableFlags_NoBordersInBodyUntilResize     # [alpha] disable vertical borders in columns body until hovered for resize (borders will always appear in headers). -> may move to style
+        ImGuiTableFlags_SizingFixedFit                 # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching contents width.
+        ImGuiTableFlags_SizingFixedSame                # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching the maximum contents width of all columns. implicitly enable imguitableflags_nokeepcolumnsvisible.
+        ImGuiTableFlags_SizingStretchProp              # Columns default to _widthstretch with default weights proportional to each columns contents widths.
+        ImGuiTableFlags_SizingStretchSame              # Columns default to _widthstretch with default weights all equal, unless overridden by tablesetupcolumn().
+        ImGuiTableFlags_NoHostExtendX                  # Make outer width auto-fit to columns, overriding outer_size.x value. only available when scrollx/scrolly are disabled and stretch columns are not used.
+        ImGuiTableFlags_NoHostExtendY                  # Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). only available when scrollx/scrolly are disabled. data below the limit will be clipped and not visible.
+        ImGuiTableFlags_NoKeepColumnsVisible           # Disable keeping column always minimally visible when scrollx is off and table gets too small. not recommended if columns are resizable.
+        ImGuiTableFlags_PreciseWidths                  # Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: without this flag: 33,33,34. with this flag: 33,33,33). with larger number of columns, resizing will appear to be less smooth.
+        ImGuiTableFlags_NoClip                         # Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). generally incompatible with tablesetupscrollfreeze().
+        ImGuiTableFlags_PadOuterX                      # Default if bordersouterv is on. enable outermost padding. generally desirable if you have headers.
+        ImGuiTableFlags_NoPadOuterX                    # Default if bordersouterv is off. disable outermost padding.
+        ImGuiTableFlags_NoPadInnerX                    # Disable inner padding between columns (double inner padding if bordersouterv is on, single inner padding if bordersouterv is off).
+        ImGuiTableFlags_ScrollX                        # Enable horizontal scrolling. require 'outer_size' parameter of begintable() to specify the container size. changes default sizing policy. because this creates a child window, scrolly is currently generally recommended when using scrollx.
+        ImGuiTableFlags_ScrollY                        # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
+        ImGuiTableFlags_SortMulti                      # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
+        ImGuiTableFlags_SortTristate                   # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
+        ImGuiTableFlags_HighlightHoveredColumn         # Highlight column headers when hovered (may evolve into a fuller highlight)
+        ImGuiTableFlags_SizingMask_
+
+    ctypedef enum ImGuiTableColumnFlags_:
+        ImGuiTableColumnFlags_None
+        ImGuiTableColumnFlags_Disabled                 # Overriding/master disable flag: hide column, won't show in context menu (unlike calling tablesetcolumnenabled() which manipulates the user accessible state)
+        ImGuiTableColumnFlags_DefaultHide              # Default as a hidden/disabled column.
+        ImGuiTableColumnFlags_DefaultSort              # Default as a sorting column.
+        ImGuiTableColumnFlags_WidthStretch             # Column will stretch. preferable with horizontal scrolling disabled (default if table sizing policy is _sizingstretchsame or _sizingstretchprop).
+        ImGuiTableColumnFlags_WidthFixed               # Column will not stretch. preferable with horizontal scrolling enabled (default if table sizing policy is _sizingfixedfit and table is resizable).
+        ImGuiTableColumnFlags_NoResize                 # Disable manual resizing.
+        ImGuiTableColumnFlags_NoReorder                # Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+        ImGuiTableColumnFlags_NoHide                   # Disable ability to hide/disable this column.
+        ImGuiTableColumnFlags_NoClip                   # Disable clipping for this column (all noclip columns will render in a same draw command).
+        ImGuiTableColumnFlags_NoSort                   # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
+        ImGuiTableColumnFlags_NoSortAscending          # Disable ability to sort in the ascending direction.
+        ImGuiTableColumnFlags_NoSortDescending         # Disable ability to sort in the descending direction.
+        ImGuiTableColumnFlags_NoHeaderLabel            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
+        ImGuiTableColumnFlags_NoHeaderWidth            # Disable header text width contribution to automatic column width.
+        ImGuiTableColumnFlags_PreferSortAscending      # Make the initial sort direction ascending when first sorting on this column (default).
+        ImGuiTableColumnFlags_PreferSortDescending     # Make the initial sort direction descending when first sorting on this column.
+        ImGuiTableColumnFlags_IndentEnable             # Use current indent value when entering cell (default for column 0).
+        ImGuiTableColumnFlags_IndentDisable            # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
+        ImGuiTableColumnFlags_AngledHeader             # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
+        ImGuiTableColumnFlags_IsEnabled                # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
+        ImGuiTableColumnFlags_IsVisible                # Status: is visible == is enabled and not clipped by scrolling.
+        ImGuiTableColumnFlags_IsSorted                 # Status: is currently part of the sort specs
+        ImGuiTableColumnFlags_IsHovered                # Status: is hovered by mouse
+        ImGuiTableColumnFlags_WidthMask_
+        ImGuiTableColumnFlags_IndentMask_
+        ImGuiTableColumnFlags_StatusMask_
+        ImGuiTableColumnFlags_NoDirectResize_          # [internal] disable user resizing this column directly (it may however we resized indirectly from its left edge)
+
+    ctypedef enum ImGuiTableRowFlags_:
+        ImGuiTableRowFlags_None
+        ImGuiTableRowFlags_Headers     # Identify header row (set default background color + width of its contents accounted differently for auto column width)
+
+    ctypedef enum ImGuiTableBgTarget_:
+        ImGuiTableBgTarget_None
+        ImGuiTableBgTarget_RowBg0     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
+        ImGuiTableBgTarget_RowBg1     # Set row background color 1 (generally used for selection marking)
+        ImGuiTableBgTarget_CellBg     # Set cell background color (top-most color)
+
     ctypedef enum ImDrawFlags_:
         ImDrawFlags_None
         ImDrawFlags_Closed                      # Pathstroke(), addpolyline(): specify that shape should be closed (important: this is always == 1 for legacy reason)
@@ -884,6 +886,26 @@ cdef extern from "cimgui.h":
         float y
         float z
         float w
+
+
+
+    # Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
+    # Obtained by calling TableGetSortSpecs().
+    # When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
+    # Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
+    ctypedef struct ImGuiTableSortSpecs:
+        const ImGuiTableColumnSortSpecs* Specs     # Pointer to sort spec array.
+        int SpecsCount                             # Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
+        bool SpecsDirty                            # Set to true when specs have changed since last time! use this to sort again, then clear the flag.
+
+
+
+    # Sorting specification for one column of a table (sizeof == 12 bytes)
+    ctypedef struct ImGuiTableColumnSortSpecs:
+        ImGuiID ColumnUserID                 # User id of the column (if specified by a tablesetupcolumn() call)
+        ImS16 ColumnIndex                    # Index of the column
+        ImS16 SortOrder                      # Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
+        ImGuiSortDirection SortDirection     # Imguisortdirection_ascending or imguisortdirection_descending
 
 
 
@@ -1130,6 +1152,7 @@ cdef extern from "cimgui.h":
         float MouseDragThreshold                                                              # = 6.0f           // distance threshold before considering we are dragging.
         float KeyRepeatDelay                                                                  # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
         float KeyRepeatRate                                                                   # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
+        bool ConfigDebugIsDebuggerPresent                                                     # = false          // enable various tools calling im_debug_break().
         bool ConfigDebugBeginReturnValueOnce                                                  # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         bool ConfigDebugBeginReturnValueLoop                                                  # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         bool ConfigDebugIgnoreFocusLoss                                                       # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
@@ -1157,7 +1180,6 @@ cdef extern from "cimgui.h":
         int MetricsRenderWindows                                                              # Number of visible windows
         int MetricsActiveWindows                                                              # Number of active windows
         ImVec2 MouseDelta                                                                     # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
-        void* _UnusedPadding
         ImGuiContext* Ctx                                                                     # Parent ui context (needs to be set explicitly by parent).
         ImVec2 MousePos                                                                       # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
         bool* MouseDown                                                                       # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
@@ -1297,6 +1319,7 @@ cdef extern from "cimgui.h":
     ctypedef struct ImGuiWindowClass:
         ImGuiID ClassId                                   # User data. 0 = default class (unclassed). windows of different classes cannot be docked with each others.
         ImGuiID ParentViewportId                          # Hint for the platform backend. -1: use default. 0: request platform backend to not parent the platform. != 0: request platform backend to create a parent<>child relationship between the platform windows. not conforming backends are free to e.g. parent every viewport to the main viewport or not.
+        ImGuiID FocusRouteParentWindowId                  # Id of parent window for shortcut focus route evaluation, e.g. shortcut() call from parent window will succeed when this window is focused.
         ImGuiViewportFlags ViewportFlagsOverrideSet       # Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
         ImGuiViewportFlags ViewportFlagsOverrideClear     # Viewport flags to clear when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
         ImGuiTabItemFlags TabItemFlagsOverrideSet         # [experimental] tabitem flags to set when a window of this class gets submitted into a dock node tab bar. may use with imguitabitemflags_leading or imguitabitemflags_trailing.
@@ -1321,26 +1344,6 @@ cdef extern from "cimgui.h":
     bool ImGuiPayload_IsDataType(const ImGuiPayload* self, const char* type_) except +
     bool ImGuiPayload_IsPreview(const ImGuiPayload* self) except +
     bool ImGuiPayload_IsDelivery(const ImGuiPayload* self) except +
-
-
-    # Sorting specification for one column of a table (sizeof == 12 bytes)
-    ctypedef struct ImGuiTableColumnSortSpecs:
-        ImGuiID ColumnUserID                 # User id of the column (if specified by a tablesetupcolumn() call)
-        ImS16 ColumnIndex                    # Index of the column
-        ImS16 SortOrder                      # Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
-        ImGuiSortDirection SortDirection     # Imguisortdirection_ascending or imguisortdirection_descending
-
-
-
-    # Sorting specifications for a table (often handling sort specs for a single column, occasionally more)
-    # Obtained by calling TableGetSortSpecs().
-    # When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.
-    # Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!
-    ctypedef struct ImGuiTableSortSpecs:
-        const ImGuiTableColumnSortSpecs* Specs     # Pointer to sort spec array.
-        int SpecsCount                             # Sort spec count. most often 1. may be > 1 when imguitableflags_sortmulti is enabled. may be == 0 when imguitableflags_sorttristate is enabled.
-        bool SpecsDirty                            # Set to true when specs have changed since last time! use this to sort again, then clear the flag.
-
 
 
     # [Internal]
@@ -1631,12 +1634,12 @@ cdef extern from "cimgui.h":
     void ImDrawList_AddNgonFilled(ImDrawList* self, ImVec2 center, float radius, ImU32 col, int num_segments) except +
 
     # Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
-    void ImDrawList_AddEllipse(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col) except +
-    void ImDrawList_AddEllipseEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col, float rot, int num_segments, float thickness) except +
+    void ImDrawList_AddEllipse(ImDrawList* self, ImVec2 center, ImVec2 radius, ImU32 col) except +
+    void ImDrawList_AddEllipseEx(ImDrawList* self, ImVec2 center, ImVec2 radius, ImU32 col, float rot, int num_segments, float thickness) except +
 
     # Implied rot = 0.0f, num_segments = 0
-    void ImDrawList_AddEllipseFilled(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col) except +
-    void ImDrawList_AddEllipseFilledEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, ImU32 col, float rot, int num_segments) except +
+    void ImDrawList_AddEllipseFilled(ImDrawList* self, ImVec2 center, ImVec2 radius, ImU32 col) except +
+    void ImDrawList_AddEllipseFilledEx(ImDrawList* self, ImVec2 center, ImVec2 radius, ImU32 col, float rot, int num_segments) except +
 
     # Implied text_end = null
     void ImDrawList_AddText(ImDrawList* self, ImVec2 pos, ImU32 col, const char* text_begin) except +
@@ -1645,14 +1648,19 @@ cdef extern from "cimgui.h":
     # Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
     void ImDrawList_AddTextImFontPtr(ImDrawList* self, const ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin) except +
     void ImDrawList_AddTextImFontPtrEx(ImDrawList* self, const ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect) except +
-    void ImDrawList_AddPolyline(ImDrawList* self, const ImVec2* points, int num_points, ImU32 col, ImDrawFlags flags, float thickness) except +
-    void ImDrawList_AddConvexPolyFilled(ImDrawList* self, const ImVec2* points, int num_points, ImU32 col) except +
 
     # Cubic bezier (4 control points)
     void ImDrawList_AddBezierCubic(ImDrawList* self, ImVec2 p1, ImVec2 p2, ImVec2 p3, ImVec2 p4, ImU32 col, float thickness, int num_segments) except +
 
     # Quadratic bezier (3 control points)
     void ImDrawList_AddBezierQuadratic(ImDrawList* self, ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col, float thickness, int num_segments) except +
+
+    # General polygon
+    # - Only simple polygons are supported by filling functions (no self-intersections, no holes).
+    # - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience fo user but not used by main library.
+    void ImDrawList_AddPolyline(ImDrawList* self, const ImVec2* points, int num_points, ImU32 col, ImDrawFlags flags, float thickness) except +
+    void ImDrawList_AddConvexPolyFilled(ImDrawList* self, const ImVec2* points, int num_points, ImU32 col) except +
+    void ImDrawList_AddConcavePolyFilled(ImDrawList* self, const ImVec2* points, int num_points, ImU32 col) except +
 
     # Image primitives
     # - Read FAQ to understand what ImTextureID is.
@@ -1668,11 +1676,13 @@ cdef extern from "cimgui.h":
     void ImDrawList_AddImageRounded(ImDrawList* self, ImTextureID user_texture_id, ImVec2 p_min, ImVec2 p_max, ImVec2 uv_min, ImVec2 uv_max, ImU32 col, float rounding, ImDrawFlags flags) except +
 
     # Stateful path API, add points then finish with PathFillConvex() or PathStroke()
-    # - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+    # - Important: filled shapes must always use clockwise winding order! The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+    # so e.g. 'PathArcTo(center, radius, PI * -0.5f, PI)' is ok, whereas 'PathArcTo(center, radius, PI, PI * -0.5f)' won't have correct anti-aliasing when followed by PathFillConvex().
     void ImDrawList_PathClear(ImDrawList* self) except +
     void ImDrawList_PathLineTo(ImDrawList* self, ImVec2 pos) except +
     void ImDrawList_PathLineToMergeDuplicate(ImDrawList* self, ImVec2 pos) except +
     void ImDrawList_PathFillConvex(ImDrawList* self, ImU32 col) except +
+    void ImDrawList_PathFillConcave(ImDrawList* self, ImU32 col) except +
     void ImDrawList_PathStroke(ImDrawList* self, ImU32 col, ImDrawFlags flags, float thickness) except +
     void ImDrawList_PathArcTo(ImDrawList* self, ImVec2 center, float radius, float a_min, float a_max, int num_segments) except +
 
@@ -1680,10 +1690,10 @@ cdef extern from "cimgui.h":
     void ImDrawList_PathArcToFast(ImDrawList* self, ImVec2 center, float radius, int a_min_of_12, int a_max_of_12) except +
 
     # Implied num_segments = 0
-    void ImDrawList_PathEllipticalArcTo(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, float rot, float a_min, float a_max) except +
+    void ImDrawList_PathEllipticalArcTo(ImDrawList* self, ImVec2 center, ImVec2 radius, float rot, float a_min, float a_max) except +
 
     # Ellipse
-    void ImDrawList_PathEllipticalArcToEx(ImDrawList* self, ImVec2 center, float radius_x, float radius_y, float rot, float a_min, float a_max, int num_segments) except +
+    void ImDrawList_PathEllipticalArcToEx(ImDrawList* self, ImVec2 center, ImVec2 radius, float rot, float a_min, float a_max, int num_segments) except +
 
     # Cubic bezier (4 control points)
     void ImDrawList_PathBezierCubicCurveTo(ImDrawList* self, ImVec2 p2, ImVec2 p3, ImVec2 p4, int num_segments) except +
@@ -2132,7 +2142,7 @@ cdef extern from "cimgui.h":
     # Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
     ImGuiIO* ImGui_GetIO() except +
 
-    # Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
+    # Access the style structure (colors, sizes). always use pushstylecolor(), pushstylevar() to modify style mid-frame!
     ImGuiStyle* ImGui_GetStyle() except +
 
     # Start a new dear imgui frame, you can submit any command from this point until render()/endframe().
@@ -2210,7 +2220,7 @@ cdef extern from "cimgui.h":
     # - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
     # - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
     # This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
-    # Consider updating your old call sites:
+    # Consider updating your old code:
     # BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
     # BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Border);
     # - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
@@ -2433,8 +2443,11 @@ cdef extern from "cimgui.h":
     # Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
     ImU32 ImGui_GetColorU32ImVec4(ImVec4 col) except +
 
-    # Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    # Implied alpha_mul = 1.0f
     ImU32 ImGui_GetColorU32ImU32(ImU32 col) except +
+
+    # Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    ImU32 ImGui_GetColorU32ImU32Ex(ImU32 col, float alpha_mul) except +
 
     # Retrieve style color as stored in imguistyle structure. use to feed back into pushstylecolor(), otherwise use getcoloru32() to get style color with style alpha baked in.
     const ImVec4* ImGui_GetStyleColorVec4(ImGuiCol idx) except +
@@ -2624,10 +2637,11 @@ cdef extern from "cimgui.h":
 
     # Widgets: Images
     # - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-    # - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
+    # - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
+    # - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
-    void ImGui_Image(ImTextureID user_texture_id, ImVec2 size) except +
-    void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col) except +
+    void ImGui_Image(ImTextureID user_texture_id, ImVec2 image_size) except +
+    void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col) except +
 
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     bool ImGui_ImageButton(const char* str_id, ImTextureID user_texture_id, ImVec2 image_size) except +
@@ -2997,8 +3011,15 @@ cdef extern from "cimgui.h":
     void ImGui_SetItemTooltip(const char* fmt) except +
     void ImGui_SetItemTooltipV(const char* fmt) except +
 
-    # Popups: begin/end functions
-    # - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
+    # Popups, Modals
+    # - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.
+    # - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    # - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.
+    # - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.
+    # - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().
+    # - IMPORTANT: Popup identifiers are relative to the current ID stack, so OpenPopup and BeginPopup generally needs to be at the same level of the stack.
+    # This is sometimes leading to confusing mistakes. May rework this in the future.
+    # - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards if returned true. ImGuiWindowFlags are forwarded to the window.
     # - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
     # Return true if the popup is open, and you can start outputting to it.
     bool ImGui_BeginPopup(const char* str_id, ImGuiWindowFlags flags) except +
@@ -3075,12 +3096,10 @@ cdef extern from "cimgui.h":
     # TableNextColumn() will automatically wrap-around into the next row if needed.
     # - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
     # - Summary of possible call flow:
-    # --------------------------------------------------------------------------------------------------------
-    # TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
-    # TableNextRow() -> TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK
-    # TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
-    # TableNextRow()                           -> Text("Hello 0")                                               // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
-    # --------------------------------------------------------------------------------------------------------
+    # - TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
+    # - TableNextRow() -> TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK
+    # -                   TableNextColumn()      -> Text("Hello 0") -> TableNextColumn()      -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
+    # - TableNextRow()                           -> Text("Hello 0")                                               // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
     # - 5. Call EndTable()
     # Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
     bool ImGui_BeginTable(const char* str_id, int column, ImGuiTableFlags flags) except +
@@ -3528,7 +3547,10 @@ cdef extern from "cimgui.h":
     const char* ImGui_SaveIniSettingsToMemory(size_t* out_ini_size) except +
 
     # Debug Utilities
+    # - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo->Tools->Metrics Debugger
     void ImGui_DebugTextEncoding(const char* text) except +
+    void ImGui_DebugFlashStyleColor(ImGuiCol idx) except +
+    void ImGui_DebugStartItemPicker() except +
 
     # This is called by imgui_checkversion() macro.
     bool ImGui_DebugCheckVersionAndDataLayout(const char* version_str, size_t sz_io, size_t sz_style, size_t sz_vec2, size_t sz_vec4, size_t sz_drawvert, size_t sz_drawidx) except +
@@ -3571,7 +3593,6 @@ cdef extern from "cimgui.h":
 
     # Destruct an imvector<> (of any type). important: frees the vector memory but does not call destructors on contained objects (if they have them)
     void ImVector_Destruct(void* vector) except +
-    ImGuiKey ImGui_GetKeyIndex(ImGuiKey key) except +
 
 cdef extern from "imgui_impl_glfw.h":
     ctypedef struct GLFWwindow
