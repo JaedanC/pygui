@@ -407,7 +407,7 @@ WINDOW_FLAGS_NO_DOCKING: int                      # Disable docking of this wind
 WINDOW_FLAGS_NO_NAV: int
 WINDOW_FLAGS_NO_DECORATION: int
 WINDOW_FLAGS_NO_INPUTS: int
-WINDOW_FLAGS_NAV_FLATTENED: int                   # [beta] on child window: allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+WINDOW_FLAGS_NAV_FLATTENED: int                   # [beta] on child window: share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
 WINDOW_FLAGS_CHILD_WINDOW: int                    # Don't use! for internal use by beginchild()
 WINDOW_FLAGS_TOOLTIP: int                         # Don't use! for internal use by begintooltip()
 WINDOW_FLAGS_POPUP: int                           # Don't use! for internal use by beginpopup()
@@ -457,8 +457,9 @@ TREE_NODE_FLAGS_OPEN_ON_ARROW: int                # Only open when clicking on t
 TREE_NODE_FLAGS_LEAF: int                         # No collapsing, no arrow (use as a convenience for leaf nodes).
 TREE_NODE_FLAGS_BULLET: int                       # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
 TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
-TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line. in the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
-TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (bypass the indented area).
+TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line without using allowoverlap mode.
+TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (cover the indent area).
+TREE_NODE_FLAGS_SPAN_TEXT_WIDTH: int              # Narrow hit box + narrow hovering highlight, will only cover the label text.
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (text will still fit in current column)
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
@@ -468,6 +469,7 @@ POPUP_FLAGS_MOUSE_BUTTON_RIGHT: int              # For beginpopupcontext*(): ope
 POPUP_FLAGS_MOUSE_BUTTON_MIDDLE: int             # For beginpopupcontext*(): open on middle mouse release. guaranteed to always be == 2 (same as imguimousebutton_middle)
 POPUP_FLAGS_MOUSE_BUTTON_MASK: int
 POPUP_FLAGS_MOUSE_BUTTON_DEFAULT: int
+POPUP_FLAGS_NO_REOPEN: int                       # For openpopup*(), beginpopupcontext*(): don't reopen same popup if already open (won't reposition, won't reinitialize navigation)
 POPUP_FLAGS_NO_OPEN_OVER_EXISTING_POPUP: int     # For openpopup*(), beginpopupcontext*(): don't open if there's already a popup at the same level of the popup stack
 POPUP_FLAGS_NO_OPEN_OVER_ITEMS: int              # For beginpopupcontextwindow(): don't return true when hovering items, only when hovering empty space
 POPUP_FLAGS_ANY_POPUP_ID: int                    # For ispopupopen(): ignore the imguiid parameter and test for any popup.
@@ -493,7 +495,7 @@ TAB_BAR_FLAGS_NONE: int
 TAB_BAR_FLAGS_REORDERABLE: int                           # Allow manually dragging tabs to re-order them + new tabs are appended at the end of list
 TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS: int                  # Automatically select new tabs when they appear
 TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON: int                 # Disable buttons to open the tab list popup
-TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you may handle this behavior manually on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
 TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS: int         # Disable scrolling buttons (apply when fitting policy is imguitabbarflags_fittingpolicyscroll)
 TAB_BAR_FLAGS_NO_TOOLTIP: int                            # Disable tooltips when hovering a tab
 TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN: int            # Resize tabs when they don't fit
@@ -501,85 +503,15 @@ TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int                 # Add scroll buttons wh
 TAB_BAR_FLAGS_FITTING_POLICY_MASK: int
 TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT: int
 TAB_ITEM_FLAGS_NONE: int
-TAB_ITEM_FLAGS_UNSAVED_DOCUMENT: int                      # Display a dot next to the title + tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
+TAB_ITEM_FLAGS_UNSAVED_DOCUMENT: int                      # Display a dot next to the title + set imguitabitemflags_noassumedclosure.
 TAB_ITEM_FLAGS_SET_SELECTED: int                          # Trigger flag to programmatically make the tab selected when calling begintabitem()
-TAB_ITEM_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you can still repro this behavior on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
-TAB_ITEM_FLAGS_NO_PUSH_ID: int                            # Don't call pushid(tab->id)/popid() on begintabitem()/endtabitem()
+TAB_ITEM_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you may handle this behavior manually on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
+TAB_ITEM_FLAGS_NO_PUSH_ID: int                            # Don't call pushid()/popid() on begintabitem()/endtabitem()
 TAB_ITEM_FLAGS_NO_TOOLTIP: int                            # Disable tooltip for the given tab
 TAB_ITEM_FLAGS_NO_REORDER: int                            # Disable reordering this tab or having another tab cross over this tab
 TAB_ITEM_FLAGS_LEADING: int                               # Enforce the tab position to the left of the tab bar (after the tab list popup button)
 TAB_ITEM_FLAGS_TRAILING: int                              # Enforce the tab position to the right of the tab bar (before the scrolling buttons)
-TABLE_FLAGS_NONE: int
-TABLE_FLAGS_RESIZABLE: int                           # Enable resizing columns.
-TABLE_FLAGS_REORDERABLE: int                         # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
-TABLE_FLAGS_HIDEABLE: int                            # Enable hiding/disabling columns in context menu.
-TABLE_FLAGS_SORTABLE: int                            # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
-TABLE_FLAGS_NO_SAVED_SETTINGS: int                   # Disable persisting columns order, width and sort settings in the .ini file.
-TABLE_FLAGS_CONTEXT_MENU_IN_BODY: int                # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
-TABLE_FLAGS_ROW_BG: int                              # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
-TABLE_FLAGS_BORDERS_INNER_H: int                     # Draw horizontal borders between rows.
-TABLE_FLAGS_BORDERS_OUTER_H: int                     # Draw horizontal borders at the top and bottom.
-TABLE_FLAGS_BORDERS_INNER_V: int                     # Draw vertical borders between columns.
-TABLE_FLAGS_BORDERS_OUTER_V: int                     # Draw vertical borders on the left and right sides.
-TABLE_FLAGS_BORDERS_H: int                           # Draw horizontal borders.
-TABLE_FLAGS_BORDERS_V: int                           # Draw vertical borders.
-TABLE_FLAGS_BORDERS_INNER: int                       # Draw inner borders.
-TABLE_FLAGS_BORDERS_OUTER: int                       # Draw outer borders.
-TABLE_FLAGS_BORDERS: int                             # Draw all borders.
-TABLE_FLAGS_NO_BORDERS_IN_BODY: int                  # [alpha] disable vertical borders in columns body (borders will always appear in headers). -> may move to style
-TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE: int     # [alpha] disable vertical borders in columns body until hovered for resize (borders will always appear in headers). -> may move to style
-TABLE_FLAGS_SIZING_FIXED_FIT: int                    # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching contents width.
-TABLE_FLAGS_SIZING_FIXED_SAME: int                   # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching the maximum contents width of all columns. implicitly enable imguitableflags_nokeepcolumnsvisible.
-TABLE_FLAGS_SIZING_STRETCH_PROP: int                 # Columns default to _widthstretch with default weights proportional to each columns contents widths.
-TABLE_FLAGS_SIZING_STRETCH_SAME: int                 # Columns default to _widthstretch with default weights all equal, unless overridden by tablesetupcolumn().
-TABLE_FLAGS_NO_HOST_EXTEND_X: int                    # Make outer width auto-fit to columns, overriding outer_size.x value. only available when scrollx/scrolly are disabled and stretch columns are not used.
-TABLE_FLAGS_NO_HOST_EXTEND_Y: int                    # Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). only available when scrollx/scrolly are disabled. data below the limit will be clipped and not visible.
-TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE: int             # Disable keeping column always minimally visible when scrollx is off and table gets too small. not recommended if columns are resizable.
-TABLE_FLAGS_PRECISE_WIDTHS: int                      # Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: without this flag: 33,33,34. with this flag: 33,33,33). with larger number of columns, resizing will appear to be less smooth.
-TABLE_FLAGS_NO_CLIP: int                             # Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). generally incompatible with tablesetupscrollfreeze().
-TABLE_FLAGS_PAD_OUTER_X: int                         # Default if bordersouterv is on. enable outermost padding. generally desirable if you have headers.
-TABLE_FLAGS_NO_PAD_OUTER_X: int                      # Default if bordersouterv is off. disable outermost padding.
-TABLE_FLAGS_NO_PAD_INNER_X: int                      # Disable inner padding between columns (double inner padding if bordersouterv is on, single inner padding if bordersouterv is off).
-TABLE_FLAGS_SCROLL_X: int                            # Enable horizontal scrolling. require 'outer_size' parameter of begintable() to specify the container size. changes default sizing policy. because this creates a child window, scrolly is currently generally recommended when using scrollx.
-TABLE_FLAGS_SCROLL_Y: int                            # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
-TABLE_FLAGS_SORT_MULTI: int                          # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
-TABLE_FLAGS_SORT_TRISTATE: int                       # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
-TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN: int            # Highlight column headers when hovered (may evolve into a fuller highlight)
-TABLE_FLAGS_SIZING_MASK: int
-TABLE_COLUMN_FLAGS_NONE: int
-TABLE_COLUMN_FLAGS_DISABLED: int                   # Overriding/master disable flag: hide column, won't show in context menu (unlike calling tablesetcolumnenabled() which manipulates the user accessible state)
-TABLE_COLUMN_FLAGS_DEFAULT_HIDE: int               # Default as a hidden/disabled column.
-TABLE_COLUMN_FLAGS_DEFAULT_SORT: int               # Default as a sorting column.
-TABLE_COLUMN_FLAGS_WIDTH_STRETCH: int              # Column will stretch. preferable with horizontal scrolling disabled (default if table sizing policy is _sizingstretchsame or _sizingstretchprop).
-TABLE_COLUMN_FLAGS_WIDTH_FIXED: int                # Column will not stretch. preferable with horizontal scrolling enabled (default if table sizing policy is _sizingfixedfit and table is resizable).
-TABLE_COLUMN_FLAGS_NO_RESIZE: int                  # Disable manual resizing.
-TABLE_COLUMN_FLAGS_NO_REORDER: int                 # Disable manual reordering this column, this will also prevent other columns from crossing over this column.
-TABLE_COLUMN_FLAGS_NO_HIDE: int                    # Disable ability to hide/disable this column.
-TABLE_COLUMN_FLAGS_NO_CLIP: int                    # Disable clipping for this column (all noclip columns will render in a same draw command).
-TABLE_COLUMN_FLAGS_NO_SORT: int                    # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
-TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING: int          # Disable ability to sort in the ascending direction.
-TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING: int         # Disable ability to sort in the descending direction.
-TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
-TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH: int            # Disable header text width contribution to automatic column width.
-TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int      # Make the initial sort direction ascending when first sorting on this column (default).
-TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int     # Make the initial sort direction descending when first sorting on this column.
-TABLE_COLUMN_FLAGS_INDENT_ENABLE: int              # Use current indent value when entering cell (default for column 0).
-TABLE_COLUMN_FLAGS_INDENT_DISABLE: int             # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
-TABLE_COLUMN_FLAGS_ANGLED_HEADER: int              # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
-TABLE_COLUMN_FLAGS_IS_ENABLED: int                 # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
-TABLE_COLUMN_FLAGS_IS_VISIBLE: int                 # Status: is visible == is enabled and not clipped by scrolling.
-TABLE_COLUMN_FLAGS_IS_SORTED: int                  # Status: is currently part of the sort specs
-TABLE_COLUMN_FLAGS_IS_HOVERED: int                 # Status: is hovered by mouse
-TABLE_COLUMN_FLAGS_WIDTH_MASK: int
-TABLE_COLUMN_FLAGS_INDENT_MASK: int
-TABLE_COLUMN_FLAGS_STATUS_MASK: int
-TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE: int           # [internal] disable user resizing this column directly (it may however we resized indirectly from its left edge)
-TABLE_ROW_FLAGS_NONE: int
-TABLE_ROW_FLAGS_HEADERS: int     # Identify header row (set default background color + width of its contents accounted differently for auto column width)
-TABLE_BG_TARGET_NONE: int
-TABLE_BG_TARGET_ROW_BG0: int     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
-TABLE_BG_TARGET_ROW_BG1: int     # Set row background color 1 (generally used for selection marking)
-TABLE_BG_TARGET_CELL_BG: int     # Set cell background color (top-most color)
+TAB_ITEM_FLAGS_NO_ASSUMED_CLOSURE: int                    # Tab is selected when trying to close + closure is not immediately assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
 FOCUSED_FLAGS_NONE: int
 FOCUSED_FLAGS_CHILD_WINDOWS: int              # Return true if any children of the window is focused
 FOCUSED_FLAGS_ROOT_WINDOW: int                # Test from root window (top most parent of the current hierarchy)
@@ -846,15 +778,15 @@ COL_BORDER_SHADOW: int
 COL_FRAME_BG: int                    # Background of checkbox, radio button, plot, slider, text input
 COL_FRAME_BG_HOVERED: int
 COL_FRAME_BG_ACTIVE: int
-COL_TITLE_BG: int
-COL_TITLE_BG_ACTIVE: int
-COL_TITLE_BG_COLLAPSED: int
+COL_TITLE_BG: int                    # Title bar
+COL_TITLE_BG_ACTIVE: int             # Title bar when focused
+COL_TITLE_BG_COLLAPSED: int          # Title bar when collapsed
 COL_MENU_BAR_BG: int
 COL_SCROLLBAR_BG: int
 COL_SCROLLBAR_GRAB: int
 COL_SCROLLBAR_GRAB_HOVERED: int
 COL_SCROLLBAR_GRAB_ACTIVE: int
-COL_CHECK_MARK: int
+COL_CHECK_MARK: int                  # Checkbox tick and radiobutton circle
 COL_SLIDER_GRAB: int
 COL_SLIDER_GRAB_ACTIVE: int
 COL_BUTTON: int
@@ -892,36 +824,39 @@ COL_NAV_WINDOWING_HIGHLIGHT: int     # Highlight window when using ctrl+tab
 COL_NAV_WINDOWING_DIM_BG: int        # Darken/colorize entire screen behind the ctrl+tab window list, when active
 COL_MODAL_WINDOW_DIM_BG: int         # Darken/colorize entire screen behind a modal window, when one is active
 COL_COUNT: int
-STYLE_VAR_ALPHA: int                          # Float     alpha
-STYLE_VAR_DISABLED_ALPHA: int                 # Float     disabledalpha
-STYLE_VAR_WINDOW_PADDING: int                 # Imvec2    windowpadding
-STYLE_VAR_WINDOW_ROUNDING: int                # Float     windowrounding
-STYLE_VAR_WINDOW_BORDER_SIZE: int             # Float     windowbordersize
-STYLE_VAR_WINDOW_MIN_SIZE: int                # Imvec2    windowminsize
-STYLE_VAR_WINDOW_TITLE_ALIGN: int             # Imvec2    windowtitlealign
-STYLE_VAR_CHILD_ROUNDING: int                 # Float     childrounding
-STYLE_VAR_CHILD_BORDER_SIZE: int              # Float     childbordersize
-STYLE_VAR_POPUP_ROUNDING: int                 # Float     popuprounding
-STYLE_VAR_POPUP_BORDER_SIZE: int              # Float     popupbordersize
-STYLE_VAR_FRAME_PADDING: int                  # Imvec2    framepadding
-STYLE_VAR_FRAME_ROUNDING: int                 # Float     framerounding
-STYLE_VAR_FRAME_BORDER_SIZE: int              # Float     framebordersize
-STYLE_VAR_ITEM_SPACING: int                   # Imvec2    itemspacing
-STYLE_VAR_ITEM_INNER_SPACING: int             # Imvec2    iteminnerspacing
-STYLE_VAR_INDENT_SPACING: int                 # Float     indentspacing
-STYLE_VAR_CELL_PADDING: int                   # Imvec2    cellpadding
-STYLE_VAR_SCROLLBAR_SIZE: int                 # Float     scrollbarsize
-STYLE_VAR_SCROLLBAR_ROUNDING: int             # Float     scrollbarrounding
-STYLE_VAR_GRAB_MIN_SIZE: int                  # Float     grabminsize
-STYLE_VAR_GRAB_ROUNDING: int                  # Float     grabrounding
-STYLE_VAR_TAB_ROUNDING: int                   # Float     tabrounding
-STYLE_VAR_TAB_BAR_BORDER_SIZE: int            # Float     tabbarbordersize
-STYLE_VAR_BUTTON_TEXT_ALIGN: int              # Imvec2    buttontextalign
-STYLE_VAR_SELECTABLE_TEXT_ALIGN: int          # Imvec2    selectabletextalign
-STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int     # Float  separatortextbordersize
-STYLE_VAR_SEPARATOR_TEXT_ALIGN: int           # Imvec2    separatortextalign
-STYLE_VAR_SEPARATOR_TEXT_PADDING: int         # Imvec2    separatortextpadding
-STYLE_VAR_DOCKING_SEPARATOR_SIZE: int         # Float     dockingseparatorsize
+STYLE_VAR_ALPHA: int                               # Float     alpha
+STYLE_VAR_DISABLED_ALPHA: int                      # Float     disabledalpha
+STYLE_VAR_WINDOW_PADDING: int                      # Imvec2    windowpadding
+STYLE_VAR_WINDOW_ROUNDING: int                     # Float     windowrounding
+STYLE_VAR_WINDOW_BORDER_SIZE: int                  # Float     windowbordersize
+STYLE_VAR_WINDOW_MIN_SIZE: int                     # Imvec2    windowminsize
+STYLE_VAR_WINDOW_TITLE_ALIGN: int                  # Imvec2    windowtitlealign
+STYLE_VAR_CHILD_ROUNDING: int                      # Float     childrounding
+STYLE_VAR_CHILD_BORDER_SIZE: int                   # Float     childbordersize
+STYLE_VAR_POPUP_ROUNDING: int                      # Float     popuprounding
+STYLE_VAR_POPUP_BORDER_SIZE: int                   # Float     popupbordersize
+STYLE_VAR_FRAME_PADDING: int                       # Imvec2    framepadding
+STYLE_VAR_FRAME_ROUNDING: int                      # Float     framerounding
+STYLE_VAR_FRAME_BORDER_SIZE: int                   # Float     framebordersize
+STYLE_VAR_ITEM_SPACING: int                        # Imvec2    itemspacing
+STYLE_VAR_ITEM_INNER_SPACING: int                  # Imvec2    iteminnerspacing
+STYLE_VAR_INDENT_SPACING: int                      # Float     indentspacing
+STYLE_VAR_CELL_PADDING: int                        # Imvec2    cellpadding
+STYLE_VAR_SCROLLBAR_SIZE: int                      # Float     scrollbarsize
+STYLE_VAR_SCROLLBAR_ROUNDING: int                  # Float     scrollbarrounding
+STYLE_VAR_GRAB_MIN_SIZE: int                       # Float     grabminsize
+STYLE_VAR_GRAB_ROUNDING: int                       # Float     grabrounding
+STYLE_VAR_TAB_ROUNDING: int                        # Float     tabrounding
+STYLE_VAR_TAB_BORDER_SIZE: int                     # Float     tabbordersize
+STYLE_VAR_TAB_BAR_BORDER_SIZE: int                 # Float     tabbarbordersize
+STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE: int          # Float     tableangledheadersangle
+STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN: int     # Imvec2  tableangledheaderstextalign
+STYLE_VAR_BUTTON_TEXT_ALIGN: int                   # Imvec2    buttontextalign
+STYLE_VAR_SELECTABLE_TEXT_ALIGN: int               # Imvec2    selectabletextalign
+STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int          # Float     separatortextbordersize
+STYLE_VAR_SEPARATOR_TEXT_ALIGN: int                # Imvec2    separatortextalign
+STYLE_VAR_SEPARATOR_TEXT_PADDING: int              # Imvec2    separatortextpadding
+STYLE_VAR_DOCKING_SEPARATOR_SIZE: int              # Float     dockingseparatorsize
 STYLE_VAR_COUNT: int
 BUTTON_FLAGS_NONE: int
 BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int        # React on left mouse button (default)
@@ -988,6 +923,77 @@ COND_ALWAYS: int             # No condition (always set the variable), same as _
 COND_ONCE: int               # Set the variable once per runtime session (only the first call will succeed)
 COND_FIRST_USE_EVER: int     # Set the variable if the object/window has no persistently saved data (no entry in .ini file)
 COND_APPEARING: int          # Set the variable if the object/window is appearing after being hidden/inactive (or the first time)
+TABLE_FLAGS_NONE: int
+TABLE_FLAGS_RESIZABLE: int                           # Enable resizing columns.
+TABLE_FLAGS_REORDERABLE: int                         # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
+TABLE_FLAGS_HIDEABLE: int                            # Enable hiding/disabling columns in context menu.
+TABLE_FLAGS_SORTABLE: int                            # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
+TABLE_FLAGS_NO_SAVED_SETTINGS: int                   # Disable persisting columns order, width and sort settings in the .ini file.
+TABLE_FLAGS_CONTEXT_MENU_IN_BODY: int                # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
+TABLE_FLAGS_ROW_BG: int                              # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
+TABLE_FLAGS_BORDERS_INNER_H: int                     # Draw horizontal borders between rows.
+TABLE_FLAGS_BORDERS_OUTER_H: int                     # Draw horizontal borders at the top and bottom.
+TABLE_FLAGS_BORDERS_INNER_V: int                     # Draw vertical borders between columns.
+TABLE_FLAGS_BORDERS_OUTER_V: int                     # Draw vertical borders on the left and right sides.
+TABLE_FLAGS_BORDERS_H: int                           # Draw horizontal borders.
+TABLE_FLAGS_BORDERS_V: int                           # Draw vertical borders.
+TABLE_FLAGS_BORDERS_INNER: int                       # Draw inner borders.
+TABLE_FLAGS_BORDERS_OUTER: int                       # Draw outer borders.
+TABLE_FLAGS_BORDERS: int                             # Draw all borders.
+TABLE_FLAGS_NO_BORDERS_IN_BODY: int                  # [alpha] disable vertical borders in columns body (borders will always appear in headers). -> may move to style
+TABLE_FLAGS_NO_BORDERS_IN_BODY_UNTIL_RESIZE: int     # [alpha] disable vertical borders in columns body until hovered for resize (borders will always appear in headers). -> may move to style
+TABLE_FLAGS_SIZING_FIXED_FIT: int                    # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching contents width.
+TABLE_FLAGS_SIZING_FIXED_SAME: int                   # Columns default to _widthfixed or _widthauto (if resizable or not resizable), matching the maximum contents width of all columns. implicitly enable imguitableflags_nokeepcolumnsvisible.
+TABLE_FLAGS_SIZING_STRETCH_PROP: int                 # Columns default to _widthstretch with default weights proportional to each columns contents widths.
+TABLE_FLAGS_SIZING_STRETCH_SAME: int                 # Columns default to _widthstretch with default weights all equal, unless overridden by tablesetupcolumn().
+TABLE_FLAGS_NO_HOST_EXTEND_X: int                    # Make outer width auto-fit to columns, overriding outer_size.x value. only available when scrollx/scrolly are disabled and stretch columns are not used.
+TABLE_FLAGS_NO_HOST_EXTEND_Y: int                    # Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). only available when scrollx/scrolly are disabled. data below the limit will be clipped and not visible.
+TABLE_FLAGS_NO_KEEP_COLUMNS_VISIBLE: int             # Disable keeping column always minimally visible when scrollx is off and table gets too small. not recommended if columns are resizable.
+TABLE_FLAGS_PRECISE_WIDTHS: int                      # Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: without this flag: 33,33,34. with this flag: 33,33,33). with larger number of columns, resizing will appear to be less smooth.
+TABLE_FLAGS_NO_CLIP: int                             # Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). generally incompatible with tablesetupscrollfreeze().
+TABLE_FLAGS_PAD_OUTER_X: int                         # Default if bordersouterv is on. enable outermost padding. generally desirable if you have headers.
+TABLE_FLAGS_NO_PAD_OUTER_X: int                      # Default if bordersouterv is off. disable outermost padding.
+TABLE_FLAGS_NO_PAD_INNER_X: int                      # Disable inner padding between columns (double inner padding if bordersouterv is on, single inner padding if bordersouterv is off).
+TABLE_FLAGS_SCROLL_X: int                            # Enable horizontal scrolling. require 'outer_size' parameter of begintable() to specify the container size. changes default sizing policy. because this creates a child window, scrolly is currently generally recommended when using scrollx.
+TABLE_FLAGS_SCROLL_Y: int                            # Enable vertical scrolling. require 'outer_size' parameter of begintable() to specify the container size.
+TABLE_FLAGS_SORT_MULTI: int                          # Hold shift when clicking headers to sort on multiple column. tablegetsortspecs() may return specs where (specscount > 1).
+TABLE_FLAGS_SORT_TRISTATE: int                       # Allow no sorting, disable default sorting. tablegetsortspecs() may return specs where (specscount == 0).
+TABLE_FLAGS_HIGHLIGHT_HOVERED_COLUMN: int            # Highlight column headers when hovered (may evolve into a fuller highlight)
+TABLE_FLAGS_SIZING_MASK: int
+TABLE_COLUMN_FLAGS_NONE: int
+TABLE_COLUMN_FLAGS_DISABLED: int                   # Overriding/master disable flag: hide column, won't show in context menu (unlike calling tablesetcolumnenabled() which manipulates the user accessible state)
+TABLE_COLUMN_FLAGS_DEFAULT_HIDE: int               # Default as a hidden/disabled column.
+TABLE_COLUMN_FLAGS_DEFAULT_SORT: int               # Default as a sorting column.
+TABLE_COLUMN_FLAGS_WIDTH_STRETCH: int              # Column will stretch. preferable with horizontal scrolling disabled (default if table sizing policy is _sizingstretchsame or _sizingstretchprop).
+TABLE_COLUMN_FLAGS_WIDTH_FIXED: int                # Column will not stretch. preferable with horizontal scrolling enabled (default if table sizing policy is _sizingfixedfit and table is resizable).
+TABLE_COLUMN_FLAGS_NO_RESIZE: int                  # Disable manual resizing.
+TABLE_COLUMN_FLAGS_NO_REORDER: int                 # Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+TABLE_COLUMN_FLAGS_NO_HIDE: int                    # Disable ability to hide/disable this column.
+TABLE_COLUMN_FLAGS_NO_CLIP: int                    # Disable clipping for this column (all noclip columns will render in a same draw command).
+TABLE_COLUMN_FLAGS_NO_SORT: int                    # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
+TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING: int          # Disable ability to sort in the ascending direction.
+TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING: int         # Disable ability to sort in the descending direction.
+TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
+TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH: int            # Disable header text width contribution to automatic column width.
+TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int      # Make the initial sort direction ascending when first sorting on this column (default).
+TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int     # Make the initial sort direction descending when first sorting on this column.
+TABLE_COLUMN_FLAGS_INDENT_ENABLE: int              # Use current indent value when entering cell (default for column 0).
+TABLE_COLUMN_FLAGS_INDENT_DISABLE: int             # Ignore current indent value when entering cell (default for columns > 0). indentation changes _within_ the cell will still be honored.
+TABLE_COLUMN_FLAGS_ANGLED_HEADER: int              # Tableheadersrow() will submit an angled header row for this column. note this will add an extra row.
+TABLE_COLUMN_FLAGS_IS_ENABLED: int                 # Status: is enabled == not hidden by user/api (referred to as 'hide' in _defaulthide and _nohide) flags.
+TABLE_COLUMN_FLAGS_IS_VISIBLE: int                 # Status: is visible == is enabled and not clipped by scrolling.
+TABLE_COLUMN_FLAGS_IS_SORTED: int                  # Status: is currently part of the sort specs
+TABLE_COLUMN_FLAGS_IS_HOVERED: int                 # Status: is hovered by mouse
+TABLE_COLUMN_FLAGS_WIDTH_MASK: int
+TABLE_COLUMN_FLAGS_INDENT_MASK: int
+TABLE_COLUMN_FLAGS_STATUS_MASK: int
+TABLE_COLUMN_FLAGS_NO_DIRECT_RESIZE: int           # [internal] disable user resizing this column directly (it may however we resized indirectly from its left edge)
+TABLE_ROW_FLAGS_NONE: int
+TABLE_ROW_FLAGS_HEADERS: int     # Identify header row (set default background color + width of its contents accounted differently for auto column width)
+TABLE_BG_TARGET_NONE: int
+TABLE_BG_TARGET_ROW_BG0: int     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
+TABLE_BG_TARGET_ROW_BG1: int     # Set row background color 1 (generally used for selection marking)
+TABLE_BG_TARGET_CELL_BG: int     # Set cell background color (top-most color)
 IM_DRAW_FLAGS_NONE: int
 IM_DRAW_FLAGS_CLOSED: int                         # Pathstroke(), addpolyline(): specify that shape should be closed (important: this is always == 1 for legacy reason)
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT: int         # Addrect(), addrectfilled(), pathrect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). was 0x01.
@@ -1070,7 +1076,7 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
     - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
     This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
-    Consider updating your old call sites:
+    Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
     BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Border);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
@@ -1128,15 +1134,15 @@ def begin_group() -> None:
     """
     pass
 
-# def begin_item_tooltip() -> bool:
-#     """
-#     Tooltips: helpers for showing a tooltip when hovering an item
-#     - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
-#     - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
-#     - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
-#     Begin/append a tooltip window if preceding item was hovered.
-#     """
-#     pass
+def begin_item_tooltip() -> bool:
+    """
+    Tooltips: helpers for showing a tooltip when hovering an item
+    - BeginItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip) && BeginTooltip())' idiom.
+    - SetItemTooltip() is a shortcut for the 'if (IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ( SetTooltip(...); )' idiom.
+    - Where 'ImGuiHoveredFlags_ForTooltip' itself is a shortcut to use 'style.HoverFlagsForTooltipMouse' or 'style.HoverFlagsForTooltipNav' depending on active input type. For mouse it defaults to 'ImGuiHoveredFlags_Stationary | ImGuiHoveredFlags_DelayShort'.
+    Begin/append a tooltip window if preceding item was hovered.
+    """
+    pass
 
 def begin_list_box(label: str, size: Tuple[float, float]=(0, 0)) -> bool:
     """
@@ -1175,8 +1181,15 @@ def begin_menu_bar() -> bool:
 
 def begin_popup(str_id: str, flags: int=0) -> bool:
     """
-    Popups: begin/end functions
-    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards. ImGuiWindowFlags are forwarded to the window.
+    Popups, Modals
+    - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.
+    - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.
+    - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.
+    - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().
+    - IMPORTANT: Popup identifiers are relative to the current ID stack, so OpenPopup and BeginPopup generally needs to be at the same level of the stack.
+    This is sometimes leading to confusing mistakes. May rework this in the future.
+    - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards if returned true. ImGuiWindowFlags are forwarded to the window.
     - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.
     Return true if the popup is open, and you can start outputting to it.
     """
@@ -1244,12 +1257,10 @@ def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 
     TableNextColumn() will automatically wrap-around into the next row if needed.
     - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!
     - Summary of possible call flow:
-    --------------------------------------------------------------------------------------------------------
-    TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
-    TableNextRow() -> TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK
-    TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
-    TableNextRow()   -> Text("Hello 0")   // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
-    --------------------------------------------------------------------------------------------------------
+    - TableNextRow() -> TableSetColumnIndex(0) -> Text("Hello 0") -> TableSetColumnIndex(1) -> Text("Hello 1")  // OK
+    - TableNextRow() -> TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK
+    -   TableNextColumn()  -> Text("Hello 0") -> TableNextColumn()  -> Text("Hello 1")  // OK: TableNextColumn() automatically gets to next row!
+    - TableNextRow()   -> Text("Hello 0")   // Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!
     - 5. Call EndTable()
     Implied outer_size = imvec2(0.0f, 0.0f), inner_width = 0.0f
     """
@@ -1374,9 +1385,12 @@ def debug_check_version_and_data_layout() -> bool:
     """
     pass
 
+# def debug_flash_style_color(idx: int) -> None: ...
+# def debug_start_item_picker() -> None: ...
 def debug_text_encoding(text: str) -> None:
     """
     Debug Utilities
+    - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo->Tools->Metrics Debugger
     """
     pass
 
@@ -1595,9 +1609,15 @@ def get_color_u32(idx: int, alpha_mul: float=1.0) -> int:
 
 def get_color_u32_im_u32(col: int) -> int:
     """
-    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+    Implied alpha_mul = 1.0f
     """
     pass
+
+# def get_color_u32_im_u32_ex(col: int, alpha_mul: float=1.0) -> int:
+#     """
+#     Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+#     """
+#     pass
 
 def get_color_u32_im_vec4(col: Tuple[float, float, float, float]) -> int:
     """
@@ -1775,7 +1795,6 @@ def get_item_rect_size() -> Tuple[float, float]:
     """
     pass
 
-# def get_key_index(key: int) -> int: ...
 def get_key_pressed_amount(key: int, repeat_delay: float, rate: float) -> int:
     """
     Uses provided repeat rate/delay. return a count, most often 0 or 1 but might be >1 if repeatrate is small enough that deltatime > repeatrate
@@ -1861,7 +1880,7 @@ def get_scroll_y() -> float:
 # def get_state_storage() -> ImGuiStorage: ...
 def get_style() -> ImGuiStyle:
     """
-    Access the style structure (colors, sizes). always use pushstylecol(), pushstylevar() to modify style mid-frame!
+    Access the style structure (colors, sizes). always use pushstylecolor(), pushstylevar() to modify style mid-frame!
     """
     pass
 
@@ -1974,11 +1993,12 @@ def get_window_width() -> float:
 #     """
 #     pass
 
-def image(user_texture_id: int, size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
+def image(user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
     """
     Widgets: Images
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
-    - Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
+    - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
+    - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     pass
@@ -2331,7 +2351,7 @@ def menu_item(label: str, shortcut: str=None, selected: bool=False, enabled: boo
     """
     pass
 
-def menu_item_bool_ptr(label: str, shortcut: str, p_selected: Bool, enabled: bool=True) -> bool:
+def menu_item_bool_ptr(label: str, shortcut: Optional[str], p_selected: Bool, enabled: bool=True) -> bool:
     """
     Return true when activated + toggle (*p_selected) if p_selected != null
     """
@@ -2638,11 +2658,11 @@ def set_item_default_focus() -> None:
     """
     pass
 
-# def set_item_tooltip(fmt: str) -> None:
-#     """
-#     Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
-#     """
-#     pass
+def set_item_tooltip(fmt: str) -> None:
+    """
+    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    """
+    pass
 
 def set_keyboard_focus_here(offset: int=0) -> None:
     """
@@ -3363,6 +3383,7 @@ class ImDrawList:
 
     def add_circle(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
     def add_circle_filled(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0) -> None: ...
+    def add_concave_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int) -> None: ...
     def add_convex_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int) -> None: ...
     # def add_draw_cmd(self: ImDrawList) -> None:
     #     """
@@ -3370,20 +3391,8 @@ class ImDrawList:
     #     """
     #     pass
 
-    # def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int) -> None:
-    #     """
-    #     Implied rot = 0.0f, num_segments = 0, thickness = 1.0f
-    #     """
-    #     pass
-
-    # def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
-    # def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int) -> None:
-    #     """
-    #     Implied rot = 0.0f, num_segments = 0
-    #     """
-    #     pass
-
-    # def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, col: int, rot: float=0.0, num_segments: int=0) -> None: ...
+    def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
+    def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0) -> None: ...
     def add_image(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
         """
         Image primitives
@@ -3410,7 +3419,14 @@ class ImDrawList:
 
     def add_ngon(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int, thickness: float=1.0) -> None: ...
     def add_ngon_filled(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int) -> None: ...
-    def add_polyline(self: ImDrawList, points: Sequence[tuple], col: int, flags: int, thickness: float) -> None: ...
+    def add_polyline(self: ImDrawList, points: Sequence[tuple], col: int, flags: int, thickness: float) -> None:
+        """
+        General polygon
+        - Only simple polygons are supported by filling functions (no self-intersections, no holes).
+        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience fo user but not used by main library.
+        """
+        pass
+
     def add_quad(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float=1.0) -> None: ...
     def add_quad_filled(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int) -> None: ...
     def add_rect(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0) -> None:
@@ -3473,22 +3489,24 @@ class ImDrawList:
     def path_clear(self: ImDrawList) -> None:
         """
         Stateful path API, add points then finish with PathFillConvex() or PathStroke()
-        - Filled shapes must always use clockwise winding order. The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        - Important: filled shapes must always use clockwise winding order! The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.
+        so e.g. 'PathArcTo(center, radius, PI * -0.5f, PI)' is ok, whereas 'PathArcTo(center, radius, PI, PI * -0.5f)' won't have correct anti-aliasing when followed by PathFillConvex().
         """
         pass
 
-    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float) -> None:
+    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float) -> None:
     #     """
     #     Implied num_segments = 0
     #     """
     #     pass
 
-    # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius_x: float, radius_y: float, rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
+    # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
     #     """
     #     Ellipse
     #     """
     #     pass
 
+    # def path_fill_concave(self: ImDrawList, col: int) -> None: ...
     def path_fill_convex(self: ImDrawList, col: int) -> None: ...
     def path_line_to(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
     def path_line_to_merge_duplicate(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
@@ -4219,16 +4237,16 @@ class ImGuiIO:
     config_debug_begin_return_value_once: bool
     """
     Tools to test correct Begin/End and BeginChild/EndChild behaviors.
-    Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
-    This is inconsistent with other BeginXXX functions and create confusion for many users.
-    We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
+    - Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
+    - This is inconsistent with other BeginXXX functions and create confusion for many users.
+    - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
     = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
     """
     # config_debug_ignore_focus_loss: bool
     # """
-    # Option to deactivate io.AddFocusEvent(false) handling. May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-    # Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    # Consider using e.g. Win32's IsDebuggerPresent() as an additional filter (or see ImOsIsDebuggerPresent() in imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+    # Option to deactivate io.AddFocusEvent(false) handling.
+    # - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+    # - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
     # = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
     # """
     config_debug_ini_settings: bool
@@ -4236,6 +4254,14 @@ class ImGuiIO:
     Option to audit .ini data
     = false  // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
     """
+    # config_debug_is_debugger_present: bool
+    # """
+    # Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
+    # - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
+    # - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
+    # e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+    # = false  // enable various tools calling im_debug_break().
+    # """
     config_docking_always_tab_bar: bool
     """
     = false  // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
@@ -4545,7 +4571,6 @@ class ImGuiIO:
     # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
     # (default to use native imm32 api on Windows)
     # """
-    # unused_padding: Any
     user_data: Any
     """
     = null   // store your own data.
@@ -4712,6 +4737,8 @@ class ImGuiInputTextCallbackData:
     event_char: int
     """
     Arguments for the different callback events
+    - During Resize callback, Buf will be same as your input buffer.
+    - However, during Completion/History/Always callback, Buf always points to our own internal data (it is not the same as your buffer)! Changes to it will be reflected into your own buffer shortly after the callback.
     - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
     - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
     Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
@@ -5103,7 +5130,7 @@ class ImGuiStyle:
     """
     cell_padding: Tuple[float, float]
     """
-    Padding within a table cell. cellpadding.y may be altered between different rows.
+    Padding within a table cell. cellpadding.x is locked for entire table. cellpadding.y may be altered between different rows.
     """
     child_border_size: float
     """
@@ -5166,14 +5193,14 @@ class ImGuiStyle:
     """
     Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
     """
-    # hover_delay_normal: float
-    # """
-    # Delay for isitemhovered(imguihoveredflags_delaynormal). '
-    # """
-    # hover_delay_short: float
-    # """
-    # Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
-    # """
+    hover_delay_normal: float
+    """
+    Delay for isitemhovered(imguihoveredflags_delaynormal). '
+    """
+    hover_delay_short: float
+    """
+    Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
+    """
     # hover_flags_for_tooltip_mouse: int
     # """
     # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
@@ -5256,10 +5283,14 @@ class ImGuiStyle:
     """
     Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
     """
-    # table_angled_headers_angle: float
-    # """
-    # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
-    # """
+    table_angled_headers_angle: float
+    """
+    Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
+    """
+    table_angled_headers_text_align: Tuple[float, float]
+    """
+    Alignment of angled headers within the cell
+    """
     touch_extra_padding: Tuple[float, float]
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
@@ -5466,6 +5497,10 @@ class ImGuiWindowClass:
     # docking_always_tab_bar: bool
     # """
     # Set to true to enforce single floating windows of this class always having their own docking node (equivalent of setting the global io.configdockingalwaystabbar)
+    # """
+    # focus_route_parent_window_id: int
+    # """
+    # Id of parent window for shortcut focus route evaluation, e.g. shortcut() call from parent window will succeed when this window is focused.
     # """
     # parent_viewport_id: int
     # """
