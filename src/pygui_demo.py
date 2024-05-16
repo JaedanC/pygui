@@ -3220,6 +3220,8 @@ def show_random_extras():
             pygui.menu_item("style.tab_min_width_for_close_button:  {}".format(style.tab_min_width_for_close_button))
             pygui.menu_item("style.tab_rounding:                    {}".format(style.tab_rounding))
             pygui.menu_item("style.touch_extra_padding:             {}".format(style.touch_extra_padding))
+            pygui.menu_item("style.table_angled_headers_angle:      {}".format(style.table_angled_headers_angle))
+            pygui.menu_item("style.table_angled_headers_text_align: {}".format(style.table_angled_headers_text_align))
             pygui.menu_item("style.window_border_size:              {}".format(style.window_border_size))
             pygui.menu_item("style.window_menu_button_position:     {}".format(style.window_menu_button_position))
             pygui.menu_item("style.window_min_size:                 {}".format(style.window_min_size))

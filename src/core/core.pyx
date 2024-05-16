@@ -602,6 +602,7 @@ TREE_NODE_FLAGS_BULLET = ccimgui.ImGuiTreeNodeFlags_Bullet
 TREE_NODE_FLAGS_FRAME_PADDING = ccimgui.ImGuiTreeNodeFlags_FramePadding
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanAvailWidth
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanFullWidth
+TREE_NODE_FLAGS_SPAN_TEXT_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanTextWidth
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImGuiTreeNodeFlags_SpanAllColumns
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE = ccimgui.ImGuiTreeNodeFlags_NavLeftJumpsBackHere
 TREE_NODE_FLAGS_COLLAPSING_HEADER = ccimgui.ImGuiTreeNodeFlags_CollapsingHeader
@@ -989,7 +990,10 @@ STYLE_VAR_SCROLLBAR_ROUNDING = ccimgui.ImGuiStyleVar_ScrollbarRounding
 STYLE_VAR_GRAB_MIN_SIZE = ccimgui.ImGuiStyleVar_GrabMinSize
 STYLE_VAR_GRAB_ROUNDING = ccimgui.ImGuiStyleVar_GrabRounding
 STYLE_VAR_TAB_ROUNDING = ccimgui.ImGuiStyleVar_TabRounding
+STYLE_VAR_TAB_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBorderSize
 STYLE_VAR_TAB_BAR_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBarBorderSize
+STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE = ccimgui.ImGuiStyleVar_TableAngledHeadersAngle
+STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN = ccimgui.ImGuiStyleVar_TableAngledHeadersTextAlign
 STYLE_VAR_BUTTON_TEXT_ALIGN = ccimgui.ImGuiStyleVar_ButtonTextAlign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN = ccimgui.ImGuiStyleVar_SelectableTextAlign
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE = ccimgui.ImGuiStyleVar_SeparatorTextBorderSize
@@ -21059,7 +21063,7 @@ cdef class ImGuiStyle:
     @property
     def cell_padding(self):
         """
-        Padding within a table cell. cellpadding.y may be altered between different rows.
+        Padding within a table cell. cellpadding.x is locked for entire table. cellpadding.y may be altered between different rows.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).CellPadding
         return _cast_ImVec2_tuple(res)
@@ -21792,21 +21796,40 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def table_angled_headers_angle(self):
-    #     """
-    #     Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
-    #     """
-    #     cdef float res = dereference(self._ptr).TableAngledHeadersAngle
-    #     return res
-    # @table_angled_headers_angle.setter
-    # def table_angled_headers_angle(self, value: float):
-    #     # dereference(self._ptr).TableAngledHeadersAngle = value
-    #     raise NotImplementedError
+    @property
+    def table_angled_headers_angle(self):
+        """
+        Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
+        """
+        cdef float res = dereference(self._ptr).TableAngledHeadersAngle
+        return res
+    @table_angled_headers_angle.setter
+    def table_angled_headers_angle(self, value: float):
+        # dereference(self._ptr).TableAngledHeadersAngle = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def table_angled_headers_text_align(self):
+        """
+        Alignment of angled headers within the cell
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).TableAngledHeadersTextAlign
+        return _cast_ImVec2_tuple(res)
+    @table_angled_headers_text_align.setter
+    def table_angled_headers_text_align(self, value: Tuple[float, float]):
+        # dereference(self._ptr).TableAngledHeadersTextAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
     # [End Field]
 
     # [Field]

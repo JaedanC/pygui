@@ -602,6 +602,7 @@ TREE_NODE_FLAGS_BULLET = ccimgui.ImGuiTreeNodeFlags_Bullet
 TREE_NODE_FLAGS_FRAME_PADDING = ccimgui.ImGuiTreeNodeFlags_FramePadding
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanAvailWidth
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanFullWidth
+TREE_NODE_FLAGS_SPAN_TEXT_WIDTH = ccimgui.ImGuiTreeNodeFlags_SpanTextWidth
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImGuiTreeNodeFlags_SpanAllColumns
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE = ccimgui.ImGuiTreeNodeFlags_NavLeftJumpsBackHere
 TREE_NODE_FLAGS_COLLAPSING_HEADER = ccimgui.ImGuiTreeNodeFlags_CollapsingHeader
@@ -989,7 +990,10 @@ STYLE_VAR_SCROLLBAR_ROUNDING = ccimgui.ImGuiStyleVar_ScrollbarRounding
 STYLE_VAR_GRAB_MIN_SIZE = ccimgui.ImGuiStyleVar_GrabMinSize
 STYLE_VAR_GRAB_ROUNDING = ccimgui.ImGuiStyleVar_GrabRounding
 STYLE_VAR_TAB_ROUNDING = ccimgui.ImGuiStyleVar_TabRounding
+STYLE_VAR_TAB_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBorderSize
 STYLE_VAR_TAB_BAR_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBarBorderSize
+STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE = ccimgui.ImGuiStyleVar_TableAngledHeadersAngle
+STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN = ccimgui.ImGuiStyleVar_TableAngledHeadersTextAlign
 STYLE_VAR_BUTTON_TEXT_ALIGN = ccimgui.ImGuiStyleVar_ButtonTextAlign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN = ccimgui.ImGuiStyleVar_SelectableTextAlign
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE = ccimgui.ImGuiStyleVar_SeparatorTextBorderSize
@@ -10104,6 +10108,93 @@ cdef class ImVector_ImDrawVert:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+cdef class ImVector_ImVec2:
+    cdef ccimgui.ImVector_ImVec2* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImVec2 from_ptr(ccimgui.ImVector_ImVec2* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImVec2 wrapper = ImVector_ImVec2.__new__(ImVector_ImVec2)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImVec2 from_heap_ptr(ccimgui.ImVector_ImVec2* _ptr):
+        wrapper = ImVector_ImVec2.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVec2)
+    @property
+    def data(self):
+        cdef ccimgui.ImVec2* res = dereference(self._ptr).Data
+        return ImVec2.from_ptr(res)
+    @data.setter
+    def data(self, value: ImVec2):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
     cdef bool dynamically_allocated
@@ -10267,93 +10358,6 @@ cdef class ImVector_ImTextureID:
     @data.setter
     def data(self, value: Any):
         # dereference(self._ptr).Data = value
-        raise NotImplementedError
-    # [End Field]
-
-# [End Class]
-
-# [Class]
-# [Class Constants]
-# ?use_template(False)
-# ?active(True)
-# ?invisible(False)
-# ?custom_comment_only(False)
-cdef class ImVector_ImVec2:
-    cdef ccimgui.ImVector_ImVec2* _ptr
-    cdef bool dynamically_allocated
-    
-    @staticmethod
-    cdef ImVector_ImVec2 from_ptr(ccimgui.ImVector_ImVec2* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImVector_ImVec2 wrapper = ImVector_ImVec2.__new__(ImVector_ImVec2)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
-    
-    @staticmethod
-    cdef ImVector_ImVec2 from_heap_ptr(ccimgui.ImVector_ImVec2* _ptr):
-        wrapper = ImVector_ImVec2.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
-    
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
-    # [End Class Constants]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImVec2)
-    @property
-    def data(self):
-        cdef ccimgui.ImVec2* res = dereference(self._ptr).Data
-        return ImVec2.from_ptr(res)
-    @data.setter
-    def data(self, value: ImVec2):
-        # dereference(self._ptr).Data = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -11511,7 +11515,7 @@ cdef class ImGuiStyle:
     @property
     def cell_padding(self):
         """
-        Padding within a table cell. cellpadding.y may be altered between different rows.
+        Padding within a table cell. cellpadding.x is locked for entire table. cellpadding.y may be altered between different rows.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).CellPadding
         return _cast_ImVec2_tuple(res)
@@ -11765,6 +11769,25 @@ cdef class ImGuiStyle:
     @table_angled_headers_angle.setter
     def table_angled_headers_angle(self, value: float):
         # dereference(self._ptr).TableAngledHeadersAngle = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def table_angled_headers_text_align(self):
+        """
+        Alignment of angled headers within the cell
+        """
+        cdef ccimgui.ImVec2 res = dereference(self._ptr).TableAngledHeadersTextAlign
+        return _cast_ImVec2_tuple(res)
+    @table_angled_headers_text_align.setter
+    def table_angled_headers_text_align(self, value: Tuple[float, float]):
+        # dereference(self._ptr).TableAngledHeadersTextAlign = _cast_tuple_ImVec2(value)
         raise NotImplementedError
     # [End Field]
 
@@ -17426,25 +17449,6 @@ cdef class ImDrawList:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(str)
-    @property
-    def owner_name(self):
-        """
-        Pointer to owner window's name for debugging
-        """
-        cdef const char* res = dereference(self._ptr)._OwnerName
-        return _from_bytes(res)
-    @owner_name.setter
-    def owner_name(self, value: str):
-        # dereference(self._ptr)._OwnerName = _bytes(value)
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(ImDrawVert)
     @property
     def vtx_write_ptr(self):
@@ -17475,44 +17479,6 @@ cdef class ImDrawList:
     @idx_write_ptr.setter
     def idx_write_ptr(self, value: int):
         # dereference(self._ptr)._IdxWritePtr = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImVector_ImVec4)
-    @property
-    def clip_rect_stack(self):
-        """
-        [internal]
-        """
-        cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
-        return ImVector_ImVec4.from_ptr(res)
-    @clip_rect_stack.setter
-    def clip_rect_stack(self, value: ImVector_ImVec4):
-        # dereference(self._ptr)._ClipRectStack = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImVector_ImTextureID)
-    @property
-    def texture_id_stack(self):
-        """
-        [internal]
-        """
-        cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
-        return ImVector_ImTextureID.from_ptr(res)
-    @texture_id_stack.setter
-    def texture_id_stack(self, value: ImVector_ImTextureID):
-        # dereference(self._ptr)._TextureIdStack = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -17578,6 +17544,44 @@ cdef class ImDrawList:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(ImVector_ImVec4)
+    @property
+    def clip_rect_stack(self):
+        """
+        [internal]
+        """
+        cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
+        return ImVector_ImVec4.from_ptr(res)
+    @clip_rect_stack.setter
+    def clip_rect_stack(self, value: ImVector_ImVec4):
+        # dereference(self._ptr)._ClipRectStack = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImTextureID)
+    @property
+    def texture_id_stack(self):
+        """
+        [internal]
+        """
+        cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
+        return ImVector_ImTextureID.from_ptr(res)
+    @texture_id_stack.setter
+    def texture_id_stack(self, value: ImVector_ImTextureID):
+        # dereference(self._ptr)._TextureIdStack = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(float)
     @property
     def fringe_scale(self):
@@ -17589,6 +17593,25 @@ cdef class ImDrawList:
     @fringe_scale.setter
     def fringe_scale(self, value: float):
         # dereference(self._ptr)._FringeScale = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    @property
+    def owner_name(self):
+        """
+        Pointer to owner window's name for debugging
+        """
+        cdef const char* res = dereference(self._ptr)._OwnerName
+        return _from_bytes(res)
+    @owner_name.setter
+    def owner_name(self, value: str):
+        # dereference(self._ptr)._OwnerName = _bytes(value)
         raise NotImplementedError
     # [End Field]
 

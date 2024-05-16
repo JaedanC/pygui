@@ -25,9 +25,9 @@ cdef extern from "cimgui.h":
     ctypedef struct ImVector_ImDrawIdx
     ctypedef struct ImVector_ImDrawChannel
     ctypedef struct ImVector_ImDrawVert
+    ctypedef struct ImVector_ImVec2
     ctypedef struct ImVector_ImVec4
     ctypedef struct ImVector_ImTextureID
-    ctypedef struct ImVector_ImVec2
     ctypedef struct ImVector_ImDrawListPtr
     ctypedef struct ImVector_ImU32
     ctypedef struct ImVector_ImFontPtr
@@ -73,8 +73,9 @@ cdef extern from "cimgui.h":
     # Enumerations
     # - We don't use strongly typed enums much because they add constraints (can't extend in private code, can't store typed in bit fields, extra casting on iteration)
     # - Tip: Use your programming IDE navigation facilities on the names in the _central column_ below to find the actual flags/enum lists!
-    # In Visual Studio IDE: CTRL+comma ("Edit.GoToAll") can follow symbols in comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
-    # With Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols in comments.
+    # - In Visual Studio: CTRL+comma ("Edit.GoToAll") can follow symbols inside comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
+    # - In Visual Studio w/ Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols inside comments.
+    # - In VS Code, CLion, etc.: CTRL+click can follow symbols inside comments.
     ctypedef int ImGuiKey                  # -> enum imguikey              // enum: a key identifier (imguikey_xxx or imguimod_xxx value)
     ctypedef int ImGuiMouseSource          # -> enum imguimousesource      // enum; a mouse input source identifier (mouse, touchscreen, pen)
     ctypedef int ImGuiCol                  # -> enum imguicol_             // enum: a color identifier for styling
@@ -89,8 +90,9 @@ cdef extern from "cimgui.h":
 
     # Flags (declared as int to allow using as flags without overhead, and to not pollute the top of this file)
     # - Tip: Use your programming IDE navigation facilities on the names in the _central column_ below to find the actual flags/enum lists!
-    # In Visual Studio IDE: CTRL+comma ("Edit.GoToAll") can follow symbols in comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
-    # With Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols in comments.
+    # - In Visual Studio: CTRL+comma ("Edit.GoToAll") can follow symbols inside comments, whereas CTRL+F12 ("Edit.GoToImplementation") cannot.
+    # - In Visual Studio w/ Visual Assist installed: ALT+G ("VAssistX.GoToImplementation") can also follow symbols inside comments.
+    # - In VS Code, CLion, etc.: CTRL+click can follow symbols inside comments.
     ctypedef int ImDrawFlags               # -> enum imdrawflags_          // flags: for imdrawlist functions
     ctypedef int ImDrawListFlags           # -> enum imdrawlistflags_      // flags: for imdrawlist instance
     ctypedef int ImFontAtlasFlags          # -> enum imfontatlasflags_     // flags: for imfontatlas build
@@ -225,8 +227,9 @@ cdef extern from "cimgui.h":
         ImGuiTreeNodeFlags_Leaf                     # No collapsing, no arrow (use as a convenience for leaf nodes).
         ImGuiTreeNodeFlags_Bullet                   # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
         ImGuiTreeNodeFlags_FramePadding             # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
-        ImGuiTreeNodeFlags_SpanAvailWidth           # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line. in the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
-        ImGuiTreeNodeFlags_SpanFullWidth            # Extend hit box to the left-most and right-most edges (bypass the indented area).
+        ImGuiTreeNodeFlags_SpanAvailWidth           # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line without using allowoverlap mode.
+        ImGuiTreeNodeFlags_SpanFullWidth            # Extend hit box to the left-most and right-most edges (cover the indent area).
+        ImGuiTreeNodeFlags_SpanTextWidth            # Narrow hit box + narrow hovering highlight, will only cover the label text.
         ImGuiTreeNodeFlags_SpanAllColumns           # Frame will span all columns of its container table (text will still fit in current column)
         ImGuiTreeNodeFlags_NavLeftJumpsBackHere     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
         ImGuiTreeNodeFlags_CollapsingHeader
@@ -625,36 +628,39 @@ cdef extern from "cimgui.h":
         ImGuiCol_COUNT
 
     ctypedef enum ImGuiStyleVar_:
-        ImGuiStyleVar_Alpha                       # Float     alpha
-        ImGuiStyleVar_DisabledAlpha               # Float     disabledalpha
-        ImGuiStyleVar_WindowPadding               # Imvec2    windowpadding
-        ImGuiStyleVar_WindowRounding              # Float     windowrounding
-        ImGuiStyleVar_WindowBorderSize            # Float     windowbordersize
-        ImGuiStyleVar_WindowMinSize               # Imvec2    windowminsize
-        ImGuiStyleVar_WindowTitleAlign            # Imvec2    windowtitlealign
-        ImGuiStyleVar_ChildRounding               # Float     childrounding
-        ImGuiStyleVar_ChildBorderSize             # Float     childbordersize
-        ImGuiStyleVar_PopupRounding               # Float     popuprounding
-        ImGuiStyleVar_PopupBorderSize             # Float     popupbordersize
-        ImGuiStyleVar_FramePadding                # Imvec2    framepadding
-        ImGuiStyleVar_FrameRounding               # Float     framerounding
-        ImGuiStyleVar_FrameBorderSize             # Float     framebordersize
-        ImGuiStyleVar_ItemSpacing                 # Imvec2    itemspacing
-        ImGuiStyleVar_ItemInnerSpacing            # Imvec2    iteminnerspacing
-        ImGuiStyleVar_IndentSpacing               # Float     indentspacing
-        ImGuiStyleVar_CellPadding                 # Imvec2    cellpadding
-        ImGuiStyleVar_ScrollbarSize               # Float     scrollbarsize
-        ImGuiStyleVar_ScrollbarRounding           # Float     scrollbarrounding
-        ImGuiStyleVar_GrabMinSize                 # Float     grabminsize
-        ImGuiStyleVar_GrabRounding                # Float     grabrounding
-        ImGuiStyleVar_TabRounding                 # Float     tabrounding
-        ImGuiStyleVar_TabBarBorderSize            # Float     tabbarbordersize
-        ImGuiStyleVar_ButtonTextAlign             # Imvec2    buttontextalign
-        ImGuiStyleVar_SelectableTextAlign         # Imvec2    selectabletextalign
-        ImGuiStyleVar_SeparatorTextBorderSize     # Float  separatortextbordersize
-        ImGuiStyleVar_SeparatorTextAlign          # Imvec2    separatortextalign
-        ImGuiStyleVar_SeparatorTextPadding        # Imvec2    separatortextpadding
-        ImGuiStyleVar_DockingSeparatorSize        # Float     dockingseparatorsize
+        ImGuiStyleVar_Alpha                           # Float     alpha
+        ImGuiStyleVar_DisabledAlpha                   # Float     disabledalpha
+        ImGuiStyleVar_WindowPadding                   # Imvec2    windowpadding
+        ImGuiStyleVar_WindowRounding                  # Float     windowrounding
+        ImGuiStyleVar_WindowBorderSize                # Float     windowbordersize
+        ImGuiStyleVar_WindowMinSize                   # Imvec2    windowminsize
+        ImGuiStyleVar_WindowTitleAlign                # Imvec2    windowtitlealign
+        ImGuiStyleVar_ChildRounding                   # Float     childrounding
+        ImGuiStyleVar_ChildBorderSize                 # Float     childbordersize
+        ImGuiStyleVar_PopupRounding                   # Float     popuprounding
+        ImGuiStyleVar_PopupBorderSize                 # Float     popupbordersize
+        ImGuiStyleVar_FramePadding                    # Imvec2    framepadding
+        ImGuiStyleVar_FrameRounding                   # Float     framerounding
+        ImGuiStyleVar_FrameBorderSize                 # Float     framebordersize
+        ImGuiStyleVar_ItemSpacing                     # Imvec2    itemspacing
+        ImGuiStyleVar_ItemInnerSpacing                # Imvec2    iteminnerspacing
+        ImGuiStyleVar_IndentSpacing                   # Float     indentspacing
+        ImGuiStyleVar_CellPadding                     # Imvec2    cellpadding
+        ImGuiStyleVar_ScrollbarSize                   # Float     scrollbarsize
+        ImGuiStyleVar_ScrollbarRounding               # Float     scrollbarrounding
+        ImGuiStyleVar_GrabMinSize                     # Float     grabminsize
+        ImGuiStyleVar_GrabRounding                    # Float     grabrounding
+        ImGuiStyleVar_TabRounding                     # Float     tabrounding
+        ImGuiStyleVar_TabBorderSize                   # Float     tabbordersize
+        ImGuiStyleVar_TabBarBorderSize                # Float     tabbarbordersize
+        ImGuiStyleVar_TableAngledHeadersAngle         # Float     tableangledheadersangle
+        ImGuiStyleVar_TableAngledHeadersTextAlign     # Imvec2  tableangledheaderstextalign
+        ImGuiStyleVar_ButtonTextAlign                 # Imvec2    buttontextalign
+        ImGuiStyleVar_SelectableTextAlign             # Imvec2    selectabletextalign
+        ImGuiStyleVar_SeparatorTextBorderSize         # Float     separatortextbordersize
+        ImGuiStyleVar_SeparatorTextAlign              # Imvec2    separatortextalign
+        ImGuiStyleVar_SeparatorTextPadding            # Imvec2    separatortextpadding
+        ImGuiStyleVar_DockingSeparatorSize            # Float     dockingseparatorsize
         ImGuiStyleVar_COUNT
 
     ctypedef enum ImGuiButtonFlags_:
@@ -965,6 +971,13 @@ cdef extern from "cimgui.h":
 
 
 
+    ctypedef struct ImVector_ImVec2:
+        int Size
+        int Capacity
+        ImVec2* Data
+
+
+
     ctypedef struct ImVector_ImVec4:
         int Size
         int Capacity
@@ -976,13 +989,6 @@ cdef extern from "cimgui.h":
         int Size
         int Capacity
         ImTextureID* Data
-
-
-
-    ctypedef struct ImVector_ImVec2:
-        int Size
-        int Capacity
-        ImVec2* Data
 
 
 
@@ -1067,7 +1073,7 @@ cdef extern from "cimgui.h":
         float FrameBorderSize                           # Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
         ImVec2 ItemSpacing                              # Horizontal and vertical spacing between widgets/lines.
         ImVec2 ItemInnerSpacing                         # Horizontal and vertical spacing between within elements of a composed widget (e.g. a slider and its label).
-        ImVec2 CellPadding                              # Padding within a table cell. cellpadding.y may be altered between different rows.
+        ImVec2 CellPadding                              # Padding within a table cell. cellpadding.x is locked for entire table. cellpadding.y may be altered between different rows.
         ImVec2 TouchExtraPadding                        # Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
         float IndentSpacing                             # Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
         float ColumnsMinSpacing                         # Minimum horizontal spacing between two columns. preferably > (framepadding.x + 1).
@@ -1081,6 +1087,7 @@ cdef extern from "cimgui.h":
         float TabMinWidthForCloseButton                 # Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
         float TabBarBorderSize                          # Thickness of tab-bar separator, which takes on the tab active color to denote focus.
         float TableAngledHeadersAngle                   # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
+        ImVec2 TableAngledHeadersTextAlign              # Alignment of angled headers within the cell
         ImGuiDir ColorButtonPosition                    # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
         ImVec2 ButtonTextAlign                          # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
         ImVec2 SelectableTextAlign                      # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
@@ -1569,15 +1576,15 @@ cdef extern from "cimgui.h":
         ImDrawListFlags Flags                    # Flags, you may poke into these to adjust anti-aliasing settings per-primitive.
         unsigned int _VtxCurrentIdx              # [internal] generally == vtxbuffer.size unless we are past 64k vertices, in which case this gets reset to 0.
         ImDrawListSharedData* _Data              # Pointer to shared draw data (you can use imgui::getdrawlistshareddata() to get the one from current imgui context)
-        const char* _OwnerName                   # Pointer to owner window's name for debugging
         ImDrawVert* _VtxWritePtr                 # [internal] point within vtxbuffer.data after each add command (to avoid using the imvector<> operators too much)
         ImDrawIdx* _IdxWritePtr                  # [internal] point within idxbuffer.data after each add command (to avoid using the imvector<> operators too much)
-        ImVector_ImVec4 _ClipRectStack           # [internal]
-        ImVector_ImTextureID _TextureIdStack     # [internal]
         ImVector_ImVec2 _Path                    # [internal] current path building
         ImDrawCmdHeader _CmdHeader               # [internal] template of active commands. fields should match those of cmdbuffer.back().
         ImDrawListSplitter _Splitter             # [internal] for channels api (note: prefer using your own persistent instance of imdrawlistsplitter!)
+        ImVector_ImVec4 _ClipRectStack           # [internal]
+        ImVector_ImTextureID _TextureIdStack     # [internal]
         float _FringeScale                       # [internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
+        const char* _OwnerName                   # Pointer to owner window's name for debugging
 
 
     # Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)

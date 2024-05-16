@@ -457,8 +457,9 @@ TREE_NODE_FLAGS_OPEN_ON_ARROW: int                # Only open when clicking on t
 TREE_NODE_FLAGS_LEAF: int                         # No collapsing, no arrow (use as a convenience for leaf nodes).
 TREE_NODE_FLAGS_BULLET: int                       # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
 TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
-TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line. in the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
-TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (bypass the indented area).
+TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line without using allowoverlap mode.
+TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (cover the indent area).
+TREE_NODE_FLAGS_SPAN_TEXT_WIDTH: int              # Narrow hit box + narrow hovering highlight, will only cover the label text.
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (text will still fit in current column)
 TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
@@ -823,36 +824,39 @@ COL_NAV_WINDOWING_HIGHLIGHT: int     # Highlight window when using ctrl+tab
 COL_NAV_WINDOWING_DIM_BG: int        # Darken/colorize entire screen behind the ctrl+tab window list, when active
 COL_MODAL_WINDOW_DIM_BG: int         # Darken/colorize entire screen behind a modal window, when one is active
 COL_COUNT: int
-STYLE_VAR_ALPHA: int                          # Float     alpha
-STYLE_VAR_DISABLED_ALPHA: int                 # Float     disabledalpha
-STYLE_VAR_WINDOW_PADDING: int                 # Imvec2    windowpadding
-STYLE_VAR_WINDOW_ROUNDING: int                # Float     windowrounding
-STYLE_VAR_WINDOW_BORDER_SIZE: int             # Float     windowbordersize
-STYLE_VAR_WINDOW_MIN_SIZE: int                # Imvec2    windowminsize
-STYLE_VAR_WINDOW_TITLE_ALIGN: int             # Imvec2    windowtitlealign
-STYLE_VAR_CHILD_ROUNDING: int                 # Float     childrounding
-STYLE_VAR_CHILD_BORDER_SIZE: int              # Float     childbordersize
-STYLE_VAR_POPUP_ROUNDING: int                 # Float     popuprounding
-STYLE_VAR_POPUP_BORDER_SIZE: int              # Float     popupbordersize
-STYLE_VAR_FRAME_PADDING: int                  # Imvec2    framepadding
-STYLE_VAR_FRAME_ROUNDING: int                 # Float     framerounding
-STYLE_VAR_FRAME_BORDER_SIZE: int              # Float     framebordersize
-STYLE_VAR_ITEM_SPACING: int                   # Imvec2    itemspacing
-STYLE_VAR_ITEM_INNER_SPACING: int             # Imvec2    iteminnerspacing
-STYLE_VAR_INDENT_SPACING: int                 # Float     indentspacing
-STYLE_VAR_CELL_PADDING: int                   # Imvec2    cellpadding
-STYLE_VAR_SCROLLBAR_SIZE: int                 # Float     scrollbarsize
-STYLE_VAR_SCROLLBAR_ROUNDING: int             # Float     scrollbarrounding
-STYLE_VAR_GRAB_MIN_SIZE: int                  # Float     grabminsize
-STYLE_VAR_GRAB_ROUNDING: int                  # Float     grabrounding
-STYLE_VAR_TAB_ROUNDING: int                   # Float     tabrounding
-STYLE_VAR_TAB_BAR_BORDER_SIZE: int            # Float     tabbarbordersize
-STYLE_VAR_BUTTON_TEXT_ALIGN: int              # Imvec2    buttontextalign
-STYLE_VAR_SELECTABLE_TEXT_ALIGN: int          # Imvec2    selectabletextalign
-STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int     # Float  separatortextbordersize
-STYLE_VAR_SEPARATOR_TEXT_ALIGN: int           # Imvec2    separatortextalign
-STYLE_VAR_SEPARATOR_TEXT_PADDING: int         # Imvec2    separatortextpadding
-STYLE_VAR_DOCKING_SEPARATOR_SIZE: int         # Float     dockingseparatorsize
+STYLE_VAR_ALPHA: int                               # Float     alpha
+STYLE_VAR_DISABLED_ALPHA: int                      # Float     disabledalpha
+STYLE_VAR_WINDOW_PADDING: int                      # Imvec2    windowpadding
+STYLE_VAR_WINDOW_ROUNDING: int                     # Float     windowrounding
+STYLE_VAR_WINDOW_BORDER_SIZE: int                  # Float     windowbordersize
+STYLE_VAR_WINDOW_MIN_SIZE: int                     # Imvec2    windowminsize
+STYLE_VAR_WINDOW_TITLE_ALIGN: int                  # Imvec2    windowtitlealign
+STYLE_VAR_CHILD_ROUNDING: int                      # Float     childrounding
+STYLE_VAR_CHILD_BORDER_SIZE: int                   # Float     childbordersize
+STYLE_VAR_POPUP_ROUNDING: int                      # Float     popuprounding
+STYLE_VAR_POPUP_BORDER_SIZE: int                   # Float     popupbordersize
+STYLE_VAR_FRAME_PADDING: int                       # Imvec2    framepadding
+STYLE_VAR_FRAME_ROUNDING: int                      # Float     framerounding
+STYLE_VAR_FRAME_BORDER_SIZE: int                   # Float     framebordersize
+STYLE_VAR_ITEM_SPACING: int                        # Imvec2    itemspacing
+STYLE_VAR_ITEM_INNER_SPACING: int                  # Imvec2    iteminnerspacing
+STYLE_VAR_INDENT_SPACING: int                      # Float     indentspacing
+STYLE_VAR_CELL_PADDING: int                        # Imvec2    cellpadding
+STYLE_VAR_SCROLLBAR_SIZE: int                      # Float     scrollbarsize
+STYLE_VAR_SCROLLBAR_ROUNDING: int                  # Float     scrollbarrounding
+STYLE_VAR_GRAB_MIN_SIZE: int                       # Float     grabminsize
+STYLE_VAR_GRAB_ROUNDING: int                       # Float     grabrounding
+STYLE_VAR_TAB_ROUNDING: int                        # Float     tabrounding
+STYLE_VAR_TAB_BORDER_SIZE: int                     # Float     tabbordersize
+STYLE_VAR_TAB_BAR_BORDER_SIZE: int                 # Float     tabbarbordersize
+STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE: int          # Float     tableangledheadersangle
+STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN: int     # Imvec2  tableangledheaderstextalign
+STYLE_VAR_BUTTON_TEXT_ALIGN: int                   # Imvec2    buttontextalign
+STYLE_VAR_SELECTABLE_TEXT_ALIGN: int               # Imvec2    selectabletextalign
+STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int          # Float     separatortextbordersize
+STYLE_VAR_SEPARATOR_TEXT_ALIGN: int                # Imvec2    separatortextalign
+STYLE_VAR_SEPARATOR_TEXT_PADDING: int              # Imvec2    separatortextpadding
+STYLE_VAR_DOCKING_SEPARATOR_SIZE: int              # Float     dockingseparatorsize
 STYLE_VAR_COUNT: int
 BUTTON_FLAGS_NONE: int
 BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int        # React on left mouse button (default)
@@ -5126,7 +5130,7 @@ class ImGuiStyle:
     """
     cell_padding: Tuple[float, float]
     """
-    Padding within a table cell. cellpadding.y may be altered between different rows.
+    Padding within a table cell. cellpadding.x is locked for entire table. cellpadding.y may be altered between different rows.
     """
     child_border_size: float
     """
@@ -5279,10 +5283,14 @@ class ImGuiStyle:
     """
     Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
     """
-    # table_angled_headers_angle: float
-    # """
-    # Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
-    # """
+    table_angled_headers_angle: float
+    """
+    Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
+    """
+    table_angled_headers_text_align: Tuple[float, float]
+    """
+    Alignment of angled headers within the cell
+    """
     touch_extra_padding: Tuple[float, float]
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
