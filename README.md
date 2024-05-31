@@ -52,13 +52,36 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 4. More work would be required to enable additional backends. I've attempted to make this easier though the modular nature of the CMake script and binding generator script.
 5. No `with` functionality has been added. No being lazy; your `pygui.begin()` must have a `pygui.end()`.
 
-## How to run
+## Getting Started
 
-You will need:
+The easiest way to get started with pygui is to download the release. This includes pygui and imgui precompiled into a python package that can be imported. Just extract the contacts to your python project folder.
+
+Make sure you have installed the [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist).
+
+Open a terminal to the same directory as `app.py` and run:
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+Note: You may opt to use a python virtual env. That is okay too.
+
+## Compiling pygui
+
+To compile pygui you will need:
 
 - git
 - python (pip)
 - cmake
+
+And these are the steps we will complete:
+
+1. Install python dependecies.
+2. Run `dear_bindings`'s binding generation script.
+3. Compile cimgui, glfw, and the implementations as shared dlls.
+4. *Optionally:* Add function definitions for yet to be implemented pygui functions.
+5. Compile the cython into a python module.
 
 First, download this repository recursively:
 
@@ -66,26 +89,12 @@ First, download this repository recursively:
 git clone --recursive https://github.com/JaedanC/pygui.git
 ```
 
-Then, I suggest checking out the ImGui `docking` branch. Any commit can be used if you want.
+Then, I checkout out the ImGui branch that you wish to compile. I recommend checking out the `docking` branch, but any commit/tag can be used.
 
 ```bash
 cd src/external/imgui
 git checkout docking
 ```
-
-## Running Pygui
-
-The easiest way to get started with pygui is to download the release. This includes pygui and imgui precompiled into a python package that can be imported. Just extract the contacts to your python project folder. I recommend starting with `app.py` and modifying it for your project.
-
-## Compiling Pygui
-
-To compile pygui you will need to complete these steps.
-
-1. Install python dependecies.
-2. Run `dear_bindings`'s binding generation script.
-3. Compile cimgui, glfw, and the implementations as shared dlls.
-4. *Optionally:* Add function definitions for yet to be implemented pygui functions.
-5. Compile the cython into a python module.
 
 ### 1. Install python dependencies
 
@@ -95,7 +104,7 @@ Run:
 pip install -r requirements.txt
 ```
 
-You may choose to use `venv`, but this is outside the scope of this tutorial.
+Note: Using a `venv` is recommended.
 
 ### 2. Running dear_binding
 
@@ -118,6 +127,8 @@ This step will compile:
 You may use Visual Studio or the command-line (developer console on windows) to run CMake. I will be using Visual Studio.
 
 Configure (build) CMake and then CMake "Install". This will build the targets and save them to `src/pygui`. An additional `./src/pygui/my_program.exe` has been included that compiles from `main.c`. This is to demonstrate the `dll`'s in action. If this program does not run correctly, then the `dll`'s are not ready for python.
+
+You can choose debug or release for cmake. All github releases (from 1.90.6+) are built in release.
 
 ### 4. (Optionally) Create new pygui function definitions
 
