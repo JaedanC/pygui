@@ -2,15 +2,17 @@ cmake_minimum_required(VERSION 3.26)
 project(pygui)
 
 
-set(CIMGUI_DIRECTORY          src/external/dear_bindings)
+set(CIMGUI_DIRECTORY          src/external/dear_bindings/generated)
+set(CIMGUI_IMPL_DIRECTORY     ${CIMGUI_DIRECTORY}/backends)
+
 set(IMGUI_DIRECTORY           src/external/imgui)
 set(IMGUI_IMPL_DIRECTORY      ${IMGUI_DIRECTORY}/backends)
-set(IMGUILESS_IMPL_DIRECTORY  src/core/backends)
+
 set(GLFW_DIRECTORY            src/external/glfw)
 set(GLFW_INCLUDE_DIRECTORY    ${GLFW_DIRECTORY}/include)
 
-set(PYGUI_CONFIG_H      ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.h)
-set(PYGUI_CONFIG_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.cpp)
+set(PYGUI_CONFIG_H            ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.h)
+set(PYGUI_CONFIG_CPP          ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.cpp)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(Python_FIND_ABI "ANY" "ANY" "ANY")
@@ -19,12 +21,6 @@ find_package(Python3 COMPONENTS Development)
 # ------------------------------------------------------------------------------
 # glfw.dll
 # - Contains glfw implementation
-
-# Layout:
-#  - define: PYGUI_COMPILING_GLFW
-#       _GLFW_BUILD_DLL
-#  - src:
-#       Use built-in CMake
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 add_subdirectory(${GLFW_DIRECTORY})
@@ -35,88 +31,94 @@ target_compile_definitions(glfw PRIVATE
 
 # ------------------------------------------------------------------------------
 # cimgui.dll
-# - Contains cimgui and imgui.
-# - Exports the cimgui functions non-mangled (for pygui)
-# - Exports the imgui functions mangled so that the internals for implementations
-#   know how to link with imgui directly.
+# - Contains imgui, cimgui, and cimgui backend.
+# - Exports only the cimgui functions
 
 # Layout:
 #  - define: PYGUI_COMPILING_CIMGUI
-#       IMGUI_API       __declspec(dllexport)
-#       CIMGUI_API      extern "C" __declspec(dllexport)
+#       CIMGUI_IMPL_API   __declspec(dllexport)
+#       CIMGUI_API        __declspec(dllexport)
 #  - include:
-#       cimgui.h
-#       {imgui_includes}
+#       {imgui headers}
+#       {cimgui headers}
+#       {cimgui backend headers}
+#       {glfw headers}
+#       {python headers} -> For custom assertion
 #  - src:
-#       cimgui.cpp
-#       {imgui_src}
+#       {imgui  src}
+#       {cimgui src}
+#       {cimgui backend src}
+#       {custom python assert src}
+
 
 file(
     GLOB
-    CIMGUI_FILES
-    ${CIMGUI_DIRECTORY}/*.cpp
+    CIMGUI_AND_IMPL_FILES
     ${IMGUI_DIRECTORY}/*.cpp
+    ${CIMGUI_DIRECTORY}/*.cpp
+    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_glfw.cpp
+    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
+    ${CIMGUI_IMPL_DIRECTORY}/cimgui_impl_glfw.cpp
+    ${CIMGUI_IMPL_DIRECTORY}/cimgui_impl_opengl3.cpp
+    ${PYGUI_CONFIG_CPP}                             # Custom Python assertion
 )
-add_library(cimgui SHARED ${CIMGUI_FILES} ${PYGUI_CONFIG_CPP})
+add_library(cimgui SHARED ${CIMGUI_AND_IMPL_FILES})
 target_compile_definitions(cimgui PRIVATE
-    PYGUI_COMPILING_CIMGUI
-    USE_CUSTOM_PYTHON_ERROR
+    PYGUI_COMPILING_DLL
+    USE_CUSTOM_PYTHON_ERROR                         # Comment this to disable custom assert
 )
 target_include_directories(cimgui PRIVATE
-    ${CIMGUI_DIRECTORY}
     ${IMGUI_DIRECTORY}
+    ${IMGUI_IMPL_DIRECTORY}
+    ${CIMGUI_DIRECTORY}
+    ${CIMGUI_IMPL_DIRECTORY}
+    ${GLFW_INCLUDE_DIRECTORY}
     ${Python3_INCLUDE_DIRS}
 )
-target_link_libraries(cimgui
-    ${Python3_LIBRARIES}
-)
-
-# cl specific. Force include of the config file
 target_compile_options(cimgui PRIVATE "/FI${PYGUI_CONFIG_H}")
+target_link_libraries(cimgui glfw ${Python3_LIBRARIES})
 
 
 # ------------------------------------------------------------------------------
-# imgui_glfw_opengl3.dll
-# - Contains glfw and opengl specific imgui code
+# my_program_cpp.exe
+# - This is compiled to test the stability of ImGui itself.
 
 # Layout:
-#  - define: PYGUI_COMPILING_GLFW_IMPL
-#       GLFW_DLL
-#  		IMGUI_IMPL_API  extern "C" __declspec(dllexport)
-# 		IMGUI_API                  __declspec(dllimport)
+#  - define: PYGUI_COMPILING_CPP_APP
+# 		GLFW_DLL
 #  - include
-#       imgui_impl_glfw.h
-#       imgui_impl_opengl3.h
-#       {imgui_includes}
+#       {imgui}
+#       {imgui_impl}
 #  - src:
-#       imgui_impl_glfw.cpp
-#       imgui_impl_opengl3.cpp
+#       main.cpp
+#       {imgui}
+#       {imgui_impl}
 #  - links:
-#       cimgui  (IMGUI_API import)
-#       glfw    (So that glfw functions calls are found)
+#       glfw                (So that glfw function calls are found)
+#       opengl32            (So that opengl function calls are found)
 
-add_library(imgui_glfw_opengl3 SHARED
+file(
+    GLOB
+    IMGUI_FILES
+    ${IMGUI_DIRECTORY}/*.cpp
     ${IMGUI_IMPL_DIRECTORY}/imgui_impl_glfw.cpp
     ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
 )
-target_compile_definitions(imgui_glfw_opengl3 PRIVATE
-    PYGUI_COMPILING_GLFW_IMPL
+add_executable(my_program_cpp
+    ${IMGUI_DIRECTORY}/examples/example_glfw_opengl3/main.cpp
+    ${IMGUI_FILES}
 )
-target_include_directories(imgui_glfw_opengl3 PRIVATE
+target_include_directories(my_program_cpp PRIVATE
     ${IMGUI_DIRECTORY}
-    ${IMGUI_IMPL_DIRECTORY} # Technically this isn't required because the sources come
-                            # this directory but this is more obvious and I prefer that.
-    ${GLFW_INCLUDE_DIRECTORY}
+    ${IMGUI_IMPL_DIRECTORY}
 )
-target_compile_options(imgui_glfw_opengl3 PRIVATE "/FI${PYGUI_CONFIG_H}")
-target_link_libraries(imgui_glfw_opengl3 cimgui glfw)
-
+target_link_libraries(my_program_cpp opengl32 glfw)
 
 # ------------------------------------------------------------------------------
 # my_program.exe
-# - Since this is a C file, we can only link to functions that at non-mangled.
-#   This is why this app uses the CIMGUI_API and the much simpler header file
-#   of cimgui_impl.h.
+# - Since this is a C file, we can only link to functions that are non-mangled.
+# - Thankfully, dear_bindings now supports C backends, so everything can be
+#   wrapped into a single DLL and linked in one go :)
 # - VERY IMPORTANT. Since this links with cimgui (which may be compiled with
 #   a redefined IM_ASSERT macro), you need to be careful. If IM_ASSERT() fails
 #   then the program will crash WITHOUT an error message at all. If you are
@@ -128,74 +130,37 @@ target_link_libraries(imgui_glfw_opengl3 cimgui glfw)
 #   then you are good. Otherwise, it is using the custom python exception.
 
 # Layout:
-#  - define: PYGUI_COMPILING_APP
-# 		CIMGUI_API           __declspec(dllimport)
+#  - define: PYGUI_COMPILING_C_APP
+# 		CIMGUI_API       __declspec(dllimport)
+#       CIMGUI_IMPL_API  __declspec(dllimport)
 #  - include
 #       {basically everything}
 #  - src:
 #       main.c
 #  - links:
-#       cimgui              (CIMGUI_API import)
-#       imgui_glfw_opengl3  (So that glfw function calls are found)
-#       opengl32            (So that opengl function calls are found)
+#       cimgui              (CIMGUI_API import. Includes glfw nad backend).
+#       opengl32            (So that opengl function calls are found).
 
-add_executable(my_program src/main.c)
-target_compile_definitions(my_program PRIVATE
-    PYGUI_COMPILING_APP
+add_executable(my_program_c
+    src/main.c
 )
-target_include_directories(my_program PRIVATE
+target_compile_definitions(my_program_c PRIVATE
+    PYGUI_COMPILING_C_APP
+)
+target_include_directories(my_program_c PRIVATE
     ${IMGUI_DIRECTORY}
     ${CIMGUI_DIRECTORY}
-    ${IMGUILESS_IMPL_DIRECTORY}
+    ${CIMGUI_IMPL_DIRECTORY}
 )
-# ${GLFW_INCLUDE_DIRECTORY}
-target_compile_options(my_program PRIVATE "/FI${PYGUI_CONFIG_H}")
-target_link_libraries(my_program cimgui imgui_glfw_opengl3 opengl32)
-
-
-# ------------------------------------------------------------------------------
-# my_program_cpp.exe
-# - This is compiled to test the stability of ImGui itself.
-
-# Layout:
-#  - define: PYGUI_COMPILING_CPP_APP
-# 		GLFW_DLL
-#  - include
-#       {imgui} {imgui_impl}
-#  - src:
-#       main.cpp {imgui} {imgui_impl}
-#  - links:
-#       glfw                (So that glfw function calls are found)
-#       opengl32            (So that opengl function calls are found)
-
-file(
-    GLOB
-    IMGUI_FILES
-    ${IMGUI_DIRECTORY}/*.cpp
-)
-add_executable(my_program_cpp
-    src/main.cpp
-    ${IMGUI_FILES}
-    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_glfw.cpp
-    ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
-)
-target_compile_definitions(my_program_cpp PRIVATE
-    PYGUI_COMPILING_CPP_APP
-)
-target_include_directories(my_program_cpp PRIVATE
-    ${IMGUI_DIRECTORY}
-    ${IMGUI_IMPL_DIRECTORY}
-)
-# ${GLFW_INCLUDE_DIRECTORY}
-target_compile_options(my_program_cpp PRIVATE "/FI${PYGUI_CONFIG_H}")
-target_link_libraries(my_program_cpp opengl32 glfw)
+target_compile_options(my_program_c PRIVATE "/FI${PYGUI_CONFIG_H}")
+target_link_libraries(my_program_c cimgui opengl32)
 
 
 # Since we are compiling SHARED dll's, then we are mostly interesting in
 # the runtime (dll) and the archive (associated .lib). The .lib file is
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
-install(TARGETS cimgui imgui_glfw_opengl3 glfw my_program my_program_cpp
+install(TARGETS cimgui my_program_c glfw my_program_cpp
         RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui
         LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs
         ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs)

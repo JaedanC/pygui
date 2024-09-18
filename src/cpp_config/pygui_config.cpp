@@ -1,4 +1,4 @@
-#ifdef PYGUI_COMPILING_CIMGUI
+#ifdef PYGUI_COMPILING_DLL
 #include "pygui_config.h"
 
 #ifdef USE_CUSTOM_PYTHON_ERROR

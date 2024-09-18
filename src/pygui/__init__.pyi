@@ -407,7 +407,6 @@ WINDOW_FLAGS_NO_DOCKING: int                      # Disable docking of this wind
 WINDOW_FLAGS_NO_NAV: int
 WINDOW_FLAGS_NO_DECORATION: int
 WINDOW_FLAGS_NO_INPUTS: int
-WINDOW_FLAGS_NAV_FLATTENED: int                   # [beta] on child window: share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
 WINDOW_FLAGS_CHILD_WINDOW: int                    # Don't use! for internal use by beginchild()
 WINDOW_FLAGS_TOOLTIP: int                         # Don't use! for internal use by begintooltip()
 WINDOW_FLAGS_POPUP: int                           # Don't use! for internal use by beginpopup()
@@ -415,7 +414,7 @@ WINDOW_FLAGS_MODAL: int                           # Don't use! for internal use 
 WINDOW_FLAGS_CHILD_MENU: int                      # Don't use! for internal use by beginmenu()
 WINDOW_FLAGS_DOCK_NODE_HOST: int                  # Don't use! for internal use by begin()/newframe()
 CHILD_FLAGS_NONE: int
-CHILD_FLAGS_BORDER: int                        # Show an outer border and enable windowpadding. (important: this is always == 1 == true for legacy reason)
+CHILD_FLAGS_BORDERS: int                       # Show an outer border and enable windowpadding. (important: this is always == 1 == true for legacy reason)
 CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING: int     # Pad with style.windowpadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
 CHILD_FLAGS_RESIZE_X: int                      # Allow resize from right border (layout direction). enable .ini saving (unless imguiwindowflags_nosavedsettings passed to window flags)
 CHILD_FLAGS_RESIZE_Y: int                      # Allow resize from bottom border (layout direction). '
@@ -423,28 +422,37 @@ CHILD_FLAGS_AUTO_RESIZE_X: int                 # Enable auto-resizing width. rea
 CHILD_FLAGS_AUTO_RESIZE_Y: int                 # Enable auto-resizing height. read 'important: size measurement' details above.
 CHILD_FLAGS_ALWAYS_AUTO_RESIZE: int            # Combined with autoresizex/autoresizey. always measure size even when child is hidden, always return true, always disable clipping optimization! not recommended.
 CHILD_FLAGS_FRAME_STYLE: int                   # Style the child window like a framed item: use framebg, framerounding, framebordersize, framepadding instead of childbg, childrounding, childbordersize, windowpadding.
+CHILD_FLAGS_NAV_FLATTENED: int                 # [beta] share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+ITEM_FLAGS_NONE: int                     # (default)
+ITEM_FLAGS_NO_TAB_STOP: int              # False    // disable keyboard tabbing. this is a 'lighter' version of imguiitemflags_nonav.
+ITEM_FLAGS_NO_NAV: int                   # False    // disable any form of focusing (keyboard/gamepad directional navigation and setkeyboardfocushere() calls).
+ITEM_FLAGS_NO_NAV_DEFAULT_FOCUS: int     # False    // disable item being a candidate for default focus (e.g. used by title bar items).
+ITEM_FLAGS_BUTTON_REPEAT: int            # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
+ITEM_FLAGS_AUTO_CLOSE_POPUPS: int        # True     // menuitem()/selectable() automatically close their parent popup window.
 INPUT_TEXT_FLAGS_NONE: int
 INPUT_TEXT_FLAGS_CHARS_DECIMAL: int               # Allow 0123456789.+-*/
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL: int           # Allow 0123456789abcdefabcdef
+INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC: int            # Allow 0123456789.+-*/ee (scientific notation input)
 INPUT_TEXT_FLAGS_CHARS_UPPERCASE: int             # Turn a..z into a..z
 INPUT_TEXT_FLAGS_CHARS_NO_BLANK: int              # Filter out spaces, tabs
-INPUT_TEXT_FLAGS_AUTO_SELECT_ALL: int             # Select entire text when first taking mouse focus
+INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT: int             # Pressing tab input a '\t' character into the text field
 INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE: int          # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider looking at the isitemdeactivatedafteredit() function.
+INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int           # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
+INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE: int     # In multi-line mode, validate with enter, add new line with ctrl+enter (default is opposite: validate with ctrl+enter, add line with enter).
+INPUT_TEXT_FLAGS_READ_ONLY: int                   # Read-only mode
+INPUT_TEXT_FLAGS_PASSWORD: int                    # Password mode, display all characters as '*', disable copy
+INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE: int            # Overwrite mode
+INPUT_TEXT_FLAGS_AUTO_SELECT_ALL: int             # Select entire text when first taking mouse focus
+INPUT_TEXT_FLAGS_PARSE_EMPTY_REF_VAL: int         # Inputfloat(), inputint(), inputscalar() etc. only: parse empty string as zero value.
+INPUT_TEXT_FLAGS_DISPLAY_EMPTY_REF_VAL: int       # Inputfloat(), inputint(), inputscalar() etc. only: when value is zero, do not display it. generally used with imguiinputtextflags_parseemptyrefval.
+INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL: int        # Disable following the cursor horizontally
+INPUT_TEXT_FLAGS_NO_UNDO_REDO: int                # Disable undo/redo. note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call clearactiveid().
 INPUT_TEXT_FLAGS_CALLBACK_COMPLETION: int         # Callback on pressing tab (for completion handling)
 INPUT_TEXT_FLAGS_CALLBACK_HISTORY: int            # Callback on pressing up/down arrows (for history handling)
 INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int             # Callback on each iteration. user code may query cursor position, modify text buffer.
 INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: int        # Callback on character inputs to replace or discard them. modify 'eventchar' to replace or discard, or return 1 in callback to discard.
-INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT: int             # Pressing tab input a '\t' character into the text field
-INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE: int     # In multi-line mode, unfocus with enter, add new line with ctrl+enter (default is opposite: unfocus with ctrl+enter, add line with enter).
-INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL: int        # Disable following the cursor horizontally
-INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE: int            # Overwrite mode
-INPUT_TEXT_FLAGS_READ_ONLY: int                   # Read-only mode
-INPUT_TEXT_FLAGS_PASSWORD: int                    # Password mode, display all characters as '*'
-INPUT_TEXT_FLAGS_NO_UNDO_REDO: int                # Disable undo/redo. note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call clearactiveid().
-INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC: int            # Allow 0123456789.+-*/ee (scientific notation input)
 INPUT_TEXT_FLAGS_CALLBACK_RESIZE: int             # Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. notify when the string wants to be resized (for string types which hold a cache of their size). you will be provided a new bufsize in the callback and need to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
 INPUT_TEXT_FLAGS_CALLBACK_EDIT: int               # Callback on any edit (note that inputtext() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
-INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int           # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
 TREE_NODE_FLAGS_NONE: int
 TREE_NODE_FLAGS_SELECTED: int                     # Draw as selected
 TREE_NODE_FLAGS_FRAMED: int                       # Draw frame with background (e.g. for collapsingheader)
@@ -452,11 +460,11 @@ TREE_NODE_FLAGS_ALLOW_OVERLAP: int                # Hit testing to allow subsequ
 TREE_NODE_FLAGS_NO_TREE_PUSH_ON_OPEN: int         # Don't do a treepush() when open (e.g. for collapsingheader) = no extra indent nor pushing on id stack
 TREE_NODE_FLAGS_NO_AUTO_OPEN_ON_LOG: int          # Don't automatically and temporarily open node when logging is active (by default logging will automatically open tree nodes)
 TREE_NODE_FLAGS_DEFAULT_OPEN: int                 # Default node to be open
-TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK: int         # Need double-click to open node
-TREE_NODE_FLAGS_OPEN_ON_ARROW: int                # Only open when clicking on the arrow part. if imguitreenodeflags_openondoubleclick is also set, single-click arrow or double-click all box to open.
+TREE_NODE_FLAGS_OPEN_ON_DOUBLE_CLICK: int         # Open on double-click instead of simple click (default for multi-select unless any _openonxxx behavior is set explicitly). both behaviors may be combined.
+TREE_NODE_FLAGS_OPEN_ON_ARROW: int                # Open when clicking on the arrow part (default for multi-select unless any _openonxxx behavior is set explicitly). both behaviors may be combined.
 TREE_NODE_FLAGS_LEAF: int                         # No collapsing, no arrow (use as a convenience for leaf nodes).
 TREE_NODE_FLAGS_BULLET: int                       # Display a bullet instead of arrow. important: node can still be marked open/close if you don't set the _leaf flag!
-TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding().
+TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding() before the node.
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line without using allowoverlap mode.
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (cover the indent area).
 TREE_NODE_FLAGS_SPAN_TEXT_WIDTH: int              # Narrow hit box + narrow hovering highlight, will only cover the label text.
@@ -476,11 +484,12 @@ POPUP_FLAGS_ANY_POPUP_ID: int                    # For ispopupopen(): ignore the
 POPUP_FLAGS_ANY_POPUP_LEVEL: int                 # For ispopupopen(): search/test at any level of the popup stack (default test in the current level)
 POPUP_FLAGS_ANY_POPUP: int
 SELECTABLE_FLAGS_NONE: int
-SELECTABLE_FLAGS_DONT_CLOSE_POPUPS: int      # Clicking this doesn't close parent popup window
-SELECTABLE_FLAGS_SPAN_ALL_COLUMNS: int       # Frame will span all columns of its container table (text will still fit in current column)
-SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int     # Generate press events on double clicks too
-SELECTABLE_FLAGS_DISABLED: int               # Cannot be selected, display grayed out text
-SELECTABLE_FLAGS_ALLOW_OVERLAP: int          # (wip) hit testing to allow subsequent widgets to overlap this one
+SELECTABLE_FLAGS_NO_AUTO_CLOSE_POPUPS: int     # Clicking this doesn't close parent popup window (overrides imguiitemflags_autoclosepopups)
+SELECTABLE_FLAGS_SPAN_ALL_COLUMNS: int         # Frame will span all columns of its container table (text will still fit in current column)
+SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int       # Generate press events on double clicks too
+SELECTABLE_FLAGS_DISABLED: int                 # Cannot be selected, display grayed out text
+SELECTABLE_FLAGS_ALLOW_OVERLAP: int            # (wip) hit testing to allow subsequent widgets to overlap this one
+SELECTABLE_FLAGS_HIGHLIGHT: int                # Make the item be displayed as if it is hovered
 COMBO_FLAGS_NONE: int
 COMBO_FLAGS_POPUP_ALIGN_LEFT: int      # Align the popup toward the left by default
 COMBO_FLAGS_HEIGHT_SMALL: int          # Max ~4 items visible. tip: if you want your combo popup to be a specific size you can use setnextwindowsizeconstraints() prior to calling begincombo()
@@ -498,6 +507,7 @@ TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON: int                 # Disable buttons to op
 TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of closing tabs (that are submitted with p_open != null) with middle mouse button. you may handle this behavior manually on user's side with if (isitemhovered() && ismouseclicked(2)) *p_open = false.
 TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS: int         # Disable scrolling buttons (apply when fitting policy is imguitabbarflags_fittingpolicyscroll)
 TAB_BAR_FLAGS_NO_TOOLTIP: int                            # Disable tooltips when hovering a tab
+TAB_BAR_FLAGS_DRAW_SELECTED_OVERLINE: int                # Draw selected overline markers over selected tab
 TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN: int            # Resize tabs when they don't fit
 TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int                 # Add scroll buttons when tabs don't fit
 TAB_BAR_FLAGS_FITTING_POLICY_MASK: int
@@ -554,7 +564,9 @@ DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER: int           # By default, when draggi
 DRAG_DROP_FLAGS_SOURCE_NO_HOLD_TO_OPEN_OTHERS: int     # Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
 DRAG_DROP_FLAGS_SOURCE_ALLOW_NULL_ID: int              # Allow items such as text(), image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. this is extremely unusual within the dear imgui ecosystem and so we made it explicit.
 DRAG_DROP_FLAGS_SOURCE_EXTERN: int                     # External source (from outside of dear imgui), won't attempt to read current item/window info. will always return true. only one extern source can be active simultaneously.
-DRAG_DROP_FLAGS_SOURCE_AUTO_EXPIRE_PAYLOAD: int        # Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+DRAG_DROP_FLAGS_PAYLOAD_AUTO_EXPIRE: int               # Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+DRAG_DROP_FLAGS_PAYLOAD_NO_CROSS_CONTEXT: int          # Hint to specify that the payload may not be copied outside current dear imgui context.
+DRAG_DROP_FLAGS_PAYLOAD_NO_CROSS_PROCESS: int          # Hint to specify that the payload may not be copied outside current process.
 DRAG_DROP_FLAGS_ACCEPT_BEFORE_DELIVERY: int            # Acceptdragdroppayload() will returns true even before the mouse button is released. you can then call isdelivery() to test if the payload needs to be delivered.
 DRAG_DROP_FLAGS_ACCEPT_NO_DRAW_DEFAULT_RECT: int       # Do not draw the default highlight rectangle when hovering over target.
 DRAG_DROP_FLAGS_ACCEPT_NO_PREVIEW_TOOLTIP: int         # Request hiding the begindragdropsource tooltip from the begindragdroptarget site.
@@ -569,6 +581,7 @@ DATA_TYPE_S64: int        # Long long / __int64
 DATA_TYPE_U64: int        # Unsigned long long / unsigned __int64
 DATA_TYPE_FLOAT: int      # Float
 DATA_TYPE_DOUBLE: int     # Double
+DATA_TYPE_BOOL: int       # Bool (provided for user convenience, not supported by scalar widgets)
 DATA_TYPE_COUNT: int
 DIR_NONE: int
 DIR_LEFT: int
@@ -736,24 +749,35 @@ KEY_RESERVED_FOR_MOD_ALT: int
 KEY_RESERVED_FOR_MOD_SUPER: int
 KEY_COUNT: int
 MOD_NONE: int
-MOD_CTRL: int                       # Ctrl
+MOD_CTRL: int                       # Ctrl (non-macos), cmd (macos)
 MOD_SHIFT: int                      # Shift
 MOD_ALT: int                        # Option/menu
-MOD_SUPER: int                      # Cmd/super/windows
-MOD_SHORTCUT: int                   # Alias for ctrl (non-macos) _or_ super (macos).
-MOD_MASK: int                       # 5-bits
+MOD_SUPER: int                      # Windows/super (non-macos), ctrl (macos)
+MOD_MASK: int                       # 4-bits
 KEY_NAMED_KEY_BEGIN: int
 KEY_NAMED_KEY_END: int
 KEY_NAMED_KEY_COUNT: int
 KEY_KEYS_DATA_SIZE: int             # Size of keysdata[]: only hold named keys
 KEY_KEYS_DATA_OFFSET: int           # Accesses to io.keysdata[] must use (key - imguikey_keysdata_offset) index.
+INPUT_FLAGS_NONE: int
+INPUT_FLAGS_REPEAT: int                      # Enable repeat. return true on successive repeats. default for legacy iskeypressed(). not default for legacy ismouseclicked(). must be == 1.
+INPUT_FLAGS_ROUTE_ACTIVE: int                # Route to active item only.
+INPUT_FLAGS_ROUTE_FOCUSED: int               # Route to windows in the focus stack (default). deep-most focused window takes inputs. active item takes inputs over deep-most focused window.
+INPUT_FLAGS_ROUTE_GLOBAL: int                # Global route (unless a focused window or active item registered the route).
+INPUT_FLAGS_ROUTE_ALWAYS: int                # Do not register route, poll keys directly.
+INPUT_FLAGS_ROUTE_OVER_FOCUSED: int          # Option: global route: higher priority than focused route (unless active item in focused route).
+INPUT_FLAGS_ROUTE_OVER_ACTIVE: int           # Option: global route: higher priority than active item. unlikely you need to use that: will interfere with every active items, e.g. ctrl+a registered by inputtext will be overridden by this. may not be fully honored as user/internal code is likely to always assume they can access keys when active.
+INPUT_FLAGS_ROUTE_UNLESS_BG_FOCUSED: int     # Option: global route: will not be applied if underlying background/void is focused (== no dear imgui windows are focused). useful for overlay applications.
+INPUT_FLAGS_ROUTE_FROM_ROOT_WINDOW: int      # Option: route evaluated from the point of view of root window rather than current window.
+INPUT_FLAGS_TOOLTIP: int                     # Automatically display a tooltip when hovering item [beta] unsure of right api (opt-in/opt-out)
 CONFIG_FLAGS_NONE: int
 CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int            # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
 CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int             # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
 CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS: int       # Instruct navigation to move the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is awkward. will update io.mousepos and set io.wantsetmousepos=true. if enabled you must honor io.wantsetmousepos requests in your backend, otherwise imgui will react as if the mouse is jumping around back and forth.
 CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD: int        # Instruct navigation to not set the io.wantcapturekeyboard flag when io.navactive is set.
-CONFIG_FLAGS_NO_MOUSE: int                       # Instruct imgui to clear mouse position/buttons in newframe(). this allows ignoring the mouse information set by the backend.
+CONFIG_FLAGS_NO_MOUSE: int                       # Instruct dear imgui to disable mouse inputs and interactions.
 CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int         # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
+CONFIG_FLAGS_NO_KEYBOARD: int                    # Instruct dear imgui to disable keyboard inputs and interactions. this is done by ignoring keyboard events and clearing existing states.
 CONFIG_FLAGS_DOCKING_ENABLE: int                 # Docking enable flags.
 CONFIG_FLAGS_VIEWPORTS_ENABLE: int               # Viewport enable flags (require both imguibackendflags_platformhasviewports + imguibackendflags_rendererhasviewports set by the respective backends)
 CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS: int     # [beta: don't use] fixme-dpi: reposition and resize imgui windows when the dpiscale of a viewport changed (mostly useful for the main viewport hosting other window). note that resizing the main window itself is up to your application.
@@ -770,59 +794,62 @@ BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int     # Backend platform supports ca
 BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int         # Backend renderer supports multiple viewports.
 COL_TEXT: int
 COL_TEXT_DISABLED: int
-COL_WINDOW_BG: int                   # Background of normal windows
-COL_CHILD_BG: int                    # Background of child windows
-COL_POPUP_BG: int                    # Background of popups, menus, tooltips windows
+COL_WINDOW_BG: int                        # Background of normal windows
+COL_CHILD_BG: int                         # Background of child windows
+COL_POPUP_BG: int                         # Background of popups, menus, tooltips windows
 COL_BORDER: int
 COL_BORDER_SHADOW: int
-COL_FRAME_BG: int                    # Background of checkbox, radio button, plot, slider, text input
+COL_FRAME_BG: int                         # Background of checkbox, radio button, plot, slider, text input
 COL_FRAME_BG_HOVERED: int
 COL_FRAME_BG_ACTIVE: int
-COL_TITLE_BG: int                    # Title bar
-COL_TITLE_BG_ACTIVE: int             # Title bar when focused
-COL_TITLE_BG_COLLAPSED: int          # Title bar when collapsed
+COL_TITLE_BG: int                         # Title bar
+COL_TITLE_BG_ACTIVE: int                  # Title bar when focused
+COL_TITLE_BG_COLLAPSED: int               # Title bar when collapsed
 COL_MENU_BAR_BG: int
 COL_SCROLLBAR_BG: int
 COL_SCROLLBAR_GRAB: int
 COL_SCROLLBAR_GRAB_HOVERED: int
 COL_SCROLLBAR_GRAB_ACTIVE: int
-COL_CHECK_MARK: int                  # Checkbox tick and radiobutton circle
+COL_CHECK_MARK: int                       # Checkbox tick and radiobutton circle
 COL_SLIDER_GRAB: int
 COL_SLIDER_GRAB_ACTIVE: int
 COL_BUTTON: int
 COL_BUTTON_HOVERED: int
 COL_BUTTON_ACTIVE: int
-COL_HEADER: int                      # Header* colors are used for collapsingheader, treenode, selectable, menuitem
+COL_HEADER: int                           # Header* colors are used for collapsingheader, treenode, selectable, menuitem
 COL_HEADER_HOVERED: int
 COL_HEADER_ACTIVE: int
 COL_SEPARATOR: int
 COL_SEPARATOR_HOVERED: int
 COL_SEPARATOR_ACTIVE: int
-COL_RESIZE_GRIP: int                 # Resize grip in lower-right and lower-left corners of windows.
+COL_RESIZE_GRIP: int                      # Resize grip in lower-right and lower-left corners of windows.
 COL_RESIZE_GRIP_HOVERED: int
 COL_RESIZE_GRIP_ACTIVE: int
-COL_TAB: int                         # Tabitem in a tabbar
-COL_TAB_HOVERED: int
-COL_TAB_ACTIVE: int
-COL_TAB_UNFOCUSED: int
-COL_TAB_UNFOCUSED_ACTIVE: int
-COL_DOCKING_PREVIEW: int             # Preview overlay color when about to docking something
-COL_DOCKING_EMPTY_BG: int            # Background color for empty node (e.g. centralnode with no window docked into it)
+COL_TAB_HOVERED: int                      # Tab background, when hovered
+COL_TAB: int                              # Tab background, when tab-bar is focused & tab is unselected
+COL_TAB_SELECTED: int                     # Tab background, when tab-bar is focused & tab is selected
+COL_TAB_SELECTED_OVERLINE: int            # Tab horizontal overline, when tab-bar is focused & tab is selected
+COL_TAB_DIMMED: int                       # Tab background, when tab-bar is unfocused & tab is unselected
+COL_TAB_DIMMED_SELECTED: int              # Tab background, when tab-bar is unfocused & tab is selected
+COL_TAB_DIMMED_SELECTED_OVERLINE: int     # ..horizontal overline, when tab-bar is unfocused & tab is selected
+COL_DOCKING_PREVIEW: int                  # Preview overlay color when about to docking something
+COL_DOCKING_EMPTY_BG: int                 # Background color for empty node (e.g. centralnode with no window docked into it)
 COL_PLOT_LINES: int
 COL_PLOT_LINES_HOVERED: int
 COL_PLOT_HISTOGRAM: int
 COL_PLOT_HISTOGRAM_HOVERED: int
-COL_TABLE_HEADER_BG: int             # Table header background
-COL_TABLE_BORDER_STRONG: int         # Table outer and header borders (prefer using alpha=1.0 here)
-COL_TABLE_BORDER_LIGHT: int          # Table inner borders (prefer using alpha=1.0 here)
-COL_TABLE_ROW_BG: int                # Table row background (even rows)
-COL_TABLE_ROW_BG_ALT: int            # Table row background (odd rows)
+COL_TABLE_HEADER_BG: int                  # Table header background
+COL_TABLE_BORDER_STRONG: int              # Table outer and header borders (prefer using alpha=1.0 here)
+COL_TABLE_BORDER_LIGHT: int               # Table inner borders (prefer using alpha=1.0 here)
+COL_TABLE_ROW_BG: int                     # Table row background (even rows)
+COL_TABLE_ROW_BG_ALT: int                 # Table row background (odd rows)
+COL_TEXT_LINK: int                        # Hyperlink color
 COL_TEXT_SELECTED_BG: int
-COL_DRAG_DROP_TARGET: int            # Rectangle highlighting a drop target
-COL_NAV_HIGHLIGHT: int               # Gamepad/keyboard: current highlighted item
-COL_NAV_WINDOWING_HIGHLIGHT: int     # Highlight window when using ctrl+tab
-COL_NAV_WINDOWING_DIM_BG: int        # Darken/colorize entire screen behind the ctrl+tab window list, when active
-COL_MODAL_WINDOW_DIM_BG: int         # Darken/colorize entire screen behind a modal window, when one is active
+COL_DRAG_DROP_TARGET: int                 # Rectangle highlighting a drop target
+COL_NAV_HIGHLIGHT: int                    # Gamepad/keyboard: current highlighted item
+COL_NAV_WINDOWING_HIGHLIGHT: int          # Highlight window when using ctrl+tab
+COL_NAV_WINDOWING_DIM_BG: int             # Darken/colorize entire screen behind the ctrl+tab window list, when active
+COL_MODAL_WINDOW_DIM_BG: int              # Darken/colorize entire screen behind a modal window, when one is active
 COL_COUNT: int
 STYLE_VAR_ALPHA: int                               # Float     alpha
 STYLE_VAR_DISABLED_ALPHA: int                      # Float     disabledalpha
@@ -849,6 +876,7 @@ STYLE_VAR_GRAB_ROUNDING: int                       # Float     grabrounding
 STYLE_VAR_TAB_ROUNDING: int                        # Float     tabrounding
 STYLE_VAR_TAB_BORDER_SIZE: int                     # Float     tabbordersize
 STYLE_VAR_TAB_BAR_BORDER_SIZE: int                 # Float     tabbarbordersize
+STYLE_VAR_TAB_BAR_OVERLINE_SIZE: int               # Float     tabbaroverlinesize
 STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE: int          # Float     tableangledheadersangle
 STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN: int     # Imvec2  tableangledheaderstextalign
 STYLE_VAR_BUTTON_TEXT_ALIGN: int                   # Imvec2    buttontextalign
@@ -859,11 +887,10 @@ STYLE_VAR_SEPARATOR_TEXT_PADDING: int              # Imvec2    separatortextpadd
 STYLE_VAR_DOCKING_SEPARATOR_SIZE: int              # Float     dockingseparatorsize
 STYLE_VAR_COUNT: int
 BUTTON_FLAGS_NONE: int
-BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int        # React on left mouse button (default)
-BUTTON_FLAGS_MOUSE_BUTTON_RIGHT: int       # React on right mouse button
-BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE: int      # React on center mouse button
-BUTTON_FLAGS_MOUSE_BUTTON_MASK: int
-BUTTON_FLAGS_MOUSE_BUTTON_DEFAULT: int
+BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int       # React on left mouse button (default)
+BUTTON_FLAGS_MOUSE_BUTTON_RIGHT: int      # React on right mouse button
+BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE: int     # React on center mouse button
+BUTTON_FLAGS_MOUSE_BUTTON_MASK: int       # [internal]
 COLOR_EDIT_FLAGS_NONE: int
 COLOR_EDIT_FLAGS_NO_ALPHA: int               # Coloredit, colorpicker, colorbutton: ignore alpha component (will only read 3 components from the input pointer).
 COLOR_EDIT_FLAGS_NO_PICKER: int              # Coloredit: disable picker when clicking on color square.
@@ -896,8 +923,9 @@ COLOR_EDIT_FLAGS_INPUT_MASK: int
 SLIDER_FLAGS_NONE: int
 SLIDER_FLAGS_ALWAYS_CLAMP: int           # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
 SLIDER_FLAGS_LOGARITHMIC: int            # Make the widget logarithmic (linear otherwise). consider using imguisliderflags_noroundtoformat with this if using a format-string with small amount of digits.
-SLIDER_FLAGS_NO_ROUND_TO_FORMAT: int     # Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits)
-SLIDER_FLAGS_NO_INPUT: int               # Disable ctrl+click or enter key allowing to input text directly into the widget
+SLIDER_FLAGS_NO_ROUND_TO_FORMAT: int     # Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits).
+SLIDER_FLAGS_NO_INPUT: int               # Disable ctrl+click or enter key allowing to input text directly into the widget.
+SLIDER_FLAGS_WRAP_AROUND: int            # Enable wrapping around from max to min and from min to max (only supported by dragxxx() functions for now.
 SLIDER_FLAGS_INVALID_MASK: int           # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
 MOUSE_BUTTON_LEFT: int
 MOUSE_BUTTON_RIGHT: int
@@ -973,7 +1001,7 @@ TABLE_COLUMN_FLAGS_NO_CLIP: int                    # Disable clipping for this c
 TABLE_COLUMN_FLAGS_NO_SORT: int                    # Disable ability to sort on this field (even if imguitableflags_sortable is set on the table).
 TABLE_COLUMN_FLAGS_NO_SORT_ASCENDING: int          # Disable ability to sort in the ascending direction.
 TABLE_COLUMN_FLAGS_NO_SORT_DESCENDING: int         # Disable ability to sort in the descending direction.
-TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int            # Tableheadersrow() will not submit horizontal label for this column. convenient for some small columns. name will still appear in context menu or in angled headers.
+TABLE_COLUMN_FLAGS_NO_HEADER_LABEL: int            # Tableheadersrow() will submit an empty label for this column. convenient for some small columns. name will still appear in context menu or in angled headers. you may append into this cell by calling tablesetcolumnindex() right after the tableheadersrow() call.
 TABLE_COLUMN_FLAGS_NO_HEADER_WIDTH: int            # Disable header text width contribution to automatic column width.
 TABLE_COLUMN_FLAGS_PREFER_SORT_ASCENDING: int      # Make the initial sort direction ascending when first sorting on this column (default).
 TABLE_COLUMN_FLAGS_PREFER_SORT_DESCENDING: int     # Make the initial sort direction descending when first sorting on this column.
@@ -994,6 +1022,26 @@ TABLE_BG_TARGET_NONE: int
 TABLE_BG_TARGET_ROW_BG0: int     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
 TABLE_BG_TARGET_ROW_BG1: int     # Set row background color 1 (generally used for selection marking)
 TABLE_BG_TARGET_CELL_BG: int     # Set cell background color (top-most color)
+MULTI_SELECT_FLAGS_NONE: int
+MULTI_SELECT_FLAGS_SINGLE_SELECT: int                 # Disable selecting more than one item. this is available to allow single-selection code to share same code/logic if desired. it essentially disables the main purpose of beginmultiselect() tho!
+MULTI_SELECT_FLAGS_NO_SELECT_ALL: int                 # Disable ctrl+a shortcut to select all.
+MULTI_SELECT_FLAGS_NO_RANGE_SELECT: int               # Disable shift+selection mouse/keyboard support (useful for unordered 2d selection). with boxselect is also ensure contiguous setrange requests are not combined into one. this allows not handling interpolation in setrange requests.
+MULTI_SELECT_FLAGS_NO_AUTO_SELECT: int                # Disable selecting items when navigating (useful for e.g. supporting range-select in a list of checkboxes).
+MULTI_SELECT_FLAGS_NO_AUTO_CLEAR: int                 # Disable clearing selection when navigating or selecting another one (generally used with imguimultiselectflags_noautoselect. useful for e.g. supporting range-select in a list of checkboxes).
+MULTI_SELECT_FLAGS_NO_AUTO_CLEAR_ON_RESELECT: int     # Disable clearing selection when clicking/selecting an already selected item.
+MULTI_SELECT_FLAGS_BOX_SELECT1D: int                  # Enable box-selection with same width and same x pos items (e.g. full row selectable()). box-selection works better with little bit of spacing between items hit-box in order to be able to aim at empty space.
+MULTI_SELECT_FLAGS_BOX_SELECT2D: int                  # Enable box-selection with varying width or varying x pos items support (e.g. different width labels, or 2d layout/grid). this is slower: alters clipping logic so that e.g. horizontal movements will update selection of normally clipped items.
+MULTI_SELECT_FLAGS_BOX_SELECT_NO_SCROLL: int          # Disable scrolling when box-selecting near edges of scope.
+MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE: int               # Clear selection when pressing escape while scope is focused.
+MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID: int           # Clear selection when clicking on empty location within scope.
+MULTI_SELECT_FLAGS_SCOPE_WINDOW: int                  # Scope for _boxselect and _clearonclickvoid is whole window (default). use if beginmultiselect() covers a whole window or used a single time in same window.
+MULTI_SELECT_FLAGS_SCOPE_RECT: int                    # Scope for _boxselect and _clearonclickvoid is rectangle encompassing beginmultiselect()/endmultiselect(). use if beginmultiselect() is called multiple times in same window.
+MULTI_SELECT_FLAGS_SELECT_ON_CLICK: int               # Apply selection on mouse down when clicking on unselected item. (default)
+MULTI_SELECT_FLAGS_SELECT_ON_CLICK_RELEASE: int       # Apply selection on mouse release when clicking an unselected item. allow dragging an unselected item without altering selection.
+MULTI_SELECT_FLAGS_NAV_WRAP_X: int                    # [temporary] enable navigation wrapping on x axis. provided as a convenience because we don't have a design for the general nav api for this yet. when the more general feature be public we may obsolete this flag in favor of new one.
+SELECTION_REQUEST_TYPE_NONE: int
+SELECTION_REQUEST_TYPE_SET_ALL: int       # Request app to clear selection (if selected==false) or select all items (if selected==true). we cannot set rangefirstitem/rangelastitem as its contents is entirely up to user (not necessarily an index)
+SELECTION_REQUEST_TYPE_SET_RANGE: int     # Request app to select/unselect [rangefirstitem..rangelastitem] items (inclusive) based on value of selected. only endmultiselect() request this, app code can read after beginmultiselect() and it will always be false.
 IM_DRAW_FLAGS_NONE: int
 IM_DRAW_FLAGS_CLOSED: int                         # Pathstroke(), addpolyline(): specify that shape should be closed (important: this is always == 1 for legacy reason)
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT: int         # Addrect(), addrectfilled(), pathrect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). was 0x01.
@@ -1020,7 +1068,7 @@ IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES: int             # Don't build thick line tex
 VIEWPORT_FLAGS_NONE: int
 VIEWPORT_FLAGS_IS_PLATFORM_WINDOW: int         # Represent a platform window
 VIEWPORT_FLAGS_IS_PLATFORM_MONITOR: int        # Represent a platform monitor (unused yet)
-VIEWPORT_FLAGS_OWNED_BY_APP: int               # Platform window: was created/managed by the user application? (rather than our backend)
+VIEWPORT_FLAGS_OWNED_BY_APP: int               # Platform window: is created/managed by the user application? (rather than our backend)
 VIEWPORT_FLAGS_NO_DECORATION: int              # Platform window: disable platform decorations: title bar, borders, etc. (generally set all windows, but if imguiconfigflags_viewportsdecoration is set we only set this on popups/tooltips)
 VIEWPORT_FLAGS_NO_TASK_BAR_ICON: int           # Platform window: disable platform task bar icon (generally set on popups/tooltips, or all windows if imguiconfigflags_viewportsnotaskbaricon is set)
 VIEWPORT_FLAGS_NO_FOCUS_ON_APPEARING: int      # Platform window: don't take focus when created.
@@ -1075,10 +1123,10 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     Child Windows
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
     - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
-    This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
+    This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Borders == true.
     Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
-    BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Border);
+    BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Borders);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
     == 0.0f: use remaining parent window size for this axis.
     > 0.0f: use specified size for this axis.
@@ -1107,6 +1155,7 @@ def begin_disabled(disabled: bool=True) -> None:
     Disabling [BETA API]
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
+    - Tooltips windows by exception are opted out of disabling.
     - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
     """
     pass
@@ -1179,6 +1228,20 @@ def begin_menu_bar() -> bool:
     """
     pass
 
+# def begin_multi_select(flags: int) -> ImGuiMultiSelectIO:
+#     """
+#     Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
+#     - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
+#     - ImGuiSelectionUserData is often used to store your item index within the current view (but may store something else).
+#     - Read comments near ImGuiMultiSelectIO for instructions/details and see 'Demo->Widgets->Selection State & Multi-Select' for demo.
+#     - TreeNode() is technically supported but... using this correctly is more complicated. You need some sort of linear/random access to your tree,
+#     which is suited to advanced trees setups already implementing filters and clipper. We will work simplifying the current demo.
+#     - 'selection_size' and 'items_count' parameters are optional and used by a few features. If they are costly for you to compute, you may avoid them.
+#     Implied selection_size = -1, items_count = -1
+#     """
+#     pass
+
+# def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1) -> ImGuiMultiSelectIO: ...
 def begin_popup(str_id: str, flags: int=0) -> bool:
     """
     Popups, Modals
@@ -1239,7 +1302,7 @@ def begin_tab_item(label: str, p_open: Bool=None, flags: int=0) -> bool:
     """
     pass
 
-def begin_table(str_id: str, column: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool:
+def begin_table(str_id: str, columns: int, flags: int=0, outer_size: tuple=(0.0, 0.0), inner_width: float=0.0) -> bool:
     """
     Tables
     - Full-featured replacement for old Columns API.
@@ -1270,7 +1333,8 @@ def begin_tooltip() -> bool:
     """
     Tooltips
     - Tooltips are windows following the mouse. They do not take focus away.
-    - A tooltip window can contain items of any types. SetTooltip() is a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom.
+    - A tooltip window can contain items of any types.
+    - SetTooltip() is more or less a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom (with a subtlety that it discard any previously submitted tooltip)
     Begin/append a tooltip window.
     """
     pass
@@ -1296,6 +1360,81 @@ def button(label: str, size: tuple=(0, 0)) -> bool:
     """
     pass
 
+# def c_impl_glfw_char_callback(window: GLFWwindow, c: int) -> None: ...
+# def c_impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int) -> None:
+#     """
+#     Since 1.84
+#     """
+#     pass
+
+# def c_impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float) -> None:
+#     """
+#     Since 1.87
+#     """
+#     pass
+
+def c_impl_glfw_init_for_open_gl(window, install_callbacks: bool) -> bool:
+    """
+    Follow "Getting Started" link and check examples/ folder to learn about using backends!
+    """
+    pass
+
+# def c_impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool) -> bool: ...
+# def c_impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool) -> bool: ...
+# def c_impl_glfw_install_callbacks(window: GLFWwindow) -> None:
+#     """
+#     GLFW callbacks install
+#     - When calling Init with 'install_callbacks=true': ImGui_ImplGlfw_InstallCallbacks() is called. GLFW callbacks will be installed for you. They will chain-call user's previously installed callbacks, if any.
+#     - When calling Init with 'install_callbacks=false': GLFW callbacks won't be installed. You will need to call individual function yourself from your own GLFW callbacks.
+#     """
+#     pass
+
+# def c_impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int) -> None: ...
+# def c_impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int) -> None: ...
+# def c_impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int) -> None: ...
+def c_impl_glfw_new_frame() -> None: ...
+# def c_impl_glfw_restore_callbacks(window: GLFWwindow) -> None: ...
+# def c_impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float) -> None: ...
+# def c_impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool) -> None:
+#     """
+#     GFLW callbacks options:
+#     - Set 'chain_for_all_windows=true' to enable chaining callbacks for all windows (including secondary viewports created by backends or by user)
+#     """
+#     pass
+
+def c_impl_glfw_shutdown() -> None: ...
+# def c_impl_glfw_sleep(milliseconds: int) -> None:
+#     """
+#     GLFW helpers
+#     """
+#     pass
+
+# def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int) -> None:
+#     """
+#     GLFW callbacks (individual callbacks to call yourself if you didn't install callbacks)
+#     Since 1.84
+#     """
+#     pass
+
+# def c_impl_open_gl3_create_device_objects() -> bool: ...
+# def c_impl_open_gl3_create_fonts_texture() -> bool:
+#     """
+#     (Optional) Called by Init/NewFrame/Shutdown
+#     """
+#     pass
+
+# def c_impl_open_gl3_destroy_device_objects() -> None: ...
+# def c_impl_open_gl3_destroy_fonts_texture() -> None: ...
+def c_impl_open_gl3_init(glsl_version: str=None) -> bool:
+    """
+    Follow "Getting Started" link and check examples/ folder to learn about using backends!
+    Implied glsl_version = nullptr
+    """
+    pass
+
+def c_impl_open_gl3_new_frame() -> None: ...
+def c_impl_open_gl3_render_draw_data(draw_data: ImDrawData) -> None: ...
+def c_impl_open_gl3_shutdown() -> None: ...
 def calc_item_width() -> float:
     """
     Width of item given pushed settings and current cursor position. not necessarily the width of last item unlike most 'item' functions.
@@ -1359,7 +1498,7 @@ def columns(count: int=1, id_: str=None, border: bool=True) -> None:
     """
     Legacy Columns API (prefer using Tables!)
     - You can also use SameLine(pos_x) to mimic simplified columns.
-    Implied count = 1, id = null, border = true
+    Implied count = 1, id = null, borders = true
     """
     pass
 
@@ -1386,6 +1525,13 @@ def debug_check_version_and_data_layout() -> bool:
     pass
 
 # def debug_flash_style_color(idx: int) -> None: ...
+# def debug_log(fmt: str) -> None:
+#     """
+#     Call via imgui_debug_log() for maximum stripping in caller code!
+#     """
+#     pass
+
+# def debug_log_v(fmt: str) -> None: ...
 # def debug_start_item_picker() -> None: ...
 def debug_text_encoding(text: str) -> None:
     """
@@ -1406,7 +1552,7 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 #     """
 #     pass
 
-def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None) -> int:
+def dock_space(dockspace_id: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None) -> int:
     """
     Docking
     [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
@@ -1415,7 +1561,7 @@ def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWi
     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
     - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
     About dockspaces:
-    - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
+    - Use DockSpaceOverViewport() to create a window covering the screen or a specific viewport + a dockspace inside it.
     This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
     - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
@@ -1425,7 +1571,12 @@ def dock_space(id_: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWi
     """
     pass
 
-def dock_space_over_viewport(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None) -> int: ...
+def dock_space_over_viewport(dockspace_id: int, viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None) -> int:
+    """
+    Implied dockspace_id = 0, viewport = null, flags = 0, window_class = null
+    """
+    pass
+
 def drag_float(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
     """
     Widgets: Drag Sliders
@@ -1544,6 +1695,7 @@ def end_menu_bar() -> None:
     """
     pass
 
+# def end_multi_select() -> ImGuiMultiSelectIO: ...
 def end_popup() -> None:
     """
     Only call endpopup() if beginpopupxxx() returns true!
@@ -1586,13 +1738,18 @@ def end_tooltip() -> None:
 #     """
 #     pass
 
-def get_background_draw_list(viewport: ImGuiViewport=None) -> ImDrawList:
+def get_background_draw_list() -> ImDrawList:
     """
     Background/Foreground Draw Lists
-    If viewport is None, get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
-    Otherwise, get background draw list for the given viewport.
+    Implied viewport = null
     """
     pass
+
+# def get_background_draw_list_ex(viewport: ImGuiViewport=None) -> ImDrawList:
+#     """
+#     Get background draw list for the given viewport or viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+#     """
+#     pass
 
 def get_clipboard_text() -> str:
     """
@@ -1646,23 +1803,14 @@ def get_color_u32_im_vec4(col: Tuple[float, float, float, float]) -> int:
 # def get_columns_count() -> int: ...
 def get_content_region_avail() -> Tuple[float, float]:
     """
-    Content region
-    - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
-    - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
-    == getcontentregionmax() - getcursorpos()
-    """
-    pass
-
-def get_content_region_max() -> Tuple[float, float]:
-    """
-    Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates
+    Available space from current position. this is your best friend.
     """
     pass
 
 def get_current_context() -> ImGuiContext: ...
 def get_cursor_pos() -> Tuple[float, float]:
     """
-    [window-local] cursor position in window coordinates (relative to window position)
+    [window-local] cursor position in window-local coordinates. this is not your best friend.
     """
     pass
 
@@ -1684,17 +1832,19 @@ def get_cursor_screen_pos() -> Tuple[float, float]:
     - By "cursor" we mean the current output position.
     - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - YOU CAN DO 99% OF WHAT YOU NEED WITH ONLY GetCursorScreenPos() and GetContentRegionAvail().
     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
     - Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
-    - Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates.
-    Cursor position in absolute coordinates (prefer using this, also more useful to work with imdrawlist api).
+    - Window-local coordinates:   SameLine(offset), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), PushTextWrapPos()
+    - Window-local coordinates:   GetContentRegionMax(), GetWindowContentRegionMin(), GetWindowContentRegionMax() --> all obsoleted. YOU DON'T NEED THEM.
+    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates. Try not to use it.
+    Cursor position, absolute coordinates. this is your best friend (prefer using this rather than getcursorpos(), also more useful to work with imdrawlist api).
     """
     pass
 
 def get_cursor_start_pos() -> Tuple[float, float]:
     """
-    [window-local] initial cursor position, in window coordinates
+    [window-local] initial cursor position, in window-local coordinates. call getcursorscreenpos() after begin() to get the absolute coordinates version.
     """
     pass
 
@@ -1727,14 +1877,13 @@ def get_font_size() -> float:
 
 def get_font_tex_uv_white_pixel() -> Tuple[float, float]:
     """
-    Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api
+    Get uv coordinate for a white pixel, useful to draw custom shapes via the imdrawlist api
     """
     pass
 
 def get_foreground_draw_list(viewport: ImGuiViewport=None) -> ImDrawList:
     """
-    If viewport is None, get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
-    Otherwise, get foreground draw list for the given viewport.
+    Get foreground draw list for the given viewport or viewport associated to the current window. this draw list will be the top-most rendered one. useful to quickly draw shapes/text over dear imgui contents.
     """
     pass
 
@@ -1762,12 +1911,13 @@ def get_id(str_id: str) -> int:
     """
     pass
 
+# def get_id_int(int_id: int) -> int: ...
 # def get_id_ptr(ptr_id: Any) -> int: ...
 # def get_id_str(str_id_begin: str, str_id_end: str) -> int: ...
 def get_io() -> ImGuiIO:
     """
     Main
-    Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
+    Access the imguiio structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
     """
     pass
 
@@ -1825,7 +1975,7 @@ def get_mouse_cursor() -> int:
 
 def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0) -> Tuple[float, float]:
     """
-    Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (uses io.mousedraggingthreshold if lock_threshold < 0.0f)
     """
     pass
 
@@ -1843,10 +1993,7 @@ def get_mouse_pos_on_opening_current_popup() -> Tuple[float, float]:
 
 def get_platform_io() -> ImGuiPlatformIO:
     """
-    (Optional) Platform/OS interface for multi-viewport support
-    Read comments around the ImGuiPlatformIO structure for more details.
-    Note: You may use GetWindowViewport() to get the current viewport of the current window.
-    Platform/renderer functions, for backend to setup + viewports list.
+    Access the imguiplatformio structure (mostly hooks/functions to connect to platform/renderer and os clipboard, ime etc.)
     """
     pass
 
@@ -1926,18 +2073,6 @@ def get_version() -> str:
     """
     pass
 
-def get_window_content_region_max() -> Tuple[float, float]:
-    """
-    Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates
-    """
-    pass
-
-def get_window_content_region_min() -> Tuple[float, float]:
-    """
-    Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates
-    """
-    pass
-
 def get_window_dock_id() -> int: ...
 def get_window_dpi_scale() -> float:
     """
@@ -1953,19 +2088,19 @@ def get_window_draw_list() -> ImDrawList:
 
 def get_window_height() -> float:
     """
-    Get current window height (shortcut for getwindowsize().y)
+    Get current window height (it is unlikely you ever need to use this). shortcut for getwindowsize().y.
     """
     pass
 
 def get_window_pos() -> Tuple[float, float]:
     """
-    Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
+    Get current window position in screen space (it is unlikely you ever need to use this. consider always using getcursorscreenpos() and getcontentregionavail() instead)
     """
     pass
 
 def get_window_size() -> Tuple[float, float]:
     """
-    Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
+    Get current window size (it is unlikely you ever need to use this. consider always using getcursorscreenpos() and getcontentregionavail() instead)
     """
     pass
 
@@ -1977,10 +2112,11 @@ def get_window_viewport() -> ImGuiViewport:
 
 def get_window_width() -> float:
     """
-    Get current window width (shortcut for getwindowsize().x)
+    Get current window width (it is unlikely you ever need to use this). shortcut for getwindowsize().x.
     """
     pass
 
+# def im_color_hsv(h: float, s: float, v: float, a: float=1.0) -> ImColor: ...
 # def im_vector_construct(vector: Any) -> None:
 #     """
 #     Construct a zero-size imvector<> (of any type). this is primarily useful when calling imfontglyphrangesbuilder_buildranges()
@@ -2009,30 +2145,6 @@ def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, flo
     """
     pass
 
-# def impl_glfw_char_callback(window: GLFWwindow, c: int) -> None: ...
-# def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: float) -> None: ...
-# def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float) -> None: ...
-def impl_glfw_init_for_open_gl(window, install_callbacks: bool) -> bool: ...
-# def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool) -> bool: ...
-# def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool) -> bool: ...
-# def impl_glfw_install_callbacks(window: GLFWwindow) -> None: ...
-# def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int) -> None: ...
-# def impl_glfw_monitor_callback(window: GLFWwindow, event: int) -> None: ...
-# def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int) -> None: ...
-def impl_glfw_new_frame() -> None: ...
-# def impl_glfw_restore_callbacks(window: GLFWwindow) -> None: ...
-# def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float) -> None: ...
-# def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool) -> None: ...
-def impl_glfw_shutdown() -> None: ...
-# def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int) -> None: ...
-# def impl_open_gl3_create_device_objects() -> bool: ...
-# def impl_open_gl3_create_fonts_texture() -> bool: ...
-# def impl_open_gl3_destroy_device_objects() -> None: ...
-# def impl_open_gl3_destroy_fonts_texture() -> None: ...
-def impl_open_gl3_init(glsl_version: str=None) -> bool: ...
-def impl_open_gl3_new_frame() -> None: ...
-def impl_open_gl3_render_draw_data(draw_data: ImDrawData) -> None: ...
-def impl_open_gl3_shutdown() -> None: ...
 def indent(indent_w: float=0.0) -> None:
     """
     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
@@ -2153,6 +2265,12 @@ def is_item_toggled_open() -> bool:
     """
     pass
 
+# def is_item_toggled_selection() -> bool:
+#     """
+#     Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
+#     """
+#     pass
+
 def is_item_visible() -> bool:
     """
     Is the last item visible? (items may be out of sight because of clipping/scrolling)
@@ -2212,7 +2330,7 @@ def is_mouse_down(button: int) -> bool:
 
 def is_mouse_dragging(button: int, lock_threshold: float=-1.0) -> bool:
     """
-    Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    Is mouse dragging? (uses io.mousedraggingthreshold if lock_threshold < 0.0f)
     """
     pass
 
@@ -2422,7 +2540,6 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
     pass
 
 def plot_lines_callback(label: str, values_getter: Callable[[Any, int], float], data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: tuple=(0, 0)) -> None: ...
-def pop_button_repeat() -> None: ...
 # def pop_clip_rect() -> None: ...
 def pop_font() -> None: ...
 def pop_id() -> None:
@@ -2431,18 +2548,12 @@ def pop_id() -> None:
     """
     pass
 
+def pop_item_flag() -> None: ...
 def pop_item_width() -> None: ...
 def pop_style_color(count: int=1) -> None: ...
 def pop_style_var(count: int=1) -> None: ...
-def pop_tab_stop() -> None: ...
 def pop_text_wrap_pos() -> None: ...
 def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), overlay: str=None) -> None: ...
-def push_button_repeat(repeat: bool) -> None:
-    """
-    In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
-    """
-    pass
-
 # def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool) -> None:
 #     """
 #     Clipping
@@ -2480,6 +2591,12 @@ def push_id(obj: object) -> None:
     """
     pass
 
+def push_item_flag(option: int, enabled: bool) -> None:
+    """
+    Modify specified shared item flag, e.g. pushitemflag(imguiitemflags_notabstop, true)
+    """
+    pass
+
 def push_item_width(item_width: float) -> None:
     """
     Parameters stacks (current window)
@@ -2496,16 +2613,22 @@ def push_style_color(idx: int, col: "int | tuple") -> None:
 
 def push_style_var(idx: int, val: "float | tuple") -> None:
     """
-    Modify a style float variable. always use this if you modify the style after newframe().
+    Modify a style float variable. always use this if you modify the style after newframe()!
     pygui note: You can pass a float or length 2 tuple.
     """
     pass
 
-def push_tab_stop(tab_stop: bool) -> None:
-    """
-    == tab stop enable. allow focusing using tab/shift-tab, enabled by default but you can disable it for certain widgets
-    """
-    pass
+# def push_style_var_x(idx: int, val_x: float) -> None:
+#     """
+#     Modify x component of a style imvec2 variable. '
+#     """
+#     pass
+
+# def push_style_var_y(idx: int, val_y: float) -> None:
+#     """
+#     Modify y component of a style imvec2 variable. '
+#     """
+#     pass
 
 def push_text_wrap_pos(wrap_local_pos_x: float=0.0) -> None:
     """
@@ -2637,7 +2760,7 @@ def set_cursor_pos_y(local_y: float) -> None:
 
 def set_cursor_screen_pos(pos: Tuple[float, float]) -> None:
     """
-    Cursor position in absolute coordinates
+    Cursor position, absolute coordinates. this is your best friend.
     """
     pass
 
@@ -2658,9 +2781,21 @@ def set_item_default_focus() -> None:
     """
     pass
 
+# def set_item_key_owner(key: int) -> None:
+#     """
+#     Inputs Utilities: Key/Input Ownership [BETA]
+#     - One common use case would be to allow your items to disable standard inputs behaviors such
+#     as Tab or Alt key handling, Mouse Wheel scrolling, etc.
+#     e.g. Button(...); SetItemKeyOwner(ImGuiKey_MouseWheelY); to make hovering/activating a button disable wheel for scrolling.
+#     - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.
+#     - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.
+#     Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
+#     """
+#     pass
+
 def set_item_tooltip(fmt: str) -> None:
     """
-    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    Set a text-only tooltip if preceding item was hovered. override any previous call to settooltip().
     """
     pass
 
@@ -2700,6 +2835,14 @@ def set_next_item_open(is_open: bool, cond: int=0) -> None:
     Set next treenode/collapsingheader open state.
     """
     pass
+
+# def set_next_item_selection_user_data(selection_user_data: Any) -> None: ...
+# def set_next_item_shortcut(key_chord: int, flags: int=0) -> None: ...
+# def set_next_item_storage_id(storage_id: int) -> None:
+#     """
+#     Set id to use for open/close storage (default to same as item id).
+#     """
+#     pass
 
 def set_next_item_width(item_width: float) -> None:
     """
@@ -2880,6 +3023,26 @@ def set_tooltip(fmt: str) -> None:
 # def set_window_size_str(name: str, size: Tuple[float, float], cond: int=0) -> None:
 #     """
 #     Set named window size. set axis to 0.0f to force an auto-fit on this axis.
+#     """
+#     pass
+
+# def shortcut(key_chord: int, flags: int=0) -> bool:
+#     """
+#     Inputs Utilities: Shortcut Testing & Routing [BETA]
+#     - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
+#     ImGuiKey_C  // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
+#     ImGuiMod_Ctrl | ImGuiKey_C  // Accepted by functions taking ImGuiKeyChord arguments)
+#     only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
+#     - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
+#     Parent   -> call Shortcut(Ctrl+S)// When Parent is focused, Parent gets the shortcut.
+#     Child1 -> call Shortcut(Ctrl+S)// When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
+#     Child2 -> no call  // When Child2 is focused, Parent gets the shortcut.
+#     The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
+#     This is an important property as it facilitate working with foreign code or larger codebase.
+#     - To understand the difference:
+#     - IsKeyChordPressed() compares mods and call IsKeyPressed() -> function has no side-effect.
+#     - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed() -> function has (desirable) side-effects as it can prevents another call from getting the route.
+#     - Visualize registered routes in 'Metrics/Debugger->Inputs'.
 #     """
 #     pass
 
@@ -3068,6 +3231,12 @@ def tab_item_button(label: str, flags: int=0) -> bool:
 #     """
 #     pass
 
+# def table_get_hovered_column() -> int:
+#     """
+#     Return hovered column. return -1 when table is not hovered. return columns_count if the unused space at the right of visible columns is hovered. can also use (tablegetcolumnflags() & imguitablecolumnflags_ishovered) instead.
+#     """
+#     pass
+
 # def table_get_row_index() -> int:
 #     """
 #     Return current row index.
@@ -3166,6 +3335,24 @@ def text_disabled(fmt: str) -> None:
     """
     pass
 
+# def text_link(label: str) -> bool:
+#     """
+#     Hyperlink text button, return true when clicked
+#     """
+#     pass
+
+# def text_link_open_url(label: str) -> None:
+#     """
+#     Implied url = null
+#     """
+#     pass
+
+# def text_link_open_url_ex(label: str, url: str=None) -> None:
+#     """
+#     Hyperlink text button, automatically open file/url when clicked
+#     """
+#     pass
+
 def text_unformatted(text: str, text_end: str=None) -> None:
     """
     Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
@@ -3212,6 +3399,9 @@ def unindent(indent_w: float=0.0) -> None:
 
 def update_platform_windows() -> None:
     """
+    (Optional) Platform/OS interface for multi-viewport support
+    Read comments around the ImGuiPlatformIO structure for more details.
+    Note: You may use GetWindowViewport() to get the current viewport of the current window.
     Call in main loop. will call createwindow/resizewindow/etc. platform functions for each secondary viewport, and destroywindow for each inactive viewport.
     """
     pass
@@ -3269,9 +3459,7 @@ class ImDrawCmd:
 
 class ImDrawData:
     """
-    All draw data to render a Dear ImGui frame
-    (NB: the style and the naming convention here is a little inconsistent, we currently preserve them for backward compatibility purpose,
-    as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
+    Array of imdrawlist* to render. the imdrawlists are owned by imguicontext and only pointed to from here.
     """
     cmd_lists: List[ImVector_ImDrawListPtr]
     """
@@ -3522,6 +3710,7 @@ class ImDrawList:
 
     # def push_clip_rect_full_screen(self: ImDrawList) -> None: ...
     # def push_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
+    # def set_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
 
 class ImDrawListSplitter:
     """
@@ -3558,7 +3747,7 @@ class ImFont:
     """
     ascent: float
     """
-    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
     """
     config_data: ImFontConfig
     """
@@ -3577,7 +3766,7 @@ class ImFont:
     """
     descent: float
     """
-    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
     """
     dirty_lookup_tables: bool
     """
@@ -3622,7 +3811,7 @@ class ImFont:
     index_advance_x: List[float]
     """
     Members: Hot ~20/24 bytes (for CalcTextSize)
-    12-16 // out //// sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this this info, and are often bottleneck in large ui).
+    12-16 // out //// sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
     """
     index_lookup: List[int]
     """
@@ -3779,7 +3968,7 @@ class ImFontAtlas:
     #     """
     #     You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
     #     - After calling Build(), you can query the rectangle position and render your pixels.
-    #     - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of prefered texture format.
+    #     - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
     #     - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
     #     so you can render e.g. custom colorful icons and use them as regular glyphs.
     #     - Read docs/FONTS.md for more details about using colorful icons.
@@ -4247,7 +4436,7 @@ class ImGuiIO:
     # Option to deactivate io.AddFocusEvent(false) handling.
     # - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
     # - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    # = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
+    # = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
     # """
     config_debug_ini_settings: bool
     """
@@ -4301,12 +4490,16 @@ class ImGuiIO:
     """
     config_mac_osx_behaviors: bool
     """
-    = defined(__apple__) // os x style: text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
+    = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
     """
     config_memory_compact_timer: float
     """
     = 60.0f  // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
     """
+    # config_nav_swap_gamepad_buttons: bool
+    # """
+    # = false  // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+    # """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
@@ -4368,7 +4561,6 @@ class ImGuiIO:
     """
     Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
     """
-    get_clipboard_text_fn: Callable
     ini_filename: str
     """
     = 'imgui.ini'// path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
@@ -4396,7 +4588,7 @@ class ImGuiIO:
     key_mods: int
     """
     Other state maintained from data above + IO function calls
-    Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. does not contains imguimod_shortcut which is pretranslated). read-only, updated by newframe()
+    Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. read-only, updated by newframe()
     """
     key_repeat_delay: float
     """
@@ -4457,6 +4649,10 @@ class ImGuiIO:
     # mouse_clicked_time: Sequence[Double]
     # """
     # Time of last click (used to figure out double-click)
+    # """
+    # mouse_ctrl_left_as_right_click: bool
+    # """
+    # (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
     # """
     mouse_delta: Tuple[float, float]
     """
@@ -4560,17 +4756,6 @@ class ImGuiIO:
     """
     Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
     """
-    # platform_locale_decimal_point: int
-    # """
-    # Optional: Platform locale
-    # '.'  // [experimental] configure decimal point e.g. '.' or ',' useful for some languages (e.g. german), generally pulled from *localeconv()->decimal_point
-    # """
-    set_clipboard_text_fn: Callable
-    # set_platform_ime_data_fn: Callable
-    # """
-    # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
-    # (default to use native imm32 api on Windows)
-    # """
     user_data: Any
     """
     = null   // store your own data.
@@ -4675,7 +4860,13 @@ class ImGuiIO:
 
     # def clear_input_keys(self: ImGuiIO) -> None:
     #     """
-    #     Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+    #     Clear current keyboard/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+    #     """
+    #     pass
+
+    # def clear_input_mouse(self: ImGuiIO) -> None:
+    #     """
+    #     Clear current mouse state.
     #     """
     #     pass
 
@@ -4831,6 +5022,10 @@ class ImGuiListClipper:
     """
     First item to display, updated by each call to step()
     """
+    # start_seek_offset_y: float
+    # """
+    # [internal] account for frozen rows in a table and initial loss of precision in very large windows.
+    # """
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
     def create() -> ImGuiListClipper:
         """
@@ -4866,12 +5061,80 @@ class ImGuiListClipper:
         """
         pass
 
+    # def seek_cursor_for_item(self: ImGuiListClipper, item_index: int) -> None:
+    #     """
+    #     Seek cursor toward given item. This is automatically called while stepping.
+    #     - The only reason to call this is: you can use ImGuiListClipper::Begin(INT_MAX) if you don't know item count ahead of time.
+    #     - In this case, after all steps are done, you'll want to call SeekCursorForItem(item_count).
+    #     """
+    #     pass
+
     def step(self: ImGuiListClipper) -> bool:
         """
         Call until it returns false. the displaystart/displayend fields will be set and you can process/draw those items.
         """
         pass
 
+
+class ImGuiMultiSelectIO:
+    """
+    Main IO structure returned by BeginMultiSelect()/EndMultiSelect().
+    This mainly contains a list of selection requests.
+    - Use 'Demo->Tools->Debug Log->Selection' to see requests as they happen.
+    - Some fields are only useful if your list is dynamic and allows deletion (getting post-deletion focus/state right is shown in the demo)
+    - Below: who reads/writes each fields? 'r'=read, 'w'=write, 'ms'=multi-select code, 'app'=application/user code.
+    """
+    pass
+    # items_count: int
+    # """
+    # Ms:w, app:r /app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+    # """
+    # items_count: int
+    # """
+    # Ms:w, app:r /app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+    # """
+    # nav_id_item: Any
+    # """
+    # Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+    # """
+    # nav_id_item: Any
+    # """
+    # Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+    # """
+    # nav_id_selected: bool
+    # """
+    # Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+    # """
+    # nav_id_selected: bool
+    # """
+    # Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+    # """
+    # range_src_item: Any
+    # """
+    # Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+    # """
+    # range_src_item: Any
+    # """
+    # Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+    # """
+    # range_src_reset: bool
+    # """
+    # App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+    # """
+    # range_src_reset: bool
+    # """
+    # App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+    # """
+    # requests: ImVector_ImGuiSelectionRequest
+    # """
+    # ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    # Ms:w, app:r /  ms:w  app:r   // requests to apply to your selection data.
+    # """
+    # requests: ImVector_ImGuiSelectionRequest
+    # """
+    # ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    # Ms:w, app:r /  ms:w  app:r   // requests to apply to your selection data.
+    # """
 
 class ImGuiPayload:
     """
@@ -4925,7 +5188,7 @@ class ImGuiPayload:
 
 class ImGuiPlatformIO:
     """
-    (Optional) Access via ImGui::GetPlatformIO()
+    Access via ImGui::GetPlatformIO()
     """
     monitors: List[ImGuiPlatformMonitor]
     """
@@ -4933,18 +5196,24 @@ class ImGuiPlatformIO:
     - Updated by: app/backend. Update every frame to dynamically support changing monitor or DPI configuration.
     - Used by: dear imgui to query DPI info, clamp popups/tooltips within same monitor and not have them straddle monitors.
     """
+    # platform_clipboard_user_data: Any
     # platform_create_vk_surface: Callable
     # """
     # (optional) for a vulkan renderer to call into platform code (since the surface creation needs to tie them both).
     # """
     # platform_create_window: Callable
     # """
-    # Platform function --------------------------------------------------- Called by -----
+    # Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
     # . . u . .  // create a new platform window for the given viewport
     # """
     # platform_destroy_window: Callable
     # """
     # N . u . d  //
+    # """
+    # platform_get_clipboard_text_fn: Callable
+    # """
+    # Optional: Access OS clipboard
+    # (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
     # """
     # platform_get_window_dpi_scale: Callable
     # """
@@ -4966,13 +5235,36 @@ class ImGuiPlatformIO:
     # """
     # N . . . .  // get platform window client area size
     # """
+    # platform_get_window_work_area_insets: Callable
+    # """
+    # N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
+    # """
+    # platform_ime_user_data: Any
+    # platform_locale_decimal_point: int
+    # """
+    # Optional: Platform locale
+    # [Experimental] Configure decimal point e.g. '.' or ',' useful for some languages (e.g. German), generally pulled from *localeconv()->decimal_point
+    # '.'
+    # """
     # platform_on_changed_viewport: Callable
     # """
     # . f . . .  // (optional) [beta] fixme-dpi: dpi handling: called during begin() every time the viewport we are outputting into changes, so backend has a chance to swap fonts to adjust style.
     # """
+    # platform_open_in_shell_fn: Callable
+    # """
+    # Optional: Open link/folder/file in OS Shell
+    # (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
+    # """
+    # platform_open_in_shell_user_data: Any
     # platform_render_window: Callable
     # """
     # . . . r .  // (optional) main rendering (platform side! this is often unused, or just setting a 'current' context for opengl bindings). 'render_arg' is the value passed to renderplatformwindowsdefault().
+    # """
+    # platform_set_clipboard_text_fn: Callable
+    # platform_set_ime_data_fn: Callable
+    # """
+    # Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
+    # (default to use native imm32 api on Windows)
     # """
     # platform_set_window_alpha: Callable
     # """
@@ -5008,7 +5300,7 @@ class ImGuiPlatformIO:
     # """
     # renderer_create_window: Callable
     # """
-    # (Optional) Renderer functions (e.g. DirectX, OpenGL, Vulkan)
+    # Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
     # . . u . .  // create swap chain, frame buffers etc. (called after platform_createwindow)
     # """
     # renderer_destroy_window: Callable
@@ -5036,7 +5328,7 @@ class ImGuiPlatformIO:
 
 class ImGuiPlatformImeData:
     """
-    (Optional) Support for IME (Input Method Editor) via the io.SetPlatformImeDataFn() function.
+    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function.
     """
     pass
     # input_line_height: float
@@ -5082,6 +5374,246 @@ class ImGuiPlatformMonitor:
     Coordinates without task bars / side bars / menu bars. used to avoid positioning popups/tooltips inside this region. if you don't have this info, please copy the value for mainpos/mainsize.
     """
 
+class ImGuiSelectionBasicStorage:
+    """
+    Optional helper to store multi-selection state + apply multi-selection requests.
+    - Used by our demos and provided as a convenience to easily implement basic multi-selection.
+    - Iterate selection with 'void* it = NULL; ImGuiID id; while (selection.GetNextSelectedItem(&it, &id)) ( ... )'
+    Or you can check 'if (Contains(id)) ( ... )' for each possible object if their number is not too high to iterate.
+    - USING THIS IS NOT MANDATORY. This is only a helper and not a required API.
+    To store a multi-selection, in your application you could:
+    - Use this helper as a convenience. We use our simple key->value ImGuiStorage as a std::set<ImGuiID> replacement.
+    - Use your own external storage: e.g. std::set<MyObjectId>, std::vector<MyObjectId>, interval trees, intrusively stored selection etc.
+    In ImGuiSelectionBasicStorage we:
+    - always use indices in the multi-selection API (passed to SetNextItemSelectionUserData(), retrieved in ImGuiMultiSelectIO)
+    - use the AdapterIndexToStorageId() indirection layer to abstract how persistent selection data is derived from an index.
+    - use decently optimized logic to allow queries and insertion of very large selection sets.
+    - do not preserve selection order.
+    Many combinations are possible depending on how you prefer to store your items and how you prefer to store your selection.
+    Large applications are likely to eventually want to get rid of this indirection layer and do their own thing.
+    See https://github.com/ocornut/imgui/wiki/Multi-Select for details and pseudo-code using this helper.
+    """
+    pass
+    # adapter_index_to_storage_id: Callable
+    # """
+    # E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
+    # """
+    # adapter_index_to_storage_id: Callable
+    # """
+    # E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
+    # """
+    # preserve_order: bool
+    # """
+    # = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
+    # """
+    # preserve_order: bool
+    # """
+    # = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
+    # """
+    # selection_order: int
+    # """
+    # [internal] increasing counter to store selection order
+    # """
+    # selection_order: int
+    # """
+    # [internal] increasing counter to store selection order
+    # """
+    # size: int
+    # """
+    # Members
+    # Number of selected items, maintained by this helper.
+    # """
+    # size: int
+    # """
+    # Members
+    # Number of selected items, maintained by this helper.
+    # """
+    # storage: ImGuiStorage
+    # """
+    # [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
+    # """
+    # storage: ImGuiStorage
+    # """
+    # [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
+    # """
+    # user_data: Any
+    # """
+    # = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+    # """
+    # user_data: Any
+    # """
+    # = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+    # """
+    # def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO) -> None:
+    #     """
+    #     Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
+    #     """
+    #     pass
+
+    # def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO) -> None:
+    #     """
+    #     Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
+    #     """
+    #     pass
+
+    # def clear(self: ImGuiSelectionBasicStorage) -> None:
+    #     """
+    #     Clear selection
+    #     """
+    #     pass
+
+    # def clear(self: ImGuiSelectionBasicStorage) -> None:
+    #     """
+    #     Clear selection
+    #     """
+    #     pass
+
+    # def contains(self: ImGuiSelectionBasicStorage, id_: int) -> bool:
+    #     """
+    #     Query if an item id is in selection.
+    #     """
+    #     pass
+
+    # def contains(self: ImGuiSelectionBasicStorage, id_: int) -> bool:
+    #     """
+    #     Query if an item id is in selection.
+    #     """
+    #     pass
+
+    # def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int) -> bool:
+    #     """
+    #     Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
+    #     """
+    #     pass
+
+    # def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int) -> bool:
+    #     """
+    #     Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
+    #     """
+    #     pass
+
+    # def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int) -> int:
+    #     """
+    #     Convert index to item id based on provided adapter.
+    #     """
+    #     pass
+
+    # def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int) -> int:
+    #     """
+    #     Convert index to item id based on provided adapter.
+    #     """
+    #     pass
+
+    # def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool) -> None:
+    #     """
+    #     Add/remove an item from selection (generally done by applyrequests() function)
+    #     """
+    #     pass
+
+    # def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool) -> None:
+    #     """
+    #     Add/remove an item from selection (generally done by applyrequests() function)
+    #     """
+    #     pass
+
+    # def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage) -> None:
+    #     """
+    #     Swap two selections
+    #     """
+    #     pass
+
+    # def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage) -> None:
+    #     """
+    #     Swap two selections
+    #     """
+    #     pass
+
+
+class ImGuiSelectionExternalStorage:
+    """
+    Optional helper to apply multi-selection requests to existing randomly accessible storage.
+    Convenient if you want to quickly wire multi-select API on e.g. an array of bool or items storing their own selection state.
+    """
+    pass
+    # adapter_set_item_selected: Callable
+    # """
+    # E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
+    # """
+    # adapter_set_item_selected: Callable
+    # """
+    # E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
+    # """
+    # user_data: Any
+    # """
+    # Members
+    # User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+    # """
+    # user_data: Any
+    # """
+    # Members
+    # User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+    # """
+    # def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO) -> None:
+    #     """
+    #     Apply selection requests by using adaptersetitemselected() calls
+    #     """
+    #     pass
+
+    # def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO) -> None:
+    #     """
+    #     Apply selection requests by using adaptersetitemselected() calls
+    #     """
+    #     pass
+
+
+class ImGuiSelectionRequest:
+    """
+    Selection request item
+    """
+    pass
+    # range_direction: int
+    # """
+    # Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
+    # """
+    # range_direction: int
+    # """
+    # Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
+    # """
+    # range_first_item: Any
+    # """
+    # Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
+    # """
+    # range_first_item: Any
+    # """
+    # Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
+    # """
+    # range_last_item: Any
+    # """
+    # Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
+    # """
+    # range_last_item: Any
+    # """
+    # Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
+    # """
+    # selected: bool
+    # """
+    # Ms:w, app:r /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+    # """
+    # selected: bool
+    # """
+    # Ms:w, app:r /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+    # """
+    # type: Any
+    # """
+    # ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    # Ms:w, app:r /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+    # """
+    # type: Any
+    # """
+    # ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    # Ms:w, app:r /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+    # """
+
 class ImGuiSizeCallbackData:
     """
     Resizing callback data to apply custom constraint. As enabled by SetNextWindowSizeConstraints(). Callback is called during the next Begin().
@@ -5103,6 +5635,14 @@ class ImGuiSizeCallbackData:
     """
     Read-only.   what user passed to setnextwindowsizeconstraints(). generally store an integer or float in here (need reinterpret_cast<>).
     """
+
+class ImGuiStoragePair:
+    """
+    [Internal] Key+Value for ImGuiStorage
+    """
+    pass
+    # key: int
+    # key: int
 
 class ImGuiStyle:
     """
@@ -5163,11 +5703,11 @@ class ImGuiStyle:
     """
     display_safe_area_padding: Tuple[float, float]
     """
-    If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
+    Apply to every windows, menus, popups, tooltips: amount where we avoid displaying contents. adjust if you cannot see the edges of your screen (e.g. on a tv where scaling has not been configured).
     """
     display_window_padding: Tuple[float, float]
     """
-    Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
+    Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
     """
     # docking_separator_size: float
     # """
@@ -5261,7 +5801,7 @@ class ImGuiStyle:
     """
     separator_text_border_size: float
     """
-    Thickkness of border in separatortext()
+    Thickness of border in separatortext()
     """
     separator_text_padding: Tuple[float, float]
     """
@@ -5270,6 +5810,10 @@ class ImGuiStyle:
     # tab_bar_border_size: float
     # """
     # Thickness of tab-bar separator, which takes on the tab active color to denote focus.
+    # """
+    # tab_bar_overline_size: float
+    # """
+    # Thickness of tab-bar overline, which highlights the selected tab-bar.
     # """
     tab_border_size: float
     """
@@ -5425,7 +5969,7 @@ class ImGuiViewport:
     """
     # platform_handle: Any
     # """
-    # Void* for findviewportbyplatformhandle(). (e.g. suggested to use natural platform handle such as hwnd, glfwwindow*, sdl_window*)
+    # Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
     # """
     # platform_handle_raw: Any
     # """
@@ -5538,6 +6082,22 @@ class ImVector_ImDrawVert:
     # capacity: int
     data: ImDrawVert
     size: int
+
+class ImVector_ImGuiSelectionRequest: ...
+    # capacity: int
+    # capacity: int
+    # data: ImGuiSelectionRequest
+    # data: ImGuiSelectionRequest
+    # size: int
+    # size: int
+
+class ImVector_ImGuiStoragePair: ...
+    # capacity: int
+    # capacity: int
+    # data: ImGuiStoragePair
+    # data: ImGuiStoragePair
+    # size: int
+    # size: int
 
 class ImVector_ImU32: ...
     # capacity: int
