@@ -4,6 +4,8 @@ Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) us
 
 ![Hello From pygui](./docs/img/hello_from_pygui.png)
 
+Version: `v1.91.1-docking`
+
 ## Features
 
 1. Imgui Docking Support.
@@ -20,41 +22,42 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 
 1. The binding is **auto-generated**:
 
-    Over time, the API for ImGui will change, and so keeping up with the changes is hard if you plan on manually updating the wrapper to match the changes. Pygui fixes this by dynamically generating the binding between cimgui and python to *significantly reduce* the manual work required to maintain the wrapper.
+    Over time, the API for ImGui will change, and so keeping the wrapper up the date can be tedious. Pygui fixes this by dynamically generating the binding between cimgui and python to **significantly reduce** the manual work required.
 
-    Every struct and function (within reason) is mapped from cimgui to pygui. You as a user can then choose to activate and/or modify a default wrapper of the function. In a majority of cases the default implementation will work out-of-the-box, but for more complicated functions (like mapping python lists to c arrays), some manual work is required.
+    Every struct and function in cimgui can be mapped to python through cython. You as a user can then choose to activate and/or modify a default wrapper of the function. In a majority of cases the default implementation will work out-of-the-box, but for more complicated functions (like mapping python lists to c arrays), some manual work is required.
 
-    This also meant that including **docking** and **multi-viewport** support was easy. I just switched branch and rebuilt the binding! As time progresses, this repository should continue to be useful.
+    This also meant that including **docking** and **multi-viewport** support was easy. I just switched branch and rebuilt the binding!
 
 2. Writing pygui code is *almost* exactly the same as writing imgui code.
 
-    A deliberate choice of pygui is to match imgui's API as much as possible. I'm not interested in adding wrapper `App` classes or anything like that. Pygui is just a wrapper! Setting up the glfw context is left to user, (exactly like imgui's minimal examples!).
+    A deliberate choice for pygui was to match ImGui's API as much as possible. Pygui does **NOT** have, an `App` class with a main function, `with` clauses for auto `begin()` and `end()`, odd behaviour that removes the immediately-mode-ness of ImGui. Pygui is just a wrapper! Setting up the glfw context is left to user exactly like ImGui's minimal examples!
 
-    Secondly, function calls match imgui as much as possible. Where imgui expects (for example) `int*` parameters, these have been replaced with pygui wrappers, so that the `input_` style functions work exactly like they do in imgui. There is no weird returning of multiple values in a tuple to retrieve inputs.
+    Consequently, pygui codes looks extremely similar to ImGui code. Where ImGui expects (for example) `int*` parameters, these have been replaced with pygui wrappers, so that the `input_` style functions work exactly like they do in imgui. There is no weird returning of multiple values in a tuple to retrieve inputs.
 
-3. An `__init__.pyi` file is included with comments from cimgui.
+    The only additions are designing around C complexity. For example, functions that expected arrays can now take python lists, callbacks functions now take python functions pointers, and userdata can be supplied with arbitrary python objects, to name a few. Basically, you leverage what makes Python a great language; It's ease of use!
 
-    This makes developing with pygui much easier because many code editors recognise the `__init__.pyi` as the interface and such will do intellisense using it. No red squiggly lines, no guessing of function parameters, and no need to check imgui.h for comments.'
+3. An `__init__.pyi` file is included **with comments** from cimgui.
+
+    This makes developing pygui much easier than other wrappers because many code editors will perform intellisense on `__init__.pyi`. No red squiggly lines, no guessing of function parameters, and no need to check `imgui.h` for comments.
 
 4. An extensive pygui demo window is included (`pygui_demo.py`).
 
-    Some other wrappers don't include an example. My demo window tests all the functions, methods, and fields in pygui. It even has some functions from the imgui demo done in pygui, just to show that even the most complicated of features is not only possible in python, but often much simpler too.
+    Some other wrappers don't include an example. My demo window tests many functions, methods, and fields from the wrapper. You will be surprised that even the most complicated of features is not only possible with pygui, but often much simpler to create than ImGui.
 
-5. It's fast, because you spend a minimal amount of time inside Python.
+5. It's performant, because you spend a minimal amount of time inside Python.
 
-    Pygui uses imgui's backend so all of the rendering is in c++. I don't need to maintain a rendering context inside Python. The imgui devs have done it for me. But, you can still write your own renderer if you need, because the vertices (etc) are still available to be read in python.
+    Pygui uses ImGui's backend so all of the rendering is in c++. You don't need to maintain a rendering context inside Python. The ImGui devs have done it for us. But, you can still write your own renderer if you need, because the draw data is still available to be read from Python.
 
 ## Limitations
 
 1. The current build assumes windows as the platform. Some work would be required to enable linux/mac builds.
-2. glfw/cimgui/imgui_impl need to be linked at runtime (dll) which may hurt performance slightly.
-3. Not all imgui functions are activated. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
-4. More work would be required to enable additional backends. I've attempted to make this easier though the modular nature of the CMake script and binding generator script.
-5. No `with` functionality has been added. No being lazy; your `pygui.begin()` must have a `pygui.end()`.
+2. glfw and cimgui is linked at runtime with a DLL which may hurt performance slightly.
+3. Not all ImGui functions are activated, but with some work more can be. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
+4. More work would be required to enable additional backends. Since cimgui also wraps backends too, this should be possible to do as long as you have a way to write the c++ minimal example in Python.
 
 ## Getting Started
 
-The easiest way to get started with pygui is to download the release. This includes pygui and imgui precompiled into a python package that can be imported. Just extract the contacts to your python project folder.
+The easiest way to get started with pygui is to download the release. This includes pygui and cimgui precompiled into a python package that can be imported. Just extract the contents to your Python project folder.
 
 Make sure you have installed the [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist).
 
@@ -64,8 +67,6 @@ Open a terminal to the same directory as `app.py` and run:
 pip install -r requirements.txt
 python app.py
 ```
-
-Note: You may opt to use a python virtual env. That is okay too.
 
 ## Compiling pygui
 
@@ -111,7 +112,7 @@ Note: Using a `venv` is recommended.
 Navigate to `src/external/dear_bindings` and run:
 
 ```bash
-python dear_bindings.py -o cimgui ../imgui/imgui.h
+.\BuildAllBindings.bat
 ```
 
 ### 3. Compiling cimgui
@@ -119,10 +120,9 @@ python dear_bindings.py -o cimgui ../imgui/imgui.h
 This step will compile:
 
 - cimgui
-- imgui_glfw_opengl3
 - glfw
 
-...As shared `.dll`'s so that you can recompile each module and/or include extra implementations as a dll. It is very important that glfw is NOT compiled statically. If it is compiled statically then python's glfw will refer do a different instance, causing imgui to crash on startup.
+...As shared `.dll`s. It is very important that glfw is **NOT** compiled statically. If it is compiled statically then python's glfw will refer do a different instance, causing ImGui to crash on startup.
 
 You may use Visual Studio or the command-line (developer console on windows) to run CMake. I will be using Visual Studio.
 
@@ -178,7 +178,7 @@ python app.py
 
 Bindings are creating by reading the output of dear_binding's `cimgui.json` that contains information about the cimgui implementation. This file is parsed and then used to create three files:
 
-1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/external/dear_bindings/cimgui.h`) and any defined backends. This file does not need to be touched if the API changes.
+1. `pxd`: (Located at `src/core/ccimgui.pxd`) This files contains all the 1 to 1 definitions that are defined inside `cimgui.h` (Located at `src/external/dear_bindings/generated/cimgui.h`) and any defined backends. This file does not need to be touched if the API changes.
 2. `pyx`: (Located at `src/core/core.pyx`) This file contains the generated cython that will be compiled. This file can be editted if you want, but new additions should instead be put inside `src/core/core_template.pyx`. More on this later.
 3. `pyi`: (Located at `src/pygui/__init__.pyi`) This file contains the cython function definitions so that intellisense on editors work correctly with pygui. Cython does not export any symbols so this file is required if you don't want squiggly lines everywhere in your editor, (and if you want comments!).
 
@@ -225,23 +225,60 @@ If you are unsure about the output, run `python model_creator.py --trial`. This 
 
 ## Can pygui wrap ...*insert imgui extension here*?
 
-In theory, yes. Because the way that pygui is compiling-in the implementation headers is using the process that could be ported to other c++ ImGui extensions. See `src/core/backends/*.json` and `src/config.json`.
+1. Compile the extension into the DLL. Add the source code and headers to the `cimgui_glfw_opengl3`.
 
-As long as all the functions in the header are defined in the format that is generated by `dear_binding`, then in theory you should be able to include your library.
+    `CMakeLists.txt`
 
-Make sure that when you compile, you have similar settings in CMake:
+    ```cmake
+    file(
+        # ...
+        my_extension/*.cpp
+    )
+    # ...
+    target_include_directories(cimgui_glfw_opengl3 PRIVATE
+        # ...
+        my_extension
+    )
+    # ...
+    ```
 
-```txt
-# my_imgui_extension.dll
-# Layout:
-#  - define:
-#       IMGUI_API __declspec(dllimport)
-#  - include
-#       imgui.h directory
-#  - src:
-#       {extension sources}
-#  - links:
-#       cimgui
-```
+    Edit `src/cpp_config/pygui_config.h` to include your DLL exports and imports.
+    In theory, yes. The `model_creator.py` scripts uses `config.py`, and builds the headers as modules.
 
-ImGui needs to be dynamically linked at runtime. This process would not be trivial, but the infrastructure is there. This is the beauty of dynamically generated bindings.
+    `src/cpp_config/pygui_config.h`
+
+    ```c
+    #ifdef PYGUI_COMPILING_DLL
+    // ...
+    #define CIMGUI_API       __declspec(dllexport)
+    #define CIMGUI_IMPL_API  __declspec(dllexport)
+    #define MY_EXTENSION_API __declspec(dllexport)
+    // ...
+    #endif // PYGUI_COMPILING_DLL
+
+
+    #ifdef PYGUI_COMPILING_DLL_APP
+    // ...
+    #define CIMGUI_API       __declspec(dllimport)
+    #define CIMGUI_IMPL_API  __declspec(dllimport)
+    #define MY_EXTENSION_API __declspec(dllimport)
+    // ...
+    #endif // PYGUI_COMPILING_DLL_APP
+
+    ```
+
+2. As long as all the functions in the header are defined in the format that is used by `dear_bindings`, then you can certainly include your library.
+
+    `src/config.py`
+
+    ```python
+    # My extension
+    with open("my_extension/extra.json") as f:
+        modules.append(
+            Binding.from_json(json.load(f), "extra.h", defines)
+        )
+    ```
+
+3. Run the `model_creator.py` and (see above developing pygui) add/activate functions in the library.
+
+4. Compile the module with `setup.py`. The `__init__.pyi` file should be updated automatically.

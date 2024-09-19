@@ -34,6 +34,44 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+
+void show_imfontconfig(ImFontConfig* config)
+{
+    char rasterizer_multiply_text[64];
+    sprintf(rasterizer_multiply_text, "config.rasterizer_multiply: %f", config->RasterizerMultiply);
+    ImGui_MenuItem(rasterizer_multiply_text);
+}
+
+
+void show_imfont_atlas(ImFontAtlas* atlas)
+{
+    if (ImGui_BeginMenu("atlas.config_data"))
+    {
+        char config_data_size[32];
+        sprintf(config_data_size, "atlas->ConfigData.size(): %d", atlas->ConfigData.Size);
+        ImGui_MenuItem(config_data_size);
+        for (int i = 0; i < atlas->ConfigData.Size; i++)
+        {
+            char config_text[32];
+            sprintf(config_text, "Config %d", i);
+            if (ImGui_BeginMenu(config_text))
+            {
+                show_imfontconfig(&atlas->ConfigData.Data[i]);
+                ImGui_EndMenu();
+            }
+        }
+        ImGui_EndMenu();
+    }
+}
+
+
+void example_function()
+{
+    ImFont* font = ImGui_GetFont();
+    show_imfont_atlas(font->ContainerAtlas);
+}
+
+
 // Main code
 int main(int argc, char* argv[])
 {
@@ -99,7 +137,7 @@ int main(int argc, char* argv[])
 #ifdef __EMSCRIPTEN__
     cImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
 #endif
-    cImGui_ImplOpenGL3_Init(glsl_version);
+    cImGui_ImplOpenGL3_InitEx(glsl_version);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui_PushFont()/PopFont() to select them.
@@ -154,28 +192,41 @@ int main(int argc, char* argv[])
         if (show_demo_window)
             ImGui_ShowDemoWindow(&show_demo_window);
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui_Begin("Hello, world!", NULL, 0);                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui_Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui_Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui_Checkbox("Another Window", &show_another_window);
-
-            ImGui_SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui_ColorEdit3("clear color", (float*)&clear_color, 0); // Edit 3 floats representing a color
-
-            if (ImGui_Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui_SameLine();
-            ImGui_Text("counter = %d", counter);
-
-            ImGui_Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
-            ImGui_End();
-        }
+        // 2. Show a simple window that we created ourselves.
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+		
+			ImGui_Begin("Hello, world!", NULL, 0);
+			ImGui_Text("This is some useful text");
+			ImGui_Checkbox("Demo window", &show_demo_window);
+			ImGui_Checkbox("Another window", &show_another_window);
+			ImGui_Text("New Char: ∮");
+		
+			example_function();
+		
+			ImGui_SliderFloatEx("Float", &f, 0.0f, 1.0f, "%.3f", 0);
+			ImGui_ColorEdit3("clear color", (float*)&clear_color, 0);
+		
+			static int current_item = 0;
+			const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange" };
+			ImGui_ListBox("List box", &current_item, items, 6, 4);
+		
+			ImVec2 button_size;
+			button_size.x = 0;
+			button_size.y = 0;
+			if (ImGui_ButtonEx("Button", button_size))
+				counter++;
+			ImGui_SameLineEx(0.0f, -1.0f);
+			ImGui_Text("counter = %d", counter);
+		
+			ImGui_Text("Application average %.3f ms/frame (%.1f FPS)",
+				1000.0f / ImGui_GetIO()->Framerate, ImGui_GetIO()->Framerate);
+			if (ImGui_Button("Click to crash ImGui in Dev Builds"))
+				IM_ASSERT(false && "If you're reading this, cimgui is crashing visibly!");
+		
+			ImGui_End();
+		}
 
         // 3. Show another simple window.
         if (show_another_window)

@@ -4455,7 +4455,7 @@ def show_random_extras():
         if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
             rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
         pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
-        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDERS):
             for event in rand.mouse_press_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4752,6 +4752,8 @@ def show_random_extras():
 class crash:
     error_text = pygui.String()
     catch_message = ""
+    green_colour = pygui.Vec4(0, 1, 0, 0.4)
+    red_colour = pygui.Vec4(1, 0, 0, 0.4)
 
 
 def show_crash_test():
@@ -4759,54 +4761,127 @@ def show_crash_test():
         return
     
     pygui.text("Test various crashes")
-    pygui.same_line()
-    help_marker(
-        "1. This will call a function in ImGui that is known to crash. This crash"
-        " originates from ImGui itself. If USE_CUSTOM_PYTHON_ERROR is defined then"
-        " this will exception will be caught.\n"
-        "2. This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
-        " this function call will raise a pygui.ImGuiError, otherwise it will"
-        " raise an AssertionError. In either cause, this should not crash because"
-        " pygui.ImGuiError is AssertionError when USE_CUSTOM_PYTHON_ERROR is"
-        " undefined.\n"
-        "3. This uses python's assert keyword. If USE_CUSTOM_PYTHON_ERROR is"
-        " defined this should crash your program because pygui.ImGuiError and"
-        " AssertionError are different.\n"
-        "4. This will call IM_ASSERT but will except by force using the ImGui's"
-        " exposed dll exception. If USE_CUSTOM_PYTHON_ERROR is not defined, this"
-        " will be caught, otherwise this will crash simply because you can't catch"
-        " and exception with 'None'.\n"
-    )
 
     if pygui.button("Clear"):
         crash.catch_message = ""
         crash.error_text.value = ""
 
-    
-    if pygui.button("Crash 1: pop_style_color() -> except pygui.Error"):
+    custom_exceptions_on = pygui.ImGuiError == pygui.get_imgui_error()
+    if custom_exceptions_on:
+        pygui.text_colored((0, 1, 0, 1), "Custom Exceptions On")
+    else:
+        pygui.text_colored((1, 0, 0, 1), "Custom Exceptions Off")
+
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##1")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##1")
+    pygui.pop_style_color()
+
+    pygui.same_line()
+    help_marker(
+        "This will call a function in ImGui that is known to crash. This crash"
+        " originates from ImGui itself. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this will exception will be caught.\n"
+        "\n"
+        "    try:\n"
+        "        pygui.pop_style_color()\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 1: pop_style_color() without pop_style_color(). ImGui will error.")
+    if pressed:
         try:
             pygui.pop_style_color(1)
         except pygui.ImGuiError as e:
-            crash.catch_message = "Caught! You have custom exceptions on."
+            crash.catch_message = "Caught! You have custom exceptions working!"
             crash.error_text.value = str(e)
-    
-    if pygui.button("Crash 2: pygui.IM_ASSERT(False) -> except pygui.Error"):
+
+
+    pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+    pressed = pygui.button("Catch ##2")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this function call will raise a pygui.ImGuiError, otherwise it will"
+        " raise an AssertionError. In either cause, this should not crash because"
+        " pygui.ImGuiError is AssertionError when USE_CUSTOM_PYTHON_ERROR is"
+        " undefined.\n"
+        "\n"
+        "    try:\n"
+        "        pygui.IM_ASSERT(False, \"You should not see this :(\")\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\"\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 2: pygui.IM_ASSERT(False) except with pygui.Error")
+    if pressed:
         try:
-            pygui.IM_ASSERT(False, "I am an error message")
+            pygui.IM_ASSERT(False, "You should not see this :(")
         except pygui.ImGuiError as e:
             crash.catch_message = "Caught! This should never crash."
             crash.error_text.value = str(e)
     
-    if pygui.button("Crash 3: assert False -> except pygui.Error"):
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##3")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##3")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This uses python's assert keyword. If USE_CUSTOM_PYTHON_ERROR is"
+        " defined this should crash your program because pygui.ImGuiError and"
+        " AssertionError are different.\n"
+        "\n"
+        "    try:\n"
+        "        assert False, \"Custom exceptions are on.\"\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 3: assert False -> except pygui.Error")
+    if pressed:
         try:
-            assert False, "I am another error message"
+            assert False, "If this crashes, custom exceptions are on"
         except pygui.ImGuiError as e:
             crash.catch_message = "Caught! You have custom exceptions off."
             crash.error_text.value = str(e)
-    
-    if pygui.button("Crash 4: pygui.IM_ASSERT(False) -> except pygui.core.Error"):
+
+
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##4")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##4")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This will call IM_ASSERT but will except by force using the ImGui's"
+        " exposed dll exception. If USE_CUSTOM_PYTHON_ERROR is not defined, this"
+        " will be caught, otherwise this will crash simply because you can't catch"
+        " and exception with 'None'.\n"
+        "\n"
+        "    try:\n"
+        "        assert pygui.IM_ASSERT(False, \"We are an error message\")\n"
+        "    except pygui.get_imgui_error() as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 4: pygui.IM_ASSERT(False) except with pygui.core.Error")
+    if pressed:
         try:
-            assert pygui.IM_ASSERT(False, "We are an error message")
+            assert pygui.IM_ASSERT(False, "Haha, can't catch me")
         except pygui.get_imgui_error() as e:
             # Prefer to use pygui.ImGuiError as it is safer. This value could
             # be None if cimgui is not using a custom python exception. For this
@@ -4816,7 +4891,7 @@ def show_crash_test():
     
     if len(crash.catch_message) > 0:
         pygui.text(crash.catch_message)
-        pygui.text_wrapped(crash.error_text.value)
+        pygui.text_wrapped("Potential Error Message: " + crash.error_text.value)
     
 
 class menu:

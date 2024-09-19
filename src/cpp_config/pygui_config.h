@@ -1,5 +1,8 @@
 #pragma once
 
+#define IMGUI_DISABLE_OBSOLETE_KEYIO
+#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
 // -----------------------------------------------------------------------------
 
 #ifdef PYGUI_COMPILING_DLL
@@ -9,11 +12,13 @@
 #define GLFW_DLL
 #endif
 
-#define IMGUI_DISABLE_OBSOLETE_KEYIO
-#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
-#define CIMGUI_IMPL_API __declspec(dllexport)
 #define CIMGUI_API      __declspec(dllexport)
+#define CIMGUI_IMPL_API __declspec(dllexport)
+
+// If you are compiling any additional modules then make sure you export the
+// functions in the DLL like below
+// #define MY_EXTENSION_API __declspec(dllexport)
+
 
 extern "C" {
     #ifdef _DEBUG
@@ -52,11 +57,13 @@ CIMGUI_API PyObject* get_imgui_error();
 
 // -----------------------------------------------------------------------------
 
-#ifdef PYGUI_COMPILING_C_APP
-#pragma message ( "Preprocessor: PYGUI_COMPILING_C_APP" )
-// No need to include extern "C" because this is a C project. Extern is not
-// supported in C. This means we also need to make sure the header file is C
-// compatable.
+#ifdef PYGUI_COMPILING_DLL_APP
+#pragma message ( "Preprocessor: PYGUI_COMPILING_DLL_APP" )
+
 #define CIMGUI_API       __declspec(dllimport)
 #define CIMGUI_IMPL_API  __declspec(dllimport)
-#endif // PYGUI_COMPILING_C_APP
+// And likewise, to test the module make sure you import the functions from the
+// DLL like below
+// #define MY_EXTENSION_API __declspec(dllimport)
+
+#endif // PYGUI_COMPILING_DLL_APP

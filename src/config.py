@@ -2,11 +2,6 @@ import json
 from typing import List
 from model.dear_bindings.interfaces import IBinding
 from model.dear_bindings.binding import Binding
-from model.dear_bindings.struct import Struct
-from model.dear_bindings.function import Function
-from model.dear_bindings.db_type import _Type, Kind, Kinds
-from model.dear_bindings.argument import Argument
-from model.comments import Comments
 
 
 EXTENSION_NAME =           "core"
