@@ -1551,12 +1551,12 @@ def begin_menu_ex(label: str, enabled: bool=True):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
-def begin_multi_select(flags: int):
+def begin_multi_select(flags: int, selection_size: int=-1, items_count: int=-1):
     """
     Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
     - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
@@ -1567,8 +1567,10 @@ def begin_multi_select(flags: int):
     - 'selection_size' and 'items_count' parameters are optional and used by a few features. If they are costly for you to compute, you may avoid them.
     Implied selection_size = -1, items_count = -1
     """
-    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelect(
-        flags
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelectEx(
+        flags,
+        selection_size,
+        items_count
     )
     return ImGuiMultiSelectIO.from_ptr(res)
 # [End Function]
@@ -1576,7 +1578,7 @@ def begin_multi_select(flags: int):
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
 def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1):
@@ -3942,7 +3944,7 @@ def end_menu_bar():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
@@ -8262,7 +8264,7 @@ def set_next_item_open(is_open: bool, cond: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -8816,7 +8818,7 @@ def set_window_size_str(name: str, size: Tuple[float, float], cond: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
@@ -19768,7 +19770,7 @@ cdef class ImGuiMultiSelectIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
@@ -19787,7 +19789,7 @@ cdef class ImGuiMultiSelectIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -19806,7 +19808,7 @@ cdef class ImGuiMultiSelectIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
@@ -19825,7 +19827,7 @@ cdef class ImGuiMultiSelectIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -21093,10 +21095,11 @@ cdef class ImGuiPlatformMonitor:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+_adapter_index_to_storage_id_callback = {}
 cdef class ImGuiSelectionBasicStorage:
     """
     Optional helper to store multi-selection state + apply multi-selection requests.
@@ -21118,6 +21121,7 @@ cdef class ImGuiSelectionBasicStorage:
     """
     cdef ccimgui.ImGuiSelectionBasicStorage* _ptr
     cdef bool dynamically_allocated
+
     
     @staticmethod
     cdef ImGuiSelectionBasicStorage from_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
@@ -21147,27 +21151,27 @@ cdef class ImGuiSelectionBasicStorage:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable)
+    # ?returns(Callable[[ImGuiSelectionBasicStorage, int], int])
     @property
     def adapter_index_to_storage_id(self):
         """
         E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
         """
-        cdef Callable res = dereference(self._ptr).AdapterIndexToStorageId
-        return res
+        return _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)]
     @adapter_index_to_storage_id.setter
-    def adapter_index_to_storage_id(self, value: Callable):
+    def adapter_index_to_storage_id(self, value: "Callable[[ImGuiSelectionBasicStorage, int], int]"):
+        _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)] = value
         # dereference(self._ptr).AdapterIndexToStorageId = value
-        raise NotImplementedError
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -21180,13 +21184,13 @@ cdef class ImGuiSelectionBasicStorage:
         return res
     @preserve_order.setter
     def preserve_order(self, value: bool):
-        # dereference(self._ptr).PreserveOrder = value
-        raise NotImplementedError
+        dereference(self._ptr).PreserveOrder = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
@@ -21199,13 +21203,13 @@ cdef class ImGuiSelectionBasicStorage:
         return res
     @selection_order.setter
     def selection_order(self, value: int):
-        # dereference(self._ptr)._SelectionOrder = value
-        raise NotImplementedError
+        dereference(self._ptr)._SelectionOrder = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
@@ -21219,8 +21223,8 @@ cdef class ImGuiSelectionBasicStorage:
         return res
     @size.setter
     def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+        dereference(self._ptr).Size = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21243,27 +21247,30 @@ cdef class ImGuiSelectionBasicStorage:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
+    _basic_storage_userdata = {}
     @property
     def user_data(self):
         """
         = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
         """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
+        return self._basic_storage_userdata[<uintptr_t>(self._ptr)]
+        # cdef void* res = dereference(self._ptr).UserData
+        # return res
     @user_data.setter
     def user_data(self, value: Any):
+        self._basic_storage_userdata[<uintptr_t>(self._ptr)] = value
         # dereference(self._ptr).UserData = value
-        raise NotImplementedError
+        # raise NotImplementedError
     # [End Field]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -21279,7 +21286,7 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -21294,7 +21301,7 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -21307,6 +21314,58 @@ cdef class ImGuiSelectionBasicStorage:
             id_
         )
         return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImGuiSelectionBasicStorage)
+    @staticmethod
+    def create():
+        """
+        Create a dynamically allocated instance of ImGuiSelectionBasicStorage. Must
+        also be freed with destroy(). Mimics the constructor for ImGuiSelectionBasicStorage
+        """
+        cdef ccimgui.ImGuiSelectionBasicStorage* storage = <ccimgui.ImGuiSelectionBasicStorage*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiSelectionBasicStorage))
+        memset(storage, 0, sizeof(ccimgui.ImGuiSelectionBasicStorage))
+        _adapter_index_to_storage_id_callback[<uintptr_t>(storage)] = ImGuiSelectionBasicStorage._ImGuiSelectionBasicStorage_default_getter_python
+        storage.Size = 0
+        storage.PreserveOrder = False
+        storage.AdapterIndexToStorageId = ImGuiSelectionBasicStorage._AdapterIndexToStorageId_getter
+        storage._SelectionOrder = 1
+        return ImGuiSelectionBasicStorage.from_heap_ptr(storage)
+    
+    def _ImGuiSelectionBasicStorage_default_getter_python(ImGuiSelectionBasicStorage storage, int idx):
+        return idx
+
+    @staticmethod
+    cdef ccimgui.ImGuiID _AdapterIndexToStorageId_getter(ccimgui.ImGuiSelectionBasicStorage* storage, int idx) noexcept:
+        return _adapter_index_to_storage_id_callback[<uintptr_t>(storage)](
+            ImGuiSelectionBasicStorage.from_ptr(storage), idx
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImGuiSelectionBasicStorage):
+        """
+        Mimics the destructor of ccimgui.ImGuiSelectionBasicStorage. (Currently none)
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        if not self.dynamically_allocated:
+            return
+        
+        self.destroy()
     # [End Method]
 
     # [Method]
@@ -21329,7 +21388,7 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
@@ -21346,7 +21405,7 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -21734,7 +21793,7 @@ cdef class ImGuiSizeCallbackData:
 # [Class]
 # [Class Constants]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(True)
 # ?custom_comment_only(False)
 cdef class ImGuiStorage:

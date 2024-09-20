@@ -1551,32 +1551,34 @@ def begin_menu_bar():
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
-# def begin_multi_select(flags: int):
-#     """
-#     Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
-#     - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
-#     - ImGuiSelectionUserData is often used to store your item index within the current view (but may store something else).
-#     - Read comments near ImGuiMultiSelectIO for instructions/details and see 'Demo->Widgets->Selection State & Multi-Select' for demo.
-#     - TreeNode() is technically supported but... using this correctly is more complicated. You need some sort of linear/random access to your tree,
-#     which is suited to advanced trees setups already implementing filters and clipper. We will work simplifying the current demo.
-#     - 'selection_size' and 'items_count' parameters are optional and used by a few features. If they are costly for you to compute, you may avoid them.
-#     Implied selection_size = -1, items_count = -1
-#     """
-#     cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelect(
-#         flags
-#     )
-#     return ImGuiMultiSelectIO.from_ptr(res)
+def begin_multi_select(flags: int, selection_size: int=-1, items_count: int=-1):
+    """
+    Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
+    - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
+    - ImGuiSelectionUserData is often used to store your item index within the current view (but may store something else).
+    - Read comments near ImGuiMultiSelectIO for instructions/details and see 'Demo->Widgets->Selection State & Multi-Select' for demo.
+    - TreeNode() is technically supported but... using this correctly is more complicated. You need some sort of linear/random access to your tree,
+    which is suited to advanced trees setups already implementing filters and clipper. We will work simplifying the current demo.
+    - 'selection_size' and 'items_count' parameters are optional and used by a few features. If they are costly for you to compute, you may avoid them.
+    Implied selection_size = -1, items_count = -1
+    """
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelectEx(
+        flags,
+        selection_size,
+        items_count
+    )
+    return ImGuiMultiSelectIO.from_ptr(res)
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
 # def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1):
@@ -3942,13 +3944,13 @@ def end_menu_bar():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
-# def end_multi_select():
-#     cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_EndMultiSelect()
-#     return ImGuiMultiSelectIO.from_ptr(res)
+def end_multi_select():
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_EndMultiSelect()
+    return ImGuiMultiSelectIO.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -8262,14 +8264,14 @@ def set_next_item_open(is_open: bool, cond: int=0):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def set_next_item_selection_user_data(selection_user_data: Any):
-#     ccimgui.ImGui_SetNextItemSelectionUserData(
-#         selection_user_data
-#     )
+def set_next_item_selection_user_data(selection_user_data: Any):
+    ccimgui.ImGui_SetNextItemSelectionUserData(
+        selection_user_data
+    )
 # [End Function]
 
 # [Function]
@@ -8816,33 +8818,33 @@ def set_tooltip(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def shortcut(key_chord: int, flags: int=0):
-#     """
-#     Inputs Utilities: Shortcut Testing & Routing [BETA]
-#     - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
-#     ImGuiKey_C  // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
-#     ImGuiMod_Ctrl | ImGuiKey_C  // Accepted by functions taking ImGuiKeyChord arguments)
-#     only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
-#     - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
-#     Parent   -> call Shortcut(Ctrl+S)// When Parent is focused, Parent gets the shortcut.
-#     Child1 -> call Shortcut(Ctrl+S)// When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
-#     Child2 -> no call  // When Child2 is focused, Parent gets the shortcut.
-#     The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
-#     This is an important property as it facilitate working with foreign code or larger codebase.
-#     - To understand the difference:
-#     - IsKeyChordPressed() compares mods and call IsKeyPressed() -> function has no side-effect.
-#     - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed() -> function has (desirable) side-effects as it can prevents another call from getting the route.
-#     - Visualize registered routes in 'Metrics/Debugger->Inputs'.
-#     """
-#     cdef bool res = ccimgui.ImGui_Shortcut(
-#         key_chord,
-#         flags
-#     )
-#     return res
+def shortcut(key_chord: int, flags: int=0):
+    """
+    Inputs Utilities: Shortcut Testing & Routing [BETA]
+    - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
+    ImGuiKey_C  // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
+    ImGuiMod_Ctrl | ImGuiKey_C  // Accepted by functions taking ImGuiKeyChord arguments)
+    only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
+    - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
+    Parent   -> call Shortcut(Ctrl+S)// When Parent is focused, Parent gets the shortcut.
+    Child1 -> call Shortcut(Ctrl+S)// When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
+    Child2 -> no call  // When Child2 is focused, Parent gets the shortcut.
+    The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
+    This is an important property as it facilitate working with foreign code or larger codebase.
+    - To understand the difference:
+    - IsKeyChordPressed() compares mods and call IsKeyPressed() -> function has no side-effect.
+    - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed() -> function has (desirable) side-effects as it can prevents another call from getting the route.
+    - Visualize registered routes in 'Metrics/Debugger->Inputs'.
+    """
+    cdef bool res = ccimgui.ImGui_Shortcut(
+        key_chord,
+        flags
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -19768,78 +19770,78 @@ cdef class ImGuiMultiSelectIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    # @property
-    # def nav_id_item(self):
-    #     """
-    #     Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
-    #     """
-    #     cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).NavIdItem
-    #     return res
-    # @nav_id_item.setter
-    # def nav_id_item(self, value: Any):
-    #     # dereference(self._ptr).NavIdItem = value
-    #     raise NotImplementedError
+    @property
+    def nav_id_item(self):
+        """
+        Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).NavIdItem
+        return res
+    @nav_id_item.setter
+    def nav_id_item(self, value: Any):
+        # dereference(self._ptr).NavIdItem = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def nav_id_selected(self):
-    #     """
-    #     Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
-    #     """
-    #     cdef bool res = dereference(self._ptr).NavIdSelected
-    #     return res
-    # @nav_id_selected.setter
-    # def nav_id_selected(self, value: bool):
-    #     # dereference(self._ptr).NavIdSelected = value
-    #     raise NotImplementedError
+    @property
+    def nav_id_selected(self):
+        """
+        Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+        """
+        cdef bool res = dereference(self._ptr).NavIdSelected
+        return res
+    @nav_id_selected.setter
+    def nav_id_selected(self, value: bool):
+        # dereference(self._ptr).NavIdSelected = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    # @property
-    # def range_src_item(self):
-    #     """
-    #     Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
-    #     """
-    #     cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeSrcItem
-    #     return res
-    # @range_src_item.setter
-    # def range_src_item(self, value: Any):
-    #     # dereference(self._ptr).RangeSrcItem = value
-    #     raise NotImplementedError
+    @property
+    def range_src_item(self):
+        """
+        Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeSrcItem
+        return res
+    @range_src_item.setter
+    def range_src_item(self, value: Any):
+        # dereference(self._ptr).RangeSrcItem = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def range_src_reset(self):
-    #     """
-    #     App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
-    #     """
-    #     cdef bool res = dereference(self._ptr).RangeSrcReset
-    #     return res
-    # @range_src_reset.setter
-    # def range_src_reset(self, value: bool):
-    #     # dereference(self._ptr).RangeSrcReset = value
-    #     raise NotImplementedError
+    @property
+    def range_src_reset(self):
+        """
+        App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+        """
+        cdef bool res = dereference(self._ptr).RangeSrcReset
+        return res
+    @range_src_reset.setter
+    def range_src_reset(self, value: bool):
+        # dereference(self._ptr).RangeSrcReset = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21093,10 +21095,11 @@ cdef class ImGuiPlatformMonitor:
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+_adapter_index_to_storage_id_callback = {}
 cdef class ImGuiSelectionBasicStorage:
     """
     Optional helper to store multi-selection state + apply multi-selection requests.
@@ -21118,6 +21121,7 @@ cdef class ImGuiSelectionBasicStorage:
     """
     cdef ccimgui.ImGuiSelectionBasicStorage* _ptr
     cdef bool dynamically_allocated
+
     
     @staticmethod
     cdef ImGuiSelectionBasicStorage from_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
@@ -21147,80 +21151,80 @@ cdef class ImGuiSelectionBasicStorage:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable)
-    # @property
-    # def adapter_index_to_storage_id(self):
-    #     """
-    #     E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
-    #     """
-    #     cdef Callable res = dereference(self._ptr).AdapterIndexToStorageId
-    #     return res
-    # @adapter_index_to_storage_id.setter
-    # def adapter_index_to_storage_id(self, value: Callable):
-    #     # dereference(self._ptr).AdapterIndexToStorageId = value
-    #     raise NotImplementedError
+    # ?returns(Callable[[ImGuiSelectionBasicStorage, int], int])
+    @property
+    def adapter_index_to_storage_id(self):
+        """
+        E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
+        """
+        return _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)]
+    @adapter_index_to_storage_id.setter
+    def adapter_index_to_storage_id(self, value: "Callable[[ImGuiSelectionBasicStorage, int], int]"):
+        _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)] = value
+        # dereference(self._ptr).AdapterIndexToStorageId = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def preserve_order(self):
-    #     """
-    #     = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
-    #     """
-    #     cdef bool res = dereference(self._ptr).PreserveOrder
-    #     return res
-    # @preserve_order.setter
-    # def preserve_order(self, value: bool):
-    #     # dereference(self._ptr).PreserveOrder = value
-    #     raise NotImplementedError
+    @property
+    def preserve_order(self):
+        """
+        = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
+        """
+        cdef bool res = dereference(self._ptr).PreserveOrder
+        return res
+    @preserve_order.setter
+    def preserve_order(self, value: bool):
+        dereference(self._ptr).PreserveOrder = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # @property
-    # def selection_order(self):
-    #     """
-    #     [internal] increasing counter to store selection order
-    #     """
-    #     cdef int res = dereference(self._ptr)._SelectionOrder
-    #     return res
-    # @selection_order.setter
-    # def selection_order(self, value: int):
-    #     # dereference(self._ptr)._SelectionOrder = value
-    #     raise NotImplementedError
+    @property
+    def selection_order(self):
+        """
+        [internal] increasing counter to store selection order
+        """
+        cdef int res = dereference(self._ptr)._SelectionOrder
+        return res
+    @selection_order.setter
+    def selection_order(self, value: int):
+        dereference(self._ptr)._SelectionOrder = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # @property
-    # def size(self):
-    #     """
-    #     Members
-    #     Number of selected items, maintained by this helper.
-    #     """
-    #     cdef int res = dereference(self._ptr).Size
-    #     return res
-    # @size.setter
-    # def size(self, value: int):
-    #     # dereference(self._ptr).Size = value
-    #     raise NotImplementedError
+    @property
+    def size(self):
+        """
+        Members
+        Number of selected items, maintained by this helper.
+        """
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        dereference(self._ptr).Size = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21243,70 +21247,125 @@ cdef class ImGuiSelectionBasicStorage:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    # @property
-    # def user_data(self):
-    #     """
-    #     = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
-    #     """
-    #     cdef void* res = dereference(self._ptr).UserData
-    #     return res
-    # @user_data.setter
-    # def user_data(self, value: Any):
-    #     # dereference(self._ptr).UserData = value
-    #     raise NotImplementedError
+    _basic_storage_userdata = {}
+    @property
+    def user_data(self):
+        """
+        = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+        """
+        return self._basic_storage_userdata[<uintptr_t>(self._ptr)]
+        # cdef void* res = dereference(self._ptr).UserData
+        # return res
+    @user_data.setter
+    def user_data(self, value: Any):
+        self._basic_storage_userdata[<uintptr_t>(self._ptr)] = value
+        # dereference(self._ptr).UserData = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO):
-    #     """
-    #     Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
-    #     """
-    #     ccimgui.ImGuiSelectionBasicStorage_ApplyRequests(
-    #         self._ptr,
-    #         ms_io._ptr
-    #     )
+    def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO):
+        """
+        Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
+        """
+        ccimgui.ImGuiSelectionBasicStorage_ApplyRequests(
+            self._ptr,
+            ms_io._ptr
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def clear(self: ImGuiSelectionBasicStorage):
-    #     """
-    #     Clear selection
-    #     """
-    #     ccimgui.ImGuiSelectionBasicStorage_Clear(
-    #         self._ptr
-    #     )
+    def clear(self: ImGuiSelectionBasicStorage):
+        """
+        Clear selection
+        """
+        ccimgui.ImGuiSelectionBasicStorage_Clear(
+            self._ptr
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def contains(self: ImGuiSelectionBasicStorage, id_: int):
-    #     """
-    #     Query if an item id is in selection.
-    #     """
-    #     cdef bool res = ccimgui.ImGuiSelectionBasicStorage_Contains(
-    #         self._ptr,
-    #         id_
-    #     )
-    #     return res
+    def contains(self: ImGuiSelectionBasicStorage, id_: int):
+        """
+        Query if an item id is in selection.
+        """
+        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_Contains(
+            self._ptr,
+            id_
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImGuiSelectionBasicStorage)
+    @staticmethod
+    def create():
+        """
+        Create a dynamically allocated instance of ImGuiSelectionBasicStorage. Must
+        also be freed with destroy(). Mimics the constructor for ImGuiSelectionBasicStorage
+        """
+        cdef ccimgui.ImGuiSelectionBasicStorage* storage = <ccimgui.ImGuiSelectionBasicStorage*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiSelectionBasicStorage))
+        memset(storage, 0, sizeof(ccimgui.ImGuiSelectionBasicStorage))
+        _adapter_index_to_storage_id_callback[<uintptr_t>(storage)] = ImGuiSelectionBasicStorage._ImGuiSelectionBasicStorage_default_getter_python
+        storage.Size = 0
+        storage.PreserveOrder = False
+        storage.AdapterIndexToStorageId = ImGuiSelectionBasicStorage._AdapterIndexToStorageId_getter
+        storage._SelectionOrder = 1
+        return ImGuiSelectionBasicStorage.from_heap_ptr(storage)
+    
+    def _ImGuiSelectionBasicStorage_default_getter_python(ImGuiSelectionBasicStorage storage, int idx):
+        return idx
+
+    @staticmethod
+    cdef ccimgui.ImGuiID _AdapterIndexToStorageId_getter(ccimgui.ImGuiSelectionBasicStorage* storage, int idx) noexcept:
+        return _adapter_index_to_storage_id_callback[<uintptr_t>(storage)](
+            ImGuiSelectionBasicStorage.from_ptr(storage), idx
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImGuiSelectionBasicStorage):
+        """
+        Mimics the destructor of ccimgui.ImGuiSelectionBasicStorage. (Currently none)
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        if not self.dynamically_allocated:
+            return
+        
+        self.destroy()
     # [End Method]
 
     # [Method]
@@ -21329,36 +21388,36 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int):
-    #     """
-    #     Convert index to item id based on provided adapter.
-    #     """
-    #     cdef ccimgui.ImGuiID res = ccimgui.ImGuiSelectionBasicStorage_GetStorageIdFromIndex(
-    #         self._ptr,
-    #         idx
-    #     )
-    #     return res
+    def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int):
+        """
+        Convert index to item id based on provided adapter.
+        """
+        cdef ccimgui.ImGuiID res = ccimgui.ImGuiSelectionBasicStorage_GetStorageIdFromIndex(
+            self._ptr,
+            idx
+        )
+        return res
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool):
-    #     """
-    #     Add/remove an item from selection (generally done by applyrequests() function)
-    #     """
-    #     ccimgui.ImGuiSelectionBasicStorage_SetItemSelected(
-    #         self._ptr,
-    #         id_,
-    #         selected
-    #     )
+    def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool):
+        """
+        Add/remove an item from selection (generally done by applyrequests() function)
+        """
+        ccimgui.ImGuiSelectionBasicStorage_SetItemSelected(
+            self._ptr,
+            id_,
+            selected
+        )
     # [End Method]
 
     # [Method]
@@ -21734,48 +21793,48 @@ cdef class ImGuiSizeCallbackData:
 # [Class]
 # [Class Constants]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(True)
 # ?custom_comment_only(False)
-# cdef class ImGuiStorage:
-#     """
-#     Helper: Key->Value storage
-#     Typically you don't have to worry about this since a storage is held within each Window.
-#     We use it to e.g. store collapse state for a tree (Int 0/1)
-#     This is optimized for efficient lookup (dichotomy into a contiguous buffer) and rare insertion (typically tied to user interactions aka max once a frame)
-#     You can use it as custom user storage for temporary values. Declare your own storage if, for example:
-#     - You want to manipulate the open/close state of a particular sub-tree in your interface (tree node uses Int 0/1 to store their state).
-#     - You want to store custom debug data easily without adding or editing structures in your code (probably not efficient, but convenient)
-#     Types are NOT stored, so it is up to you to make sure your Key don't collide with different types.
-#     """
-#     cdef ccimgui.ImGuiStorage* _ptr
-#     cdef bool dynamically_allocated
+cdef class ImGuiStorage:
+    """
+    Helper: Key->Value storage
+    Typically you don't have to worry about this since a storage is held within each Window.
+    We use it to e.g. store collapse state for a tree (Int 0/1)
+    This is optimized for efficient lookup (dichotomy into a contiguous buffer) and rare insertion (typically tied to user interactions aka max once a frame)
+    You can use it as custom user storage for temporary values. Declare your own storage if, for example:
+    - You want to manipulate the open/close state of a particular sub-tree in your interface (tree node uses Int 0/1 to store their state).
+    - You want to store custom debug data easily without adding or editing structures in your code (probably not efficient, but convenient)
+    Types are NOT stored, so it is up to you to make sure your Key don't collide with different types.
+    """
+    cdef ccimgui.ImGuiStorage* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiStorage from_ptr(ccimgui.ImGuiStorage* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiStorage wrapper = ImGuiStorage.__new__(ImGuiStorage)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiStorage from_heap_ptr(ccimgui.ImGuiStorage* _ptr):
+        wrapper = ImGuiStorage.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
 
-#     @staticmethod
-#     cdef ImGuiStorage from_ptr(ccimgui.ImGuiStorage* _ptr):
-#         if _ptr == NULL:
-#             return None
-#         cdef ImGuiStorage wrapper = ImGuiStorage.__new__(ImGuiStorage)
-#         wrapper._ptr = _ptr
-#         wrapper.dynamically_allocated = False
-#         return wrapper
-
-#     @staticmethod
-#     cdef ImGuiStorage from_heap_ptr(ccimgui.ImGuiStorage* _ptr):
-#         wrapper = ImGuiStorage.from_ptr(_ptr)
-#         if wrapper is None:
-#             return None
-#         wrapper.dynamically_allocated = True
-#         return wrapper
-
-#     def __init__(self):
-#         raise TypeError("This class cannot be instantiated directly.")
-
-#     def __hash__(self) -> int:
-#         if self._ptr == NULL:
-#             raise RuntimeError("Won't hash a NULL pointer")
-#         cdef unsigned int ptr_int = <uintptr_t>self._ptr
-#         return hash(ptr_int)
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]

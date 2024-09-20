@@ -11,6 +11,7 @@
 #include "cimgui_impl_glfw.h"
 #include "cimgui_impl_opengl3.h"
 #include <stdio.h>
+#include <float.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -61,6 +62,71 @@ void show_imfont_atlas(ImFontAtlas* atlas)
             }
         }
         ImGui_EndMenu();
+    }
+}
+
+static const char* ExampleNames[] =
+{
+    "Artichoke", "Arugula", "Asparagus", "Avocado", "Bamboo Shoots", "Bean Sprouts", "Beans", "Beet", "Belgian Endive", "Bell Pepper",
+    "Bitter Gourd", "Bok Choy", "Broccoli", "Brussels Sprouts", "Burdock Root", "Cabbage", "Calabash", "Capers", "Carrot", "Cassava",
+    "Cauliflower", "Celery", "Celery Root", "Celcuce", "Chayote", "Chinese Broccoli", "Corn", "Cucumber"
+};
+
+
+ImGuiID basic_storage(ImGuiSelectionBasicStorage* self, int idx)
+{
+    return  idx;
+}
+
+void multi_select_test()
+{
+    if (ImGui_TreeNode("Multi-Select"))
+    {
+        ImGui_Text("Supported features:");
+        ImGui_BulletText("Keyboard navigation (arrows, page up/down, home/end, space).");
+        ImGui_BulletText("Ctrl modifier to preserve and toggle selection.");
+        ImGui_BulletText("Shift modifier for range selection.");
+        ImGui_BulletText("CTRL+A to select all.");
+        ImGui_BulletText("Escape to clear selection.");
+        ImGui_BulletText("Click and drag to box-select.");
+        ImGui_Text("Tip: Use 'Demo->Tools->Debug Log->Selection' to see selection requests as they happen.");
+
+        // Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+        const int ITEMS_COUNT = 50;
+        static ImGuiSelectionBasicStorage selection = {
+            .Size = 0,
+            .PreserveOrder = false,
+            .UserData = NULL,
+            .AdapterIndexToStorageId = basic_storage,
+            ._SelectionOrder = 1, // Always >0
+        };
+        ImGui_Text("Selection: %d/%d", selection.Size, ITEMS_COUNT);
+
+        // The BeginChild() has no purpose for selection logic, other that offering a scrolling region.
+        ImVec2 size;
+        size.x = -FLT_MIN;
+        size.y = ImGui_GetFontSize() * 20;
+        if (ImGui_BeginChild("##Basket", size, ImGuiChildFlags_FrameStyle | ImGuiChildFlags_ResizeY, 0))
+        {
+            ImGuiMultiSelectFlags flags = ImGuiMultiSelectFlags_ClearOnEscape | ImGuiMultiSelectFlags_BoxSelect1d;
+            ImGuiMultiSelectIO* ms_io = ImGui_BeginMultiSelectEx(flags, selection.Size, ITEMS_COUNT);
+            ImGuiSelectionBasicStorage_ApplyRequests(&selection, ms_io);
+
+            for (int n = 0; n < ITEMS_COUNT; n++)
+            {
+                char label[64];
+                sprintf(label, "Object %05d: %s", n, ExampleNames[n % IM_ARRAYSIZE(ExampleNames)]);
+                bool item_is_selected = ImGuiSelectionBasicStorage_Contains(&selection, (ImGuiID)n);
+                ImGui_SetNextItemSelectionUserData(n);
+                ImVec2 zero = { 0, 0 };
+                ImGui_SelectableEx(label, item_is_selected, 0, zero);
+            }
+
+            ms_io = ImGui_EndMultiSelect();
+            ImGuiSelectionBasicStorage_ApplyRequests(&selection, ms_io);
+        }
+        ImGui_EndChild();
+        ImGui_TreePop();
     }
 }
 
@@ -235,6 +301,7 @@ int main(int argc, char* argv[])
             ImGui_Text("Hello from another window!");
             if (ImGui_Button("Close Me"))
                 show_another_window = false;
+            multi_select_test();
             ImGui_End();
         }
 

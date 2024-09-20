@@ -806,9 +806,19 @@ class widget:
         pygui.Float(0.4),
         pygui.Float(0.25),
     ]
+    ms_example_names = [
+        "Artichoke", "Arugula", "Asparagus", "Avocado", "Bamboo Shoots", "Bean Sprouts", "Beans", "Beet", "Belgian Endive", "Bell Pepper",
+        "Bitter Gourd", "Bok Choy", "Broccoli", "Brussels Sprouts", "Burdock Root", "Cabbage", "Calabash", "Capers", "Carrot", "Cassava",
+        "Cauliflower", "Celery", "Celery Root", "Celcuce", "Chayote", "Chinese Broccoli", "Corn", "Cucumber"
+    ]
     ms_single_selected = -1
     ms_multi_selected1 = [False, False, False, False, False]
     ms_multi_selected2 = pygui.ImGuiSelectionBasicStorage.create()
+    ms_multi_use_custom_adapter = pygui.Bool(False)
+    ms_multi_clipper_selection = pygui.ImGuiSelectionBasicStorage.create()
+    ms_delete_items = []
+    ms_delete_selection = pygui.ImGuiSelectionBasicStorage.create()
+    ms_items_next_id = 0
 
 
 def show_demo_widgets():
@@ -1508,68 +1518,222 @@ def show_demo_widgets():
         # SHIFT+Click w/ CTRL and other standard features are supported.
         # We use the ImGuiSelectionBasicStorage helper which you may freely reimplement.
         if pygui.tree_node("Multi-Select"):
-            # pygui.text("Supported features:")
-            # pygui.bullet_text("Keyboard navigation (arrows, page up/down, home/end, space).")
-            # pygui.bullet_text("Ctrl modifier to preserve and toggle selection.")
-            # pygui.bullet_text("Shift modifier for range selection.")
-            # pygui.bullet_text("CTRL+A to select all.")
-            # pygui.bullet_text("Escape to clear selection.")
-            # pygui.bullet_text("Click and drag to box-select.")
-            # pygui.text("Tip: Use 'Demo->Tools->Debug Log->Selection' to see selection requests as they happen.")
+            pygui.text("Supported features:")
+            pygui.bullet_text("Keyboard navigation (arrows, page up/down, home/end, space).")
+            pygui.bullet_text("Ctrl modifier to preserve and toggle selection.")
+            pygui.bullet_text("Shift modifier for range selection.")
+            pygui.bullet_text("CTRL+A to select all.")
+            pygui.bullet_text("Escape to clear selection.")
+            pygui.bullet_text("Click and drag to box-select.")
+            pygui.text("Tip: Use 'Demo->Tools->Debug Log->Selection' to see selection requests as they happen.")
 
-            # # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
-            # ITEMS_COUNT = 50;
-            # ImGui::Text("Selection: %d/%d", widget.ms_multi_selected2.Size, ITEMS_COUNT);
+            # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            ITEMS_COUNT = 50
+            selected = widget.ms_multi_selected2
+            selected.user_data = ("My custom data", 1, pygui.get_frame_count())
+            pygui.text("Selection: {}/{}".format(selected.size, ITEMS_COUNT))
+            pygui.text("Preserve Order: {}".format(selected.preserve_order))
+            pygui.text("Selection Order: {}".format(selected.selection_order))
+            pygui.text("Selection Order: {}".format(selected.user_data))
+            pygui.text("User data: {}".format(selected.user_data))
+            pygui.text("adapter_index_to_storage_id func: {}".format(selected.adapter_index_to_storage_id))
 
-            # // The BeginChild() has no purpose for selection logic, other that offering a scrolling region.
-            # if (ImGui::BeginChild("##Basket", ImVec2(-FLT_MIN, ImGui::GetFontSize() * 20), ImGuiChildFlags_FrameStyle | ImGuiChildFlags_ResizeY))
-            # {
-            #     ImGuiMultiSelectFlags flags = ImGuiMultiSelectFlags_ClearOnEscape | ImGuiMultiSelectFlags_BoxSelect1d;
-            #     ImGuiMultiSelectIO* ms_io = ImGui::BeginMultiSelect(flags, selection.Size, ITEMS_COUNT);
-            #     selection.ApplyRequests(ms_io);
+            if pygui.checkbox("Use custom adapter func", widget.ms_multi_use_custom_adapter):
+                if widget.ms_multi_use_custom_adapter:
+                    # This creates odd behaviour, but does indeed proves that you can
+                    # change the function
+                    selected.adapter_index_to_storage_id = lambda _, idx: (idx + 1) % ITEMS_COUNT
+                else:
+                    selected.adapter_index_to_storage_id = lambda _, idx: idx
 
-            #     for (int n = 0; n < ITEMS_COUNT; n++)
-            #     {
-            #         char label[64];
-            #         sprintf(label, "Object %05d: %s", n, ExampleNames[n % IM_ARRAYSIZE(ExampleNames)]);
-            #         bool item_is_selected = selection.Contains((ImGuiID)n);
-            #         ImGui::SetNextItemSelectionUserData(n);
-            #         ImGui::Selectable(label, item_is_selected);
-            #     }
+            pygui.text("adapter_index_to_storage_id func: {}".format(selected.adapter_index_to_storage_id))
 
-            #     ms_io = ImGui::EndMultiSelect();
-            #     selection.ApplyRequests(ms_io);
-            # }
-            # ImGui::EndChild();
-            # ImGui::TreePop();
+            # The BeginChild() has no purpose for selection logic, other that offering a scrolling region.
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selected.size, ITEMS_COUNT)
+                selected.apply_requests(ms_io)
+
+                for n in range(ITEMS_COUNT):
+                    label = "Object {:05d}: {}".format(n, widget.ms_example_names[n % len(widget.ms_example_names)])
+                    item_is_selected = selected.contains(n)
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.selectable(label, item_is_selected)
+                
+                ms_io = pygui.end_multi_select()
+                selected.apply_requests(ms_io)
+            pygui.end_child()
             pygui.tree_pop()
         
+        # Demonstrate using the clipper with BeginMultiSelect()/EndMultiSelect()
         if pygui.tree_node("Multi-Select (with clipper)"):
+            # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            selection = widget.ms_multi_clipper_selection
+
+            pygui.text("Added features:")
+            pygui.bullet_text("Using ImGuiListClipper.")
+
+            ITEMS_COUNT = 10000
+            pygui.text("Selection: {}/{}".format(selection.size, ITEMS_COUNT))
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selection.size, ITEMS_COUNT)
+                selection.apply_requests(ms_io)
+
+                clipper = pygui.ImGuiListClipper.create()
+                clipper.begin(ITEMS_COUNT)
+                if ms_io.range_src_item != -1:
+                    clipper.include_item_by_index(ms_io.range_src_item) # Ensure RangeSrc item is not clipped.
+                while clipper.step():
+                    for n in range(clipper.display_start, clipper.display_end):
+                        label = "Object {:05d}: {}".format(n, widget.ms_example_names[n % len(widget.ms_example_names)])
+                        item_is_selected = selection.contains(n)
+                        pygui.set_next_item_selection_user_data(n)
+                        pygui.selectable(label, item_is_selected)
+
+                clipper.destroy()
+
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+            pygui.end_child()
             pygui.tree_pop()
         
+        # Find which item should be Focused after deletion.
+        # Call _before_ item submission. Retunr an index in the before-deletion item list, your item loop should call SetKeyboardFocusHere() on it.
+        # The subsequent ApplyDeletionPostLoop() code will use it to apply Selection.
+        # - We cannot provide this logic in core Dear ImGui because we don't have access to selection data.
+        # - We don't actually manipulate the ImVector<> here, only in ApplyDeletionPostLoop(), but using similar API for consistency and flexibility.
+        # - Important: Deletion only works if the underlying ImGuiID for your items are stable: aka not depend on their index, but on e.g. item id/ptr.
+        # FIXME-MULTISELECT: Doesn't take account of the possibility focus target will be moved during deletion. Need refocus or scroll offset.
+        def apply_deletion_pre_loop(self: pygui.ImGuiSelectionBasicStorage, ms_io: pygui.ImGuiMultiSelectIO, items_count: int):
+            if self.size == 0:
+                return -1
+
+            # If focused item is not selected...
+            focused_idx = ms_io.nav_id_item      # Index of currently focused item
+            if ms_io.nav_id_selected == False:   # This is merely a shortcut, == Contains(adapter->IndexToStorage(items, focused_idx))
+                ms_io.range_src_reset = True     # Request to recover RangeSrc from NavId next frame. Would be ok to reset even when NavIdSelected==true, but it would take an extra frame to recover RangeSrc when deleting a selected item.
+                return focused_idx               # Request to focus same item after deletion.
+
+            # If focused item is selected: land on first unselected item after focused item.
+            for idx in range(focused_idx + 1, items_count):
+                if not self.contains(self.get_storage_id_from_index(idx)):
+                    return idx
+
+            # If focused item is selected: otherwise return last unselected item before focused item.
+            for idx in range(min(focused_idx, items_count) - 1, 0, -1):
+                if not self.contains(self.get_storage_id_from_index(idx)):
+                    return idx
+            return -1
+        
+        # Rewrite item list (delete items) + update selection.
+        # - Call after EndMultiSelect()
+        # - We cannot provide this logic in core Dear ImGui because we don't have access to your items, nor to selection data.
+        def apply_deletion_post_loop(self: pygui.ImGuiSelectionBasicStorage, ms_io: pygui.ImGuiMultiSelectIO, items: list, item_curr_idx_to_select: int):
+            # Rewrite item list (delete items) + convert old selection index (before deletion) to new selection index (after selection).
+            # If NavId was not part of selection, we will stay on same item.
+            new_items = []
+            item_next_idx_to_select = -1
+            for idx in range(len(items)):
+                if not self.contains(self.get_storage_id_from_index(idx)):
+                    new_items.append(items[idx])
+                if item_curr_idx_to_select == idx:
+                    item_next_idx_to_select = len(new_items) - 1
+            
+            items.clear()
+            items.extend(new_items)
+
+            # Update selection
+            self.clear()
+            if item_next_idx_to_select != -1 and ms_io.nav_id_selected:
+                self.set_item_selected(self.get_storage_id_from_index(item_next_idx_to_select), True)
+
+        # Demonstrate dynamic item list + deletion support using the BeginMultiSelect/EndMultiSelect API.
+        # In order to support Deletion without any glitches you need to:
+        # - (1) If items are submitted in their own scrolling area, submit contents size SetNextWindowContentSize() ahead of time to prevent one-frame readjustment of scrolling.
+        # - (2) Items needs to have persistent ID Stack identifier = ID needs to not depends on their index. PushID(index) = KO. PushID(item_id) = OK. This is in order to focus items reliably after a selection.
+        # - (3) BeginXXXX process
+        # - (4) Focus process
+        # - (5) EndXXXX process
         if pygui.tree_node("Multi-Select (with deletion)"):
+            # Storing items data separately from selection data.
+            # (you may decide to store selection data inside your item (aka intrusive storage) if you don't need multiple views over same items)
+            # Use a custom selection.Adapter: store item identifier in Selection (instead of index)
+            items = widget.ms_delete_items
+            selection = widget.ms_delete_selection
+            selection.user_data = items
+            selection.adapter_index_to_storage_id = lambda storage, idx: storage.user_data[idx]
+
+            pygui.text("Added features:")
+            pygui.bullet_text("Dynamic list with Delete key support.")
+            pygui.text("Selection size: {}/{}".format(selection.size, len(items)))
+
+            # Initialize default list with 50 items + button to add/remove items.
+            if widget.ms_items_next_id == 0:
+                for n in range(50):
+                    items.append(widget.ms_items_next_id)
+                    widget.ms_items_next_id += 1
+            
+            if pygui.small_button("Add 20 items"):
+                for n in range(20):
+                    items.append(widget.ms_items_next_id)
+                    widget.ms_items_next_id += 1
+            pygui.same_line()
+            if pygui.small_button("Remove 20 items"):
+                for n in range(min(20, len(items)), 0, -1):
+                    selection.set_item_selected(items[-1], False)
+                    items.pop()
+
+            # (1) Extra to support deletion: Submit scrolling range to avoid glitches on deletion
+            items_height = pygui.get_text_line_height_with_spacing()
+            pygui.set_next_window_content_size((0, len(items) * items_height))
+
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selection.size, len(items))
+                selection.apply_requests(ms_io)
+
+                want_delete = pygui.shortcut(pygui.KEY_DELETE, pygui.INPUT_FLAGS_REPEAT) and (selection.size > 0)
+                item_curr_idx_to_focus = apply_deletion_pre_loop(selection, ms_io, len(items)) if want_delete else -1
+
+                for n, item_id in enumerate(items):
+                    label = "Object {:05d}: {}".format(item_id, widget.ms_example_names[item_id % len(widget.ms_example_names)])
+                    item_is_selected = selection.contains(item_id)
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.selectable(label, item_is_selected)
+                    if item_curr_idx_to_focus == n:
+                        pygui.set_keyboard_focus_here(-1)
+
+                # Apply multi-select requests
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+                if want_delete:
+                    apply_deletion_post_loop(selection, ms_io, items, item_curr_idx_to_focus)
+
+            pygui.end_child()
             pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (dual list box)"):
-            pygui.tree_pop()
+        # TODO: pygui: Implement these test functions
+        # if pygui.tree_node("Multi-Select (dual list box)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (in a table)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (in a table)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (checkboxes)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (checkboxes)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (multiple scopes)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (multiple scopes)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (tiled assets browser)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (tiled assets browser)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (trees)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (trees)"):
+        #     pygui.tree_pop()
         
-        if pygui.tree_node("Multi-Select (advanced)"):
-            pygui.tree_pop()
+        # if pygui.tree_node("Multi-Select (advanced)"):
+        #     pygui.tree_pop()
         
         pygui.tree_pop()
 
@@ -4865,6 +5029,10 @@ def show_crash_test():
     else:
         pygui.text_colored((1, 0, 0, 1), "Custom Exceptions Off")
 
+    # TODO: I believe this specific crash test is not working since cimgui
+    # wrapped IM_ASSERT with their own implementation. Can this be fixed? The
+    # other errors are caught fine. Perhaps this error is unrecoverable and thus
+    # cannot show the text to screen? 
     if custom_exceptions_on:
         pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
         pressed = pygui.button("Catch ##1")
