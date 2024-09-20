@@ -806,6 +806,9 @@ class widget:
         pygui.Float(0.4),
         pygui.Float(0.25),
     ]
+    ms_single_selected = -1
+    ms_multi_selected1 = [False, False, False, False, False]
+    ms_multi_selected2 = pygui.ImGuiSelectionBasicStorage.create()
 
 
 def show_demo_widgets():
@@ -1478,6 +1481,96 @@ def show_demo_widgets():
                     )
                     pygui.pop_style_var()
             pygui.tree_pop()
+        pygui.tree_pop()
+
+    if pygui.tree_node("Selection State & Multi-Select"):
+        # Without any fancy API: manage single-selection yourself.
+        if pygui.tree_node("Single-Select"):
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", widget.ms_single_selected == n):
+                    widget.ms_single_selected = n
+            pygui.tree_pop()
+        
+        # Demonstrate implementation a most-basic form of multi-selection manually
+        # This doesn't support the SHIFT modifier which requires BeginMultiSelect()!
+        if pygui.tree_node("Multi-Select (manual/simplified, without BeginMultiSelect)"):
+            help_marker("Hold CTRL and click to select multiple items.")
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", widget.ms_multi_selected1[n]):
+                    # Clear selection when CTRL is not held
+                    if not pygui.get_io().key_ctrl:
+                        widget.ms_multi_selected1 = [False for _ in widget.ms_multi_selected1]
+                    # Toggle current item
+                    widget.ms_multi_selected1[n] = not widget.ms_multi_selected1[n]
+            pygui.tree_pop()
+        
+        # Demonstrate handling proper multi-selection using the BeginMultiSelect/EndMultiSelect API.
+        # SHIFT+Click w/ CTRL and other standard features are supported.
+        # We use the ImGuiSelectionBasicStorage helper which you may freely reimplement.
+        if pygui.tree_node("Multi-Select"):
+            # pygui.text("Supported features:")
+            # pygui.bullet_text("Keyboard navigation (arrows, page up/down, home/end, space).")
+            # pygui.bullet_text("Ctrl modifier to preserve and toggle selection.")
+            # pygui.bullet_text("Shift modifier for range selection.")
+            # pygui.bullet_text("CTRL+A to select all.")
+            # pygui.bullet_text("Escape to clear selection.")
+            # pygui.bullet_text("Click and drag to box-select.")
+            # pygui.text("Tip: Use 'Demo->Tools->Debug Log->Selection' to see selection requests as they happen.")
+
+            # # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            # ITEMS_COUNT = 50;
+            # ImGui::Text("Selection: %d/%d", widget.ms_multi_selected2.Size, ITEMS_COUNT);
+
+            # // The BeginChild() has no purpose for selection logic, other that offering a scrolling region.
+            # if (ImGui::BeginChild("##Basket", ImVec2(-FLT_MIN, ImGui::GetFontSize() * 20), ImGuiChildFlags_FrameStyle | ImGuiChildFlags_ResizeY))
+            # {
+            #     ImGuiMultiSelectFlags flags = ImGuiMultiSelectFlags_ClearOnEscape | ImGuiMultiSelectFlags_BoxSelect1d;
+            #     ImGuiMultiSelectIO* ms_io = ImGui::BeginMultiSelect(flags, selection.Size, ITEMS_COUNT);
+            #     selection.ApplyRequests(ms_io);
+
+            #     for (int n = 0; n < ITEMS_COUNT; n++)
+            #     {
+            #         char label[64];
+            #         sprintf(label, "Object %05d: %s", n, ExampleNames[n % IM_ARRAYSIZE(ExampleNames)]);
+            #         bool item_is_selected = selection.Contains((ImGuiID)n);
+            #         ImGui::SetNextItemSelectionUserData(n);
+            #         ImGui::Selectable(label, item_is_selected);
+            #     }
+
+            #     ms_io = ImGui::EndMultiSelect();
+            #     selection.ApplyRequests(ms_io);
+            # }
+            # ImGui::EndChild();
+            # ImGui::TreePop();
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (with clipper)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (with deletion)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (dual list box)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (in a table)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (checkboxes)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (multiple scopes)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (tiled assets browser)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (trees)"):
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (advanced)"):
+            pygui.tree_pop()
+        
         pygui.tree_pop()
 
     if pygui.tree_node("Tabs"):

@@ -568,17 +568,18 @@ def main():
         Note: This script expects a file called config.json to exist in the calling directory.
         The config file should contain the constants and backends used by the script.
 
-          --help       Prints this
-          --trial      Attempts to merge the old/new/template content but writes the result to
-                         core_trial.pyx only.
-          --all        Typical usage. Builds the pxd/pyx/pyi file. The merged file is written
-                         to core.pyx.
-          --pxd        Builds the pxd file only.
-          --pyx        Builds the pyx file only.
-          --pyi        Builds the pyi file only.
-          --reset      Creates a new template to manually modify pxy files with. This will not
-                         complete if a template stil exists. You must delete core_template.pyx
-                         yourself.
+          --help         Prints this
+          --trial        Attempts to merge the old/new/template content but writes the result to
+                           core_trial.pyx only.
+          --all          Typical usage. Builds the pxd/pyx/pyi file. The merged file is written
+                           to core.pyx.
+          --pxd          Builds the pxd file only.
+          --pyx          Builds the pyx file only.
+          --pyi          Builds the pyi file only.
+          --nocomments   Builds files without comments included.
+          --reset        Creates a new template to manually modify pxy files with. This will not
+                           complete if a template stil exists. You must delete core_template.pyx
+                           yourself.
         """.lstrip("\n")))
         return
 

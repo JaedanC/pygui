@@ -19771,25 +19771,6 @@ cdef class ImGuiMultiSelectIO:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def items_count(self):
-        """
-        Ms:w, app:r /app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
-        """
-        cdef int res = dereference(self._ptr).ItemsCount
-        return res
-    @items_count.setter
-    def items_count(self, value: int):
-        # dereference(self._ptr).ItemsCount = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(Any)
     @property
     def nav_id_item(self):
@@ -19801,44 +19782,6 @@ cdef class ImGuiMultiSelectIO:
     @nav_id_item.setter
     def nav_id_item(self, value: Any):
         # dereference(self._ptr).NavIdItem = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def nav_id_item(self):
-        """
-        Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).NavIdItem
-        return res
-    @nav_id_item.setter
-    def nav_id_item(self, value: Any):
-        # dereference(self._ptr).NavIdItem = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def nav_id_selected(self):
-        """
-        Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
-        """
-        cdef bool res = dereference(self._ptr).NavIdSelected
-        return res
-    @nav_id_selected.setter
-    def nav_id_selected(self, value: bool):
-        # dereference(self._ptr).NavIdSelected = value
         raise NotImplementedError
     # [End Field]
 
@@ -19885,25 +19828,6 @@ cdef class ImGuiMultiSelectIO:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def range_src_item(self):
-        """
-        Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeSrcItem
-        return res
-    @range_src_item.setter
-    def range_src_item(self, value: Any):
-        # dereference(self._ptr).RangeSrcItem = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(bool)
     @property
     def range_src_reset(self):
@@ -19915,45 +19839,6 @@ cdef class ImGuiMultiSelectIO:
     @range_src_reset.setter
     def range_src_reset(self, value: bool):
         # dereference(self._ptr).RangeSrcReset = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def range_src_reset(self):
-        """
-        App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
-        """
-        cdef bool res = dereference(self._ptr).RangeSrcReset
-        return res
-    @range_src_reset.setter
-    def range_src_reset(self, value: bool):
-        # dereference(self._ptr).RangeSrcReset = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImVector_ImGuiSelectionRequest)
-    @property
-    def requests(self):
-        """
-        ------------------------------------------// BeginMultiSelect / EndMultiSelect
-        Ms:w, app:r /  ms:w  app:r   // requests to apply to your selection data.
-        """
-        cdef ccimgui.ImVector_ImGuiSelectionRequest res = dereference(self._ptr).Requests
-        return ImVector_ImGuiSelectionRequest.from_ptr(res)
-    @requests.setter
-    def requests(self, value: ImVector_ImGuiSelectionRequest):
-        # dereference(self._ptr).Requests = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -21285,25 +21170,6 @@ cdef class ImGuiSelectionBasicStorage:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable)
-    @property
-    def adapter_index_to_storage_id(self):
-        """
-        E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
-        """
-        cdef Callable res = dereference(self._ptr).AdapterIndexToStorageId
-        return res
-    @adapter_index_to_storage_id.setter
-    def adapter_index_to_storage_id(self, value: Callable):
-        # dereference(self._ptr).AdapterIndexToStorageId = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(bool)
     @property
     def preserve_order(self):
@@ -21315,44 +21181,6 @@ cdef class ImGuiSelectionBasicStorage:
     @preserve_order.setter
     def preserve_order(self, value: bool):
         # dereference(self._ptr).PreserveOrder = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def preserve_order(self):
-        """
-        = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
-        """
-        cdef bool res = dereference(self._ptr).PreserveOrder
-        return res
-    @preserve_order.setter
-    def preserve_order(self, value: bool):
-        # dereference(self._ptr).PreserveOrder = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def selection_order(self):
-        """
-        [internal] increasing counter to store selection order
-        """
-        cdef int res = dereference(self._ptr)._SelectionOrder
-        return res
-    @selection_order.setter
-    def selection_order(self, value: int):
-        # dereference(self._ptr)._SelectionOrder = value
         raise NotImplementedError
     # [End Field]
 
@@ -21400,26 +21228,6 @@ cdef class ImGuiSelectionBasicStorage:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def size(self):
-        """
-        Members
-        Number of selected items, maintained by this helper.
-        """
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(ImGuiStorage)
     @property
     def storage(self):
@@ -21431,44 +21239,6 @@ cdef class ImGuiSelectionBasicStorage:
     @storage.setter
     def storage(self, value: ImGuiStorage):
         # dereference(self._ptr)._Storage = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGuiStorage)
-    @property
-    def storage(self):
-        """
-        [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
-        """
-        cdef ccimgui.ImGuiStorage res = dereference(self._ptr)._Storage
-        return ImGuiStorage.from_ptr(res)
-    @storage.setter
-    def storage(self, value: ImGuiStorage):
-        # dereference(self._ptr)._Storage = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def user_data(self):
-        """
-        = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
-        """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
-    @user_data.setter
-    def user_data(self, value: Any):
-        # dereference(self._ptr).UserData = value
         raise NotImplementedError
     # [End Field]
 
@@ -21513,37 +21283,6 @@ cdef class ImGuiSelectionBasicStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO):
-        """
-        Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
-        """
-        ccimgui.ImGuiSelectionBasicStorage_ApplyRequests(
-            self._ptr,
-            ms_io._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def clear(self: ImGuiSelectionBasicStorage):
-        """
-        Clear selection
-        """
-        ccimgui.ImGuiSelectionBasicStorage_Clear(
-            self._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
     def clear(self: ImGuiSelectionBasicStorage):
         """
         Clear selection
@@ -21566,41 +21305,6 @@ cdef class ImGuiSelectionBasicStorage:
         cdef bool res = ccimgui.ImGuiSelectionBasicStorage_Contains(
             self._ptr,
             id_
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    def contains(self: ImGuiSelectionBasicStorage, id_: int):
-        """
-        Query if an item id is in selection.
-        """
-        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_Contains(
-            self._ptr,
-            id_
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int):
-        """
-        Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
-        """
-        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_GetNextSelectedItem(
-            self._ptr,
-            opaque_it,
-            out_id
         )
         return res
     # [End Method]
@@ -21645,23 +21349,6 @@ cdef class ImGuiSelectionBasicStorage:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int):
-        """
-        Convert index to item id based on provided adapter.
-        """
-        cdef ccimgui.ImGuiID res = ccimgui.ImGuiSelectionBasicStorage_GetStorageIdFromIndex(
-            self._ptr,
-            idx
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(None)
     def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool):
         """
@@ -21671,39 +21358,6 @@ cdef class ImGuiSelectionBasicStorage:
             self._ptr,
             id_,
             selected
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool):
-        """
-        Add/remove an item from selection (generally done by applyrequests() function)
-        """
-        ccimgui.ImGuiSelectionBasicStorage_SetItemSelected(
-            self._ptr,
-            id_,
-            selected
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage):
-        """
-        Swap two selections
-        """
-        ccimgui.ImGuiSelectionBasicStorage_Swap(
-            self._ptr,
-            r._ptr
         )
     # [End Method]
 
@@ -21789,25 +21443,6 @@ cdef class ImGuiSelectionExternalStorage:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable)
-    @property
-    def adapter_set_item_selected(self):
-        """
-        E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
-        """
-        cdef Callable res = dereference(self._ptr).AdapterSetItemSelected
-        return res
-    @adapter_set_item_selected.setter
-    def adapter_set_item_selected(self, value: Callable):
-        # dereference(self._ptr).AdapterSetItemSelected = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(Any)
     @property
     def user_data(self):
@@ -21822,42 +21457,6 @@ cdef class ImGuiSelectionExternalStorage:
         # dereference(self._ptr).UserData = value
         raise NotImplementedError
     # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def user_data(self):
-        """
-        Members
-        User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
-        """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
-    @user_data.setter
-    def user_data(self, value: Any):
-        # dereference(self._ptr).UserData = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO):
-        """
-        Apply selection requests by using adaptersetitemselected() calls
-        """
-        ccimgui.ImGuiSelectionExternalStorage_ApplyRequests(
-            self._ptr,
-            ms_io._ptr
-        )
-    # [End Method]
 
     # [Method]
     # ?use_template(False)
@@ -21940,44 +21539,6 @@ cdef class ImGuiSelectionRequest:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def range_direction(self):
-        """
-        Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
-        """
-        cdef ccimgui.ImS8 res = dereference(self._ptr).RangeDirection
-        return res
-    @range_direction.setter
-    def range_direction(self, value: int):
-        # dereference(self._ptr).RangeDirection = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def range_first_item(self):
-        """
-        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeFirstItem
-        return res
-    @range_first_item.setter
-    def range_first_item(self, value: Any):
-        # dereference(self._ptr).RangeFirstItem = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(Any)
     @property
     def range_first_item(self):
@@ -22016,25 +21577,6 @@ cdef class ImGuiSelectionRequest:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def range_last_item(self):
-        """
-        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeLastItem
-        return res
-    @range_last_item.setter
-    def range_last_item(self, value: Any):
-        # dereference(self._ptr).RangeLastItem = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(bool)
     @property
     def selected(self):
@@ -22046,45 +21588,6 @@ cdef class ImGuiSelectionRequest:
     @selected.setter
     def selected(self, value: bool):
         # dereference(self._ptr).Selected = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def selected(self):
-        """
-        Ms:w, app:r /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
-        """
-        cdef bool res = dereference(self._ptr).Selected
-        return res
-    @selected.setter
-    def selected(self, value: bool):
-        # dereference(self._ptr).Selected = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def type(self):
-        """
-        ------------------------------------------// BeginMultiSelect / EndMultiSelect
-        Ms:w, app:r /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
-        """
-        cdef ImGuiSelectionRequestType res = dereference(self._ptr).Type
-        return res
-    @type.setter
-    def type(self, value: Any):
-        # dereference(self._ptr).Type = value
         raise NotImplementedError
     # [End Field]
 
@@ -22566,22 +22069,6 @@ cdef class ImGuiStoragePair:
         cdef unsigned int ptr_int = <uintptr_t>self._ptr
         return hash(ptr_int)
     # [End Class Constants]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def key(self):
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).key
-        return res
-    @key.setter
-    def key(self, value: int):
-        # dereference(self._ptr).key = value
-        raise NotImplementedError
-    # [End Field]
 
     # [Field]
     # ?use_template(False)
@@ -26109,22 +25596,6 @@ cdef class ImVector_ImGuiSelectionRequest:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(ImGuiSelectionRequest)
     @property
     def data(self):
@@ -26133,38 +25604,6 @@ cdef class ImVector_ImGuiSelectionRequest:
     @data.setter
     def data(self, value: ImGuiSelectionRequest):
         # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGuiSelectionRequest)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiSelectionRequest* res = dereference(self._ptr).Data
-        return ImGuiSelectionRequest.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiSelectionRequest):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
         raise NotImplementedError
     # [End Field]
 
@@ -26243,22 +25682,6 @@ cdef class ImVector_ImGuiStoragePair:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(ImGuiStoragePair)
     @property
     def data(self):
@@ -26267,38 +25690,6 @@ cdef class ImVector_ImGuiStoragePair:
     @data.setter
     def data(self, value: ImGuiStoragePair):
         # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGuiStoragePair)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiStoragePair* res = dereference(self._ptr).Data
-        return ImGuiStoragePair.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiStoragePair):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
         raise NotImplementedError
     # [End Field]
 
