@@ -1126,7 +1126,7 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Borders == true.
     Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
-    BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Borders);
+    BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Borders);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
     == 0.0f: use remaining parent window size for this axis.
     > 0.0f: use specified size for this axis.
@@ -1833,7 +1833,7 @@ def get_cursor_screen_pos() -> Tuple[float, float]:
     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
     - YOU CAN DO 99% OF WHAT YOU NEED WITH ONLY GetCursorScreenPos() and GetContentRegionAvail().
     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-    - Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
+    - Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
     - Window-local coordinates:   SameLine(offset), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), PushTextWrapPos()
     - Window-local coordinates:   GetContentRegionMax(), GetWindowContentRegionMin(), GetWindowContentRegionMax() --> all obsoleted. YOU DON'T NEED THEM.
     - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates. Try not to use it.
@@ -2264,11 +2264,11 @@ def is_item_toggled_open() -> bool:
     """
     pass
 
-# def is_item_toggled_selection() -> bool:
-#     """
-#     Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
-#     """
-#     pass
+def is_item_toggled_selection() -> bool:
+    """
+    Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
+    """
+    pass
 
 def is_item_visible() -> bool:
     """
@@ -2288,7 +2288,7 @@ def is_key_down(key: int) -> bool:
     - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
     - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
     - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-    - withIMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
     Is key being held.
     """
     pass
@@ -3029,13 +3029,13 @@ def shortcut(key_chord: int, flags: int=0) -> bool:
     """
     Inputs Utilities: Shortcut Testing & Routing [BETA]
     - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
-    ImGuiKey_C  // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
-    ImGuiMod_Ctrl | ImGuiKey_C  // Accepted by functions taking ImGuiKeyChord arguments)
+    ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
+    ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments)
     only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
     - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
-    Parent   -> call Shortcut(Ctrl+S)// When Parent is focused, Parent gets the shortcut.
-    Child1 -> call Shortcut(Ctrl+S)// When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
-    Child2 -> no call  // When Child2 is focused, Parent gets the shortcut.
+    Parent   -> call Shortcut(Ctrl+S)    // When Parent is focused, Parent gets the shortcut.
+    Child1 -> call Shortcut(Ctrl+S)    // When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
+    Child2 -> no call                  // When Child2 is focused, Parent gets the shortcut.
     The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
     This is an important property as it facilitate working with foreign code or larger codebase.
     - To understand the difference:
@@ -3427,11 +3427,11 @@ class ImDrawCmd:
     """
     elem_count: int
     """
-    4// number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
+    4    // number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
     """
     idx_offset: int
     """
-    4// start offset in index buffer.
+    4    // start offset in index buffer.
     """
     # texture_id: object
     # """
@@ -3447,7 +3447,7 @@ class ImDrawCmd:
     # """
     vtx_offset: int
     """
-    4// start offset in vertex buffer. imguibackendflags_rendererhasvtxoffset: always 0, otherwise may be >0 to support meshes larger than 64k vertices with 16-bit indices.
+    4    // start offset in vertex buffer. imguibackendflags_rendererhasvtxoffset: always 0, otherwise may be >0 to support meshes larger than 64k vertices with 16-bit indices.
     """
     # def get_tex_id(self: ImDrawCmd) -> Any:
     #     """
@@ -4129,27 +4129,27 @@ class ImFontAtlasCustomRect:
     """
     font: ImFont
     """
-    Input// for custom font glyphs only: target font
+    Input    // for custom font glyphs only: target font
     """
     glyph_advance_x: float
     """
-    Input// for custom font glyphs only: glyph xadvance
+    Input    // for custom font glyphs only: glyph xadvance
     """
     glyph_id: int
     """
-    Input// for custom font glyphs only (id < 0x110000)
+    Input    // for custom font glyphs only (id < 0x110000)
     """
     glyph_offset: Tuple[float, float]
     """
-    Input// for custom font glyphs only: glyph display offset
+    Input    // for custom font glyphs only: glyph display offset
     """
     height: int
     """
-    Input// desired rectangle dimension
+    Input    // desired rectangle dimension
     """
     width: int
     """
-    Input// desired rectangle dimension
+    Input    // desired rectangle dimension
     """
     x: int
     """
@@ -4235,7 +4235,7 @@ class ImFontConfig:
     """
     # rasterizer_density: float
     # """
-    # 1.0f // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+    # 1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
     # """
     rasterizer_multiply: float
     """
@@ -4399,7 +4399,7 @@ class ImGuiIO:
     """
     backend_flags: int
     """
-    = 0  // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
+    = 0              // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
     """
     backend_platform_name: str
     """
@@ -4420,7 +4420,7 @@ class ImGuiIO:
     """
     config_debug_begin_return_value_loop: bool
     """
-    = false  // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+    = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
     """
     config_debug_begin_return_value_once: bool
     """
@@ -4428,14 +4428,14 @@ class ImGuiIO:
     - Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
     - This is inconsistent with other BeginXXX functions and create confusion for many users.
     - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
-    = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
+    = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
     """
     # config_debug_ignore_focus_loss: bool
     # """
     # Option to deactivate io.AddFocusEvent(false) handling.
     # - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
     # - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    # = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
+    # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
     # """
     config_debug_ini_settings: bool
     """
@@ -4448,28 +4448,28 @@ class ImGuiIO:
     # - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
     # - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
     # e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
-    # = false  // enable various tools calling im_debug_break().
+    # = false          // enable various tools calling im_debug_break().
     # """
     config_docking_always_tab_bar: bool
     """
-    = false  // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
+    = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
     """
     config_docking_no_split: bool
     """
     Docking options (when ImGuiConfigFlags_DockingEnable is set)
-    = false  // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
+    = false          // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
     """
     config_docking_transparent_payload: bool
     """
-    = false  // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
+    = false          // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
     """
     config_docking_with_shift: bool
     """
-    = false  // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
+    = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
     """
     config_drag_click_to_input_text: bool
     """
-    = false  // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
+    = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
     """
     config_flags: int
     """
@@ -4477,15 +4477,15 @@ class ImGuiIO:
     """
     config_input_text_cursor_blink: bool
     """
-    = true   // enable blinking cursor (optional as some users consider it to be distracting).
+    = true           // enable blinking cursor (optional as some users consider it to be distracting).
     """
     config_input_text_enter_keep_active: bool
     """
-    = false  // [beta] pressing enter will keep item active and select contents (single-line only).
+    = false          // [beta] pressing enter will keep item active and select contents (single-line only).
     """
     config_input_trickle_event_queue: bool
     """
-    = true   // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
+    = true           // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
     """
     config_mac_osx_behaviors: bool
     """
@@ -4493,36 +4493,36 @@ class ImGuiIO:
     """
     config_memory_compact_timer: float
     """
-    = 60.0f  // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
+    = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
     """
     # config_nav_swap_gamepad_buttons: bool
     # """
-    # = false  // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+    # = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
     # """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
-    = false; // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
+    = false;         // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
     """
     config_viewports_no_decoration: bool
     """
-    = true   // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
+    = true           // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
     """
     config_viewports_no_default_parent: bool
     """
-    = false  // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
+    = false          // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
     """
     config_viewports_no_task_bar_icon: bool
     """
-    = false  // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
+    = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
     """
     config_windows_move_from_title_bar_only: bool
     """
-    = false   // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+    = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
     """
     config_windows_resize_from_edges: bool
     """
-    = true   // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
+    = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
     """
     ctx: ImGuiContext
     """
@@ -4530,31 +4530,31 @@ class ImGuiIO:
     """
     delta_time: float
     """
-    = 1.0f/60.0f // time elapsed since last frame, in seconds. may change every frame.
+    = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
     """
     display_framebuffer_scale: Tuple[float, float]
     """
-    = (1, 1) // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+    = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
     """
     display_size: Tuple[float, float]
     """
-    <unset>  // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+    <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
     """
     font_allow_user_scaling: bool
     """
-    = false  // allow user scaling text of individual window with ctrl+wheel.
+    = false          // allow user scaling text of individual window with ctrl+wheel.
     """
     font_default: ImFont
     """
-    = null   // font to use on newframe(). use null to uses fonts->fonts[0].
+    = null           // font to use on newframe(). use null to uses fonts->fonts[0].
     """
     font_global_scale: float
     """
-    = 1.0f   // global scale all fonts
+    = 1.0f           // global scale all fonts
     """
     fonts: ImFontAtlas
     """
-    <auto>   // font atlas: load, rasterize and pack one or more fonts into a single texture.
+    <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
     """
     framerate: float
     """
@@ -4562,11 +4562,11 @@ class ImGuiIO:
     """
     ini_filename: str
     """
-    = 'imgui.ini'// path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
+    = 'imgui.ini'    // path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
     """
     ini_saving_rate: float
     """
-    = 5.0f   // minimum time between saving positions/sizes to .ini file, in seconds.
+    = 5.0f           // minimum time between saving positions/sizes to .ini file, in seconds.
     """
     input_queue_characters: List[int]
     """
@@ -4591,11 +4591,11 @@ class ImGuiIO:
     """
     key_repeat_delay: float
     """
-    = 0.275f // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
+    = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
     """
     key_repeat_rate: float
     """
-    = 0.050f // when holding a key/button, rate at which it repeats, in seconds.
+    = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
     """
     key_shift: bool
     """
@@ -4659,13 +4659,13 @@ class ImGuiIO:
     """
     mouse_double_click_max_dist: float
     """
-    = 6.0f   // distance threshold to stay in to validate a double-click, in pixels.
+    = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
     """
     mouse_double_click_time: float
     """
     Inputs Behaviors
     (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
-    = 0.30f  // time for a double-click, in seconds.
+    = 0.30f          // time for a double-click, in seconds.
     """
     mouse_double_clicked: Sequence[bool]
     """
@@ -4701,12 +4701,12 @@ class ImGuiIO:
     """
     mouse_drag_threshold: float
     """
-    = 6.0f   // distance threshold before considering we are dragging.
+    = 6.0f           // distance threshold before considering we are dragging.
     """
     mouse_draw_cursor: bool
     """
     Miscellaneous options
-    = false  // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
+    = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
     """
     mouse_hovered_viewport: int
     """
@@ -4893,12 +4893,12 @@ class ImGuiInputTextCallbackData:
     Shared state of InputText(), passed as an argument to your callback when a ImGuiInputTextFlags_Callback* flag is used.
     The callback function should return 0 by default.
     Callbacks (follow a flag name and see comments in ImGuiInputTextFlags_ declarations for more details)
-    - ImGuiInputTextFlags_CallbackEdit:Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
-    - ImGuiInputTextFlags_CallbackAlways:  Callback on each iteration
+    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    - ImGuiInputTextFlags_CallbackAlways:      Callback on each iteration
     - ImGuiInputTextFlags_CallbackCompletion:  Callback on pressing TAB
-    - ImGuiInputTextFlags_CallbackHistory: Callback on pressing Up/Down arrows
+    - ImGuiInputTextFlags_CallbackHistory:     Callback on pressing Up/Down arrows
     - ImGuiInputTextFlags_CallbackCharFilter:  Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
-    - ImGuiInputTextFlags_CallbackResize:  Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
+    - ImGuiInputTextFlags_CallbackResize:      Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
     """
     buf: str
     """
@@ -4910,11 +4910,11 @@ class ImGuiInputTextCallbackData:
     """
     buf_size: int
     """
-    Buffer size (in bytes) = capacity+1  // read-only// [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
+    Buffer size (in bytes) = capacity+1  // read-only    // [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
     """
     buf_text_len: int
     """
-    Text length (in bytes)   // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
+    Text length (in bytes)               // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
     """
     ctx: ImGuiContext
     """
@@ -4931,19 +4931,19 @@ class ImGuiInputTextCallbackData:
     - However, during Completion/History/Always callback, Buf always points to our own internal data (it is not the same as your buffer)! Changes to it will be reflected into your own buffer shortly after the callback.
     - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
     - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
-    Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
+    Character input                      // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
     """
     event_flag: int
     """
-    One imguiinputtextflags_callback*// read-only
+    One imguiinputtextflags_callback*    // read-only
     """
     event_key: int
     """
-    Key pressed (up/down/tab)// read-only// [completion,history]
+    Key pressed (up/down/tab)            // read-only    // [completion,history]
     """
     flags: int
     """
-    What user passed to inputtext()  // read-only
+    What user passed to inputtext()      // read-only
     """
     selection_end: int
     """
@@ -5085,28 +5085,28 @@ class ImGuiMultiSelectIO:
     """
     # items_count: int
     # """
-    # Ms:w, app:r /app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+    # Ms:w, app:r     /        app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
     # """
     nav_id_item: Any
     """
-    Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+    Ms:w, app:r     /                // (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
     """
     nav_id_selected: bool
     """
-    Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+    Ms:w, app:r     /        app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
     """
     range_src_item: Any
     """
-    Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+    Ms:w  app:r     /                // (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
     """
     range_src_reset: bool
     """
-    App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+    App:w     /  ms:r          // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
     """
     # requests: ImVector_ImGuiSelectionRequest
     # """
     # ------------------------------------------// BeginMultiSelect / EndMultiSelect
-    # Ms:w, app:r /  ms:w  app:r   // requests to apply to your selection data.
+    # Ms:w, app:r     /  ms:w  app:r   // requests to apply to your selection data.
     # """
 
 class ImGuiPayload:
@@ -5366,7 +5366,7 @@ class ImGuiSelectionBasicStorage:
     Large applications are likely to eventually want to get rid of this indirection layer and do their own thing.
     See https://github.com/ocornut/imgui/wiki/Multi-Select for details and pseudo-code using this helper.
     """
-    adapter_index_to_storage_id: Callable[[ImGuiSelectionBasicStorage, int], int]
+    adapter_index_to_storage_id: Callable[[ImGuiSelectionBasicStorage, int], int] | None
     """
     E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
     """
@@ -5383,10 +5383,6 @@ class ImGuiSelectionBasicStorage:
     Members
     Number of selected items, maintained by this helper.
     """
-    # storage: ImGuiStorage
-    # """
-    # [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
-    # """
     user_data: Any
     """
     = null   // user data for use by adapter function// e.g. selection.userdata = (void*)my_items;
@@ -5422,11 +5418,24 @@ class ImGuiSelectionBasicStorage:
         """
         pass
 
-    # def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int) -> bool:
-    #     """
-    #     Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
-    #     """
-    #     pass
+    def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Int, out_id: Int) -> bool:
+        """
+        Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
+
+        pygui note: This function usually requires the caller to keep a void* as an iterator.
+        Now, we can do that in python, so instead we use pygui.Int() as a
+        replacement. This means it is critical you do not modify to the value of
+        the `opaque_it` supplied. You can iterate as follows:
+
+        ```python
+        selected_id = pygui.Int()
+        it = pygui.Int()
+        while (selection.get_next_selected_item(it, selected_id)):
+            # Do work with selected_id
+            pass
+        ```
+        """
+        pass
 
     def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int) -> int:
         """
@@ -5440,11 +5449,11 @@ class ImGuiSelectionBasicStorage:
         """
         pass
 
-    # def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage) -> None:
-    #     """
-    #     Swap two selections
-    #     """
-    #     pass
+    def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage) -> None:
+        """
+        Swap two selections
+        """
+        pass
 
 
 class ImGuiSelectionExternalStorage:
@@ -5452,21 +5461,33 @@ class ImGuiSelectionExternalStorage:
     Optional helper to apply multi-selection requests to existing randomly accessible storage.
     Convenient if you want to quickly wire multi-select API on e.g. an array of bool or items storing their own selection state.
     """
-    pass
-    # adapter_set_item_selected: Callable
-    # """
-    # E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
-    # """
-    # user_data: Any
-    # """
-    # Members
-    # User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
-    # """
-    # def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO) -> None:
-    #     """
-    #     Apply selection requests by using adaptersetitemselected() calls
-    #     """
-    #     pass
+    adapter_set_item_selected: Callable[[ImGuiSelectionExternalStorage, int, bool], None] | None
+    """
+    E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
+    """
+    user_data: Any
+    """
+    Members
+    User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+    """
+    def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO) -> None:
+        """
+        Apply selection requests by using adaptersetitemselected() calls
+        """
+        pass
+
+    def create() -> ImGuiSelectionExternalStorage:
+        """
+        Create a dynamically allocated instance of ImGuiSelectionExternalStorage. Must
+        also be freed with destroy(). Mimics the constructor for ImGuiSelectionExternalStorage
+        """
+        pass
+
+    def destroy(self: ImGuiSelectionExternalStorage) -> None:
+        """
+        Mimics the destructor of ccimgui.ImGuiSelectionExternalStorage. (Currently none)
+        """
+        pass
 
 
 class ImGuiSelectionRequest:
@@ -5488,12 +5509,12 @@ class ImGuiSelectionRequest:
     # """
     # selected: bool
     # """
-    # Ms:w, app:r /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+    # Ms:w, app:r     /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
     # """
     # type: Any
     # """
     # ------------------------------------------// BeginMultiSelect / EndMultiSelect
-    # Ms:w, app:r /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+    # Ms:w, app:r     /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
     # """
 
 class ImGuiSizeCallbackData:
@@ -5756,7 +5777,7 @@ class ImGuiTableColumnSortSpecs:
     """
     column_user_id: int
     """
-    User id of the column (if specified by a tablesetupcolumn() call)
+    User id of the column (if specified by a table_setup_column() call)
     """
     sort_direction: int
     """

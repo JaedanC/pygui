@@ -1317,7 +1317,7 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Borders == true.
     Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
-    BeginChild("Name", size, true)-> Begin("Name", size, ImGuiChildFlags_Borders);
+    BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Borders);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
     == 0.0f: use remaining parent window size for this axis.
     > 0.0f: use specified size for this axis.
@@ -4333,7 +4333,7 @@ def get_cursor_screen_pos():
     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
     - YOU CAN DO 99% OF WHAT YOU NEED WITH ONLY GetCursorScreenPos() and GetContentRegionAvail().
     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
-    - Absolute coordinate:GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
+    - Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
     - Window-local coordinates:   SameLine(offset), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), PushTextWrapPos()
     - Window-local coordinates:   GetContentRegionMax(), GetWindowContentRegionMin(), GetWindowContentRegionMax() --> all obsoleted. YOU DON'T NEED THEM.
     - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates. Try not to use it.
@@ -4368,6 +4368,8 @@ def get_drag_drop_payload():
     Peek directly into the current payload from anywhere. returns null when drag and drop is finished or inactive. use imguipayload::isdatatype() to test for the payload type.
     """
     cdef const ccimgui.ImGuiPayload* res = ccimgui.ImGui_GetDragDropPayload()
+    if (res == NULL):
+        return
     return ImGuiPayload.from_ptr(res)
 # [End Function]
 
@@ -6170,16 +6172,16 @@ def is_item_toggled_open():
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def is_item_toggled_selection():
-#     """
-#     Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
-#     """
-#     cdef bool res = ccimgui.ImGui_IsItemToggledSelection()
-#     return res
+def is_item_toggled_selection():
+    """
+    Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
+    """
+    cdef bool res = ccimgui.ImGui_IsItemToggledSelection()
+    return res
 # [End Function]
 
 # [Function]
@@ -6224,7 +6226,7 @@ def is_key_down(key: int):
     - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
     - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
     - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-    - withIMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
     Is key being held.
     """
     cdef bool res = ccimgui.ImGui_IsKeyDown(
@@ -8075,7 +8077,7 @@ def set_cursor_screen_pos(pos: Tuple[float, float]):
 _drag_drop_payload = {}
 # This purely exists so that we have *something* to give to the function that
 # is copyable. This is required to know if the .data is NULL or not.
-cdef int _drag_drop_constant = 0
+cdef int _drag_drop_constant = 1
 def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
     """
     Type is a user defined string of maximum 32 characters. strings starting with '_' are reserved for dear imgui internal types.
@@ -8089,8 +8091,7 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
         sizeof(_drag_drop_constant),
         cond
     )
-    if res:
-        _drag_drop_payload[<uintptr_t>ccimgui.ImGui_GetCurrentContext()] = data
+    _drag_drop_payload[<uintptr_t>ccimgui.ImGui_GetCurrentContext()] = data
     return res
 # [End Function]
 
@@ -8826,13 +8827,13 @@ def shortcut(key_chord: int, flags: int=0):
     """
     Inputs Utilities: Shortcut Testing & Routing [BETA]
     - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
-    ImGuiKey_C  // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
-    ImGuiMod_Ctrl | ImGuiKey_C  // Accepted by functions taking ImGuiKeyChord arguments)
+    ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
+    ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments)
     only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
     - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
-    Parent   -> call Shortcut(Ctrl+S)// When Parent is focused, Parent gets the shortcut.
-    Child1 -> call Shortcut(Ctrl+S)// When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
-    Child2 -> no call  // When Child2 is focused, Parent gets the shortcut.
+    Parent   -> call Shortcut(Ctrl+S)    // When Parent is focused, Parent gets the shortcut.
+    Child1 -> call Shortcut(Ctrl+S)    // When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
+    Child2 -> no call                  // When Child2 is focused, Parent gets the shortcut.
     The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
     This is an important property as it facilitate working with foreign code or larger codebase.
     - To understand the difference:
@@ -10937,7 +10938,7 @@ cdef class ImDrawCmd:
     @property
     def elem_count(self):
         """
-        4// number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
+        4    // number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
         """
         cdef unsigned int res = dereference(self._ptr).ElemCount
         return res
@@ -10956,7 +10957,7 @@ cdef class ImDrawCmd:
     @property
     def idx_offset(self):
         """
-        4// start offset in index buffer.
+        4    // start offset in index buffer.
         """
         cdef unsigned int res = dereference(self._ptr).IdxOffset
         return res
@@ -11032,7 +11033,7 @@ cdef class ImDrawCmd:
     @property
     def vtx_offset(self):
         """
-        4// start offset in vertex buffer. imguibackendflags_rendererhasvtxoffset: always 0, otherwise may be >0 to support meshes larger than 64k vertices with 16-bit indices.
+        4    // start offset in vertex buffer. imguibackendflags_rendererhasvtxoffset: always 0, otherwise may be >0 to support meshes larger than 64k vertices with 16-bit indices.
         """
         cdef unsigned int res = dereference(self._ptr).VtxOffset
         return res
@@ -15353,7 +15354,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def font(self):
         """
-        Input// for custom font glyphs only: target font
+        Input    // for custom font glyphs only: target font
         """
         cdef ccimgui.ImFont* res = dereference(self._ptr).Font
         return ImFont.from_ptr(res)
@@ -15372,7 +15373,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def glyph_advance_x(self):
         """
-        Input// for custom font glyphs only: glyph xadvance
+        Input    // for custom font glyphs only: glyph xadvance
         """
         cdef float res = dereference(self._ptr).GlyphAdvanceX
         return res
@@ -15391,7 +15392,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def glyph_id(self):
         """
-        Input// for custom font glyphs only (id < 0x110000)
+        Input    // for custom font glyphs only (id < 0x110000)
         """
         cdef unsigned int res = dereference(self._ptr).GlyphID
         return res
@@ -15410,7 +15411,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def glyph_offset(self):
         """
-        Input// for custom font glyphs only: glyph display offset
+        Input    // for custom font glyphs only: glyph display offset
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).GlyphOffset
         return _cast_ImVec2_tuple(res)
@@ -15429,7 +15430,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def height(self):
         """
-        Input// desired rectangle dimension
+        Input    // desired rectangle dimension
         """
         cdef unsigned short res = dereference(self._ptr).Height
         return res
@@ -15448,7 +15449,7 @@ cdef class ImFontAtlasCustomRect:
     @property
     def width(self):
         """
-        Input// desired rectangle dimension
+        Input    // desired rectangle dimension
         """
         cdef unsigned short res = dereference(self._ptr).Width
         return res
@@ -16028,7 +16029,7 @@ cdef class ImFontConfig:
     # @property
     # def rasterizer_density(self):
     #     """
-    #     1.0f // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+    #     1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
     #     """
     #     cdef float res = dereference(self._ptr).RasterizerDensity
     #     return res
@@ -16770,7 +16771,7 @@ cdef class ImGuiIO:
     @property
     def backend_flags(self):
         """
-        = 0  // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
+        = 0              // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
         """
         cdef ccimgui.ImGuiBackendFlags res = dereference(self._ptr).BackendFlags
         return res
@@ -16789,7 +16790,7 @@ cdef class ImGuiIO:
     # @property
     # def backend_language_user_data(self):
     #     """
-    #     = null   // user data for non c++ programming language backend
+    #     = null           // user data for non c++ programming language backend
     #     """
     #     cdef void* res = dereference(self._ptr).BackendLanguageUserData
     #     return res
@@ -16828,7 +16829,7 @@ cdef class ImGuiIO:
     # @property
     # def backend_platform_user_data(self):
     #     """
-    #     = null   // user data for platform backend
+    #     = null           // user data for platform backend
     #     """
     #     cdef void* res = dereference(self._ptr).BackendPlatformUserData
     #     return res
@@ -16866,7 +16867,7 @@ cdef class ImGuiIO:
     # @property
     # def backend_renderer_user_data(self):
     #     """
-    #     = null   // user data for renderer backend
+    #     = null           // user data for renderer backend
     #     """
     #     cdef void* res = dereference(self._ptr).BackendRendererUserData
     #     return res
@@ -16923,7 +16924,7 @@ cdef class ImGuiIO:
     @property
     def config_debug_begin_return_value_loop(self):
         """
-        = false  // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+        = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueLoop
         return res
@@ -16946,7 +16947,7 @@ cdef class ImGuiIO:
         - Presently Begin()/End() and BeginChild()/EndChild() needs to ALWAYS be called in tandem, regardless of return value of BeginXXX()
         - This is inconsistent with other BeginXXX functions and create confusion for many users.
         - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
-        = false  // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
+        = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugBeginReturnValueOnce
         return res
@@ -16968,7 +16969,7 @@ cdef class ImGuiIO:
     #     Option to deactivate io.AddFocusEvent(false) handling.
     #     - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
     #     - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    #     = false  // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
+    #     = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
     #     """
     #     cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
     #     return res
@@ -17011,7 +17012,7 @@ cdef class ImGuiIO:
     #     - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
     #     - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
     #     e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
-    #     = false  // enable various tools calling im_debug_break().
+    #     = false          // enable various tools calling im_debug_break().
     #     """
     #     cdef bool res = dereference(self._ptr).ConfigDebugIsDebuggerPresent
     #     return res
@@ -17030,7 +17031,7 @@ cdef class ImGuiIO:
     @property
     def config_docking_always_tab_bar(self):
         """
-        = false  // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
+        = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
         """
         cdef bool res = dereference(self._ptr).ConfigDockingAlwaysTabBar
         return res
@@ -17050,7 +17051,7 @@ cdef class ImGuiIO:
     def config_docking_no_split(self):
         """
         Docking options (when ImGuiConfigFlags_DockingEnable is set)
-        = false  // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
+        = false          // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
         """
         cdef bool res = dereference(self._ptr).ConfigDockingNoSplit
         return res
@@ -17069,7 +17070,7 @@ cdef class ImGuiIO:
     @property
     def config_docking_transparent_payload(self):
         """
-        = false  // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
+        = false          // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
         """
         cdef bool res = dereference(self._ptr).ConfigDockingTransparentPayload
         return res
@@ -17088,7 +17089,7 @@ cdef class ImGuiIO:
     @property
     def config_docking_with_shift(self):
         """
-        = false  // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
+        = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
         """
         cdef bool res = dereference(self._ptr).ConfigDockingWithShift
         return res
@@ -17107,7 +17108,7 @@ cdef class ImGuiIO:
     @property
     def config_drag_click_to_input_text(self):
         """
-        = false  // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
+        = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
         """
         cdef bool res = dereference(self._ptr).ConfigDragClickToInputText
         return res
@@ -17145,7 +17146,7 @@ cdef class ImGuiIO:
     @property
     def config_input_text_cursor_blink(self):
         """
-        = true   // enable blinking cursor (optional as some users consider it to be distracting).
+        = true           // enable blinking cursor (optional as some users consider it to be distracting).
         """
         cdef bool res = dereference(self._ptr).ConfigInputTextCursorBlink
         return res
@@ -17164,7 +17165,7 @@ cdef class ImGuiIO:
     @property
     def config_input_text_enter_keep_active(self):
         """
-        = false  // [beta] pressing enter will keep item active and select contents (single-line only).
+        = false          // [beta] pressing enter will keep item active and select contents (single-line only).
         """
         cdef bool res = dereference(self._ptr).ConfigInputTextEnterKeepActive
         return res
@@ -17183,7 +17184,7 @@ cdef class ImGuiIO:
     @property
     def config_input_trickle_event_queue(self):
         """
-        = true   // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
+        = true           // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
         """
         cdef bool res = dereference(self._ptr).ConfigInputTrickleEventQueue
         return res
@@ -17221,7 +17222,7 @@ cdef class ImGuiIO:
     @property
     def config_memory_compact_timer(self):
         """
-        = 60.0f  // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
+        = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
         """
         cdef float res = dereference(self._ptr).ConfigMemoryCompactTimer
         return res
@@ -17240,7 +17241,7 @@ cdef class ImGuiIO:
     # @property
     # def config_nav_swap_gamepad_buttons(self):
     #     """
-    #     = false  // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+    #     = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
     #     """
     #     cdef bool res = dereference(self._ptr).ConfigNavSwapGamepadButtons
     #     return res
@@ -17260,7 +17261,7 @@ cdef class ImGuiIO:
     def config_viewports_no_auto_merge(self):
         """
         Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
-        = false; // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
+        = false;         // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoAutoMerge
         return res
@@ -17279,7 +17280,7 @@ cdef class ImGuiIO:
     @property
     def config_viewports_no_decoration(self):
         """
-        = true   // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
+        = true           // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoDecoration
         return res
@@ -17298,7 +17299,7 @@ cdef class ImGuiIO:
     @property
     def config_viewports_no_default_parent(self):
         """
-        = false  // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
+        = false          // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoDefaultParent
         return res
@@ -17317,7 +17318,7 @@ cdef class ImGuiIO:
     @property
     def config_viewports_no_task_bar_icon(self):
         """
-        = false  // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
+        = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoTaskBarIcon
         return res
@@ -17336,7 +17337,7 @@ cdef class ImGuiIO:
     @property
     def config_windows_move_from_title_bar_only(self):
         """
-        = false   // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+        = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
         """
         cdef bool res = dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly
         return res
@@ -17355,7 +17356,7 @@ cdef class ImGuiIO:
     @property
     def config_windows_resize_from_edges(self):
         """
-        = true   // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
+        = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         """
         cdef bool res = dereference(self._ptr).ConfigWindowsResizeFromEdges
         return res
@@ -17393,7 +17394,7 @@ cdef class ImGuiIO:
     @property
     def delta_time(self):
         """
-        = 1.0f/60.0f // time elapsed since last frame, in seconds. may change every frame.
+        = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
         """
         cdef float res = dereference(self._ptr).DeltaTime
         return res
@@ -17412,7 +17413,7 @@ cdef class ImGuiIO:
     @property
     def display_framebuffer_scale(self):
         """
-        = (1, 1) // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+        = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayFramebufferScale
         return _cast_ImVec2_tuple(res)
@@ -17431,7 +17432,7 @@ cdef class ImGuiIO:
     @property
     def display_size(self):
         """
-        <unset>  // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+        <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySize
         return _cast_ImVec2_tuple(res)
@@ -17450,7 +17451,7 @@ cdef class ImGuiIO:
     @property
     def font_allow_user_scaling(self):
         """
-        = false  // allow user scaling text of individual window with ctrl+wheel.
+        = false          // allow user scaling text of individual window with ctrl+wheel.
         """
         cdef bool res = dereference(self._ptr).FontAllowUserScaling
         return res
@@ -17469,7 +17470,7 @@ cdef class ImGuiIO:
     @property
     def font_default(self):
         """
-        = null   // font to use on newframe(). use null to uses fonts->fonts[0].
+        = null           // font to use on newframe(). use null to uses fonts->fonts[0].
         """
         cdef ccimgui.ImFont* res = dereference(self._ptr).FontDefault
         return ImFont.from_ptr(res)
@@ -17488,7 +17489,7 @@ cdef class ImGuiIO:
     @property
     def font_global_scale(self):
         """
-        = 1.0f   // global scale all fonts
+        = 1.0f           // global scale all fonts
         """
         cdef float res = dereference(self._ptr).FontGlobalScale
         return res
@@ -17507,7 +17508,7 @@ cdef class ImGuiIO:
     @property
     def fonts(self):
         """
-        <auto>   // font atlas: load, rasterize and pack one or more fonts into a single texture.
+        <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
         """
         cdef ccimgui.ImFontAtlas* res = dereference(self._ptr).Fonts
         return ImFontAtlas.from_ptr(res)
@@ -17545,7 +17546,7 @@ cdef class ImGuiIO:
     @property
     def ini_filename(self):
         """
-        = 'imgui.ini'// path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
+        = 'imgui.ini'    // path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
         """
         cdef const char* res = dereference(self._ptr).IniFilename
         return _from_bytes(res)
@@ -17564,7 +17565,7 @@ cdef class ImGuiIO:
     @property
     def ini_saving_rate(self):
         """
-        = 5.0f   // minimum time between saving positions/sizes to .ini file, in seconds.
+        = 5.0f           // minimum time between saving positions/sizes to .ini file, in seconds.
         """
         cdef float res = dereference(self._ptr).IniSavingRate
         return res
@@ -17680,7 +17681,7 @@ cdef class ImGuiIO:
     @property
     def key_repeat_delay(self):
         """
-        = 0.275f // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
+        = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
         """
         cdef float res = dereference(self._ptr).KeyRepeatDelay
         return res
@@ -17699,7 +17700,7 @@ cdef class ImGuiIO:
     @property
     def key_repeat_rate(self):
         """
-        = 0.050f // when holding a key/button, rate at which it repeats, in seconds.
+        = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
         """
         cdef float res = dereference(self._ptr).KeyRepeatRate
         return res
@@ -18003,7 +18004,7 @@ cdef class ImGuiIO:
     @property
     def mouse_double_click_max_dist(self):
         """
-        = 6.0f   // distance threshold to stay in to validate a double-click, in pixels.
+        = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
         """
         cdef float res = dereference(self._ptr).MouseDoubleClickMaxDist
         return res
@@ -18024,7 +18025,7 @@ cdef class ImGuiIO:
         """
         Inputs Behaviors
         (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
-        = 0.30f  // time for a double-click, in seconds.
+        = 0.30f          // time for a double-click, in seconds.
         """
         cdef float res = dereference(self._ptr).MouseDoubleClickTime
         return res
@@ -18195,7 +18196,7 @@ cdef class ImGuiIO:
     @property
     def mouse_drag_threshold(self):
         """
-        = 6.0f   // distance threshold before considering we are dragging.
+        = 6.0f           // distance threshold before considering we are dragging.
         """
         cdef float res = dereference(self._ptr).MouseDragThreshold
         return res
@@ -18215,7 +18216,7 @@ cdef class ImGuiIO:
     def mouse_draw_cursor(self):
         """
         Miscellaneous options
-        = false  // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
+        = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
         """
         cdef bool res = dereference(self._ptr).MouseDrawCursor
         return res
@@ -18874,12 +18875,12 @@ cdef class ImGuiInputTextCallbackData:
     Shared state of InputText(), passed as an argument to your callback when a ImGuiInputTextFlags_Callback* flag is used.
     The callback function should return 0 by default.
     Callbacks (follow a flag name and see comments in ImGuiInputTextFlags_ declarations for more details)
-    - ImGuiInputTextFlags_CallbackEdit:Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
-    - ImGuiInputTextFlags_CallbackAlways:  Callback on each iteration
+    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    - ImGuiInputTextFlags_CallbackAlways:      Callback on each iteration
     - ImGuiInputTextFlags_CallbackCompletion:  Callback on pressing TAB
-    - ImGuiInputTextFlags_CallbackHistory: Callback on pressing Up/Down arrows
+    - ImGuiInputTextFlags_CallbackHistory:     Callback on pressing Up/Down arrows
     - ImGuiInputTextFlags_CallbackCharFilter:  Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.
-    - ImGuiInputTextFlags_CallbackResize:  Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
+    - ImGuiInputTextFlags_CallbackResize:      Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.
     """
     cdef ccimgui.ImGuiInputTextCallbackData* _ptr
     cdef bool dynamically_allocated
@@ -18958,7 +18959,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def buf_size(self):
         """
-        Buffer size (in bytes) = capacity+1  // read-only// [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
+        Buffer size (in bytes) = capacity+1  // read-only    // [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
         """
         cdef int res = dereference(self._ptr).BufSize
         return res
@@ -18977,7 +18978,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def buf_text_len(self):
         """
-        Text length (in bytes)   // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
+        Text length (in bytes)               // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
         """
         cdef int res = dereference(self._ptr).BufTextLen
         return res
@@ -19039,7 +19040,7 @@ cdef class ImGuiInputTextCallbackData:
         - However, during Completion/History/Always callback, Buf always points to our own internal data (it is not the same as your buffer)! Changes to it will be reflected into your own buffer shortly after the callback.
         - To modify the text buffer in a callback, prefer using the InsertChars() / DeleteChars() function. InsertChars() will take care of calling the resize callback if necessary.
         - If you know your edits are not going to resize the underlying buffer allocation, you may modify the contents of 'Buf[]' directly. You need to update 'BufTextLen' accordingly (0 <= BufTextLen < BufSize) and set 'BufDirty'' to true so InputText can update its internal state.
-        Character input  // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
+        Character input                      // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
         """
         cdef ccimgui.ImWchar res = dereference(self._ptr).EventChar
         return res
@@ -19058,7 +19059,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def event_flag(self):
         """
-        One imguiinputtextflags_callback*// read-only
+        One imguiinputtextflags_callback*    // read-only
         """
         cdef ccimgui.ImGuiInputTextFlags res = dereference(self._ptr).EventFlag
         return res
@@ -19077,7 +19078,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def event_key(self):
         """
-        Key pressed (up/down/tab)// read-only// [completion,history]
+        Key pressed (up/down/tab)            // read-only    // [completion,history]
         """
         cdef ccimgui.ImGuiKey res = dereference(self._ptr).EventKey
         return res
@@ -19096,7 +19097,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def flags(self):
         """
-        What user passed to inputtext()  // read-only
+        What user passed to inputtext()      // read-only
         """
         cdef ccimgui.ImGuiInputTextFlags res = dereference(self._ptr).Flags
         return res
@@ -19758,7 +19759,7 @@ cdef class ImGuiMultiSelectIO:
     # @property
     # def items_count(self):
     #     """
-    #     Ms:w, app:r /app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+    #     Ms:w, app:r     /        app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
     #     """
     #     cdef int res = dereference(self._ptr).ItemsCount
     #     return res
@@ -19777,7 +19778,7 @@ cdef class ImGuiMultiSelectIO:
     @property
     def nav_id_item(self):
         """
-        Ms:w, app:r /// (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+        Ms:w, app:r     /                // (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
         """
         cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).NavIdItem
         return res
@@ -19796,7 +19797,7 @@ cdef class ImGuiMultiSelectIO:
     @property
     def nav_id_selected(self):
         """
-        Ms:w, app:r /app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+        Ms:w, app:r     /        app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
         """
         cdef bool res = dereference(self._ptr).NavIdSelected
         return res
@@ -19815,7 +19816,7 @@ cdef class ImGuiMultiSelectIO:
     @property
     def range_src_item(self):
         """
-        Ms:w  app:r /// (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+        Ms:w  app:r     /                // (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
         """
         cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeSrcItem
         return res
@@ -19834,7 +19835,7 @@ cdef class ImGuiMultiSelectIO:
     @property
     def range_src_reset(self):
         """
-        App:w /  ms:r  // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+        App:w     /  ms:r          // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
         """
         cdef bool res = dereference(self._ptr).RangeSrcReset
         return res
@@ -19854,7 +19855,7 @@ cdef class ImGuiMultiSelectIO:
     # def requests(self):
     #     """
     #     ------------------------------------------// BeginMultiSelect / EndMultiSelect
-    #     Ms:w, app:r /  ms:w  app:r   // requests to apply to your selection data.
+    #     Ms:w, app:r     /  ms:w  app:r   // requests to apply to your selection data.
     #     """
     #     cdef ccimgui.ImVector_ImGuiSelectionRequest res = dereference(self._ptr).Requests
     #     return ImVector_ImGuiSelectionRequest.from_ptr(res)
@@ -19921,7 +19922,6 @@ cdef class ImGuiPayload:
         _type = _from_bytes(dereference(self._ptr).DataType)
         # This check is only possible because we pass in _drag_drop_constant
         # into set_drag_drop_payload
-        _drag_drop_constant
         cdef void* data = dereference(self._ptr).Data
         if data is NULL:
             return None
@@ -21155,13 +21155,13 @@ cdef class ImGuiSelectionBasicStorage:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable[[ImGuiSelectionBasicStorage, int], int])
+    # ?returns(Callable[[ImGuiSelectionBasicStorage, int], int] | None)
     @property
     def adapter_index_to_storage_id(self):
         """
         E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
         """
-        return _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)]
+        return _adapter_index_to_storage_id_callback.get(<uintptr_t>(self._ptr))
     @adapter_index_to_storage_id.setter
     def adapter_index_to_storage_id(self, value: "Callable[[ImGuiSelectionBasicStorage, int], int]"):
         _adapter_index_to_storage_id_callback[<uintptr_t>(self._ptr)] = value
@@ -21230,7 +21230,7 @@ cdef class ImGuiSelectionBasicStorage:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImGuiStorage)
     # @property
@@ -21369,21 +21369,35 @@ cdef class ImGuiSelectionBasicStorage:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int):
-    #     """
-    #     Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
-    #     """
-    #     cdef bool res = ccimgui.ImGuiSelectionBasicStorage_GetNextSelectedItem(
-    #         self._ptr,
-    #         opaque_it,
-    #         out_id
-    #     )
-    #     return res
+    def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Int, out_id: Int):
+        """
+        Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
+
+        pygui note: This function usually requires the caller to keep a void* as an iterator.
+        Now, we can do that in python, so instead we use pygui.Int() as a
+        replacement. This means it is critical you do not modify to the value of
+        the `opaque_it` supplied. You can iterate as follows:
+
+        ```python
+        selected_id = pygui.Int()
+        it = pygui.Int()
+        while (selection.get_next_selected_item(it, selected_id)):
+            # Do work with selected_id
+            pass
+        ```
+        """
+        cdef void** ptr = <void**>&(opaque_it.value)
+        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_GetNextSelectedItem(
+            self._ptr,
+            ptr,
+            <ccimgui.ImGuiID*>&out_id.value
+        )
+        return res
     # [End Method]
 
     # [Method]
@@ -21422,27 +21436,28 @@ cdef class ImGuiSelectionBasicStorage:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage):
-    #     """
-    #     Swap two selections
-    #     """
-    #     ccimgui.ImGuiSelectionBasicStorage_Swap(
-    #         self._ptr,
-    #         r._ptr
-    #     )
+    def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage):
+        """
+        Swap two selections
+        """
+        ccimgui.ImGuiSelectionBasicStorage_Swap(
+            self._ptr,
+            r._ptr
+        )
     # [End Method]
 # [End Class]
 
 # [Class]
 # [Class Constants]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+_external_storage_adapter_set_item_selected_callback = {}
 cdef class ImGuiSelectionExternalStorage:
     """
     Optional helper to apply multi-selection requests to existing randomly accessible storage.
@@ -21479,58 +21494,107 @@ cdef class ImGuiSelectionExternalStorage:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Callable)
-    # @property
-    # def adapter_set_item_selected(self):
-    #     """
-    #     E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
-    #     """
-    #     cdef Callable res = dereference(self._ptr).AdapterSetItemSelected
-    #     return res
-    # @adapter_set_item_selected.setter
-    # def adapter_set_item_selected(self, value: Callable):
-    #     # dereference(self._ptr).AdapterSetItemSelected = value
-    #     raise NotImplementedError
+    # ?returns(Callable[[ImGuiSelectionExternalStorage, int, bool], None] | None)
+    @property
+    def adapter_set_item_selected(self):
+        """
+        E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
+        """
+        return _external_storage_adapter_set_item_selected_callback.get(<uintptr_t>(self._ptr))
+        # cdef Callable res = dereference(self._ptr).AdapterSetItemSelected
+        # return res
+    @adapter_set_item_selected.setter
+    def adapter_set_item_selected(self, value: "Callable[[ImGuiSelectionExternalStorage, int, bool], None]"):
+        _external_storage_adapter_set_item_selected_callback[<uintptr_t>(self._ptr)] = value
+        dereference(self._ptr).AdapterSetItemSelected = ImGuiSelectionExternalStorage._AdapterSetItemSelected_getter
+        # raise NotImplementedError
+    
+    @staticmethod
+    cdef void _AdapterSetItemSelected_getter(ccimgui.ImGuiSelectionExternalStorage* storage, int idx, bool selected) noexcept:
+        _external_storage_adapter_set_item_selected_callback[<uintptr_t>(storage)](
+            ImGuiSelectionExternalStorage.from_ptr(storage), idx, selected
+        )
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    # @property
-    # def user_data(self):
-    #     """
-    #     Members
-    #     User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
-    #     """
-    #     cdef void* res = dereference(self._ptr).UserData
-    #     return res
-    # @user_data.setter
-    # def user_data(self, value: Any):
-    #     # dereference(self._ptr).UserData = value
-    #     raise NotImplementedError
+    _external_storage_userdata = {}
+    @property
+    def user_data(self):
+        """
+        Members
+        User data for use by adapter function// e.g. selection.userdata = (void*)my_items;
+        """
+        return self._external_storage_userdata[<uintptr_t>(self._ptr)]
+        # cdef void* res = dereference(self._ptr).UserData
+        # return res
+    @user_data.setter
+    def user_data(self, value: Any):
+        self._external_storage_userdata[<uintptr_t>(self._ptr)] = value
+        # dereference(self._ptr).UserData = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO):
-    #     """
-    #     Apply selection requests by using adaptersetitemselected() calls
-    #     """
-    #     ccimgui.ImGuiSelectionExternalStorage_ApplyRequests(
-    #         self._ptr,
-    #         ms_io._ptr
-    #     )
+    def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO):
+        """
+        Apply selection requests by using adaptersetitemselected() calls
+        """
+        ccimgui.ImGuiSelectionExternalStorage_ApplyRequests(
+            self._ptr,
+            ms_io._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImGuiSelectionExternalStorage)
+    @staticmethod
+    def create():
+        """
+        Create a dynamically allocated instance of ImGuiSelectionExternalStorage. Must
+        also be freed with destroy(). Mimics the constructor for ImGuiSelectionExternalStorage
+        """
+        cdef ccimgui.ImGuiSelectionExternalStorage* storage = <ccimgui.ImGuiSelectionExternalStorage*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiSelectionExternalStorage))
+        memset(storage, 0, sizeof(ccimgui.ImGuiSelectionExternalStorage))
+        return ImGuiSelectionExternalStorage.from_heap_ptr(storage)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImGuiSelectionExternalStorage):
+        """
+        Mimics the destructor of ccimgui.ImGuiSelectionExternalStorage. (Currently none)
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        if not self.dynamically_allocated:
+            return
+        
+        self.destroy()
     # [End Method]
 # [End Class]
 
@@ -21640,7 +21704,7 @@ cdef class ImGuiSelectionRequest:
     # @property
     # def selected(self):
     #     """
-    #     Ms:w, app:r /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+    #     Ms:w, app:r     /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
     #     """
     #     cdef bool res = dereference(self._ptr).Selected
     #     return res
@@ -21660,7 +21724,7 @@ cdef class ImGuiSelectionRequest:
     # def type(self):
     #     """
     #     ------------------------------------------// BeginMultiSelect / EndMultiSelect
-    #     Ms:w, app:r /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+    #     Ms:w, app:r     /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
     #     """
     #     cdef ImGuiSelectionRequestType res = dereference(self._ptr).Type
     #     return res
@@ -23285,12 +23349,12 @@ cdef class ImGuiTableColumnSortSpecs:
     # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
-    # ?custom_comment_only(False)
+    # ?custom_comment_only(True)
     # ?returns(int)
     @property
     def column_user_id(self):
         """
-        User id of the column (if specified by a tablesetupcolumn() call)
+        User id of the column (if specified by a table_setup_column() call)
         """
         cdef ccimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
         return res
