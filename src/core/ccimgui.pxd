@@ -210,6 +210,7 @@ cdef extern from "cimgui.h":
         ImGuiItemFlags_NoNavDefaultFocus     # False    // disable item being a candidate for default focus (e.g. used by title bar items).
         ImGuiItemFlags_ButtonRepeat          # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
         ImGuiItemFlags_AutoClosePopups       # True     // menuitem()/selectable() automatically close their parent popup window.
+        ImGuiItemFlags_AllowDuplicateId      # False    // allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.configdebughighlightidconflicts is set.
 
     ctypedef enum ImGuiInputTextFlags_:
         ImGuiInputTextFlags_None
@@ -1238,6 +1239,7 @@ cdef extern from "cimgui.h":
         float KeyRepeatDelay                       # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
         float KeyRepeatRate                        # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
         bool ConfigDebugIsDebuggerPresent          # = false          // enable various tools calling im_debug_break().
+        bool ConfigDebugHighlightIdConflicts       # = true           // highlight and show an error message when multiple items have conflicting identifiers.
         bool ConfigDebugBeginReturnValueOnce       # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         bool ConfigDebugBeginReturnValueLoop       # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         bool ConfigDebugIgnoreFocusLoss            # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.

@@ -572,6 +572,7 @@ ITEM_FLAGS_NO_NAV = ccimgui.ImGuiItemFlags_NoNav
 ITEM_FLAGS_NO_NAV_DEFAULT_FOCUS = ccimgui.ImGuiItemFlags_NoNavDefaultFocus
 ITEM_FLAGS_BUTTON_REPEAT = ccimgui.ImGuiItemFlags_ButtonRepeat
 ITEM_FLAGS_AUTO_CLOSE_POPUPS = ccimgui.ImGuiItemFlags_AutoClosePopups
+ITEM_FLAGS_ALLOW_DUPLICATE_ID = ccimgui.ImGuiItemFlags_AllowDuplicateId
 INPUT_TEXT_FLAGS_NONE = ccimgui.ImGuiInputTextFlags_None
 INPUT_TEXT_FLAGS_CHARS_DECIMAL = ccimgui.ImGuiInputTextFlags_CharsDecimal
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL = ccimgui.ImGuiInputTextFlags_CharsHexadecimal
@@ -16964,6 +16965,29 @@ cdef class ImGuiIO:
     # ?custom_comment_only(False)
     # ?returns(bool)
     @property
+    def config_debug_highlight_id_conflicts(self):
+        """
+        Tools to detect code submitting items with conflicting/duplicate IDs
+        - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
+        - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
+        - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
+        = true           // highlight and show an error message when multiple items have conflicting identifiers.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflicts
+        return res
+    @config_debug_highlight_id_conflicts.setter
+    def config_debug_highlight_id_conflicts(self, value: bool):
+        # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
     def config_debug_ignore_focus_loss(self):
         """
         Option to deactivate io.AddFocusEvent(false) handling.
@@ -17508,6 +17532,7 @@ cdef class ImGuiIO:
     @property
     def fonts(self):
         """
+        Font system
         <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
         """
         cdef ccimgui.ImFontAtlas* res = dereference(self._ptr).Fonts
@@ -18216,6 +18241,7 @@ cdef class ImGuiIO:
     def mouse_draw_cursor(self):
         """
         Miscellaneous options
+        (you can visualize and interact with all options in 'Demo->Configuration')
         = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
         """
         cdef bool res = dereference(self._ptr).MouseDrawCursor

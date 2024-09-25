@@ -429,6 +429,7 @@ ITEM_FLAGS_NO_NAV: int                   # False    // disable any form of focus
 ITEM_FLAGS_NO_NAV_DEFAULT_FOCUS: int     # False    // disable item being a candidate for default focus (e.g. used by title bar items).
 ITEM_FLAGS_BUTTON_REPEAT: int            # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
 ITEM_FLAGS_AUTO_CLOSE_POPUPS: int        # True     // menuitem()/selectable() automatically close their parent popup window.
+ITEM_FLAGS_ALLOW_DUPLICATE_ID: int       # False    // allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.configdebughighlightidconflicts is set.
 INPUT_TEXT_FLAGS_NONE: int
 INPUT_TEXT_FLAGS_CHARS_DECIMAL: int               # Allow 0123456789.+-*/
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL: int           # Allow 0123456789abcdefabcdef
@@ -4430,6 +4431,14 @@ class ImGuiIO:
     - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
     = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
     """
+    # config_debug_highlight_id_conflicts: bool
+    # """
+    # Tools to detect code submitting items with conflicting/duplicate IDs
+    # - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
+    # - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
+    # - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
+    # = true           // highlight and show an error message when multiple items have conflicting identifiers.
+    # """
     # config_debug_ignore_focus_loss: bool
     # """
     # Option to deactivate io.AddFocusEvent(false) handling.
@@ -4554,6 +4563,7 @@ class ImGuiIO:
     """
     fonts: ImFontAtlas
     """
+    Font system
     <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
     """
     framerate: float
@@ -4706,6 +4716,7 @@ class ImGuiIO:
     mouse_draw_cursor: bool
     """
     Miscellaneous options
+    (you can visualize and interact with all options in 'Demo->Configuration')
     = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
     """
     mouse_hovered_viewport: int
