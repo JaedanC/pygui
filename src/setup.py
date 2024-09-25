@@ -26,23 +26,19 @@ def main():
             sources=sources,
             # Any header files expected by implementations should have their
             # directory added here. Cython will attempt to statically compile
-            # the functions we defined in our pxd file. So for the implementations,
-            # since we are linking them with a dll, the impl functions should be
-            # marked as extern "C" __declspec(dllexport)
+            # the functions we defined in our pxd file.
             include_dirs=[
-                "cpp_config",               # imconfig.h, pygui_config.h
-                "external/dear_bindings",   # cimgui.h
-                "core/backends",            # imgui_impl_*.h
+                "cpp_config",                                # pygui_config.h
+                "external/dear_bindings/generated",          # cimgui.h
+                "external/dear_bindings/generated/backends", # imgui_impl_*.h
+                "external/imgui",                            # imconfig.h (Ununsed)
             ],
             library_dirs=[
                 "pygui/libs",
             ],
-            libraries=["cimgui", "glfw3dll", "imgui_glfw_opengl3"],
+            libraries=["cimgui_glfw_opengl3", "glfw3dll"],
             define_macros=[
-                ("IMGUI_IMPL_API", 'extern "C" __declspec(dllexport)'),
-                ("IMGUI_DISABLE_OBSOLETE_KEYIO", True),
-                ("IMGUI_DISABLE_OBSOLETE_FUNCTIONS", True),
-                ("PYGUI_COMPILING_CIMGUI", True),
+                ("PYGUI_COMPILING_DLL", True),
                 ("USE_CUSTOM_PYTHON_ERROR", True),
             ],
             extra_compile_args=([compile_option])

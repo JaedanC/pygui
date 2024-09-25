@@ -623,14 +623,15 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         assert False
 
     def parse_multiline_comment(src_containing_comment: str) -> str:
-        src_containing_comment = src_containing_comment.replace("    ", "")
         try:
             start_index = src_containing_comment.index('"""')
             end_index = src_containing_comment.index('"""', start_index + 1)
         except ValueError:
             return None
         
-        return src_containing_comment[start_index + 3:end_index].strip()
+        multiline_comments = textwrap.dedent(src_containing_comment[start_index + 3:end_index])
+        multiline_comments = multiline_comments.strip("\n")
+        return multiline_comments
 
 
     parsed_functions: List[PyxFunction] = []

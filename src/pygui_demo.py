@@ -4,6 +4,7 @@ import math
 import time
 from PIL import Image
 from enum import Enum, auto
+from typing import List, Tuple
 
 
 def help_marker(desc: str):
@@ -22,6 +23,10 @@ def show_docking_disabled_message():
     pygui.same_line(0, 0)
     if pygui.small_button("click here"):
         io.config_flags |= pygui.CONFIG_FLAGS_DOCKING_ENABLE
+
+
+def clamp(n, smallest, largest):
+    return max(smallest, min(n, largest))
 
 
 class ExampleAppConsole:
@@ -553,12 +558,542 @@ class ExampleAppDocuments:
         pygui.end()
 
 
+# Find which item should be Focused after deletion.
+# Call _before_ item submission. Retunr an index in the before-deletion item list, your item loop should call SetKeyboardFocusHere() on it.
+# The subsequent ApplyDeletionPostLoop() code will use it to apply Selection.
+# - We cannot provide this logic in core Dear ImGui because we don't have access to selection data.
+# - We don't actually manipulate the ImVector<> here, only in ApplyDeletionPostLoop(), but using similar API for consistency and flexibility.
+# - Important: Deletion only works if the underlying ImGuiID for your items are stable: aka not depend on their index, but on e.g. item id/ptr.
+# FIXME-MULTISELECT: Doesn't take account of the possibility focus target will be moved during deletion. Need refocus or scroll offset.
+def apply_deletion_pre_loop(self: pygui.ImGuiSelectionBasicStorage, ms_io: pygui.ImGuiMultiSelectIO, items_count: int):
+    if self.size == 0:
+        return -1
+
+    # If focused item is not selected...
+    focused_idx = ms_io.nav_id_item      # Index of currently focused item
+    if ms_io.nav_id_selected == False:   # This is merely a shortcut, == Contains(adapter->IndexToStorage(items, focused_idx))
+        ms_io.range_src_reset = True     # Request to recover RangeSrc from NavId next frame. Would be ok to reset even when NavIdSelected==true, but it would take an extra frame to recover RangeSrc when deleting a selected item.
+        return focused_idx               # Request to focus same item after deletion.
+
+    # If focused item is selected: land on first unselected item after focused item.
+    for idx in range(focused_idx + 1, items_count):
+        if not self.contains(self.get_storage_id_from_index(idx)):
+            return idx
+
+    # If focused item is selected: otherwise return last unselected item before focused item.
+    for idx in range(min(focused_idx, items_count) - 1, 0, -1):
+        if not self.contains(self.get_storage_id_from_index(idx)):
+            return idx
+    return -1
+
+# Rewrite item list (delete items) + update selection.
+# - Call after EndMultiSelect()
+# - We cannot provide this logic in core Dear ImGui because we don't have access to your items, nor to selection data.
+def apply_deletion_post_loop(self: pygui.ImGuiSelectionBasicStorage, ms_io: pygui.ImGuiMultiSelectIO, items: list, item_curr_idx_to_select: int):
+    # Rewrite item list (delete items) + convert old selection index (before deletion) to new selection index (after selection).
+    # If NavId was not part of selection, we will stay on same item.
+    new_items = []
+    item_next_idx_to_select = -1
+    for idx in range(len(items)):
+        if not self.contains(self.get_storage_id_from_index(idx)):
+            new_items.append(items[idx])
+        if item_curr_idx_to_select == idx:
+            item_next_idx_to_select = len(new_items) - 1
+    
+    items.clear()
+    items.extend(new_items)
+
+    # Update selection
+    self.clear()
+    if item_next_idx_to_select != -1 and ms_io.nav_id_selected:
+        self.set_item_selected(self.get_storage_id_from_index(item_next_idx_to_select), True)
+
+
+class ExampleAsset:
+    def __init__(self, id_: int, type_: int):
+        self.id_ = id_
+        self.type_ = type_
+    
+class ExampleAssetsBrowser:
+    def __init__(self):
+        # Options
+        self.show_type_overlay = pygui.Bool(True)
+        self.allow_sorting = pygui.Bool(True)
+        self.allow_drag_unselected = pygui.Bool(False)
+        self.allow_box_select = pygui.Bool(True)
+        self.icon_size = pygui.Float(32)
+        self.icon_spacing = pygui.Int(10)
+        self.icon_hit_spacing = pygui.Int(4)          # Increase hit-spacing if you want to make it possible to clear or box-select from gaps. Some spacing is required to able to amend with Shift+box-select. Value is small in Explorer
+        self.stretch_spacing = pygui.Bool(True)
+
+        # State
+        self.items: List[ExampleAsset] = []    # Our items
+        self.selection = pygui.ImGuiSelectionBasicStorage.create()  # Our selection
+
+        self.next_item_id = 0            # Unique identifier when creating new items
+        self.request_delete = False      # Deferred deletion request
+        self.request_sort = False        # Deferred sort request
+        self.zoom_wheel_accum = 0        # Mouse wheel accumulator to handle smooth wheels better
+
+        # Calculated sizes for layout, output of UpdateLayoutSizes(). Could be locals but our code is simpler this way.
+        self.layout_item_size: Tuple[int, int] = (0, 0) 
+        self.layout_item_step: Tuple[int, int] = (0, 0)             # == LayoutItemSize + LayoutItemSpacing
+        self.layout_item_spacing = 0.0
+        self.layout_selectable_spacing = 0.0
+        self.layout_outer_padding = 0.0
+        self.layout_column_count = 0
+        self.layout_line_count = 0
+        self.add_items(10000)
+
+    
+    def add_items(self, count: int):
+        if len(self.items) == 0:
+            self.next_item_id = 0
+
+        for _ in range(count):
+            _type = 0 if (self.next_item_id % 20) < 15 else (1 if (self.next_item_id % 20) < 18 else 2)
+            self.items.append(ExampleAsset(self.next_item_id, _type))
+            self.next_item_id += 1
+        self.request_sort = True
+    
+    def clear_items(self):
+        self.items.clear()
+        self.selection.clear()
+    
+    # Logic would be written in the main code BeginChild() and outputing to local variables.
+    # We extracted it into a function so we can call it easily from multiple places.
+    def update_layout_sizes(self, avail_width: float):
+        # Layout: when not stretching: allow extending into right-most spacing.
+        self.layout_item_spacing = float(self.icon_spacing.value)
+        if not self.stretch_spacing:
+            avail_width += math.floor(self.layout_item_spacing * 0.5)
+
+        # Layout: calculate number of icon per line and number of lines
+        self.layout_item_size = (math.floor(self.icon_size.value), math.floor(self.icon_size.value))
+        self.layout_column_count = int(max(avail_width / (self.layout_item_size[0] + self.layout_item_spacing), 1))
+        self.layout_line_count = int((len(self.items) + self.layout_column_count - 1) / self.layout_column_count)
+
+        # Layout: when stretching: allocate remaining space to more spacing. Round before division, so item_spacing may be non-integer.
+        if self.stretch_spacing and self.layout_column_count > 1:
+            self.layout_item_spacing = math.floor(avail_width - self.layout_item_size[0] * self.layout_column_count) / self.layout_column_count
+
+        self.layout_item_step = (self.layout_item_size[0] + self.layout_item_spacing, self.layout_item_size[1] + self.layout_item_spacing)
+        self.layout_selectable_spacing = max(math.floor(self.layout_item_spacing) - self.icon_hit_spacing.value, 0)
+        self.layout_outer_padding = math.floor(self.layout_item_spacing * 0.5)
+
+    def draw(self, title: str, p_open: pygui.Bool | None):
+        pygui.set_next_window_size((self.icon_size.value * 25, self.icon_size.value * 15), pygui.COND_FIRST_USE_EVER)
+        if not pygui.begin(title, p_open, pygui.WINDOW_FLAGS_MENU_BAR):
+            pygui.end()
+            return
+
+        # Menu bar
+        if pygui.begin_menu_bar():
+            if pygui.begin_menu("File"):
+                if pygui.menu_item("Add 10000 items"):
+                    self.add_items(10000)
+                if pygui.menu_item("Clear items"):
+                    self.clear_items()
+                pygui.separator()
+                if pygui.menu_item("Close", None, False, p_open != None):
+                    p_open.value = False
+                pygui.end_menu()
+            
+            if pygui.begin_menu("Edit"):
+                if pygui.menu_item("Delete", "Del", False, self.selection.size > 0):
+                    self.request_delete = True
+                pygui.end_menu()
+            if pygui.begin_menu("Options"):
+                pygui.push_item_width(pygui.get_font_size() * 10)
+                pygui.separator_text("Contents")
+                pygui.checkbox("Show Type Overlay", self.show_type_overlay)
+                pygui.checkbox("Allow Sorting", self.allow_sorting)
+
+                pygui.separator_text("Selection Behavior")
+                pygui.checkbox("Allow dragging unselected item", self.allow_drag_unselected)
+                pygui.checkbox("Allow box-selection", self.allow_box_select)
+
+                pygui.separator_text("Layout")
+                pygui.slider_float("Icon Size", self.icon_size, 16, 128, "%.0f")
+                pygui.same_line()
+                help_marker("Use CTRL+Wheel to zoom")
+                pygui.slider_int("Icon Spacing", self.icon_spacing, 0, 32)
+                pygui.slider_int("Icon Hit Spacing", self.icon_hit_spacing, 0, 32)
+                pygui.checkbox("Stretch Spacing", self.stretch_spacing)
+                pygui.pop_item_width()
+                pygui.end_menu()
+            pygui.end_menu_bar()
+
+        # Show a table with ONLY one header row to showcase the idea/possibility of using this to provide a sorting UI
+        if self.allow_sorting:
+            pygui.push_style_var(pygui.STYLE_VAR_ITEM_SPACING, (0, 0))
+            table_flags_for_sort_specs = pygui.TABLE_FLAGS_SORTABLE | \
+                pygui.TABLE_FLAGS_SORT_MULTI | \
+                pygui.TABLE_FLAGS_SIZING_FIXED_FIT | \
+                pygui.TABLE_FLAGS_BORDERS
+
+            if pygui.begin_table("for_sort_specs_only", 2, table_flags_for_sort_specs, (0, pygui.get_frame_height())):
+                pygui.table_setup_column("Index", user_id=0)
+                pygui.table_setup_column("Type", user_id=1)
+                pygui.table_headers_row()
+
+                def custom_asset_sort(element: ExampleAsset):
+                    sort_specs = pygui.table_get_sort_specs()
+                    sort_with = []
+                    for sort_spec in sort_specs.specs:
+                        compare_obj = None
+                        # Or instead of using column_index you could directly check the value of
+                        # column_user_id, (passed into pygui.table_setup_column()) to then add
+                        # the corresponding field to the tuple. That setup is commented out below.
+
+                        if sort_spec.column_user_id == 0:
+                            compare_obj = element.id_
+                        elif sort_spec.column_user_id == 1:
+                            compare_obj = element.type_
+                        
+                        if sort_spec.sort_direction == pygui.SORT_DIRECTION_DESCENDING:
+                            compare_obj = table.negated(compare_obj)
+                        sort_with.append(compare_obj)
+                    
+                    # Add a default sorting method
+                    sort_with.append(element.id_)
+                    return tuple(sort_with)
+
+                if (sort_specs := pygui.table_get_sort_specs()):
+                    if sort_specs.specs_dirty or self.request_sort:
+                        self.items.sort(key=custom_asset_sort)
+                        self.request_sort = False
+                        sort_specs.specs_dirty = False
+                pygui.end_table()
+            pygui.pop_style_var()
+
+        io = pygui.get_io()
+        pygui.set_next_window_content_size((0, self.layout_outer_padding + self.layout_line_count * (self.layout_item_size[0] + self.layout_item_spacing)))
+        if pygui.begin_child("Assets", (0, -pygui.get_text_line_height_with_spacing()), pygui.CHILD_FLAGS_BORDERS, pygui.WINDOW_FLAGS_NO_MOVE):
+            draw_list = pygui.get_window_draw_list()
+
+            avail_width = pygui.get_content_region_avail()[0]
+            self.update_layout_sizes(avail_width)
+
+            # Calculate and store start position.
+            start_pos = pygui.get_cursor_screen_pos()
+            start_pos = (start_pos[0] + self.layout_outer_padding, start_pos[1] + self.layout_outer_padding)
+            pygui.set_cursor_screen_pos(start_pos)
+
+            # Multi-select
+            ms_flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID
+
+            # - Enable box-select (in 2D mode, so that changing box-select rectangle X1/X2 boundaries will affect clipped items)
+            if self.allow_box_select:
+                ms_flags |= pygui.MULTI_SELECT_FLAGS_BOX_SELECT2D
+
+            # - This feature allows dragging an unselected item without selecting it (rarely used)
+            if self.allow_drag_unselected:
+                ms_flags |= pygui.MULTI_SELECT_FLAGS_SELECT_ON_CLICK_RELEASE
+
+            # - Enable keyboard wrapping on X axis
+            # (FIXME-MULTISELECT: We haven't designed/exposed a general nav wrapping api yet, so this flag is provided as a courtesy to avoid doing:
+            #    pygui.NavMoveRequestTryWrapping(pygui.GetCurrentWindow(), ImGuiNavMoveFlags_WrapX);
+            # When we finish implementing a more general API for this, we will obsolete this flag in favor of the new system)
+            ms_flags |= pygui.MULTI_SELECT_FLAGS_NAV_WRAP_X
+
+            ms_io = pygui.begin_multi_select(ms_flags, self.selection.size, len(self.items))
+
+            # Use custom selection adapter: store ID in selection (recommended)
+            self.selection.user_data = self
+            self.selection.adapter_index_to_storage_id = lambda self_, idx: self_.user_data.items[idx].id_
+            self.selection.apply_requests(ms_io)
+
+            want_delete = (pygui.shortcut(pygui.KEY_DELETE, pygui.INPUT_FLAGS_REPEAT) and (self.selection.size > 0)) or self.request_delete
+            item_curr_idx_to_focus = apply_deletion_pre_loop(self.selection, ms_io, len(self.items)) if want_delete else -1
+            self.request_delete = False
+
+            # Push LayoutSelectableSpacing (which is LayoutItemSpacing minus hit-spacing, if we decide to have hit gaps between items)
+            # Altering style ItemSpacing may seem unnecessary as we position every items using SetCursorScreenPos()...
+            # But it is necessary for two reasons:
+            # - Selectables uses it by default to visually fill the space between two items.
+            # - The vertical spacing would be measured by Clipper to calculate line height if we didn't provide it explicitly (here we do).
+            pygui.push_style_var(pygui.STYLE_VAR_ITEM_SPACING, (self.layout_selectable_spacing, self.layout_selectable_spacing))
+
+            # Rendering parameters
+            icon_type_overlay_colors = (
+                0,
+                pygui.IM_COL32(200, 70, 70, 255),
+                pygui.IM_COL32(70, 170, 70, 255),
+            )
+
+            icon_bg_color = pygui.get_color_u32(pygui.COL_MENU_BAR_BG)
+            icon_type_overlay_size = (4, 4)
+            display_label = (self.layout_item_size[0] >= pygui.calc_text_size("999")[0])
+
+            column_count = self.layout_column_count
+            clipper = pygui.ImGuiListClipper.create()
+
+            clipper.begin(self.layout_line_count, self.layout_item_step[1])
+            if item_curr_idx_to_focus != -1:
+                clipper.include_item_by_index(item_curr_idx_to_focus // column_count) # Ensure focused item line is not clipped.
+            if ms_io.range_src_item != -1:
+                clipper.include_item_by_index(ms_io.range_src_item // column_count)   # Ensure RangeSrc item line is not clipped.
+            while clipper.step():
+                for line_idx in range(clipper.display_start, clipper.display_end):
+                    item_min_idx_for_current_line = line_idx * column_count
+                    item_max_idx_for_current_line = min((line_idx + 1) * column_count, len(self.items))
+                    for item_idx in range(item_min_idx_for_current_line, item_max_idx_for_current_line):
+                        item_data: ExampleAsset  = self.items[item_idx]
+                        pygui.push_id(item_data.id_)
+
+                        # Position item
+                        pos = (start_pos[0] + (item_idx % column_count) * self.layout_item_step[0], start_pos[1] + line_idx * self.layout_item_step[1])
+                        pygui.set_cursor_screen_pos(pos)
+
+                        pygui.set_next_item_selection_user_data(item_idx)
+                        item_is_selected = self.selection.contains(item_data.id_)
+                        item_is_visible = pygui.is_rect_visible_by_size(self.layout_item_size)
+                        pygui.selectable("", item_is_selected, pygui.SELECTABLE_FLAGS_NONE, self.layout_item_size)
+
+                        # Update our selection state immediately (without waiting for EndMultiSelect() requests)
+                        # because we use this to alter the color of our text/icon.
+                        if pygui.is_item_toggled_selection():
+                            item_is_selected = not item_is_selected
+
+                        # Focus (for after deletion)
+                        if item_curr_idx_to_focus == item_idx:
+                            pygui.set_keyboard_focus_here(-1)
+
+                        # Drag and drop
+                        if pygui.begin_drag_drop_source():
+                            # Create payload with full selection OR single unselected item.
+                            # (the later is only possible when using ImGuiMultiSelectFlags_SelectOnClickRelease)
+                            if pygui.get_drag_drop_payload() is None:
+                                payload_items = []
+                                id_ = pygui.Int()
+                                if not item_is_selected:
+                                    payload_items.append(item_data.id_)
+                                else:
+                                    it = pygui.Int()
+                                    while (self.selection.get_next_selected_item(it, id_)):
+                                        payload_items.append(id_.value)
+                                pygui.set_drag_drop_payload("ASSETS_BROWSER_ITEMS", payload_items)
+
+                            # Display payload content in tooltip, by extracting it from the payload data
+                            # (we could read from selection, but it is more correct and reusable to read from payload)
+                            payload = pygui.get_drag_drop_payload()
+                            payload_count = len(payload.data)
+                            pygui.text(f"{payload_count} assets")
+
+                            pygui.end_drag_drop_source()
+
+                        # Render icon (a real app would likely display an image/thumbnail here)
+                        # Because we use ImGuiMultiSelectFlags_BoxSelect2d, clipping vertical may occasionally be larger, so we coarse-clip our rendering as well.
+                        if item_is_visible:
+                            box_min = (pos[0] - 1, pos[1] - 1)
+                            box_max = (box_min[0] + self.layout_item_size[0] + 2, box_min[1] + self.layout_item_size[1] + 2)  # Dubious
+                            draw_list.add_rect_filled(box_min, box_max, icon_bg_color)  # Background color
+                            if self.show_type_overlay and item_data.type_ != 0:
+                                type_col = icon_type_overlay_colors[item_data.type_ % len(icon_type_overlay_colors)]
+                                draw_list.add_rect_filled((box_max[0] - 2 - icon_type_overlay_size[0], box_min[1] + 2), (box_max[0] - 2, box_min[1] + 2 + icon_type_overlay_size[1]), type_col)
+                            if display_label:
+                                label_col = pygui.get_color_u32(pygui.COL_TEXT if item_is_selected else pygui.COL_TEXT_DISABLED)
+                                label = f"{item_data.id_}"
+                                draw_list.add_text((box_min[0], box_max[1] - pygui.get_font_size()), label_col, label)
+
+                        pygui.pop_id()
+            clipper.end()
+            clipper.destroy()
+            pygui.pop_style_var() # ImGuiStyleVar_ItemSpacing
+
+            # Context menu
+            if pygui.begin_popup_context_window():
+                pygui.text("Selection: {} items".format(self.selection.size))
+                pygui.separator()
+                if pygui.menu_item("Delete", "Del", False, self.selection.size > 0):
+                    self.request_delete = True
+                pygui.end_popup()
+
+            ms_io = pygui.end_multi_select()
+            self.selection.apply_requests(ms_io)
+            if want_delete:
+                apply_deletion_post_loop(self.selection, ms_io, self.items, item_curr_idx_to_focus)
+
+            # Zooming with CTRL+Wheel
+            if pygui.is_window_appearing():
+                self.zoom_wheel_accum = 0
+            if pygui.is_window_hovered() and io.mouse_wheel != 0 and pygui.is_key_down(pygui.MOD_CTRL) and not pygui.is_any_item_active():
+                self.zoom_wheel_accum += io.mouse_wheel
+                if abs(self.zoom_wheel_accum) >= 1:
+                    # Calculate hovered item index from mouse location
+                    # FIXME: Locking aiming on 'hovered_item_idx' (with a cool-down timer) would ensure zoom keeps on it.
+                    hovered_item_nx = (io.mouse_pos[0] - start_pos[0] + self.layout_item_spacing * 0.5) / self.layout_item_step[0]
+                    hovered_item_ny = (io.mouse_pos[1] - start_pos[1] + self.layout_item_spacing * 0.5) / self.layout_item_step[1]
+                    hovered_item_idx = (hovered_item_ny * self.layout_column_count) + hovered_item_nx
+
+                    # Zoom
+                    self.icon_size.value *= math.pow(1.1, self.zoom_wheel_accum)
+                    self.icon_size.value = clamp(self.icon_size.value, 16, 128)
+                    self.zoom_wheel_accum -= self.zoom_wheel_accum
+                    self.update_layout_sizes(avail_width)
+
+                    # Manipulate scroll to that we will land at the same Y location of currently hovered item.
+                    # - Calculate next frame position of item under mouse
+                    # - Set new scroll position to be used in next pygui.BeginChild() call.
+                    hovered_item_rel_pos_y = ((hovered_item_idx / self.layout_column_count) + (hovered_item_ny % 1)) * self.layout_item_step[1]
+                    hovered_item_rel_pos_y += pygui.get_style().window_padding[1]
+                    mouse_local_y = io.mouse_pos[1] - pygui.get_window_pos()[1]
+                    pygui.set_scroll_y(hovered_item_rel_pos_y - mouse_local_y)
+        
+        pygui.end_child()
+        pygui.text("Selected: {}/{} items".format(self.selection.size, len(self.items)))
+        pygui.end()
+
+
+example_names = [
+    "Artichoke", "Arugula", "Asparagus", "Avocado", "Bamboo Shoots", "Bean Sprouts", "Beans", "Beet", "Belgian Endive", "Bell Pepper",
+    "Bitter Gourd", "Bok Choy", "Broccoli", "Brussels Sprouts", "Burdock Root", "Cabbage", "Calabash", "Capers", "Carrot", "Cassava",
+    "Cauliflower", "Celery", "Celery Root", "Celcuce", "Chayote", "Chinese Broccoli", "Corn", "Cucumber"
+]
+
+
+class ExampleDualListBox:
+    def __init__(self):
+        self.items = ([], [])
+        self.selections = (pygui.ImGuiSelectionBasicStorage.create(), pygui.ImGuiSelectionBasicStorage.create())
+        self.opt_keep_sorted = pygui.Bool(True)
+    
+    def move_all(self, src: int, dst: int):
+        assert (src == 0 and dst == 1) or (src == 1 and dst == 0)
+        for item_id in self.items[src]:
+            self.items[dst].append(item_id)
+        self.items[src].clear()
+        self.sort_items(dst)
+        self.selections[src].swap(self.selections[dst])
+        self.selections[src].clear()
+    
+    def move_selected(self, src: int, dst: int):
+        src_n = 0
+        while src_n < len(self.items[src]):
+            item_id = self.items[src][src_n]
+            if not self.selections[src].contains(item_id):
+                src_n += 1
+                continue
+            self.items[src].remove(self.items[src][src_n])
+            self.items[dst].append(item_id)
+        
+        if self.opt_keep_sorted:
+            self.sort_items(dst)
+        self.selections[src].swap(self.selections[dst])
+        self.selections[src].clear()
+
+    def apply_selection_requests(self, ms_io: pygui.ImGuiMultiSelectIO, side: int):
+        self.selections[side].user_data = self.items[side]
+        self.selections[side].adapter_index_to_storage_id = lambda storage, idx: storage.user_data[idx]
+        self.selections[side].apply_requests(ms_io)
+    
+    def sort_items(self, n: int):
+        self.items[n].sort()
+    
+    def show(self):
+        pygui.checkbox("Sorted", self.opt_keep_sorted)
+
+        if pygui.begin_table("split", 3, pygui.TABLE_FLAGS_NONE):
+            pygui.table_setup_column("", pygui.TABLE_COLUMN_FLAGS_WIDTH_STRETCH)    # Left side
+            pygui.table_setup_column("", pygui.TABLE_COLUMN_FLAGS_WIDTH_FIXED)      # Buttons
+            pygui.table_setup_column("", pygui.TABLE_COLUMN_FLAGS_WIDTH_STRETCH)    # Right side
+            pygui.table_next_row()
+
+            request_move_selected = -1
+            request_move_all = -1
+            child_height_0 = 0
+
+            for side in range(2):
+                # FIXME-MULTISELECT: Dual List Box: Add context menus
+                # FIXME-NAV: Using ImGuiWindowFlags_NavFlattened exhibit many issues.
+                items = self.items[side]
+                selection = self.selections[side]
+
+                pygui.table_set_column_index(0 if (side == 0) else 2)
+                pygui.text("{} ({})".format("Available" if (side == 0) else "Basket", len(items)))
+
+                # Submit scrolling range to avoid glitches on moving/deletion
+                items_height = pygui.get_text_line_height_with_spacing()
+                pygui.set_next_window_content_size((0, len(items) * items_height))
+
+                child_visible = False
+                if side == 0:
+                    # Left child is resizable
+                    pygui.set_next_window_size_constraints((0, pygui.get_frame_height_with_spacing() * 4), (pygui.FLT_MAX, pygui.FLT_MAX))
+                    child_visible = pygui.begin_child("0", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y)
+                    child_height_0 = pygui.get_window_size()[1]
+                else:
+                    # Right child use same height as left one
+                    child_visible = pygui.begin_child("1", (-pygui.FLT_MIN, child_height_0), pygui.CHILD_FLAGS_FRAME_STYLE)
+                
+                if child_visible:
+                    flags = pygui.MULTI_SELECT_FLAGS_NONE
+                    ms_io = pygui.begin_multi_select(flags, selection.size, len(items))
+                    self.apply_selection_requests(ms_io, side)
+
+                    for item_n, item_id in enumerate(items):
+                        item_is_selected = selection.contains(item_id)
+                        pygui.set_next_item_selection_user_data(item_n)
+                        pygui.selectable(example_names[item_id], item_is_selected, pygui.SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK)
+                        if pygui.is_item_focused():
+                            # FIXME-MULTISELECT: Dual List Box: Transfer focus
+                            if pygui.is_key_pressed(pygui.KEY_ENTER) or pygui.is_key_pressed(pygui.KEY_KEYPAD_ENTER):
+                                request_move_selected = side
+                            if pygui.is_mouse_double_clicked(0): # FIXME-MULTISELECT: Double-click on multi-selection?
+                                request_move_selected = side
+
+                    ms_io = pygui.end_multi_select()
+                    self.apply_selection_requests(ms_io, side)
+               
+                pygui.end_child()
+
+            # Buttons columns
+            pygui.table_set_column_index(1)
+            pygui.new_line()
+            # button_sz = (pygui.calc_text_size(">>")[0] + pygui.get_style().frame_padding[0] * 2, pygui.get_frame_height() + padding[1] * 2)# ImGui::GetFrameHeight() + padding.y * 2.0f };
+            button_sz = (pygui.get_frame_height(), pygui.get_frame_height())
+
+            # (Using BeginDisabled()/EndDisabled() works but feels distracting given how it is currently visualized)
+            if pygui.button(">>", button_sz):
+                request_move_all = 0
+            if pygui.button(">", button_sz):
+                request_move_selected = 0
+            if pygui.button("<", button_sz):
+                request_move_selected = 1
+            if pygui.button("<<", button_sz):
+                request_move_all = 1
+
+            # Process requests
+            if request_move_all != -1:
+                self.move_all(request_move_all, request_move_all ^ 1)
+            if request_move_selected != -1:
+                self.move_selected(request_move_selected, request_move_selected ^ 1)
+
+            # // FIXME-MULTISELECT: Support action from outside
+            # if not self.opt_keep_sorted:
+            #     pygui.new_line()
+            #     if pygui.arrow_button("MoveUp", pygui.DIR_UP):
+            #         pass
+            #     if pygui.arrow_button("MoveDown", pygui.DIR_DOWN):
+            #         pass
+
+            pygui.end_table()
+    
+    def __del__(self):
+        self.selections[0].destroy()
+        self.selections[1].destroy()
+        self.selections = (None, None)
+
+
 class demo:
     example_app_console = ExampleAppConsole()
     example_app_documents = ExampleAppDocuments()
+    example_app_assets_browser = ExampleAssetsBrowser()
 
     show_app_console = pygui.Bool(False)
     show_app_documents = pygui.Bool(False)
+    show_app_assets_browser = pygui.Bool(False)
     show_custom_rendering = pygui.Bool(False)
     show_font_demo = pygui.Bool(False)
 
@@ -579,6 +1114,8 @@ def pygui_demo_window():
         demo.example_app_console.draw("Example: Pygui Console", demo.show_app_console)
     if demo.show_app_documents:
         demo.example_app_documents.show_example_app_documents(demo.show_app_documents)
+    if demo.show_app_assets_browser:
+        demo.example_app_assets_browser.draw("Example: Pygui Assets Browser", demo.show_app_assets_browser)
     if demo.show_custom_rendering:
         show_app_custom_rendering(demo.show_custom_rendering)
     if demo.show_font_demo:
@@ -806,6 +1343,32 @@ class widget:
         pygui.Float(0.4),
         pygui.Float(0.25),
     ]
+    example_names = [
+        "Artichoke", "Arugula", "Asparagus", "Avocado", "Bamboo Shoots", "Bean Sprouts", "Beans", "Beet", "Belgian Endive", "Bell Pepper",
+        "Bitter Gourd", "Bok Choy", "Broccoli", "Brussels Sprouts", "Burdock Root", "Cabbage", "Calabash", "Capers", "Carrot", "Cassava",
+        "Cauliflower", "Celery", "Celery Root", "Celcuce", "Chayote", "Chinese Broccoli", "Corn", "Cucumber"
+    ]
+    ms_single_selected = -1
+    ms_multi_selected1 = [False, False, False, False, False]
+    ms_multi_selected2 = pygui.ImGuiSelectionBasicStorage.create()
+    ms_multi_use_custom_adapter = pygui.Bool(False)
+    ms_multi_clipper_selection = pygui.ImGuiSelectionBasicStorage.create()
+    ms_delete_items = []
+    ms_delete_selection = pygui.ImGuiSelectionBasicStorage.create()
+    ms_items_next_id = 0
+    ms_dlb = ExampleDualListBox()
+    ms_table_selection = pygui.ImGuiSelectionBasicStorage.create()
+    ms_check_flags = pygui.Int(
+        pygui.MULTI_SELECT_FLAGS_NO_AUTO_SELECT | \
+        pygui.MULTI_SELECT_FLAGS_NO_AUTO_CLEAR | \
+        pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE)
+    ms_check_items = [pygui.Bool(False) for _ in range(20)]
+    ms_scope_selections_data = []
+    ms_scope_flags = pygui.Int(
+        pygui.MULTI_SELECT_FLAGS_SCOPE_RECT | \
+        pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE
+    )
+
 
 
 def show_demo_widgets():
@@ -851,13 +1414,13 @@ def show_demo_widgets():
         pygui.same_line()
 
         spacing: float = pygui.get_style().item_inner_spacing[0]
-        pygui.push_button_repeat(True)
+        pygui.push_item_flag(pygui.ITEM_FLAGS_BUTTON_REPEAT, True)
         if pygui.arrow_button("##left", pygui.DIR_LEFT):
             widget.general_counter -= 1
         pygui.same_line(0, spacing)
         if pygui.arrow_button("##right", pygui.DIR_RIGHT):
             widget.general_counter += 1
-        pygui.pop_button_repeat()
+        pygui.pop_item_flag()
         pygui.same_line()
         pygui.text(str(widget.general_counter))
 
@@ -1478,6 +2041,314 @@ def show_demo_widgets():
                     )
                     pygui.pop_style_var()
             pygui.tree_pop()
+        pygui.tree_pop()
+
+    if pygui.tree_node("Selection State & Multi-Select"):
+        # Without any fancy API: manage single-selection yourself.
+        if pygui.tree_node("Single-Select"):
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", widget.ms_single_selected == n):
+                    widget.ms_single_selected = n
+            pygui.tree_pop()
+        
+        # Demonstrate implementation a most-basic form of multi-selection manually
+        # This doesn't support the SHIFT modifier which requires BeginMultiSelect()!
+        if pygui.tree_node("Multi-Select (manual/simplified, without BeginMultiSelect)"):
+            help_marker("Hold CTRL and click to select multiple items.")
+            for n in range(5):
+                if pygui.selectable(f"Object {n}", widget.ms_multi_selected1[n]):
+                    # Clear selection when CTRL is not held
+                    if not pygui.get_io().key_ctrl:
+                        widget.ms_multi_selected1 = [False for _ in widget.ms_multi_selected1]
+                    # Toggle current item
+                    widget.ms_multi_selected1[n] = not widget.ms_multi_selected1[n]
+            pygui.tree_pop()
+        
+        # Demonstrate handling proper multi-selection using the BeginMultiSelect/EndMultiSelect API.
+        # SHIFT+Click w/ CTRL and other standard features are supported.
+        # We use the ImGuiSelectionBasicStorage helper which you may freely reimplement.
+        if pygui.tree_node("Multi-Select"):
+            pygui.text("Supported features:")
+            pygui.bullet_text("Keyboard navigation (arrows, page up/down, home/end, space).")
+            pygui.bullet_text("Ctrl modifier to preserve and toggle selection.")
+            pygui.bullet_text("Shift modifier for range selection.")
+            pygui.bullet_text("CTRL+A to select all.")
+            pygui.bullet_text("Escape to clear selection.")
+            pygui.bullet_text("Click and drag to box-select.")
+            pygui.text("Tip: Use 'Demo->Tools->Debug Log->Selection' to see selection requests as they happen.")
+
+            # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            ITEMS_COUNT = 50
+            selected = widget.ms_multi_selected2
+            selected.user_data = ("My custom data", 1, pygui.get_frame_count())
+            pygui.text("Selection: {}/{}".format(selected.size, ITEMS_COUNT))
+            pygui.text("Preserve Order: {}".format(selected.preserve_order))
+            pygui.text("Selection Order: {}".format(selected.selection_order))
+            pygui.text("Selection Order: {}".format(selected.user_data))
+            pygui.text("User data: {}".format(selected.user_data))
+            pygui.text("adapter_index_to_storage_id func: {}".format(selected.adapter_index_to_storage_id))
+
+            if pygui.checkbox("Use custom adapter func", widget.ms_multi_use_custom_adapter):
+                if widget.ms_multi_use_custom_adapter:
+                    # This creates odd behaviour, but does indeed proves that you can
+                    # change the function
+                    selected.adapter_index_to_storage_id = lambda _, idx: (idx + 1) % ITEMS_COUNT
+                else:
+                    selected.adapter_index_to_storage_id = lambda _, idx: idx
+
+            pygui.text("adapter_index_to_storage_id func: {}".format(selected.adapter_index_to_storage_id))
+
+            # The BeginChild() has no purpose for selection logic, other that offering a scrolling region.
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selected.size, ITEMS_COUNT)
+                selected.apply_requests(ms_io)
+
+                for n in range(ITEMS_COUNT):
+                    label = "Object {:05d}: {}".format(n, example_names[n % len(example_names)])
+                    item_is_selected = selected.contains(n)
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.selectable(label, item_is_selected)
+                
+                ms_io = pygui.end_multi_select()
+                selected.apply_requests(ms_io)
+            pygui.end_child()
+            pygui.tree_pop()
+        
+        # Demonstrate using the clipper with BeginMultiSelect()/EndMultiSelect()
+        if pygui.tree_node("Multi-Select (with clipper)"):
+            # Use default selection.Adapter: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            selection = widget.ms_multi_clipper_selection
+
+            pygui.text("Added features:")
+            pygui.bullet_text("Using ImGuiListClipper.")
+
+            ITEMS_COUNT = 10000
+            pygui.text("Selection: {}/{}".format(selection.size, ITEMS_COUNT))
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selection.size, ITEMS_COUNT)
+                selection.apply_requests(ms_io)
+
+                clipper = pygui.ImGuiListClipper.create()
+                clipper.begin(ITEMS_COUNT)
+                if ms_io.range_src_item != -1:
+                    clipper.include_item_by_index(ms_io.range_src_item) # Ensure RangeSrc item is not clipped.
+                while clipper.step():
+                    for n in range(clipper.display_start, clipper.display_end):
+                        label = "Object {:05d}: {}".format(n, example_names[n % len(example_names)])
+                        item_is_selected = selection.contains(n)
+                        pygui.set_next_item_selection_user_data(n)
+                        pygui.selectable(label, item_is_selected)
+
+                clipper.destroy()
+
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+            pygui.end_child()
+            pygui.tree_pop()
+        
+        # Demonstrate dynamic item list + deletion support using the BeginMultiSelect/EndMultiSelect API.
+        # In order to support Deletion without any glitches you need to:
+        # - (1) If items are submitted in their own scrolling area, submit contents size SetNextWindowContentSize() ahead of time to prevent one-frame readjustment of scrolling.
+        # - (2) Items needs to have persistent ID Stack identifier = ID needs to not depends on their index. PushID(index) = KO. PushID(item_id) = OK. This is in order to focus items reliably after a selection.
+        # - (3) BeginXXXX process
+        # - (4) Focus process
+        # - (5) EndXXXX process
+        if pygui.tree_node("Multi-Select (with deletion)"):
+            # Storing items data separately from selection data.
+            # (you may decide to store selection data inside your item (aka intrusive storage) if you don't need multiple views over same items)
+            # Use a custom selection.Adapter: store item identifier in Selection (instead of index)
+            items = widget.ms_delete_items
+            selection = widget.ms_delete_selection
+            selection.user_data = items
+            selection.adapter_index_to_storage_id = lambda storage, idx: storage.user_data[idx]
+
+            pygui.text("Added features:")
+            pygui.bullet_text("Dynamic list with Delete key support.")
+            pygui.text("Selection size: {}/{}".format(selection.size, len(items)))
+
+            # Initialize default list with 50 items + button to add/remove items.
+            if widget.ms_items_next_id == 0:
+                for n in range(50):
+                    items.append(widget.ms_items_next_id)
+                    widget.ms_items_next_id += 1
+            
+            if pygui.small_button("Add 20 items"):
+                for n in range(20):
+                    items.append(widget.ms_items_next_id)
+                    widget.ms_items_next_id += 1
+            pygui.same_line()
+            if pygui.small_button("Remove 20 items"):
+                for n in range(min(20, len(items)), 0, -1):
+                    selection.set_item_selected(items[-1], False)
+                    items.pop()
+
+            # (1) Extra to support deletion: Submit scrolling range to avoid glitches on deletion
+            items_height = pygui.get_text_line_height_with_spacing()
+            pygui.set_next_window_content_size((0, len(items) * items_height))
+
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_FRAME_STYLE | pygui.CHILD_FLAGS_RESIZE_Y):
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selection.size, len(items))
+                selection.apply_requests(ms_io)
+
+                want_delete = pygui.shortcut(pygui.KEY_DELETE, pygui.INPUT_FLAGS_REPEAT) and (selection.size > 0)
+                item_curr_idx_to_focus = apply_deletion_pre_loop(selection, ms_io, len(items)) if want_delete else -1
+
+                for n, item_id in enumerate(items):
+                    label = "Object {:05d}: {}".format(item_id, example_names[item_id % len(example_names)])
+                    item_is_selected = selection.contains(item_id)
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.selectable(label, item_is_selected)
+                    if item_curr_idx_to_focus == n:
+                        pygui.set_keyboard_focus_here(-1)
+
+                # Apply multi-select requests
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+                if want_delete:
+                    apply_deletion_post_loop(selection, ms_io, items, item_curr_idx_to_focus)
+
+            pygui.end_child()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (dual list box)"):
+            # Init default state
+            dlb = widget.ms_dlb
+            if len(dlb.items[0]) == 0 and len(dlb.items[1]) == 0:
+                for item_id in range(len(example_names)):
+                    dlb.items[0].append(item_id)
+
+            # Show
+            dlb.show()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (in a table)"):
+            ITEMS_COUNT = 10000
+            selection = widget.ms_table_selection
+            pygui.text("Selection: {}/{}".format(selection.size, ITEMS_COUNT))
+            if pygui.begin_table("##Basket", 2, pygui.TABLE_FLAGS_SCROLL_Y | pygui.TABLE_FLAGS_ROW_BG | pygui.TABLE_FLAGS_BORDERS_OUTER):
+                pygui.table_setup_column("Object")
+                pygui.table_setup_column("Action")
+                pygui.table_setup_scroll_freeze(0, 1)
+                pygui.table_headers_row()
+
+                flags = pygui.MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE | pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D
+                ms_io = pygui.begin_multi_select(flags, selection.size, ITEMS_COUNT)
+                selection.apply_requests(ms_io)
+
+                clipper = pygui.ImGuiListClipper.create()
+                clipper.begin(ITEMS_COUNT)
+
+                if ms_io.range_src_item != -1:
+                    clipper.include_item_by_index(ms_io.range_src_item) # Ensure RangeSrc item is not clipped.
+                
+                while clipper.step():
+                    for n in range(clipper.display_start, clipper.display_end):
+                        pygui.table_next_row()
+                        pygui.table_next_column()
+                        label = "Object {:05d}: {}".format(n, example_names[n % len(example_names)])
+                        item_is_selected = selection.contains(n)
+                        pygui.set_next_item_selection_user_data(n)
+                        pygui.selectable(label, item_is_selected, pygui.SELECTABLE_FLAGS_SPAN_ALL_COLUMNS | pygui.SELECTABLE_FLAGS_ALLOW_OVERLAP)
+                        pygui.table_next_column()
+                        pygui.small_button("hello")
+
+                clipper.destroy()
+
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+                pygui.end_table()
+
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (checkboxes)"):
+            pygui.text("In a list of checkboxes (not selectable):")
+            pygui.bullet_text("Using _NoAutoSelect + _NoAutoClear flags.")
+            pygui.bullet_text("Shift+Click to check multiple boxes.")
+            pygui.bullet_text("Shift+Keyboard to copy current value to other boxes.")
+
+            # If you have an array of checkboxes, you may want to use NoAutoSelect + NoAutoClear and the ImGuiSelectionExternalStorage helper.
+            items = widget.ms_check_items
+            flags = widget.ms_check_flags
+            pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_NO_AUTO_SELECT", flags, pygui.MULTI_SELECT_FLAGS_NO_AUTO_SELECT)
+            pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_NO_AUTO_CLEAR",  flags, pygui.MULTI_SELECT_FLAGS_NO_AUTO_CLEAR)
+            pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_BOX_SELECT2D",   flags, pygui.MULTI_SELECT_FLAGS_BOX_SELECT2D) # Cannot use ImGuiMultiSelectFlags_BoxSelect1d as checkboxes are varying width.
+
+            if pygui.begin_child("##Basket", (-pygui.FLT_MIN, pygui.get_font_size() * 20), pygui.CHILD_FLAGS_BORDERS | pygui.CHILD_FLAGS_RESIZE_Y):
+                ms_io = pygui.begin_multi_select(flags.value, -1, len(items))
+                storage_wrapper = pygui.ImGuiSelectionExternalStorage.create()
+                storage_wrapper.user_data = items
+                
+                def adapter_set_item_selected(self: pygui.ImGuiSelectionExternalStorage, n: int, selected: bool):
+                    array: List[pygui.Bool] = self.user_data
+                    array[n].value = selected
+                
+                storage_wrapper.adapter_set_item_selected = adapter_set_item_selected
+                storage_wrapper.apply_requests(ms_io)
+                for n in range(20):
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.checkbox(f"Item {n}", items[n])
+
+                ms_io = pygui.end_multi_select()
+                storage_wrapper.apply_requests(ms_io)
+                storage_wrapper.destroy()
+
+            pygui.end_child()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (multiple scopes)"):
+            # Use default select: Pass index to SetNextItemSelectionUserData(), store index in Selection
+            SCOPES_COUNT = 3
+            ITEMS_COUNT = 8  # Per scope
+            if len(widget.ms_scope_selections_data) == 0:
+                widget.ms_scope_selections_data = [pygui.ImGuiSelectionBasicStorage.create() for _ in range(SCOPES_COUNT)]
+
+            # Use ImGuiMultiSelectFlags_ScopeRect to not affect other selections in same window.
+            if pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_SCOPE_WINDOW", widget.ms_scope_flags, pygui.MULTI_SELECT_FLAGS_SCOPE_WINDOW) and (widget.ms_scope_flags.value & pygui.MULTI_SELECT_FLAGS_SCOPE_WINDOW):
+                widget.ms_scope_flags.value &= ~pygui.MULTI_SELECT_FLAGS_SCOPE_RECT
+
+            if pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_SCOPE_RECT", widget.ms_scope_flags, pygui.MULTI_SELECT_FLAGS_SCOPE_RECT) and (widget.ms_scope_flags.value & pygui.MULTI_SELECT_FLAGS_SCOPE_RECT):
+                widget.ms_scope_flags.value &= ~pygui.MULTI_SELECT_FLAGS_SCOPE_WINDOW
+
+            pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID", widget.ms_scope_flags, pygui.MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID)
+            pygui.checkbox_flags("pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D", widget.ms_scope_flags, pygui.MULTI_SELECT_FLAGS_BOX_SELECT1D)
+
+            for selection_scope_n in range(SCOPES_COUNT):
+                pygui.push_id(selection_scope_n)
+                selection = widget.ms_scope_selections_data[selection_scope_n]
+                ms_io = pygui.begin_multi_select(widget.ms_scope_flags.value, selection.size, ITEMS_COUNT)
+                selection.apply_requests(ms_io)
+                
+                pygui.separator_text("Selection scope")
+                pygui.text("Selection size: {}/{}".format(selection.size, ITEMS_COUNT))
+                
+                for n in range(ITEMS_COUNT):
+                    label = "Object {:05d}: {}".format(n, example_names[n % len(example_names)])
+                    item_is_selected = selection.contains(n)
+                    pygui.set_next_item_selection_user_data(n)
+                    pygui.selectable(label, item_is_selected)
+                
+                # Apply multi-select requests
+                ms_io = pygui.end_multi_select()
+                selection.apply_requests(ms_io)
+                
+                pygui.pop_id()
+            pygui.tree_pop()
+        
+        if pygui.tree_node("Multi-Select (tiled assets browser)"):
+            pygui.checkbox("Assets Browser", demo.show_app_assets_browser)
+            pygui.text("(also access from 'Examples->Assets Browser' in menu)")
+            pygui.tree_pop()
+        
+        # TODO: pygui: Implement these test functions
+        # if pygui.tree_node("Multi-Select (trees)"):
+        #     pygui.tree_pop()
+        
+        # if pygui.tree_node("Multi-Select (advanced)"):
+        #     pygui.tree_pop()
+        
         pygui.tree_pop()
 
     if pygui.tree_node("Tabs"):
@@ -2135,7 +3006,7 @@ def show_demo_window_layout():
             names = ["Top", "25%", "Center", "75%", "Bottom"]
             pygui.text_unformatted(names[i])
 
-            child_flags = pygui.CHILD_FLAGS_BORDER | (pygui.WINDOW_FLAGS_MENU_BAR if layout.enable_extra_decorations else 0)
+            child_flags = pygui.CHILD_FLAGS_BORDERS | (pygui.WINDOW_FLAGS_MENU_BAR if layout.enable_extra_decorations else 0)
             child_id = pygui.get_id(str(i))
             child_is_visible = pygui.begin_child(str(child_id), (child_w, 200), child_flags)
             if pygui.begin_menu_bar():
@@ -2169,7 +3040,7 @@ def show_demo_window_layout():
         pygui.push_id("##HorizontalScrolling")
         for i in range(5):
             child_height = pygui.get_text_line_height() + style.scrollbar_size + style.window_padding[1] * 2
-            child_flags = pygui.CHILD_FLAGS_BORDER
+            child_flags = pygui.CHILD_FLAGS_BORDERS
             window_flags = \
                 pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR | \
                 (pygui.WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR if layout.enable_extra_decorations else 0)
@@ -2205,7 +3076,7 @@ def show_demo_window_layout():
         pygui.push_style_var(pygui.STYLE_VAR_FRAME_ROUNDING, 3)
         pygui.push_style_var(pygui.STYLE_VAR_FRAME_PADDING, (2, 1))
         scrolling_child_size = (0, pygui.get_frame_height_with_spacing() * 7 + 30)
-        pygui.begin_child("scrolling", scrolling_child_size, pygui.CHILD_FLAGS_BORDER, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
+        pygui.begin_child("scrolling", scrolling_child_size, pygui.CHILD_FLAGS_BORDERS, pygui.WINDOW_FLAGS_HORIZONTAL_SCROLLBAR)
         for line in range(layout.lines.value):
             # Display random stuff. For the sake of this trivial demo we are using basic Button() + SameLine()
             # If you want to create your own time line for a real application you may be better off manipulating
@@ -2907,7 +3778,6 @@ def show_random_extras():
     if pygui.tree_node("Info functions"):
         pygui.text("pygui.get_font_size(): {}".format(pygui.get_font_size()))
         pygui.text("pygui.get_font_tex_uv_white_pixel(): {}".format(pygui.get_font_tex_uv_white_pixel()))
-        pygui.text("pygui.get_content_region_max(): {}".format(pygui.get_content_region_max()))
         pygui.text("pygui.get_cursor_pos_x(): {}".format(pygui.get_cursor_pos_x()))
         pygui.text("pygui.get_cursor_pos_y(): {}".format(pygui.get_cursor_pos_y()))
         pygui.text("pygui.get_mouse_pos(): {}".format(pygui.get_mouse_pos()))
@@ -2920,8 +3790,6 @@ def show_random_extras():
             rand.left_click_count.value = left_click_count
             pygui.text(left_click_string.format(left_click_count))
         pygui.text("pygui.get_mouse_cursor(): {}".format(pygui.get_mouse_cursor()))
-        pygui.text("pygui.get_window_content_region_max(): {}".format(pygui.get_window_content_region_max()))
-        pygui.text("pygui.get_window_content_region_min(): {}".format(pygui.get_window_content_region_min()))
         pygui.text("pygui.get_window_dock_id(): {}".format(pygui.get_window_dock_id()))
         pygui.text("pygui.get_window_dpi_scale(): {}".format(pygui.get_window_dpi_scale()))
         pygui.text("pygui.get_window_height(): {}".format(pygui.get_window_height()))
@@ -3118,7 +3986,6 @@ def show_random_extras():
                 show_imfontatlas(io.fonts)
                 pygui.end_menu()
             pygui.menu_item("io.framerate:                              {}".format(io.framerate))
-            pygui.menu_item("io.get_clipboard_text_fn:                  {}".format(io.get_clipboard_text_fn))
             pygui.menu_item("io.ini_filename:                           {}".format(io.ini_filename))
             pygui.menu_item("io.ini_saving_rate:                        {}".format(io.ini_saving_rate))
             pygui.menu_item("io.input_queue_characters:                 {}".format(io.input_queue_characters))
@@ -3166,7 +4033,6 @@ def show_random_extras():
             pygui.menu_item("io.nav_active:                             {}".format(io.nav_active))
             pygui.menu_item("io.nav_visible:                            {}".format(io.nav_visible))
             pygui.menu_item("io.pen_pressure:                           {}".format(io.pen_pressure))
-            pygui.menu_item("io.set_clipboard_text_fn:                  {}".format(io.set_clipboard_text_fn))
             pygui.menu_item("io.user_data:                              {}".format(io.user_data))
             pygui.menu_item("io.want_capture_keyboard:                  {}".format(io.want_capture_keyboard))
             pygui.menu_item("io.want_capture_mouse:                     {}".format(io.want_capture_mouse))
@@ -3794,7 +4660,7 @@ def show_random_extras():
 
     if pygui.tree_node("pygui.begin_child_id()"):
         new_id = pygui.get_id("begin_child_id()")
-        pygui.begin_child_id(new_id, (0, 260), pygui.CHILD_FLAGS_BORDER)
+        pygui.begin_child_id(new_id, (0, 260), pygui.CHILD_FLAGS_BORDERS)
         if pygui.begin_table("split", 2, pygui.TABLE_FLAGS_RESIZABLE | pygui.TABLE_FLAGS_NO_SAVED_SETTINGS):
             for i in range(30):
                 pygui.table_next_column()
@@ -3969,7 +4835,7 @@ def show_random_extras():
     if pygui.tree_node("pygui.dock_space_over_viewport()"):
         dockspace_id = pygui.get_id("My ViewportDockspace")
         viewport = pygui.get_main_viewport()
-        pygui.dock_space_over_viewport(viewport, pygui.DOCK_NODE_FLAGS_NO_RESIZE)
+        pygui.dock_space_over_viewport(dockspace_id, viewport, pygui.DOCK_NODE_FLAGS_NO_RESIZE)
         pygui.begin("Dock me in the viewport")
         pygui.show_user_guide()
         pygui.end()
@@ -4135,7 +5001,7 @@ def show_random_extras():
         pygui.text_wrapped("Buffer Size: {}".format(rand.input_buffer.buffer_size))
 
         pygui.text("Events: {}".format(len(rand.input_buffer_log)))
-        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDERS):
             for i, event in enumerate(rand.input_buffer_log):
                 pygui.text("{}: {}".format(i, event))
             pygui.set_scroll_here_y(1)
@@ -4238,12 +5104,12 @@ def show_random_extras():
             rand.jump_to_cache = steps_showing
         pygui.text("1. Update on the frame you move the slider")
         pygui.text("2. Update every frame")
-        if pygui.begin_child("Steps Showing", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Steps Showing", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDERS):
             for step in rand.jump_to_cache:
                 pygui.text("Showing {} -> {}".format(*step))
         pygui.end_child()
         pygui.same_line()
-        if pygui.begin_child("Steps Showing Live", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Steps Showing Live", (140, pygui.get_text_line_height_with_spacing() * 4), pygui.CHILD_FLAGS_BORDERS):
             for step in steps_showing:
                 pygui.text("Showing {} -> {}".format(*step))
         pygui.end_child()
@@ -4260,7 +5126,7 @@ def show_random_extras():
         ]
         rand.text_filter.draw()
         pygui.text("filter.is_active(): {}".format(rand.text_filter.is_active()))
-        if pygui.begin_child("Filtered items", (200, pygui.get_text_line_height_with_spacing() * 7), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Filtered items", (200, pygui.get_text_line_height_with_spacing() * 7), pygui.CHILD_FLAGS_BORDERS):
             for item in items:
                 if not rand.text_filter.pass_filter(item):
                     continue
@@ -4336,7 +5202,7 @@ def show_random_extras():
             pygui.same_line()
             pygui.text("Is Activated!")
             pygui.same_line()
-            if pygui.button("Reset"):
+            if pygui.button("Reset ##1"):
                 rand.is_activated = False
         pygui.button("is_item_deactivated")
         if pygui.is_item_deactivated() or rand.is_deactivated:
@@ -4344,7 +5210,7 @@ def show_random_extras():
             pygui.same_line()
             pygui.text("Is Deactivated!")
             pygui.same_line()
-            if pygui.button("Reset"):
+            if pygui.button("Reset ##2"):
                 rand.is_deactivated = False
         pygui.set_next_item_width(200)
         pygui.drag_float("is_item_deactivated_after_edit", rand.edit_float, 0.01)
@@ -4353,7 +5219,7 @@ def show_random_extras():
             pygui.same_line()
             pygui.text("Is Deactivated after edit!")
             pygui.same_line()
-            if pygui.button("Reset"):
+            if pygui.button("Reset ##3"):
                 rand.is_deactivated_after_edit = False
         
         pygui.set_next_item_width(200)
@@ -4363,7 +5229,7 @@ def show_random_extras():
             pygui.same_line()
             pygui.text("Is Edited!")
             pygui.same_line()
-            if pygui.button("Reset"):
+            if pygui.button("Reset ##4"):
                 rand.is_edited = False
         
         focused = -1
@@ -4382,7 +5248,7 @@ def show_random_extras():
         visible = None
         rect_visible_from_cursor = None
         rect_visible = None
-        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("My child", (500, pygui.get_text_line_height_with_spacing() * 6), pygui.CHILD_FLAGS_BORDERS):
             pygui.text("Some")
             pygui.text("Lines")
             pygui.text("Inside")
@@ -4433,7 +5299,7 @@ def show_random_extras():
                 pygui.get_frame_count()
             ))
 
-        if pygui.begin_child("##Log for keys", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("##Log for keys", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDERS):
             for event in rand.key_press_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4460,7 +5326,7 @@ def show_random_extras():
         if pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT):
             rand.mouse_press_log.append("pygui.is_mouse_released(pygui.MOUSE_BUTTON_LEFT)")
         pygui.text("Log for pygui.MOUSE_BUTTON_LEFT")
-        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("Log for pygui.MOUSE_BUTTON_LEFT", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDERS):
             for event in rand.mouse_press_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4483,7 +5349,7 @@ def show_random_extras():
             is_collapsed = pygui.is_window_collapsed()
             pygui.end()
         
-        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDER):
+        if pygui.begin_child("#window log", (400, pygui.get_text_line_height_with_spacing() * 5), pygui.CHILD_FLAGS_BORDERS):
             for event in rand.window_log:
                 pygui.text(event)
         pygui.end_child()
@@ -4544,7 +5410,7 @@ def show_random_extras():
             values, len(values), 0, None, -10, 10, (300, 100))
         pygui.tree_pop()
 
-    if pygui.tree_node("pygui.push_tab_stop()"):
+    if pygui.tree_node("pygui.ITEM_FLAGS_NO_TAB_STOP"):
         pygui.text("You can tab here")
         pygui.push_id("First")
         for i, buf in enumerate(rand.text_input):
@@ -4555,10 +5421,10 @@ def show_random_extras():
 
         pygui.text("You can't tab here")
         pygui.push_id("Second")
-        pygui.push_tab_stop(False)
+        pygui.push_item_flag(pygui.ITEM_FLAGS_NO_TAB_STOP, True)
         for i, buf in enumerate(rand.text_input):
             pygui.input_text("##{}".format(i), buf)
-        pygui.pop_tab_stop()
+        pygui.pop_item_flag()
         pygui.pop_id()
 
         pygui.separator()
@@ -4757,6 +5623,8 @@ def show_random_extras():
 class crash:
     error_text = pygui.String()
     catch_message = ""
+    green_colour = pygui.Vec4(0, 1, 0, 0.4)
+    red_colour = pygui.Vec4(1, 0, 0, 0.4)
 
 
 def show_crash_test():
@@ -4764,54 +5632,131 @@ def show_crash_test():
         return
     
     pygui.text("Test various crashes")
-    pygui.same_line()
-    help_marker(
-        "1. This will call a function in ImGui that is known to crash. This crash"
-        " originates from ImGui itself. If USE_CUSTOM_PYTHON_ERROR is defined then"
-        " this will exception will be caught.\n"
-        "2. This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
-        " this function call will raise a pygui.ImGuiError, otherwise it will"
-        " raise an AssertionError. In either cause, this should not crash because"
-        " pygui.ImGuiError is AssertionError when USE_CUSTOM_PYTHON_ERROR is"
-        " undefined.\n"
-        "3. This uses python's assert keyword. If USE_CUSTOM_PYTHON_ERROR is"
-        " defined this should crash your program because pygui.ImGuiError and"
-        " AssertionError are different.\n"
-        "4. This will call IM_ASSERT but will except by force using the ImGui's"
-        " exposed dll exception. If USE_CUSTOM_PYTHON_ERROR is not defined, this"
-        " will be caught, otherwise this will crash simply because you can't catch"
-        " and exception with 'None'.\n"
-    )
 
     if pygui.button("Clear"):
         crash.catch_message = ""
         crash.error_text.value = ""
 
-    
-    if pygui.button("Crash 1: pop_style_color() -> except pygui.Error"):
+    custom_exceptions_on = pygui.ImGuiError == pygui.get_imgui_error()
+    if custom_exceptions_on:
+        pygui.text_colored((0, 1, 0, 1), "Custom Exceptions On")
+    else:
+        pygui.text_colored((1, 0, 0, 1), "Custom Exceptions Off")
+
+    # TODO: I believe this specific crash test is not working since cimgui
+    # wrapped IM_ASSERT with their own implementation. Can this be fixed? The
+    # other errors are caught fine. Perhaps this error is unrecoverable and thus
+    # cannot show the text to screen? 
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##1")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##1")
+    pygui.pop_style_color()
+
+    pygui.same_line()
+    help_marker(
+        "This will call a function in ImGui that is known to crash. This crash"
+        " originates from ImGui itself. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this will exception will be caught.\n"
+        "\n"
+        "    try:\n"
+        "        pygui.pop_style_color()\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 1: pop_style_color() without pop_style_color(). ImGui will error.")
+    if pressed:
         try:
             pygui.pop_style_color(1)
         except pygui.ImGuiError as e:
-            crash.catch_message = "Caught! You have custom exceptions on."
+            crash.catch_message = "Caught! You have custom exceptions working!"
             crash.error_text.value = str(e)
-    
-    if pygui.button("Crash 2: pygui.IM_ASSERT(False) -> except pygui.Error"):
+
+
+    pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+    pressed = pygui.button("Catch ##2")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This will call IM_ASSERT. If USE_CUSTOM_PYTHON_ERROR is defined then"
+        " this function call will raise a pygui.ImGuiError, otherwise it will"
+        " raise an AssertionError. In either cause, this should not crash because"
+        " pygui.ImGuiError is AssertionError when USE_CUSTOM_PYTHON_ERROR is"
+        " undefined.\n"
+        "\n"
+        "    try:\n"
+        "        pygui.IM_ASSERT(False, \"You should not see this :(\")\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\"\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 2: pygui.IM_ASSERT(False) except with pygui.Error")
+    if pressed:
         try:
-            pygui.IM_ASSERT(False, "I am an error message")
+            pygui.IM_ASSERT(False, "You should not see this :(")
         except pygui.ImGuiError as e:
             crash.catch_message = "Caught! This should never crash."
             crash.error_text.value = str(e)
     
-    if pygui.button("Crash 3: assert False -> except pygui.Error"):
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##3")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##3")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This uses python's assert keyword. If USE_CUSTOM_PYTHON_ERROR is"
+        " defined this should crash your program because pygui.ImGuiError and"
+        " AssertionError are different.\n"
+        "\n"
+        "    try:\n"
+        "        assert False, \"Custom exceptions are on.\"\n"
+        "    except pygui.ImGuiError as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 3: assert False -> except pygui.Error")
+    if pressed:
         try:
-            assert False, "I am another error message"
+            assert False, "If this crashes, custom exceptions are on"
         except pygui.ImGuiError as e:
             crash.catch_message = "Caught! You have custom exceptions off."
             crash.error_text.value = str(e)
-    
-    if pygui.button("Crash 4: pygui.IM_ASSERT(False) -> except pygui.core.Error"):
+
+
+    if custom_exceptions_on:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.green_colour.to_u32())
+        pressed = pygui.button("Catch ##4")
+    else:
+        pygui.push_style_color(pygui.COL_BUTTON, crash.red_colour.to_u32())
+        pressed = pygui.button("Throw ##4")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This will call IM_ASSERT but will except by force using the ImGui's"
+        " exposed dll exception. If USE_CUSTOM_PYTHON_ERROR is not defined, this"
+        " will be caught, otherwise this will crash simply because you can't catch"
+        " and exception with 'None'.\n"
+        "\n"
+        "    try:\n"
+        "        assert pygui.IM_ASSERT(False, \"We are an error message\")\n"
+        "    except pygui.get_imgui_error() as e:\n"
+        "        pygui.text(\"Caught!\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.text("Crash 4: pygui.IM_ASSERT(False) except with pygui.core.Error")
+    if pressed:
         try:
-            assert pygui.IM_ASSERT(False, "We are an error message")
+            assert pygui.IM_ASSERT(False, "Haha, can't catch me")
         except pygui.get_imgui_error() as e:
             # Prefer to use pygui.ImGuiError as it is safer. This value could
             # be None if cimgui is not using a custom python exception. For this
@@ -4821,7 +5766,7 @@ def show_crash_test():
     
     if len(crash.catch_message) > 0:
         pygui.text(crash.catch_message)
-        pygui.text_wrapped(crash.error_text.value)
+        pygui.text_wrapped("Potential Error Message: " + crash.error_text.value)
     
 
 class menu:
@@ -4846,6 +5791,7 @@ def show_menu_bar():
             pygui.menu_item_bool_ptr("Console", None, demo.show_app_console)
             pygui.menu_item_bool_ptr("Custom rendering", None, demo.show_custom_rendering)
             pygui.menu_item_bool_ptr("Documents", None, demo.show_app_documents)
+            pygui.menu_item_bool_ptr("Assets Browser", None, demo.show_app_assets_browser)
             pygui.menu_item_bool_ptr("Custom fonts", None, demo.show_font_demo)
             pygui.end_menu()
         if pygui.begin_menu("Tools"):

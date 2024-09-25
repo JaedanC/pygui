@@ -2,11 +2,6 @@ import json
 from typing import List
 from model.dear_bindings.interfaces import IBinding
 from model.dear_bindings.binding import Binding
-from model.dear_bindings.struct import Struct
-from model.dear_bindings.function import Function
-from model.dear_bindings.db_type import _Type, Kind, Kinds
-from model.dear_bindings.argument import Argument
-from model.comments import Comments
 
 
 EXTENSION_NAME =           "core"
@@ -30,182 +25,19 @@ defines = [
 modules: List[IBinding] = []
 
 # core
-with open("external/dear_bindings/cimgui.json") as f:
+with open("external/dear_bindings/generated/cimgui.json") as f:
     modules.append(
         Binding.from_json(json.load(f), "cimgui.h", defines)
     )
 
 # glfw
-with open("core/backends/glfw.json") as f:
-    glfw = Binding(
-        enums=[],
-        typedefs=[],
-        structs=[
-            Struct("GLFWwindow",  []),
-            Struct("GLFWmonitor", []),
-        ],
-        functions=[
-            Function("ImGui_ImplGlfw_InitForOpenGL",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [
-                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_InitForVulkan",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [
-                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
-                ],
-                Comments([], None)
-            ),
-            Function("ImGui_ImplGlfw_InitForOther",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [
-                    Argument("window",            _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("install_callbacks", _Type("bool",        Kind(Kinds.Builtin, "bool"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_Shutdown",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-            Function("ImGui_ImplGlfw_NewFrame",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-            Function("ImGui_ImplGlfw_InstallCallbacks",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_RestoreCallbacks",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("chain_for_all_windows", _Type("bool", Kind(Kinds.Builtin, "bool"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_WindowFocusCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("focused", _Type("int",         Kind(Kinds.Builtin, "int"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_CursorEnterCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("entered", _Type("double",      Kind(Kinds.Builtin, "double"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_CursorPosCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("x",      _Type("double",      Kind(Kinds.Builtin, "double"))),
-                    Argument("y",      _Type("double",      Kind(Kinds.Builtin, "double"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_MouseButtonCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("button", _Type("int",         Kind(Kinds.Builtin, "int"))),
-                    Argument("action", _Type("int",         Kind(Kinds.Builtin, "int"))),
-                    Argument("mods",   _Type("int",         Kind(Kinds.Builtin, "int"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_ScrollCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window",  _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("xoffset", _Type("double",      Kind(Kinds.Builtin, "double"))),
-                    Argument("yoffset", _Type("double",      Kind(Kinds.Builtin, "double"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_KeyCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window",   _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("key",      _Type("int",         Kind(Kinds.Builtin, "int"))),
-                    Argument("scancode", _Type("int",         Kind(Kinds.Builtin, "int"))),
-                    Argument("action",   _Type("int",         Kind(Kinds.Builtin, "int"))),
-                    Argument("mods",     _Type("int",         Kind(Kinds.Builtin, "int"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_CharCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*",  Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("c",      _Type("unsigned int", Kind(Kinds.Builtin, "unsigned int"))),
-                ],
-            ),
-            Function("ImGui_ImplGlfw_MonitorCallback",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("window", _Type("GLFWwindow*", Kind(Kinds.Pointer, Kind(Kinds.User, "GLFWwindow")))),
-                    Argument("event",  _Type("int",         Kind(Kinds.Builtin, "int"))),
-                ],
-            ),
-        ],
-        pxd_header="imgui_impl_glfw.h"
+with open("external/dear_bindings/generated/backends/cimgui_impl_glfw.json") as f:
+    modules.append(
+        Binding.from_json(json.load(f), "cimgui_impl_glfw.h", defines)
     )
-    modules.append(glfw)
 
-
-# opengl3
-with open("core/backends/opengl3.json") as f:
-    opengl3 = Binding(
-        enums=[],
-        typedefs=[],
-        structs=[],
-        functions=[
-            Function("ImGui_ImplOpenGL3_Init",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [
-                    Argument("glsl_version", _Type("const char*", Kind(Kinds.Pointer, Kind(Kinds.Builtin, "char", is_const=True))), default_value="None"),
-                ],
-            ),
-            Function("ImGui_ImplOpenGL3_Shutdown",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-            Function("ImGui_ImplOpenGL3_NewFrame",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-            Function("ImGui_ImplOpenGL3_RenderDrawData",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [
-                    Argument("draw_data", _Type("ImDrawData*", Kind(Kinds.Pointer, Kind(Kinds.User, "ImDrawData")))),
-                ],
-            ),
-            Function("ImGui_ImplOpenGL3_CreateFontsTexture",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [],
-            ),
-            Function("ImGui_ImplOpenGL3_DestroyFontsTexture",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-            Function("ImGui_ImplOpenGL3_CreateDeviceObjects",
-                _Type("bool", Kind(Kinds.Builtin, "bool")),
-                [],
-            ),
-            Function("ImGui_ImplOpenGL3_DestroyDeviceObjects",
-                _Type("void", Kind(Kinds.Builtin, "void")),
-                [],
-            ),
-        ],
-        pxd_header="imgui_impl_opengl3.h"
+# opengl
+with open("external/dear_bindings/generated/backends/cimgui_impl_opengl3.json") as f:
+    modules.append(
+        Binding.from_json(json.load(f), "cimgui_impl_opengl3.h", defines)
     )
-    modules.append(opengl3)

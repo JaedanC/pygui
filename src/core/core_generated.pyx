@@ -550,7 +550,6 @@ WINDOW_FLAGS_NO_DOCKING = ccimgui.ImGuiWindowFlags_NoDocking
 WINDOW_FLAGS_NO_NAV = ccimgui.ImGuiWindowFlags_NoNav
 WINDOW_FLAGS_NO_DECORATION = ccimgui.ImGuiWindowFlags_NoDecoration
 WINDOW_FLAGS_NO_INPUTS = ccimgui.ImGuiWindowFlags_NoInputs
-WINDOW_FLAGS_NAV_FLATTENED = ccimgui.ImGuiWindowFlags_NavFlattened
 WINDOW_FLAGS_CHILD_WINDOW = ccimgui.ImGuiWindowFlags_ChildWindow
 WINDOW_FLAGS_TOOLTIP = ccimgui.ImGuiWindowFlags_Tooltip
 WINDOW_FLAGS_POPUP = ccimgui.ImGuiWindowFlags_Popup
@@ -558,7 +557,7 @@ WINDOW_FLAGS_MODAL = ccimgui.ImGuiWindowFlags_Modal
 WINDOW_FLAGS_CHILD_MENU = ccimgui.ImGuiWindowFlags_ChildMenu
 WINDOW_FLAGS_DOCK_NODE_HOST = ccimgui.ImGuiWindowFlags_DockNodeHost
 CHILD_FLAGS_NONE = ccimgui.ImGuiChildFlags_None
-CHILD_FLAGS_BORDER = ccimgui.ImGuiChildFlags_Border
+CHILD_FLAGS_BORDERS = ccimgui.ImGuiChildFlags_Borders
 CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING = ccimgui.ImGuiChildFlags_AlwaysUseWindowPadding
 CHILD_FLAGS_RESIZE_X = ccimgui.ImGuiChildFlags_ResizeX
 CHILD_FLAGS_RESIZE_Y = ccimgui.ImGuiChildFlags_ResizeY
@@ -566,28 +565,38 @@ CHILD_FLAGS_AUTO_RESIZE_X = ccimgui.ImGuiChildFlags_AutoResizeX
 CHILD_FLAGS_AUTO_RESIZE_Y = ccimgui.ImGuiChildFlags_AutoResizeY
 CHILD_FLAGS_ALWAYS_AUTO_RESIZE = ccimgui.ImGuiChildFlags_AlwaysAutoResize
 CHILD_FLAGS_FRAME_STYLE = ccimgui.ImGuiChildFlags_FrameStyle
+CHILD_FLAGS_NAV_FLATTENED = ccimgui.ImGuiChildFlags_NavFlattened
+ITEM_FLAGS_NONE = ccimgui.ImGuiItemFlags_None
+ITEM_FLAGS_NO_TAB_STOP = ccimgui.ImGuiItemFlags_NoTabStop
+ITEM_FLAGS_NO_NAV = ccimgui.ImGuiItemFlags_NoNav
+ITEM_FLAGS_NO_NAV_DEFAULT_FOCUS = ccimgui.ImGuiItemFlags_NoNavDefaultFocus
+ITEM_FLAGS_BUTTON_REPEAT = ccimgui.ImGuiItemFlags_ButtonRepeat
+ITEM_FLAGS_AUTO_CLOSE_POPUPS = ccimgui.ImGuiItemFlags_AutoClosePopups
+ITEM_FLAGS_ALLOW_DUPLICATE_ID = ccimgui.ImGuiItemFlags_AllowDuplicateId
 INPUT_TEXT_FLAGS_NONE = ccimgui.ImGuiInputTextFlags_None
 INPUT_TEXT_FLAGS_CHARS_DECIMAL = ccimgui.ImGuiInputTextFlags_CharsDecimal
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL = ccimgui.ImGuiInputTextFlags_CharsHexadecimal
+INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC = ccimgui.ImGuiInputTextFlags_CharsScientific
 INPUT_TEXT_FLAGS_CHARS_UPPERCASE = ccimgui.ImGuiInputTextFlags_CharsUppercase
 INPUT_TEXT_FLAGS_CHARS_NO_BLANK = ccimgui.ImGuiInputTextFlags_CharsNoBlank
-INPUT_TEXT_FLAGS_AUTO_SELECT_ALL = ccimgui.ImGuiInputTextFlags_AutoSelectAll
+INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT = ccimgui.ImGuiInputTextFlags_AllowTabInput
 INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE = ccimgui.ImGuiInputTextFlags_EnterReturnsTrue
+INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL = ccimgui.ImGuiInputTextFlags_EscapeClearsAll
+INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE = ccimgui.ImGuiInputTextFlags_CtrlEnterForNewLine
+INPUT_TEXT_FLAGS_READ_ONLY = ccimgui.ImGuiInputTextFlags_ReadOnly
+INPUT_TEXT_FLAGS_PASSWORD = ccimgui.ImGuiInputTextFlags_Password
+INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE = ccimgui.ImGuiInputTextFlags_AlwaysOverwrite
+INPUT_TEXT_FLAGS_AUTO_SELECT_ALL = ccimgui.ImGuiInputTextFlags_AutoSelectAll
+INPUT_TEXT_FLAGS_PARSE_EMPTY_REF_VAL = ccimgui.ImGuiInputTextFlags_ParseEmptyRefVal
+INPUT_TEXT_FLAGS_DISPLAY_EMPTY_REF_VAL = ccimgui.ImGuiInputTextFlags_DisplayEmptyRefVal
+INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL = ccimgui.ImGuiInputTextFlags_NoHorizontalScroll
+INPUT_TEXT_FLAGS_NO_UNDO_REDO = ccimgui.ImGuiInputTextFlags_NoUndoRedo
 INPUT_TEXT_FLAGS_CALLBACK_COMPLETION = ccimgui.ImGuiInputTextFlags_CallbackCompletion
 INPUT_TEXT_FLAGS_CALLBACK_HISTORY = ccimgui.ImGuiInputTextFlags_CallbackHistory
 INPUT_TEXT_FLAGS_CALLBACK_ALWAYS = ccimgui.ImGuiInputTextFlags_CallbackAlways
 INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER = ccimgui.ImGuiInputTextFlags_CallbackCharFilter
-INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT = ccimgui.ImGuiInputTextFlags_AllowTabInput
-INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE = ccimgui.ImGuiInputTextFlags_CtrlEnterForNewLine
-INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL = ccimgui.ImGuiInputTextFlags_NoHorizontalScroll
-INPUT_TEXT_FLAGS_ALWAYS_OVERWRITE = ccimgui.ImGuiInputTextFlags_AlwaysOverwrite
-INPUT_TEXT_FLAGS_READ_ONLY = ccimgui.ImGuiInputTextFlags_ReadOnly
-INPUT_TEXT_FLAGS_PASSWORD = ccimgui.ImGuiInputTextFlags_Password
-INPUT_TEXT_FLAGS_NO_UNDO_REDO = ccimgui.ImGuiInputTextFlags_NoUndoRedo
-INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC = ccimgui.ImGuiInputTextFlags_CharsScientific
 INPUT_TEXT_FLAGS_CALLBACK_RESIZE = ccimgui.ImGuiInputTextFlags_CallbackResize
 INPUT_TEXT_FLAGS_CALLBACK_EDIT = ccimgui.ImGuiInputTextFlags_CallbackEdit
-INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL = ccimgui.ImGuiInputTextFlags_EscapeClearsAll
 TREE_NODE_FLAGS_NONE = ccimgui.ImGuiTreeNodeFlags_None
 TREE_NODE_FLAGS_SELECTED = ccimgui.ImGuiTreeNodeFlags_Selected
 TREE_NODE_FLAGS_FRAMED = ccimgui.ImGuiTreeNodeFlags_Framed
@@ -619,11 +628,12 @@ POPUP_FLAGS_ANY_POPUP_ID = ccimgui.ImGuiPopupFlags_AnyPopupId
 POPUP_FLAGS_ANY_POPUP_LEVEL = ccimgui.ImGuiPopupFlags_AnyPopupLevel
 POPUP_FLAGS_ANY_POPUP = ccimgui.ImGuiPopupFlags_AnyPopup
 SELECTABLE_FLAGS_NONE = ccimgui.ImGuiSelectableFlags_None
-SELECTABLE_FLAGS_DONT_CLOSE_POPUPS = ccimgui.ImGuiSelectableFlags_DontClosePopups
+SELECTABLE_FLAGS_NO_AUTO_CLOSE_POPUPS = ccimgui.ImGuiSelectableFlags_NoAutoClosePopups
 SELECTABLE_FLAGS_SPAN_ALL_COLUMNS = ccimgui.ImGuiSelectableFlags_SpanAllColumns
 SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK = ccimgui.ImGuiSelectableFlags_AllowDoubleClick
 SELECTABLE_FLAGS_DISABLED = ccimgui.ImGuiSelectableFlags_Disabled
 SELECTABLE_FLAGS_ALLOW_OVERLAP = ccimgui.ImGuiSelectableFlags_AllowOverlap
+SELECTABLE_FLAGS_HIGHLIGHT = ccimgui.ImGuiSelectableFlags_Highlight
 COMBO_FLAGS_NONE = ccimgui.ImGuiComboFlags_None
 COMBO_FLAGS_POPUP_ALIGN_LEFT = ccimgui.ImGuiComboFlags_PopupAlignLeft
 COMBO_FLAGS_HEIGHT_SMALL = ccimgui.ImGuiComboFlags_HeightSmall
@@ -641,6 +651,7 @@ TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON = ccimgui.ImGuiTabBarFlags_TabListPopupButto
 TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON = ccimgui.ImGuiTabBarFlags_NoCloseWithMiddleMouseButton
 TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS = ccimgui.ImGuiTabBarFlags_NoTabListScrollingButtons
 TAB_BAR_FLAGS_NO_TOOLTIP = ccimgui.ImGuiTabBarFlags_NoTooltip
+TAB_BAR_FLAGS_DRAW_SELECTED_OVERLINE = ccimgui.ImGuiTabBarFlags_DrawSelectedOverline
 TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN = ccimgui.ImGuiTabBarFlags_FittingPolicyResizeDown
 TAB_BAR_FLAGS_FITTING_POLICY_SCROLL = ccimgui.ImGuiTabBarFlags_FittingPolicyScroll
 TAB_BAR_FLAGS_FITTING_POLICY_MASK = ccimgui.ImGuiTabBarFlags_FittingPolicyMask_
@@ -697,7 +708,9 @@ DRAG_DROP_FLAGS_SOURCE_NO_DISABLE_HOVER = ccimgui.ImGuiDragDropFlags_SourceNoDis
 DRAG_DROP_FLAGS_SOURCE_NO_HOLD_TO_OPEN_OTHERS = ccimgui.ImGuiDragDropFlags_SourceNoHoldToOpenOthers
 DRAG_DROP_FLAGS_SOURCE_ALLOW_NULL_ID = ccimgui.ImGuiDragDropFlags_SourceAllowNullID
 DRAG_DROP_FLAGS_SOURCE_EXTERN = ccimgui.ImGuiDragDropFlags_SourceExtern
-DRAG_DROP_FLAGS_SOURCE_AUTO_EXPIRE_PAYLOAD = ccimgui.ImGuiDragDropFlags_SourceAutoExpirePayload
+DRAG_DROP_FLAGS_PAYLOAD_AUTO_EXPIRE = ccimgui.ImGuiDragDropFlags_PayloadAutoExpire
+DRAG_DROP_FLAGS_PAYLOAD_NO_CROSS_CONTEXT = ccimgui.ImGuiDragDropFlags_PayloadNoCrossContext
+DRAG_DROP_FLAGS_PAYLOAD_NO_CROSS_PROCESS = ccimgui.ImGuiDragDropFlags_PayloadNoCrossProcess
 DRAG_DROP_FLAGS_ACCEPT_BEFORE_DELIVERY = ccimgui.ImGuiDragDropFlags_AcceptBeforeDelivery
 DRAG_DROP_FLAGS_ACCEPT_NO_DRAW_DEFAULT_RECT = ccimgui.ImGuiDragDropFlags_AcceptNoDrawDefaultRect
 DRAG_DROP_FLAGS_ACCEPT_NO_PREVIEW_TOOLTIP = ccimgui.ImGuiDragDropFlags_AcceptNoPreviewTooltip
@@ -712,6 +725,7 @@ DATA_TYPE_S64 = ccimgui.ImGuiDataType_S64
 DATA_TYPE_U64 = ccimgui.ImGuiDataType_U64
 DATA_TYPE_FLOAT = ccimgui.ImGuiDataType_Float
 DATA_TYPE_DOUBLE = ccimgui.ImGuiDataType_Double
+DATA_TYPE_BOOL = ccimgui.ImGuiDataType_Bool
 DATA_TYPE_COUNT = ccimgui.ImGuiDataType_COUNT
 DIR_NONE = ccimgui.ImGuiDir_None
 DIR_LEFT = ccimgui.ImGuiDir_Left
@@ -883,13 +897,23 @@ MOD_CTRL = ccimgui.ImGuiMod_Ctrl
 MOD_SHIFT = ccimgui.ImGuiMod_Shift
 MOD_ALT = ccimgui.ImGuiMod_Alt
 MOD_SUPER = ccimgui.ImGuiMod_Super
-MOD_SHORTCUT = ccimgui.ImGuiMod_Shortcut
 MOD_MASK = ccimgui.ImGuiMod_Mask_
 KEY_NAMED_KEY_BEGIN = ccimgui.ImGuiKey_NamedKey_BEGIN
 KEY_NAMED_KEY_END = ccimgui.ImGuiKey_NamedKey_END
 KEY_NAMED_KEY_COUNT = ccimgui.ImGuiKey_NamedKey_COUNT
 KEY_KEYS_DATA_SIZE = ccimgui.ImGuiKey_KeysData_SIZE
 KEY_KEYS_DATA_OFFSET = ccimgui.ImGuiKey_KeysData_OFFSET
+INPUT_FLAGS_NONE = ccimgui.ImGuiInputFlags_None
+INPUT_FLAGS_REPEAT = ccimgui.ImGuiInputFlags_Repeat
+INPUT_FLAGS_ROUTE_ACTIVE = ccimgui.ImGuiInputFlags_RouteActive
+INPUT_FLAGS_ROUTE_FOCUSED = ccimgui.ImGuiInputFlags_RouteFocused
+INPUT_FLAGS_ROUTE_GLOBAL = ccimgui.ImGuiInputFlags_RouteGlobal
+INPUT_FLAGS_ROUTE_ALWAYS = ccimgui.ImGuiInputFlags_RouteAlways
+INPUT_FLAGS_ROUTE_OVER_FOCUSED = ccimgui.ImGuiInputFlags_RouteOverFocused
+INPUT_FLAGS_ROUTE_OVER_ACTIVE = ccimgui.ImGuiInputFlags_RouteOverActive
+INPUT_FLAGS_ROUTE_UNLESS_BG_FOCUSED = ccimgui.ImGuiInputFlags_RouteUnlessBgFocused
+INPUT_FLAGS_ROUTE_FROM_ROOT_WINDOW = ccimgui.ImGuiInputFlags_RouteFromRootWindow
+INPUT_FLAGS_TOOLTIP = ccimgui.ImGuiInputFlags_Tooltip
 CONFIG_FLAGS_NONE = ccimgui.ImGuiConfigFlags_None
 CONFIG_FLAGS_NAV_ENABLE_KEYBOARD = ccimgui.ImGuiConfigFlags_NavEnableKeyboard
 CONFIG_FLAGS_NAV_ENABLE_GAMEPAD = ccimgui.ImGuiConfigFlags_NavEnableGamepad
@@ -897,6 +921,7 @@ CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS = ccimgui.ImGuiConfigFlags_NavEnableSetMou
 CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD = ccimgui.ImGuiConfigFlags_NavNoCaptureKeyboard
 CONFIG_FLAGS_NO_MOUSE = ccimgui.ImGuiConfigFlags_NoMouse
 CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE = ccimgui.ImGuiConfigFlags_NoMouseCursorChange
+CONFIG_FLAGS_NO_KEYBOARD = ccimgui.ImGuiConfigFlags_NoKeyboard
 CONFIG_FLAGS_DOCKING_ENABLE = ccimgui.ImGuiConfigFlags_DockingEnable
 CONFIG_FLAGS_VIEWPORTS_ENABLE = ccimgui.ImGuiConfigFlags_ViewportsEnable
 CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS = ccimgui.ImGuiConfigFlags_DpiEnableScaleViewports
@@ -944,11 +969,13 @@ COL_SEPARATOR_ACTIVE = ccimgui.ImGuiCol_SeparatorActive
 COL_RESIZE_GRIP = ccimgui.ImGuiCol_ResizeGrip
 COL_RESIZE_GRIP_HOVERED = ccimgui.ImGuiCol_ResizeGripHovered
 COL_RESIZE_GRIP_ACTIVE = ccimgui.ImGuiCol_ResizeGripActive
-COL_TAB = ccimgui.ImGuiCol_Tab
 COL_TAB_HOVERED = ccimgui.ImGuiCol_TabHovered
-COL_TAB_ACTIVE = ccimgui.ImGuiCol_TabActive
-COL_TAB_UNFOCUSED = ccimgui.ImGuiCol_TabUnfocused
-COL_TAB_UNFOCUSED_ACTIVE = ccimgui.ImGuiCol_TabUnfocusedActive
+COL_TAB = ccimgui.ImGuiCol_Tab
+COL_TAB_SELECTED = ccimgui.ImGuiCol_TabSelected
+COL_TAB_SELECTED_OVERLINE = ccimgui.ImGuiCol_TabSelectedOverline
+COL_TAB_DIMMED = ccimgui.ImGuiCol_TabDimmed
+COL_TAB_DIMMED_SELECTED = ccimgui.ImGuiCol_TabDimmedSelected
+COL_TAB_DIMMED_SELECTED_OVERLINE = ccimgui.ImGuiCol_TabDimmedSelectedOverline
 COL_DOCKING_PREVIEW = ccimgui.ImGuiCol_DockingPreview
 COL_DOCKING_EMPTY_BG = ccimgui.ImGuiCol_DockingEmptyBg
 COL_PLOT_LINES = ccimgui.ImGuiCol_PlotLines
@@ -960,6 +987,7 @@ COL_TABLE_BORDER_STRONG = ccimgui.ImGuiCol_TableBorderStrong
 COL_TABLE_BORDER_LIGHT = ccimgui.ImGuiCol_TableBorderLight
 COL_TABLE_ROW_BG = ccimgui.ImGuiCol_TableRowBg
 COL_TABLE_ROW_BG_ALT = ccimgui.ImGuiCol_TableRowBgAlt
+COL_TEXT_LINK = ccimgui.ImGuiCol_TextLink
 COL_TEXT_SELECTED_BG = ccimgui.ImGuiCol_TextSelectedBg
 COL_DRAG_DROP_TARGET = ccimgui.ImGuiCol_DragDropTarget
 COL_NAV_HIGHLIGHT = ccimgui.ImGuiCol_NavHighlight
@@ -992,6 +1020,7 @@ STYLE_VAR_GRAB_ROUNDING = ccimgui.ImGuiStyleVar_GrabRounding
 STYLE_VAR_TAB_ROUNDING = ccimgui.ImGuiStyleVar_TabRounding
 STYLE_VAR_TAB_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBorderSize
 STYLE_VAR_TAB_BAR_BORDER_SIZE = ccimgui.ImGuiStyleVar_TabBarBorderSize
+STYLE_VAR_TAB_BAR_OVERLINE_SIZE = ccimgui.ImGuiStyleVar_TabBarOverlineSize
 STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE = ccimgui.ImGuiStyleVar_TableAngledHeadersAngle
 STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN = ccimgui.ImGuiStyleVar_TableAngledHeadersTextAlign
 STYLE_VAR_BUTTON_TEXT_ALIGN = ccimgui.ImGuiStyleVar_ButtonTextAlign
@@ -1006,7 +1035,6 @@ BUTTON_FLAGS_MOUSE_BUTTON_LEFT = ccimgui.ImGuiButtonFlags_MouseButtonLeft
 BUTTON_FLAGS_MOUSE_BUTTON_RIGHT = ccimgui.ImGuiButtonFlags_MouseButtonRight
 BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE = ccimgui.ImGuiButtonFlags_MouseButtonMiddle
 BUTTON_FLAGS_MOUSE_BUTTON_MASK = ccimgui.ImGuiButtonFlags_MouseButtonMask_
-BUTTON_FLAGS_MOUSE_BUTTON_DEFAULT = ccimgui.ImGuiButtonFlags_MouseButtonDefault_
 COLOR_EDIT_FLAGS_NONE = ccimgui.ImGuiColorEditFlags_None
 COLOR_EDIT_FLAGS_NO_ALPHA = ccimgui.ImGuiColorEditFlags_NoAlpha
 COLOR_EDIT_FLAGS_NO_PICKER = ccimgui.ImGuiColorEditFlags_NoPicker
@@ -1041,6 +1069,7 @@ SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_LOGARITHMIC = ccimgui.ImGuiSliderFlags_Logarithmic
 SLIDER_FLAGS_NO_ROUND_TO_FORMAT = ccimgui.ImGuiSliderFlags_NoRoundToFormat
 SLIDER_FLAGS_NO_INPUT = ccimgui.ImGuiSliderFlags_NoInput
+SLIDER_FLAGS_WRAP_AROUND = ccimgui.ImGuiSliderFlags_WrapAround
 SLIDER_FLAGS_INVALID_MASK = ccimgui.ImGuiSliderFlags_InvalidMask_
 MOUSE_BUTTON_LEFT = ccimgui.ImGuiMouseButton_Left
 MOUSE_BUTTON_RIGHT = ccimgui.ImGuiMouseButton_Right
@@ -1137,6 +1166,26 @@ TABLE_BG_TARGET_NONE = ccimgui.ImGuiTableBgTarget_None
 TABLE_BG_TARGET_ROW_BG0 = ccimgui.ImGuiTableBgTarget_RowBg0
 TABLE_BG_TARGET_ROW_BG1 = ccimgui.ImGuiTableBgTarget_RowBg1
 TABLE_BG_TARGET_CELL_BG = ccimgui.ImGuiTableBgTarget_CellBg
+MULTI_SELECT_FLAGS_NONE = ccimgui.ImGuiMultiSelectFlags_None
+MULTI_SELECT_FLAGS_SINGLE_SELECT = ccimgui.ImGuiMultiSelectFlags_SingleSelect
+MULTI_SELECT_FLAGS_NO_SELECT_ALL = ccimgui.ImGuiMultiSelectFlags_NoSelectAll
+MULTI_SELECT_FLAGS_NO_RANGE_SELECT = ccimgui.ImGuiMultiSelectFlags_NoRangeSelect
+MULTI_SELECT_FLAGS_NO_AUTO_SELECT = ccimgui.ImGuiMultiSelectFlags_NoAutoSelect
+MULTI_SELECT_FLAGS_NO_AUTO_CLEAR = ccimgui.ImGuiMultiSelectFlags_NoAutoClear
+MULTI_SELECT_FLAGS_NO_AUTO_CLEAR_ON_RESELECT = ccimgui.ImGuiMultiSelectFlags_NoAutoClearOnReselect
+MULTI_SELECT_FLAGS_BOX_SELECT1D = ccimgui.ImGuiMultiSelectFlags_BoxSelect1d
+MULTI_SELECT_FLAGS_BOX_SELECT2D = ccimgui.ImGuiMultiSelectFlags_BoxSelect2d
+MULTI_SELECT_FLAGS_BOX_SELECT_NO_SCROLL = ccimgui.ImGuiMultiSelectFlags_BoxSelectNoScroll
+MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE = ccimgui.ImGuiMultiSelectFlags_ClearOnEscape
+MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID = ccimgui.ImGuiMultiSelectFlags_ClearOnClickVoid
+MULTI_SELECT_FLAGS_SCOPE_WINDOW = ccimgui.ImGuiMultiSelectFlags_ScopeWindow
+MULTI_SELECT_FLAGS_SCOPE_RECT = ccimgui.ImGuiMultiSelectFlags_ScopeRect
+MULTI_SELECT_FLAGS_SELECT_ON_CLICK = ccimgui.ImGuiMultiSelectFlags_SelectOnClick
+MULTI_SELECT_FLAGS_SELECT_ON_CLICK_RELEASE = ccimgui.ImGuiMultiSelectFlags_SelectOnClickRelease
+MULTI_SELECT_FLAGS_NAV_WRAP_X = ccimgui.ImGuiMultiSelectFlags_NavWrapX
+SELECTION_REQUEST_TYPE_NONE = ccimgui.ImGuiSelectionRequestType_None
+SELECTION_REQUEST_TYPE_SET_ALL = ccimgui.ImGuiSelectionRequestType_SetAll
+SELECTION_REQUEST_TYPE_SET_RANGE = ccimgui.ImGuiSelectionRequestType_SetRange
 IM_DRAW_FLAGS_NONE = ccimgui.ImDrawFlags_None
 IM_DRAW_FLAGS_CLOSED = ccimgui.ImDrawFlags_Closed
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT = ccimgui.ImDrawFlags_RoundCornersTopLeft
@@ -1245,10 +1294,24 @@ def set_current_context(ctx: ImGuiContext):
 def get_io():
     """
     Main
-    Access the io structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
+    Access the imguiio structure (mouse/keyboard/gamepad inputs, time, various configuration options/flags)
     """
     cdef ccimgui.ImGuiIO* res = ccimgui.ImGui_GetIO()
     return ImGuiIO.from_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImGuiPlatformIO)
+def get_platform_io():
+    """
+    Access the imguiplatformio structure (mostly hooks/functions to connect to platform/renderer and os clipboard, ime etc.)
+    """
+    cdef ccimgui.ImGuiPlatformIO* res = ccimgui.ImGui_GetPlatformIO()
+    return ImGuiPlatformIO.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -1576,10 +1639,10 @@ def begin_child(str_id: str, size: Tuple[float, float]=(0, 0), child_flags: int=
     Child Windows
     - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.
     - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".
-    This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Border == true.
+    This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Borders == true.
     Consider updating your old code:
     BeginChild("Name", size, false)   -> Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);
-    BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Border);
+    BeginChild("Name", size, true)    -> Begin("Name", size, ImGuiChildFlags_Borders);
     - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):
     == 0.0f: use remaining parent window size for this axis.
     > 0.0f: use specified size for this axis.
@@ -1721,7 +1784,7 @@ def get_window_dpi_scale():
 # ?returns(Tuple[float, float])
 def get_window_pos():
     """
-    Get current window position in screen space (note: it is unlikely you need to use this. consider using current layout pos instead, getcursorscreenpos())
+    Get current window position in screen space (it is unlikely you ever need to use this. consider always using getcursorscreenpos() and getcontentregionavail() instead)
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowPos()
     return _cast_ImVec2_tuple(res)
@@ -1735,7 +1798,7 @@ def get_window_pos():
 # ?returns(Tuple[float, float])
 def get_window_size():
     """
-    Get current window size (note: it is unlikely you need to use this. consider using getcursorscreenpos() and e.g. getcontentregionavail() instead)
+    Get current window size (it is unlikely you ever need to use this. consider always using getcursorscreenpos() and getcontentregionavail() instead)
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowSize()
     return _cast_ImVec2_tuple(res)
@@ -1749,7 +1812,7 @@ def get_window_size():
 # ?returns(float)
 def get_window_width():
     """
-    Get current window width (shortcut for getwindowsize().x)
+    Get current window width (it is unlikely you ever need to use this). shortcut for getwindowsize().x.
     """
     cdef float res = ccimgui.ImGui_GetWindowWidth()
     return res
@@ -1763,7 +1826,7 @@ def get_window_width():
 # ?returns(float)
 def get_window_height():
     """
-    Get current window height (shortcut for getwindowsize().y)
+    Get current window height (it is unlikely you ever need to use this). shortcut for getwindowsize().y.
     """
     cdef float res = ccimgui.ImGui_GetWindowHeight()
     return res
@@ -2088,65 +2151,6 @@ def set_window_focus_str(name: str):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(Tuple[float, float])
-def get_content_region_avail():
-    """
-    Content region
-    - Retrieve available space from a given point. GetContentRegionAvail() is frequently useful.
-    - Those functions are bound to be redesigned (they are confusing, incomplete and the Min/Max return values are in local window coordinates which increases confusion)
-    == getcontentregionmax() - getcursorpos()
-    """
-    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionAvail()
-    return _cast_ImVec2_tuple(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(Tuple[float, float])
-def get_content_region_max():
-    """
-    Current content boundaries (typically window boundaries including scrolling, or current column boundaries), in windows coordinates
-    """
-    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionMax()
-    return _cast_ImVec2_tuple(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(Tuple[float, float])
-def get_window_content_region_min():
-    """
-    Content boundaries min for the full window (roughly (0,0)-scroll), in window coordinates
-    """
-    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMin()
-    return _cast_ImVec2_tuple(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(Tuple[float, float])
-def get_window_content_region_max():
-    """
-    Content boundaries max for the full window (roughly (0,0)+size-scroll) where size can be overridden with setnextwindowcontentsize(), in window coordinates
-    """
-    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetWindowContentRegionMax()
-    return _cast_ImVec2_tuple(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
 # ?returns(float)
 def get_scroll_x():
     """
@@ -2381,7 +2385,7 @@ def pop_style_color_ex(count: int=1):
 # ?returns(None)
 def push_style_var(idx: int, val: float):
     """
-    Modify a style float variable. always use this if you modify the style after newframe().
+    Modify a style float variable. always use this if you modify the style after newframe()!
     """
     ccimgui.ImGui_PushStyleVar(
         idx,
@@ -2397,11 +2401,43 @@ def push_style_var(idx: int, val: float):
 # ?returns(None)
 def push_style_var_im_vec2(idx: int, val: Tuple[float, float]):
     """
-    Modify a style imvec2 variable. always use this if you modify the style after newframe().
+    Modify a style imvec2 variable. '
     """
     ccimgui.ImGui_PushStyleVarImVec2(
         idx,
         _cast_tuple_ImVec2(val)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def push_style_var_x(idx: int, val_x: float):
+    """
+    Modify x component of a style imvec2 variable. '
+    """
+    ccimgui.ImGui_PushStyleVarX(
+        idx,
+        val_x
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def push_style_var_y(idx: int, val_y: float):
+    """
+    Modify y component of a style imvec2 variable. '
+    """
+    ccimgui.ImGui_PushStyleVarY(
+        idx,
+        val_y
     )
 # [End Function]
 
@@ -2436,12 +2472,13 @@ def pop_style_var_ex(count: int=1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_tab_stop(tab_stop: bool):
+def push_item_flag(option: int, enabled: bool):
     """
-    == tab stop enable. allow focusing using tab/shift-tab, enabled by default but you can disable it for certain widgets
+    Modify specified shared item flag, e.g. pushitemflag(imguiitemflags_notabstop, true)
     """
-    ccimgui.ImGui_PushTabStop(
-        tab_stop
+    ccimgui.ImGui_PushItemFlag(
+        option,
+        enabled
     )
 # [End Function]
 
@@ -2451,33 +2488,8 @@ def push_tab_stop(tab_stop: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def pop_tab_stop():
-    ccimgui.ImGui_PopTabStop()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
-def push_button_repeat(repeat: bool):
-    """
-    In 'repeat' mode, button*() functions return repeated true in a typematic manner (using io.keyrepeatdelay/io.keyrepeatrate setting). note that you can call isitemactive() after any button() to tell if the button is held in the current frame.
-    """
-    ccimgui.ImGui_PushButtonRepeat(
-        repeat
-    )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
-def pop_button_repeat():
-    ccimgui.ImGui_PopButtonRepeat()
+def pop_item_flag():
+    ccimgui.ImGui_PopItemFlag()
 # [End Function]
 
 # [Function]
@@ -2598,7 +2610,7 @@ def get_font_size():
 # ?returns(Tuple[float, float])
 def get_font_tex_uv_white_pixel():
     """
-    Get uv coordinate for a while pixel, useful to draw custom shapes via the imdrawlist api
+    Get uv coordinate for a white pixel, useful to draw custom shapes via the imdrawlist api
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetFontTexUvWhitePixel()
     return _cast_ImVec2_tuple(res)
@@ -2714,11 +2726,13 @@ def get_cursor_screen_pos():
     - By "cursor" we mean the current output position.
     - The typical widget behavior is to output themselves at the current cursor position, then move the cursor one line down.
     - You can call SameLine() between widgets to undo the last carriage return and output at the right of the preceding widget.
+    - YOU CAN DO 99% OF WHAT YOU NEED WITH ONLY GetCursorScreenPos() and GetContentRegionAvail().
     - Attention! We currently have inconsistencies between window-local and absolute positions we will aim to fix with future API:
     - Absolute coordinate:        GetCursorScreenPos(), SetCursorScreenPos(), all ImDrawList:: functions. -> this is the preferred way forward.
-    - Window-local coordinates:   SameLine(), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), GetContentRegionMax(), GetWindowContentRegion*(), PushTextWrapPos()
-    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates.
-    Cursor position in absolute coordinates (prefer using this, also more useful to work with imdrawlist api).
+    - Window-local coordinates:   SameLine(offset), GetCursorPos(), SetCursorPos(), GetCursorStartPos(), PushTextWrapPos()
+    - Window-local coordinates:   GetContentRegionMax(), GetWindowContentRegionMin(), GetWindowContentRegionMax() --> all obsoleted. YOU DON'T NEED THEM.
+    - GetCursorScreenPos() = GetCursorPos() + GetWindowPos(). GetWindowPos() is almost only ever useful to convert from window-local to absolute coordinates. Try not to use it.
+    Cursor position, absolute coordinates. this is your best friend (prefer using this rather than getcursorpos(), also more useful to work with imdrawlist api).
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorScreenPos()
     return _cast_ImVec2_tuple(res)
@@ -2732,7 +2746,7 @@ def get_cursor_screen_pos():
 # ?returns(None)
 def set_cursor_screen_pos(pos: Tuple[float, float]):
     """
-    Cursor position in absolute coordinates
+    Cursor position, absolute coordinates. this is your best friend.
     """
     ccimgui.ImGui_SetCursorScreenPos(
         _cast_tuple_ImVec2(pos)
@@ -2745,9 +2759,23 @@ def set_cursor_screen_pos(pos: Tuple[float, float]):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(Tuple[float, float])
+def get_content_region_avail():
+    """
+    Available space from current position. this is your best friend.
+    """
+    cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetContentRegionAvail()
+    return _cast_ImVec2_tuple(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(Tuple[float, float])
 def get_cursor_pos():
     """
-    [window-local] cursor position in window coordinates (relative to window position)
+    [window-local] cursor position in window-local coordinates. this is not your best friend.
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorPos()
     return _cast_ImVec2_tuple(res)
@@ -2834,7 +2862,7 @@ def set_cursor_pos_y(local_y: float):
 # ?returns(Tuple[float, float])
 def get_cursor_start_pos():
     """
-    [window-local] initial cursor position, in window coordinates
+    [window-local] initial cursor position, in window-local coordinates. call getcursorscreenpos() after begin() to get the absolute coordinates version.
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetCursorStartPos()
     return _cast_ImVec2_tuple(res)
@@ -3199,6 +3227,19 @@ def get_id_str(str_id_begin: str, str_id_end: str):
 def get_id_ptr(ptr_id: Any):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDPtr(
         ptr_id
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(int)
+def get_id_int(int_id: int):
+    cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDInt(
+        int_id
     )
     return res
 # [End Function]
@@ -3611,6 +3652,55 @@ def bullet():
     Draw a small circle + keep the cursor on the same line. advance cursor x position by gettreenodetolabelspacing(), same distance that treenode() uses
     """
     ccimgui.ImGui_Bullet()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def text_link(label: str):
+    """
+    Hyperlink text button, return true when clicked
+    """
+    cdef bool res = ccimgui.ImGui_TextLink(
+        _bytes(label)
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def text_link_open_url(label: str):
+    """
+    Implied url = null
+    """
+    ccimgui.ImGui_TextLinkOpenURL(
+        _bytes(label)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def text_link_open_url_ex(label: str, url: str=None):
+    """
+    Hyperlink text button, automatically open file/url when clicked
+    """
+    bytes_url = _bytes(url) if url is not None else None
+
+    ccimgui.ImGui_TextLinkOpenURLEx(
+        _bytes(label),
+        ((<char*>bytes_url if url is not None else NULL))
+    )
 # [End Function]
 
 # [Function]
@@ -5674,6 +5764,21 @@ def set_next_item_open(is_open: bool, cond: int=0):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
+# ?returns(None)
+def set_next_item_storage_id(storage_id: int):
+    """
+    Set id to use for open/close storage (default to same as item id).
+    """
+    ccimgui.ImGui_SetNextItemStorageID(
+        storage_id
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
 # ?returns(bool)
 def selectable(label: str):
     """
@@ -5741,6 +5846,81 @@ def selectable_bool_ptr_ex(label: str, p_selected: Bool, flags: int=0, size: Tup
         flags,
         _cast_tuple_ImVec2(size)
     )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImGuiMultiSelectIO)
+def begin_multi_select(flags: int):
+    """
+    Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
+    - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
+    - ImGuiSelectionUserData is often used to store your item index within the current view (but may store something else).
+    - Read comments near ImGuiMultiSelectIO for instructions/details and see 'Demo->Widgets->Selection State & Multi-Select' for demo.
+    - TreeNode() is technically supported but... using this correctly is more complicated. You need some sort of linear/random access to your tree,
+    which is suited to advanced trees setups already implementing filters and clipper. We will work simplifying the current demo.
+    - 'selection_size' and 'items_count' parameters are optional and used by a few features. If they are costly for you to compute, you may avoid them.
+    Implied selection_size = -1, items_count = -1
+    """
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelect(
+        flags
+    )
+    return ImGuiMultiSelectIO.from_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImGuiMultiSelectIO)
+def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1):
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelectEx(
+        flags,
+        selection_size,
+        items_count
+    )
+    return ImGuiMultiSelectIO.from_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImGuiMultiSelectIO)
+def end_multi_select():
+    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_EndMultiSelect()
+    return ImGuiMultiSelectIO.from_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_next_item_selection_user_data(selection_user_data: Any):
+    ccimgui.ImGui_SetNextItemSelectionUserData(
+        selection_user_data
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def is_item_toggled_selection():
+    """
+    Was the last item selection state toggled? useful if you need the per-item information _before_ reaching endmultiselect(). we only returns toggle _event_ in order to handle clipping correctly.
+    """
+    cdef bool res = ccimgui.ImGui_IsItemToggledSelection()
     return res
 # [End Function]
 
@@ -6166,7 +6346,8 @@ def begin_tooltip():
     """
     Tooltips
     - Tooltips are windows following the mouse. They do not take focus away.
-    - A tooltip window can contain items of any types. SetTooltip() is a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom.
+    - A tooltip window can contain items of any types.
+    - SetTooltip() is more or less a shortcut for the 'if (BeginTooltip()) ( Text(...); EndTooltip(); )' idiom (with a subtlety that it discard any previously submitted tooltip)
     Begin/append a tooltip window.
     """
     cdef bool res = ccimgui.ImGui_BeginTooltip()
@@ -6239,7 +6420,7 @@ def begin_item_tooltip():
 # ?returns(None)
 def set_item_tooltip(fmt: str):
     """
-    Set a text-only tooltip if preceeding item was hovered. override any previous call to settooltip().
+    Set a text-only tooltip if preceding item was hovered. override any previous call to settooltip().
     """
     ccimgui.ImGui_SetItemTooltip(
         _bytes(fmt)
@@ -6518,7 +6699,7 @@ def is_popup_open(str_id: str, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_table(str_id: str, column: int, flags: int=0):
+def begin_table(str_id: str, columns: int, flags: int=0):
     """
     Tables
     - Full-featured replacement for old Columns API.
@@ -6545,7 +6726,7 @@ def begin_table(str_id: str, column: int, flags: int=0):
     """
     cdef bool res = ccimgui.ImGui_BeginTable(
         _bytes(str_id),
-        column,
+        columns,
         flags
     )
     return res
@@ -6557,10 +6738,10 @@ def begin_table(str_id: str, column: int, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_table_ex(str_id: str, column: int, flags: int=0, outer_size: Tuple[float, float]=(0.0, 0.0), inner_width: float=0.0):
+def begin_table_ex(str_id: str, columns: int, flags: int=0, outer_size: Tuple[float, float]=(0.0, 0.0), inner_width: float=0.0):
     cdef bool res = ccimgui.ImGui_BeginTableEx(
         _bytes(str_id),
-        column,
+        columns,
         flags,
         _cast_tuple_ImVec2(outer_size),
         inner_width
@@ -6851,6 +7032,20 @@ def table_set_column_enabled(column_n: int, v: bool):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
+# ?returns(int)
+def table_get_hovered_column():
+    """
+    Return hovered column. return -1 when table is not hovered. return columns_count if the unused space at the right of visible columns is hovered. can also use (tablegetcolumnflags() & imguitablecolumnflags_ishovered) instead.
+    """
+    cdef int res = ccimgui.ImGui_TableGetHoveredColumn()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
 # ?returns(None)
 def table_set_bg_color(target: int, color: int, column_n: int=-1):
     """
@@ -6873,7 +7068,7 @@ def columns():
     """
     Legacy Columns API (prefer using Tables!)
     - You can also use SameLine(pos_x) to mimic simplified columns.
-    Implied count = 1, id = null, border = true
+    Implied count = 1, id = null, borders = true
     """
     ccimgui.ImGui_Columns()
 # [End Function]
@@ -6884,13 +7079,13 @@ def columns():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def columns_ex(count: int=1, id_: str=None, border: bool=True):
+def columns_ex(count: int=1, id_: str=None, borders: bool=True):
     bytes_id_ = _bytes(id_) if id_ is not None else None
 
     ccimgui.ImGui_ColumnsEx(
         count,
         ((<char*>bytes_id_ if id_ is not None else NULL)),
-        border
+        borders
     )
 # [End Function]
 
@@ -7097,7 +7292,7 @@ def set_tab_item_closed(tab_or_docked_window_label: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def dock_space(id_: int):
+def dock_space(dockspace_id: int):
     """
     Docking
     [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
@@ -7106,7 +7301,7 @@ def dock_space(id_: int):
     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
     - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
     About dockspaces:
-    - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
+    - Use DockSpaceOverViewport() to create a window covering the screen or a specific viewport + a dockspace inside it.
     This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
     - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
     - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
@@ -7115,7 +7310,7 @@ def dock_space(id_: int):
     Implied size = imvec2(0, 0), flags = 0, window_class = null
     """
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpace(
-        id_
+        dockspace_id
     )
     return res
 # [End Function]
@@ -7126,9 +7321,9 @@ def dock_space(id_: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def dock_space_ex(id_: int, size: Tuple[float, float]=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
+def dock_space_ex(dockspace_id: int, size: Tuple[float, float]=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
-        id_,
+        dockspace_id,
         _cast_tuple_ImVec2(size),
         flags,
         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
@@ -7144,7 +7339,7 @@ def dock_space_ex(id_: int, size: Tuple[float, float]=(0, 0), flags: int=0, wind
 # ?returns(int)
 def dock_space_over_viewport():
     """
-    Implied viewport = null, flags = 0, window_class = null
+    Implied dockspace_id = 0, viewport = null, flags = 0, window_class = null
     """
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewport()
     return res
@@ -7156,8 +7351,9 @@ def dock_space_over_viewport():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def dock_space_over_viewport_ex(viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
+def dock_space_over_viewport_ex(dockspace_id: int=0, viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
+        dockspace_id,
         <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr),
         flags,
         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
@@ -7446,6 +7642,7 @@ def begin_disabled(disabled: bool=True):
     Disabling [BETA API]
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
+    - Tooltips windows by exception are opted out of disabling.
     - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
     """
     ccimgui.ImGui_BeginDisabled(
@@ -7834,7 +8031,7 @@ def get_main_viewport():
 def get_background_draw_list():
     """
     Background/Foreground Draw Lists
-    Get background draw list for the viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    Implied viewport = null
     """
     cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawList()
     return ImDrawList.from_ptr(res)
@@ -7846,9 +8043,25 @@ def get_background_draw_list():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImDrawList)
+def get_background_draw_list_ex(viewport: ImGuiViewport=None):
+    """
+    Get background draw list for the given viewport or viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    """
+    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawListEx(
+        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
+    )
+    return ImDrawList.from_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImDrawList)
 def get_foreground_draw_list():
     """
-    Get foreground draw list for the viewport associated to the current window. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
+    Implied viewport = null
     """
     cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawList()
     return ImDrawList.from_ptr(res)
@@ -7860,28 +8073,12 @@ def get_foreground_draw_list():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImDrawList)
-def get_background_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
+def get_foreground_draw_list_ex(viewport: ImGuiViewport=None):
     """
-    Get background draw list for the given viewport. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+    Get foreground draw list for the given viewport or viewport associated to the current window. this draw list will be the top-most rendered one. useful to quickly draw shapes/text over dear imgui contents.
     """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawListImGuiViewportPtr(
-        viewport._ptr
-    )
-    return ImDrawList.from_ptr(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(ImDrawList)
-def get_foreground_draw_list_imgui_viewport_ptr(viewport: ImGuiViewport):
-    """
-    Get foreground draw list for the given viewport. this draw list will be the last rendered one. useful to quickly draw shapes/text over dear imgui contents.
-    """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawListImGuiViewportPtr(
-        viewport._ptr
+    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawListEx(
+        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
     )
     return ImDrawList.from_ptr(res)
 # [End Function]
@@ -8243,6 +8440,71 @@ def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
+def shortcut(key_chord: int, flags: int=0):
+    """
+    Inputs Utilities: Shortcut Testing & Routing [BETA]
+    - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
+    ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
+    ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments)
+    only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
+    - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
+    Parent   -> call Shortcut(Ctrl+S)    // When Parent is focused, Parent gets the shortcut.
+    Child1 -> call Shortcut(Ctrl+S)    // When Child1 is focused, Child1 gets the shortcut (Child1 overrides Parent shortcuts)
+    Child2 -> no call                  // When Child2 is focused, Parent gets the shortcut.
+    The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
+    This is an important property as it facilitate working with foreign code or larger codebase.
+    - To understand the difference:
+    - IsKeyChordPressed() compares mods and call IsKeyPressed() -> function has no side-effect.
+    - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed() -> function has (desirable) side-effects as it can prevents another call from getting the route.
+    - Visualize registered routes in 'Metrics/Debugger->Inputs'.
+    """
+    cdef bool res = ccimgui.ImGui_Shortcut(
+        key_chord,
+        flags
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_next_item_shortcut(key_chord: int, flags: int=0):
+    ccimgui.ImGui_SetNextItemShortcut(
+        key_chord,
+        flags
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def set_item_key_owner(key: int):
+    """
+    Inputs Utilities: Key/Input Ownership [BETA]
+    - One common use case would be to allow your items to disable standard inputs behaviors such
+    as Tab or Alt key handling, Mouse Wheel scrolling, etc.
+    e.g. Button(...); SetItemKeyOwner(ImGuiKey_MouseWheelY); to make hovering/activating a button disable wheel for scrolling.
+    - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.
+    - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.
+    Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
+    """
+    ccimgui.ImGui_SetItemKeyOwner(
+        key
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
 def is_mouse_down(button: int):
     """
     Inputs Utilities: Mouse specific
@@ -8439,7 +8701,7 @@ def get_mouse_pos_on_opening_current_popup():
 # ?returns(bool)
 def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
     """
-    Is mouse dragging? (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    Is mouse dragging? (uses io.mousedraggingthreshold if lock_threshold < 0.0f)
     """
     cdef bool res = ccimgui.ImGui_IsMouseDragging(
         button,
@@ -8456,7 +8718,7 @@ def is_mouse_dragging(button: int, lock_threshold: float=-1.0):
 # ?returns(Tuple[float, float])
 def get_mouse_drag_delta(button: int=0, lock_threshold: float=-1.0):
     """
-    Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (if lock_threshold < -1.0f, uses io.mousedraggingthreshold)
+    Return the delta from the initial clicking position while the mouse button is pressed or was just released. this is locked and return 0.0f until the mouse moves past a distance threshold at least once (uses io.mousedraggingthreshold if lock_threshold < 0.0f)
     """
     cdef ccimgui.ImVec2 res = ccimgui.ImGui_GetMouseDragDelta(
         button,
@@ -8696,6 +8958,33 @@ def debug_check_version_and_data_layout(version_str: str, sz_io: int, sz_style: 
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
+def debug_log(fmt: str):
+    """
+    Call via imgui_debug_log() for maximum stripping in caller code!
+    """
+    ccimgui.ImGui_DebugLog(
+        _bytes(fmt)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def debug_log_v(fmt: str):
+    ccimgui.ImGui_DebugLogV(
+        _bytes(fmt)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
 def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
     """
     Memory Allocators
@@ -8754,26 +9043,12 @@ def mem_free(ptr: Any):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(ImGuiPlatformIO)
-def get_platform_io():
+# ?returns(None)
+def update_platform_windows():
     """
     (Optional) Platform/OS interface for multi-viewport support
     Read comments around the ImGuiPlatformIO structure for more details.
     Note: You may use GetWindowViewport() to get the current viewport of the current window.
-    Platform/renderer functions, for backend to setup + viewports list.
-    """
-    cdef ccimgui.ImGuiPlatformIO* res = ccimgui.ImGui_GetPlatformIO()
-    return ImGuiPlatformIO.from_ptr(res)
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
-def update_platform_windows():
-    """
     Call in main loop. will call createwindow/resizewindow/etc. platform functions for each secondary viewport, and destroywindow for each inactive viewport.
     """
     ccimgui.ImGui_UpdatePlatformWindows()
@@ -8881,6 +9156,22 @@ def im_vector_destruct(vector: Any):
     ccimgui.ImVector_Destruct(
         vector
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImColor)
+def im_color_hsv(h: float, s: float, v: float, a: float=1.0):
+    cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
+        h,
+        s,
+        v,
+        a
+    )
+    return ImColor.from_ptr(res)
 # [End Function]
 
 # [Class]
@@ -9673,22 +9964,22 @@ cdef class ImVector_char:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
-    cdef ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr
+cdef class ImVector_ImGuiStoragePair:
+    cdef ccimgui.ImVector_ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
     
     @staticmethod
-    cdef ImVector_ImGuiStorage_ImGuiStoragePair from_ptr(ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr):
+    cdef ImVector_ImGuiStoragePair from_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
         if _ptr == NULL:
             return None
-        cdef ImVector_ImGuiStorage_ImGuiStoragePair wrapper = ImVector_ImGuiStorage_ImGuiStoragePair.__new__(ImVector_ImGuiStorage_ImGuiStoragePair)
+        cdef ImVector_ImGuiStoragePair wrapper = ImVector_ImGuiStoragePair.__new__(ImVector_ImGuiStoragePair)
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
     
     @staticmethod
-    cdef ImVector_ImGuiStorage_ImGuiStoragePair from_heap_ptr(ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair* _ptr):
-        wrapper = ImVector_ImGuiStorage_ImGuiStoragePair.from_ptr(_ptr)
+    cdef ImVector_ImGuiStoragePair from_heap_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
+        wrapper = ImVector_ImGuiStoragePair.from_ptr(_ptr)
         if wrapper is None:
             return None
         wrapper.dynamically_allocated = True
@@ -9741,13 +10032,100 @@ cdef class ImVector_ImGuiStorage_ImGuiStoragePair:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImGuiStorage_ImGuiStoragePair)
+    # ?returns(ImGuiStoragePair)
     @property
     def data(self):
-        cdef ccimgui.ImGuiStorage_ImGuiStoragePair* res = dereference(self._ptr).Data
-        return ImGuiStorage_ImGuiStoragePair.from_ptr(res)
+        cdef ccimgui.ImGuiStoragePair* res = dereference(self._ptr).Data
+        return ImGuiStoragePair.from_ptr(res)
     @data.setter
-    def data(self, value: ImGuiStorage_ImGuiStoragePair):
+    def data(self, value: ImGuiStoragePair):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImGuiSelectionRequest:
+    cdef ccimgui.ImVector_ImGuiSelectionRequest* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImGuiSelectionRequest from_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImGuiSelectionRequest wrapper = ImVector_ImGuiSelectionRequest.__new__(ImVector_ImGuiSelectionRequest)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImGuiSelectionRequest from_heap_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
+        wrapper = ImVector_ImGuiSelectionRequest.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImGuiSelectionRequest)
+    @property
+    def data(self):
+        cdef ccimgui.ImGuiSelectionRequest* res = dereference(self._ptr).Data
+        return ImGuiSelectionRequest.from_ptr(res)
+    @data.setter
+    def data(self, value: ImGuiSelectionRequest):
         # dereference(self._ptr).Data = value._ptr
         raise NotImplementedError
     # [End Field]
@@ -11760,6 +12138,25 @@ cdef class ImGuiStyle:
     # ?custom_comment_only(False)
     # ?returns(float)
     @property
+    def tab_bar_overline_size(self):
+        """
+        Thickness of tab-bar overline, which highlights the selected tab-bar.
+        """
+        cdef float res = dereference(self._ptr).TabBarOverlineSize
+        return res
+    @tab_bar_overline_size.setter
+    def tab_bar_overline_size(self, value: float):
+        # dereference(self._ptr).TabBarOverlineSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
     def table_angled_headers_angle(self):
         """
         Angle of angled headers (supported values range from -50.0f degrees to +50.0f degrees).
@@ -11857,7 +12254,7 @@ cdef class ImGuiStyle:
     @property
     def separator_text_border_size(self):
         """
-        Thickkness of border in separatortext()
+        Thickness of border in separatortext()
         """
         cdef float res = dereference(self._ptr).SeparatorTextBorderSize
         return res
@@ -11914,7 +12311,7 @@ cdef class ImGuiStyle:
     @property
     def display_window_padding(self):
         """
-        Window position are clamped to be visible within the display area or monitors by at least this amount. only applies to regular windows.
+        Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayWindowPadding
         return _cast_ImVec2_tuple(res)
@@ -11933,7 +12330,7 @@ cdef class ImGuiStyle:
     @property
     def display_safe_area_padding(self):
         """
-        If you cannot see the edges of your screen (e.g. on a tv) increase the safe area padding. apply to popups/tooltips as well regular windows. nb: prefer configuring your tv sets correctly!
+        Apply to every windows, menus, popups, tooltips: amount where we avoid displaying contents. adjust if you cannot see the edges of your screen (e.g. on a tv where scaling has not been configured).
         """
         cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySafeAreaPadding
         return _cast_ImVec2_tuple(res)
@@ -12521,6 +12918,7 @@ cdef class ImGuiIO:
     @property
     def fonts(self):
         """
+        Font system
         <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
         """
         cdef ccimgui.ImFontAtlas* res = dereference(self._ptr).Fonts
@@ -12771,6 +13169,7 @@ cdef class ImGuiIO:
     def mouse_draw_cursor(self):
         """
         Miscellaneous options
+        (you can visualize and interact with all options in 'Demo->Configuration')
         = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
         """
         cdef bool res = dereference(self._ptr).MouseDrawCursor
@@ -12790,13 +13189,32 @@ cdef class ImGuiIO:
     @property
     def config_mac_osx_behaviors(self):
         """
-        = defined(__apple__) // os x style: text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
+        = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
         """
         cdef bool res = dereference(self._ptr).ConfigMacOSXBehaviors
         return res
     @config_mac_osx_behaviors.setter
     def config_mac_osx_behaviors(self, value: bool):
         # dereference(self._ptr).ConfigMacOSXBehaviors = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_nav_swap_gamepad_buttons(self):
+        """
+        = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavSwapGamepadButtons
+        return res
+    @config_nav_swap_gamepad_buttons.setter
+    def config_nav_swap_gamepad_buttons(self, value: bool):
+        # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
         raise NotImplementedError
     # [End Field]
 
@@ -13060,6 +13478,29 @@ cdef class ImGuiIO:
     # ?custom_comment_only(False)
     # ?returns(bool)
     @property
+    def config_debug_highlight_id_conflicts(self):
+        """
+        Tools to detect code submitting items with conflicting/duplicate IDs
+        - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
+        - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
+        - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
+        = true           // highlight and show an error message when multiple items have conflicting identifiers.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflicts
+        return res
+    @config_debug_highlight_id_conflicts.setter
+    def config_debug_highlight_id_conflicts(self, value: bool):
+        # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
     def config_debug_begin_return_value_once(self):
         """
         Tools to test correct Begin/End and BeginChild/EndChild behaviors.
@@ -13107,7 +13548,7 @@ cdef class ImGuiIO:
         Option to deactivate io.AddFocusEvent(false) handling.
         - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
         - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-        = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys() in input processing.
+        = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
         return res
@@ -13230,98 +13671,6 @@ cdef class ImGuiIO:
     @backend_language_user_data.setter
     def backend_language_user_data(self, value: Any):
         # dereference(self._ptr).BackendLanguageUserData = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Callable)
-    @property
-    def get_clipboard_text_fn(self):
-        """
-        Optional: Access OS clipboard
-        (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
-        """
-        cdef Callable res = dereference(self._ptr).GetClipboardTextFn
-        return res
-    @get_clipboard_text_fn.setter
-    def get_clipboard_text_fn(self, value: Callable):
-        # dereference(self._ptr).GetClipboardTextFn = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Callable)
-    @property
-    def set_clipboard_text_fn(self):
-        cdef Callable res = dereference(self._ptr).SetClipboardTextFn
-        return res
-    @set_clipboard_text_fn.setter
-    def set_clipboard_text_fn(self, value: Callable):
-        # dereference(self._ptr).SetClipboardTextFn = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Any)
-    @property
-    def clipboard_user_data(self):
-        cdef void* res = dereference(self._ptr).ClipboardUserData
-        return res
-    @clipboard_user_data.setter
-    def clipboard_user_data(self, value: Any):
-        # dereference(self._ptr).ClipboardUserData = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(Callable)
-    @property
-    def set_platform_ime_data_fn(self):
-        """
-        Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
-        (default to use native imm32 api on Windows)
-        """
-        cdef Callable res = dereference(self._ptr).SetPlatformImeDataFn
-        return res
-    @set_platform_ime_data_fn.setter
-    def set_platform_ime_data_fn(self, value: Callable):
-        # dereference(self._ptr).SetPlatformImeDataFn = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def platform_locale_decimal_point(self):
-        """
-        Optional: Platform locale
-        '.'              // [experimental] configure decimal point e.g. '.' or ',' useful for some languages (e.g. german), generally pulled from *localeconv()->decimal_point
-        """
-        cdef ccimgui.ImWchar res = dereference(self._ptr).PlatformLocaleDecimalPoint
-        return res
-    @platform_locale_decimal_point.setter
-    def platform_locale_decimal_point(self, value: int):
-        # dereference(self._ptr).PlatformLocaleDecimalPoint = value
         raise NotImplementedError
     # [End Field]
 
@@ -13794,7 +14143,7 @@ cdef class ImGuiIO:
     def key_mods(self):
         """
         Other state maintained from data above + IO function calls
-        Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. does not contains imguimod_shortcut which is pretranslated). read-only, updated by newframe()
+        Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. read-only, updated by newframe()
         """
         cdef ccimgui.ImGuiKeyChord res = dereference(self._ptr).KeyMods
         return res
@@ -14048,6 +14397,25 @@ cdef class ImGuiIO:
     @mouse_wheel_request_axis_swap.setter
     def mouse_wheel_request_axis_swap(self, value: bool):
         # dereference(self._ptr).MouseWheelRequestAxisSwap = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def mouse_ctrl_left_as_right_click(self):
+        """
+        (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+        """
+        cdef bool res = dereference(self._ptr).MouseCtrlLeftAsRightClick
+        return res
+    @mouse_ctrl_left_as_right_click.setter
+    def mouse_ctrl_left_as_right_click(self, value: bool):
+        # dereference(self._ptr).MouseCtrlLeftAsRightClick = value
         raise NotImplementedError
     # [End Field]
 
@@ -14519,9 +14887,24 @@ cdef class ImGuiIO:
     # ?returns(None)
     def clear_input_keys(self: ImGuiIO):
         """
-        Clear current keyboard/mouse/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+        Clear current keyboard/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
         """
         ccimgui.ImGuiIO_ClearInputKeys(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def clear_input_mouse(self: ImGuiIO):
+        """
+        Clear current mouse state.
+        """
+        ccimgui.ImGuiIO_ClearInputMouse(
             self._ptr
         )
     # [End Method]
@@ -15947,25 +16330,25 @@ cdef class ImGuiTextBuffer:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImGuiStorage_ImGuiStoragePair:
+cdef class ImGuiStoragePair:
     """
-    [Internal]
+    [Internal] Key+Value for ImGuiStorage
     """
-    cdef ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr
+    cdef ccimgui.ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
     
     @staticmethod
-    cdef ImGuiStorage_ImGuiStoragePair from_ptr(ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr):
+    cdef ImGuiStoragePair from_ptr(ccimgui.ImGuiStoragePair* _ptr):
         if _ptr == NULL:
             return None
-        cdef ImGuiStorage_ImGuiStoragePair wrapper = ImGuiStorage_ImGuiStoragePair.__new__(ImGuiStorage_ImGuiStoragePair)
+        cdef ImGuiStoragePair wrapper = ImGuiStoragePair.__new__(ImGuiStoragePair)
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
     
     @staticmethod
-    cdef ImGuiStorage_ImGuiStoragePair from_heap_ptr(ccimgui.ImGuiStorage_ImGuiStoragePair* _ptr):
-        wrapper = ImGuiStorage_ImGuiStoragePair.from_ptr(_ptr)
+    cdef ImGuiStoragePair from_heap_ptr(ccimgui.ImGuiStoragePair* _ptr):
+        wrapper = ImGuiStoragePair.from_ptr(_ptr)
         if wrapper is None:
             return None
         wrapper.dynamically_allocated = True
@@ -16051,13 +16434,16 @@ cdef class ImGuiStorage:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImVector_ImGuiStorage_ImGuiStoragePair)
+    # ?returns(ImVector_ImGuiStoragePair)
     @property
     def data(self):
-        cdef ccimgui.ImVector_ImGuiStorage_ImGuiStoragePair res = dereference(self._ptr).Data
-        return ImVector_ImGuiStorage_ImGuiStoragePair.from_ptr(res)
+        """
+        [Internal]
+        """
+        cdef ccimgui.ImVector_ImGuiStoragePair res = dereference(self._ptr).Data
+        return ImVector_ImGuiStoragePair.from_ptr(res)
     @data.setter
-    def data(self, value: ImVector_ImGuiStorage_ImGuiStoragePair):
+    def data(self, value: ImVector_ImGuiStoragePair):
         # dereference(self._ptr).Data = value._ptr
         raise NotImplementedError
     # [End Field]
@@ -16474,6 +16860,25 @@ cdef class ImGuiListClipper:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def start_seek_offset_y(self):
+        """
+        [internal] account for frozen rows in a table and initial loss of precision in very large windows.
+        """
+        cdef double res = dereference(self._ptr).StartSeekOffsetY
+        return res
+    @start_seek_offset_y.setter
+    def start_seek_offset_y(self, value: float):
+        # dereference(self._ptr).StartSeekOffsetY = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(Any)
     @property
     def temp_data(self):
@@ -16567,6 +16972,24 @@ cdef class ImGuiListClipper:
         )
     # [End Method]
 
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def seek_cursor_for_item(self: ImGuiListClipper, item_index: int):
+        """
+        Seek cursor toward given item. This is automatically called while stepping.
+        - The only reason to call this is: you can use ImGuiListClipper::Begin(INT_MAX) if you don't know item count ahead of time.
+        - In this case, after all steps are done, you'll want to call SeekCursorForItem(item_count).
+        """
+        ccimgui.ImGuiListClipper_SeekCursorForItem(
+            self._ptr,
+            item_index
+        )
+    # [End Method]
+
 # [End Class]
 
 # [Class]
@@ -16647,21 +17070,689 @@ cdef class ImColor:
         )
     # [End Method]
 
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiMultiSelectIO:
+    """
+    Main IO structure returned by BeginMultiSelect()/EndMultiSelect().
+    This mainly contains a list of selection requests.
+    - Use 'Demo->Tools->Debug Log->Selection' to see requests as they happen.
+    - Some fields are only useful if your list is dynamic and allows deletion (getting post-deletion focus/state right is shown in the demo)
+    - Below: who reads/writes each fields? 'r'=read, 'w'=write, 'ms'=multi-select code, 'app'=application/user code.
+    """
+    cdef ccimgui.ImGuiMultiSelectIO* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiMultiSelectIO from_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiMultiSelectIO wrapper = ImGuiMultiSelectIO.__new__(ImGuiMultiSelectIO)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiMultiSelectIO from_heap_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
+        wrapper = ImGuiMultiSelectIO.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImGuiSelectionRequest)
+    @property
+    def requests(self):
+        """
+        ------------------------------------------// BeginMultiSelect / EndMultiSelect
+        Ms:w, app:r     /  ms:w  app:r   // requests to apply to your selection data.
+        """
+        cdef ccimgui.ImVector_ImGuiSelectionRequest res = dereference(self._ptr).Requests
+        return ImVector_ImGuiSelectionRequest.from_ptr(res)
+    @requests.setter
+    def requests(self, value: ImVector_ImGuiSelectionRequest):
+        # dereference(self._ptr).Requests = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def range_src_item(self):
+        """
+        Ms:w  app:r     /                // (if using clipper) begin: source item (often the first selected item) must never be clipped: use clipper.includeitembyindex() to ensure it is submitted.
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeSrcItem
+        return res
+    @range_src_item.setter
+    def range_src_item(self, value: Any):
+        # dereference(self._ptr).RangeSrcItem = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def nav_id_item(self):
+        """
+        Ms:w, app:r     /                // (if using deletion) last known setnextitemselectionuserdata() value for navid (if part of submitted items).
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).NavIdItem
+        return res
+    @nav_id_item.setter
+    def nav_id_item(self, value: Any):
+        # dereference(self._ptr).NavIdItem = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def nav_id_selected(self):
+        """
+        Ms:w, app:r     /        app:r   // (if using deletion) last known selection state for navid (if part of submitted items).
+        """
+        cdef bool res = dereference(self._ptr).NavIdSelected
+        return res
+    @nav_id_selected.setter
+    def nav_id_selected(self, value: bool):
+        # dereference(self._ptr).NavIdSelected = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def range_src_reset(self):
+        """
+        App:w     /  ms:r          // (if using deletion) set before endmultiselect() to reset resetsrcitem (e.g. if deleted selection).
+        """
+        cdef bool res = dereference(self._ptr).RangeSrcReset
+        return res
+    @range_src_reset.setter
+    def range_src_reset(self, value: bool):
+        # dereference(self._ptr).RangeSrcReset = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def items_count(self):
+        """
+        Ms:w, app:r     /        app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+        """
+        cdef int res = dereference(self._ptr).ItemsCount
+        return res
+    @items_count.setter
+    def items_count(self, value: int):
+        # dereference(self._ptr).ItemsCount = value
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiSelectionRequest:
+    """
+    Selection request item
+    """
+    cdef ccimgui.ImGuiSelectionRequest* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiSelectionRequest from_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiSelectionRequest wrapper = ImGuiSelectionRequest.__new__(ImGuiSelectionRequest)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiSelectionRequest from_heap_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
+        wrapper = ImGuiSelectionRequest.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def type(self):
+        """
+        ------------------------------------------// BeginMultiSelect / EndMultiSelect
+        Ms:w, app:r     /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+        """
+        cdef ImGuiSelectionRequestType res = dereference(self._ptr).Type
+        return res
+    @type.setter
+    def type(self, value: Any):
+        # dereference(self._ptr).Type = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def selected(self):
+        """
+        Ms:w, app:r     /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+        """
+        cdef bool res = dereference(self._ptr).Selected
+        return res
+    @selected.setter
+    def selected(self, value: bool):
+        # dereference(self._ptr).Selected = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def range_direction(self):
+        """
+        Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
+        """
+        cdef ccimgui.ImS8 res = dereference(self._ptr).RangeDirection
+        return res
+    @range_direction.setter
+    def range_direction(self, value: int):
+        # dereference(self._ptr).RangeDirection = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def range_first_item(self):
+        """
+        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeFirstItem
+        return res
+    @range_first_item.setter
+    def range_first_item(self, value: Any):
+        # dereference(self._ptr).RangeFirstItem = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def range_last_item(self):
+        """
+        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
+        """
+        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeLastItem
+        return res
+    @range_last_item.setter
+    def range_last_item(self, value: Any):
+        # dereference(self._ptr).RangeLastItem = value
+        raise NotImplementedError
+    # [End Field]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiSelectionBasicStorage:
+    """
+    Optional helper to store multi-selection state + apply multi-selection requests.
+    - Used by our demos and provided as a convenience to easily implement basic multi-selection.
+    - Iterate selection with 'void* it = NULL; ImGuiID id; while (selection.GetNextSelectedItem(&it, &id)) ( ... )'
+    Or you can check 'if (Contains(id)) ( ... )' for each possible object if their number is not too high to iterate.
+    - USING THIS IS NOT MANDATORY. This is only a helper and not a required API.
+    To store a multi-selection, in your application you could:
+    - Use this helper as a convenience. We use our simple key->value ImGuiStorage as a std::set<ImGuiID> replacement.
+    - Use your own external storage: e.g. std::set<MyObjectId>, std::vector<MyObjectId>, interval trees, intrusively stored selection etc.
+    In ImGuiSelectionBasicStorage we:
+    - always use indices in the multi-selection API (passed to SetNextItemSelectionUserData(), retrieved in ImGuiMultiSelectIO)
+    - use the AdapterIndexToStorageId() indirection layer to abstract how persistent selection data is derived from an index.
+    - use decently optimized logic to allow queries and insertion of very large selection sets.
+    - do not preserve selection order.
+    Many combinations are possible depending on how you prefer to store your items and how you prefer to store your selection.
+    Large applications are likely to eventually want to get rid of this indirection layer and do their own thing.
+    See https://github.com/ocornut/imgui/wiki/Multi-Select for details and pseudo-code using this helper.
+    """
+    cdef ccimgui.ImGuiSelectionBasicStorage* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiSelectionBasicStorage from_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiSelectionBasicStorage wrapper = ImGuiSelectionBasicStorage.__new__(ImGuiSelectionBasicStorage)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiSelectionBasicStorage from_heap_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
+        wrapper = ImGuiSelectionBasicStorage.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        """
+        Members
+        Number of selected items, maintained by this helper.
+        """
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def preserve_order(self):
+        """
+        = false  // getnextselecteditem() will return ordered selection (currently implemented by two additional sorts of selection. could be improved)
+        """
+        cdef bool res = dereference(self._ptr).PreserveOrder
+        return res
+    @preserve_order.setter
+    def preserve_order(self, value: bool):
+        # dereference(self._ptr).PreserveOrder = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def user_data(self):
+        """
+        = null   // user data for use by adapter function        // e.g. selection.userdata = (void*)my_items;
+        """
+        cdef void* res = dereference(self._ptr).UserData
+        return res
+    @user_data.setter
+    def user_data(self, value: Any):
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def adapter_index_to_storage_id(self):
+        """
+        E.g. selection.adapterindextostorageid = [](imguiselectionbasicstorage* self, int idx) ( return ((myitems**)self->userdata)[idx]->id; );
+        """
+        cdef Callable res = dereference(self._ptr).AdapterIndexToStorageId
+        return res
+    @adapter_index_to_storage_id.setter
+    def adapter_index_to_storage_id(self, value: Callable):
+        # dereference(self._ptr).AdapterIndexToStorageId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def selection_order(self):
+        """
+        [internal] increasing counter to store selection order
+        """
+        cdef int res = dereference(self._ptr)._SelectionOrder
+        return res
+    @selection_order.setter
+    def selection_order(self, value: int):
+        # dereference(self._ptr)._SelectionOrder = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImGuiStorage)
+    @property
+    def storage(self):
+        """
+        [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
+        """
+        cdef ccimgui.ImGuiStorage res = dereference(self._ptr)._Storage
+        return ImGuiStorage.from_ptr(res)
+    @storage.setter
+    def storage(self, value: ImGuiStorage):
+        # dereference(self._ptr)._Storage = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
     # [Method]
     # ?use_template(False)
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImColor)
-    def hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
-        cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
+    # ?returns(None)
+    def apply_requests(self: ImGuiSelectionBasicStorage, ms_io: ImGuiMultiSelectIO):
+        """
+        Apply selection requests coming from beginmultiselect() and endmultiselect() functions. it uses 'items_count' passed to beginmultiselect()
+        """
+        ccimgui.ImGuiSelectionBasicStorage_ApplyRequests(
             self._ptr,
-            h,
-            s,
-            v,
-            a
+            ms_io._ptr
         )
-        return ImColor.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    def contains(self: ImGuiSelectionBasicStorage, id_: int):
+        """
+        Query if an item id is in selection.
+        """
+        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_Contains(
+            self._ptr,
+            id_
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def clear(self: ImGuiSelectionBasicStorage):
+        """
+        Clear selection
+        """
+        ccimgui.ImGuiSelectionBasicStorage_Clear(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def swap(self: ImGuiSelectionBasicStorage, r: ImGuiSelectionBasicStorage):
+        """
+        Swap two selections
+        """
+        ccimgui.ImGuiSelectionBasicStorage_Swap(
+            self._ptr,
+            r._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_item_selected(self: ImGuiSelectionBasicStorage, id_: int, selected: bool):
+        """
+        Add/remove an item from selection (generally done by applyrequests() function)
+        """
+        ccimgui.ImGuiSelectionBasicStorage_SetItemSelected(
+            self._ptr,
+            id_,
+            selected
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    def get_next_selected_item(self: ImGuiSelectionBasicStorage, opaque_it: Any, out_id: int):
+        """
+        Iterate selection with 'void* it = null; imguiid id; while (selection.getnextselecteditem(&it, &id)) ( ... )'
+        """
+        cdef bool res = ccimgui.ImGuiSelectionBasicStorage_GetNextSelectedItem(
+            self._ptr,
+            opaque_it,
+            out_id
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    def get_storage_id_from_index(self: ImGuiSelectionBasicStorage, idx: int):
+        """
+        Convert index to item id based on provided adapter.
+        """
+        cdef ccimgui.ImGuiID res = ccimgui.ImGuiSelectionBasicStorage_GetStorageIdFromIndex(
+            self._ptr,
+            idx
+        )
+        return res
+    # [End Method]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiSelectionExternalStorage:
+    """
+    Optional helper to apply multi-selection requests to existing randomly accessible storage.
+    Convenient if you want to quickly wire multi-select API on e.g. an array of bool or items storing their own selection state.
+    """
+    cdef ccimgui.ImGuiSelectionExternalStorage* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiSelectionExternalStorage from_ptr(ccimgui.ImGuiSelectionExternalStorage* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiSelectionExternalStorage wrapper = ImGuiSelectionExternalStorage.__new__(ImGuiSelectionExternalStorage)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiSelectionExternalStorage from_heap_ptr(ccimgui.ImGuiSelectionExternalStorage* _ptr):
+        wrapper = ImGuiSelectionExternalStorage.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def user_data(self):
+        """
+        Members
+        User data for use by adapter function                                // e.g. selection.userdata = (void*)my_items;
+        """
+        cdef void* res = dereference(self._ptr).UserData
+        return res
+    @user_data.setter
+    def user_data(self, value: Any):
+        # dereference(self._ptr).UserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def adapter_set_item_selected(self):
+        """
+        E.g. adaptersetitemselected = [](imguiselectionexternalstorage* self, int idx, bool selected) ( ((myitems**)self->userdata)[idx]->selected = selected; )
+        """
+        cdef Callable res = dereference(self._ptr).AdapterSetItemSelected
+        return res
+    @adapter_set_item_selected.setter
+    def adapter_set_item_selected(self, value: Callable):
+        # dereference(self._ptr).AdapterSetItemSelected = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def apply_requests(self: ImGuiSelectionExternalStorage, ms_io: ImGuiMultiSelectIO):
+        """
+        Apply selection requests by using adaptersetitemselected() calls
+        """
+        ccimgui.ImGuiSelectionExternalStorage_ApplyRequests(
+            self._ptr,
+            ms_io._ptr
+        )
     # [End Method]
 
 # [End Class]
@@ -18928,6 +20019,19 @@ cdef class ImDrawList:
     def on_changed_vtx_offset(self: ImDrawList):
         ccimgui.ImDrawList__OnChangedVtxOffset(
             self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_texture_id(self: ImDrawList, texture_id: Any):
+        ccimgui.ImDrawList__SetTextureID(
+            self._ptr,
+            texture_id
         )
     # [End Method]
 
@@ -21215,7 +22319,7 @@ cdef class ImFontAtlas:
         """
         You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
         - After calling Build(), you can query the rectangle position and render your pixels.
-        - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of prefered texture format.
+        - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
         - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
         so you can render e.g. custom colorful icons and use them as regular glyphs.
         - Read docs/FONTS.md for more details about using colorful icons.
@@ -21351,7 +22455,7 @@ cdef class ImFont:
     def index_advance_x(self):
         """
         Members: Hot ~20/24 bytes (for CalcTextSize)
-        12-16 // out //            // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this this info, and are often bottleneck in large ui).
+        12-16 // out //            // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
         """
         cdef ccimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
         return ImVector_float.from_ptr(res)
@@ -21657,7 +22761,7 @@ cdef class ImFont:
     @property
     def ascent(self):
         """
-        4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+        4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
         """
         cdef float res = dereference(self._ptr).Ascent
         return res
@@ -21676,7 +22780,7 @@ cdef class ImFont:
     @property
     def descent(self):
         """
-        4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize]
+        4+4   // out //            // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
         """
         cdef float res = dereference(self._ptr).Descent
         return res
@@ -22274,7 +23378,7 @@ cdef class ImGuiViewport:
     @property
     def platform_handle(self):
         """
-        Void* for findviewportbyplatformhandle(). (e.g. suggested to use natural platform handle such as hwnd, glfwwindow*, sdl_window*)
+        Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
         """
         cdef void* res = dereference(self._ptr).PlatformHandle
         return res
@@ -22418,7 +23522,7 @@ cdef class ImGuiViewport:
 # ?custom_comment_only(False)
 cdef class ImGuiPlatformIO:
     """
-    (Optional) Access via ImGui::GetPlatformIO()
+    Access via ImGui::GetPlatformIO()
     """
     cdef ccimgui.ImGuiPlatformIO* _ptr
     cdef bool dynamically_allocated
@@ -22457,9 +23561,154 @@ cdef class ImGuiPlatformIO:
     # ?custom_comment_only(False)
     # ?returns(Callable)
     @property
+    def platform_get_clipboard_text_fn(self):
+        """
+        Optional: Access OS clipboard
+        (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
+        """
+        cdef Callable res = dereference(self._ptr).Platform_GetClipboardTextFn
+        return res
+    @platform_get_clipboard_text_fn.setter
+    def platform_get_clipboard_text_fn(self, value: Callable):
+        # dereference(self._ptr).Platform_GetClipboardTextFn = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def platform_set_clipboard_text_fn(self):
+        cdef Callable res = dereference(self._ptr).Platform_SetClipboardTextFn
+        return res
+    @platform_set_clipboard_text_fn.setter
+    def platform_set_clipboard_text_fn(self, value: Callable):
+        # dereference(self._ptr).Platform_SetClipboardTextFn = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def platform_clipboard_user_data(self):
+        cdef void* res = dereference(self._ptr).Platform_ClipboardUserData
+        return res
+    @platform_clipboard_user_data.setter
+    def platform_clipboard_user_data(self, value: Any):
+        # dereference(self._ptr).Platform_ClipboardUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def platform_open_in_shell_fn(self):
+        """
+        Optional: Open link/folder/file in OS Shell
+        (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
+        """
+        cdef Callable res = dereference(self._ptr).Platform_OpenInShellFn
+        return res
+    @platform_open_in_shell_fn.setter
+    def platform_open_in_shell_fn(self, value: Callable):
+        # dereference(self._ptr).Platform_OpenInShellFn = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def platform_open_in_shell_user_data(self):
+        cdef void* res = dereference(self._ptr).Platform_OpenInShellUserData
+        return res
+    @platform_open_in_shell_user_data.setter
+    def platform_open_in_shell_user_data(self, value: Any):
+        # dereference(self._ptr).Platform_OpenInShellUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def platform_set_ime_data_fn(self):
+        """
+        Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
+        (default to use native imm32 api on Windows)
+        """
+        cdef Callable res = dereference(self._ptr).Platform_SetImeDataFn
+        return res
+    @platform_set_ime_data_fn.setter
+    def platform_set_ime_data_fn(self, value: Callable):
+        # dereference(self._ptr).Platform_SetImeDataFn = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def platform_ime_user_data(self):
+        cdef void* res = dereference(self._ptr).Platform_ImeUserData
+        return res
+    @platform_ime_user_data.setter
+    def platform_ime_user_data(self, value: Any):
+        # dereference(self._ptr).Platform_ImeUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def platform_locale_decimal_point(self):
+        """
+        Optional: Platform locale
+        [Experimental] Configure decimal point e.g. '.' or ',' useful for some languages (e.g. German), generally pulled from *localeconv()->decimal_point
+        '.'
+        """
+        cdef ccimgui.ImWchar res = dereference(self._ptr).Platform_LocaleDecimalPoint
+        return res
+    @platform_locale_decimal_point.setter
+    def platform_locale_decimal_point(self, value: int):
+        # dereference(self._ptr).Platform_LocaleDecimalPoint = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
     def platform_create_window(self):
         """
-        Platform function --------------------------------------------------- Called by -----
+        Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
         . . u . .  // create a new platform window for the given viewport
         """
         cdef Callable res = dereference(self._ptr).Platform_CreateWindow
@@ -22781,6 +24030,25 @@ cdef class ImGuiPlatformIO:
     # ?custom_comment_only(False)
     # ?returns(Callable)
     @property
+    def platform_get_window_work_area_insets(self):
+        """
+        N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
+        """
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowWorkAreaInsets
+        return res
+    @platform_get_window_work_area_insets.setter
+    def platform_get_window_work_area_insets(self, value: Callable):
+        # dereference(self._ptr).Platform_GetWindowWorkAreaInsets = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
     def platform_create_vk_surface(self):
         """
         (optional) for a vulkan renderer to call into platform code (since the surface creation needs to tie them both).
@@ -22802,7 +24070,7 @@ cdef class ImGuiPlatformIO:
     @property
     def renderer_create_window(self):
         """
-        (Optional) Renderer functions (e.g. DirectX, OpenGL, Vulkan)
+        Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
         . . u . .  // create swap chain, frame buffers etc. (called after platform_createwindow)
         """
         cdef Callable res = dereference(self._ptr).Renderer_CreateWindow
@@ -23098,7 +24366,7 @@ cdef class ImGuiPlatformMonitor:
 # ?custom_comment_only(False)
 cdef class ImGuiPlatformImeData:
     """
-    (Optional) Support for IME (Input Method Editor) via the io.SetPlatformImeDataFn() function.
+    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function.
     """
     cdef ccimgui.ImGuiPlatformImeData* _ptr
     cdef bool dynamically_allocated
@@ -23199,8 +24467,11 @@ cdef class ImGuiPlatformImeData:
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
-    cdef bool res = ccimgui.ImGui_ImplGlfw_InitForOpenGL(
+def c_impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
+    """
+    Follow "Getting Started" link and check examples/ folder to learn about using backends!
+    """
+    cdef bool res = ccimgui.cImGui_ImplGlfw_InitForOpenGL(
         window._ptr,
         install_callbacks
     )
@@ -23213,8 +24484,8 @@ def impl_glfw_init_for_open_gl(window: GLFWwindow, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
-    cdef bool res = ccimgui.ImGui_ImplGlfw_InitForVulkan(
+def c_impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
+    cdef bool res = ccimgui.cImGui_ImplGlfw_InitForVulkan(
         window._ptr,
         install_callbacks
     )
@@ -23227,8 +24498,8 @@ def impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
-    cdef bool res = ccimgui.ImGui_ImplGlfw_InitForOther(
+def c_impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
+    cdef bool res = ccimgui.cImGui_ImplGlfw_InitForOther(
         window._ptr,
         install_callbacks
     )
@@ -23241,8 +24512,8 @@ def impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_shutdown():
-    ccimgui.ImGui_ImplGlfw_Shutdown()
+def c_impl_glfw_shutdown():
+    ccimgui.cImGui_ImplGlfw_Shutdown()
 # [End Function]
 
 # [Function]
@@ -23251,8 +24522,8 @@ def impl_glfw_shutdown():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_new_frame():
-    ccimgui.ImGui_ImplGlfw_NewFrame()
+def c_impl_glfw_new_frame():
+    ccimgui.cImGui_ImplGlfw_NewFrame()
 # [End Function]
 
 # [Function]
@@ -23261,8 +24532,13 @@ def impl_glfw_new_frame():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_install_callbacks(window: GLFWwindow):
-    ccimgui.ImGui_ImplGlfw_InstallCallbacks(
+def c_impl_glfw_install_callbacks(window: GLFWwindow):
+    """
+    GLFW callbacks install
+    - When calling Init with 'install_callbacks=true': ImGui_ImplGlfw_InstallCallbacks() is called. GLFW callbacks will be installed for you. They will chain-call user's previously installed callbacks, if any.
+    - When calling Init with 'install_callbacks=false': GLFW callbacks won't be installed. You will need to call individual function yourself from your own GLFW callbacks.
+    """
+    ccimgui.cImGui_ImplGlfw_InstallCallbacks(
         window._ptr
     )
 # [End Function]
@@ -23273,8 +24549,8 @@ def impl_glfw_install_callbacks(window: GLFWwindow):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_restore_callbacks(window: GLFWwindow):
-    ccimgui.ImGui_ImplGlfw_RestoreCallbacks(
+def c_impl_glfw_restore_callbacks(window: GLFWwindow):
+    ccimgui.cImGui_ImplGlfw_RestoreCallbacks(
         window._ptr
     )
 # [End Function]
@@ -23285,8 +24561,12 @@ def impl_glfw_restore_callbacks(window: GLFWwindow):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
-    ccimgui.ImGui_ImplGlfw_SetCallbacksChainForAllWindows(
+def c_impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
+    """
+    GFLW callbacks options:
+    - Set 'chain_for_all_windows=true' to enable chaining callbacks for all windows (including secondary viewports created by backends or by user)
+    """
+    ccimgui.cImGui_ImplGlfw_SetCallbacksChainForAllWindows(
         chain_for_all_windows
     )
 # [End Function]
@@ -23297,8 +24577,12 @@ def impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
-    ccimgui.ImGui_ImplGlfw_WindowFocusCallback(
+def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
+    """
+    GLFW callbacks (individual callbacks to call yourself if you didn't install callbacks)
+    Since 1.84
+    """
+    ccimgui.cImGui_ImplGlfw_WindowFocusCallback(
         window._ptr,
         focused
     )
@@ -23310,8 +24594,11 @@ def impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: float):
-    ccimgui.ImGui_ImplGlfw_CursorEnterCallback(
+def c_impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
+    """
+    Since 1.84
+    """
+    ccimgui.cImGui_ImplGlfw_CursorEnterCallback(
         window._ptr,
         entered
     )
@@ -23323,8 +24610,11 @@ def impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
-    ccimgui.ImGui_ImplGlfw_CursorPosCallback(
+def c_impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
+    """
+    Since 1.87
+    """
+    ccimgui.cImGui_ImplGlfw_CursorPosCallback(
         window._ptr,
         x,
         y
@@ -23337,8 +24627,8 @@ def impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
-    ccimgui.ImGui_ImplGlfw_MouseButtonCallback(
+def c_impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
+    ccimgui.cImGui_ImplGlfw_MouseButtonCallback(
         window._ptr,
         button,
         action,
@@ -23352,8 +24642,8 @@ def impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
-    ccimgui.ImGui_ImplGlfw_ScrollCallback(
+def c_impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
+    ccimgui.cImGui_ImplGlfw_ScrollCallback(
         window._ptr,
         xoffset,
         yoffset
@@ -23366,8 +24656,8 @@ def impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
-    ccimgui.ImGui_ImplGlfw_KeyCallback(
+def c_impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
+    ccimgui.cImGui_ImplGlfw_KeyCallback(
         window._ptr,
         key,
         scancode,
@@ -23382,8 +24672,8 @@ def impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: 
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_char_callback(window: GLFWwindow, c: int):
-    ccimgui.ImGui_ImplGlfw_CharCallback(
+def c_impl_glfw_char_callback(window: GLFWwindow, c: int):
+    ccimgui.cImGui_ImplGlfw_CharCallback(
         window._ptr,
         c
     )
@@ -23395,10 +24685,25 @@ def impl_glfw_char_callback(window: GLFWwindow, c: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_glfw_monitor_callback(window: GLFWwindow, event: int):
-    ccimgui.ImGui_ImplGlfw_MonitorCallback(
-        window._ptr,
+def c_impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
+    ccimgui.cImGui_ImplGlfw_MonitorCallback(
+        monitor._ptr,
         event
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def c_impl_glfw_sleep(milliseconds: int):
+    """
+    GLFW helpers
+    """
+    ccimgui.cImGui_ImplGlfw_Sleep(
+        milliseconds
     )
 # [End Function]
 
@@ -23480,6 +24785,45 @@ cdef class GLFWmonitor:
 
 # [End Class]
 
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImDrawData:
+    cdef ccimgui.ImDrawData* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImDrawData from_ptr(ccimgui.ImDrawData* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImDrawData wrapper = ImDrawData.__new__(ImDrawData)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawData from_heap_ptr(ccimgui.ImDrawData* _ptr):
+        wrapper = ImDrawData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+# [End Class]
+
 
 
 # ---- Start Generated Content ----
@@ -23490,11 +24834,24 @@ cdef class GLFWmonitor:
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_open_gl3_init(glsl_version: str=None):
-    bytes_glsl_version = _bytes(glsl_version) if glsl_version is not None else None
+def c_impl_open_gl3_init():
+    """
+    Follow "Getting Started" link and check examples/ folder to learn about using backends!
+    Implied glsl_version = nullptr
+    """
+    cdef bool res = ccimgui.cImGui_ImplOpenGL3_Init()
+    return res
+# [End Function]
 
-    cdef bool res = ccimgui.ImGui_ImplOpenGL3_Init(
-        ((<char*>bytes_glsl_version if glsl_version is not None else NULL))
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def c_impl_open_gl3_init_ex(glsl_version: str=nullptr):
+    cdef bool res = ccimgui.cImGui_ImplOpenGL3_InitEx(
+        _bytes(glsl_version)
     )
     return res
 # [End Function]
@@ -23505,8 +24862,8 @@ def impl_open_gl3_init(glsl_version: str=None):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_open_gl3_shutdown():
-    ccimgui.ImGui_ImplOpenGL3_Shutdown()
+def c_impl_open_gl3_shutdown():
+    ccimgui.cImGui_ImplOpenGL3_Shutdown()
 # [End Function]
 
 # [Function]
@@ -23515,8 +24872,8 @@ def impl_open_gl3_shutdown():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_open_gl3_new_frame():
-    ccimgui.ImGui_ImplOpenGL3_NewFrame()
+def c_impl_open_gl3_new_frame():
+    ccimgui.cImGui_ImplOpenGL3_NewFrame()
 # [End Function]
 
 # [Function]
@@ -23525,9 +24882,9 @@ def impl_open_gl3_new_frame():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_open_gl3_render_draw_data(draw_data: Any):
-    ccimgui.ImGui_ImplOpenGL3_RenderDrawData(
-        draw_data
+def c_impl_open_gl3_render_draw_data(draw_data: ImDrawData):
+    ccimgui.cImGui_ImplOpenGL3_RenderDrawData(
+        draw_data._ptr
     )
 # [End Function]
 
@@ -23537,8 +24894,11 @@ def impl_open_gl3_render_draw_data(draw_data: Any):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_open_gl3_create_fonts_texture():
-    cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateFontsTexture()
+def c_impl_open_gl3_create_fonts_texture():
+    """
+    (Optional) Called by Init/NewFrame/Shutdown
+    """
+    cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateFontsTexture()
     return res
 # [End Function]
 
@@ -23548,8 +24908,8 @@ def impl_open_gl3_create_fonts_texture():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_open_gl3_destroy_fonts_texture():
-    ccimgui.ImGui_ImplOpenGL3_DestroyFontsTexture()
+def c_impl_open_gl3_destroy_fonts_texture():
+    ccimgui.cImGui_ImplOpenGL3_DestroyFontsTexture()
 # [End Function]
 
 # [Function]
@@ -23558,8 +24918,8 @@ def impl_open_gl3_destroy_fonts_texture():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def impl_open_gl3_create_device_objects():
-    cdef bool res = ccimgui.ImGui_ImplOpenGL3_CreateDeviceObjects()
+def c_impl_open_gl3_create_device_objects():
+    cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateDeviceObjects()
     return res
 # [End Function]
 
@@ -23569,7 +24929,46 @@ def impl_open_gl3_create_device_objects():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def impl_open_gl3_destroy_device_objects():
-    ccimgui.ImGui_ImplOpenGL3_DestroyDeviceObjects()
+def c_impl_open_gl3_destroy_device_objects():
+    ccimgui.cImGui_ImplOpenGL3_DestroyDeviceObjects()
 # [End Function]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImDrawData:
+    cdef ccimgui.ImDrawData* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImDrawData from_ptr(ccimgui.ImDrawData* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImDrawData wrapper = ImDrawData.__new__(ImDrawData)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImDrawData from_heap_ptr(ccimgui.ImDrawData* _ptr):
+        wrapper = ImDrawData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+# [End Class]
 

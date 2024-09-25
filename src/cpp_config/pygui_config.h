@@ -1,19 +1,24 @@
 #pragma once
 
-// -----------------------------------------------------------------------------
-
-#ifdef PYGUI_COMPILING_CIMGUI
-#pragma message ( "Preprocessor: PYGUI_COMPILING_CIMGUI" )
-#define CIMGUI_API extern "C" __declspec(dllexport)
-#define IMGUI_API             __declspec(dllexport)
-
-// TODO: Additional settings. The cimgui.json file won't see this change, so see
-// if we find a way to change this value.
-// #define ImDrawIdx      unsigned int
 #define IMGUI_DISABLE_OBSOLETE_KEYIO
 #define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-// This shouldn't be required if you look at cimgui.h
-// #define IMGUI_HAS_IMSTR false
+
+// -----------------------------------------------------------------------------
+
+#ifdef PYGUI_COMPILING_DLL
+#pragma message ( "Preprocessor: PYGUI_COMPILING_DLL" )
+// The glfw implementation is in another dll
+#ifndef GLFW_DLL
+#define GLFW_DLL
+#endif
+
+#define CIMGUI_API      __declspec(dllexport)
+#define CIMGUI_IMPL_API __declspec(dllexport)
+
+// If you are compiling any additional modules then make sure you export the
+// functions in the DLL like below
+// #define MY_EXTENSION_API __declspec(dllexport)
+
 
 extern "C" {
     #ifdef _DEBUG
@@ -27,7 +32,7 @@ extern "C" {
 
 CIMGUI_API PyObject* get_imgui_error();
 
-    #ifdef USE_CUSTOM_PYTHON_ERROR
+#ifdef USE_CUSTOM_PYTHON_ERROR
 
     // few macros to make IM_ASSERT cleaner
     #define STRINGIFY(x) #x
@@ -46,46 +51,19 @@ CIMGUI_API PyObject* get_imgui_error();
     static PyObject* ImGuiError = NULL;
     void __py_assert(const char* msg);
 
-    #endif // USE_CUSTOM_PYTHON_ERROR
-#endif // PYGUI_COMPILING_CIMGUI
+#endif // USE_CUSTOM_PYTHON_ERROR
+
+#endif // PYGUI_COMPILING_DLL
 
 // -----------------------------------------------------------------------------
 
-#ifdef PYGUI_COMPILING_GLFW
-// The glfw implementation is in this dll
-#define _GLFW_BUILD_DLL
-#endif // PYGUI_COMPILING_GLFW
+#ifdef PYGUI_COMPILING_DLL_APP
+#pragma message ( "Preprocessor: PYGUI_COMPILING_DLL_APP" )
 
-// -----------------------------------------------------------------------------
+#define CIMGUI_API       __declspec(dllimport)
+#define CIMGUI_IMPL_API  __declspec(dllimport)
+// And likewise, to test the module make sure you import the functions from the
+// DLL like below
+// #define MY_EXTENSION_API __declspec(dllimport)
 
-#ifdef PYGUI_COMPILING_GLFW_IMPL
-#pragma message ( "Preprocessor: PYGUI_COMPILING_GLFW_IMPL" )
-// The glfw implementation is in another dll
-#ifndef GLFW_DLL
-#define GLFW_DLL
-#endif
-#define IMGUI_IMPL_API  extern "C" __declspec(dllexport)
-#define IMGUI_API                  __declspec(dllimport)
-#endif // PYGUI_COMPILING_GLFW_IMPL
-
-// -----------------------------------------------------------------------------
-
-#ifdef PYGUI_COMPILING_APP
-#pragma message ( "Preprocessor: PYGUI_COMPILING_APP" )
-// No need to include extern "C" because this is a C project. Extern is not
-// supported in C. This means we also need to make sure the header file is C
-// compatable.
-#define CIMGUI_API      __declspec(dllimport)
-#define IMGUI_IMPL_API  __declspec(dllimport)
-#endif // PYGUI_COMPILING_APP
-
-// -----------------------------------------------------------------------------
-
-#ifdef PYGUI_COMPILING_CPP_APP
-#pragma message ( "Preprocessor: PYGUI_COMPILING_CPP_APP" )
-
-#ifndef GLFW_DLL
-#define GLFW_DLL
-#endif
-
-#endif // PYGUI_COMPILING_CPP_APP
+#endif // PYGUI_COMPILING_DLL_APP
