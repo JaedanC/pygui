@@ -1,6 +1,7 @@
-import pygui
 import glfw
 import OpenGL.GL as gl
+
+import pygui
 from pygui_demo import demo_fonts_init, pygui_demo_window
 
 
@@ -38,10 +39,10 @@ def main():
 
     window = glfw.create_window(1024, 768, "Hello World!", None, None)
     if window is None:
-       print("Failed to create window! Terminating")
-       glfw.terminate()
-       return
-    
+        print("Failed to create window! Terminating")
+        glfw.terminate()
+        return
+
     glfw.make_context_current(window)
 
     # Vsync:
@@ -82,7 +83,7 @@ def main():
             print("AssertionError")
         else:
             print("pygui.ImGuiError")
-    
+
     demo_fonts_init()
 
     try:
@@ -96,7 +97,7 @@ def main():
 
             pygui.render()
             glfw.make_context_current(window)
-            
+
             gl.glViewport(0, 0, int(io.display_size[0]), int(io.display_size[1]))
             gl.glClearColor(*clear_color)
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
@@ -109,11 +110,11 @@ def main():
                 pygui.update_platform_windows()
                 pygui.render_platform_windows_default()
                 glfw.make_context_current(backup_current_window)
-            
+
             glfw.swap_buffers(window)
     except KeyboardInterrupt:
         print("Closing")
-    
+
     pygui.c_impl_open_gl3_shutdown()
     pygui.c_impl_glfw_shutdown()
     pygui.destroy_context()

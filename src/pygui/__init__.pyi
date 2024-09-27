@@ -131,11 +131,11 @@ class Vec2:
     """
     x: float
     """
-    Access/Modify the `x` component of the `Vec2` 
+    Access/Modify the `x` component of the `Vec2`
     """
     y: float
     """
-    Access/Modify the `y` component of the `Vec2` 
+    Access/Modify the `y` component of the `Vec2`
     """
     x_ptr: Float
     """
@@ -207,19 +207,19 @@ class Vec4:
     """
     x: float
     """
-    Access/Modify the `x` component of the `Vec4` 
+    Access/Modify the `x` component of the `Vec4`
     """
     y: float
     """
-    Access/Modify the `y` component of the `Vec4` 
+    Access/Modify the `y` component of the `Vec4`
     """
     z: float
     """
-    Access/Modify the `z` component of the `Vec4` 
+    Access/Modify the `z` component of the `Vec4`
     """
     w: float
     """
-    Access/Modify the `w` component of the `Vec4` 
+    Access/Modify the `w` component of the `Vec4`
     """
     x_ptr: Float
     """
@@ -317,7 +317,7 @@ class ImGlyphRange:
         ```python
         range = pygui.ImGlyphRange([
             (0x00, 0xFF) # Internally adds 1
-        ]) 
+        ])
         # Is the the same as
         range = pygui.ImGlyphRange([
             (0x01, 0xFF)
@@ -4234,10 +4234,10 @@ class ImFontConfig:
     """
     False// align every glyph to pixel boundary. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
     """
-    # rasterizer_density: float
-    # """
-    # 1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
-    # """
+    rasterizer_density: float
+    """
+    1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+    """
     rasterizer_multiply: float
     """
     1.0f // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
@@ -4431,34 +4431,34 @@ class ImGuiIO:
     - We expect to update the API eventually. In the meanwhile we provide tools to facilitate checking user-code behavior.
     = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
     """
-    # config_debug_highlight_id_conflicts: bool
-    # """
-    # Tools to detect code submitting items with conflicting/duplicate IDs
-    # - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
-    # - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
-    # - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
-    # = true           // highlight and show an error message when multiple items have conflicting identifiers.
-    # """
-    # config_debug_ignore_focus_loss: bool
-    # """
-    # Option to deactivate io.AddFocusEvent(false) handling.
-    # - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-    # - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
-    # """
+    config_debug_highlight_id_conflicts: bool
+    """
+    Tools to detect code submitting items with conflicting/duplicate IDs
+    - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
+    - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
+    - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
+    = true           // highlight and show an error message when multiple items have conflicting identifiers.
+    """
+    config_debug_ignore_focus_loss: bool
+    """
+    Option to deactivate io.AddFocusEvent(false) handling.
+    - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+    - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
+    = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
+    """
     config_debug_ini_settings: bool
     """
     Option to audit .ini data
     = false  // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
     """
-    # config_debug_is_debugger_present: bool
-    # """
-    # Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
-    # - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
-    # - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
-    # e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
-    # = false          // enable various tools calling im_debug_break().
-    # """
+    config_debug_is_debugger_present: bool
+    """
+    Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
+    - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
+    - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
+    e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+    = false          // enable various tools calling im_debug_break().
+    """
     config_docking_always_tab_bar: bool
     """
     = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
@@ -4504,10 +4504,10 @@ class ImGuiIO:
     """
     = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
     """
-    # config_nav_swap_gamepad_buttons: bool
-    # """
-    # = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
-    # """
+    config_nav_swap_gamepad_buttons: bool
+    """
+    = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+    """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
@@ -4655,14 +4655,14 @@ class ImGuiIO:
     """
     Position at time of clicking
     """
-    # mouse_clicked_time: Sequence[Double]
-    # """
-    # Time of last click (used to figure out double-click)
-    # """
-    # mouse_ctrl_left_as_right_click: bool
-    # """
-    # (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
-    # """
+    mouse_clicked_time: float
+    """
+    Time of last click (used to figure out double-click)
+    """
+    mouse_ctrl_left_as_right_click: bool
+    """
+    (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+    """
     mouse_delta: Tuple[float, float]
     """
     Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
@@ -5144,7 +5144,7 @@ class ImGuiPayload:
     calls len(_drag_drop_payload), which is still not ideal but better than
     returning sizeof(int) I guess.
     """
-    data_type: int
+    data_type: str
     """
     Data type tag (short user-supplied string, 32 characters max)
     """
@@ -5166,9 +5166,9 @@ class ImGuiPayload:
     Source parent id (if available)
     """
     # def clear(self: ImGuiPayload) -> None: ...
-    # def is_data_type(self: ImGuiPayload, type_: str) -> bool: ...
-    # def is_delivery(self: ImGuiPayload) -> bool: ...
-    # def is_preview(self: ImGuiPayload) -> bool: ...
+    def is_data_type(self: ImGuiPayload, type_: str) -> bool: ...
+    def is_delivery(self: ImGuiPayload) -> bool: ...
+    def is_preview(self: ImGuiPayload) -> bool: ...
 
 class ImGuiPlatformIO:
     """
@@ -5622,10 +5622,10 @@ class ImGuiStyle:
     """
     Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
     """
-    # docking_separator_size: float
-    # """
-    # Thickness of resizing border between docked windows
-    # """
+    docking_separator_size: float
+    """
+    Thickness of resizing border between docked windows
+    """
     frame_border_size: float
     """
     Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -5654,20 +5654,20 @@ class ImGuiStyle:
     """
     Delay for isitemhovered(imguihoveredflags_delayshort). usually used along with hoverstationarydelay.
     """
-    # hover_flags_for_tooltip_mouse: int
-    # """
-    # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
-    # """
-    # hover_flags_for_tooltip_nav: int
-    # """
-    # Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
-    # """
-    # hover_stationary_delay: float
-    # """
-    # Behaviors
-    # (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
-    # Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
-    # """
+    hover_flags_for_tooltip_mouse: int
+    """
+    Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
+    """
+    hover_flags_for_tooltip_nav: int
+    """
+    Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
+    """
+    hover_stationary_delay: float
+    """
+    Behaviors
+    (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
+    Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
+    """
     indent_spacing: float
     """
     Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
@@ -5720,14 +5720,14 @@ class ImGuiStyle:
     """
     Horizontal offset of text from each edge of the separator + spacing on other axis. generally small values. .y is recommended to be == framepadding.y.
     """
-    # tab_bar_border_size: float
-    # """
-    # Thickness of tab-bar separator, which takes on the tab active color to denote focus.
-    # """
-    # tab_bar_overline_size: float
-    # """
-    # Thickness of tab-bar overline, which highlights the selected tab-bar.
-    # """
+    tab_bar_border_size: float
+    """
+    Thickness of tab-bar separator, which takes on the tab active color to denote focus.
+    """
+    tab_bar_overline_size: float
+    """
+    Thickness of tab-bar overline, which highlights the selected tab-bar.
+    """
     tab_border_size: float
     """
     Thickness of border around tabs.

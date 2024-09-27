@@ -16023,21 +16023,21 @@ cdef class ImFontConfig:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def rasterizer_density(self):
-    #     """
-    #     1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
-    #     """
-    #     cdef float res = dereference(self._ptr).RasterizerDensity
-    #     return res
-    # @rasterizer_density.setter
-    # def rasterizer_density(self, value: float):
-    #     # dereference(self._ptr).RasterizerDensity = value
-    #     raise NotImplementedError
+    @property
+    def rasterizer_density(self):
+        """
+        1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+        """
+        cdef float res = dereference(self._ptr).RasterizerDensity
+        return res
+    @rasterizer_density.setter
+    def rasterizer_density(self, value: float):
+        # dereference(self._ptr).RasterizerDensity = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16960,47 +16960,47 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_debug_highlight_id_conflicts(self):
-    #     """
-    #     Tools to detect code submitting items with conflicting/duplicate IDs
-    #     - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
-    #     - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
-    #     - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
-    #     = true           // highlight and show an error message when multiple items have conflicting identifiers.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflicts
-    #     return res
-    # @config_debug_highlight_id_conflicts.setter
-    # def config_debug_highlight_id_conflicts(self, value: bool):
-    #     # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
-    #     raise NotImplementedError
+    @property
+    def config_debug_highlight_id_conflicts(self):
+        """
+        Tools to detect code submitting items with conflicting/duplicate IDs
+        - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
+        - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
+        - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
+        = true           // highlight and show an error message when multiple items have conflicting identifiers.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflicts
+        return res
+    @config_debug_highlight_id_conflicts.setter
+    def config_debug_highlight_id_conflicts(self, value: bool):
+        # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_debug_ignore_focus_loss(self):
-    #     """
-    #     Option to deactivate io.AddFocusEvent(false) handling.
-    #     - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
-    #     - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
-    #     = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
-    #     return res
-    # @config_debug_ignore_focus_loss.setter
-    # def config_debug_ignore_focus_loss(self, value: bool):
-    #     # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
-    #     raise NotImplementedError
+    @property
+    def config_debug_ignore_focus_loss(self):
+        """
+        Option to deactivate io.AddFocusEvent(false) handling.
+        - May facilitate interactions with a debugger when focus loss leads to clearing inputs data.
+        - Backends may have other side-effects on focus loss, so this will reduce side-effects but not necessary remove all of them.
+        = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIgnoreFocusLoss
+        return res
+    @config_debug_ignore_focus_loss.setter
+    def config_debug_ignore_focus_loss(self, value: bool):
+        # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17025,25 +17025,25 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_debug_is_debugger_present(self):
-    #     """
-    #     Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
-    #     - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
-    #     - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
-    #     e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
-    #     = false          // enable various tools calling im_debug_break().
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDebugIsDebuggerPresent
-    #     return res
-    # @config_debug_is_debugger_present.setter
-    # def config_debug_is_debugger_present(self, value: bool):
-    #     # dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
-    #     raise NotImplementedError
+    @property
+    def config_debug_is_debugger_present(self):
+        """
+        Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
+        - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
+        - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
+        e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+        = false          // enable various tools calling im_debug_break().
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIsDebuggerPresent
+        return res
+    @config_debug_is_debugger_present.setter
+    def config_debug_is_debugger_present(self, value: bool):
+        # dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17258,21 +17258,21 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_swap_gamepad_buttons(self):
-    #     """
-    #     = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavSwapGamepadButtons
-    #     return res
-    # @config_nav_swap_gamepad_buttons.setter
-    # def config_nav_swap_gamepad_buttons(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_swap_gamepad_buttons(self):
+        """
+        = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavSwapGamepadButtons
+        return res
+    @config_nav_swap_gamepad_buttons.setter
+    def config_nav_swap_gamepad_buttons(self, value: bool):
+        # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17964,41 +17964,41 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[Double])
-    # @property
-    # def mouse_clicked_time(self):
-    #     """
-    #     Time of last click (used to figure out double-click)
-    #     """
-    #     cdef double* res = dereference(self._ptr).MouseClickedTime
-    #     return Double(dereference(res))
-    # @mouse_clicked_time.setter
-    # def mouse_clicked_time(self, value: Sequence[Double]):
-    #     # dereference(self._ptr).MouseClickedTime = &value.value
-    #     raise NotImplementedError
+    # ?returns(float)
+    @property
+    def mouse_clicked_time(self):
+        """
+        Time of last click (used to figure out double-click)
+        """
+        cdef double* res = dereference(self._ptr).MouseClickedTime
+        return <float>dereference(res)
+    @mouse_clicked_time.setter
+    def mouse_clicked_time(self, value: float):
+        # dereference(self._ptr).MouseClickedTime = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def mouse_ctrl_left_as_right_click(self):
-    #     """
-    #     (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
-    #     """
-    #     cdef bool res = dereference(self._ptr).MouseCtrlLeftAsRightClick
-    #     return res
-    # @mouse_ctrl_left_as_right_click.setter
-    # def mouse_ctrl_left_as_right_click(self, value: bool):
-    #     # dereference(self._ptr).MouseCtrlLeftAsRightClick = value
-    #     raise NotImplementedError
+    @property
+    def mouse_ctrl_left_as_right_click(self):
+        """
+        (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+        """
+        cdef bool res = dereference(self._ptr).MouseCtrlLeftAsRightClick
+        return res
+    @mouse_ctrl_left_as_right_click.setter
+    def mouse_ctrl_left_as_right_click(self, value: bool):
+        # dereference(self._ptr).MouseCtrlLeftAsRightClick = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20030,7 +20030,7 @@ cdef class ImGuiPayload:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def data_type(self):
         """
@@ -20136,42 +20136,42 @@ cdef class ImGuiPayload:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_data_type(self: ImGuiPayload, type_: str):
-    #     cdef bool res = ccimgui.ImGuiPayload_IsDataType(
-    #         self._ptr,
-    #         _bytes(type_)
-    #     )
-    #     return res
+    def is_data_type(self: ImGuiPayload, type_: str):
+        cdef bool res = ccimgui.ImGuiPayload_IsDataType(
+            self._ptr,
+            _bytes(type_)
+        )
+        return res
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_delivery(self: ImGuiPayload):
-    #     cdef bool res = ccimgui.ImGuiPayload_IsDelivery(
-    #         self._ptr
-    #     )
-    #     return res
+    def is_delivery(self: ImGuiPayload):
+        cdef bool res = ccimgui.ImGuiPayload_IsDelivery(
+            self._ptr
+        )
+        return res
     # [End Method]
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # def is_preview(self: ImGuiPayload):
-    #     cdef bool res = ccimgui.ImGuiPayload_IsPreview(
-    #         self._ptr
-    #     )
-    #     return res
+    def is_preview(self: ImGuiPayload):
+        cdef bool res = ccimgui.ImGuiPayload_IsPreview(
+            self._ptr
+        )
+        return res
     # [End Method]
 # [End Class]
 
@@ -22576,21 +22576,21 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def docking_separator_size(self):
-    #     """
-    #     Thickness of resizing border between docked windows
-    #     """
-    #     cdef float res = dereference(self._ptr).DockingSeparatorSize
-    #     return res
-    # @docking_separator_size.setter
-    # def docking_separator_size(self, value: float):
-    #     # dereference(self._ptr).DockingSeparatorSize = value
-    #     raise NotImplementedError
+    @property
+    def docking_separator_size(self):
+        """
+        Thickness of resizing border between docked windows
+        """
+        cdef float res = dereference(self._ptr).DockingSeparatorSize
+        return res
+    @docking_separator_size.setter
+    def docking_separator_size(self, value: float):
+        # dereference(self._ptr).DockingSeparatorSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22728,61 +22728,61 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # @property
-    # def hover_flags_for_tooltip_mouse(self):
-    #     """
-    #     Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
-    #     """
-    #     cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipMouse
-    #     return res
-    # @hover_flags_for_tooltip_mouse.setter
-    # def hover_flags_for_tooltip_mouse(self, value: int):
-    #     # dereference(self._ptr).HoverFlagsForTooltipMouse = value
-    #     raise NotImplementedError
+    @property
+    def hover_flags_for_tooltip_mouse(self):
+        """
+        Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using mouse.
+        """
+        cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipMouse
+        return res
+    @hover_flags_for_tooltip_mouse.setter
+    def hover_flags_for_tooltip_mouse(self, value: int):
+        # dereference(self._ptr).HoverFlagsForTooltipMouse = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # @property
-    # def hover_flags_for_tooltip_nav(self):
-    #     """
-    #     Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
-    #     """
-    #     cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipNav
-    #     return res
-    # @hover_flags_for_tooltip_nav.setter
-    # def hover_flags_for_tooltip_nav(self, value: int):
-    #     # dereference(self._ptr).HoverFlagsForTooltipNav = value
-    #     raise NotImplementedError
+    @property
+    def hover_flags_for_tooltip_nav(self):
+        """
+        Default flags when using isitemhovered(imguihoveredflags_fortooltip) or beginitemtooltip()/setitemtooltip() while using keyboard/gamepad.
+        """
+        cdef ccimgui.ImGuiHoveredFlags res = dereference(self._ptr).HoverFlagsForTooltipNav
+        return res
+    @hover_flags_for_tooltip_nav.setter
+    def hover_flags_for_tooltip_nav(self, value: int):
+        # dereference(self._ptr).HoverFlagsForTooltipNav = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def hover_stationary_delay(self):
-    #     """
-    #     Behaviors
-    #     (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
-    #     Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
-    #     """
-    #     cdef float res = dereference(self._ptr).HoverStationaryDelay
-    #     return res
-    # @hover_stationary_delay.setter
-    # def hover_stationary_delay(self, value: float):
-    #     # dereference(self._ptr).HoverStationaryDelay = value
-    #     raise NotImplementedError
+    @property
+    def hover_stationary_delay(self):
+        """
+        Behaviors
+        (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
+        Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
+        """
+        cdef float res = dereference(self._ptr).HoverStationaryDelay
+        return res
+    @hover_stationary_delay.setter
+    def hover_stationary_delay(self, value: float):
+        # dereference(self._ptr).HoverStationaryDelay = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -23034,40 +23034,40 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_bar_border_size(self):
-    #     """
-    #     Thickness of tab-bar separator, which takes on the tab active color to denote focus.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabBarBorderSize
-    #     return res
-    # @tab_bar_border_size.setter
-    # def tab_bar_border_size(self, value: float):
-    #     # dereference(self._ptr).TabBarBorderSize = value
-    #     raise NotImplementedError
+    @property
+    def tab_bar_border_size(self):
+        """
+        Thickness of tab-bar separator, which takes on the tab active color to denote focus.
+        """
+        cdef float res = dereference(self._ptr).TabBarBorderSize
+        return res
+    @tab_bar_border_size.setter
+    def tab_bar_border_size(self, value: float):
+        # dereference(self._ptr).TabBarBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_bar_overline_size(self):
-    #     """
-    #     Thickness of tab-bar overline, which highlights the selected tab-bar.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabBarOverlineSize
-    #     return res
-    # @tab_bar_overline_size.setter
-    # def tab_bar_overline_size(self, value: float):
-    #     # dereference(self._ptr).TabBarOverlineSize = value
-    #     raise NotImplementedError
+    @property
+    def tab_bar_overline_size(self):
+        """
+        Thickness of tab-bar overline, which highlights the selected tab-bar.
+        """
+        cdef float res = dereference(self._ptr).TabBarOverlineSize
+        return res
+    @tab_bar_overline_size.setter
+    def tab_bar_overline_size(self, value: float):
+        # dereference(self._ptr).TabBarOverlineSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]

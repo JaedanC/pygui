@@ -30,7 +30,7 @@ class MergeResult:
         self.merged_model: PyxHeader = comparison.create_new_header_based_on_comparison(self.template_model)
         if self.merged_model is None:
             raise MergeFailed
-        
+
         self.merged_pyx: str = replace_after(
             new_pyx,
             PYX_TEMPLATE_MARKER,
@@ -127,7 +127,7 @@ def to_pyi(
             """
             Allows this instance to be directly used a boolean in an `if` statement
             without needing to extract the value.
-                
+
                 ```python
                 my_boolean = pygui.Bool(True)
                 if my_boolean:
@@ -180,7 +180,7 @@ def to_pyi(
         `buffer_size` indicates how large the buffer backing this string should
         be. Depending on the characters in the string, the `buffer_size`
         *may not* be the same `len()` as the string.
-        
+
         The number of writable bytes is equal to `buffer_size - 1`, to make room
         for the NULL byte which is automatically handled by this class.
 
@@ -189,7 +189,7 @@ def to_pyi(
         using `strncpy` (no buffer overflow for you). Modifying the
         `buffer_size` is *not* supported and will raise a NotImplementedError if
         changed. `buffer_size` must be >= 0 on creation.
-        
+
         This as a replacement for `char*` in c++.
         """
         value: str
@@ -209,11 +209,11 @@ def to_pyi(
         """
         x: float
         """
-        Access/Modify the `x` component of the `Vec2` 
+        Access/Modify the `x` component of the `Vec2`
         """
         y: float
         """
-        Access/Modify the `y` component of the `Vec2` 
+        Access/Modify the `y` component of the `Vec2`
         """
         x_ptr: Float
         """
@@ -230,14 +230,14 @@ def to_pyi(
             Same as `Vec2(0, 0)`
             """
             pass
-        
+
         def tuple(self) -> Sequence[float, float]:
             """
             Access a read-only tuple containing the `x`, `y` components of the
             `Vec2`
             """
             pass
-        
+
         def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
             """
             Modify the components of the `Vec2` using a (minimum) length 2
@@ -247,11 +247,11 @@ def to_pyi(
                 vec2 = pygui.Vec2(0, 0)
                 vec2.from_tuple((50, 100))
                 ```
-            
+
             Returns the same Vec2 so that this method can be chained.
             """
             pass
-        
+
         def as_floatptrs(self) -> Sequence[Float, Float]:
             """
             Returns the internal components of the `Vec2` as a length 2 tuple of
@@ -259,7 +259,7 @@ def to_pyi(
             internal state of the `Vec2` from elsewhere.
             """
             pass
-        
+
         def from_floatptrs(self, float_ptrs: Sequence[Float, Float]) -> Vec2:
             """
             Modify the components of the `Vec2` using a (minimum) length 2
@@ -267,7 +267,7 @@ def to_pyi(
             that this method can be chained.
             """
             pass
-        
+
         def copy(self) -> Vec2:
             """
             Returns a new deepcopied `Vec2`. The underlying `pygui.Float` are
@@ -285,19 +285,19 @@ def to_pyi(
         """
         x: float
         """
-        Access/Modify the `x` component of the `Vec4` 
+        Access/Modify the `x` component of the `Vec4`
         """
         y: float
         """
-        Access/Modify the `y` component of the `Vec4` 
+        Access/Modify the `y` component of the `Vec4`
         """
         z: float
         """
-        Access/Modify the `z` component of the `Vec4` 
+        Access/Modify the `z` component of the `Vec4`
         """
         w: float
         """
-        Access/Modify the `w` component of the `Vec4` 
+        Access/Modify the `w` component of the `Vec4`
         """
         x_ptr: Float
         """
@@ -322,13 +322,13 @@ def to_pyi(
             Same as `Vec4(0, 0)`
             """
             pass
-        
+
         def tuple(self) -> Sequence[float, float, float, float]:
             """
             Access a read-only tuple containing the components of the `Vec4`
             """
             pass
-        
+
         def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
             """
             Modify the components of the `Vec4` using a (minimum)
@@ -342,7 +342,7 @@ def to_pyi(
             Returns the same Vec4 so that this method can be chained.
             """
             pass
-        
+
         def as_floatptrs(self) -> Sequence[Float, Float, Float, Float]:
             """
             Returns the internal components of the `Vec2` as a length 4 tuple of
@@ -350,7 +350,7 @@ def to_pyi(
             internal state of the `Vec4` from elsewhere.
             """
             pass
-        
+
         def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4:
             """
             Modify the components of the `Vec4` using a (minimum) length 4
@@ -358,27 +358,27 @@ def to_pyi(
             that this method can be chained.
             """
             pass
-        
+
         def to_u32(self) -> int:
             """
             Converts this `Vec4` into a u32 integer. u32 integers are used in
             ImGui for coloring.
             """
             pass
-        
+
         def copy(self) -> Vec4:
             """
             Returns a new deepcopied `Vec4`. The underlying `pygui.Float` are
             also new.
             """
             pass
-    
+
     class ImGlyphRange:
         """
         A custom wrapper around an `unsigned short*` array. This is used to back
         the glyph range used by many of the font functions in pygui. Pass a list
         of 2 element tuples to create a valid range.
-        
+
         For example:
 
             ```python
@@ -395,7 +395,7 @@ def to_pyi(
             ```python
             range = pygui.ImGlyphRange([
                 (0x00, 0xFF) # Internally adds 1
-            ]) 
+            ])
             # Is the the same as
             range = pygui.ImGlyphRange([
                 (0x01, 0xFF)
@@ -415,7 +415,7 @@ def to_pyi(
             may actually free the memory backing this range before you call
             `ImFontAtlas.build()` which requires the buffer to be valid. Hence,
             this function exists.
-            
+
             Call `ImGlyphRange.destroy()` explicitly after calling
             `ImFontAtlas.build()` to ensure Python does not garbage-collect this
             object.
@@ -428,7 +428,7 @@ def to_pyi(
         Mimics a macro in ImGui. Each components is between 0-255. The result is
         a u32 integer used commonly in ImGui for coloring.
         """
-    
+
     IM_COL32_WHITE: int
     IM_COL32_BLACK: int
     IM_COL32_BLACK_TRANS: int
@@ -440,60 +440,60 @@ def to_pyi(
         Use like `assert`. If the condition is false an `ImGuiError` is raised.
         """
         pass
-    
+
     def IM_CLAMP(n, smallest, largest):
         """
         Returns n clamped to [smallest, largest]
         """
         pass
-        
+
     def load_image(image: Image) -> int:
         """
         Loads a PIL image into ImGui. Returns a texture handle that can be used
         in any `pygui.image` function.
         """
         pass
-                           
+
     # def sizeof(_type) -> int:
     #     """
     #     Placeholder to make the pyi not get upset about sizeof() in cython.
     #     Do not use.
     #     """
     #     pass
-    
+
     '''.lstrip("\n"))
 
     # __init__.pyi ------------------------------------
 
     pyi = StringIO()
     pyi.write(base)
-    
+
 
     for header in modules:
         for enum in header.get_enums():
             longest_enum = 0
             for enum_value in enum.get_elements():
                 longest_enum = max(longest_enum, len(enum_value.to_pyi()))
-            
+
             for enum_value in enum.get_elements():
                 pyi.write("{}: int".format(enum_value.to_pyi()))
-                
+
                 comment_text = enum_value.get_comment().hash_attached_only()
                 if comment_text is not None and show_comments:
                     pyi.write(" " * (longest_enum - len(enum_value.to_pyi()) + 5) + comment_text)
 
                 pyi.write("\n")
         pyi.write("\n")
-    
+
     with open("core/templates/function.pyi") as f:
         function_template_base = f.read()
-    
+
     with open("core/templates/class.pyi") as f:
         class_template_base = f.read()
-    
+
     with open("core/templates/field.pyi") as f:
         field_template_base = f.read()
-    
+
     pyi.write(model.to_pyi(
         function_template_base,
         class_template_base,
@@ -556,7 +556,7 @@ def to_py(extension_name: str):
         # clean up afterwards
         gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
         return texture
-    
+
     """.lstrip("\n"))
     return py
 
@@ -607,7 +607,7 @@ def main():
         except MergeFailed:
             print("Trial: Merge failed. Aborting.")
             return
-        
+
         with open(GENERATED_PYX_TRIAL_PATH, "w") as f:
             f.write(merge_result.new_pyx)
         with open(PYX_TRIAL_PATH, "w") as f:
@@ -622,7 +622,7 @@ def main():
         new_pyx = ""
         for i, header in enumerate(modules):
             new_pyx += header.to_pyx(pxd_libary_name, i == 0)
-        
+
         new_model = create_pyx_model(new_pyx)
         try:
             with open(TEMPLATE_PYX_PATH) as f:
@@ -649,11 +649,11 @@ def main():
         pxd = ""
         for i, header in enumerate(modules):
             pxd += header.to_pxd(i == 0)
-        
+
         with open(CIMGUI_PXD_PATH, "w") as f:
             f.write(pxd)
         print(f"Created {CIMGUI_PXD_PATH}")
-    
+
     def write_pyx(modules: List[IBinding], pxd_libary_name: str):
         new_pyx = ""
         for i, header in enumerate(modules):
@@ -672,7 +672,7 @@ def main():
         except FileNotFoundError:
             print(f"'{TEMPLATE_PYX_PATH}' not found. Aborting. Use --reset first ")
             return
-        
+
         try:
             merge_result = MergeResult(old_pyx, new_pyx, template_pyx)
         except MergeFailed:
@@ -688,7 +688,7 @@ def main():
         print(f"Created {GENERATED_PYX_PATH}")
         print(f"Created {PYX_PATH}")
         print(f"Created {TEMPLATE_PYX_PATH}")
-    
+
     def write_pyi(modules: List[IBinding], extension_name: str, show_comments: bool):
         try:
             with open(TEMPLATE_PYX_PATH) as f:
@@ -696,7 +696,7 @@ def main():
         except FileNotFoundError:
             print(f"'{TEMPLATE_PYX_PATH}' not found. This is required to create the pyi file")
             return
-        
+
         pyi = to_pyi(modules, model, show_comments)
         py = to_py(extension_name)
 
@@ -711,17 +711,17 @@ def main():
     if len(sys.argv) < 2:
         _help()
         return
-    
+
     show_comments = "--nocomments" not in sys.argv
 
     if "--help" in sys.argv:
         _help()
         return
-    
+
     if "--trial" in sys.argv:
         trial_pyx(modules, CIMGUI_LIBRARY_NAME)
         return
-    
+
     if "--reset" in sys.argv:
         reset(modules, CIMGUI_LIBRARY_NAME)
         return
@@ -729,7 +729,7 @@ def main():
     if "--pxd" in sys.argv:
         write_pxd(modules)
         return
-    
+
     if "--pyx" in sys.argv:
         write_pyx(modules, CIMGUI_LIBRARY_NAME)
         return
@@ -737,7 +737,7 @@ def main():
     if "--pyi" in sys.argv:
         write_pyi(modules, EXTENSION_NAME, show_comments)
         return
-    
+
     if "--all" in sys.argv:
         write_pxd(modules)
         write_pyx(modules, CIMGUI_LIBRARY_NAME)
