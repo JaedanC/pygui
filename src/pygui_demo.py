@@ -4,6 +4,7 @@ Run the demo with `pygui.show_demo_window()`
 """
 from __future__ import annotations
 import math
+import sys
 import time
 from enum import Enum, auto
 from typing import List, Tuple
@@ -1153,6 +1154,14 @@ def pygui_demo_window():
 
     pygui.push_item_width(pygui.get_font_size() * -12)
     show_menu_bar()
+
+    pygui.text("imgui version:  ({})".format(pygui.get_version()))
+    pygui.text("python version: ({}.{}.{})".format(
+        sys.version_info.major,
+        sys.version_info.minor,
+        sys.version_info.micro,
+    ))
+
     show_demo_widgets()
     show_demo_window_layout()
     show_demo_tables()
