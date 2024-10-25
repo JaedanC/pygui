@@ -86,6 +86,7 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
 
 
 class Binding(IBinding):
+    @staticmethod
     def from_json(cimgui_json, pxd_header: str, definitions: List[Tuple[str, bool]]):
         cimgui_json = deep_json_filter(cimgui_json, passes_conditional, definitions)
         cimgui_json = deep_json_filter(cimgui_json, ignore_anonymous)
@@ -203,7 +204,14 @@ class Binding(IBinding):
 
         return dynamic_content.getvalue()
 
-    def to_pyx(self, pxd_library_name: str, include_base: bool) -> str:
+    def to_pyx(
+            self,
+            pxd_library_name: str,
+            include_base: bool,
+            class_base: str,
+            function_base: str,
+            field_base: str
+        ) -> str:
         # TODO: Sort?
         base = '''
         # distutils: language = c++
@@ -748,9 +756,6 @@ class Binding(IBinding):
             pyx.write(enum.to_pyx(pxd_library_name))
 
         # Add Functions
-        with open("core/templates/function.h") as f:
-            function_base = f.read()
-
         pyx.write("\n\n")
         pyx.write(PYX_TEMPLATE_MARKER)
         for function in self.functions:
@@ -760,12 +765,7 @@ class Binding(IBinding):
             pyx.write(function_pyx)
             pyx.write("# [End Function]\n\n")
 
-            # Add Classes/Methods
-        with open("core/templates/class.h") as f:
-            class_base = f.read()
-        with open("core/templates/field.h") as f:
-            field_base = f.read()
-
+        # Add Classes/Methods
         for struct in self.structs:
             class_template = Template(class_base)
 

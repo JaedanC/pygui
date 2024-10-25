@@ -2,10 +2,11 @@ from __future__ import annotations
 import re
 import textwrap
 import json
-from typing import List, Tuple, Any
-from diff_match_patch import diff_match_patch
 from io import StringIO
-from model.template import Template
+from typing import List, Tuple, Any
+
+from diff_match_patch import diff_match_patch
+from .model.template import Template
 
 
 def comment_out_text(text: str):

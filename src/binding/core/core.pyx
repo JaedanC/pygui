@@ -1542,15 +1542,15 @@ def begin_menu_bar():
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_menu_ex(label: str, enabled: bool=True):
-    """
-    Create a sub-menu entry. only call endmenu() if this returns true!
-    """
-    cdef bool res = ccimgui.ImGui_BeginMenuEx(
-        _bytes(label),
-        enabled
-    )
-    return res
+# def begin_menu_ex(label: str, enabled: bool=True):
+#     """
+#     Create a sub-menu entry. only call endmenu() if this returns true!
+#     """
+#     cdef bool res = ccimgui.ImGui_BeginMenuEx(
+#         _bytes(label),
+#         enabled
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1584,13 +1584,13 @@ def begin_multi_select(flags: int, selection_size: int=-1, items_count: int=-1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(ImGuiMultiSelectIO)
-def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1):
-    cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelectEx(
-        flags,
-        selection_size,
-        items_count
-    )
-    return ImGuiMultiSelectIO.from_ptr(res)
+# def begin_multi_select_ex(flags: int, selection_size: int=-1, items_count: int=-1):
+#     cdef ccimgui.ImGuiMultiSelectIO* res = ccimgui.ImGui_BeginMultiSelectEx(
+#         flags,
+#         selection_size,
+#         items_count
+#     )
+#     return ImGuiMultiSelectIO.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -1651,17 +1651,17 @@ def begin_popup_context_item(str_id: str=None, popup_flags: int=1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_popup_context_item_ex(str_id: str=None, popup_flags: int=1):
-    """
-    Open+begin popup when clicked on last item. use str_id==null to associate the popup to previous item. if you want to use that on a non-interactive item such as text() you need to pass in an explicit id here. read comments in .cpp!
-    """
-    bytes_str_id = _bytes(str_id) if str_id is not None else None
+# def begin_popup_context_item_ex(str_id: str=None, popup_flags: int=1):
+#     """
+#     Open+begin popup when clicked on last item. use str_id==null to associate the popup to previous item. if you want to use that on a non-interactive item such as text() you need to pass in an explicit id here. read comments in .cpp!
+#     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
 
-    cdef bool res = ccimgui.ImGui_BeginPopupContextItemEx(
-        ((<char*>bytes_str_id if str_id is not None else NULL)),
-        popup_flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_BeginPopupContextItemEx(
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
+#         popup_flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1689,17 +1689,17 @@ def begin_popup_context_void(str_id: str=None, popup_flags: int=1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1):
-    """
-    Open+begin popup when clicked in void (where there are no windows).
-    """
-    bytes_str_id = _bytes(str_id) if str_id is not None else None
+# def begin_popup_context_void_ex(str_id: str=None, popup_flags: int=1):
+#     """
+#     Open+begin popup when clicked in void (where there are no windows).
+#     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
 
-    cdef bool res = ccimgui.ImGui_BeginPopupContextVoidEx(
-        ((<char*>bytes_str_id if str_id is not None else NULL)),
-        popup_flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_BeginPopupContextVoidEx(
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
+#         popup_flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1727,17 +1727,17 @@ def begin_popup_context_window(str_id: str=None, popup_flags: int=1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_popup_context_window_ex(str_id: str=None, popup_flags: int=1):
-    """
-    Open+begin popup when clicked on current window.
-    """
-    bytes_str_id = _bytes(str_id) if str_id is not None else None
+# def begin_popup_context_window_ex(str_id: str=None, popup_flags: int=1):
+#     """
+#     Open+begin popup when clicked on current window.
+#     """
+#     bytes_str_id = _bytes(str_id) if str_id is not None else None
 
-    cdef bool res = ccimgui.ImGui_BeginPopupContextWindowEx(
-        ((<char*>bytes_str_id if str_id is not None else NULL)),
-        popup_flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_BeginPopupContextWindowEx(
+#         ((<char*>bytes_str_id if str_id is not None else NULL)),
+#         popup_flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1842,15 +1842,15 @@ def begin_table(str_id: str, columns: int, flags: int=0, outer_size: tuple=(0.0,
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin_table_ex(str_id: str, columns: int, flags: int=0, outer_size: Tuple[float, float]=(0.0, 0.0), inner_width: float=0.0):
-    cdef bool res = ccimgui.ImGui_BeginTableEx(
-        _bytes(str_id),
-        columns,
-        flags,
-        _cast_tuple_ImVec2(outer_size),
-        inner_width
-    )
-    return res
+# def begin_table_ex(str_id: str, columns: int, flags: int=0, outer_size: Tuple[float, float]=(0.0, 0.0), inner_width: float=0.0):
+#     cdef bool res = ccimgui.ImGui_BeginTableEx(
+#         _bytes(str_id),
+#         columns,
+#         flags,
+#         _cast_tuple_ImVec2(outer_size),
+#         inner_width
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1905,10 +1905,10 @@ def bullet_text(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def bullet_text_v(fmt: str):
-    ccimgui.ImGui_BulletTextV(
-        _bytes(fmt)
-    )
+# def bullet_text_v(fmt: str):
+#     ccimgui.ImGui_BulletTextV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -1937,15 +1937,15 @@ def button(label: str, size: tuple=(0, 0)):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def button_ex(label: str, size: Tuple[float, float]=(0, 0)):
-    """
-    Button
-    """
-    cdef bool res = ccimgui.ImGui_ButtonEx(
-        _bytes(label),
-        _cast_tuple_ImVec2(size)
-    )
-    return res
+# def button_ex(label: str, size: Tuple[float, float]=(0, 0)):
+#     """
+#     Button
+#     """
+#     cdef bool res = ccimgui.ImGui_ButtonEx(
+#         _bytes(label),
+#         _cast_tuple_ImVec2(size)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -1954,11 +1954,11 @@ def button_ex(label: str, size: Tuple[float, float]=(0, 0)):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_char_callback(window: GLFWwindow, c: int):
-    ccimgui.cImGui_ImplGlfw_CharCallback(
-        window._ptr,
-        c
-    )
+# def c_impl_glfw_char_callback(window: GLFWwindow, c: int):
+#     ccimgui.cImGui_ImplGlfw_CharCallback(
+#         window._ptr,
+#         c
+#     )
 # [End Function]
 
 # [Function]
@@ -1967,14 +1967,14 @@ def c_impl_glfw_char_callback(window: GLFWwindow, c: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
-    """
-    Since 1.84
-    """
-    ccimgui.cImGui_ImplGlfw_CursorEnterCallback(
-        window._ptr,
-        entered
-    )
+# def c_impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
+#     """
+#     Since 1.84
+#     """
+#     ccimgui.cImGui_ImplGlfw_CursorEnterCallback(
+#         window._ptr,
+#         entered
+#     )
 # [End Function]
 
 # [Function]
@@ -1983,15 +1983,15 @@ def c_impl_glfw_cursor_enter_callback(window: GLFWwindow, entered: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
-    """
-    Since 1.87
-    """
-    ccimgui.cImGui_ImplGlfw_CursorPosCallback(
-        window._ptr,
-        x,
-        y
-    )
+# def c_impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
+#     """
+#     Since 1.87
+#     """
+#     ccimgui.cImGui_ImplGlfw_CursorPosCallback(
+#         window._ptr,
+#         x,
+#         y
+#     )
 # [End Function]
 
 # [Function]
@@ -2018,12 +2018,12 @@ def c_impl_glfw_init_for_open_gl(window, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def c_impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
-    cdef bool res = ccimgui.cImGui_ImplGlfw_InitForOther(
-        window._ptr,
-        install_callbacks
-    )
-    return res
+# def c_impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
+#     cdef bool res = ccimgui.cImGui_ImplGlfw_InitForOther(
+#         window._ptr,
+#         install_callbacks
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2032,12 +2032,12 @@ def c_impl_glfw_init_for_other(window: GLFWwindow, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def c_impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
-    cdef bool res = ccimgui.cImGui_ImplGlfw_InitForVulkan(
-        window._ptr,
-        install_callbacks
-    )
-    return res
+# def c_impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
+#     cdef bool res = ccimgui.cImGui_ImplGlfw_InitForVulkan(
+#         window._ptr,
+#         install_callbacks
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2046,15 +2046,15 @@ def c_impl_glfw_init_for_vulkan(window: GLFWwindow, install_callbacks: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_install_callbacks(window: GLFWwindow):
-    """
-    GLFW callbacks install
-    - When calling Init with 'install_callbacks=true': ImGui_ImplGlfw_InstallCallbacks() is called. GLFW callbacks will be installed for you. They will chain-call user's previously installed callbacks, if any.
-    - When calling Init with 'install_callbacks=false': GLFW callbacks won't be installed. You will need to call individual function yourself from your own GLFW callbacks.
-    """
-    ccimgui.cImGui_ImplGlfw_InstallCallbacks(
-        window._ptr
-    )
+# def c_impl_glfw_install_callbacks(window: GLFWwindow):
+#     """
+#     GLFW callbacks install
+#     - When calling Init with 'install_callbacks=true': ImGui_ImplGlfw_InstallCallbacks() is called. GLFW callbacks will be installed for you. They will chain-call user's previously installed callbacks, if any.
+#     - When calling Init with 'install_callbacks=false': GLFW callbacks won't be installed. You will need to call individual function yourself from your own GLFW callbacks.
+#     """
+#     ccimgui.cImGui_ImplGlfw_InstallCallbacks(
+#         window._ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -2063,14 +2063,14 @@ def c_impl_glfw_install_callbacks(window: GLFWwindow):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
-    ccimgui.cImGui_ImplGlfw_KeyCallback(
-        window._ptr,
-        key,
-        scancode,
-        action,
-        mods
-    )
+# def c_impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action: int, mods: int):
+#     ccimgui.cImGui_ImplGlfw_KeyCallback(
+#         window._ptr,
+#         key,
+#         scancode,
+#         action,
+#         mods
+#     )
 # [End Function]
 
 # [Function]
@@ -2079,11 +2079,11 @@ def c_impl_glfw_key_callback(window: GLFWwindow, key: int, scancode: int, action
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
-    ccimgui.cImGui_ImplGlfw_MonitorCallback(
-        monitor._ptr,
-        event
-    )
+# def c_impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
+#     ccimgui.cImGui_ImplGlfw_MonitorCallback(
+#         monitor._ptr,
+#         event
+#     )
 # [End Function]
 
 # [Function]
@@ -2092,13 +2092,13 @@ def c_impl_glfw_monitor_callback(monitor: GLFWmonitor, event: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
-    ccimgui.cImGui_ImplGlfw_MouseButtonCallback(
-        window._ptr,
-        button,
-        action,
-        mods
-    )
+# def c_impl_glfw_mouse_button_callback(window: GLFWwindow, button: int, action: int, mods: int):
+#     ccimgui.cImGui_ImplGlfw_MouseButtonCallback(
+#         window._ptr,
+#         button,
+#         action,
+#         mods
+#     )
 # [End Function]
 
 # [Function]
@@ -2117,10 +2117,10 @@ def c_impl_glfw_new_frame():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_restore_callbacks(window: GLFWwindow):
-    ccimgui.cImGui_ImplGlfw_RestoreCallbacks(
-        window._ptr
-    )
+# def c_impl_glfw_restore_callbacks(window: GLFWwindow):
+#     ccimgui.cImGui_ImplGlfw_RestoreCallbacks(
+#         window._ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -2129,12 +2129,12 @@ def c_impl_glfw_restore_callbacks(window: GLFWwindow):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
-    ccimgui.cImGui_ImplGlfw_ScrollCallback(
-        window._ptr,
-        xoffset,
-        yoffset
-    )
+# def c_impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: float):
+#     ccimgui.cImGui_ImplGlfw_ScrollCallback(
+#         window._ptr,
+#         xoffset,
+#         yoffset
+#     )
 # [End Function]
 
 # [Function]
@@ -2143,14 +2143,14 @@ def c_impl_glfw_scroll_callback(window: GLFWwindow, xoffset: float, yoffset: flo
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
-    """
-    GFLW callbacks options:
-    - Set 'chain_for_all_windows=true' to enable chaining callbacks for all windows (including secondary viewports created by backends or by user)
-    """
-    ccimgui.cImGui_ImplGlfw_SetCallbacksChainForAllWindows(
-        chain_for_all_windows
-    )
+# def c_impl_glfw_set_callbacks_chain_for_all_windows(chain_for_all_windows: bool):
+#     """
+#     GFLW callbacks options:
+#     - Set 'chain_for_all_windows=true' to enable chaining callbacks for all windows (including secondary viewports created by backends or by user)
+#     """
+#     ccimgui.cImGui_ImplGlfw_SetCallbacksChainForAllWindows(
+#         chain_for_all_windows
+#     )
 # [End Function]
 
 # [Function]
@@ -2169,13 +2169,13 @@ def c_impl_glfw_shutdown():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_sleep(milliseconds: int):
-    """
-    GLFW helpers
-    """
-    ccimgui.cImGui_ImplGlfw_Sleep(
-        milliseconds
-    )
+# def c_impl_glfw_sleep(milliseconds: int):
+#     """
+#     GLFW helpers
+#     """
+#     ccimgui.cImGui_ImplGlfw_Sleep(
+#         milliseconds
+#     )
 # [End Function]
 
 # [Function]
@@ -2184,15 +2184,15 @@ def c_impl_glfw_sleep(milliseconds: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
-    """
-    GLFW callbacks (individual callbacks to call yourself if you didn't install callbacks)
-    Since 1.84
-    """
-    ccimgui.cImGui_ImplGlfw_WindowFocusCallback(
-        window._ptr,
-        focused
-    )
+# def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
+#     """
+#     GLFW callbacks (individual callbacks to call yourself if you didn't install callbacks)
+#     Since 1.84
+#     """
+#     ccimgui.cImGui_ImplGlfw_WindowFocusCallback(
+#         window._ptr,
+#         focused
+#     )
 # [End Function]
 
 # [Function]
@@ -2201,9 +2201,9 @@ def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def c_impl_open_gl3_create_device_objects():
-    cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateDeviceObjects()
-    return res
+# def c_impl_open_gl3_create_device_objects():
+#     cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateDeviceObjects()
+#     return res
 # [End Function]
 
 # [Function]
@@ -2212,12 +2212,12 @@ def c_impl_open_gl3_create_device_objects():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def c_impl_open_gl3_create_fonts_texture():
-    """
-    (Optional) Called by Init/NewFrame/Shutdown
-    """
-    cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateFontsTexture()
-    return res
+# def c_impl_open_gl3_create_fonts_texture():
+#     """
+#     (Optional) Called by Init/NewFrame/Shutdown
+#     """
+#     cdef bool res = ccimgui.cImGui_ImplOpenGL3_CreateFontsTexture()
+#     return res
 # [End Function]
 
 # [Function]
@@ -2226,8 +2226,8 @@ def c_impl_open_gl3_create_fonts_texture():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_open_gl3_destroy_device_objects():
-    ccimgui.cImGui_ImplOpenGL3_DestroyDeviceObjects()
+# def c_impl_open_gl3_destroy_device_objects():
+#     ccimgui.cImGui_ImplOpenGL3_DestroyDeviceObjects()
 # [End Function]
 
 # [Function]
@@ -2236,8 +2236,8 @@ def c_impl_open_gl3_destroy_device_objects():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def c_impl_open_gl3_destroy_fonts_texture():
-    ccimgui.cImGui_ImplOpenGL3_DestroyFontsTexture()
+# def c_impl_open_gl3_destroy_fonts_texture():
+#     ccimgui.cImGui_ImplOpenGL3_DestroyFontsTexture()
 # [End Function]
 
 # [Function]
@@ -2265,11 +2265,11 @@ def c_impl_open_gl3_init(glsl_version: str=None):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def c_impl_open_gl3_init_ex(glsl_version: str=nullptr):
-    cdef bool res = ccimgui.cImGui_ImplOpenGL3_InitEx(
-        _bytes(glsl_version)
-    )
-    return res
+# def c_impl_open_gl3_init_ex(glsl_version: str=nullptr):
+#     cdef bool res = ccimgui.cImGui_ImplOpenGL3_InitEx(
+#         _bytes(glsl_version)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2346,16 +2346,16 @@ def calc_text_size(text: str, text_end: str=None, hide_text_after_double_hash: b
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(Tuple[float, float])
-def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
-    bytes_text_end = _bytes(text_end) if text_end is not None else None
+# def calc_text_size_ex(text: str, text_end: str=None, hide_text_after_double_hash: bool=False, wrap_width: float=-1.0):
+#     bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-    cdef ccimgui.ImVec2 res = ccimgui.ImGui_CalcTextSizeEx(
-        _bytes(text),
-        ((<char*>bytes_text_end if text_end is not None else NULL)),
-        hide_text_after_double_hash,
-        wrap_width
-    )
-    return _cast_ImVec2_tuple(res)
+#     cdef ccimgui.ImVec2 res = ccimgui.ImGui_CalcTextSizeEx(
+#         _bytes(text),
+#         ((<char*>bytes_text_end if text_end is not None else NULL)),
+#         hide_text_after_double_hash,
+#         wrap_width
+#     )
+#     return _cast_ImVec2_tuple(res)
 # [End Function]
 
 # [Function]
@@ -2392,13 +2392,13 @@ def checkbox_flags(label: str, flags: Int, flags_value: int):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def checkbox_flags_int_ptr(label: str, flags: Int, flags_value: int):
-    cdef bool res = ccimgui.ImGui_CheckboxFlagsIntPtr(
-        _bytes(label),
-        &flags.value,
-        flags_value
-    )
-    return res
+# def checkbox_flags_int_ptr(label: str, flags: Int, flags_value: int):
+#     cdef bool res = ccimgui.ImGui_CheckboxFlagsIntPtr(
+#         _bytes(label),
+#         &flags.value,
+#         flags_value
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2407,13 +2407,13 @@ def checkbox_flags_int_ptr(label: str, flags: Int, flags_value: int):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def checkbox_flags_uint_ptr(label: str, flags: Int, flags_value: int):
-    cdef bool res = ccimgui.ImGui_CheckboxFlagsUintPtr(
-        _bytes(label),
-        &flags.value,
-        flags_value
-    )
-    return res
+# def checkbox_flags_uint_ptr(label: str, flags: Int, flags_value: int):
+#     cdef bool res = ccimgui.ImGui_CheckboxFlagsUintPtr(
+#         _bytes(label),
+#         &flags.value,
+#         flags_value
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2489,17 +2489,17 @@ def color_button(desc_id: str, col: Tuple[float, float, float, float], flags: in
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def color_button_ex(desc_id: str, col: Tuple[float, float, float, float], flags: int=0, size: Tuple[float, float]=(0, 0)):
-    """
-    Display a color square/button, hover for details, return true when pressed.
-    """
-    cdef bool res = ccimgui.ImGui_ColorButtonEx(
-        _bytes(desc_id),
-        _cast_tuple_ImVec4(col),
-        flags,
-        _cast_tuple_ImVec2(size)
-    )
-    return res
+# def color_button_ex(desc_id: str, col: Tuple[float, float, float, float], flags: int=0, size: Tuple[float, float]=(0, 0)):
+#     """
+#     Display a color square/button, hover for details, return true when pressed.
+#     """
+#     cdef bool res = ccimgui.ImGui_ColorButtonEx(
+#         _bytes(desc_id),
+#         _cast_tuple_ImVec4(col),
+#         flags,
+#         _cast_tuple_ImVec2(size)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2693,14 +2693,14 @@ def columns(count: int=1, id_: str=None, border: bool=True):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def columns_ex(count: int=1, id_: str=None, borders: bool=True):
-    bytes_id_ = _bytes(id_) if id_ is not None else None
+# def columns_ex(count: int=1, id_: str=None, borders: bool=True):
+#     bytes_id_ = _bytes(id_) if id_ is not None else None
 
-    ccimgui.ImGui_ColumnsEx(
-        count,
-        ((<char*>bytes_id_ if id_ is not None else NULL)),
-        borders
-    )
+#     ccimgui.ImGui_ColumnsEx(
+#         count,
+#         ((<char*>bytes_id_ if id_ is not None else NULL)),
+#         borders
+#     )
 # [End Function]
 
 # [Function]
@@ -2774,16 +2774,16 @@ cdef const char* _combo_callback_function(void* data, int index) noexcept:
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, popup_max_height_in_items: int=-1):
-    cdef bool res = ccimgui.ImGui_ComboCallbackEx(
-        _bytes(label),
-        &current_item.value,
-        getter,
-        user_data,
-        items_count,
-        popup_max_height_in_items
-    )
-    return res
+# def combo_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, popup_max_height_in_items: int=-1):
+#     cdef bool res = ccimgui.ImGui_ComboCallbackEx(
+#         _bytes(label),
+#         &current_item.value,
+#         getter,
+#         user_data,
+#         items_count,
+#         popup_max_height_in_items
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2792,17 +2792,17 @@ def combo_callback_ex(label: str, current_item: Int, getter: Callable, user_data
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_char(label: str, current_item: Int, items: Any, items_count: int):
-    """
-    Implied popup_max_height_in_items = -1
-    """
-    cdef bool res = ccimgui.ImGui_ComboChar(
-        _bytes(label),
-        &current_item.value,
-        items,
-        items_count
-    )
-    return res
+# def combo_char(label: str, current_item: Int, items: Any, items_count: int):
+#     """
+#     Implied popup_max_height_in_items = -1
+#     """
+#     cdef bool res = ccimgui.ImGui_ComboChar(
+#         _bytes(label),
+#         &current_item.value,
+#         items,
+#         items_count
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2811,15 +2811,15 @@ def combo_char(label: str, current_item: Int, items: Any, items_count: int):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_char_ex(label: str, current_item: Int, items: Any, items_count: int, popup_max_height_in_items: int=-1):
-    cdef bool res = ccimgui.ImGui_ComboCharEx(
-        _bytes(label),
-        &current_item.value,
-        items,
-        items_count,
-        popup_max_height_in_items
-    )
-    return res
+# def combo_char_ex(label: str, current_item: Int, items: Any, items_count: int, popup_max_height_in_items: int=-1):
+#     cdef bool res = ccimgui.ImGui_ComboCharEx(
+#         _bytes(label),
+#         &current_item.value,
+#         items,
+#         items_count,
+#         popup_max_height_in_items
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2828,17 +2828,17 @@ def combo_char_ex(label: str, current_item: Int, items: Any, items_count: int, p
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def combo_ex(label: str, current_item: Int, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
-    """
-    Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
-    """
-    cdef bool res = ccimgui.ImGui_ComboEx(
-        _bytes(label),
-        &current_item.value,
-        _bytes(items_separated_by_zeros),
-        popup_max_height_in_items
-    )
-    return res
+# def combo_ex(label: str, current_item: Int, items_separated_by_zeros: str, popup_max_height_in_items: int=-1):
+#     """
+#     Separate items with \0 within a string, end item-list with \0\0. e.g. 'one\0two\0three\0'
+#     """
+#     cdef bool res = ccimgui.ImGui_ComboEx(
+#         _bytes(label),
+#         &current_item.value,
+#         _bytes(items_separated_by_zeros),
+#         popup_max_height_in_items
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -2891,10 +2891,10 @@ def debug_check_version_and_data_layout():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def debug_flash_style_color(idx: int):
-    ccimgui.ImGui_DebugFlashStyleColor(
-        idx
-    )
+# def debug_flash_style_color(idx: int):
+#     ccimgui.ImGui_DebugFlashStyleColor(
+#         idx
+#     )
 # [End Function]
 
 # [Function]
@@ -2903,13 +2903,13 @@ def debug_flash_style_color(idx: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def debug_log(fmt: str):
-    """
-    Call via imgui_debug_log() for maximum stripping in caller code!
-    """
-    ccimgui.ImGui_DebugLog(
-        _bytes(fmt)
-    )
+# def debug_log(fmt: str):
+#     """
+#     Call via imgui_debug_log() for maximum stripping in caller code!
+#     """
+#     ccimgui.ImGui_DebugLog(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -2918,10 +2918,10 @@ def debug_log(fmt: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def debug_log_v(fmt: str):
-    ccimgui.ImGui_DebugLogV(
-        _bytes(fmt)
-    )
+# def debug_log_v(fmt: str):
+#     ccimgui.ImGui_DebugLogV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -2930,8 +2930,8 @@ def debug_log_v(fmt: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def debug_start_item_picker():
-    ccimgui.ImGui_DebugStartItemPicker()
+# def debug_start_item_picker():
+#     ccimgui.ImGui_DebugStartItemPicker()
 # [End Function]
 
 # [Function]
@@ -2971,11 +2971,11 @@ def destroy_context(ctx: ImGuiContext=None):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def destroy_platform_windows():
-    """
-    Call destroywindow platform functions for all viewports. call from backend shutdown() if you need to close platform windows before imgui shutdown. otherwise will be called by destroycontext().
-    """
-    ccimgui.ImGui_DestroyPlatformWindows()
+# def destroy_platform_windows():
+#     """
+#     Call destroywindow platform functions for all viewports. call from backend shutdown() if you need to close platform windows before imgui shutdown. otherwise will be called by destroycontext().
+#     """
+#     ccimgui.ImGui_DestroyPlatformWindows()
 # [End Function]
 
 # [Function]
@@ -3016,14 +3016,14 @@ def dock_space(dockspace_id: int, size: tuple=(0, 0), flags: int=0, window_class
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(int)
-def dock_space_ex(dockspace_id: int, size: Tuple[float, float]=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
-        dockspace_id,
-        _cast_tuple_ImVec2(size),
-        flags,
-        <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
-    )
-    return res
+# def dock_space_ex(dockspace_id: int, size: Tuple[float, float]=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None):
+#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceEx(
+#         dockspace_id,
+#         _cast_tuple_ImVec2(size),
+#         flags,
+#         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3051,14 +3051,14 @@ def dock_space_over_viewport(dockspace_id: int, viewport: ImGuiViewport=None, fl
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(int)
-def dock_space_over_viewport_ex(dockspace_id: int=0, viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
-        dockspace_id,
-        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr),
-        flags,
-        <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
-    )
-    return res
+# def dock_space_over_viewport_ex(dockspace_id: int=0, viewport: ImGuiViewport=None, flags: int=0, window_class: ImGuiWindowClass=None):
+#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_DockSpaceOverViewportEx(
+#         dockspace_id,
+#         <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr),
+#         flags,
+#         <ccimgui.ImGuiWindowClass*>(NULL if window_class is None else window_class._ptr)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3130,17 +3130,17 @@ def drag_float2(label: str, float_ptrs: Sequence[Float], v_speed: float=1.0, v_m
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_float2_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragFloat2Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_float2_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragFloat2Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3179,17 +3179,17 @@ def drag_float3(label: str, float_ptrs: Sequence[Float], v_speed: float=1.0, v_m
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_float3_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragFloat3Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_float3_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragFloat3Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3230,17 +3230,17 @@ def drag_float4(label: str, float_ptrs: Sequence[Float], v_speed: float=1.0, v_m
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_float4_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragFloat4Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_float4_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragFloat4Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3249,20 +3249,20 @@ def drag_float4_ex(label: str, v: Sequence[Float], v_speed: float=1.0, v_min: fl
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_float_ex(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
-    """
-    If v_min >= v_max we have no bound
-    """
-    cdef bool res = ccimgui.ImGui_DragFloatEx(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_float_ex(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0):
+#     """
+#     If v_min >= v_max we have no bound
+#     """
+#     cdef bool res = ccimgui.ImGui_DragFloatEx(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3294,21 +3294,21 @@ def drag_float_range2(label: str, v_current_min: Float, v_current_max: Float, v_
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_float_range2_ex(label: str, v_current_min: Float, v_current_max: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
-    bytes_format_max = _bytes(format_max) if format_max is not None else None
+# def drag_float_range2_ex(label: str, v_current_min: Float, v_current_max: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", format_max: str=None, flags: int=0):
+#     bytes_format_max = _bytes(format_max) if format_max is not None else None
 
-    cdef bool res = ccimgui.ImGui_DragFloatRange2Ex(
-        _bytes(label),
-        &v_current_min.value,
-        &v_current_max.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        ((<char*>bytes_format_max if format_max is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_DragFloatRange2Ex(
+#         _bytes(label),
+#         &v_current_min.value,
+#         &v_current_max.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         ((<char*>bytes_format_max if format_max is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3364,17 +3364,17 @@ def drag_int2(label: str, int_ptrs: Sequence[Int], v_speed: float=1.0, v_min: in
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_int2_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragInt2Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_int2_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragInt2Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3410,17 +3410,17 @@ def drag_int3(label: str, int_ptrs: Sequence[Int], v_speed: float=1.0, v_min: in
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_int3_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragInt3Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_int3_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragInt3Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3458,17 +3458,17 @@ def drag_int4(label: str, int_ptrs: Sequence[Int], v_speed: float=1.0, v_min: in
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_int4_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_DragInt4Ex(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_int4_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_DragInt4Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3477,20 +3477,20 @@ def drag_int4_ex(label: str, v: Sequence[Int], v_speed: float=1.0, v_min: int=0,
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_int_ex(label: str, v: Int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
-    """
-    If v_min >= v_max we have no bound
-    """
-    cdef bool res = ccimgui.ImGui_DragIntEx(
-        _bytes(label),
-        &v.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def drag_int_ex(label: str, v: Int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", flags: int=0):
+#     """
+#     If v_min >= v_max we have no bound
+#     """
+#     cdef bool res = ccimgui.ImGui_DragIntEx(
+#         _bytes(label),
+#         &v.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3522,21 +3522,21 @@ def drag_int_range2(label: str, v_current_min: Int, v_current_max: Int, v_speed:
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_int_range2_ex(label: str, v_current_min: Int, v_current_max: Int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0):
-    bytes_format_max = _bytes(format_max) if format_max is not None else None
+# def drag_int_range2_ex(label: str, v_current_min: Int, v_current_max: Int, v_speed: float=1.0, v_min: int=0, v_max: int=0, format_: str="%d", format_max: str=None, flags: int=0):
+#     bytes_format_max = _bytes(format_max) if format_max is not None else None
 
-    cdef bool res = ccimgui.ImGui_DragIntRange2Ex(
-        _bytes(label),
-        &v_current_min.value,
-        &v_current_max.value,
-        v_speed,
-        v_min,
-        v_max,
-        _bytes(format_),
-        ((<char*>bytes_format_max if format_max is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_DragIntRange2Ex(
+#         _bytes(label),
+#         &v_current_min.value,
+#         &v_current_max.value,
+#         v_speed,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         ((<char*>bytes_format_max if format_max is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3613,20 +3613,20 @@ def drag_scalar(label: str, data_type: int, p_data: "Int | Long | Float | Double
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def drag_scalar_ex(label: str, data_type: int, p_data: Any, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_DragScalarEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        v_speed,
-        p_min,
-        p_max,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_DragScalarEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         v_speed,
+#         p_min,
+#         p_max,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -3766,21 +3766,21 @@ def drag_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Flo
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def drag_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, v_speed: float=1.0, p_min: Any=None, p_max: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_DragScalarNEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        components,
-        v_speed,
-        p_min,
-        p_max,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_DragScalarNEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         components,
+#         v_speed,
+#         p_min,
+#         p_max,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4051,14 +4051,14 @@ def error_recovery_try_to_recover_state(state_in: ImGuiErrorRecoveryState):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiViewport)
-def find_viewport_by_id(id_: int):
-    """
-    This is a helper for backends.
-    """
-    cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_FindViewportByID(
-        id_
-    )
-    return ImGuiViewport.from_ptr(res)
+# def find_viewport_by_id(id_: int):
+#     """
+#     This is a helper for backends.
+#     """
+#     cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_FindViewportByID(
+#         id_
+#     )
+#     return ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4067,14 +4067,14 @@ def find_viewport_by_id(id_: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiViewport)
-def find_viewport_by_platform_handle(platform_handle: Any):
-    """
-    This is a helper for backends. the type platform_handle is decided by the backend (e.g. hwnd, mywindow*, glfwwindow* etc.)
-    """
-    cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_FindViewportByPlatformHandle(
-        platform_handle
-    )
-    return ImGuiViewport.from_ptr(res)
+# def find_viewport_by_platform_handle(platform_handle: Any):
+#     """
+#     This is a helper for backends. the type platform_handle is decided by the backend (e.g. hwnd, mywindow*, glfwwindow* etc.)
+#     """
+#     cdef ccimgui.ImGuiViewport* res = ccimgui.ImGui_FindViewportByPlatformHandle(
+#         platform_handle
+#     )
+#     return ImGuiViewport.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4083,12 +4083,12 @@ def find_viewport_by_platform_handle(platform_handle: Any):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_user_data: Any):
-    ccimgui.ImGui_GetAllocatorFunctions(
-        p_alloc_func,
-        p_free_func,
-        p_user_data
-    )
+# def get_allocator_functions(p_alloc_func: Callable, p_free_func: Callable, p_user_data: Any):
+#     ccimgui.ImGui_GetAllocatorFunctions(
+#         p_alloc_func,
+#         p_free_func,
+#         p_user_data
+#     )
 # [End Function]
 
 # [Function]
@@ -4112,14 +4112,14 @@ def get_background_draw_list():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImDrawList)
-def get_background_draw_list_ex(viewport: ImGuiViewport=None):
-    """
-    Get background draw list for the given viewport or viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
-    """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawListEx(
-        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
-    )
-    return ImDrawList.from_ptr(res)
+# def get_background_draw_list_ex(viewport: ImGuiViewport=None):
+#     """
+#     Get background draw list for the given viewport or viewport associated to the current window. this draw list will be the first rendering one. useful to quickly draw shapes/text behind dear imgui contents.
+#     """
+#     cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetBackgroundDrawListEx(
+#         <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
+#     )
+#     return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4162,15 +4162,15 @@ def get_color_u32(idx: int, alpha_mul: float=1.0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_color_u32_ex(idx: int, alpha_mul: float=1.0):
-    """
-    Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
-    """
-    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32Ex(
-        idx,
-        alpha_mul
-    )
-    return res
+# def get_color_u32_ex(idx: int, alpha_mul: float=1.0):
+#     """
+#     Retrieve given style color with style alpha applied and optional extra alpha multiplier, packed as a 32-bit value suitable for imdrawlist
+#     """
+#     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32Ex(
+#         idx,
+#         alpha_mul
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4195,15 +4195,15 @@ def get_color_u32_im_u32(col: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_color_u32_im_u32_ex(col: int, alpha_mul: float=1.0):
-    """
-    Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
-    """
-    cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImU32Ex(
-        col,
-        alpha_mul
-    )
-    return res
+# def get_color_u32_im_u32_ex(col: int, alpha_mul: float=1.0):
+#     """
+#     Retrieve given color with style alpha applied, packed as a 32-bit value suitable for imdrawlist
+#     """
+#     cdef ccimgui.ImU32 res = ccimgui.ImGui_GetColorU32ImU32Ex(
+#         col,
+#         alpha_mul
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4228,12 +4228,12 @@ def get_color_u32_im_vec4(col: Tuple[float, float, float, float]):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_column_index():
-    """
-    Get current column index
-    """
-    cdef int res = ccimgui.ImGui_GetColumnIndex()
-    return res
+# def get_column_index():
+#     """
+#     Get current column index
+#     """
+#     cdef int res = ccimgui.ImGui_GetColumnIndex()
+#     return res
 # [End Function]
 
 # [Function]
@@ -4242,14 +4242,14 @@ def get_column_index():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(float)
-def get_column_offset(column_index: int=-1):
-    """
-    Get position of column line (in pixels, from the left side of the contents region). pass -1 to use current column, otherwise 0..getcolumnscount() inclusive. column 0 is typically 0.0f
-    """
-    cdef float res = ccimgui.ImGui_GetColumnOffset(
-        column_index
-    )
-    return res
+# def get_column_offset(column_index: int=-1):
+#     """
+#     Get position of column line (in pixels, from the left side of the contents region). pass -1 to use current column, otherwise 0..getcolumnscount() inclusive. column 0 is typically 0.0f
+#     """
+#     cdef float res = ccimgui.ImGui_GetColumnOffset(
+#         column_index
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4258,14 +4258,14 @@ def get_column_offset(column_index: int=-1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(float)
-def get_column_width(column_index: int=-1):
-    """
-    Get column width (in pixels). pass -1 to use current column
-    """
-    cdef float res = ccimgui.ImGui_GetColumnWidth(
-        column_index
-    )
-    return res
+# def get_column_width(column_index: int=-1):
+#     """
+#     Get column width (in pixels). pass -1 to use current column
+#     """
+#     cdef float res = ccimgui.ImGui_GetColumnWidth(
+#         column_index
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4274,9 +4274,9 @@ def get_column_width(column_index: int=-1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_columns_count():
-    cdef int res = ccimgui.ImGui_GetColumnsCount()
-    return res
+# def get_columns_count():
+#     cdef int res = ccimgui.ImGui_GetColumnsCount()
+#     return res
 # [End Function]
 
 # [Function]
@@ -4420,12 +4420,12 @@ def get_draw_data():
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(ImDrawListSharedData)
-def get_draw_list_shared_data():
-    """
-    You may use this when creating your own imdrawlist instances.
-    """
-    cdef ccimgui.ImDrawListSharedData* res = ccimgui.ImGui_GetDrawListSharedData()
-    return ImDrawListSharedData.from_ptr(res)
+# def get_draw_list_shared_data():
+#     """
+#     You may use this when creating your own imdrawlist instances.
+#     """
+#     cdef ccimgui.ImDrawListSharedData* res = ccimgui.ImGui_GetDrawListSharedData()
+#     return ImDrawListSharedData.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4495,14 +4495,14 @@ def get_foreground_draw_list(viewport: ImGuiViewport=None):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(ImDrawList)
-def get_foreground_draw_list_ex(viewport: ImGuiViewport=None):
-    """
-    Get foreground draw list for the given viewport or viewport associated to the current window. this draw list will be the top-most rendered one. useful to quickly draw shapes/text over dear imgui contents.
-    """
-    cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawListEx(
-        <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
-    )
-    return ImDrawList.from_ptr(res)
+# def get_foreground_draw_list_ex(viewport: ImGuiViewport=None):
+#     """
+#     Get foreground draw list for the given viewport or viewport associated to the current window. this draw list will be the top-most rendered one. useful to quickly draw shapes/text over dear imgui contents.
+#     """
+#     cdef ccimgui.ImDrawList* res = ccimgui.ImGui_GetForegroundDrawListEx(
+#         <ccimgui.ImGuiViewport*>(NULL if viewport is None else viewport._ptr)
+#     )
+#     return ImDrawList.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4569,11 +4569,11 @@ def get_id(str_id: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_id_int(int_id: int):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDInt(
-        int_id
-    )
-    return res
+# def get_id_int(int_id: int):
+#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDInt(
+#         int_id
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4582,11 +4582,11 @@ def get_id_int(int_id: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_id_ptr(ptr_id: Any):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDPtr(
-        ptr_id
-    )
-    return res
+# def get_id_ptr(ptr_id: Any):
+#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDPtr(
+#         ptr_id
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4595,12 +4595,12 @@ def get_id_ptr(ptr_id: Any):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def get_id_str(str_id_begin: str, str_id_end: str):
-    cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDStr(
-        _bytes(str_id_begin),
-        _bytes(str_id_end)
-    )
-    return res
+# def get_id_str(str_id_begin: str, str_id_end: str):
+#     cdef ccimgui.ImGuiID res = ccimgui.ImGui_GetIDStr(
+#         _bytes(str_id_begin),
+#         _bytes(str_id_end)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -4680,14 +4680,14 @@ def get_item_rect_size():
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(str)
-def get_key_name(key: int):
-    """
-    [debug] returns english name of the key. those names a provided for debugging purpose and are not meant to be saved persistently not compared.
-    """
-    cdef const char* res = ccimgui.ImGui_GetKeyName(
-        key
-    )
-    return _from_bytes(res)
+# def get_key_name(key: int):
+#     """
+#     [debug] returns english name of the key. those names a provided for debugging purpose and are not meant to be saved persistently not compared.
+#     """
+#     cdef const char* res = ccimgui.ImGui_GetKeyName(
+#         key
+#     )
+#     return _from_bytes(res)
 # [End Function]
 
 # [Function]
@@ -4880,9 +4880,9 @@ def get_scroll_y():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImGuiStorage)
-def get_state_storage():
-    cdef ccimgui.ImGuiStorage* res = ccimgui.ImGui_GetStateStorage()
-    return ImGuiStorage.from_ptr(res)
+# def get_state_storage():
+#     cdef ccimgui.ImGuiStorage* res = ccimgui.ImGui_GetStateStorage()
+#     return ImGuiStorage.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -5116,14 +5116,14 @@ def get_window_width():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(ImColor)
-def im_color_hsv(h: float, s: float, v: float, a: float=1.0):
-    cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
-        h,
-        s,
-        v,
-        a
-    )
-    return ImColor.from_ptr(res)
+# def im_color_hsv(h: float, s: float, v: float, a: float=1.0):
+#     cdef ccimgui.ImColor res = ccimgui.ImColor_HSV(
+#         h,
+#         s,
+#         v,
+#         a
+#     )
+#     return ImColor.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -5132,13 +5132,13 @@ def im_color_hsv(h: float, s: float, v: float, a: float=1.0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def im_vector_construct(vector: Any):
-    """
-    Construct a zero-size imvector<> (of any type). this is primarily useful when calling imfontglyphrangesbuilder_buildranges()
-    """
-    ccimgui.ImVector_Construct(
-        vector
-    )
+# def im_vector_construct(vector: Any):
+#     """
+#     Construct a zero-size imvector<> (of any type). this is primarily useful when calling imfontglyphrangesbuilder_buildranges()
+#     """
+#     ccimgui.ImVector_Construct(
+#         vector
+#     )
 # [End Function]
 
 # [Function]
@@ -5147,13 +5147,13 @@ def im_vector_construct(vector: Any):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def im_vector_destruct(vector: Any):
-    """
-    Destruct an imvector<> (of any type). important: frees the vector memory but does not call destructors on contained objects (if they have them)
-    """
-    ccimgui.ImVector_Destruct(
-        vector
-    )
+# def im_vector_destruct(vector: Any):
+#     """
+#     Destruct an imvector<> (of any type). important: frees the vector memory but does not call destructors on contained objects (if they have them)
+#     """
+#     ccimgui.ImVector_Destruct(
+#         vector
+#     )
 # [End Function]
 
 # [Function]
@@ -5208,17 +5208,17 @@ def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, flo
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def image_button_ex(str_id: str, user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)):
-    cdef bool res = ccimgui.ImGui_ImageButtonEx(
-        _bytes(str_id),
-        user_texture_id,
-        _cast_tuple_ImVec2(image_size),
-        _cast_tuple_ImVec2(uv0),
-        _cast_tuple_ImVec2(uv1),
-        _cast_tuple_ImVec4(bg_col),
-        _cast_tuple_ImVec4(tint_col)
-    )
-    return res
+# def image_button_ex(str_id: str, user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)):
+#     cdef bool res = ccimgui.ImGui_ImageButtonEx(
+#         _bytes(str_id),
+#         user_texture_id,
+#         _cast_tuple_ImVec2(image_size),
+#         _cast_tuple_ImVec2(uv0),
+#         _cast_tuple_ImVec2(uv1),
+#         _cast_tuple_ImVec4(bg_col),
+#         _cast_tuple_ImVec4(tint_col)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5227,15 +5227,15 @@ def image_button_ex(str_id: str, user_texture_id: Any, image_size: Tuple[float, 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image_ex(user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1), border_col: Tuple[float, float, float, float]=(0, 0, 0, 0)):
-    ccimgui.ImGui_ImageEx(
-        user_texture_id,
-        _cast_tuple_ImVec2(image_size),
-        _cast_tuple_ImVec2(uv0),
-        _cast_tuple_ImVec2(uv1),
-        _cast_tuple_ImVec4(tint_col),
-        _cast_tuple_ImVec4(border_col)
-    )
+# def image_ex(user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1), border_col: Tuple[float, float, float, float]=(0, 0, 0, 0)):
+#     ccimgui.ImGui_ImageEx(
+#         user_texture_id,
+#         _cast_tuple_ImVec2(image_size),
+#         _cast_tuple_ImVec2(uv0),
+#         _cast_tuple_ImVec2(uv1),
+#         _cast_tuple_ImVec4(tint_col),
+#         _cast_tuple_ImVec4(border_col)
+#     )
 # [End Function]
 
 # [Function]
@@ -5259,13 +5259,13 @@ def indent(indent_w: float=0.0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def indent_ex(indent_w: float=0.0):
-    """
-    Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
-    """
-    ccimgui.ImGui_IndentEx(
-        indent_w
-    )
+# def indent_ex(indent_w: float=0.0):
+#     """
+#     Move content position toward the right, by indent_w, or style.indentspacing if indent_w <= 0
+#     """
+#     ccimgui.ImGui_IndentEx(
+#         indent_w
+#     )
 # [End Function]
 
 # [Function]
@@ -5292,16 +5292,16 @@ def input_double(label: str, v: Double, step: float=0.0, step_fast: float=0.0, f
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_double_ex(label: str, v: Double, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_InputDoubleEx(
-        _bytes(label),
-        &v.value,
-        step,
-        step_fast,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def input_double_ex(label: str, v: Double, step: float=0.0, step_fast: float=0.0, format_: str="%.6f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_InputDoubleEx(
+#         _bytes(label),
+#         &v.value,
+#         step,
+#         step_fast,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5350,14 +5350,14 @@ def input_float2(label: str, float_ptrs: Sequence[Float], format_: str="%.3f", f
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_float2_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_InputFloat2Ex(
-        _bytes(label),
-        &v.value,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def input_float2_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_InputFloat2Ex(
+#         _bytes(label),
+#         &v.value,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5390,14 +5390,14 @@ def input_float3(label: str, float_ptrs: Sequence[Float], format_: str="%.3f", f
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_float3_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_InputFloat3Ex(
-        _bytes(label),
-        &v.value,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def input_float3_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_InputFloat3Ex(
+#         _bytes(label),
+#         &v.value,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5432,14 +5432,14 @@ def input_float4(label: str, float_ptrs: Sequence[Float], format_: str="%.3f", f
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_float4_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_InputFloat4Ex(
-        _bytes(label),
-        &v.value,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def input_float4_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_InputFloat4Ex(
+#         _bytes(label),
+#         &v.value,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5448,16 +5448,16 @@ def input_float4_ex(label: str, v: Sequence[Float], format_: str="%.3f", flags: 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_float_ex(label: str, v: Float, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_InputFloatEx(
-        _bytes(label),
-        &v.value,
-        step,
-        step_fast,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def input_float_ex(label: str, v: Float, step: float=0.0, step_fast: float=0.0, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_InputFloatEx(
+#         _bytes(label),
+#         &v.value,
+#         step,
+#         step_fast,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5634,19 +5634,19 @@ def input_scalar(label: str, data_type: int, p_data: "Int | Long | Float | Doubl
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_InputScalarEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        p_step,
-        p_step_fast,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_InputScalarEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         p_step,
+#         p_step_fast,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5780,20 +5780,20 @@ def input_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Fl
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def input_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_step: Any=None, p_step_fast: Any=None, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_InputScalarNEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        components,
-        p_step,
-        p_step_fast,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_InputScalarNEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         components,
+#         p_step,
+#         p_step_fast,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5858,16 +5858,16 @@ cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_text_ex(label: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
-    cdef bool res = ccimgui.ImGui_InputTextEx(
-        _bytes(label),
-        _bytes(buf),
-        buf_size,
-        flags,
-        callback,
-        user_data
-    )
-    return res
+# def input_text_ex(label: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
+#     cdef bool res = ccimgui.ImGui_InputTextEx(
+#         _bytes(label),
+#         _bytes(buf),
+#         buf_size,
+#         flags,
+#         callback,
+#         user_data
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5909,17 +5909,17 @@ def input_text_multiline(label: str, buf: String, size: tuple=(0, 0), flags: int
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: Tuple[float, float]=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
-    cdef bool res = ccimgui.ImGui_InputTextMultilineEx(
-        _bytes(label),
-        _bytes(buf),
-        buf_size,
-        _cast_tuple_ImVec2(size),
-        flags,
-        callback,
-        user_data
-    )
-    return res
+# def input_text_multiline_ex(label: str, buf: str, buf_size: int, size: Tuple[float, float]=(0, 0), flags: int=0, callback: Callable=None, user_data: Any=None):
+#     cdef bool res = ccimgui.ImGui_InputTextMultilineEx(
+#         _bytes(label),
+#         _bytes(buf),
+#         buf_size,
+#         _cast_tuple_ImVec2(size),
+#         flags,
+#         callback,
+#         user_data
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -5961,17 +5961,17 @@ def input_text_with_hint(label: str, hint: str, buf: String, flags: int=0, callb
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
-    cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
-        _bytes(label),
-        _bytes(hint),
-        _bytes(buf),
-        buf_size,
-        flags,
-        callback,
-        user_data
-    )
-    return res
+# def input_text_with_hint_ex(label: str, hint: str, buf: str, buf_size: int, flags: int=0, callback: Callable=None, user_data: Any=None):
+#     cdef bool res = ccimgui.ImGui_InputTextWithHintEx(
+#         _bytes(label),
+#         _bytes(hint),
+#         _bytes(buf),
+#         buf_size,
+#         flags,
+#         callback,
+#         user_data
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6098,14 +6098,14 @@ def is_item_clicked(mouse_button: int=0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_item_clicked_ex(mouse_button: int=0):
-    """
-    Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button) && isitemhovered()important. (**) this is not equivalent to the behavior of e.g. button(). read comments in function definition.
-    """
-    cdef bool res = ccimgui.ImGui_IsItemClickedEx(
-        mouse_button
-    )
-    return res
+# def is_item_clicked_ex(mouse_button: int=0):
+#     """
+#     Is the last item hovered and mouse clicked on? (**)  == ismouseclicked(mouse_button) && isitemhovered()important. (**) this is not equivalent to the behavior of e.g. button(). read comments in function definition.
+#     """
+#     cdef bool res = ccimgui.ImGui_IsItemClickedEx(
+#         mouse_button
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6231,14 +6231,14 @@ def is_item_visible():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_key_chord_pressed(key_chord: int):
-    """
-    Was key chord (mods + key) pressed, e.g. you can pass 'imguimod_ctrl | imguikey_s' as a key-chord. this doesn't do any routing or focus check, please consider using shortcut() function instead.
-    """
-    cdef bool res = ccimgui.ImGui_IsKeyChordPressed(
-        key_chord
-    )
-    return res
+# def is_key_chord_pressed(key_chord: int):
+#     """
+#     Was key chord (mods + key) pressed, e.g. you can pass 'imguimod_ctrl | imguikey_s' as a key-chord. this doesn't do any routing or focus check, please consider using shortcut() function instead.
+#     """
+#     cdef bool res = ccimgui.ImGui_IsKeyChordPressed(
+#         key_chord
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6285,15 +6285,15 @@ def is_key_pressed(key: int, repeat: bool=True):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_key_pressed_ex(key: int, repeat: bool=True):
-    """
-    Was key pressed (went from !down to down)? if repeat=true, uses io.keyrepeatdelay / keyrepeatrate
-    """
-    cdef bool res = ccimgui.ImGui_IsKeyPressedEx(
-        key,
-        repeat
-    )
-    return res
+# def is_key_pressed_ex(key: int, repeat: bool=True):
+#     """
+#     Was key pressed (went from !down to down)? if repeat=true, uses io.keyrepeatdelay / keyrepeatrate
+#     """
+#     cdef bool res = ccimgui.ImGui_IsKeyPressedEx(
+#         key,
+#         repeat
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6335,15 +6335,15 @@ def is_mouse_clicked(button: int, repeat: bool=False):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_mouse_clicked_ex(button: int, repeat: bool=False):
-    """
-    Did mouse button clicked? (went from !down to down). same as getmouseclickedcount() == 1.
-    """
-    cdef bool res = ccimgui.ImGui_IsMouseClickedEx(
-        button,
-        repeat
-    )
-    return res
+# def is_mouse_clicked_ex(button: int, repeat: bool=False):
+#     """
+#     Did mouse button clicked? (went from !down to down). same as getmouseclickedcount() == 1.
+#     """
+#     cdef bool res = ccimgui.ImGui_IsMouseClickedEx(
+#         button,
+#         repeat
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6423,16 +6423,16 @@ def is_mouse_hovering_rect(r_min: Tuple[float, float], r_max: Tuple[float, float
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_mouse_hovering_rect_ex(r_min: Tuple[float, float], r_max: Tuple[float, float], clip: bool=True):
-    """
-    Is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
-    """
-    cdef bool res = ccimgui.ImGui_IsMouseHoveringRectEx(
-        _cast_tuple_ImVec2(r_min),
-        _cast_tuple_ImVec2(r_max),
-        clip
-    )
-    return res
+# def is_mouse_hovering_rect_ex(r_min: Tuple[float, float], r_max: Tuple[float, float], clip: bool=True):
+#     """
+#     Is mouse hovering given bounding rect (in screen space). clipped by current clipping settings, but disregarding of other consideration of focus/window ordering/popup-block.
+#     """
+#     cdef bool res = ccimgui.ImGui_IsMouseHoveringRectEx(
+#         _cast_tuple_ImVec2(r_min),
+#         _cast_tuple_ImVec2(r_max),
+#         clip
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6621,11 +6621,11 @@ def label_text(label: str, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def label_text_v(label: str, fmt: str):
-    ccimgui.ImGui_LabelTextV(
-        _bytes(label),
-        _bytes(fmt)
-    )
+# def label_text_v(label: str, fmt: str):
+#     ccimgui.ImGui_LabelTextV(
+#         _bytes(label),
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -6700,16 +6700,16 @@ cdef const char* _list_box_callback_function(void* data, int index) noexcept:
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def list_box_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, height_in_items: int=-1):
-    cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
-        _bytes(label),
-        &current_item.value,
-        getter,
-        user_data,
-        items_count,
-        height_in_items
-    )
-    return res
+# def list_box_callback_ex(label: str, current_item: Int, getter: Callable, user_data: Any, items_count: int, height_in_items: int=-1):
+#     cdef bool res = ccimgui.ImGui_ListBoxCallbackEx(
+#         _bytes(label),
+#         &current_item.value,
+#         getter,
+#         user_data,
+#         items_count,
+#         height_in_items
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6718,17 +6718,17 @@ def list_box_callback_ex(label: str, current_item: Int, getter: Callable, user_d
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def load_ini_settings_from_disk(ini_filename: str):
-    """
-    Settings/.Ini Utilities
-    - The disk functions are automatically called if io.IniFilename != NULL (default is "imgui.ini").
-    - Set io.IniFilename to NULL to load/save manually. Read io.WantSaveIniSettings description about handling .ini saving manually.
-    - Important: default value "imgui.ini" is relative to current working dir! Most apps will want to lock this to an absolute path (e.g. same path as executables).
-    Call after createcontext() and before the first call to newframe(). newframe() automatically calls loadinisettingsfromdisk(io.inifilename).
-    """
-    ccimgui.ImGui_LoadIniSettingsFromDisk(
-        _bytes(ini_filename)
-    )
+# def load_ini_settings_from_disk(ini_filename: str):
+#     """
+#     Settings/.Ini Utilities
+#     - The disk functions are automatically called if io.IniFilename != NULL (default is "imgui.ini").
+#     - Set io.IniFilename to NULL to load/save manually. Read io.WantSaveIniSettings description about handling .ini saving manually.
+#     - Important: default value "imgui.ini" is relative to current working dir! Most apps will want to lock this to an absolute path (e.g. same path as executables).
+#     Call after createcontext() and before the first call to newframe(). newframe() automatically calls loadinisettingsfromdisk(io.inifilename).
+#     """
+#     ccimgui.ImGui_LoadIniSettingsFromDisk(
+#         _bytes(ini_filename)
+#     )
 # [End Function]
 
 # [Function]
@@ -6737,14 +6737,14 @@ def load_ini_settings_from_disk(ini_filename: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def load_ini_settings_from_memory(ini_data: str, ini_size: int=0):
-    """
-    Call after createcontext() and before the first call to newframe() to provide .ini data from your own data source.
-    """
-    ccimgui.ImGui_LoadIniSettingsFromMemory(
-        _bytes(ini_data),
-        ini_size
-    )
+# def load_ini_settings_from_memory(ini_data: str, ini_size: int=0):
+#     """
+#     Call after createcontext() and before the first call to newframe() to provide .ini data from your own data source.
+#     """
+#     ccimgui.ImGui_LoadIniSettingsFromMemory(
+#         _bytes(ini_data),
+#         ini_size
+#     )
 # [End Function]
 
 # [Function]
@@ -6794,10 +6794,10 @@ def log_text(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def log_text_v(fmt: str):
-    ccimgui.ImGui_LogTextV(
-        _bytes(fmt)
-    )
+# def log_text_v(fmt: str):
+#     ccimgui.ImGui_LogTextV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -6821,16 +6821,16 @@ def log_to_clipboard(auto_open_depth: int=-1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def log_to_file(auto_open_depth: int=-1, filename: str=None):
-    """
-    Start logging to file
-    """
-    bytes_filename = _bytes(filename) if filename is not None else None
+# def log_to_file(auto_open_depth: int=-1, filename: str=None):
+#     """
+#     Start logging to file
+#     """
+#     bytes_filename = _bytes(filename) if filename is not None else None
 
-    ccimgui.ImGui_LogToFile(
-        auto_open_depth,
-        ((<char*>bytes_filename if filename is not None else NULL))
-    )
+#     ccimgui.ImGui_LogToFile(
+#         auto_open_depth,
+#         ((<char*>bytes_filename if filename is not None else NULL))
+#     )
 # [End Function]
 
 # [Function]
@@ -6839,15 +6839,15 @@ def log_to_file(auto_open_depth: int=-1, filename: str=None):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def log_to_tty(auto_open_depth: int=-1):
-    """
-    Logging/Capture
-    - All text output from the interface can be captured into tty/file/clipboard. By default, tree nodes are automatically opened during logging.
-    Start logging to tty (stdout)
-    """
-    ccimgui.ImGui_LogToTTY(
-        auto_open_depth
-    )
+# def log_to_tty(auto_open_depth: int=-1):
+#     """
+#     Logging/Capture
+#     - All text output from the interface can be captured into tty/file/clipboard. By default, tree nodes are automatically opened during logging.
+#     Start logging to tty (stdout)
+#     """
+#     ccimgui.ImGui_LogToTTY(
+#         auto_open_depth
+#     )
 # [End Function]
 
 # [Function]
@@ -6856,11 +6856,11 @@ def log_to_tty(auto_open_depth: int=-1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(Any)
-def mem_alloc(size: int):
-    cdef void* res = ccimgui.ImGui_MemAlloc(
-        size
-    )
-    return res
+# def mem_alloc(size: int):
+#     cdef void* res = ccimgui.ImGui_MemAlloc(
+#         size
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6869,10 +6869,10 @@ def mem_alloc(size: int):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def mem_free(ptr: Any):
-    ccimgui.ImGui_MemFree(
-        ptr
-    )
+# def mem_free(ptr: Any):
+#     ccimgui.ImGui_MemFree(
+#         ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -6923,19 +6923,19 @@ def menu_item_bool_ptr(label: str, shortcut: Optional[str], p_selected: Bool, en
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True):
-    """
-    Return true when activated.
-    """
-    bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
+# def menu_item_ex(label: str, shortcut: str=None, selected: bool=False, enabled: bool=True):
+#     """
+#     Return true when activated.
+#     """
+#     bytes_shortcut = _bytes(shortcut) if shortcut is not None else None
 
-    cdef bool res = ccimgui.ImGui_MenuItemEx(
-        _bytes(label),
-        ((<char*>bytes_shortcut if shortcut is not None else NULL)),
-        selected,
-        enabled
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_MenuItemEx(
+#         _bytes(label),
+#         ((<char*>bytes_shortcut if shortcut is not None else NULL)),
+#         selected,
+#         enabled
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -6970,11 +6970,11 @@ def new_line():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def next_column():
-    """
-    Next column, defaults to current row or next row if the current row is finished
-    """
-    ccimgui.ImGui_NextColumn()
+# def next_column():
+#     """
+#     Next column, defaults to current row or next row if the current row is finished
+#     """
+#     ccimgui.ImGui_NextColumn()
 # [End Function]
 
 # [Function]
@@ -7113,20 +7113,20 @@ cdef float _plot_histogram_callback_function(void* data, int idx) noexcept:
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0)):
-    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+# def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
 
-    ccimgui.ImGui_PlotHistogramCallbackEx(
-        _bytes(label),
-        values_getter,
-        data,
-        values_count,
-        values_offset,
-        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
-        scale_min,
-        scale_max,
-        _cast_tuple_ImVec2(graph_size)
-    )
+#     ccimgui.ImGui_PlotHistogramCallbackEx(
+#         _bytes(label),
+#         values_getter,
+#         data,
+#         values_count,
+#         values_offset,
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+#         scale_min,
+#         scale_max,
+#         _cast_tuple_ImVec2(graph_size)
+#     )
 # [End Function]
 
 # [Function]
@@ -7135,20 +7135,20 @@ def plot_histogram_callback_ex(label: str, values_getter: Callable, data: Any, v
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def plot_histogram_ex(label: str, values: Float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0), stride: int=4):
-    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+# def plot_histogram_ex(label: str, values: Float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0), stride: int=4):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
 
-    ccimgui.ImGui_PlotHistogramEx(
-        _bytes(label),
-        &values.value,
-        values_count,
-        values_offset,
-        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
-        scale_min,
-        scale_max,
-        _cast_tuple_ImVec2(graph_size),
-        stride
-    )
+#     ccimgui.ImGui_PlotHistogramEx(
+#         _bytes(label),
+#         &values.value,
+#         values_count,
+#         values_offset,
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+#         scale_min,
+#         scale_max,
+#         _cast_tuple_ImVec2(graph_size),
+#         stride
+#     )
 # [End Function]
 
 # [Function]
@@ -7230,20 +7230,20 @@ cdef float _plot_lines_callback_function(void* data, int idx) noexcept:
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0)):
-    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+# def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0)):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
 
-    ccimgui.ImGui_PlotLinesCallbackEx(
-        _bytes(label),
-        values_getter,
-        data,
-        values_count,
-        values_offset,
-        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
-        scale_min,
-        scale_max,
-        _cast_tuple_ImVec2(graph_size)
-    )
+#     ccimgui.ImGui_PlotLinesCallbackEx(
+#         _bytes(label),
+#         values_getter,
+#         data,
+#         values_count,
+#         values_offset,
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+#         scale_min,
+#         scale_max,
+#         _cast_tuple_ImVec2(graph_size)
+#     )
 # [End Function]
 
 # [Function]
@@ -7252,20 +7252,20 @@ def plot_lines_callback_ex(label: str, values_getter: Callable, data: Any, value
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def plot_lines_ex(label: str, values: Float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0), stride: int=4):
-    bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
+# def plot_lines_ex(label: str, values: Float, values_count: int, values_offset: int=0, overlay_text: str=None, scale_min: float=FLT_MAX, scale_max: float=FLT_MAX, graph_size: Tuple[float, float]=(0, 0), stride: int=4):
+#     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
 
-    ccimgui.ImGui_PlotLinesEx(
-        _bytes(label),
-        &values.value,
-        values_count,
-        values_offset,
-        ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
-        scale_min,
-        scale_max,
-        _cast_tuple_ImVec2(graph_size),
-        stride
-    )
+#     ccimgui.ImGui_PlotLinesEx(
+#         _bytes(label),
+#         &values.value,
+#         values_count,
+#         values_offset,
+#         ((<char*>bytes_overlay_text if overlay_text is not None else NULL)),
+#         scale_min,
+#         scale_max,
+#         _cast_tuple_ImVec2(graph_size),
+#         stride
+#     )
 # [End Function]
 
 # [Function]
@@ -7274,8 +7274,8 @@ def plot_lines_ex(label: str, values: Float, values_count: int, values_offset: i
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def pop_clip_rect():
-    ccimgui.ImGui_PopClipRect()
+# def pop_clip_rect():
+#     ccimgui.ImGui_PopClipRect()
 # [End Function]
 
 # [Function]
@@ -7339,10 +7339,10 @@ def pop_style_color(count: int=1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def pop_style_color_ex(count: int=1):
-    ccimgui.ImGui_PopStyleColorEx(
-        count
-    )
+# def pop_style_color_ex(count: int=1):
+#     ccimgui.ImGui_PopStyleColorEx(
+#         count
+#     )
 # [End Function]
 
 # [Function]
@@ -7363,10 +7363,10 @@ def pop_style_var(count: int=1):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def pop_style_var_ex(count: int=1):
-    ccimgui.ImGui_PopStyleVarEx(
-        count
-    )
+# def pop_style_var_ex(count: int=1):
+#     ccimgui.ImGui_PopStyleVarEx(
+#         count
+#     )
 # [End Function]
 
 # [Function]
@@ -7401,16 +7401,16 @@ def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), o
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool):
-    """
-    Clipping
-    - Mouse hovering is affected by ImGui::PushClipRect() calls, unlike direct calls to ImDrawList::PushClipRect() which are render only.
-    """
-    ccimgui.ImGui_PushClipRect(
-        _cast_tuple_ImVec2(clip_rect_min),
-        _cast_tuple_ImVec2(clip_rect_max),
-        intersect_with_current_clip_rect
-    )
+# def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool):
+#     """
+#     Clipping
+#     - Mouse hovering is affected by ImGui::PushClipRect() calls, unlike direct calls to ImDrawList::PushClipRect() which are render only.
+#     """
+#     ccimgui.ImGui_PushClipRect(
+#         _cast_tuple_ImVec2(clip_rect_min),
+#         _cast_tuple_ImVec2(clip_rect_max),
+#         intersect_with_current_clip_rect
+#     )
 # [End Function]
 
 # [Function]
@@ -7467,13 +7467,13 @@ def push_id(obj: object):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_id_int(int_id: int):
-    """
-    Push integer into the id stack (will hash integer).
-    """
-    ccimgui.ImGui_PushIDInt(
-        int_id
-    )
+# def push_id_int(int_id: int):
+#     """
+#     Push integer into the id stack (will hash integer).
+#     """
+#     ccimgui.ImGui_PushIDInt(
+#         int_id
+#     )
 # [End Function]
 
 # [Function]
@@ -7482,13 +7482,13 @@ def push_id_int(int_id: int):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_id_ptr(ptr_id: Any):
-    """
-    Push pointer into the id stack (will hash pointer).
-    """
-    ccimgui.ImGui_PushIDPtr(
-        ptr_id
-    )
+# def push_id_ptr(ptr_id: Any):
+#     """
+#     Push pointer into the id stack (will hash pointer).
+#     """
+#     ccimgui.ImGui_PushIDPtr(
+#         ptr_id
+#     )
 # [End Function]
 
 # [Function]
@@ -7497,14 +7497,14 @@ def push_id_ptr(ptr_id: Any):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_id_str(str_id_begin: str, str_id_end: str):
-    """
-    Push string into the id stack (will hash string).
-    """
-    ccimgui.ImGui_PushIDStr(
-        _bytes(str_id_begin),
-        _bytes(str_id_end)
-    )
+# def push_id_str(str_id_begin: str, str_id_end: str):
+#     """
+#     Push string into the id stack (will hash string).
+#     """
+#     ccimgui.ImGui_PushIDStr(
+#         _bytes(str_id_begin),
+#         _bytes(str_id_end)
+#     )
 # [End Function]
 
 # [Function]
@@ -7568,11 +7568,11 @@ def push_style_color(idx: int, col: "int | tuple"):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_style_color_im_vec4(idx: int, col: Tuple[float, float, float, float]):
-    ccimgui.ImGui_PushStyleColorImVec4(
-        idx,
-        _cast_tuple_ImVec4(col)
-    )
+# def push_style_color_im_vec4(idx: int, col: Tuple[float, float, float, float]):
+#     ccimgui.ImGui_PushStyleColorImVec4(
+#         idx,
+#         _cast_tuple_ImVec4(col)
+#     )
 # [End Function]
 
 # [Function]
@@ -7604,14 +7604,14 @@ def push_style_var(idx: int, val: "float | tuple"):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_style_var_im_vec2(idx: int, val: Tuple[float, float]):
-    """
-    Modify a style imvec2 variable. '
-    """
-    ccimgui.ImGui_PushStyleVarImVec2(
-        idx,
-        _cast_tuple_ImVec2(val)
-    )
+# def push_style_var_im_vec2(idx: int, val: Tuple[float, float]):
+#     """
+#     Modify a style imvec2 variable. '
+#     """
+#     ccimgui.ImGui_PushStyleVarImVec2(
+#         idx,
+#         _cast_tuple_ImVec2(val)
+#     )
 # [End Function]
 
 # [Function]
@@ -7620,14 +7620,14 @@ def push_style_var_im_vec2(idx: int, val: Tuple[float, float]):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_style_var_x(idx: int, val_x: float):
-    """
-    Modify x component of a style imvec2 variable. '
-    """
-    ccimgui.ImGui_PushStyleVarX(
-        idx,
-        val_x
-    )
+# def push_style_var_x(idx: int, val_x: float):
+#     """
+#     Modify x component of a style imvec2 variable. '
+#     """
+#     ccimgui.ImGui_PushStyleVarX(
+#         idx,
+#         val_x
+#     )
 # [End Function]
 
 # [Function]
@@ -7636,14 +7636,14 @@ def push_style_var_x(idx: int, val_x: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_style_var_y(idx: int, val_y: float):
-    """
-    Modify y component of a style imvec2 variable. '
-    """
-    ccimgui.ImGui_PushStyleVarY(
-        idx,
-        val_y
-    )
+# def push_style_var_y(idx: int, val_y: float):
+#     """
+#     Modify y component of a style imvec2 variable. '
+#     """
+#     ccimgui.ImGui_PushStyleVarY(
+#         idx,
+#         val_y
+#     )
 # [End Function]
 
 # [Function]
@@ -7732,14 +7732,14 @@ def render_platform_windows_default(platform_render_arg: Any=None, renderer_rend
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None):
-    """
-    Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
-    """
-    ccimgui.ImGui_RenderPlatformWindowsDefaultEx(
-        platform_render_arg,
-        renderer_render_arg
-    )
+# def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_render_arg: Any=None):
+#     """
+#     Call in main loop. will call renderwindow/swapbuffers platform functions for each secondary viewport which doesn't have the imguiviewportflags_minimized flag set. may be reimplemented by user for custom rendering needs.
+#     """
+#     ccimgui.ImGui_RenderPlatformWindowsDefaultEx(
+#         platform_render_arg,
+#         renderer_render_arg
+#     )
 # [End Function]
 
 # [Function]
@@ -7748,11 +7748,11 @@ def render_platform_windows_default_ex(platform_render_arg: Any=None, renderer_r
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def reset_mouse_drag_delta():
-    """
-    Implied button = 0
-    """
-    ccimgui.ImGui_ResetMouseDragDelta()
+# def reset_mouse_drag_delta():
+#     """
+#     Implied button = 0
+#     """
+#     ccimgui.ImGui_ResetMouseDragDelta()
 # [End Function]
 
 # [Function]
@@ -7761,13 +7761,13 @@ def reset_mouse_drag_delta():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def reset_mouse_drag_delta_ex(button: int=0):
-    """
+# def reset_mouse_drag_delta_ex(button: int=0):
+#     """
 
-    """
-    ccimgui.ImGui_ResetMouseDragDeltaEx(
-        button
-    )
+#     """
+#     ccimgui.ImGui_ResetMouseDragDeltaEx(
+#         button
+#     )
 # [End Function]
 
 # [Function]
@@ -7792,14 +7792,14 @@ def same_line(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
-    """
-    Call between widgets or groups to layout them horizontally. x position given in window coordinates.
-    """
-    ccimgui.ImGui_SameLineEx(
-        offset_from_start_x,
-        spacing
-    )
+# def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
+#     """
+#     Call between widgets or groups to layout them horizontally. x position given in window coordinates.
+#     """
+#     ccimgui.ImGui_SameLineEx(
+#         offset_from_start_x,
+#         spacing
+#     )
 # [End Function]
 
 # [Function]
@@ -7808,13 +7808,13 @@ def same_line_ex(offset_from_start_x: float=0.0, spacing: float=-1.0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def save_ini_settings_to_disk(ini_filename: str):
-    """
-    This is automatically called (if io.inifilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by destroycontext).
-    """
-    ccimgui.ImGui_SaveIniSettingsToDisk(
-        _bytes(ini_filename)
-    )
+# def save_ini_settings_to_disk(ini_filename: str):
+#     """
+#     This is automatically called (if io.inifilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by destroycontext).
+#     """
+#     ccimgui.ImGui_SaveIniSettingsToDisk(
+#         _bytes(ini_filename)
+#     )
 # [End Function]
 
 # [Function]
@@ -7823,14 +7823,14 @@ def save_ini_settings_to_disk(ini_filename: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(str)
-def save_ini_settings_to_memory(out_ini_size: Any=None):
-    """
-    Return a zero-terminated string with the .ini data which you can save by your own mean. call when io.wantsaveinisettings is set, then save data by your own mean and clear io.wantsaveinisettings.
-    """
-    cdef const char* res = ccimgui.ImGui_SaveIniSettingsToMemory(
-        out_ini_size
-    )
-    return _from_bytes(res)
+# def save_ini_settings_to_memory(out_ini_size: Any=None):
+#     """
+#     Return a zero-terminated string with the .ini data which you can save by your own mean. call when io.wantsaveinisettings is set, then save data by your own mean and clear io.wantsaveinisettings.
+#     """
+#     cdef const char* res = ccimgui.ImGui_SaveIniSettingsToMemory(
+#         out_ini_size
+#     )
+#     return _from_bytes(res)
 # [End Function]
 
 # [Function]
@@ -7881,17 +7881,17 @@ def selectable_bool_ptr(label: str, p_selected: Bool, flags: int=0, size: tuple=
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def selectable_bool_ptr_ex(label: str, p_selected: Bool, flags: int=0, size: Tuple[float, float]=(0, 0)):
-    """
-    'bool* p_selected' point to the selection state (read-write), as a convenient helper.
-    """
-    cdef bool res = ccimgui.ImGui_SelectableBoolPtrEx(
-        _bytes(label),
-        &p_selected.value,
-        flags,
-        _cast_tuple_ImVec2(size)
-    )
-    return res
+# def selectable_bool_ptr_ex(label: str, p_selected: Bool, flags: int=0, size: Tuple[float, float]=(0, 0)):
+#     """
+#     'bool* p_selected' point to the selection state (read-write), as a convenient helper.
+#     """
+#     cdef bool res = ccimgui.ImGui_SelectableBoolPtrEx(
+#         _bytes(label),
+#         &p_selected.value,
+#         flags,
+#         _cast_tuple_ImVec2(size)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -7900,17 +7900,17 @@ def selectable_bool_ptr_ex(label: str, p_selected: Bool, flags: int=0, size: Tup
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def selectable_ex(label: str, selected: bool=False, flags: int=0, size: Tuple[float, float]=(0, 0)):
-    """
-    'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
-    """
-    cdef bool res = ccimgui.ImGui_SelectableEx(
-        _bytes(label),
-        selected,
-        flags,
-        _cast_tuple_ImVec2(size)
-    )
-    return res
+# def selectable_ex(label: str, selected: bool=False, flags: int=0, size: Tuple[float, float]=(0, 0)):
+#     """
+#     'bool selected' carry the selection state (read-only). selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
+#     """
+#     cdef bool res = ccimgui.ImGui_SelectableEx(
+#         _bytes(label),
+#         selected,
+#         flags,
+#         _cast_tuple_ImVec2(size)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -7948,20 +7948,20 @@ def separator_text(label: str):
 # ?invisible(True)
 # ?custom_comment_only(True)
 # ?returns(None)
-def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
-    """
-    Memory Allocators
-    - Those functions are not reliant on the current context.
-    - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
-    for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for more details.
+# def set_allocator_functions(alloc_func: Callable, free_func: Callable, user_data: Any=None):
+#     """
+#     Memory Allocators
+#     - Those functions are not reliant on the current context.
+#     - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()
+#     for each static/DLL boundary you are calling from. Read "Context and Memory Allocators" section of imgui.cpp for more details.
 
-    Pygui note: see create_context(). This is where the allocator functions are set for ImGui.
-    """
-    ccimgui.ImGui_SetAllocatorFunctions(
-        alloc_func,
-        free_func,
-        user_data
-    )
+#     Pygui note: see create_context(). This is where the allocator functions are set for ImGui.
+#     """
+#     ccimgui.ImGui_SetAllocatorFunctions(
+#         alloc_func,
+#         free_func,
+#         user_data
+#     )
 # [End Function]
 
 # [Function]
@@ -7997,14 +7997,14 @@ def set_color_edit_options(flags: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_column_offset(column_index: int, offset_x: float):
-    """
-    Set position of column line (in pixels, from the left side of the contents region). pass -1 to use current column
-    """
-    ccimgui.ImGui_SetColumnOffset(
-        column_index,
-        offset_x
-    )
+# def set_column_offset(column_index: int, offset_x: float):
+#     """
+#     Set position of column line (in pixels, from the left side of the contents region). pass -1 to use current column
+#     """
+#     ccimgui.ImGui_SetColumnOffset(
+#         column_index,
+#         offset_x
+#     )
 # [End Function]
 
 # [Function]
@@ -8013,14 +8013,14 @@ def set_column_offset(column_index: int, offset_x: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_column_width(column_index: int, width: float):
-    """
-    Set column width (in pixels). pass -1 to use current column
-    """
-    ccimgui.ImGui_SetColumnWidth(
-        column_index,
-        width
-    )
+# def set_column_width(column_index: int, width: float):
+#     """
+#     Set column width (in pixels). pass -1 to use current column
+#     """
+#     ccimgui.ImGui_SetColumnWidth(
+#         column_index,
+#         width
+#     )
 # [End Function]
 
 # [Function]
@@ -8029,10 +8029,10 @@ def set_column_width(column_index: int, width: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_current_context(ctx: ImGuiContext):
-    ccimgui.ImGui_SetCurrentContext(
-        ctx._ptr
-    )
+# def set_current_context(ctx: ImGuiContext):
+#     ccimgui.ImGui_SetCurrentContext(
+#         ctx._ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -8143,19 +8143,19 @@ def set_item_default_focus():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_item_key_owner(key: int):
-    """
-    Inputs Utilities: Key/Input Ownership [BETA]
-    - One common use case would be to allow your items to disable standard inputs behaviors such
-    as Tab or Alt key handling, Mouse Wheel scrolling, etc.
-    e.g. Button(...); SetItemKeyOwner(ImGuiKey_MouseWheelY); to make hovering/activating a button disable wheel for scrolling.
-    - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.
-    - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.
-    Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
-    """
-    ccimgui.ImGui_SetItemKeyOwner(
-        key
-    )
+# def set_item_key_owner(key: int):
+#     """
+#     Inputs Utilities: Key/Input Ownership [BETA]
+#     - One common use case would be to allow your items to disable standard inputs behaviors such
+#     as Tab or Alt key handling, Mouse Wheel scrolling, etc.
+#     e.g. Button(...); SetItemKeyOwner(ImGuiKey_MouseWheelY); to make hovering/activating a button disable wheel for scrolling.
+#     - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.
+#     - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.
+#     Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
+#     """
+#     ccimgui.ImGui_SetItemKeyOwner(
+#         key
+#     )
 # [End Function]
 
 # [Function]
@@ -8179,10 +8179,10 @@ def set_item_tooltip(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_item_tooltip_v(fmt: str):
-    ccimgui.ImGui_SetItemTooltipV(
-        _bytes(fmt)
-    )
+# def set_item_tooltip_v(fmt: str):
+#     ccimgui.ImGui_SetItemTooltipV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -8206,13 +8206,13 @@ def set_keyboard_focus_here(offset: int=0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_keyboard_focus_here_ex(offset: int=0):
-    """
-    Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
-    """
-    ccimgui.ImGui_SetKeyboardFocusHereEx(
-        offset
-    )
+# def set_keyboard_focus_here_ex(offset: int=0):
+#     """
+#     Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
+#     """
+#     ccimgui.ImGui_SetKeyboardFocusHereEx(
+#         offset
+#     )
 # [End Function]
 
 # [Function]
@@ -8236,13 +8236,13 @@ def set_mouse_cursor(cursor_type: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
-    """
-    Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
-    """
-    ccimgui.ImGui_SetNextFrameWantCaptureKeyboard(
-        want_capture_keyboard
-    )
+# def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
+#     """
+#     Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
+#     """
+#     ccimgui.ImGui_SetNextFrameWantCaptureKeyboard(
+#         want_capture_keyboard
+#     )
 # [End Function]
 
 # [Function]
@@ -8251,13 +8251,13 @@ def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
-    """
-    Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
-    """
-    ccimgui.ImGui_SetNextFrameWantCaptureMouse(
-        want_capture_mouse
-    )
+# def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
+#     """
+#     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+#     """
+#     ccimgui.ImGui_SetNextFrameWantCaptureMouse(
+#         want_capture_mouse
+#     )
 # [End Function]
 
 # [Function]
@@ -8266,12 +8266,12 @@ def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_item_allow_overlap():
-    """
-    Overlapping mode
-    Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
-    """
-    ccimgui.ImGui_SetNextItemAllowOverlap()
+# def set_next_item_allow_overlap():
+#     """
+#     Overlapping mode
+#     Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
+#     """
+#     ccimgui.ImGui_SetNextItemAllowOverlap()
 # [End Function]
 
 # [Function]
@@ -8308,11 +8308,11 @@ def set_next_item_selection_user_data(selection_user_data: Any):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_item_shortcut(key_chord: int, flags: int=0):
-    ccimgui.ImGui_SetNextItemShortcut(
-        key_chord,
-        flags
-    )
+# def set_next_item_shortcut(key_chord: int, flags: int=0):
+#     ccimgui.ImGui_SetNextItemShortcut(
+#         key_chord,
+#         flags
+#     )
 # [End Function]
 
 # [Function]
@@ -8321,13 +8321,13 @@ def set_next_item_shortcut(key_chord: int, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_item_storage_id(storage_id: int):
-    """
-    Set id to use for open/close storage (default to same as item id).
-    """
-    ccimgui.ImGui_SetNextItemStorageID(
-        storage_id
-    )
+# def set_next_item_storage_id(storage_id: int):
+#     """
+#     Set id to use for open/close storage (default to same as item id).
+#     """
+#     ccimgui.ImGui_SetNextItemStorageID(
+#         storage_id
+#     )
 # [End Function]
 
 # [Function]
@@ -8366,13 +8366,13 @@ def set_next_window_bg_alpha(alpha: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_window_class(window_class: ImGuiWindowClass):
-    """
-    Set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)
-    """
-    ccimgui.ImGui_SetNextWindowClass(
-        window_class._ptr
-    )
+# def set_next_window_class(window_class: ImGuiWindowClass):
+#     """
+#     Set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)
+#     """
+#     ccimgui.ImGui_SetNextWindowClass(
+#         window_class._ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -8460,15 +8460,15 @@ def set_next_window_pos(pos: Tuple[float, float], cond: int=0, pivot: tuple=(0, 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_next_window_pos_ex(pos: Tuple[float, float], cond: int=0, pivot: Tuple[float, float]=(0, 0)):
-    """
-    Set next window position. call before begin(). use pivot=(0.5f,0.5f) to center on given point, etc.
-    """
-    ccimgui.ImGui_SetNextWindowPosEx(
-        _cast_tuple_ImVec2(pos),
-        cond,
-        _cast_tuple_ImVec2(pivot)
-    )
+# def set_next_window_pos_ex(pos: Tuple[float, float], cond: int=0, pivot: Tuple[float, float]=(0, 0)):
+#     """
+#     Set next window position. call before begin(). use pivot=(0.5f,0.5f) to center on given point, etc.
+#     """
+#     ccimgui.ImGui_SetNextWindowPosEx(
+#         _cast_tuple_ImVec2(pos),
+#         cond,
+#         _cast_tuple_ImVec2(pivot)
+#     )
 # [End Function]
 
 # [Function]
@@ -8651,13 +8651,13 @@ def set_scroll_y(scroll_y: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_state_storage(storage: ImGuiStorage):
-    """
-    Replace current window storage with our own (if you want to manipulate it yourself, typically clear subsection of it)
-    """
-    ccimgui.ImGui_SetStateStorage(
-        storage._ptr
-    )
+# def set_state_storage(storage: ImGuiStorage):
+#     """
+#     Replace current window storage with our own (if you want to manipulate it yourself, typically clear subsection of it)
+#     """
+#     ccimgui.ImGui_SetStateStorage(
+#         storage._ptr
+#     )
 # [End Function]
 
 # [Function]
@@ -8696,10 +8696,10 @@ def set_tooltip(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_tooltip_v(fmt: str):
-    ccimgui.ImGui_SetTooltipV(
-        _bytes(fmt)
-    )
+# def set_tooltip_v(fmt: str):
+#     ccimgui.ImGui_SetTooltipV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -8708,14 +8708,14 @@ def set_tooltip_v(fmt: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_collapsed(collapsed: bool, cond: int=0):
-    """
-    (not recommended) set current window collapsed state. prefer using setnextwindowcollapsed().
-    """
-    ccimgui.ImGui_SetWindowCollapsed(
-        collapsed,
-        cond
-    )
+# def set_window_collapsed(collapsed: bool, cond: int=0):
+#     """
+#     (not recommended) set current window collapsed state. prefer using setnextwindowcollapsed().
+#     """
+#     ccimgui.ImGui_SetWindowCollapsed(
+#         collapsed,
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8724,15 +8724,15 @@ def set_window_collapsed(collapsed: bool, cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_collapsed_str(name: str, collapsed: bool, cond: int=0):
-    """
-    Set named window collapsed state
-    """
-    ccimgui.ImGui_SetWindowCollapsedStr(
-        _bytes(name),
-        collapsed,
-        cond
-    )
+# def set_window_collapsed_str(name: str, collapsed: bool, cond: int=0):
+#     """
+#     Set named window collapsed state
+#     """
+#     ccimgui.ImGui_SetWindowCollapsedStr(
+#         _bytes(name),
+#         collapsed,
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8741,11 +8741,11 @@ def set_window_collapsed_str(name: str, collapsed: bool, cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_focus():
-    """
-    (not recommended) set current window to be focused / top-most. prefer using setnextwindowfocus().
-    """
-    ccimgui.ImGui_SetWindowFocus()
+# def set_window_focus():
+#     """
+#     (not recommended) set current window to be focused / top-most. prefer using setnextwindowfocus().
+#     """
+#     ccimgui.ImGui_SetWindowFocus()
 # [End Function]
 
 # [Function]
@@ -8754,13 +8754,13 @@ def set_window_focus():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_focus_str(name: str):
-    """
-    Set named window to be focused / top-most. use null to remove focus.
-    """
-    ccimgui.ImGui_SetWindowFocusStr(
-        _bytes(name)
-    )
+# def set_window_focus_str(name: str):
+#     """
+#     Set named window to be focused / top-most. use null to remove focus.
+#     """
+#     ccimgui.ImGui_SetWindowFocusStr(
+#         _bytes(name)
+#     )
 # [End Function]
 
 # [Function]
@@ -8769,13 +8769,13 @@ def set_window_focus_str(name: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_font_scale(scale: float):
-    """
-    [obsolete] set font scale. adjust io.fontglobalscale if you want to scale all windows. this is an old api! for correct scaling, prefer to reload font + rebuild imfontatlas + call style.scaleallsizes().
-    """
-    ccimgui.ImGui_SetWindowFontScale(
-        scale
-    )
+# def set_window_font_scale(scale: float):
+#     """
+#     [obsolete] set font scale. adjust io.fontglobalscale if you want to scale all windows. this is an old api! for correct scaling, prefer to reload font + rebuild imfontatlas + call style.scaleallsizes().
+#     """
+#     ccimgui.ImGui_SetWindowFontScale(
+#         scale
+#     )
 # [End Function]
 
 # [Function]
@@ -8784,14 +8784,14 @@ def set_window_font_scale(scale: float):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_pos(pos: Tuple[float, float], cond: int=0):
-    """
-    (not recommended) set current window position - call within begin()/end(). prefer using setnextwindowpos(), as this may incur tearing and side-effects.
-    """
-    ccimgui.ImGui_SetWindowPos(
-        _cast_tuple_ImVec2(pos),
-        cond
-    )
+# def set_window_pos(pos: Tuple[float, float], cond: int=0):
+#     """
+#     (not recommended) set current window position - call within begin()/end(). prefer using setnextwindowpos(), as this may incur tearing and side-effects.
+#     """
+#     ccimgui.ImGui_SetWindowPos(
+#         _cast_tuple_ImVec2(pos),
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8800,15 +8800,15 @@ def set_window_pos(pos: Tuple[float, float], cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_pos_str(name: str, pos: Tuple[float, float], cond: int=0):
-    """
-    Set named window position.
-    """
-    ccimgui.ImGui_SetWindowPosStr(
-        _bytes(name),
-        _cast_tuple_ImVec2(pos),
-        cond
-    )
+# def set_window_pos_str(name: str, pos: Tuple[float, float], cond: int=0):
+#     """
+#     Set named window position.
+#     """
+#     ccimgui.ImGui_SetWindowPosStr(
+#         _bytes(name),
+#         _cast_tuple_ImVec2(pos),
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8817,14 +8817,14 @@ def set_window_pos_str(name: str, pos: Tuple[float, float], cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_size(size: Tuple[float, float], cond: int=0):
-    """
-    (not recommended) set current window size - call within begin()/end(). set to imvec2(0, 0) to force an auto-fit. prefer using setnextwindowsize(), as this may incur tearing and minor side-effects.
-    """
-    ccimgui.ImGui_SetWindowSize(
-        _cast_tuple_ImVec2(size),
-        cond
-    )
+# def set_window_size(size: Tuple[float, float], cond: int=0):
+#     """
+#     (not recommended) set current window size - call within begin()/end(). set to imvec2(0, 0) to force an auto-fit. prefer using setnextwindowsize(), as this may incur tearing and minor side-effects.
+#     """
+#     ccimgui.ImGui_SetWindowSize(
+#         _cast_tuple_ImVec2(size),
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8833,15 +8833,15 @@ def set_window_size(size: Tuple[float, float], cond: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def set_window_size_str(name: str, size: Tuple[float, float], cond: int=0):
-    """
-    Set named window size. set axis to 0.0f to force an auto-fit on this axis.
-    """
-    ccimgui.ImGui_SetWindowSizeStr(
-        _bytes(name),
-        _cast_tuple_ImVec2(size),
-        cond
-    )
+# def set_window_size_str(name: str, size: Tuple[float, float], cond: int=0):
+#     """
+#     Set named window size. set axis to 0.0f to force an auto-fit on this axis.
+#     """
+#     ccimgui.ImGui_SetWindowSizeStr(
+#         _bytes(name),
+#         _cast_tuple_ImVec2(size),
+#         cond
+#     )
 # [End Function]
 
 # [Function]
@@ -8957,13 +8957,13 @@ def show_id_stack_tool_window(p_open: Bool=None):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def show_id_stack_tool_window_ex(p_open: Bool=None):
-    """
-    Create stack tool window. hover items with mouse to query information about the source of their unique id.
-    """
-    ccimgui.ImGui_ShowIDStackToolWindowEx(
-        Bool.ptr(p_open)
-    )
+# def show_id_stack_tool_window_ex(p_open: Bool=None):
+#     """
+#     Create stack tool window. hover items with mouse to query information about the source of their unique id.
+#     """
+#     ccimgui.ImGui_ShowIDStackToolWindowEx(
+#         Bool.ptr(p_open)
+#     )
 # [End Function]
 
 # [Function]
@@ -9052,16 +9052,16 @@ def slider_angle(label: str, v_rad: Float, v_degrees_min: float=-360.0, v_degree
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_angle_ex(label: str, v_rad: Float, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderAngleEx(
-        _bytes(label),
-        &v_rad.value,
-        v_degrees_min,
-        v_degrees_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_angle_ex(label: str, v_rad: Float, v_degrees_min: float=-360.0, v_degrees_max: float=+360.0, format_: str="%.0f deg", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderAngleEx(
+#         _bytes(label),
+#         &v_rad.value,
+#         v_degrees_min,
+#         v_degrees_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9125,16 +9125,16 @@ def slider_float2(label: str, float_ptrs: Sequence[Float], v_min: float, v_max: 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_float2_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_float2_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9172,16 +9172,16 @@ def slider_float3(label: str, float_ptrs: Sequence[Float], v_min: float, v_max: 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_float3_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_float3_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderFloat3Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9221,16 +9221,16 @@ def slider_float4(label: str, float_ptrs: Sequence[Float], v_min: float, v_max: 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_float4_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_float4_ex(label: str, v: Sequence[Float], v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderFloat4Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9239,19 +9239,19 @@ def slider_float4_ex(label: str, v: Sequence[Float], v_min: float, v_max: float,
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_float_ex(label: str, v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    """
-    Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
-    """
-    cdef bool res = ccimgui.ImGui_SliderFloatEx(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_float_ex(label: str, v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+#     """
+#     Adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.
+#     """
+#     cdef bool res = ccimgui.ImGui_SliderFloatEx(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9308,16 +9308,16 @@ def slider_int2(label: str, int_ptrs: Sequence[Int], v_min: int, v_max: int, for
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_int2_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderInt2Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_int2_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderInt2Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9355,16 +9355,16 @@ def slider_int3(label: str, int_ptrs: Sequence[Int], v_min: int, v_max: int, for
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_int3_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderInt3Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_int3_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderInt3Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9404,16 +9404,16 @@ def slider_int4(label: str, int_ptrs: Sequence[Int], v_min: int, v_max: int, for
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_int4_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderInt4Ex(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_int4_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderInt4Ex(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9422,16 +9422,16 @@ def slider_int4_ex(label: str, v: Sequence[Int], v_min: int, v_max: int, format_
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_int_ex(label: str, v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_SliderIntEx(
-        _bytes(label),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def slider_int_ex(label: str, v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_SliderIntEx(
+#         _bytes(label),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9505,19 +9505,19 @@ def slider_scalar(label: str, data_type: int, p_data: "Int | Long | Float | Doub
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_SliderScalarEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        p_min,
-        p_max,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_SliderScalarEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         p_min,
+#         p_max,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9650,20 +9650,20 @@ def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | F
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def slider_scalar_n_ex(label: str, data_type: int, p_data: Any, components: int, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_SliderScalarNEx(
-        _bytes(label),
-        data_type,
-        p_data,
-        components,
-        p_min,
-        p_max,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_SliderScalarNEx(
+#         _bytes(label),
+#         data_type,
+#         p_data,
+#         components,
+#         p_min,
+#         p_max,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9764,11 +9764,11 @@ def tab_item_button(label: str, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def table_angled_headers_row():
-    """
-    Submit a row with angled headers for every column with the imguitablecolumnflags_angledheader flag. must be first row.
-    """
-    ccimgui.ImGui_TableAngledHeadersRow()
+# def table_angled_headers_row():
+#     """
+#     Submit a row with angled headers for every column with the imguitablecolumnflags_angledheader flag. must be first row.
+#     """
+#     ccimgui.ImGui_TableAngledHeadersRow()
 # [End Function]
 
 # [Function]
@@ -9777,12 +9777,12 @@ def table_angled_headers_row():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def table_get_column_count():
-    """
-    Return number of columns (value passed to begintable)
-    """
-    cdef int res = ccimgui.ImGui_TableGetColumnCount()
-    return res
+# def table_get_column_count():
+#     """
+#     Return number of columns (value passed to begintable)
+#     """
+#     cdef int res = ccimgui.ImGui_TableGetColumnCount()
+#     return res
 # [End Function]
 
 # [Function]
@@ -9791,14 +9791,14 @@ def table_get_column_count():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def table_get_column_flags(column_n: int=-1):
-    """
-    Return column flags so you can query their enabled/visible/sorted/hovered status flags. pass -1 to use current column.
-    """
-    cdef ccimgui.ImGuiTableColumnFlags res = ccimgui.ImGui_TableGetColumnFlags(
-        column_n
-    )
-    return res
+# def table_get_column_flags(column_n: int=-1):
+#     """
+#     Return column flags so you can query their enabled/visible/sorted/hovered status flags. pass -1 to use current column.
+#     """
+#     cdef ccimgui.ImGuiTableColumnFlags res = ccimgui.ImGui_TableGetColumnFlags(
+#         column_n
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -9807,12 +9807,12 @@ def table_get_column_flags(column_n: int=-1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def table_get_column_index():
-    """
-    Return current column index.
-    """
-    cdef int res = ccimgui.ImGui_TableGetColumnIndex()
-    return res
+# def table_get_column_index():
+#     """
+#     Return current column index.
+#     """
+#     cdef int res = ccimgui.ImGui_TableGetColumnIndex()
+#     return res
 # [End Function]
 
 # [Function]
@@ -9821,14 +9821,14 @@ def table_get_column_index():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(str)
-def table_get_column_name(column_n: int=-1):
-    """
-    Return '' if column didn't have a name declared by tablesetupcolumn(). pass -1 to use current column.
-    """
-    cdef const char* res = ccimgui.ImGui_TableGetColumnName(
-        column_n
-    )
-    return _from_bytes(res)
+# def table_get_column_name(column_n: int=-1):
+#     """
+#     Return '' if column didn't have a name declared by tablesetupcolumn(). pass -1 to use current column.
+#     """
+#     cdef const char* res = ccimgui.ImGui_TableGetColumnName(
+#         column_n
+#     )
+#     return _from_bytes(res)
 # [End Function]
 
 # [Function]
@@ -9837,12 +9837,12 @@ def table_get_column_name(column_n: int=-1):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def table_get_hovered_column():
-    """
-    Return hovered column. return -1 when table is not hovered. return columns_count if the unused space at the right of visible columns is hovered. can also use (tablegetcolumnflags() & imguitablecolumnflags_ishovered) instead.
-    """
-    cdef int res = ccimgui.ImGui_TableGetHoveredColumn()
-    return res
+# def table_get_hovered_column():
+#     """
+#     Return hovered column. return -1 when table is not hovered. return columns_count if the unused space at the right of visible columns is hovered. can also use (tablegetcolumnflags() & imguitablecolumnflags_ishovered) instead.
+#     """
+#     cdef int res = ccimgui.ImGui_TableGetHoveredColumn()
+#     return res
 # [End Function]
 
 # [Function]
@@ -9851,12 +9851,12 @@ def table_get_hovered_column():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(int)
-def table_get_row_index():
-    """
-    Return current row index.
-    """
-    cdef int res = ccimgui.ImGui_TableGetRowIndex()
-    return res
+# def table_get_row_index():
+#     """
+#     Return current row index.
+#     """
+#     cdef int res = ccimgui.ImGui_TableGetRowIndex()
+#     return res
 # [End Function]
 
 # [Function]
@@ -9943,14 +9943,14 @@ def table_next_row(row_flags: int=0, min_row_height: float=0.0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
-    """
-    Append into the first cell of a new row.
-    """
-    ccimgui.ImGui_TableNextRowEx(
-        row_flags,
-        min_row_height
-    )
+# def table_next_row_ex(row_flags: int=0, min_row_height: float=0.0):
+#     """
+#     Append into the first cell of a new row.
+#     """
+#     ccimgui.ImGui_TableNextRowEx(
+#         row_flags,
+#         min_row_height
+#     )
 # [End Function]
 
 # [Function]
@@ -10034,13 +10034,13 @@ def table_setup_column(label: str, flags: int=0, init_width_or_weight: float=0.0
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
-    ccimgui.ImGui_TableSetupColumnEx(
-        _bytes(label),
-        flags,
-        init_width_or_weight,
-        user_id
-    )
+# def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
+#     ccimgui.ImGui_TableSetupColumnEx(
+#         _bytes(label),
+#         flags,
+#         init_width_or_weight,
+#         user_id
+#     )
 # [End Function]
 
 # [Function]
@@ -10096,11 +10096,11 @@ def text_colored(col: Tuple[float, float, float, float], fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_colored_v(col: Tuple[float, float, float, float], fmt: str):
-    ccimgui.ImGui_TextColoredV(
-        _cast_tuple_ImVec4(col),
-        _bytes(fmt)
-    )
+# def text_colored_v(col: Tuple[float, float, float, float], fmt: str):
+#     ccimgui.ImGui_TextColoredV(
+#         _cast_tuple_ImVec4(col),
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -10124,10 +10124,10 @@ def text_disabled(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_disabled_v(fmt: str):
-    ccimgui.ImGui_TextDisabledV(
-        _bytes(fmt)
-    )
+# def text_disabled_v(fmt: str):
+#     ccimgui.ImGui_TextDisabledV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -10136,14 +10136,14 @@ def text_disabled_v(fmt: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def text_link(label: str):
-    """
-    Hyperlink text button, return true when clicked
-    """
-    cdef bool res = ccimgui.ImGui_TextLink(
-        _bytes(label)
-    )
-    return res
+# def text_link(label: str):
+#     """
+#     Hyperlink text button, return true when clicked
+#     """
+#     cdef bool res = ccimgui.ImGui_TextLink(
+#         _bytes(label)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10152,13 +10152,13 @@ def text_link(label: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_link_open_url(label: str):
-    """
-    Implied url = null
-    """
-    ccimgui.ImGui_TextLinkOpenURL(
-        _bytes(label)
-    )
+# def text_link_open_url(label: str):
+#     """
+#     Implied url = null
+#     """
+#     ccimgui.ImGui_TextLinkOpenURL(
+#         _bytes(label)
+#     )
 # [End Function]
 
 # [Function]
@@ -10167,16 +10167,16 @@ def text_link_open_url(label: str):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_link_open_url_ex(label: str, url: str=None):
-    """
-    Hyperlink text button, automatically open file/url when clicked
-    """
-    bytes_url = _bytes(url) if url is not None else None
+# def text_link_open_url_ex(label: str, url: str=None):
+#     """
+#     Hyperlink text button, automatically open file/url when clicked
+#     """
+#     bytes_url = _bytes(url) if url is not None else None
 
-    ccimgui.ImGui_TextLinkOpenURLEx(
-        _bytes(label),
-        ((<char*>bytes_url if url is not None else NULL))
-    )
+#     ccimgui.ImGui_TextLinkOpenURLEx(
+#         _bytes(label),
+#         ((<char*>bytes_url if url is not None else NULL))
+#     )
 # [End Function]
 
 # [Function]
@@ -10203,16 +10203,16 @@ def text_unformatted(text: str, text_end: str=None):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_unformatted_ex(text: str, text_end: str=None):
-    """
-    Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
-    """
-    bytes_text_end = _bytes(text_end) if text_end is not None else None
+# def text_unformatted_ex(text: str, text_end: str=None):
+#     """
+#     Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
+#     """
+#     bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-    ccimgui.ImGui_TextUnformattedEx(
-        _bytes(text),
-        ((<char*>bytes_text_end if text_end is not None else NULL))
-    )
+#     ccimgui.ImGui_TextUnformattedEx(
+#         _bytes(text),
+#         ((<char*>bytes_text_end if text_end is not None else NULL))
+#     )
 # [End Function]
 
 # [Function]
@@ -10221,10 +10221,10 @@ def text_unformatted_ex(text: str, text_end: str=None):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_v(fmt: str):
-    ccimgui.ImGui_TextV(
-        _bytes(fmt)
-    )
+# def text_v(fmt: str):
+#     ccimgui.ImGui_TextV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -10248,10 +10248,10 @@ def text_wrapped(fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_wrapped_v(fmt: str):
-    ccimgui.ImGui_TextWrappedV(
-        _bytes(fmt)
-    )
+# def text_wrapped_v(fmt: str):
+#     ccimgui.ImGui_TextWrappedV(
+#         _bytes(fmt)
+#     )
 # [End Function]
 
 # [Function]
@@ -10278,12 +10278,12 @@ def tree_node(label: str, flags: int=0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ex(label: str, flags: int=0):
-    cdef bool res = ccimgui.ImGui_TreeNodeEx(
-        _bytes(label),
-        flags
-    )
-    return res
+# def tree_node_ex(label: str, flags: int=0):
+#     cdef bool res = ccimgui.ImGui_TreeNodeEx(
+#         _bytes(label),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10292,13 +10292,13 @@ def tree_node_ex(label: str, flags: int=0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeExPtr(
-        ptr_id,
-        flags,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeExPtr(
+#         ptr_id,
+#         flags,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10307,13 +10307,13 @@ def tree_node_ex_ptr(ptr_id: Any, flags: int, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ex_str(str_id: str, flags: int, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeExStr(
-        _bytes(str_id),
-        flags,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_ex_str(str_id: str, flags: int, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeExStr(
+#         _bytes(str_id),
+#         flags,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10322,13 +10322,13 @@ def tree_node_ex_str(str_id: str, flags: int, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ex_v(str_id: str, flags: int, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeExV(
-        _bytes(str_id),
-        flags,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_ex_v(str_id: str, flags: int, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeExV(
+#         _bytes(str_id),
+#         flags,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10337,13 +10337,13 @@ def tree_node_ex_v(str_id: str, flags: int, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeExVPtr(
-        ptr_id,
-        flags,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeExVPtr(
+#         ptr_id,
+#         flags,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10352,15 +10352,15 @@ def tree_node_ex_vptr(ptr_id: Any, flags: int, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_ptr(ptr_id: Any, fmt: str):
-    """
-    '
-    """
-    cdef bool res = ccimgui.ImGui_TreeNodePtr(
-        ptr_id,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_ptr(ptr_id: Any, fmt: str):
+#     """
+#     '
+#     """
+#     cdef bool res = ccimgui.ImGui_TreeNodePtr(
+#         ptr_id,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10386,12 +10386,12 @@ def tree_node_str(str_id: str, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_v(str_id: str, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeV(
-        _bytes(str_id),
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_v(str_id: str, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeV(
+#         _bytes(str_id),
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10400,12 +10400,12 @@ def tree_node_v(str_id: str, fmt: str):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def tree_node_vptr(ptr_id: Any, fmt: str):
-    cdef bool res = ccimgui.ImGui_TreeNodeVPtr(
-        ptr_id,
-        _bytes(fmt)
-    )
-    return res
+# def tree_node_vptr(ptr_id: Any, fmt: str):
+#     cdef bool res = ccimgui.ImGui_TreeNodeVPtr(
+#         ptr_id,
+#         _bytes(fmt)
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10443,13 +10443,13 @@ def tree_push(obj: object):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def tree_push_ptr(ptr_id: Any):
-    """
-    '
-    """
-    ccimgui.ImGui_TreePushPtr(
-        ptr_id
-    )
+# def tree_push_ptr(ptr_id: Any):
+#     """
+#     '
+#     """
+#     ccimgui.ImGui_TreePushPtr(
+#         ptr_id
+#     )
 # [End Function]
 
 # [Function]
@@ -10473,13 +10473,13 @@ def unindent(indent_w: float=0.0):
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def unindent_ex(indent_w: float=0.0):
-    """
-    Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
-    """
-    ccimgui.ImGui_UnindentEx(
-        indent_w
-    )
+# def unindent_ex(indent_w: float=0.0):
+#     """
+#     Move content position back to the left, by indent_w, or style.indentspacing if indent_w <= 0
+#     """
+#     ccimgui.ImGui_UnindentEx(
+#         indent_w
+#     )
 # [End Function]
 
 # [Function]
@@ -10523,17 +10523,17 @@ def vslider_float(label: str, size: Tuple[float, float], v: Float, v_min: float,
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def vslider_float_ex(label: str, size: Tuple[float, float], v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
-    cdef bool res = ccimgui.ImGui_VSliderFloatEx(
-        _bytes(label),
-        _cast_tuple_ImVec2(size),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def vslider_float_ex(label: str, size: Tuple[float, float], v: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_VSliderFloatEx(
+#         _bytes(label),
+#         _cast_tuple_ImVec2(size),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10561,17 +10561,17 @@ def vslider_int(label: str, size: Tuple[float, float], v: Int, v_min: int, v_max
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def vslider_int_ex(label: str, size: Tuple[float, float], v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
-    cdef bool res = ccimgui.ImGui_VSliderIntEx(
-        _bytes(label),
-        _cast_tuple_ImVec2(size),
-        &v.value,
-        v_min,
-        v_max,
-        _bytes(format_),
-        flags
-    )
-    return res
+# def vslider_int_ex(label: str, size: Tuple[float, float], v: Int, v_min: int, v_max: int, format_: str="%d", flags: int=0):
+#     cdef bool res = ccimgui.ImGui_VSliderIntEx(
+#         _bytes(label),
+#         _cast_tuple_ImVec2(size),
+#         &v.value,
+#         v_min,
+#         v_max,
+#         _bytes(format_),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Function]
@@ -10649,20 +10649,20 @@ def vslider_scalar(label: str, size: Tuple[float, float], data_type: int, p_data
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def vslider_scalar_ex(label: str, size: Tuple[float, float], data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
-    bytes_format_ = _bytes(format_) if format_ is not None else None
+# def vslider_scalar_ex(label: str, size: Tuple[float, float], data_type: int, p_data: Any, p_min: Any, p_max: Any, format_: str=None, flags: int=0):
+#     bytes_format_ = _bytes(format_) if format_ is not None else None
 
-    cdef bool res = ccimgui.ImGui_VSliderScalarEx(
-        _bytes(label),
-        _cast_tuple_ImVec2(size),
-        data_type,
-        p_data,
-        p_min,
-        p_max,
-        ((<char*>bytes_format_ if format_ is not None else NULL)),
-        flags
-    )
-    return res
+#     cdef bool res = ccimgui.ImGui_VSliderScalarEx(
+#         _bytes(label),
+#         _cast_tuple_ImVec2(size),
+#         data_type,
+#         p_data,
+#         p_min,
+#         p_max,
+#         ((<char*>bytes_format_ if format_ is not None else NULL)),
+#         flags
+#     )
+#     return res
 # [End Function]
 
 # [Class]
@@ -10674,7 +10674,7 @@ def vslider_scalar_ex(label: str, size: Tuple[float, float], data_type: int, p_d
 cdef class GLFWmonitor:
     cdef ccimgui.GLFWmonitor* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef GLFWmonitor from_ptr(ccimgui.GLFWmonitor* _ptr):
         if _ptr == NULL:
@@ -10683,7 +10683,7 @@ cdef class GLFWmonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef GLFWmonitor from_heap_ptr(ccimgui.GLFWmonitor* _ptr):
         wrapper = GLFWmonitor.from_ptr(_ptr)
@@ -10691,7 +10691,7 @@ cdef class GLFWmonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10712,7 +10712,7 @@ cdef class GLFWmonitor:
 cdef class GLFWwindow:
     cdef ccimgui.GLFWwindow* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef GLFWwindow from_ptr(ccimgui.GLFWwindow* _ptr):
         if _ptr == NULL:
@@ -10721,7 +10721,7 @@ cdef class GLFWwindow:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef GLFWwindow from_heap_ptr(ccimgui.GLFWwindow* _ptr):
         wrapper = GLFWwindow.from_ptr(_ptr)
@@ -10729,7 +10729,7 @@ cdef class GLFWwindow:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10747,41 +10747,41 @@ cdef class GLFWwindow:
 # ?active(False)
 # ?invisible(True)
 # ?custom_comment_only(False)
-cdef class ImColor:
-    """
-    Helper: ImColor() implicitly converts colors to either ImU32 (packed 4x1 byte) or ImVec4 (4x1 float)
-    Prefer using IM_COL32() macros if you want a guaranteed compile-time ImU32 for usage with ImDrawList API.
-    **Avoid storing ImColor! Store either u32 of ImVec4. This is not a full-featured color class. MAY OBSOLETE.
-    **None of the ImGui API are using ImColor directly but you can use it as a convenience to pass colors in either ImU32 or ImVec4 formats. Explicitly cast to ImU32 or ImVec4 if needed.
-    """
-    cdef ccimgui.ImColor* _ptr
-    cdef bool dynamically_allocated
+# cdef class ImColor:
+#     """
+#     Helper: ImColor() implicitly converts colors to either ImU32 (packed 4x1 byte) or ImVec4 (4x1 float)
+#     Prefer using IM_COL32() macros if you want a guaranteed compile-time ImU32 for usage with ImDrawList API.
+#     **Avoid storing ImColor! Store either u32 of ImVec4. This is not a full-featured color class. MAY OBSOLETE.
+#     **None of the ImGui API are using ImColor directly but you can use it as a convenience to pass colors in either ImU32 or ImVec4 formats. Explicitly cast to ImU32 or ImVec4 if needed.
+#     """
+#     cdef ccimgui.ImColor* _ptr
+#     cdef bool dynamically_allocated
 
-    @staticmethod
-    cdef ImColor from_ptr(ccimgui.ImColor* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImColor wrapper = ImColor.__new__(ImColor)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
+#     @staticmethod
+#     cdef ImColor from_ptr(ccimgui.ImColor* _ptr):
+#         if _ptr == NULL:
+#             return None
+#         cdef ImColor wrapper = ImColor.__new__(ImColor)
+#         wrapper._ptr = _ptr
+#         wrapper.dynamically_allocated = False
+#         return wrapper
 
-    @staticmethod
-    cdef ImColor from_heap_ptr(ccimgui.ImColor* _ptr):
-        wrapper = ImColor.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
+#     @staticmethod
+#     cdef ImColor from_heap_ptr(ccimgui.ImColor* _ptr):
+#         wrapper = ImColor.from_ptr(_ptr)
+#         if wrapper is None:
+#             return None
+#         wrapper.dynamically_allocated = True
+#         return wrapper
 
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
+#     def __init__(self):
+#         raise TypeError("This class cannot be instantiated directly.")
 
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
+#     def __hash__(self) -> int:
+#         if self._ptr == NULL:
+#             raise RuntimeError("Won't hash a NULL pointer")
+#         cdef unsigned int ptr_int = <uintptr_t>self._ptr
+#         return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -10790,14 +10790,14 @@ cdef class ImColor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float, float, float])
-    @property
-    def value(self):
-        cdef ccimgui.ImVec4 res = dereference(self._ptr).Value
-        return _cast_ImVec4_tuple(res)
-    @value.setter
-    def value(self, value: Tuple[float, float, float, float]):
-        # dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
-        raise NotImplementedError
+    # @property
+    # def value(self):
+    #     cdef ccimgui.ImVec4 res = dereference(self._ptr).Value
+    #     return _cast_ImVec4_tuple(res)
+    # @value.setter
+    # def value(self, value: Tuple[float, float, float, float]):
+    #     # dereference(self._ptr).Value = _cast_tuple_ImVec4(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -10806,17 +10806,17 @@ cdef class ImColor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
-        """
-        FIXME-OBSOLETE: May need to obsolete/cleanup those helpers.
-        """
-        ccimgui.ImColor_SetHSV(
-            self._ptr,
-            h,
-            s,
-            v,
-            a
-        )
+    # def set_hsv(self: ImColor, h: float, s: float, v: float, a: float=1.0):
+    #     """
+    #     FIXME-OBSOLETE: May need to obsolete/cleanup those helpers.
+    #     """
+    #     ccimgui.ImColor_SetHSV(
+    #         self._ptr,
+    #         h,
+    #         s,
+    #         v,
+    #         a
+    #     )
     # [End Method]
 # [End Class]
 
@@ -10832,7 +10832,7 @@ cdef class ImDrawChannel:
     """
     cdef ccimgui.ImDrawChannel* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawChannel from_ptr(ccimgui.ImDrawChannel* _ptr):
         if _ptr == NULL:
@@ -10841,7 +10841,7 @@ cdef class ImDrawChannel:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawChannel from_heap_ptr(ccimgui.ImDrawChannel* _ptr):
         wrapper = ImDrawChannel.from_ptr(_ptr)
@@ -10849,7 +10849,7 @@ cdef class ImDrawChannel:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10866,14 +10866,14 @@ cdef class ImDrawChannel:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImDrawCmd)
-    @property
-    def cmd_buffer(self):
-        cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr)._CmdBuffer
-        return ImVector_ImDrawCmd.from_ptr(res)
-    @cmd_buffer.setter
-    def cmd_buffer(self, value: ImVector_ImDrawCmd):
-        # dereference(self._ptr)._CmdBuffer = value._ptr
-        raise NotImplementedError
+    # @property
+    # def cmd_buffer(self):
+    #     cdef ccimgui.ImVector_ImDrawCmd res = dereference(self._ptr)._CmdBuffer
+    #     return ImVector_ImDrawCmd.from_ptr(res)
+    # @cmd_buffer.setter
+    # def cmd_buffer(self, value: ImVector_ImDrawCmd):
+    #     # dereference(self._ptr)._CmdBuffer = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -10882,14 +10882,14 @@ cdef class ImDrawChannel:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(List[int])
-    @property
-    def idx_buffer(self):
-        cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr)._IdxBuffer
-        return ImVector_ImDrawIdx.from_ptr(res)
-    @idx_buffer.setter
-    def idx_buffer(self, value: ImVector_ImDrawIdx):
-        # dereference(self._ptr)._IdxBuffer = value._ptr
-        raise NotImplementedError
+    # @property
+    # def idx_buffer(self):
+    #     cdef ccimgui.ImVector_ImDrawIdx res = dereference(self._ptr)._IdxBuffer
+    #     return ImVector_ImDrawIdx.from_ptr(res)
+    # @idx_buffer.setter
+    # def idx_buffer(self, value: ImVector_ImDrawIdx):
+    #     # dereference(self._ptr)._IdxBuffer = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -10909,7 +10909,7 @@ cdef class ImDrawCmd:
     """
     cdef ccimgui.ImDrawCmd* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawCmd from_ptr(ccimgui.ImDrawCmd* _ptr):
         if _ptr == NULL:
@@ -10918,7 +10918,7 @@ cdef class ImDrawCmd:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawCmd from_heap_ptr(ccimgui.ImDrawCmd* _ptr):
         wrapper = ImDrawCmd.from_ptr(_ptr)
@@ -10926,7 +10926,7 @@ cdef class ImDrawCmd:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11000,17 +11000,17 @@ cdef class ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(object)
-    @property
-    def texture_id(self):
-        """
-        4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
-        """
-        cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
-        return res
-    @texture_id.setter
-    def texture_id(self, value: Any):
-        # dereference(self._ptr).TextureId = value
-        raise NotImplementedError
+    # @property
+    # def texture_id(self):
+    #     """
+    #     4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
+    #     """
+    #     cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
+    #     return res
+    # @texture_id.setter
+    # def texture_id(self, value: Any):
+    #     # dereference(self._ptr).TextureId = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11019,17 +11019,17 @@ cdef class ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def user_callback(self):
-        """
-        4-8  // if != null, call the function instead of rendering the vertices. clip_rect and texture_id will be set normally.
-        """
-        cdef ccimgui.ImDrawCallback res = dereference(self._ptr).UserCallback
-        return res
-    @user_callback.setter
-    def user_callback(self, value: Callable):
-        # dereference(self._ptr).UserCallback = value
-        raise NotImplementedError
+    # @property
+    # def user_callback(self):
+    #     """
+    #     4-8  // if != null, call the function instead of rendering the vertices. clip_rect and texture_id will be set normally.
+    #     """
+    #     cdef ccimgui.ImDrawCallback res = dereference(self._ptr).UserCallback
+    #     return res
+    # @user_callback.setter
+    # def user_callback(self, value: Callable):
+    #     # dereference(self._ptr).UserCallback = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11038,17 +11038,17 @@ cdef class ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def user_callback_data(self):
-        """
-        4-8  // the draw callback code can access this.
-        """
-        cdef void* res = dereference(self._ptr).UserCallbackData
-        return res
-    @user_callback_data.setter
-    def user_callback_data(self, value: Any):
-        # dereference(self._ptr).UserCallbackData = value
-        raise NotImplementedError
+    # @property
+    # def user_callback_data(self):
+    #     """
+    #     4-8  // the draw callback code can access this.
+    #     """
+    #     cdef void* res = dereference(self._ptr).UserCallbackData
+    #     return res
+    # @user_callback_data.setter
+    # def user_callback_data(self, value: Any):
+    #     # dereference(self._ptr).UserCallbackData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11076,14 +11076,14 @@ cdef class ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    def get_tex_id(self: ImDrawCmd):
-        """
-        Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
-        """
-        cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(
-            self._ptr
-        )
-        return res
+    # def get_tex_id(self: ImDrawCmd):
+    #     """
+    #     Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
+    #     """
+    #     cdef ccimgui.ImTextureID res = ccimgui.ImDrawCmd_GetTexID(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 # [End Class]
 
@@ -11093,38 +11093,38 @@ cdef class ImDrawCmd:
 # ?active(False)
 # ?invisible(True)
 # ?custom_comment_only(False)
-cdef class ImDrawCmdHeader:
-    """
-    [Internal] For use by ImDrawList
-    """
-    cdef ccimgui.ImDrawCmdHeader* _ptr
-    cdef bool dynamically_allocated
+# cdef class ImDrawCmdHeader:
+#     """
+#     [Internal] For use by ImDrawList
+#     """
+#     cdef ccimgui.ImDrawCmdHeader* _ptr
+#     cdef bool dynamically_allocated
 
-    @staticmethod
-    cdef ImDrawCmdHeader from_ptr(ccimgui.ImDrawCmdHeader* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImDrawCmdHeader wrapper = ImDrawCmdHeader.__new__(ImDrawCmdHeader)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
+#     @staticmethod
+#     cdef ImDrawCmdHeader from_ptr(ccimgui.ImDrawCmdHeader* _ptr):
+#         if _ptr == NULL:
+#             return None
+#         cdef ImDrawCmdHeader wrapper = ImDrawCmdHeader.__new__(ImDrawCmdHeader)
+#         wrapper._ptr = _ptr
+#         wrapper.dynamically_allocated = False
+#         return wrapper
 
-    @staticmethod
-    cdef ImDrawCmdHeader from_heap_ptr(ccimgui.ImDrawCmdHeader* _ptr):
-        wrapper = ImDrawCmdHeader.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
+#     @staticmethod
+#     cdef ImDrawCmdHeader from_heap_ptr(ccimgui.ImDrawCmdHeader* _ptr):
+#         wrapper = ImDrawCmdHeader.from_ptr(_ptr)
+#         if wrapper is None:
+#             return None
+#         wrapper.dynamically_allocated = True
+#         return wrapper
 
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
+#     def __init__(self):
+#         raise TypeError("This class cannot be instantiated directly.")
 
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
+#     def __hash__(self) -> int:
+#         if self._ptr == NULL:
+#             raise RuntimeError("Won't hash a NULL pointer")
+#         cdef unsigned int ptr_int = <uintptr_t>self._ptr
+#         return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -11149,14 +11149,14 @@ cdef class ImDrawCmdHeader:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def texture_id(self):
-        cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
-        return res
-    @texture_id.setter
-    def texture_id(self, value: Any):
-        # dereference(self._ptr).TextureId = value
-        raise NotImplementedError
+    # @property
+    # def texture_id(self):
+    #     cdef ccimgui.ImTextureID res = dereference(self._ptr).TextureId
+    #     return res
+    # @texture_id.setter
+    # def texture_id(self, value: Any):
+    #     # dereference(self._ptr).TextureId = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11165,14 +11165,14 @@ cdef class ImDrawCmdHeader:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def vtx_offset(self):
-        cdef unsigned int res = dereference(self._ptr).VtxOffset
-        return res
-    @vtx_offset.setter
-    def vtx_offset(self, value: int):
-        # dereference(self._ptr).VtxOffset = value
-        raise NotImplementedError
+    # @property
+    # def vtx_offset(self):
+    #     cdef unsigned int res = dereference(self._ptr).VtxOffset
+    #     return res
+    # @vtx_offset.setter
+    # def vtx_offset(self, value: int):
+    #     # dereference(self._ptr).VtxOffset = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -11185,7 +11185,7 @@ cdef class ImDrawCmdHeader:
 cdef class ImDrawData:
     cdef ccimgui.ImDrawData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawData from_ptr(ccimgui.ImDrawData* _ptr):
         if _ptr == NULL:
@@ -11194,7 +11194,7 @@ cdef class ImDrawData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawData from_heap_ptr(ccimgui.ImDrawData* _ptr):
         wrapper = ImDrawData.from_ptr(_ptr)
@@ -11202,7 +11202,7 @@ cdef class ImDrawData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11259,17 +11259,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    @property
-    def display_pos(self):
-        """
-        Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== getmainviewport()->pos for the main viewport, == (0.0) in most single-viewport applications)
-        """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayPos
-        return _cast_ImVec2_tuple(res)
-    @display_pos.setter
-    def display_pos(self, value: Tuple[float, float]):
-        # dereference(self._ptr).DisplayPos = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+    # @property
+    # def display_pos(self):
+    #     """
+    #     Top-left position of the viewport to render (== top-left of the orthogonal projection matrix to use) (== getmainviewport()->pos for the main viewport, == (0.0) in most single-viewport applications)
+    #     """
+    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplayPos
+    #     return _cast_ImVec2_tuple(res)
+    # @display_pos.setter
+    # def display_pos(self, value: Tuple[float, float]):
+    #     # dereference(self._ptr).DisplayPos = _cast_tuple_ImVec2(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11278,17 +11278,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    @property
-    def display_size(self):
-        """
-        Size of the viewport to render (== getmainviewport()->size for the main viewport, == io.displaysize in most single-viewport applications)
-        """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySize
-        return _cast_ImVec2_tuple(res)
-    @display_size.setter
-    def display_size(self, value: Tuple[float, float]):
-        # dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+    # @property
+    # def display_size(self):
+    #     """
+    #     Size of the viewport to render (== getmainviewport()->size for the main viewport, == io.displaysize in most single-viewport applications)
+    #     """
+    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).DisplaySize
+    #     return _cast_ImVec2_tuple(res)
+    # @display_size.setter
+    # def display_size(self, value: Tuple[float, float]):
+    #     # dereference(self._ptr).DisplaySize = _cast_tuple_ImVec2(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11297,17 +11297,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    @property
-    def framebuffer_scale(self):
-        """
-        Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
-        """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).FramebufferScale
-        return _cast_ImVec2_tuple(res)
-    @framebuffer_scale.setter
-    def framebuffer_scale(self, value: Tuple[float, float]):
-        # dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+    # @property
+    # def framebuffer_scale(self):
+    #     """
+    #     Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
+    #     """
+    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).FramebufferScale
+    #     return _cast_ImVec2_tuple(res)
+    # @framebuffer_scale.setter
+    # def framebuffer_scale(self, value: Tuple[float, float]):
+    #     # dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11316,17 +11316,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiViewport)
-    @property
-    def owner_viewport(self):
-        """
-        Viewport carrying the imdrawdata instance, might be of use to the renderer (generally not).
-        """
-        cdef ccimgui.ImGuiViewport* res = dereference(self._ptr).OwnerViewport
-        return ImGuiViewport.from_ptr(res)
-    @owner_viewport.setter
-    def owner_viewport(self, value: ImGuiViewport):
-        # dereference(self._ptr).OwnerViewport = value._ptr
-        raise NotImplementedError
+    # @property
+    # def owner_viewport(self):
+    #     """
+    #     Viewport carrying the imdrawdata instance, might be of use to the renderer (generally not).
+    #     """
+    #     cdef ccimgui.ImGuiViewport* res = dereference(self._ptr).OwnerViewport
+    #     return ImGuiViewport.from_ptr(res)
+    # @owner_viewport.setter
+    # def owner_viewport(self, value: ImGuiViewport):
+    #     # dereference(self._ptr).OwnerViewport = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11335,17 +11335,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def total_idx_count(self):
-        """
-        For convenience, sum of all imdrawlist's idxbuffer.size
-        """
-        cdef int res = dereference(self._ptr).TotalIdxCount
-        return res
-    @total_idx_count.setter
-    def total_idx_count(self, value: int):
-        # dereference(self._ptr).TotalIdxCount = value
-        raise NotImplementedError
+    # @property
+    # def total_idx_count(self):
+    #     """
+    #     For convenience, sum of all imdrawlist's idxbuffer.size
+    #     """
+    #     cdef int res = dereference(self._ptr).TotalIdxCount
+    #     return res
+    # @total_idx_count.setter
+    # def total_idx_count(self, value: int):
+    #     # dereference(self._ptr).TotalIdxCount = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11354,17 +11354,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def total_vtx_count(self):
-        """
-        For convenience, sum of all imdrawlist's vtxbuffer.size
-        """
-        cdef int res = dereference(self._ptr).TotalVtxCount
-        return res
-    @total_vtx_count.setter
-    def total_vtx_count(self, value: int):
-        # dereference(self._ptr).TotalVtxCount = value
-        raise NotImplementedError
+    # @property
+    # def total_vtx_count(self):
+    #     """
+    #     For convenience, sum of all imdrawlist's vtxbuffer.size
+    #     """
+    #     cdef int res = dereference(self._ptr).TotalVtxCount
+    #     return res
+    # @total_vtx_count.setter
+    # def total_vtx_count(self, value: int):
+    #     # dereference(self._ptr).TotalVtxCount = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11373,17 +11373,17 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def valid(self):
-        """
-        Only valid after render() is called and before the next newframe() is called.
-        """
-        cdef bool res = dereference(self._ptr).Valid
-        return res
-    @valid.setter
-    def valid(self, value: bool):
-        # dereference(self._ptr).Valid = value
-        raise NotImplementedError
+    # @property
+    # def valid(self):
+    #     """
+    #     Only valid after render() is called and before the next newframe() is called.
+    #     """
+    #     cdef bool res = dereference(self._ptr).Valid
+    #     return res
+    # @valid.setter
+    # def valid(self, value: bool):
+    #     # dereference(self._ptr).Valid = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -11392,14 +11392,14 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_draw_list(self: ImDrawData, draw_list: ImDrawList):
-        """
-        Helper to add an external draw list into an existing imdrawdata.
-        """
-        ccimgui.ImDrawData_AddDrawList(
-            self._ptr,
-            draw_list._ptr
-        )
+    # def add_draw_list(self: ImDrawData, draw_list: ImDrawList):
+    #     """
+    #     Helper to add an external draw list into an existing imdrawdata.
+    #     """
+    #     ccimgui.ImDrawData_AddDrawList(
+    #         self._ptr,
+    #         draw_list._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -11408,10 +11408,10 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImDrawData):
-        ccimgui.ImDrawData_Clear(
-            self._ptr
-        )
+    # def clear(self: ImDrawData):
+    #     ccimgui.ImDrawData_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -11420,13 +11420,13 @@ cdef class ImDrawData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def de_index_all_buffers(self: ImDrawData):
-        """
-        Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
-        """
-        ccimgui.ImDrawData_DeIndexAllBuffers(
-            self._ptr
-        )
+    # def de_index_all_buffers(self: ImDrawData):
+    #     """
+    #     Helper to convert all buffers from indexed to non-indexed, in case you cannot render indexed. note: this is slow and most likely a waste of resources. always prefer indexed rendering!
+    #     """
+    #     ccimgui.ImDrawData_DeIndexAllBuffers(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -11466,7 +11466,7 @@ cdef class ImDrawList:
     """
     cdef ccimgui.ImDrawList* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawList from_ptr(ccimgui.ImDrawList* _ptr):
         if _ptr == NULL:
@@ -11475,7 +11475,7 @@ cdef class ImDrawList:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawList from_heap_ptr(ccimgui.ImDrawList* _ptr):
         wrapper = ImDrawList.from_ptr(_ptr)
@@ -11483,7 +11483,7 @@ cdef class ImDrawList:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11500,17 +11500,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImVec4)
-    @property
-    def clip_rect_stack(self):
-        """
-        [internal]
-        """
-        cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
-        return ImVector_ImVec4.from_ptr(res)
-    @clip_rect_stack.setter
-    def clip_rect_stack(self, value: ImVector_ImVec4):
-        # dereference(self._ptr)._ClipRectStack = value._ptr
-        raise NotImplementedError
+    # @property
+    # def clip_rect_stack(self):
+    #     """
+    #     [internal]
+    #     """
+    #     cdef ccimgui.ImVector_ImVec4 res = dereference(self._ptr)._ClipRectStack
+    #     return ImVector_ImVec4.from_ptr(res)
+    # @clip_rect_stack.setter
+    # def clip_rect_stack(self, value: ImVector_ImVec4):
+    #     # dereference(self._ptr)._ClipRectStack = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11539,17 +11539,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImDrawCmdHeader)
-    @property
-    def cmd_header(self):
-        """
-        [internal] template of active commands. fields should match those of cmdbuffer.back().
-        """
-        cdef ccimgui.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
-        return ImDrawCmdHeader.from_ptr(res)
-    @cmd_header.setter
-    def cmd_header(self, value: ImDrawCmdHeader):
-        # dereference(self._ptr)._CmdHeader = value._ptr
-        raise NotImplementedError
+    # @property
+    # def cmd_header(self):
+    #     """
+    #     [internal] template of active commands. fields should match those of cmdbuffer.back().
+    #     """
+    #     cdef ccimgui.ImDrawCmdHeader res = dereference(self._ptr)._CmdHeader
+    #     return ImDrawCmdHeader.from_ptr(res)
+    # @cmd_header.setter
+    # def cmd_header(self, value: ImDrawCmdHeader):
+    #     # dereference(self._ptr)._CmdHeader = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11596,17 +11596,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def fringe_scale(self):
-        """
-        [internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
-        """
-        cdef float res = dereference(self._ptr)._FringeScale
-        return res
-    @fringe_scale.setter
-    def fringe_scale(self, value: float):
-        # dereference(self._ptr)._FringeScale = value
-        raise NotImplementedError
+    # @property
+    # def fringe_scale(self):
+    #     """
+    #     [internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
+    #     """
+    #     cdef float res = dereference(self._ptr)._FringeScale
+    #     return res
+    # @fringe_scale.setter
+    # def fringe_scale(self, value: float):
+    #     # dereference(self._ptr)._FringeScale = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11634,17 +11634,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def idx_write_ptr(self):
-        """
-        [internal] point within idxbuffer.data after each add command (to avoid using the imvector<> operators too much)
-        """
-        cdef ccimgui.ImDrawIdx* res = dereference(self._ptr)._IdxWritePtr
-        return res
-    @idx_write_ptr.setter
-    def idx_write_ptr(self, value: int):
-        # dereference(self._ptr)._IdxWritePtr = value
-        raise NotImplementedError
+    # @property
+    # def idx_write_ptr(self):
+    #     """
+    #     [internal] point within idxbuffer.data after each add command (to avoid using the imvector<> operators too much)
+    #     """
+    #     cdef ccimgui.ImDrawIdx* res = dereference(self._ptr)._IdxWritePtr
+    #     return res
+    # @idx_write_ptr.setter
+    # def idx_write_ptr(self, value: int):
+    #     # dereference(self._ptr)._IdxWritePtr = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11672,17 +11672,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImVec2)
-    @property
-    def path(self):
-        """
-        [internal] current path building
-        """
-        cdef ccimgui.ImVector_ImVec2 res = dereference(self._ptr)._Path
-        return ImVector_ImVec2.from_ptr(res)
-    @path.setter
-    def path(self, value: ImVector_ImVec2):
-        # dereference(self._ptr)._Path = value._ptr
-        raise NotImplementedError
+    # @property
+    # def path(self):
+    #     """
+    #     [internal] current path building
+    #     """
+    #     cdef ccimgui.ImVector_ImVec2 res = dereference(self._ptr)._Path
+    #     return ImVector_ImVec2.from_ptr(res)
+    # @path.setter
+    # def path(self, value: ImVector_ImVec2):
+    #     # dereference(self._ptr)._Path = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11691,17 +11691,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImDrawListSplitter)
-    @property
-    def splitter(self):
-        """
-        [internal] for channels api (note: prefer using your own persistent instance of imdrawlistsplitter!)
-        """
-        cdef ccimgui.ImDrawListSplitter res = dereference(self._ptr)._Splitter
-        return ImDrawListSplitter.from_ptr(res)
-    @splitter.setter
-    def splitter(self, value: ImDrawListSplitter):
-        # dereference(self._ptr)._Splitter = value._ptr
-        raise NotImplementedError
+    # @property
+    # def splitter(self):
+    #     """
+    #     [internal] for channels api (note: prefer using your own persistent instance of imdrawlistsplitter!)
+    #     """
+    #     cdef ccimgui.ImDrawListSplitter res = dereference(self._ptr)._Splitter
+    #     return ImDrawListSplitter.from_ptr(res)
+    # @splitter.setter
+    # def splitter(self, value: ImDrawListSplitter):
+    #     # dereference(self._ptr)._Splitter = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11710,17 +11710,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImTextureID)
-    @property
-    def texture_id_stack(self):
-        """
-        [internal]
-        """
-        cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
-        return ImVector_ImTextureID.from_ptr(res)
-    @texture_id_stack.setter
-    def texture_id_stack(self, value: ImVector_ImTextureID):
-        # dereference(self._ptr)._TextureIdStack = value._ptr
-        raise NotImplementedError
+    # @property
+    # def texture_id_stack(self):
+    #     """
+    #     [internal]
+    #     """
+    #     cdef ccimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
+    #     return ImVector_ImTextureID.from_ptr(res)
+    # @texture_id_stack.setter
+    # def texture_id_stack(self, value: ImVector_ImTextureID):
+    #     # dereference(self._ptr)._TextureIdStack = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -11769,17 +11769,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImDrawVert)
-    @property
-    def vtx_write_ptr(self):
-        """
-        [internal] point within vtxbuffer.data after each add command (to avoid using the imvector<> operators too much)
-        """
-        cdef ccimgui.ImDrawVert* res = dereference(self._ptr)._VtxWritePtr
-        return ImDrawVert.from_ptr(res)
-    @vtx_write_ptr.setter
-    def vtx_write_ptr(self, value: ImDrawVert):
-        # dereference(self._ptr)._VtxWritePtr = value._ptr
-        raise NotImplementedError
+    # @property
+    # def vtx_write_ptr(self):
+    #     """
+    #     [internal] point within vtxbuffer.data after each add command (to avoid using the imvector<> operators too much)
+    #     """
+    #     cdef ccimgui.ImDrawVert* res = dereference(self._ptr)._VtxWritePtr
+    #     return ImDrawVert.from_ptr(res)
+    # @vtx_write_ptr.setter
+    # def vtx_write_ptr(self, value: ImDrawVert):
+    #     # dereference(self._ptr)._VtxWritePtr = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -11831,16 +11831,16 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_callback(self: ImDrawList, callback: Callable, callback_data: Any):
-        """
-        Advanced
-        Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
-        """
-        ccimgui.ImDrawList_AddCallback(
-            self._ptr,
-            callback,
-            callback_data
-        )
+    # def add_callback(self: ImDrawList, callback: Callable, callback_data: Any):
+    #     """
+    #     Advanced
+    #     Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
+    #     """
+    #     ccimgui.ImDrawList_AddCallback(
+    #         self._ptr,
+    #         callback,
+    #         callback_data
+    #     )
     # [End Method]
 
     # [Method]
@@ -11866,15 +11866,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_circle_ex(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0, thickness: float=1.0):
-        ccimgui.ImDrawList_AddCircleEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            col,
-            num_segments,
-            thickness
-        )
+    # def add_circle_ex(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddCircleEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -11945,13 +11945,13 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_draw_cmd(self: ImDrawList):
-        """
-        This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
-        """
-        ccimgui.ImDrawList_AddDrawCmd(
-            self._ptr
-        )
+    # def add_draw_cmd(self: ImDrawList):
+    #     """
+    #     This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
+    #     """
+    #     ccimgui.ImDrawList_AddDrawCmd(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -11978,16 +11978,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
-        ccimgui.ImDrawList_AddEllipseEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            _cast_tuple_ImVec2(radius),
-            col,
-            rot,
-            num_segments,
-            thickness
-        )
+    # def add_ellipse_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddEllipseEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         _cast_tuple_ImVec2(radius),
+    #         col,
+    #         rot,
+    #         num_segments,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12013,15 +12013,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0):
-        ccimgui.ImDrawList_AddEllipseFilledEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            _cast_tuple_ImVec2(radius),
-            col,
-            rot,
-            num_segments
-        )
+    # def add_ellipse_filled_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0):
+    #     ccimgui.ImDrawList_AddEllipseFilledEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         _cast_tuple_ImVec2(radius),
+    #         col,
+    #         rot,
+    #         num_segments
+    #     )
     # [End Method]
 
     # [Method]
@@ -12055,16 +12055,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float]=(0, 0), uv_max: Tuple[float, float]=(1, 1), col: int=IM_COL32_WHITE):
-        ccimgui.ImDrawList_AddImageEx(
-            self._ptr,
-            user_texture_id,
-            _cast_tuple_ImVec2(p_min),
-            _cast_tuple_ImVec2(p_max),
-            _cast_tuple_ImVec2(uv_min),
-            _cast_tuple_ImVec2(uv_max),
-            col
-        )
+    # def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float]=(0, 0), uv_max: Tuple[float, float]=(1, 1), col: int=IM_COL32_WHITE):
+    #     ccimgui.ImDrawList_AddImageEx(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         _cast_tuple_ImVec2(uv_min),
+    #         _cast_tuple_ImVec2(uv_max),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -12095,20 +12095,20 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: Tuple[float, float]=(0, 0), uv2: Tuple[float, float]=(1, 0), uv3: Tuple[float, float]=(1, 1), uv4: Tuple[float, float]=(0, 1), col: int=IM_COL32_WHITE):
-        ccimgui.ImDrawList_AddImageQuadEx(
-            self._ptr,
-            user_texture_id,
-            _cast_tuple_ImVec2(p1),
-            _cast_tuple_ImVec2(p2),
-            _cast_tuple_ImVec2(p3),
-            _cast_tuple_ImVec2(p4),
-            _cast_tuple_ImVec2(uv1),
-            _cast_tuple_ImVec2(uv2),
-            _cast_tuple_ImVec2(uv3),
-            _cast_tuple_ImVec2(uv4),
-            col
-        )
+    # def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: Tuple[float, float]=(0, 0), uv2: Tuple[float, float]=(1, 0), uv3: Tuple[float, float]=(1, 1), uv4: Tuple[float, float]=(0, 1), col: int=IM_COL32_WHITE):
+    #     ccimgui.ImDrawList_AddImageQuadEx(
+    #         self._ptr,
+    #         user_texture_id,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         _cast_tuple_ImVec2(uv1),
+    #         _cast_tuple_ImVec2(uv2),
+    #         _cast_tuple_ImVec2(uv3),
+    #         _cast_tuple_ImVec2(uv4),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -12162,14 +12162,14 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_line_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], col: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddLineEx(
-            self._ptr,
-            _cast_tuple_ImVec2(p1),
-            _cast_tuple_ImVec2(p2),
-            col,
-            thickness
-        )
+    # def add_line_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddLineEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         col,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12195,15 +12195,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_ngon_ex(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddNgonEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            col,
-            num_segments,
-            thickness
-        )
+    # def add_ngon_ex(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddNgonEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         col,
+    #         num_segments,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12276,16 +12276,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_quad_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddQuadEx(
-            self._ptr,
-            _cast_tuple_ImVec2(p1),
-            _cast_tuple_ImVec2(p2),
-            _cast_tuple_ImVec2(p3),
-            _cast_tuple_ImVec2(p4),
-            col,
-            thickness
-        )
+    # def add_quad_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddQuadEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         _cast_tuple_ImVec2(p4),
+    #         col,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12332,19 +12332,19 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_rect_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
-        """
-        A: upper-left, b: lower-right (== upper-left + size)
-        """
-        ccimgui.ImDrawList_AddRectEx(
-            self._ptr,
-            _cast_tuple_ImVec2(p_min),
-            _cast_tuple_ImVec2(p_max),
-            col,
-            rounding,
-            flags,
-            thickness
-        )
+    # def add_rect_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
+    #     """
+    #     A: upper-left, b: lower-right (== upper-left + size)
+    #     """
+    #     ccimgui.ImDrawList_AddRectEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col,
+    #         rounding,
+    #         flags,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12373,18 +12373,18 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_rect_filled_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0):
-        """
-        A: upper-left, b: lower-right (== upper-left + size)
-        """
-        ccimgui.ImDrawList_AddRectFilledEx(
-            self._ptr,
-            _cast_tuple_ImVec2(p_min),
-            _cast_tuple_ImVec2(p_max),
-            col,
-            rounding,
-            flags
-        )
+    # def add_rect_filled_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0):
+    #     """
+    #     A: upper-left, b: lower-right (== upper-left + size)
+    #     """
+    #     ccimgui.ImDrawList_AddRectFilledEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p_min),
+    #         _cast_tuple_ImVec2(p_max),
+    #         col,
+    #         rounding,
+    #         flags
+    #     )
     # [End Method]
 
     # [Method]
@@ -12427,16 +12427,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_text_ex(self: ImDrawList, pos: Tuple[float, float], col: int, text_begin: str, text_end: str=None):
-        bytes_text_end = _bytes(text_end) if text_end is not None else None
+#     def add_text_ex(self: ImDrawList, pos: Tuple[float, float], col: int, text_begin: str, text_end: str=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-        ccimgui.ImDrawList_AddTextEx(
-            self._ptr,
-            _cast_tuple_ImVec2(pos),
-            col,
-            _bytes(text_begin),
-            ((<char*>bytes_text_end if text_end is not None else NULL))
-        )
+#         ccimgui.ImDrawList_AddTextEx(
+#             self._ptr,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -12445,18 +12445,18 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str):
-        """
-        Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
-        """
-        ccimgui.ImDrawList_AddTextImFontPtr(
-            self._ptr,
-            font._ptr,
-            font_size,
-            _cast_tuple_ImVec2(pos),
-            col,
-            _bytes(text_begin)
-        )
+    # def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str):
+    #     """
+    #     Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
+    #     """
+    #     ccimgui.ImDrawList_AddTextImFontPtr(
+    #         self._ptr,
+    #         font._ptr,
+    #         font_size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         _bytes(text_begin)
+    #     )
     # [End Method]
 
     # [Method]
@@ -12465,20 +12465,20 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
-        bytes_text_end = _bytes(text_end) if text_end is not None else None
+#     def add_text_im_font_ptr_ex(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str, text_end: str=None, wrap_width: float=0.0, cpu_fine_clip_rect: ImVec4=None):
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-        ccimgui.ImDrawList_AddTextImFontPtrEx(
-            self._ptr,
-            font._ptr,
-            font_size,
-            _cast_tuple_ImVec2(pos),
-            col,
-            _bytes(text_begin),
-            ((<char*>bytes_text_end if text_end is not None else NULL)),
-            wrap_width,
-            <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
-        )
+#         ccimgui.ImDrawList_AddTextImFontPtrEx(
+#             self._ptr,
+#             font._ptr,
+#             font_size,
+#             _cast_tuple_ImVec2(pos),
+#             col,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             wrap_width,
+#             <ccimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else cpu_fine_clip_rect._ptr)
+#         )
     # [End Method]
 
     # [Method]
@@ -12531,15 +12531,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_triangle_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float=1.0):
-        ccimgui.ImDrawList_AddTriangleEx(
-            self._ptr,
-            _cast_tuple_ImVec2(p1),
-            _cast_tuple_ImVec2(p2),
-            _cast_tuple_ImVec2(p3),
-            col,
-            thickness
-        )
+    # def add_triangle_ex(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float=1.0):
+    #     ccimgui.ImDrawList_AddTriangleEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(p1),
+    #         _cast_tuple_ImVec2(p2),
+    #         _cast_tuple_ImVec2(p3),
+    #         col,
+    #         thickness
+    #     )
     # [End Method]
 
     # [Method]
@@ -12564,12 +12564,12 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
-        cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
-            self._ptr,
-            radius
-        )
-        return res
+    # def calc_circle_auto_segment_count(self: ImDrawList, radius: float):
+    #     cdef int res = ccimgui.ImDrawList__CalcCircleAutoSegmentCount(
+    #         self._ptr,
+    #         radius
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -12624,10 +12624,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_free_memory(self: ImDrawList):
-        ccimgui.ImDrawList__ClearFreeMemory(
-            self._ptr
-        )
+    # def clear_free_memory(self: ImDrawList):
+    #     ccimgui.ImDrawList__ClearFreeMemory(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -12636,14 +12636,14 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImDrawList)
-    def clone_output(self: ImDrawList):
-        """
-        Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
-        """
-        cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(
-            self._ptr
-        )
-        return ImDrawList.from_ptr(res)
+    # def clone_output(self: ImDrawList):
+    #     """
+    #     Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
+    #     """
+    #     cdef ccimgui.ImDrawList* res = ccimgui.ImDrawList_CloneOutput(
+    #         self._ptr
+    #     )
+    #     return ImDrawList.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -12652,11 +12652,11 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    def get_clip_rect_max(self: ImDrawList):
-        cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
-            self._ptr
-        )
-        return _cast_ImVec2_tuple(res)
+    # def get_clip_rect_max(self: ImDrawList):
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMax(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
     # [End Method]
 
     # [Method]
@@ -12665,11 +12665,11 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    def get_clip_rect_min(self: ImDrawList):
-        cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMin(
-            self._ptr
-        )
-        return _cast_ImVec2_tuple(res)
+    # def get_clip_rect_min(self: ImDrawList):
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImDrawList_GetClipRectMin(
+    #         self._ptr
+    #     )
+    #     return _cast_ImVec2_tuple(res)
     # [End Method]
 
     # [Method]
@@ -12678,10 +12678,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def on_changed_clip_rect(self: ImDrawList):
-        ccimgui.ImDrawList__OnChangedClipRect(
-            self._ptr
-        )
+    # def on_changed_clip_rect(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedClipRect(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -12690,10 +12690,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def on_changed_texture_id(self: ImDrawList):
-        ccimgui.ImDrawList__OnChangedTextureID(
-            self._ptr
-        )
+    # def on_changed_texture_id(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedTextureID(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -12702,10 +12702,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def on_changed_vtx_offset(self: ImDrawList):
-        ccimgui.ImDrawList__OnChangedVtxOffset(
-            self._ptr
-        )
+    # def on_changed_vtx_offset(self: ImDrawList):
+    #     ccimgui.ImDrawList__OnChangedVtxOffset(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -12752,15 +12752,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_arc_to_fast_ex(self: ImDrawList, center: Tuple[float, float], radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
-        ccimgui.ImDrawList__PathArcToFastEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            a_min_sample,
-            a_max_sample,
-            a_step
-        )
+    # def path_arc_to_fast_ex(self: ImDrawList, center: Tuple[float, float], radius: float, a_min_sample: int, a_max_sample: int, a_step: int):
+    #     ccimgui.ImDrawList__PathArcToFastEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min_sample,
+    #         a_max_sample,
+    #         a_step
+    #     )
     # [End Method]
 
     # [Method]
@@ -12769,15 +12769,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_arc_to_n(self: ImDrawList, center: Tuple[float, float], radius: float, a_min: float, a_max: float, num_segments: int):
-        ccimgui.ImDrawList__PathArcToN(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            radius,
-            a_min,
-            a_max,
-            num_segments
-        )
+    # def path_arc_to_n(self: ImDrawList, center: Tuple[float, float], radius: float, a_min: float, a_max: float, num_segments: int):
+    #     ccimgui.ImDrawList__PathArcToN(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         radius,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
     # [End Method]
 
     # [Method]
@@ -12840,18 +12840,18 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float):
-        """
-        Implied num_segments = 0
-        """
-        ccimgui.ImDrawList_PathEllipticalArcTo(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            _cast_tuple_ImVec2(radius),
-            rot,
-            a_min,
-            a_max
-        )
+    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float):
+    #     """
+    #     Implied num_segments = 0
+    #     """
+    #     ccimgui.ImDrawList_PathEllipticalArcTo(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         _cast_tuple_ImVec2(radius),
+    #         rot,
+    #         a_min,
+    #         a_max
+    #     )
     # [End Method]
 
     # [Method]
@@ -12860,19 +12860,19 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
-        """
-        Ellipse
-        """
-        ccimgui.ImDrawList_PathEllipticalArcToEx(
-            self._ptr,
-            _cast_tuple_ImVec2(center),
-            _cast_tuple_ImVec2(radius),
-            rot,
-            a_min,
-            a_max,
-            num_segments
-        )
+    # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
+    #     """
+    #     Ellipse
+    #     """
+    #     ccimgui.ImDrawList_PathEllipticalArcToEx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(center),
+    #         _cast_tuple_ImVec2(radius),
+    #         rot,
+    #         a_min,
+    #         a_max,
+    #         num_segments
+    #     )
     # [End Method]
 
     # [Method]
@@ -12881,11 +12881,11 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_fill_concave(self: ImDrawList, col: int):
-        ccimgui.ImDrawList_PathFillConcave(
-            self._ptr,
-            col
-        )
+    # def path_fill_concave(self: ImDrawList, col: int):
+    #     ccimgui.ImDrawList_PathFillConcave(
+    #         self._ptr,
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -12976,10 +12976,10 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def pop_texture_id(self: ImDrawList):
-        ccimgui.ImDrawList_PopTextureID(
-            self._ptr
-        )
+    # def pop_texture_id(self: ImDrawList):
+    #     ccimgui.ImDrawList_PopTextureID(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -12988,10 +12988,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def pop_unused_draw_cmd(self: ImDrawList):
-        ccimgui.ImDrawList__PopUnusedDrawCmd(
-            self._ptr
-        )
+    # def pop_unused_draw_cmd(self: ImDrawList):
+    #     ccimgui.ImDrawList__PopUnusedDrawCmd(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -13000,19 +13000,19 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_quad_uv(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], c: Tuple[float, float], d: Tuple[float, float], uv_a: Tuple[float, float], uv_b: Tuple[float, float], uv_c: Tuple[float, float], uv_d: Tuple[float, float], col: int):
-        ccimgui.ImDrawList_PrimQuadUV(
-            self._ptr,
-            _cast_tuple_ImVec2(a),
-            _cast_tuple_ImVec2(b),
-            _cast_tuple_ImVec2(c),
-            _cast_tuple_ImVec2(d),
-            _cast_tuple_ImVec2(uv_a),
-            _cast_tuple_ImVec2(uv_b),
-            _cast_tuple_ImVec2(uv_c),
-            _cast_tuple_ImVec2(uv_d),
-            col
-        )
+    # def prim_quad_uv(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], c: Tuple[float, float], d: Tuple[float, float], uv_a: Tuple[float, float], uv_b: Tuple[float, float], uv_c: Tuple[float, float], uv_d: Tuple[float, float], col: int):
+    #     ccimgui.ImDrawList_PrimQuadUV(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         _cast_tuple_ImVec2(c),
+    #         _cast_tuple_ImVec2(d),
+    #         _cast_tuple_ImVec2(uv_a),
+    #         _cast_tuple_ImVec2(uv_b),
+    #         _cast_tuple_ImVec2(uv_c),
+    #         _cast_tuple_ImVec2(uv_d),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -13021,16 +13021,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_rect(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], col: int):
-        """
-        Axis aligned rectangle (composed of two triangles)
-        """
-        ccimgui.ImDrawList_PrimRect(
-            self._ptr,
-            _cast_tuple_ImVec2(a),
-            _cast_tuple_ImVec2(b),
-            col
-        )
+    # def prim_rect(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], col: int):
+    #     """
+    #     Axis aligned rectangle (composed of two triangles)
+    #     """
+    #     ccimgui.ImDrawList_PrimRect(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -13039,15 +13039,15 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_rect_uv(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], uv_a: Tuple[float, float], uv_b: Tuple[float, float], col: int):
-        ccimgui.ImDrawList_PrimRectUV(
-            self._ptr,
-            _cast_tuple_ImVec2(a),
-            _cast_tuple_ImVec2(b),
-            _cast_tuple_ImVec2(uv_a),
-            _cast_tuple_ImVec2(uv_b),
-            col
-        )
+    # def prim_rect_uv(self: ImDrawList, a: Tuple[float, float], b: Tuple[float, float], uv_a: Tuple[float, float], uv_b: Tuple[float, float], col: int):
+    #     ccimgui.ImDrawList_PrimRectUV(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(a),
+    #         _cast_tuple_ImVec2(b),
+    #         _cast_tuple_ImVec2(uv_a),
+    #         _cast_tuple_ImVec2(uv_b),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -13056,17 +13056,17 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int):
-        """
-        Advanced: Primitives allocations
-        - We render triangles (three vertices)
-        - All primitives needs to be reserved via PrimReserve() beforehand.
-        """
-        ccimgui.ImDrawList_PrimReserve(
-            self._ptr,
-            idx_count,
-            vtx_count
-        )
+    # def prim_reserve(self: ImDrawList, idx_count: int, vtx_count: int):
+    #     """
+    #     Advanced: Primitives allocations
+    #     - We render triangles (three vertices)
+    #     - All primitives needs to be reserved via PrimReserve() beforehand.
+    #     """
+    #     ccimgui.ImDrawList_PrimReserve(
+    #         self._ptr,
+    #         idx_count,
+    #         vtx_count
+    #     )
     # [End Method]
 
     # [Method]
@@ -13075,12 +13075,12 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
-        ccimgui.ImDrawList_PrimUnreserve(
-            self._ptr,
-            idx_count,
-            vtx_count
-        )
+    # def prim_unreserve(self: ImDrawList, idx_count: int, vtx_count: int):
+    #     ccimgui.ImDrawList_PrimUnreserve(
+    #         self._ptr,
+    #         idx_count,
+    #         vtx_count
+    #     )
     # [End Method]
 
     # [Method]
@@ -13089,16 +13089,16 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_vtx(self: ImDrawList, pos: Tuple[float, float], uv: Tuple[float, float], col: int):
-        """
-        Write vertex with unique index
-        """
-        ccimgui.ImDrawList_PrimVtx(
-            self._ptr,
-            _cast_tuple_ImVec2(pos),
-            _cast_tuple_ImVec2(uv),
-            col
-        )
+    # def prim_vtx(self: ImDrawList, pos: Tuple[float, float], uv: Tuple[float, float], col: int):
+    #     """
+    #     Write vertex with unique index
+    #     """
+    #     ccimgui.ImDrawList_PrimVtx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos),
+    #         _cast_tuple_ImVec2(uv),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -13107,11 +13107,11 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_write_idx(self: ImDrawList, idx: int):
-        ccimgui.ImDrawList_PrimWriteIdx(
-            self._ptr,
-            idx
-        )
+    # def prim_write_idx(self: ImDrawList, idx: int):
+    #     ccimgui.ImDrawList_PrimWriteIdx(
+    #         self._ptr,
+    #         idx
+    #     )
     # [End Method]
 
     # [Method]
@@ -13120,13 +13120,13 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def prim_write_vtx(self: ImDrawList, pos: Tuple[float, float], uv: Tuple[float, float], col: int):
-        ccimgui.ImDrawList_PrimWriteVtx(
-            self._ptr,
-            _cast_tuple_ImVec2(pos),
-            _cast_tuple_ImVec2(uv),
-            col
-        )
+    # def prim_write_vtx(self: ImDrawList, pos: Tuple[float, float], uv: Tuple[float, float], col: int):
+    #     ccimgui.ImDrawList_PrimWriteVtx(
+    #         self._ptr,
+    #         _cast_tuple_ImVec2(pos),
+    #         _cast_tuple_ImVec2(uv),
+    #         col
+    #     )
     # [End Method]
 
     # [Method]
@@ -13153,10 +13153,10 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def push_clip_rect_full_screen(self: ImDrawList):
-        ccimgui.ImDrawList_PushClipRectFullScreen(
-            self._ptr
-        )
+    # def push_clip_rect_full_screen(self: ImDrawList):
+    #     ccimgui.ImDrawList_PushClipRectFullScreen(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -13165,11 +13165,11 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def push_texture_id(self: ImDrawList, texture_id: Any):
-        ccimgui.ImDrawList_PushTextureID(
-            self._ptr,
-            texture_id
-        )
+    # def push_texture_id(self: ImDrawList, texture_id: Any):
+    #     ccimgui.ImDrawList_PushTextureID(
+    #         self._ptr,
+    #         texture_id
+    #     )
     # [End Method]
 
     # [Method]
@@ -13178,13 +13178,13 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def reset_for_new_frame(self: ImDrawList):
-        """
-        [Internal helpers]
-        """
-        ccimgui.ImDrawList__ResetForNewFrame(
-            self._ptr
-        )
+    # def reset_for_new_frame(self: ImDrawList):
+    #     """
+    #     [Internal helpers]
+    #     """
+    #     ccimgui.ImDrawList__ResetForNewFrame(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -13193,11 +13193,11 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_texture_id(self: ImDrawList, texture_id: Any):
-        ccimgui.ImDrawList__SetTextureID(
-            self._ptr,
-            texture_id
-        )
+    # def set_texture_id(self: ImDrawList, texture_id: Any):
+    #     ccimgui.ImDrawList__SetTextureID(
+    #         self._ptr,
+    #         texture_id
+    #     )
     # [End Method]
 
     # [Method]
@@ -13206,10 +13206,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def try_merge_draw_cmds(self: ImDrawList):
-        ccimgui.ImDrawList__TryMergeDrawCmds(
-            self._ptr
-        )
+    # def try_merge_draw_cmds(self: ImDrawList):
+    #     ccimgui.ImDrawList__TryMergeDrawCmds(
+    #         self._ptr
+    #     )
     # [End Method]
 # [End Class]
 
@@ -13225,7 +13225,7 @@ cdef class ImDrawListSharedData:
     """
     cdef ccimgui.ImDrawListSharedData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawListSharedData from_ptr(ccimgui.ImDrawListSharedData* _ptr):
         if _ptr == NULL:
@@ -13234,7 +13234,7 @@ cdef class ImDrawListSharedData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawListSharedData from_heap_ptr(ccimgui.ImDrawListSharedData* _ptr):
         wrapper = ImDrawListSharedData.from_ptr(_ptr)
@@ -13242,7 +13242,7 @@ cdef class ImDrawListSharedData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13268,7 +13268,7 @@ cdef class ImDrawListSplitter:
     """
     cdef ccimgui.ImDrawListSplitter* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawListSplitter from_ptr(ccimgui.ImDrawListSplitter* _ptr):
         if _ptr == NULL:
@@ -13277,7 +13277,7 @@ cdef class ImDrawListSplitter:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawListSplitter from_heap_ptr(ccimgui.ImDrawListSplitter* _ptr):
         wrapper = ImDrawListSplitter.from_ptr(_ptr)
@@ -13285,7 +13285,7 @@ cdef class ImDrawListSplitter:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13302,17 +13302,17 @@ cdef class ImDrawListSplitter:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImDrawChannel)
-    @property
-    def channels(self):
-        """
-        Draw channels (not resized down so _count might be < channels.size)
-        """
-        cdef ccimgui.ImVector_ImDrawChannel res = dereference(self._ptr)._Channels
-        return ImVector_ImDrawChannel.from_ptr(res)
-    @channels.setter
-    def channels(self, value: ImVector_ImDrawChannel):
-        # dereference(self._ptr)._Channels = value._ptr
-        raise NotImplementedError
+    # @property
+    # def channels(self):
+    #     """
+    #     Draw channels (not resized down so _count might be < channels.size)
+    #     """
+    #     cdef ccimgui.ImVector_ImDrawChannel res = dereference(self._ptr)._Channels
+    #     return ImVector_ImDrawChannel.from_ptr(res)
+    # @channels.setter
+    # def channels(self, value: ImVector_ImDrawChannel):
+    #     # dereference(self._ptr)._Channels = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13321,17 +13321,17 @@ cdef class ImDrawListSplitter:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def count(self):
-        """
-        Number of active channels (1+)
-        """
-        cdef int res = dereference(self._ptr)._Count
-        return res
-    @count.setter
-    def count(self, value: int):
-        # dereference(self._ptr)._Count = value
-        raise NotImplementedError
+    # @property
+    # def count(self):
+    #     """
+    #     Number of active channels (1+)
+    #     """
+    #     cdef int res = dereference(self._ptr)._Count
+    #     return res
+    # @count.setter
+    # def count(self, value: int):
+    #     # dereference(self._ptr)._Count = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -13340,17 +13340,17 @@ cdef class ImDrawListSplitter:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def current(self):
-        """
-        Current channel number (0)
-        """
-        cdef int res = dereference(self._ptr)._Current
-        return res
-    @current.setter
-    def current(self, value: int):
-        # dereference(self._ptr)._Current = value
-        raise NotImplementedError
+    # @property
+    # def current(self):
+    #     """
+    #     Current channel number (0)
+    #     """
+    #     cdef int res = dereference(self._ptr)._Current
+    #     return res
+    # @current.setter
+    # def current(self, value: int):
+    #     # dereference(self._ptr)._Current = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -13359,13 +13359,13 @@ cdef class ImDrawListSplitter:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImDrawListSplitter):
-        """
-        Do not clear channels[] so our allocations are reused next frame
-        """
-        ccimgui.ImDrawListSplitter_Clear(
-            self._ptr
-        )
+    # def clear(self: ImDrawListSplitter):
+    #     """
+    #     Do not clear channels[] so our allocations are reused next frame
+    #     """
+    #     ccimgui.ImDrawListSplitter_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -13374,10 +13374,10 @@ cdef class ImDrawListSplitter:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_free_memory(self: ImDrawListSplitter):
-        ccimgui.ImDrawListSplitter_ClearFreeMemory(
-            self._ptr
-        )
+    # def clear_free_memory(self: ImDrawListSplitter):
+    #     ccimgui.ImDrawListSplitter_ClearFreeMemory(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -13470,7 +13470,7 @@ cdef class ImDrawListSplitter:
 cdef class ImDrawVert:
     cdef ccimgui.ImDrawVert* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImDrawVert from_ptr(ccimgui.ImDrawVert* _ptr):
         if _ptr == NULL:
@@ -13479,7 +13479,7 @@ cdef class ImDrawVert:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImDrawVert from_heap_ptr(ccimgui.ImDrawVert* _ptr):
         wrapper = ImDrawVert.from_ptr(_ptr)
@@ -13487,7 +13487,7 @@ cdef class ImDrawVert:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -14065,21 +14065,21 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
-        ccimgui.ImFont_AddGlyph(
-            self._ptr,
-            src_cfg._ptr,
-            c,
-            x0,
-            y0,
-            x1,
-            y1,
-            u0,
-            v0,
-            u1,
-            v1,
-            advance_x
-        )
+    # def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
+    #     ccimgui.ImFont_AddGlyph(
+    #         self._ptr,
+    #         src_cfg._ptr,
+    #         c,
+    #         x0,
+    #         y0,
+    #         x1,
+    #         y1,
+    #         u0,
+    #         v0,
+    #         u1,
+    #         v1,
+    #         advance_x
+    #     )
     # [End Method]
 
     # [Method]
@@ -14088,16 +14088,16 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_remap_char(self: ImFont, dst: int, src: int, overwrite_dst: bool=True):
-        """
-        Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built.
-        """
-        ccimgui.ImFont_AddRemapChar(
-            self._ptr,
-            dst,
-            src,
-            overwrite_dst
-        )
+    # def add_remap_char(self: ImFont, dst: int, src: int, overwrite_dst: bool=True):
+    #     """
+    #     Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built.
+    #     """
+    #     ccimgui.ImFont_AddRemapChar(
+    #         self._ptr,
+    #         dst,
+    #         src,
+    #         overwrite_dst
+    #     )
     # [End Method]
 
     # [Method]
@@ -14106,13 +14106,13 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def build_lookup_table(self: ImFont):
-        """
-        [Internal] Don't use!
-        """
-        ccimgui.ImFont_BuildLookupTable(
-            self._ptr
-        )
+    # def build_lookup_table(self: ImFont):
+    #     """
+    #     [Internal] Don't use!
+    #     """
+    #     ccimgui.ImFont_BuildLookupTable(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -14121,20 +14121,20 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
-        """
-        'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
-        'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
-        Implied text_end = null, remaining = null
-        """
-        cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeA(
-            self._ptr,
-            size,
-            max_width,
-            wrap_width,
-            _bytes(text_begin)
-        )
-        return _cast_ImVec2_tuple(res)
+    # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
+    #     """
+    #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
+    #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
+    #     Implied text_end = null, remaining = null
+    #     """
+    #     cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeA(
+    #         self._ptr,
+    #         size,
+    #         max_width,
+    #         wrap_width,
+    #         _bytes(text_begin)
+    #     )
+    #     return _cast_ImVec2_tuple(res)
     # [End Method]
 
     # [Method]
@@ -14143,22 +14143,22 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
-        """
-        Utf8
-        """
-        bytes_text_end = _bytes(text_end) if text_end is not None else None
+#     def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None):
+#         """
+#         Utf8
+#         """
+#         bytes_text_end = _bytes(text_end) if text_end is not None else None
 
-        cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeAEx(
-            self._ptr,
-            size,
-            max_width,
-            wrap_width,
-            _bytes(text_begin),
-            ((<char*>bytes_text_end if text_end is not None else NULL)),
-            remaining
-        )
-        return _cast_ImVec2_tuple(res)
+#         cdef ccimgui.ImVec2 res = ccimgui.ImFont_CalcTextSizeAEx(
+#             self._ptr,
+#             size,
+#             max_width,
+#             wrap_width,
+#             _bytes(text_begin),
+#             ((<char*>bytes_text_end if text_end is not None else NULL)),
+#             remaining
+#         )
+#         return _cast_ImVec2_tuple(res)
     # [End Method]
 
     # [Method]
@@ -14167,15 +14167,15 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
-        cdef const char* res = ccimgui.ImFont_CalcWordWrapPositionA(
-            self._ptr,
-            scale,
-            _bytes(text),
-            _bytes(text_end),
-            wrap_width
-        )
-        return _from_bytes(res)
+    # def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
+    #     cdef const char* res = ccimgui.ImFont_CalcWordWrapPositionA(
+    #         self._ptr,
+    #         scale,
+    #         _bytes(text),
+    #         _bytes(text_end),
+    #         wrap_width
+    #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
@@ -14184,10 +14184,10 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_output_data(self: ImFont):
-        ccimgui.ImFont_ClearOutputData(
-            self._ptr
-        )
+    # def clear_output_data(self: ImFont):
+    #     ccimgui.ImFont_ClearOutputData(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -14196,12 +14196,12 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontGlyph)
-    def find_glyph(self: ImFont, c: int):
-        cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(
-            self._ptr,
-            c
-        )
-        return ImFontGlyph.from_ptr(res)
+    # def find_glyph(self: ImFont, c: int):
+    #     cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyph(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return ImFontGlyph.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -14210,12 +14210,12 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontGlyph)
-    def find_glyph_no_fallback(self: ImFont, c: int):
-        cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(
-            self._ptr,
-            c
-        )
-        return ImFontGlyph.from_ptr(res)
+    # def find_glyph_no_fallback(self: ImFont, c: int):
+    #     cdef ccimgui.ImFontGlyph* res = ccimgui.ImFont_FindGlyphNoFallback(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return ImFontGlyph.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -14224,12 +14224,12 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(float)
-    def get_char_advance(self: ImFont, c: int):
-        cdef float res = ccimgui.ImFont_GetCharAdvance(
-            self._ptr,
-            c
-        )
-        return res
+    # def get_char_advance(self: ImFont, c: int):
+    #     cdef float res = ccimgui.ImFont_GetCharAdvance(
+    #         self._ptr,
+    #         c
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -14254,11 +14254,11 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def grow_index(self: ImFont, new_size: int):
-        ccimgui.ImFont_GrowIndex(
-            self._ptr,
-            new_size
-        )
+    # def grow_index(self: ImFont, new_size: int):
+    #     ccimgui.ImFont_GrowIndex(
+    #         self._ptr,
+    #         new_size
+    #     )
     # [End Method]
 
     # [Method]
@@ -14267,13 +14267,13 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
-        cdef bool res = ccimgui.ImFont_IsGlyphRangeUnused(
-            self._ptr,
-            c_begin,
-            c_last
-        )
-        return res
+    # def is_glyph_range_unused(self: ImFont, c_begin: int, c_last: int):
+    #     cdef bool res = ccimgui.ImFont_IsGlyphRangeUnused(
+    #         self._ptr,
+    #         c_begin,
+    #         c_last
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -14282,11 +14282,11 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def is_loaded(self: ImFont):
-        cdef bool res = ccimgui.ImFont_IsLoaded(
-            self._ptr
-        )
-        return res
+    # def is_loaded(self: ImFont):
+    #     cdef bool res = ccimgui.ImFont_IsLoaded(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -14295,15 +14295,15 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int):
-        ccimgui.ImFont_RenderChar(
-            self._ptr,
-            draw_list._ptr,
-            size,
-            _cast_tuple_ImVec2(pos),
-            col,
-            c
-        )
+    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int):
+    #     ccimgui.ImFont_RenderChar(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         c
+    #     )
     # [End Method]
 
     # [Method]
@@ -14312,19 +14312,19 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
-        ccimgui.ImFont_RenderText(
-            self._ptr,
-            draw_list._ptr,
-            size,
-            _cast_tuple_ImVec2(pos),
-            col,
-            _cast_tuple_ImVec4(clip_rect),
-            _bytes(text_begin),
-            _bytes(text_end),
-            wrap_width,
-            cpu_fine_clip
-        )
+    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False):
+    #     ccimgui.ImFont_RenderText(
+    #         self._ptr,
+    #         draw_list._ptr,
+    #         size,
+    #         _cast_tuple_ImVec2(pos),
+    #         col,
+    #         _cast_tuple_ImVec4(clip_rect),
+    #         _bytes(text_begin),
+    #         _bytes(text_end),
+    #         wrap_width,
+    #         cpu_fine_clip
+    #     )
     # [End Method]
 
     # [Method]
@@ -14333,12 +14333,12 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_glyph_visible(self: ImFont, c: int, visible: bool):
-        ccimgui.ImFont_SetGlyphVisible(
-            self._ptr,
-            c,
-            visible
-        )
+    # def set_glyph_visible(self: ImFont, c: int, visible: bool):
+    #     ccimgui.ImFont_SetGlyphVisible(
+    #         self._ptr,
+    #         c,
+    #         visible
+    #     )
     # [End Method]
 # [End Class]
 
@@ -14370,7 +14370,7 @@ cdef class ImFontAtlas:
     """
     cdef ccimgui.ImFontAtlas* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImFontAtlas from_ptr(ccimgui.ImFontAtlas* _ptr):
         if _ptr == NULL:
@@ -14379,7 +14379,7 @@ cdef class ImFontAtlas:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImFontAtlas from_heap_ptr(ccimgui.ImFontAtlas* _ptr):
         wrapper = ImFontAtlas.from_ptr(_ptr)
@@ -14387,7 +14387,7 @@ cdef class ImFontAtlas:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -14812,17 +14812,17 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def user_data(self):
-        """
-        Store your own atlas related user-data (if e.g. you have multiple font atlas).
-        """
-        cdef void* res = dereference(self._ptr).UserData
-        return res
-    @user_data.setter
-    def user_data(self, value: Any):
-        # dereference(self._ptr).UserData = value
-        raise NotImplementedError
+    # @property
+    # def user_data(self):
+    #     """
+    #     Store your own atlas related user-data (if e.g. you have multiple font atlas).
+    #     """
+    #     cdef void* res = dereference(self._ptr).UserData
+    #     return res
+    # @user_data.setter
+    # def user_data(self, value: Any):
+    #     # dereference(self._ptr).UserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -14831,17 +14831,17 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: Tuple[float, float]=(0, 0)):
-        cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
-            self._ptr,
-            font._ptr,
-            id_,
-            width,
-            height,
-            advance_x,
-            _cast_tuple_ImVec2(offset)
-        )
-        return res
+    # def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: Tuple[float, float]=(0, 0)):
+    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectFontGlyph(
+    #         self._ptr,
+    #         font._ptr,
+    #         id_,
+    #         width,
+    #         height,
+    #         advance_x,
+    #         _cast_tuple_ImVec2(offset)
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -14850,22 +14850,22 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int):
-        """
-        You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
-        - After calling Build(), you can query the rectangle position and render your pixels.
-        - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
-        - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
-        so you can render e.g. custom colorful icons and use them as regular glyphs.
-        - Read docs/FONTS.md for more details about using colorful icons.
-        - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
-        """
-        cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(
-            self._ptr,
-            width,
-            height
-        )
-        return res
+    # def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int):
+    #     """
+    #     You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
+    #     - After calling Build(), you can query the rectangle position and render your pixels.
+    #     - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
+    #     - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
+    #     so you can render e.g. custom colorful icons and use them as regular glyphs.
+    #     - Read docs/FONTS.md for more details about using colorful icons.
+    #     - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
+    #     """
+    #     cdef int res = ccimgui.ImFontAtlas_AddCustomRectRegular(
+    #         self._ptr,
+    #         width,
+    #         height
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -14874,12 +14874,12 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(
-            self._ptr,
-            font_cfg._ptr
-        )
-        return ImFont.from_ptr(res)
+    # def add_font(self: ImFontAtlas, font_cfg: ImFontConfig):
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFont(
+    #         self._ptr,
+    #         font_cfg._ptr
+    #     )
+    #     return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -14923,18 +14923,18 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
-        """
-        'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
-        """
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(
-            self._ptr,
-            _bytes(compressed_font_data_base85),
-            size_pixels,
-            <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
-            glyph_ranges
-        )
-        return ImFont.from_ptr(res)
+    # def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(
+    #         self._ptr,
+    #         _bytes(compressed_font_data_base85),
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -14943,19 +14943,19 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
-        """
-        'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
-        """
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedTTF(
-            self._ptr,
-            compressed_font_data,
-            compressed_font_data_size,
-            size_pixels,
-            <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
-            glyph_ranges
-        )
-        return ImFont.from_ptr(res)
+    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryCompressedTTF(
+    #         self._ptr,
+    #         compressed_font_data,
+    #         compressed_font_data_size,
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -14964,19 +14964,19 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
-        """
-        Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
-        """
-        cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryTTF(
-            self._ptr,
-            font_data,
-            font_data_size,
-            size_pixels,
-            <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
-            glyph_ranges
-        )
-        return ImFont.from_ptr(res)
+    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    #     """
+    #     Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
+    #     """
+    #     cdef ccimgui.ImFont* res = ccimgui.ImFontAtlas_AddFontFromMemoryTTF(
+    #         self._ptr,
+    #         font_data,
+    #         font_data_size,
+    #         size_pixels,
+    #         <ccimgui.ImFontConfig*>(NULL if font_cfg is None else font_cfg._ptr),
+    #         glyph_ranges
+    #     )
+    #     return ImFont.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -15006,16 +15006,16 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2):
-        """
-        [Internal]
-        """
-        ccimgui.ImFontAtlas_CalcCustomRectUV(
-            self._ptr,
-            rect._ptr,
-            out_uv_min._ptr,
-            out_uv_max._ptr
-        )
+    # def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2):
+    #     """
+    #     [Internal]
+    #     """
+    #     ccimgui.ImFontAtlas_CalcCustomRectUV(
+    #         self._ptr,
+    #         rect._ptr,
+    #         out_uv_min._ptr,
+    #         out_uv_max._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -15024,13 +15024,13 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImFontAtlas):
-        """
-        Clear all input and output.
-        """
-        ccimgui.ImFontAtlas_Clear(
-            self._ptr
-        )
+    # def clear(self: ImFontAtlas):
+    #     """
+    #     Clear all input and output.
+    #     """
+    #     ccimgui.ImFontAtlas_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -15039,13 +15039,13 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_fonts(self: ImFontAtlas):
-        """
-        Clear output font data (glyphs storage, uv coordinates).
-        """
-        ccimgui.ImFontAtlas_ClearFonts(
-            self._ptr
-        )
+    # def clear_fonts(self: ImFontAtlas):
+    #     """
+    #     Clear output font data (glyphs storage, uv coordinates).
+    #     """
+    #     ccimgui.ImFontAtlas_ClearFonts(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -15054,13 +15054,13 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_input_data(self: ImFontAtlas):
-        """
-        Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
-        """
-        ccimgui.ImFontAtlas_ClearInputData(
-            self._ptr
-        )
+    # def clear_input_data(self: ImFontAtlas):
+    #     """
+    #     Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+    #     """
+    #     ccimgui.ImFontAtlas_ClearInputData(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -15084,12 +15084,12 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontAtlasCustomRect)
-    def get_custom_rect_by_index(self: ImFontAtlas, index: int):
-        cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(
-            self._ptr,
-            index
-        )
-        return ImFontAtlasCustomRect.from_ptr(res)
+    # def get_custom_rect_by_index(self: ImFontAtlas, index: int):
+    #     cdef ccimgui.ImFontAtlasCustomRect* res = ccimgui.ImFontAtlas_GetCustomRectByIndex(
+    #         self._ptr,
+    #         index
+    #     )
+    #     return ImFontAtlasCustomRect.from_ptr(res)
     # [End Method]
 
     # [Method]
@@ -15114,14 +15114,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas):
-        """
-        Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
-        """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(
-            self._ptr
-        )
-        return res
+    # def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas):
+    #     """
+    #     Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15166,14 +15166,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def get_glyph_ranges_greek(self: ImFontAtlas):
-        """
-        Default + greek and coptic
-        """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesGreek(
-            self._ptr
-        )
-        return res
+    # def get_glyph_ranges_greek(self: ImFontAtlas):
+    #     """
+    #     Default + greek and coptic
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesGreek(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15198,14 +15198,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGlyphRange)
-    def get_glyph_ranges_korean(self: ImFontAtlas):
-        """
-        Default + korean characters
-        """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesKorean(
-            self._ptr
-        )
-        return res
+    # def get_glyph_ranges_korean(self: ImFontAtlas):
+    #     """
+    #     Default + korean characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesKorean(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15214,14 +15214,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def get_glyph_ranges_thai(self: ImFontAtlas):
-        """
-        Default + thai characters
-        """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesThai(
-            self._ptr
-        )
-        return res
+    # def get_glyph_ranges_thai(self: ImFontAtlas):
+    #     """
+    #     Default + thai characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesThai(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15230,14 +15230,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def get_glyph_ranges_vietnamese(self: ImFontAtlas):
-        """
-        Default + vietnamese characters
-        """
-        cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesVietnamese(
-            self._ptr
-        )
-        return res
+    # def get_glyph_ranges_vietnamese(self: ImFontAtlas):
+    #     """
+    #     Default + vietnamese characters
+    #     """
+    #     cdef ccimgui.ImWchar* res = ccimgui.ImFontAtlas_GetGlyphRangesVietnamese(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15246,16 +15246,16 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
-        cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
-            self._ptr,
-            cursor,
-            out_offset._ptr,
-            out_size._ptr,
-            out_uv_border._ptr,
-            out_uv_fill._ptr
-        )
-        return res
+    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
+    #     cdef bool res = ccimgui.ImFontAtlas_GetMouseCursorTexData(
+    #         self._ptr,
+    #         cursor,
+    #         out_offset._ptr,
+    #         out_size._ptr,
+    #         out_uv_border._ptr,
+    #         out_uv_fill._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15308,14 +15308,14 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def is_built(self: ImFontAtlas):
-        """
-        Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
-        """
-        cdef bool res = ccimgui.ImFontAtlas_IsBuilt(
-            self._ptr
-        )
-        return res
+    # def is_built(self: ImFontAtlas):
+    #     """
+    #     Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
+    #     """
+    #     cdef bool res = ccimgui.ImFontAtlas_IsBuilt(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -15324,11 +15324,11 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_tex_id(self: ImFontAtlas, id_: Any):
-        ccimgui.ImFontAtlas_SetTexID(
-            self._ptr,
-            id_
-        )
+    # def set_tex_id(self: ImFontAtlas, id_: Any):
+    #     ccimgui.ImFontAtlas_SetTexID(
+    #         self._ptr,
+    #         id_
+    #     )
     # [End Method]
 # [End Class]
 
@@ -15344,7 +15344,7 @@ cdef class ImFontAtlasCustomRect:
     """
     cdef ccimgui.ImFontAtlasCustomRect* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImFontAtlasCustomRect from_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
         if _ptr == NULL:
@@ -15353,7 +15353,7 @@ cdef class ImFontAtlasCustomRect:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
         wrapper = ImFontAtlasCustomRect.from_ptr(_ptr)
@@ -15361,7 +15361,7 @@ cdef class ImFontAtlasCustomRect:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -15705,17 +15705,17 @@ cdef class ImFontConfig:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def font_data(self):
-        """
-        Ttf/otf data
-        """
-        cdef void* res = dereference(self._ptr).FontData
-        return res
-    @font_data.setter
-    def font_data(self, value: Any):
-        # dereference(self._ptr).FontData = value
-        raise NotImplementedError
+    # @property
+    # def font_data(self):
+    #     """
+    #     Ttf/otf data
+    #     """
+    #     cdef void* res = dereference(self._ptr).FontData
+    #     return res
+    # @font_data.setter
+    # def font_data(self, value: Any):
+    #     # dereference(self._ptr).FontData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16458,7 +16458,7 @@ cdef class ImFontGlyphRangesBuilder:
     """
     cdef ccimgui.ImFontGlyphRangesBuilder* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImFontGlyphRangesBuilder from_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
         if _ptr == NULL:
@@ -16467,7 +16467,7 @@ cdef class ImFontGlyphRangesBuilder:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImFontGlyphRangesBuilder from_heap_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
         wrapper = ImFontGlyphRangesBuilder.from_ptr(_ptr)
@@ -16475,7 +16475,7 @@ cdef class ImFontGlyphRangesBuilder:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16679,7 +16679,7 @@ cdef class ImGuiContext:
     """
     cdef ccimgui.ImGuiContext* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiContext from_ptr(ccimgui.ImGuiContext* _ptr):
         if _ptr == NULL:
@@ -16688,7 +16688,7 @@ cdef class ImGuiContext:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiContext from_heap_ptr(ccimgui.ImGuiContext* _ptr):
         wrapper = ImGuiContext.from_ptr(_ptr)
@@ -16696,7 +16696,7 @@ cdef class ImGuiContext:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16720,7 +16720,7 @@ cdef class ImGuiErrorRecoveryState:
     """
     cdef ccimgui.ImGuiErrorRecoveryState* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiErrorRecoveryState from_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
         if _ptr == NULL:
@@ -16729,7 +16729,7 @@ cdef class ImGuiErrorRecoveryState:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiErrorRecoveryState from_heap_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
         wrapper = ImGuiErrorRecoveryState.from_ptr(_ptr)
@@ -16737,7 +16737,7 @@ cdef class ImGuiErrorRecoveryState:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16754,14 +16754,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_begin_popup_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
-        return res
-    @size_of_begin_popup_stack.setter
-    def size_of_begin_popup_stack(self, value: int):
-        # dereference(self._ptr).SizeOfBeginPopupStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_begin_popup_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
+    #     return res
+    # @size_of_begin_popup_stack.setter
+    # def size_of_begin_popup_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfBeginPopupStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16770,14 +16770,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_begin_popup_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
-        return res
-    @size_of_begin_popup_stack.setter
-    def size_of_begin_popup_stack(self, value: int):
-        # dereference(self._ptr).SizeOfBeginPopupStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_begin_popup_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
+    #     return res
+    # @size_of_begin_popup_stack.setter
+    # def size_of_begin_popup_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfBeginPopupStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16786,14 +16786,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_color_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfColorStack
-        return res
-    @size_of_color_stack.setter
-    def size_of_color_stack(self, value: int):
-        # dereference(self._ptr).SizeOfColorStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_color_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfColorStack
+    #     return res
+    # @size_of_color_stack.setter
+    # def size_of_color_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfColorStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16802,14 +16802,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_color_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfColorStack
-        return res
-    @size_of_color_stack.setter
-    def size_of_color_stack(self, value: int):
-        # dereference(self._ptr).SizeOfColorStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_color_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfColorStack
+    #     return res
+    # @size_of_color_stack.setter
+    # def size_of_color_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfColorStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16818,14 +16818,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_disabled_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfDisabledStack
-        return res
-    @size_of_disabled_stack.setter
-    def size_of_disabled_stack(self, value: int):
-        # dereference(self._ptr).SizeOfDisabledStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_disabled_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfDisabledStack
+    #     return res
+    # @size_of_disabled_stack.setter
+    # def size_of_disabled_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfDisabledStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16834,14 +16834,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_disabled_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfDisabledStack
-        return res
-    @size_of_disabled_stack.setter
-    def size_of_disabled_stack(self, value: int):
-        # dereference(self._ptr).SizeOfDisabledStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_disabled_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfDisabledStack
+    #     return res
+    # @size_of_disabled_stack.setter
+    # def size_of_disabled_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfDisabledStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16850,14 +16850,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_focus_scope_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
-        return res
-    @size_of_focus_scope_stack.setter
-    def size_of_focus_scope_stack(self, value: int):
-        # dereference(self._ptr).SizeOfFocusScopeStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_focus_scope_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
+    #     return res
+    # @size_of_focus_scope_stack.setter
+    # def size_of_focus_scope_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfFocusScopeStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16866,14 +16866,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_focus_scope_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
-        return res
-    @size_of_focus_scope_stack.setter
-    def size_of_focus_scope_stack(self, value: int):
-        # dereference(self._ptr).SizeOfFocusScopeStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_focus_scope_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
+    #     return res
+    # @size_of_focus_scope_stack.setter
+    # def size_of_focus_scope_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfFocusScopeStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16882,14 +16882,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_font_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfFontStack
-        return res
-    @size_of_font_stack.setter
-    def size_of_font_stack(self, value: int):
-        # dereference(self._ptr).SizeOfFontStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_font_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfFontStack
+    #     return res
+    # @size_of_font_stack.setter
+    # def size_of_font_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfFontStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16898,14 +16898,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_font_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfFontStack
-        return res
-    @size_of_font_stack.setter
-    def size_of_font_stack(self, value: int):
-        # dereference(self._ptr).SizeOfFontStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_font_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfFontStack
+    #     return res
+    # @size_of_font_stack.setter
+    # def size_of_font_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfFontStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16914,14 +16914,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_group_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfGroupStack
-        return res
-    @size_of_group_stack.setter
-    def size_of_group_stack(self, value: int):
-        # dereference(self._ptr).SizeOfGroupStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_group_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfGroupStack
+    #     return res
+    # @size_of_group_stack.setter
+    # def size_of_group_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfGroupStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16930,14 +16930,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_group_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfGroupStack
-        return res
-    @size_of_group_stack.setter
-    def size_of_group_stack(self, value: int):
-        # dereference(self._ptr).SizeOfGroupStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_group_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfGroupStack
+    #     return res
+    # @size_of_group_stack.setter
+    # def size_of_group_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfGroupStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16946,14 +16946,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_id_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfIDStack
-        return res
-    @size_of_id_stack.setter
-    def size_of_id_stack(self, value: int):
-        # dereference(self._ptr).SizeOfIDStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_id_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfIDStack
+    #     return res
+    # @size_of_id_stack.setter
+    # def size_of_id_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfIDStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16962,14 +16962,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_id_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfIDStack
-        return res
-    @size_of_id_stack.setter
-    def size_of_id_stack(self, value: int):
-        # dereference(self._ptr).SizeOfIDStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_id_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfIDStack
+    #     return res
+    # @size_of_id_stack.setter
+    # def size_of_id_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfIDStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16978,14 +16978,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_item_flags_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
-        return res
-    @size_of_item_flags_stack.setter
-    def size_of_item_flags_stack(self, value: int):
-        # dereference(self._ptr).SizeOfItemFlagsStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_item_flags_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
+    #     return res
+    # @size_of_item_flags_stack.setter
+    # def size_of_item_flags_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfItemFlagsStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -16994,14 +16994,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_item_flags_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
-        return res
-    @size_of_item_flags_stack.setter
-    def size_of_item_flags_stack(self, value: int):
-        # dereference(self._ptr).SizeOfItemFlagsStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_item_flags_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
+    #     return res
+    # @size_of_item_flags_stack.setter
+    # def size_of_item_flags_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfItemFlagsStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17010,14 +17010,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_style_var_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfStyleVarStack
-        return res
-    @size_of_style_var_stack.setter
-    def size_of_style_var_stack(self, value: int):
-        # dereference(self._ptr).SizeOfStyleVarStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_style_var_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfStyleVarStack
+    #     return res
+    # @size_of_style_var_stack.setter
+    # def size_of_style_var_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfStyleVarStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17026,14 +17026,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_style_var_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfStyleVarStack
-        return res
-    @size_of_style_var_stack.setter
-    def size_of_style_var_stack(self, value: int):
-        # dereference(self._ptr).SizeOfStyleVarStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_style_var_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfStyleVarStack
+    #     return res
+    # @size_of_style_var_stack.setter
+    # def size_of_style_var_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfStyleVarStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17042,14 +17042,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_tree_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfTreeStack
-        return res
-    @size_of_tree_stack.setter
-    def size_of_tree_stack(self, value: int):
-        # dereference(self._ptr).SizeOfTreeStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_tree_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfTreeStack
+    #     return res
+    # @size_of_tree_stack.setter
+    # def size_of_tree_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfTreeStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17058,14 +17058,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_tree_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfTreeStack
-        return res
-    @size_of_tree_stack.setter
-    def size_of_tree_stack(self, value: int):
-        # dereference(self._ptr).SizeOfTreeStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_tree_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfTreeStack
+    #     return res
+    # @size_of_tree_stack.setter
+    # def size_of_tree_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfTreeStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17074,14 +17074,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_window_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfWindowStack
-        return res
-    @size_of_window_stack.setter
-    def size_of_window_stack(self, value: int):
-        # dereference(self._ptr).SizeOfWindowStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_window_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfWindowStack
+    #     return res
+    # @size_of_window_stack.setter
+    # def size_of_window_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfWindowStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17090,14 +17090,14 @@ cdef class ImGuiErrorRecoveryState:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size_of_window_stack(self):
-        cdef short res = dereference(self._ptr).SizeOfWindowStack
-        return res
-    @size_of_window_stack.setter
-    def size_of_window_stack(self, value: int):
-        # dereference(self._ptr).SizeOfWindowStack = value
-        raise NotImplementedError
+    # @property
+    # def size_of_window_stack(self):
+    #     cdef short res = dereference(self._ptr).SizeOfWindowStack
+    #     return res
+    # @size_of_window_stack.setter
+    # def size_of_window_stack(self, value: int):
+    #     # dereference(self._ptr).SizeOfWindowStack = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -17246,17 +17246,17 @@ cdef class ImGuiIO:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def backend_language_user_data(self):
-        """
-        = null           // user data for non c++ programming language backend
-        """
-        cdef void* res = dereference(self._ptr).BackendLanguageUserData
-        return res
-    @backend_language_user_data.setter
-    def backend_language_user_data(self, value: Any):
-        # dereference(self._ptr).BackendLanguageUserData = value
-        raise NotImplementedError
+    # @property
+    # def backend_language_user_data(self):
+    #     """
+    #     = null           // user data for non c++ programming language backend
+    #     """
+    #     cdef void* res = dereference(self._ptr).BackendLanguageUserData
+    #     return res
+    # @backend_language_user_data.setter
+    # def backend_language_user_data(self, value: Any):
+    #     # dereference(self._ptr).BackendLanguageUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17285,17 +17285,17 @@ cdef class ImGuiIO:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def backend_platform_user_data(self):
-        """
-        = null           // user data for platform backend
-        """
-        cdef void* res = dereference(self._ptr).BackendPlatformUserData
-        return res
-    @backend_platform_user_data.setter
-    def backend_platform_user_data(self, value: Any):
-        # dereference(self._ptr).BackendPlatformUserData = value
-        raise NotImplementedError
+    # @property
+    # def backend_platform_user_data(self):
+    #     """
+    #     = null           // user data for platform backend
+    #     """
+    #     cdef void* res = dereference(self._ptr).BackendPlatformUserData
+    #     return res
+    # @backend_platform_user_data.setter
+    # def backend_platform_user_data(self, value: Any):
+    #     # dereference(self._ptr).BackendPlatformUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17323,17 +17323,17 @@ cdef class ImGuiIO:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def backend_renderer_user_data(self):
-        """
-        = null           // user data for renderer backend
-        """
-        cdef void* res = dereference(self._ptr).BackendRendererUserData
-        return res
-    @backend_renderer_user_data.setter
-    def backend_renderer_user_data(self, value: Any):
-        # dereference(self._ptr).BackendRendererUserData = value
-        raise NotImplementedError
+    # @property
+    # def backend_renderer_user_data(self):
+    #     """
+    #     = null           // user data for renderer backend
+    #     """
+    #     cdef void* res = dereference(self._ptr).BackendRendererUserData
+    #     return res
+    # @backend_renderer_user_data.setter
+    # def backend_renderer_user_data(self, value: Any):
+    #     # dereference(self._ptr).BackendRendererUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17829,17 +17829,17 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def config_scrollbar_scroll_by_page(self):
-        """
-        = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
-        """
-        cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
-        return res
-    @config_scrollbar_scroll_by_page.setter
-    def config_scrollbar_scroll_by_page(self, value: bool):
-        # dereference(self._ptr).ConfigScrollbarScrollByPage = value
-        raise NotImplementedError
+    # @property
+    # def config_scrollbar_scroll_by_page(self):
+    #     """
+    #     = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
+    #     return res
+    # @config_scrollbar_scroll_by_page.setter
+    # def config_scrollbar_scroll_by_page(self, value: bool):
+    #     # dereference(self._ptr).ConfigScrollbarScrollByPage = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -19181,14 +19181,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_focus_event(self: ImGuiIO, focused: bool):
-        """
-        Queue a gain/loss of focus for the application (generally based on os/platform focus of your window)
-        """
-        ccimgui.ImGuiIO_AddFocusEvent(
-            self._ptr,
-            focused
-        )
+    # def add_focus_event(self: ImGuiIO, focused: bool):
+    #     """
+    #     Queue a gain/loss of focus for the application (generally based on os/platform focus of your window)
+    #     """
+    #     ccimgui.ImGuiIO_AddFocusEvent(
+    #         self._ptr,
+    #         focused
+    #     )
     # [End Method]
 
     # [Method]
@@ -19213,14 +19213,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_input_character_utf_16(self: ImGuiIO, c: int):
-        """
-        Queue a new character input from a utf-16 character, it can be a surrogate
-        """
-        ccimgui.ImGuiIO_AddInputCharacterUTF16(
-            self._ptr,
-            c
-        )
+    # def add_input_character_utf_16(self: ImGuiIO, c: int):
+    #     """
+    #     Queue a new character input from a utf-16 character, it can be a surrogate
+    #     """
+    #     ccimgui.ImGuiIO_AddInputCharacterUTF16(
+    #         self._ptr,
+    #         c
+    #     )
     # [End Method]
 
     # [Method]
@@ -19229,14 +19229,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_input_characters_utf_8(self: ImGuiIO, str_: str):
-        """
-        Queue a new characters input from a utf-8 string
-        """
-        ccimgui.ImGuiIO_AddInputCharactersUTF8(
-            self._ptr,
-            _bytes(str_)
-        )
+    # def add_input_characters_utf_8(self: ImGuiIO, str_: str):
+    #     """
+    #     Queue a new characters input from a utf-8 string
+    #     """
+    #     ccimgui.ImGuiIO_AddInputCharactersUTF8(
+    #         self._ptr,
+    #         _bytes(str_)
+    #     )
     # [End Method]
 
     # [Method]
@@ -19245,16 +19245,16 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_key_analog_event(self: ImGuiIO, key: int, down: bool, v: float):
-        """
-        Queue a new key down/up event for analog values (e.g. imguikey_gamepad_ values). dead-zones should be handled by the backend.
-        """
-        ccimgui.ImGuiIO_AddKeyAnalogEvent(
-            self._ptr,
-            key,
-            down,
-            v
-        )
+    # def add_key_analog_event(self: ImGuiIO, key: int, down: bool, v: float):
+    #     """
+    #     Queue a new key down/up event for analog values (e.g. imguikey_gamepad_ values). dead-zones should be handled by the backend.
+    #     """
+    #     ccimgui.ImGuiIO_AddKeyAnalogEvent(
+    #         self._ptr,
+    #         key,
+    #         down,
+    #         v
+    #     )
     # [End Method]
 
     # [Method]
@@ -19315,14 +19315,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_mouse_source_event(self: ImGuiIO, source: int):
-        """
-        Queue a mouse source change (mouse/touchscreen/pen)
-        """
-        ccimgui.ImGuiIO_AddMouseSourceEvent(
-            self._ptr,
-            source
-        )
+    # def add_mouse_source_event(self: ImGuiIO, source: int):
+    #     """
+    #     Queue a mouse source change (mouse/touchscreen/pen)
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseSourceEvent(
+    #         self._ptr,
+    #         source
+    #     )
     # [End Method]
 
     # [Method]
@@ -19331,14 +19331,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_mouse_viewport_event(self: ImGuiIO, id_: int):
-        """
-        Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport to call this (for multi-viewport support).
-        """
-        ccimgui.ImGuiIO_AddMouseViewportEvent(
-            self._ptr,
-            id_
-        )
+    # def add_mouse_viewport_event(self: ImGuiIO, id_: int):
+    #     """
+    #     Queue a mouse hovered viewport. requires backend to set imguibackendflags_hasmousehoveredviewport to call this (for multi-viewport support).
+    #     """
+    #     ccimgui.ImGuiIO_AddMouseViewportEvent(
+    #         self._ptr,
+    #         id_
+    #     )
     # [End Method]
 
     # [Method]
@@ -19364,13 +19364,13 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_events_queue(self: ImGuiIO):
-        """
-        Clear all incoming events.
-        """
-        ccimgui.ImGuiIO_ClearEventsQueue(
-            self._ptr
-        )
+    # def clear_events_queue(self: ImGuiIO):
+    #     """
+    #     Clear all incoming events.
+    #     """
+    #     ccimgui.ImGuiIO_ClearEventsQueue(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -19379,13 +19379,13 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_input_keys(self: ImGuiIO):
-        """
-        Clear current keyboard/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
-        """
-        ccimgui.ImGuiIO_ClearInputKeys(
-            self._ptr
-        )
+    # def clear_input_keys(self: ImGuiIO):
+    #     """
+    #     Clear current keyboard/gamepad state + current frame text input buffer. equivalent to releasing all keys/buttons.
+    #     """
+    #     ccimgui.ImGuiIO_ClearInputKeys(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -19394,13 +19394,13 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_input_mouse(self: ImGuiIO):
-        """
-        Clear current mouse state.
-        """
-        ccimgui.ImGuiIO_ClearInputMouse(
-            self._ptr
-        )
+    # def clear_input_mouse(self: ImGuiIO):
+    #     """
+    #     Clear current mouse state.
+    #     """
+    #     ccimgui.ImGuiIO_ClearInputMouse(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -19409,14 +19409,14 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
-        """
-        Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
-        """
-        ccimgui.ImGuiIO_SetAppAcceptingEvents(
-            self._ptr,
-            accepting_events
-        )
+    # def set_app_accepting_events(self: ImGuiIO, accepting_events: bool):
+    #     """
+    #     Set master flag for accepting key/mouse/text events (default to true). useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.
+    #     """
+    #     ccimgui.ImGuiIO_SetAppAcceptingEvents(
+    #         self._ptr,
+    #         accepting_events
+    #     )
     # [End Method]
 
     # [Method]
@@ -19425,16 +19425,16 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
-        """
-        Implied native_legacy_index = -1
-        """
-        ccimgui.ImGuiIO_SetKeyEventNativeData(
-            self._ptr,
-            key,
-            native_keycode,
-            native_scancode
-        )
+    # def set_key_event_native_data(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int):
+    #     """
+    #     Implied native_legacy_index = -1
+    #     """
+    #     ccimgui.ImGuiIO_SetKeyEventNativeData(
+    #         self._ptr,
+    #         key,
+    #         native_keycode,
+    #         native_scancode
+    #     )
     # [End Method]
 
     # [Method]
@@ -19443,17 +19443,17 @@ cdef class ImGuiIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
-        """
-        [optional] specify index for legacy <1.87 iskeyxxx() functions with native indices + specify native keycode, scancode.
-        """
-        ccimgui.ImGuiIO_SetKeyEventNativeDataEx(
-            self._ptr,
-            key,
-            native_keycode,
-            native_scancode,
-            native_legacy_index
-        )
+    # def set_key_event_native_data_ex(self: ImGuiIO, key: int, native_keycode: int, native_scancode: int, native_legacy_index: int=-1):
+    #     """
+    #     [optional] specify index for legacy <1.87 iskeyxxx() functions with native indices + specify native keycode, scancode.
+    #     """
+    #     ccimgui.ImGuiIO_SetKeyEventNativeDataEx(
+    #         self._ptr,
+    #         key,
+    #         native_keycode,
+    #         native_scancode,
+    #         native_legacy_index
+    #     )
     # [End Method]
 # [End Class]
 
@@ -19477,7 +19477,7 @@ cdef class ImGuiInputTextCallbackData:
     """
     cdef ccimgui.ImGuiInputTextCallbackData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiInputTextCallbackData from_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
         if _ptr == NULL:
@@ -19486,7 +19486,7 @@ cdef class ImGuiInputTextCallbackData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiInputTextCallbackData from_heap_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
         wrapper = ImGuiInputTextCallbackData.from_ptr(_ptr)
@@ -19494,7 +19494,7 @@ cdef class ImGuiInputTextCallbackData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19841,7 +19841,7 @@ cdef class ImGuiKeyData:
     """
     cdef ccimgui.ImGuiKeyData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiKeyData from_ptr(ccimgui.ImGuiKeyData* _ptr):
         if _ptr == NULL:
@@ -19850,7 +19850,7 @@ cdef class ImGuiKeyData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiKeyData from_heap_ptr(ccimgui.ImGuiKeyData* _ptr):
         wrapper = ImGuiKeyData.from_ptr(_ptr)
@@ -19858,7 +19858,7 @@ cdef class ImGuiKeyData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19978,7 +19978,7 @@ cdef class ImGuiListClipper:
     """
     cdef ccimgui.ImGuiListClipper* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiListClipper from_ptr(ccimgui.ImGuiListClipper* _ptr):
         if _ptr == NULL:
@@ -19987,7 +19987,7 @@ cdef class ImGuiListClipper:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiListClipper from_heap_ptr(ccimgui.ImGuiListClipper* _ptr):
         wrapper = ImGuiListClipper.from_ptr(_ptr)
@@ -19995,7 +19995,7 @@ cdef class ImGuiListClipper:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -20069,17 +20069,17 @@ cdef class ImGuiListClipper:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def items_count(self):
-        """
-        [internal] number of items
-        """
-        cdef int res = dereference(self._ptr).ItemsCount
-        return res
-    @items_count.setter
-    def items_count(self, value: int):
-        # dereference(self._ptr).ItemsCount = value
-        raise NotImplementedError
+    # @property
+    # def items_count(self):
+    #     """
+    #     [internal] number of items
+    #     """
+    #     cdef int res = dereference(self._ptr).ItemsCount
+    #     return res
+    # @items_count.setter
+    # def items_count(self, value: int):
+    #     # dereference(self._ptr).ItemsCount = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20088,17 +20088,17 @@ cdef class ImGuiListClipper:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def items_height(self):
-        """
-        [internal] height of item after a first step and item submission can calculate it
-        """
-        cdef float res = dereference(self._ptr).ItemsHeight
-        return res
-    @items_height.setter
-    def items_height(self, value: float):
-        # dereference(self._ptr).ItemsHeight = value
-        raise NotImplementedError
+    # @property
+    # def items_height(self):
+    #     """
+    #     [internal] height of item after a first step and item submission can calculate it
+    #     """
+    #     cdef float res = dereference(self._ptr).ItemsHeight
+    #     return res
+    # @items_height.setter
+    # def items_height(self, value: float):
+    #     # dereference(self._ptr).ItemsHeight = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20107,17 +20107,17 @@ cdef class ImGuiListClipper:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def start_pos_y(self):
-        """
-        [internal] cursor position at the time of begin() or after table frozen rows are all processed
-        """
-        cdef float res = dereference(self._ptr).StartPosY
-        return res
-    @start_pos_y.setter
-    def start_pos_y(self, value: float):
-        # dereference(self._ptr).StartPosY = value
-        raise NotImplementedError
+    # @property
+    # def start_pos_y(self):
+    #     """
+    #     [internal] cursor position at the time of begin() or after table frozen rows are all processed
+    #     """
+    #     cdef float res = dereference(self._ptr).StartPosY
+    #     return res
+    # @start_pos_y.setter
+    # def start_pos_y(self, value: float):
+    #     # dereference(self._ptr).StartPosY = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20126,17 +20126,17 @@ cdef class ImGuiListClipper:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def start_seek_offset_y(self):
-        """
-        [internal] account for frozen rows in a table and initial loss of precision in very large windows.
-        """
-        cdef double res = dereference(self._ptr).StartSeekOffsetY
-        return res
-    @start_seek_offset_y.setter
-    def start_seek_offset_y(self, value: float):
-        # dereference(self._ptr).StartSeekOffsetY = value
-        raise NotImplementedError
+    # @property
+    # def start_seek_offset_y(self):
+    #     """
+    #     [internal] account for frozen rows in a table and initial loss of precision in very large windows.
+    #     """
+    #     cdef double res = dereference(self._ptr).StartSeekOffsetY
+    #     return res
+    # @start_seek_offset_y.setter
+    # def start_seek_offset_y(self, value: float):
+    #     # dereference(self._ptr).StartSeekOffsetY = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20145,17 +20145,17 @@ cdef class ImGuiListClipper:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def temp_data(self):
-        """
-        [internal] internal data
-        """
-        cdef void* res = dereference(self._ptr).TempData
-        return res
-    @temp_data.setter
-    def temp_data(self, value: Any):
-        # dereference(self._ptr).TempData = value
-        raise NotImplementedError
+    # @property
+    # def temp_data(self):
+    #     """
+    #     [internal] internal data
+    #     """
+    #     cdef void* res = dereference(self._ptr).TempData
+    #     return res
+    # @temp_data.setter
+    # def temp_data(self, value: Any):
+    #     # dereference(self._ptr).TempData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -20270,16 +20270,16 @@ cdef class ImGuiListClipper:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def seek_cursor_for_item(self: ImGuiListClipper, item_index: int):
-        """
-        Seek cursor toward given item. This is automatically called while stepping.
-        - The only reason to call this is: you can use ImGuiListClipper::Begin(INT_MAX) if you don't know item count ahead of time.
-        - In this case, after all steps are done, you'll want to call SeekCursorForItem(item_count).
-        """
-        ccimgui.ImGuiListClipper_SeekCursorForItem(
-            self._ptr,
-            item_index
-        )
+    # def seek_cursor_for_item(self: ImGuiListClipper, item_index: int):
+    #     """
+    #     Seek cursor toward given item. This is automatically called while stepping.
+    #     - The only reason to call this is: you can use ImGuiListClipper::Begin(INT_MAX) if you don't know item count ahead of time.
+    #     - In this case, after all steps are done, you'll want to call SeekCursorForItem(item_count).
+    #     """
+    #     ccimgui.ImGuiListClipper_SeekCursorForItem(
+    #         self._ptr,
+    #         item_index
+    #     )
     # [End Method]
 
     # [Method]
@@ -20315,7 +20315,7 @@ cdef class ImGuiMultiSelectIO:
     """
     cdef ccimgui.ImGuiMultiSelectIO* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiMultiSelectIO from_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
         if _ptr == NULL:
@@ -20324,7 +20324,7 @@ cdef class ImGuiMultiSelectIO:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiMultiSelectIO from_heap_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
         wrapper = ImGuiMultiSelectIO.from_ptr(_ptr)
@@ -20332,7 +20332,7 @@ cdef class ImGuiMultiSelectIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -20349,17 +20349,17 @@ cdef class ImGuiMultiSelectIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def items_count(self):
-        """
-        Ms:w, app:r     /        app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
-        """
-        cdef int res = dereference(self._ptr).ItemsCount
-        return res
-    @items_count.setter
-    def items_count(self, value: int):
-        # dereference(self._ptr).ItemsCount = value
-        raise NotImplementedError
+    # @property
+    # def items_count(self):
+    #     """
+    #     Ms:w, app:r     /        app:r   // 'int items_count' parameter to beginmultiselect() is copied here for convenience, allowing simpler calls to your applyrequests handler. not used internally.
+    #     """
+    #     cdef int res = dereference(self._ptr).ItemsCount
+    #     return res
+    # @items_count.setter
+    # def items_count(self, value: int):
+    #     # dereference(self._ptr).ItemsCount = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20444,18 +20444,18 @@ cdef class ImGuiMultiSelectIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImGuiSelectionRequest)
-    @property
-    def requests(self):
-        """
-        ------------------------------------------// BeginMultiSelect / EndMultiSelect
-        Ms:w, app:r     /  ms:w  app:r   // requests to apply to your selection data.
-        """
-        cdef ccimgui.ImVector_ImGuiSelectionRequest res = dereference(self._ptr).Requests
-        return ImVector_ImGuiSelectionRequest.from_ptr(res)
-    @requests.setter
-    def requests(self, value: ImVector_ImGuiSelectionRequest):
-        # dereference(self._ptr).Requests = value._ptr
-        raise NotImplementedError
+    # @property
+    # def requests(self):
+    #     """
+    #     ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    #     Ms:w, app:r     /  ms:w  app:r   // requests to apply to your selection data.
+    #     """
+    #     cdef ccimgui.ImVector_ImGuiSelectionRequest res = dereference(self._ptr).Requests
+    #     return ImVector_ImGuiSelectionRequest.from_ptr(res)
+    # @requests.setter
+    # def requests(self, value: ImVector_ImGuiSelectionRequest):
+    #     # dereference(self._ptr).Requests = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -20695,10 +20695,10 @@ cdef class ImGuiPayload:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImGuiPayload):
-        ccimgui.ImGuiPayload_Clear(
-            self._ptr
-        )
+    # def clear(self: ImGuiPayload):
+    #     ccimgui.ImGuiPayload_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -20754,7 +20754,7 @@ cdef class ImGuiPlatformIO:
     """
     cdef ccimgui.ImGuiPlatformIO* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiPlatformIO from_ptr(ccimgui.ImGuiPlatformIO* _ptr):
         if _ptr == NULL:
@@ -20763,7 +20763,7 @@ cdef class ImGuiPlatformIO:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiPlatformIO from_heap_ptr(ccimgui.ImGuiPlatformIO* _ptr):
         wrapper = ImGuiPlatformIO.from_ptr(_ptr)
@@ -20771,7 +20771,7 @@ cdef class ImGuiPlatformIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -20811,14 +20811,14 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_clipboard_user_data(self):
-        cdef void* res = dereference(self._ptr).Platform_ClipboardUserData
-        return res
-    @platform_clipboard_user_data.setter
-    def platform_clipboard_user_data(self, value: Any):
-        # dereference(self._ptr).Platform_ClipboardUserData = value
-        raise NotImplementedError
+    # @property
+    # def platform_clipboard_user_data(self):
+    #     cdef void* res = dereference(self._ptr).Platform_ClipboardUserData
+    #     return res
+    # @platform_clipboard_user_data.setter
+    # def platform_clipboard_user_data(self, value: Any):
+    #     # dereference(self._ptr).Platform_ClipboardUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20827,17 +20827,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_create_vk_surface(self):
-        """
-        (optional) for a vulkan renderer to call into platform code (since the surface creation needs to tie them both).
-        """
-        cdef Callable res = dereference(self._ptr).Platform_CreateVkSurface
-        return res
-    @platform_create_vk_surface.setter
-    def platform_create_vk_surface(self, value: Callable):
-        # dereference(self._ptr).Platform_CreateVkSurface = value
-        raise NotImplementedError
+    # @property
+    # def platform_create_vk_surface(self):
+    #     """
+    #     (optional) for a vulkan renderer to call into platform code (since the surface creation needs to tie them both).
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_CreateVkSurface
+    #     return res
+    # @platform_create_vk_surface.setter
+    # def platform_create_vk_surface(self, value: Callable):
+    #     # dereference(self._ptr).Platform_CreateVkSurface = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20846,18 +20846,18 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_create_window(self):
-        """
-        Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
-        . . u . .  // create a new platform window for the given viewport
-        """
-        cdef Callable res = dereference(self._ptr).Platform_CreateWindow
-        return res
-    @platform_create_window.setter
-    def platform_create_window(self, value: Callable):
-        # dereference(self._ptr).Platform_CreateWindow = value
-        raise NotImplementedError
+    # @property
+    # def platform_create_window(self):
+    #     """
+    #     Platform Backend functions (e.g. Win32, GLFW, SDL) ------------------- Called by -----
+    #     . . u . .  // create a new platform window for the given viewport
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_CreateWindow
+    #     return res
+    # @platform_create_window.setter
+    # def platform_create_window(self, value: Callable):
+    #     # dereference(self._ptr).Platform_CreateWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20866,17 +20866,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_destroy_window(self):
-        """
-        N . u . d  //
-        """
-        cdef Callable res = dereference(self._ptr).Platform_DestroyWindow
-        return res
-    @platform_destroy_window.setter
-    def platform_destroy_window(self, value: Callable):
-        # dereference(self._ptr).Platform_DestroyWindow = value
-        raise NotImplementedError
+    # @property
+    # def platform_destroy_window(self):
+    #     """
+    #     N . u . d  //
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_DestroyWindow
+    #     return res
+    # @platform_destroy_window.setter
+    # def platform_destroy_window(self, value: Callable):
+    #     # dereference(self._ptr).Platform_DestroyWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20885,18 +20885,18 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_clipboard_text_fn(self):
-        """
-        Optional: Access OS clipboard
-        (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetClipboardTextFn
-        return res
-    @platform_get_clipboard_text_fn.setter
-    def platform_get_clipboard_text_fn(self, value: Callable):
-        # dereference(self._ptr).Platform_GetClipboardTextFn = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_clipboard_text_fn(self):
+    #     """
+    #     Optional: Access OS clipboard
+    #     (default to use native Win32 clipboard on Windows, otherwise uses a private clipboard. Override to access OS clipboard on other architectures)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetClipboardTextFn
+    #     return res
+    # @platform_get_clipboard_text_fn.setter
+    # def platform_get_clipboard_text_fn(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetClipboardTextFn = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20905,17 +20905,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_dpi_scale(self):
-        """
-        N . . . .  // (optional) [beta] fixme-dpi: dpi handling: return dpi scale for this viewport. 1.0f = 96 dpi.
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowDpiScale
-        return res
-    @platform_get_window_dpi_scale.setter
-    def platform_get_window_dpi_scale(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowDpiScale = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_dpi_scale(self):
+    #     """
+    #     N . . . .  // (optional) [beta] fixme-dpi: dpi handling: return dpi scale for this viewport. 1.0f = 96 dpi.
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowDpiScale
+    #     return res
+    # @platform_get_window_dpi_scale.setter
+    # def platform_get_window_dpi_scale(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowDpiScale = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20924,17 +20924,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_focus(self):
-        """
-        . . u . .  //
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowFocus
-        return res
-    @platform_get_window_focus.setter
-    def platform_get_window_focus(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowFocus = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_focus(self):
+    #     """
+    #     . . u . .  //
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowFocus
+    #     return res
+    # @platform_get_window_focus.setter
+    # def platform_get_window_focus(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowFocus = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20943,17 +20943,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_minimized(self):
-        """
-        N . . . .  // get platform window minimized state. when minimized, we generally won't attempt to get/set size and contents will be culled more easily
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowMinimized
-        return res
-    @platform_get_window_minimized.setter
-    def platform_get_window_minimized(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowMinimized = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_minimized(self):
+    #     """
+    #     N . . . .  // get platform window minimized state. when minimized, we generally won't attempt to get/set size and contents will be culled more easily
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowMinimized
+    #     return res
+    # @platform_get_window_minimized.setter
+    # def platform_get_window_minimized(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowMinimized = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20962,17 +20962,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_pos(self):
-        """
-        N . . . .  //
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowPos
-        return res
-    @platform_get_window_pos.setter
-    def platform_get_window_pos(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowPos = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_pos(self):
+    #     """
+    #     N . . . .  //
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowPos
+    #     return res
+    # @platform_get_window_pos.setter
+    # def platform_get_window_pos(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowPos = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20981,17 +20981,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_size(self):
-        """
-        N . . . .  // get platform window client area size
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowSize
-        return res
-    @platform_get_window_size.setter
-    def platform_get_window_size(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowSize = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_size(self):
+    #     """
+    #     N . . . .  // get platform window client area size
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowSize
+    #     return res
+    # @platform_get_window_size.setter
+    # def platform_get_window_size(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowSize = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21000,17 +21000,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_get_window_work_area_insets(self):
-        """
-        N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
-        """
-        cdef Callable res = dereference(self._ptr).Platform_GetWindowWorkAreaInsets
-        return res
-    @platform_get_window_work_area_insets.setter
-    def platform_get_window_work_area_insets(self, value: Callable):
-        # dereference(self._ptr).Platform_GetWindowWorkAreaInsets = value
-        raise NotImplementedError
+    # @property
+    # def platform_get_window_work_area_insets(self):
+    #     """
+    #     N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_GetWindowWorkAreaInsets
+    #     return res
+    # @platform_get_window_work_area_insets.setter
+    # def platform_get_window_work_area_insets(self, value: Callable):
+    #     # dereference(self._ptr).Platform_GetWindowWorkAreaInsets = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21019,14 +21019,14 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_ime_user_data(self):
-        cdef void* res = dereference(self._ptr).Platform_ImeUserData
-        return res
-    @platform_ime_user_data.setter
-    def platform_ime_user_data(self, value: Any):
-        # dereference(self._ptr).Platform_ImeUserData = value
-        raise NotImplementedError
+    # @property
+    # def platform_ime_user_data(self):
+    #     cdef void* res = dereference(self._ptr).Platform_ImeUserData
+    #     return res
+    # @platform_ime_user_data.setter
+    # def platform_ime_user_data(self, value: Any):
+    #     # dereference(self._ptr).Platform_ImeUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21035,19 +21035,19 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def platform_locale_decimal_point(self):
-        """
-        Optional: Platform locale
-        [Experimental] Configure decimal point e.g. '.' or ',' useful for some languages (e.g. German), generally pulled from *localeconv()->decimal_point
-        '.'
-        """
-        cdef ccimgui.ImWchar res = dereference(self._ptr).Platform_LocaleDecimalPoint
-        return res
-    @platform_locale_decimal_point.setter
-    def platform_locale_decimal_point(self, value: int):
-        # dereference(self._ptr).Platform_LocaleDecimalPoint = value
-        raise NotImplementedError
+    # @property
+    # def platform_locale_decimal_point(self):
+    #     """
+    #     Optional: Platform locale
+    #     [Experimental] Configure decimal point e.g. '.' or ',' useful for some languages (e.g. German), generally pulled from *localeconv()->decimal_point
+    #     '.'
+    #     """
+    #     cdef ccimgui.ImWchar res = dereference(self._ptr).Platform_LocaleDecimalPoint
+    #     return res
+    # @platform_locale_decimal_point.setter
+    # def platform_locale_decimal_point(self, value: int):
+    #     # dereference(self._ptr).Platform_LocaleDecimalPoint = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21056,17 +21056,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_on_changed_viewport(self):
-        """
-        . f . . .  // (optional) [beta] fixme-dpi: dpi handling: called during begin() every time the viewport we are outputting into changes, so backend has a chance to swap fonts to adjust style.
-        """
-        cdef Callable res = dereference(self._ptr).Platform_OnChangedViewport
-        return res
-    @platform_on_changed_viewport.setter
-    def platform_on_changed_viewport(self, value: Callable):
-        # dereference(self._ptr).Platform_OnChangedViewport = value
-        raise NotImplementedError
+    # @property
+    # def platform_on_changed_viewport(self):
+    #     """
+    #     . f . . .  // (optional) [beta] fixme-dpi: dpi handling: called during begin() every time the viewport we are outputting into changes, so backend has a chance to swap fonts to adjust style.
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_OnChangedViewport
+    #     return res
+    # @platform_on_changed_viewport.setter
+    # def platform_on_changed_viewport(self, value: Callable):
+    #     # dereference(self._ptr).Platform_OnChangedViewport = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21075,18 +21075,18 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_open_in_shell_fn(self):
-        """
-        Optional: Open link/folder/file in OS Shell
-        (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_OpenInShellFn
-        return res
-    @platform_open_in_shell_fn.setter
-    def platform_open_in_shell_fn(self, value: Callable):
-        # dereference(self._ptr).Platform_OpenInShellFn = value
-        raise NotImplementedError
+    # @property
+    # def platform_open_in_shell_fn(self):
+    #     """
+    #     Optional: Open link/folder/file in OS Shell
+    #     (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_OpenInShellFn
+    #     return res
+    # @platform_open_in_shell_fn.setter
+    # def platform_open_in_shell_fn(self, value: Callable):
+    #     # dereference(self._ptr).Platform_OpenInShellFn = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21095,14 +21095,14 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_open_in_shell_user_data(self):
-        cdef void* res = dereference(self._ptr).Platform_OpenInShellUserData
-        return res
-    @platform_open_in_shell_user_data.setter
-    def platform_open_in_shell_user_data(self, value: Any):
-        # dereference(self._ptr).Platform_OpenInShellUserData = value
-        raise NotImplementedError
+    # @property
+    # def platform_open_in_shell_user_data(self):
+    #     cdef void* res = dereference(self._ptr).Platform_OpenInShellUserData
+    #     return res
+    # @platform_open_in_shell_user_data.setter
+    # def platform_open_in_shell_user_data(self, value: Any):
+    #     # dereference(self._ptr).Platform_OpenInShellUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21111,17 +21111,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_render_window(self):
-        """
-        . . . r .  // (optional) main rendering (platform side! this is often unused, or just setting a 'current' context for opengl bindings). 'render_arg' is the value passed to renderplatformwindowsdefault().
-        """
-        cdef Callable res = dereference(self._ptr).Platform_RenderWindow
-        return res
-    @platform_render_window.setter
-    def platform_render_window(self, value: Callable):
-        # dereference(self._ptr).Platform_RenderWindow = value
-        raise NotImplementedError
+    # @property
+    # def platform_render_window(self):
+    #     """
+    #     . . . r .  // (optional) main rendering (platform side! this is often unused, or just setting a 'current' context for opengl bindings). 'render_arg' is the value passed to renderplatformwindowsdefault().
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_RenderWindow
+    #     return res
+    # @platform_render_window.setter
+    # def platform_render_window(self, value: Callable):
+    #     # dereference(self._ptr).Platform_RenderWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21130,14 +21130,14 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_clipboard_text_fn(self):
-        cdef Callable res = dereference(self._ptr).Platform_SetClipboardTextFn
-        return res
-    @platform_set_clipboard_text_fn.setter
-    def platform_set_clipboard_text_fn(self, value: Callable):
-        # dereference(self._ptr).Platform_SetClipboardTextFn = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_clipboard_text_fn(self):
+    #     cdef Callable res = dereference(self._ptr).Platform_SetClipboardTextFn
+    #     return res
+    # @platform_set_clipboard_text_fn.setter
+    # def platform_set_clipboard_text_fn(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetClipboardTextFn = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21146,18 +21146,18 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_ime_data_fn(self):
-        """
-        Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
-        (default to use native imm32 api on Windows)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetImeDataFn
-        return res
-    @platform_set_ime_data_fn.setter
-    def platform_set_ime_data_fn(self, value: Callable):
-        # dereference(self._ptr).Platform_SetImeDataFn = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_ime_data_fn(self):
+    #     """
+    #     Optional: Notify OS Input Method Editor of the screen position of your cursor for text input position (e.g. when using Japanese/Chinese IME on Windows)
+    #     (default to use native imm32 api on Windows)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetImeDataFn
+    #     return res
+    # @platform_set_ime_data_fn.setter
+    # def platform_set_ime_data_fn(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetImeDataFn = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21166,17 +21166,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_window_alpha(self):
-        """
-        . . u . .  // (optional) setup global transparency (not per-pixel transparency)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetWindowAlpha
-        return res
-    @platform_set_window_alpha.setter
-    def platform_set_window_alpha(self, value: Callable):
-        # dereference(self._ptr).Platform_SetWindowAlpha = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_window_alpha(self):
+    #     """
+    #     . . u . .  // (optional) setup global transparency (not per-pixel transparency)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetWindowAlpha
+    #     return res
+    # @platform_set_window_alpha.setter
+    # def platform_set_window_alpha(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetWindowAlpha = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21185,17 +21185,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_window_focus(self):
-        """
-        N . . . .  // move window to front and set input focus
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetWindowFocus
-        return res
-    @platform_set_window_focus.setter
-    def platform_set_window_focus(self, value: Callable):
-        # dereference(self._ptr).Platform_SetWindowFocus = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_window_focus(self):
+    #     """
+    #     N . . . .  // move window to front and set input focus
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetWindowFocus
+    #     return res
+    # @platform_set_window_focus.setter
+    # def platform_set_window_focus(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetWindowFocus = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21204,17 +21204,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_window_pos(self):
-        """
-        . . u . .  // set platform window position (given the upper-left corner of client area)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetWindowPos
-        return res
-    @platform_set_window_pos.setter
-    def platform_set_window_pos(self, value: Callable):
-        # dereference(self._ptr).Platform_SetWindowPos = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_window_pos(self):
+    #     """
+    #     . . u . .  // set platform window position (given the upper-left corner of client area)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetWindowPos
+    #     return res
+    # @platform_set_window_pos.setter
+    # def platform_set_window_pos(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetWindowPos = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21223,17 +21223,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_window_size(self):
-        """
-        . . u . .  // set platform window client area size (ignoring os decorations such as os title bar etc.)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetWindowSize
-        return res
-    @platform_set_window_size.setter
-    def platform_set_window_size(self, value: Callable):
-        # dereference(self._ptr).Platform_SetWindowSize = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_window_size(self):
+    #     """
+    #     . . u . .  // set platform window client area size (ignoring os decorations such as os title bar etc.)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetWindowSize
+    #     return res
+    # @platform_set_window_size.setter
+    # def platform_set_window_size(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetWindowSize = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21242,17 +21242,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_set_window_title(self):
-        """
-        . . u . .  // set platform window title (given an utf-8 string)
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SetWindowTitle
-        return res
-    @platform_set_window_title.setter
-    def platform_set_window_title(self, value: Callable):
-        # dereference(self._ptr).Platform_SetWindowTitle = value
-        raise NotImplementedError
+    # @property
+    # def platform_set_window_title(self):
+    #     """
+    #     . . u . .  // set platform window title (given an utf-8 string)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SetWindowTitle
+    #     return res
+    # @platform_set_window_title.setter
+    # def platform_set_window_title(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SetWindowTitle = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21261,17 +21261,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_show_window(self):
-        """
-        . . u . .  // newly created windows are initially hidden so setwindowpos/size/title can be called on them before showing the window
-        """
-        cdef Callable res = dereference(self._ptr).Platform_ShowWindow
-        return res
-    @platform_show_window.setter
-    def platform_show_window(self, value: Callable):
-        # dereference(self._ptr).Platform_ShowWindow = value
-        raise NotImplementedError
+    # @property
+    # def platform_show_window(self):
+    #     """
+    #     . . u . .  // newly created windows are initially hidden so setwindowpos/size/title can be called on them before showing the window
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_ShowWindow
+    #     return res
+    # @platform_show_window.setter
+    # def platform_show_window(self, value: Callable):
+    #     # dereference(self._ptr).Platform_ShowWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21280,17 +21280,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_swap_buffers(self):
-        """
-        . . . r .  // (optional) call present/swapbuffers (platform side! this is often unused!). 'render_arg' is the value passed to renderplatformwindowsdefault().
-        """
-        cdef Callable res = dereference(self._ptr).Platform_SwapBuffers
-        return res
-    @platform_swap_buffers.setter
-    def platform_swap_buffers(self, value: Callable):
-        # dereference(self._ptr).Platform_SwapBuffers = value
-        raise NotImplementedError
+    # @property
+    # def platform_swap_buffers(self):
+    #     """
+    #     . . . r .  // (optional) call present/swapbuffers (platform side! this is often unused!). 'render_arg' is the value passed to renderplatformwindowsdefault().
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_SwapBuffers
+    #     return res
+    # @platform_swap_buffers.setter
+    # def platform_swap_buffers(self, value: Callable):
+    #     # dereference(self._ptr).Platform_SwapBuffers = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21299,17 +21299,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def platform_update_window(self):
-        """
-        . . u . .  // (optional) called by updateplatformwindows(). optional hook to allow the platform backend from doing general book-keeping every frame.
-        """
-        cdef Callable res = dereference(self._ptr).Platform_UpdateWindow
-        return res
-    @platform_update_window.setter
-    def platform_update_window(self, value: Callable):
-        # dereference(self._ptr).Platform_UpdateWindow = value
-        raise NotImplementedError
+    # @property
+    # def platform_update_window(self):
+    #     """
+    #     . . u . .  // (optional) called by updateplatformwindows(). optional hook to allow the platform backend from doing general book-keeping every frame.
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Platform_UpdateWindow
+    #     return res
+    # @platform_update_window.setter
+    # def platform_update_window(self, value: Callable):
+    #     # dereference(self._ptr).Platform_UpdateWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21318,18 +21318,18 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def renderer_create_window(self):
-        """
-        Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
-        . . u . .  // create swap chain, frame buffers etc. (called after platform_createwindow)
-        """
-        cdef Callable res = dereference(self._ptr).Renderer_CreateWindow
-        return res
-    @renderer_create_window.setter
-    def renderer_create_window(self, value: Callable):
-        # dereference(self._ptr).Renderer_CreateWindow = value
-        raise NotImplementedError
+    # @property
+    # def renderer_create_window(self):
+    #     """
+    #     Renderer Backend functions (e.g. DirectX, OpenGL, Vulkan) ------------ Called by -----
+    #     . . u . .  // create swap chain, frame buffers etc. (called after platform_createwindow)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Renderer_CreateWindow
+    #     return res
+    # @renderer_create_window.setter
+    # def renderer_create_window(self, value: Callable):
+    #     # dereference(self._ptr).Renderer_CreateWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21338,17 +21338,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def renderer_destroy_window(self):
-        """
-        N . u . d  // destroy swap chain, frame buffers etc. (called before platform_destroywindow)
-        """
-        cdef Callable res = dereference(self._ptr).Renderer_DestroyWindow
-        return res
-    @renderer_destroy_window.setter
-    def renderer_destroy_window(self, value: Callable):
-        # dereference(self._ptr).Renderer_DestroyWindow = value
-        raise NotImplementedError
+    # @property
+    # def renderer_destroy_window(self):
+    #     """
+    #     N . u . d  // destroy swap chain, frame buffers etc. (called before platform_destroywindow)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Renderer_DestroyWindow
+    #     return res
+    # @renderer_destroy_window.setter
+    # def renderer_destroy_window(self, value: Callable):
+    #     # dereference(self._ptr).Renderer_DestroyWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21357,17 +21357,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def renderer_render_window(self):
-        """
-        . . . r .  // (optional) clear framebuffer, setup render target, then render the viewport->drawdata. 'render_arg' is the value passed to renderplatformwindowsdefault().
-        """
-        cdef Callable res = dereference(self._ptr).Renderer_RenderWindow
-        return res
-    @renderer_render_window.setter
-    def renderer_render_window(self, value: Callable):
-        # dereference(self._ptr).Renderer_RenderWindow = value
-        raise NotImplementedError
+    # @property
+    # def renderer_render_window(self):
+    #     """
+    #     . . . r .  // (optional) clear framebuffer, setup render target, then render the viewport->drawdata. 'render_arg' is the value passed to renderplatformwindowsdefault().
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Renderer_RenderWindow
+    #     return res
+    # @renderer_render_window.setter
+    # def renderer_render_window(self, value: Callable):
+    #     # dereference(self._ptr).Renderer_RenderWindow = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21376,17 +21376,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def renderer_set_window_size(self):
-        """
-        . . u . .  // resize swap chain, frame buffers etc. (called after platform_setwindowsize)
-        """
-        cdef Callable res = dereference(self._ptr).Renderer_SetWindowSize
-        return res
-    @renderer_set_window_size.setter
-    def renderer_set_window_size(self, value: Callable):
-        # dereference(self._ptr).Renderer_SetWindowSize = value
-        raise NotImplementedError
+    # @property
+    # def renderer_set_window_size(self):
+    #     """
+    #     . . u . .  // resize swap chain, frame buffers etc. (called after platform_setwindowsize)
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Renderer_SetWindowSize
+    #     return res
+    # @renderer_set_window_size.setter
+    # def renderer_set_window_size(self, value: Callable):
+    #     # dereference(self._ptr).Renderer_SetWindowSize = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21395,17 +21395,17 @@ cdef class ImGuiPlatformIO:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Callable)
-    @property
-    def renderer_swap_buffers(self):
-        """
-        . . . r .  // (optional) call present/swapbuffers. 'render_arg' is the value passed to renderplatformwindowsdefault().
-        """
-        cdef Callable res = dereference(self._ptr).Renderer_SwapBuffers
-        return res
-    @renderer_swap_buffers.setter
-    def renderer_swap_buffers(self, value: Callable):
-        # dereference(self._ptr).Renderer_SwapBuffers = value
-        raise NotImplementedError
+    # @property
+    # def renderer_swap_buffers(self):
+    #     """
+    #     . . . r .  // (optional) call present/swapbuffers. 'render_arg' is the value passed to renderplatformwindowsdefault().
+    #     """
+    #     cdef Callable res = dereference(self._ptr).Renderer_SwapBuffers
+    #     return res
+    # @renderer_swap_buffers.setter
+    # def renderer_swap_buffers(self, value: Callable):
+    #     # dereference(self._ptr).Renderer_SwapBuffers = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21444,7 +21444,7 @@ cdef class ImGuiPlatformImeData:
     """
     cdef ccimgui.ImGuiPlatformImeData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiPlatformImeData from_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
         if _ptr == NULL:
@@ -21453,7 +21453,7 @@ cdef class ImGuiPlatformImeData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiPlatformImeData from_heap_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
         wrapper = ImGuiPlatformImeData.from_ptr(_ptr)
@@ -21461,7 +21461,7 @@ cdef class ImGuiPlatformImeData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21478,17 +21478,17 @@ cdef class ImGuiPlatformImeData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def input_line_height(self):
-        """
-        Line height
-        """
-        cdef float res = dereference(self._ptr).InputLineHeight
-        return res
-    @input_line_height.setter
-    def input_line_height(self, value: float):
-        # dereference(self._ptr).InputLineHeight = value
-        raise NotImplementedError
+    # @property
+    # def input_line_height(self):
+    #     """
+    #     Line height
+    #     """
+    #     cdef float res = dereference(self._ptr).InputLineHeight
+    #     return res
+    # @input_line_height.setter
+    # def input_line_height(self, value: float):
+    #     # dereference(self._ptr).InputLineHeight = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21497,17 +21497,17 @@ cdef class ImGuiPlatformImeData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
-    @property
-    def input_pos(self):
-        """
-        Position of the input cursor
-        """
-        cdef ccimgui.ImVec2 res = dereference(self._ptr).InputPos
-        return _cast_ImVec2_tuple(res)
-    @input_pos.setter
-    def input_pos(self, value: Tuple[float, float]):
-        # dereference(self._ptr).InputPos = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
+    # @property
+    # def input_pos(self):
+    #     """
+    #     Position of the input cursor
+    #     """
+    #     cdef ccimgui.ImVec2 res = dereference(self._ptr).InputPos
+    #     return _cast_ImVec2_tuple(res)
+    # @input_pos.setter
+    # def input_pos(self, value: Tuple[float, float]):
+    #     # dereference(self._ptr).InputPos = _cast_tuple_ImVec2(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21516,17 +21516,17 @@ cdef class ImGuiPlatformImeData:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def want_visible(self):
-        """
-        A widget wants the ime to be visible
-        """
-        cdef bool res = dereference(self._ptr).WantVisible
-        return res
-    @want_visible.setter
-    def want_visible(self, value: bool):
-        # dereference(self._ptr).WantVisible = value
-        raise NotImplementedError
+    # @property
+    # def want_visible(self):
+    #     """
+    #     A widget wants the ime to be visible
+    #     """
+    #     cdef bool res = dereference(self._ptr).WantVisible
+    #     return res
+    # @want_visible.setter
+    # def want_visible(self, value: bool):
+    #     # dereference(self._ptr).WantVisible = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -21543,7 +21543,7 @@ cdef class ImGuiPlatformMonitor:
     """
     cdef ccimgui.ImGuiPlatformMonitor* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiPlatformMonitor from_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
         if _ptr == NULL:
@@ -21552,7 +21552,7 @@ cdef class ImGuiPlatformMonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
         wrapper = ImGuiPlatformMonitor.from_ptr(_ptr)
@@ -21560,7 +21560,7 @@ cdef class ImGuiPlatformMonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21634,17 +21634,17 @@ cdef class ImGuiPlatformMonitor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_handle(self):
-        """
-        Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
-        """
-        cdef void* res = dereference(self._ptr).PlatformHandle
-        return res
-    @platform_handle.setter
-    def platform_handle(self, value: Any):
-        # dereference(self._ptr).PlatformHandle = value
-        raise NotImplementedError
+    # @property
+    # def platform_handle(self):
+    #     """
+    #     Backend dependant data (e.g. hmonitor, glfwmonitor*, sdl display index, nsscreen*)
+    #     """
+    #     cdef void* res = dereference(self._ptr).PlatformHandle
+    #     return res
+    # @platform_handle.setter
+    # def platform_handle(self, value: Any):
+    #     # dereference(self._ptr).PlatformHandle = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -21826,17 +21826,17 @@ cdef class ImGuiSelectionBasicStorage:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(ImGuiStorage)
-    @property
-    def storage(self):
-        """
-        [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
-        """
-        cdef ccimgui.ImGuiStorage res = dereference(self._ptr)._Storage
-        return ImGuiStorage.from_ptr(res)
-    @storage.setter
-    def storage(self, value: ImGuiStorage):
-        # dereference(self._ptr)._Storage = value._ptr
-        raise NotImplementedError
+    # @property
+    # def storage(self):
+    #     """
+    #     [internal] selection set. think of this as similar to e.g. std::set<imguiid>. prefer not accessing directly: iterate with getnextselecteditem().
+    #     """
+    #     cdef ccimgui.ImGuiStorage res = dereference(self._ptr)._Storage
+    #     return ImGuiStorage.from_ptr(res)
+    # @storage.setter
+    # def storage(self, value: ImGuiStorage):
+    #     # dereference(self._ptr)._Storage = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22203,7 +22203,7 @@ cdef class ImGuiSelectionRequest:
     """
     cdef ccimgui.ImGuiSelectionRequest* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiSelectionRequest from_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
         if _ptr == NULL:
@@ -22212,7 +22212,7 @@ cdef class ImGuiSelectionRequest:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiSelectionRequest from_heap_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
         wrapper = ImGuiSelectionRequest.from_ptr(_ptr)
@@ -22220,7 +22220,7 @@ cdef class ImGuiSelectionRequest:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22237,17 +22237,17 @@ cdef class ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def range_direction(self):
-        """
-        Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
-        """
-        cdef ccimgui.ImS8 res = dereference(self._ptr).RangeDirection
-        return res
-    @range_direction.setter
-    def range_direction(self, value: int):
-        # dereference(self._ptr).RangeDirection = value
-        raise NotImplementedError
+    # @property
+    # def range_direction(self):
+    #     """
+    #     Ms:w  app:r   // parameter for setrange request: +1 when rangefirstitem comes before rangelastitem, -1 otherwise. useful if you want to preserve selection order on a backward shift+click.
+    #     """
+    #     cdef ccimgui.ImS8 res = dereference(self._ptr).RangeDirection
+    #     return res
+    # @range_direction.setter
+    # def range_direction(self, value: int):
+    #     # dereference(self._ptr).RangeDirection = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22256,17 +22256,17 @@ cdef class ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def range_first_item(self):
-        """
-        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeFirstItem
-        return res
-    @range_first_item.setter
-    def range_first_item(self, value: Any):
-        # dereference(self._ptr).RangeFirstItem = value
-        raise NotImplementedError
+    # @property
+    # def range_first_item(self):
+    #     """
+    #     Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from top to bottom).
+    #     """
+    #     cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeFirstItem
+    #     return res
+    # @range_first_item.setter
+    # def range_first_item(self, value: Any):
+    #     # dereference(self._ptr).RangeFirstItem = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22275,17 +22275,17 @@ cdef class ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def range_last_item(self):
-        """
-        Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
-        """
-        cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeLastItem
-        return res
-    @range_last_item.setter
-    def range_last_item(self, value: Any):
-        # dereference(self._ptr).RangeLastItem = value
-        raise NotImplementedError
+    # @property
+    # def range_last_item(self):
+    #     """
+    #     Ms:w, app:r   // parameter for setrange request (this is generally == rangesrcitem when shift selecting from bottom to top). inclusive!
+    #     """
+    #     cdef ccimgui.ImGuiSelectionUserData res = dereference(self._ptr).RangeLastItem
+    #     return res
+    # @range_last_item.setter
+    # def range_last_item(self, value: Any):
+    #     # dereference(self._ptr).RangeLastItem = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22294,17 +22294,17 @@ cdef class ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def selected(self):
-        """
-        Ms:w, app:r     /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
-        """
-        cdef bool res = dereference(self._ptr).Selected
-        return res
-    @selected.setter
-    def selected(self, value: bool):
-        # dereference(self._ptr).Selected = value
-        raise NotImplementedError
+    # @property
+    # def selected(self):
+    #     """
+    #     Ms:w, app:r     /  ms:w, app:r   // parameter for setall/setrange requests (true = select, false = unselect)
+    #     """
+    #     cdef bool res = dereference(self._ptr).Selected
+    #     return res
+    # @selected.setter
+    # def selected(self, value: bool):
+    #     # dereference(self._ptr).Selected = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -22313,18 +22313,18 @@ cdef class ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def type(self):
-        """
-        ------------------------------------------// BeginMultiSelect / EndMultiSelect
-        Ms:w, app:r     /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
-        """
-        cdef ImGuiSelectionRequestType res = dereference(self._ptr).Type
-        return res
-    @type.setter
-    def type(self, value: Any):
-        # dereference(self._ptr).Type = value
-        raise NotImplementedError
+    # @property
+    # def type(self):
+    #     """
+    #     ------------------------------------------// BeginMultiSelect / EndMultiSelect
+    #     Ms:w, app:r     /  ms:w, app:r   // request type. you'll most often receive 1 clear + 1 setrange with a single-item range.
+    #     """
+    #     cdef ImGuiSelectionRequestType res = dereference(self._ptr).Type
+    #     return res
+    # @type.setter
+    # def type(self, value: Any):
+    #     # dereference(self._ptr).Type = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -22341,7 +22341,7 @@ cdef class ImGuiSizeCallbackData:
     """
     cdef ccimgui.ImGuiSizeCallbackData* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiSizeCallbackData from_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
         if _ptr == NULL:
@@ -22350,7 +22350,7 @@ cdef class ImGuiSizeCallbackData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiSizeCallbackData from_heap_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
         wrapper = ImGuiSizeCallbackData.from_ptr(_ptr)
@@ -22358,7 +22358,7 @@ cdef class ImGuiSizeCallbackData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22466,7 +22466,7 @@ cdef class ImGuiStorage:
     """
     cdef ccimgui.ImGuiStorage* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiStorage from_ptr(ccimgui.ImGuiStorage* _ptr):
         if _ptr == NULL:
@@ -22475,7 +22475,7 @@ cdef class ImGuiStorage:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiStorage from_heap_ptr(ccimgui.ImGuiStorage* _ptr):
         wrapper = ImGuiStorage.from_ptr(_ptr)
@@ -22483,7 +22483,7 @@ cdef class ImGuiStorage:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22500,17 +22500,17 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImGuiStoragePair)
-    @property
-    def data(self):
-        """
-        [Internal]
-        """
-        cdef ccimgui.ImVector_ImGuiStoragePair res = dereference(self._ptr).Data
-        return ImVector_ImGuiStoragePair.from_ptr(res)
-    @data.setter
-    def data(self, value: ImVector_ImGuiStoragePair):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     """
+    #     [Internal]
+    #     """
+    #     cdef ccimgui.ImVector_ImGuiStoragePair res = dereference(self._ptr).Data
+    #     return ImVector_ImGuiStoragePair.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImVector_ImGuiStoragePair):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -22519,13 +22519,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def build_sort_by_key(self: ImGuiStorage):
-        """
-        Advanced: for quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
-        """
-        ccimgui.ImGuiStorage_BuildSortByKey(
-            self._ptr
-        )
+    # def build_sort_by_key(self: ImGuiStorage):
+    #     """
+    #     Advanced: for quicker full rebuild of a storage (instead of an incremental one), you may add all your contents and then sort once.
+    #     """
+    #     ccimgui.ImGuiStorage_BuildSortByKey(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -22534,15 +22534,15 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImGuiStorage):
-        """
-        - Get***() functions find pair, never add/allocate. Pairs are sorted so a query is O(log N)
-        - Set***() functions find pair, insertion on demand if missing.
-        - Sorted insertion is costly, paid once. A typical frame shouldn't need to insert any new pair.
-        """
-        ccimgui.ImGuiStorage_Clear(
-            self._ptr
-        )
+    # def clear(self: ImGuiStorage):
+    #     """
+    #     - Get***() functions find pair, never add/allocate. Pairs are sorted so a query is O(log N)
+    #     - Set***() functions find pair, insertion on demand if missing.
+    #     - Sorted insertion is costly, paid once. A typical frame shouldn't need to insert any new pair.
+    #     """
+    #     ccimgui.ImGuiStorage_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -22551,13 +22551,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def get_bool(self: ImGuiStorage, key: int, default_val: bool=False):
-        cdef bool res = ccimgui.ImGuiStorage_GetBool(
-            self._ptr,
-            key,
-            default_val
-        )
-        return res
+    # def get_bool(self: ImGuiStorage, key: int, default_val: bool=False):
+    #     cdef bool res = ccimgui.ImGuiStorage_GetBool(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -22566,13 +22566,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Bool)
-    def get_bool_ref(self: ImGuiStorage, key: int, default_val: bool=False):
-        cdef bool* res = ccimgui.ImGuiStorage_GetBoolRef(
-            self._ptr,
-            key,
-            default_val
-        )
-        return Bool(dereference(res))
+    # def get_bool_ref(self: ImGuiStorage, key: int, default_val: bool=False):
+    #     cdef bool* res = ccimgui.ImGuiStorage_GetBoolRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Bool(dereference(res))
     # [End Method]
 
     # [Method]
@@ -22581,13 +22581,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    def get_float(self: ImGuiStorage, key: int, default_val: float=0.0):
-        cdef float res = ccimgui.ImGuiStorage_GetFloat(
-            self._ptr,
-            key,
-            default_val
-        )
-        return res
+    # def get_float(self: ImGuiStorage, key: int, default_val: float=0.0):
+    #     cdef float res = ccimgui.ImGuiStorage_GetFloat(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -22596,13 +22596,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Float)
-    def get_float_ref(self: ImGuiStorage, key: int, default_val: float=0.0):
-        cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(
-            self._ptr,
-            key,
-            default_val
-        )
-        return Float(dereference(res))
+    # def get_float_ref(self: ImGuiStorage, key: int, default_val: float=0.0):
+    #     cdef float* res = ccimgui.ImGuiStorage_GetFloatRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Float(dereference(res))
     # [End Method]
 
     # [Method]
@@ -22611,13 +22611,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def get_int(self: ImGuiStorage, key: int, default_val: int=0):
-        cdef int res = ccimgui.ImGuiStorage_GetInt(
-            self._ptr,
-            key,
-            default_val
-        )
-        return res
+    # def get_int(self: ImGuiStorage, key: int, default_val: int=0):
+    #     cdef int res = ccimgui.ImGuiStorage_GetInt(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -22626,19 +22626,19 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Int)
-    def get_int_ref(self: ImGuiStorage, key: int, default_val: int=0):
-        """
-        - Get***Ref() functions finds pair, insert on demand if missing, return pointer. Useful if you intend to do Get+Set.
-        - References are only valid until a new value is added to the storage. Calling a Set***() function or a Get***Ref() function invalidates the pointer.
-        - A typical use case where this is convenient for quick hacking (e.g. add storage during a live Edit&Continue session if you can't modify existing struct)
-        float* pvar = ImGui::GetFloatRef(key); ImGui::SliderFloat("var", pvar, 0, 100.0f); some_var += *pvar;
-        """
-        cdef int* res = ccimgui.ImGuiStorage_GetIntRef(
-            self._ptr,
-            key,
-            default_val
-        )
-        return Int(dereference(res))
+    # def get_int_ref(self: ImGuiStorage, key: int, default_val: int=0):
+    #     """
+    #     - Get***Ref() functions finds pair, insert on demand if missing, return pointer. Useful if you intend to do Get+Set.
+    #     - References are only valid until a new value is added to the storage. Calling a Set***() function or a Get***Ref() function invalidates the pointer.
+    #     - A typical use case where this is convenient for quick hacking (e.g. add storage during a live Edit&Continue session if you can't modify existing struct)
+    #     float* pvar = ImGui::GetFloatRef(key); ImGui::SliderFloat("var", pvar, 0, 100.0f); some_var += *pvar;
+    #     """
+    #     cdef int* res = ccimgui.ImGuiStorage_GetIntRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return Int(dereference(res))
     # [End Method]
 
     # [Method]
@@ -22647,15 +22647,15 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    def get_void_ptr(self: ImGuiStorage, key: int):
-        """
-        Default_val is null
-        """
-        cdef void* res = ccimgui.ImGuiStorage_GetVoidPtr(
-            self._ptr,
-            key
-        )
-        return res
+    # def get_void_ptr(self: ImGuiStorage, key: int):
+    #     """
+    #     Default_val is null
+    #     """
+    #     cdef void* res = ccimgui.ImGuiStorage_GetVoidPtr(
+    #         self._ptr,
+    #         key
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -22664,13 +22664,13 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    def get_void_ptr_ref(self: ImGuiStorage, key: int, default_val: Any=None):
-        cdef void** res = ccimgui.ImGuiStorage_GetVoidPtrRef(
-            self._ptr,
-            key,
-            default_val
-        )
-        return res
+    # def get_void_ptr_ref(self: ImGuiStorage, key: int, default_val: Any=None):
+    #     cdef void** res = ccimgui.ImGuiStorage_GetVoidPtrRef(
+    #         self._ptr,
+    #         key,
+    #         default_val
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -22679,14 +22679,14 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_all_int(self: ImGuiStorage, val: int):
-        """
-        Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
-        """
-        ccimgui.ImGuiStorage_SetAllInt(
-            self._ptr,
-            val
-        )
+    # def set_all_int(self: ImGuiStorage, val: int):
+    #     """
+    #     Obsolete: use on your own storage if you know only integer are being stored (open/close all tree nodes)
+    #     """
+    #     ccimgui.ImGuiStorage_SetAllInt(
+    #         self._ptr,
+    #         val
+    #     )
     # [End Method]
 
     # [Method]
@@ -22695,12 +22695,12 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_bool(self: ImGuiStorage, key: int, val: bool):
-        ccimgui.ImGuiStorage_SetBool(
-            self._ptr,
-            key,
-            val
-        )
+    # def set_bool(self: ImGuiStorage, key: int, val: bool):
+    #     ccimgui.ImGuiStorage_SetBool(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
     # [End Method]
 
     # [Method]
@@ -22709,12 +22709,12 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_float(self: ImGuiStorage, key: int, val: float):
-        ccimgui.ImGuiStorage_SetFloat(
-            self._ptr,
-            key,
-            val
-        )
+    # def set_float(self: ImGuiStorage, key: int, val: float):
+    #     ccimgui.ImGuiStorage_SetFloat(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
     # [End Method]
 
     # [Method]
@@ -22723,12 +22723,12 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_int(self: ImGuiStorage, key: int, val: int):
-        ccimgui.ImGuiStorage_SetInt(
-            self._ptr,
-            key,
-            val
-        )
+    # def set_int(self: ImGuiStorage, key: int, val: int):
+    #     ccimgui.ImGuiStorage_SetInt(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
     # [End Method]
 
     # [Method]
@@ -22737,12 +22737,12 @@ cdef class ImGuiStorage:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_void_ptr(self: ImGuiStorage, key: int, val: Any):
-        ccimgui.ImGuiStorage_SetVoidPtr(
-            self._ptr,
-            key,
-            val
-        )
+    # def set_void_ptr(self: ImGuiStorage, key: int, val: Any):
+    #     ccimgui.ImGuiStorage_SetVoidPtr(
+    #         self._ptr,
+    #         key,
+    #         val
+    #     )
     # [End Method]
 # [End Class]
 
@@ -22758,7 +22758,7 @@ cdef class ImGuiStoragePair:
     """
     cdef ccimgui.ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiStoragePair from_ptr(ccimgui.ImGuiStoragePair* _ptr):
         if _ptr == NULL:
@@ -22767,7 +22767,7 @@ cdef class ImGuiStoragePair:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiStoragePair from_heap_ptr(ccimgui.ImGuiStoragePair* _ptr):
         wrapper = ImGuiStoragePair.from_ptr(_ptr)
@@ -22775,7 +22775,7 @@ cdef class ImGuiStoragePair:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22792,14 +22792,14 @@ cdef class ImGuiStoragePair:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def key(self):
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).key
-        return res
-    @key.setter
-    def key(self, value: int):
-        # dereference(self._ptr).key = value
-        raise NotImplementedError
+    # @property
+    # def key(self):
+    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).key
+    #     return res
+    # @key.setter
+    # def key(self, value: int):
+    #     # dereference(self._ptr).key = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -22812,7 +22812,7 @@ cdef class ImGuiStoragePair:
 cdef class ImGuiStyle:
     cdef ccimgui.ImGuiStyle* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiStyle from_ptr(ccimgui.ImGuiStyle* _ptr):
         if _ptr == NULL:
@@ -22821,7 +22821,7 @@ cdef class ImGuiStyle:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiStyle from_heap_ptr(ccimgui.ImGuiStyle* _ptr):
         wrapper = ImGuiStyle.from_ptr(_ptr)
@@ -22829,7 +22829,7 @@ cdef class ImGuiStyle:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23871,11 +23871,11 @@ cdef class ImGuiStyle:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
-        ccimgui.ImGuiStyle_ScaleAllSizes(
-            self._ptr,
-            scale_factor
-        )
+    # def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
+    #     ccimgui.ImGuiStyle_ScaleAllSizes(
+    #         self._ptr,
+    #         scale_factor
+    #     )
     # [End Method]
 # [End Class]
 
@@ -23982,17 +23982,17 @@ cdef class ImGuiTableColumnSortSpecs:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def sort_order(self):
-        """
-        Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
-        """
-        cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
-        return res
-    @sort_order.setter
-    def sort_order(self, value: int):
-        # dereference(self._ptr).SortOrder = value
-        raise NotImplementedError
+    # @property
+    # def sort_order(self):
+    #     """
+    #     Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
+    #     """
+    #     cdef ccimgui.ImS16 res = dereference(self._ptr).SortOrder
+    #     return res
+    # @sort_order.setter
+    # def sort_order(self, value: int):
+    #     # dereference(self._ptr).SortOrder = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -24011,7 +24011,7 @@ cdef class ImGuiTableSortSpecs:
     """
     cdef ccimgui.ImGuiTableSortSpecs* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiTableSortSpecs from_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
         if _ptr == NULL:
@@ -24020,7 +24020,7 @@ cdef class ImGuiTableSortSpecs:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiTableSortSpecs from_heap_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
         wrapper = ImGuiTableSortSpecs.from_ptr(_ptr)
@@ -24028,7 +24028,7 @@ cdef class ImGuiTableSortSpecs:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24105,39 +24105,39 @@ cdef class ImGuiTableSortSpecs:
 # ?active(False)
 # ?invisible(True)
 # ?custom_comment_only(False)
-cdef class ImGuiTextBuffer:
-    """
-    Helper: Growable text buffer for logging/accumulating text
-    (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
-    """
-    cdef ccimgui.ImGuiTextBuffer* _ptr
-    cdef bool dynamically_allocated
+# cdef class ImGuiTextBuffer:
+#     """
+#     Helper: Growable text buffer for logging/accumulating text
+#     (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')
+#     """
+#     cdef ccimgui.ImGuiTextBuffer* _ptr
+#     cdef bool dynamically_allocated
 
-    @staticmethod
-    cdef ImGuiTextBuffer from_ptr(ccimgui.ImGuiTextBuffer* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImGuiTextBuffer wrapper = ImGuiTextBuffer.__new__(ImGuiTextBuffer)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
+#     @staticmethod
+#     cdef ImGuiTextBuffer from_ptr(ccimgui.ImGuiTextBuffer* _ptr):
+#         if _ptr == NULL:
+#             return None
+#         cdef ImGuiTextBuffer wrapper = ImGuiTextBuffer.__new__(ImGuiTextBuffer)
+#         wrapper._ptr = _ptr
+#         wrapper.dynamically_allocated = False
+#         return wrapper
 
-    @staticmethod
-    cdef ImGuiTextBuffer from_heap_ptr(ccimgui.ImGuiTextBuffer* _ptr):
-        wrapper = ImGuiTextBuffer.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
+#     @staticmethod
+#     cdef ImGuiTextBuffer from_heap_ptr(ccimgui.ImGuiTextBuffer* _ptr):
+#         wrapper = ImGuiTextBuffer.from_ptr(_ptr)
+#         if wrapper is None:
+#             return None
+#         wrapper.dynamically_allocated = True
+#         return wrapper
 
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
+#     def __init__(self):
+#         raise TypeError("This class cannot be instantiated directly.")
 
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
+#     def __hash__(self) -> int:
+#         if self._ptr == NULL:
+#             raise RuntimeError("Won't hash a NULL pointer")
+#         cdef unsigned int ptr_int = <uintptr_t>self._ptr
+#         return hash(ptr_int)
     # [End Class Constants]
 
     # [Field]
@@ -24146,14 +24146,14 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVector_char)
-    @property
-    def buf(self):
-        cdef ccimgui.ImVector_char res = dereference(self._ptr).Buf
-        return ImVector_char.from_ptr(res)
-    @buf.setter
-    def buf(self, value: ImVector_char):
-        # dereference(self._ptr).Buf = value._ptr
-        raise NotImplementedError
+    # @property
+    # def buf(self):
+    #     cdef ccimgui.ImVector_char res = dereference(self._ptr).Buf
+    #     return ImVector_char.from_ptr(res)
+    # @buf.setter
+    # def buf(self, value: ImVector_char):
+    #     # dereference(self._ptr).Buf = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -24162,14 +24162,14 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
-        bytes_str_end = _bytes(str_end) if str_end is not None else None
+#     def append(self: ImGuiTextBuffer, str_: str, str_end: str=None):
+#         bytes_str_end = _bytes(str_end) if str_end is not None else None
 
-        ccimgui.ImGuiTextBuffer_append(
-            self._ptr,
-            _bytes(str_),
-            ((<char*>bytes_str_end if str_end is not None else NULL))
-        )
+#         ccimgui.ImGuiTextBuffer_append(
+#             self._ptr,
+#             _bytes(str_),
+#             ((<char*>bytes_str_end if str_end is not None else NULL))
+#         )
     # [End Method]
 
     # [Method]
@@ -24178,11 +24178,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def appendf(self: ImGuiTextBuffer, fmt: str):
-        ccimgui.ImGuiTextBuffer_appendf(
-            self._ptr,
-            _bytes(fmt)
-        )
+    # def appendf(self: ImGuiTextBuffer, fmt: str):
+    #     ccimgui.ImGuiTextBuffer_appendf(
+    #         self._ptr,
+    #         _bytes(fmt)
+    #     )
     # [End Method]
 
     # [Method]
@@ -24191,11 +24191,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def appendfv(self: ImGuiTextBuffer, fmt: str):
-        ccimgui.ImGuiTextBuffer_appendfv(
-            self._ptr,
-            _bytes(fmt)
-        )
+    # def appendfv(self: ImGuiTextBuffer, fmt: str):
+    #     ccimgui.ImGuiTextBuffer_appendfv(
+    #         self._ptr,
+    #         _bytes(fmt)
+    #     )
     # [End Method]
 
     # [Method]
@@ -24204,11 +24204,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def begin(self: ImGuiTextBuffer):
-        cdef const char* res = ccimgui.ImGuiTextBuffer_begin(
-            self._ptr
-        )
-        return _from_bytes(res)
+    # def begin(self: ImGuiTextBuffer):
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_begin(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
@@ -24217,11 +24217,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def c_str(self: ImGuiTextBuffer):
-        cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
-            self._ptr
-        )
-        return _from_bytes(res)
+    # def c_str(self: ImGuiTextBuffer):
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_c_str(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
@@ -24230,10 +24230,10 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImGuiTextBuffer):
-        ccimgui.ImGuiTextBuffer_clear(
-            self._ptr
-        )
+    # def clear(self: ImGuiTextBuffer):
+    #     ccimgui.ImGuiTextBuffer_clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -24242,11 +24242,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def empty(self: ImGuiTextBuffer):
-        cdef bool res = ccimgui.ImGuiTextBuffer_empty(
-            self._ptr
-        )
-        return res
+    # def empty(self: ImGuiTextBuffer):
+    #     cdef bool res = ccimgui.ImGuiTextBuffer_empty(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -24255,14 +24255,14 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def end(self: ImGuiTextBuffer):
-        """
-        Buf is zero-terminated, so end() will point on the zero-terminator
-        """
-        cdef const char* res = ccimgui.ImGuiTextBuffer_end(
-            self._ptr
-        )
-        return _from_bytes(res)
+    # def end(self: ImGuiTextBuffer):
+    #     """
+    #     Buf is zero-terminated, so end() will point on the zero-terminator
+    #     """
+    #     cdef const char* res = ccimgui.ImGuiTextBuffer_end(
+    #         self._ptr
+    #     )
+    #     return _from_bytes(res)
     # [End Method]
 
     # [Method]
@@ -24271,11 +24271,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def reserve(self: ImGuiTextBuffer, capacity: int):
-        ccimgui.ImGuiTextBuffer_reserve(
-            self._ptr,
-            capacity
-        )
+    # def reserve(self: ImGuiTextBuffer, capacity: int):
+    #     ccimgui.ImGuiTextBuffer_reserve(
+    #         self._ptr,
+    #         capacity
+    #     )
     # [End Method]
 
     # [Method]
@@ -24284,11 +24284,11 @@ cdef class ImGuiTextBuffer:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def size(self: ImGuiTextBuffer):
-        cdef int res = ccimgui.ImGuiTextBuffer_size(
-            self._ptr
-        )
-        return res
+    # def size(self: ImGuiTextBuffer):
+    #     cdef int res = ccimgui.ImGuiTextBuffer_size(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 # [End Class]
 
@@ -24305,7 +24305,7 @@ cdef class ImGuiTextFilter:
     """
     cdef ccimgui.ImGuiTextFilter* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiTextFilter from_ptr(ccimgui.ImGuiTextFilter* _ptr):
         if _ptr == NULL:
@@ -24314,7 +24314,7 @@ cdef class ImGuiTextFilter:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiTextFilter from_heap_ptr(ccimgui.ImGuiTextFilter* _ptr):
         wrapper = ImGuiTextFilter.from_ptr(_ptr)
@@ -24322,7 +24322,7 @@ cdef class ImGuiTextFilter:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24339,14 +24339,14 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def count_grep(self):
-        cdef int res = dereference(self._ptr).CountGrep
-        return res
-    @count_grep.setter
-    def count_grep(self, value: int):
-        # dereference(self._ptr).CountGrep = value
-        raise NotImplementedError
+    # @property
+    # def count_grep(self):
+    #     cdef int res = dereference(self._ptr).CountGrep
+    #     return res
+    # @count_grep.setter
+    # def count_grep(self, value: int):
+    #     # dereference(self._ptr).CountGrep = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24355,14 +24355,14 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVector_ImGuiTextFilter_ImGuiTextRange)
-    @property
-    def filters(self):
-        cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange res = dereference(self._ptr).Filters
-        return ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
-    @filters.setter
-    def filters(self, value: ImVector_ImGuiTextFilter_ImGuiTextRange):
-        # dereference(self._ptr).Filters = value._ptr
-        raise NotImplementedError
+    # @property
+    # def filters(self):
+    #     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange res = dereference(self._ptr).Filters
+    #     return ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
+    # @filters.setter
+    # def filters(self, value: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    #     # dereference(self._ptr).Filters = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24371,14 +24371,14 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def input_buf(self):
-        cdef char* res = dereference(self._ptr).InputBuf
-        return _from_bytes(res)
-    @input_buf.setter
-    def input_buf(self, value: str):
-        # dereference(self._ptr).InputBuf = _bytes(value)
-        raise NotImplementedError
+    # @property
+    # def input_buf(self):
+    #     cdef char* res = dereference(self._ptr).InputBuf
+    #     return _from_bytes(res)
+    # @input_buf.setter
+    # def input_buf(self, value: str):
+    #     # dereference(self._ptr).InputBuf = _bytes(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -24387,10 +24387,10 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def build(self: ImGuiTextFilter):
-        ccimgui.ImGuiTextFilter_Build(
-            self._ptr
-        )
+    # def build(self: ImGuiTextFilter):
+    #     ccimgui.ImGuiTextFilter_Build(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -24399,10 +24399,10 @@ cdef class ImGuiTextFilter:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear(self: ImGuiTextFilter):
-        ccimgui.ImGuiTextFilter_Clear(
-            self._ptr
-        )
+    # def clear(self: ImGuiTextFilter):
+    #     ccimgui.ImGuiTextFilter_Clear(
+    #         self._ptr
+    #     )
     # [End Method]
 
     # [Method]
@@ -24509,7 +24509,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     """
     cdef ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
         if _ptr == NULL:
@@ -24518,7 +24518,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
         wrapper = ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
@@ -24526,7 +24526,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24543,14 +24543,14 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    @property
-    def b(self):
-        cdef const char* res = dereference(self._ptr).b
-        return _from_bytes(res)
-    @b.setter
-    def b(self, value: str):
-        # dereference(self._ptr).b = _bytes(value)
-        raise NotImplementedError
+    # @property
+    # def b(self):
+    #     cdef const char* res = dereference(self._ptr).b
+    #     return _from_bytes(res)
+    # @b.setter
+    # def b(self, value: str):
+    #     # dereference(self._ptr).b = _bytes(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24559,14 +24559,14 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    @property
-    def e(self):
-        cdef const char* res = dereference(self._ptr).e
-        return _from_bytes(res)
-    @e.setter
-    def e(self, value: str):
-        # dereference(self._ptr).e = _bytes(value)
-        raise NotImplementedError
+    # @property
+    # def e(self):
+    #     cdef const char* res = dereference(self._ptr).e
+    #     return _from_bytes(res)
+    # @e.setter
+    # def e(self, value: str):
+    #     # dereference(self._ptr).e = _bytes(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Method]
@@ -24575,11 +24575,11 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def empty(self: ImGuiTextFilter_ImGuiTextRange):
-        cdef bool res = ccimgui.ImGuiTextFilter_ImGuiTextRange_empty(
-            self._ptr
-        )
-        return res
+    # def empty(self: ImGuiTextFilter_ImGuiTextRange):
+    #     cdef bool res = ccimgui.ImGuiTextFilter_ImGuiTextRange_empty(
+    #         self._ptr
+    #     )
+    #     return res
     # [End Method]
 
     # [Method]
@@ -24588,12 +24588,12 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
-        ccimgui.ImGuiTextFilter_ImGuiTextRange_split(
-            self._ptr,
-            separator,
-            out._ptr
-        )
+    # def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    #     ccimgui.ImGuiTextFilter_ImGuiTextRange_split(
+    #         self._ptr,
+    #         separator,
+    #         out._ptr
+    #     )
     # [End Method]
 # [End Class]
 
@@ -24615,7 +24615,7 @@ cdef class ImGuiViewport:
     """
     cdef ccimgui.ImGuiViewport* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiViewport from_ptr(ccimgui.ImGuiViewport* _ptr):
         if _ptr == NULL:
@@ -24624,7 +24624,7 @@ cdef class ImGuiViewport:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiViewport from_heap_ptr(ccimgui.ImGuiViewport* _ptr):
         wrapper = ImGuiViewport.from_ptr(_ptr)
@@ -24632,7 +24632,7 @@ cdef class ImGuiViewport:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24744,17 +24744,17 @@ cdef class ImGuiViewport:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_handle(self):
-        """
-        Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
-        """
-        cdef void* res = dereference(self._ptr).PlatformHandle
-        return res
-    @platform_handle.setter
-    def platform_handle(self, value: Any):
-        # dereference(self._ptr).PlatformHandle = value
-        raise NotImplementedError
+    # @property
+    # def platform_handle(self):
+    #     """
+    #     Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
+    #     """
+    #     cdef void* res = dereference(self._ptr).PlatformHandle
+    #     return res
+    # @platform_handle.setter
+    # def platform_handle(self, value: Any):
+    #     # dereference(self._ptr).PlatformHandle = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24763,17 +24763,17 @@ cdef class ImGuiViewport:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_handle_raw(self):
-        """
-        Void* to hold lower-level, platform-native window handle (under win32 this is expected to be a hwnd, unused for other platforms), when using an abstraction layer like glfw or sdl (where platformhandle would be a sdl_window*)
-        """
-        cdef void* res = dereference(self._ptr).PlatformHandleRaw
-        return res
-    @platform_handle_raw.setter
-    def platform_handle_raw(self, value: Any):
-        # dereference(self._ptr).PlatformHandleRaw = value
-        raise NotImplementedError
+    # @property
+    # def platform_handle_raw(self):
+    #     """
+    #     Void* to hold lower-level, platform-native window handle (under win32 this is expected to be a hwnd, unused for other platforms), when using an abstraction layer like glfw or sdl (where platformhandle would be a sdl_window*)
+    #     """
+    #     cdef void* res = dereference(self._ptr).PlatformHandleRaw
+    #     return res
+    # @platform_handle_raw.setter
+    # def platform_handle_raw(self, value: Any):
+    #     # dereference(self._ptr).PlatformHandleRaw = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24839,17 +24839,17 @@ cdef class ImGuiViewport:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def platform_user_data(self):
-        """
-        Void* to hold custom data structure for the os / platform (e.g. windowing info, render context). generally set by your platform_createwindow function.
-        """
-        cdef void* res = dereference(self._ptr).PlatformUserData
-        return res
-    @platform_user_data.setter
-    def platform_user_data(self, value: Any):
-        # dereference(self._ptr).PlatformUserData = value
-        raise NotImplementedError
+    # @property
+    # def platform_user_data(self):
+    #     """
+    #     Void* to hold custom data structure for the os / platform (e.g. windowing info, render context). generally set by your platform_createwindow function.
+    #     """
+    #     cdef void* res = dereference(self._ptr).PlatformUserData
+    #     return res
+    # @platform_user_data.setter
+    # def platform_user_data(self, value: Any):
+    #     # dereference(self._ptr).PlatformUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24896,22 +24896,22 @@ cdef class ImGuiViewport:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def renderer_user_data(self):
-        """
-        Platform/Backend Dependent Data
-        Our design separate the Renderer and Platform backends to facilitate combining default backends with each others.
-        When our create your own backend for a custom engine, it is possible that both Renderer and Platform will be handled
-        by the same system and you may not need to use all the UserData/Handle fields.
-        The library never uses those fields, they are merely storage to facilitate backend implementation.
-        Void* to hold custom data structure for the renderer (e.g. swap chain, framebuffers etc.). generally set by your renderer_createwindow function.
-        """
-        cdef void* res = dereference(self._ptr).RendererUserData
-        return res
-    @renderer_user_data.setter
-    def renderer_user_data(self, value: Any):
-        # dereference(self._ptr).RendererUserData = value
-        raise NotImplementedError
+    # @property
+    # def renderer_user_data(self):
+    #     """
+    #     Platform/Backend Dependent Data
+    #     Our design separate the Renderer and Platform backends to facilitate combining default backends with each others.
+    #     When our create your own backend for a custom engine, it is possible that both Renderer and Platform will be handled
+    #     by the same system and you may not need to use all the UserData/Handle fields.
+    #     The library never uses those fields, they are merely storage to facilitate backend implementation.
+    #     Void* to hold custom data structure for the renderer (e.g. swap chain, framebuffers etc.). generally set by your renderer_createwindow function.
+    #     """
+    #     cdef void* res = dereference(self._ptr).RendererUserData
+    #     return res
+    # @renderer_user_data.setter
+    # def renderer_user_data(self, value: Any):
+    #     # dereference(self._ptr).RendererUserData = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25019,7 +25019,7 @@ cdef class ImGuiWindowClass:
     """
     cdef ccimgui.ImGuiWindowClass* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImGuiWindowClass from_ptr(ccimgui.ImGuiWindowClass* _ptr):
         if _ptr == NULL:
@@ -25028,7 +25028,7 @@ cdef class ImGuiWindowClass:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImGuiWindowClass from_heap_ptr(ccimgui.ImGuiWindowClass* _ptr):
         wrapper = ImGuiWindowClass.from_ptr(_ptr)
@@ -25036,7 +25036,7 @@ cdef class ImGuiWindowClass:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25053,17 +25053,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def class_id(self):
-        """
-        User data. 0 = default class (unclassed). windows of different classes cannot be docked with each others.
-        """
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).ClassId
-        return res
-    @class_id.setter
-    def class_id(self, value: int):
-        # dereference(self._ptr).ClassId = value
-        raise NotImplementedError
+    # @property
+    # def class_id(self):
+    #     """
+    #     User data. 0 = default class (unclassed). windows of different classes cannot be docked with each others.
+    #     """
+    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).ClassId
+    #     return res
+    # @class_id.setter
+    # def class_id(self, value: int):
+    #     # dereference(self._ptr).ClassId = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25072,17 +25072,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def dock_node_flags_override_set(self):
-        """
-        [experimental] dock node flags to set when a window of this class is hosted by a dock node (it doesn't have to be selected!)
-        """
-        cdef ccimgui.ImGuiDockNodeFlags res = dereference(self._ptr).DockNodeFlagsOverrideSet
-        return res
-    @dock_node_flags_override_set.setter
-    def dock_node_flags_override_set(self, value: int):
-        # dereference(self._ptr).DockNodeFlagsOverrideSet = value
-        raise NotImplementedError
+    # @property
+    # def dock_node_flags_override_set(self):
+    #     """
+    #     [experimental] dock node flags to set when a window of this class is hosted by a dock node (it doesn't have to be selected!)
+    #     """
+    #     cdef ccimgui.ImGuiDockNodeFlags res = dereference(self._ptr).DockNodeFlagsOverrideSet
+    #     return res
+    # @dock_node_flags_override_set.setter
+    # def dock_node_flags_override_set(self, value: int):
+    #     # dereference(self._ptr).DockNodeFlagsOverrideSet = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25091,17 +25091,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def docking_allow_unclassed(self):
-        """
-        Set to true to allow windows of this class to be docked/merged with an unclassed window. // fixme-dock: move to docknodeflags override?
-        """
-        cdef bool res = dereference(self._ptr).DockingAllowUnclassed
-        return res
-    @docking_allow_unclassed.setter
-    def docking_allow_unclassed(self, value: bool):
-        # dereference(self._ptr).DockingAllowUnclassed = value
-        raise NotImplementedError
+    # @property
+    # def docking_allow_unclassed(self):
+    #     """
+    #     Set to true to allow windows of this class to be docked/merged with an unclassed window. // fixme-dock: move to docknodeflags override?
+    #     """
+    #     cdef bool res = dereference(self._ptr).DockingAllowUnclassed
+    #     return res
+    # @docking_allow_unclassed.setter
+    # def docking_allow_unclassed(self, value: bool):
+    #     # dereference(self._ptr).DockingAllowUnclassed = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25110,17 +25110,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    @property
-    def docking_always_tab_bar(self):
-        """
-        Set to true to enforce single floating windows of this class always having their own docking node (equivalent of setting the global io.configdockingalwaystabbar)
-        """
-        cdef bool res = dereference(self._ptr).DockingAlwaysTabBar
-        return res
-    @docking_always_tab_bar.setter
-    def docking_always_tab_bar(self, value: bool):
-        # dereference(self._ptr).DockingAlwaysTabBar = value
-        raise NotImplementedError
+    # @property
+    # def docking_always_tab_bar(self):
+    #     """
+    #     Set to true to enforce single floating windows of this class always having their own docking node (equivalent of setting the global io.configdockingalwaystabbar)
+    #     """
+    #     cdef bool res = dereference(self._ptr).DockingAlwaysTabBar
+    #     return res
+    # @docking_always_tab_bar.setter
+    # def docking_always_tab_bar(self, value: bool):
+    #     # dereference(self._ptr).DockingAlwaysTabBar = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25129,17 +25129,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def focus_route_parent_window_id(self):
-        """
-        Id of parent window for shortcut focus route evaluation, e.g. shortcut() call from parent window will succeed when this window is focused.
-        """
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).FocusRouteParentWindowId
-        return res
-    @focus_route_parent_window_id.setter
-    def focus_route_parent_window_id(self, value: int):
-        # dereference(self._ptr).FocusRouteParentWindowId = value
-        raise NotImplementedError
+    # @property
+    # def focus_route_parent_window_id(self):
+    #     """
+    #     Id of parent window for shortcut focus route evaluation, e.g. shortcut() call from parent window will succeed when this window is focused.
+    #     """
+    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).FocusRouteParentWindowId
+    #     return res
+    # @focus_route_parent_window_id.setter
+    # def focus_route_parent_window_id(self, value: int):
+    #     # dereference(self._ptr).FocusRouteParentWindowId = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25148,17 +25148,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def parent_viewport_id(self):
-        """
-        Hint for the platform backend. -1: use default. 0: request platform backend to not parent the platform. != 0: request platform backend to create a parent<>child relationship between the platform windows. not conforming backends are free to e.g. parent every viewport to the main viewport or not.
-        """
-        cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
-        return res
-    @parent_viewport_id.setter
-    def parent_viewport_id(self, value: int):
-        # dereference(self._ptr).ParentViewportId = value
-        raise NotImplementedError
+    # @property
+    # def parent_viewport_id(self):
+    #     """
+    #     Hint for the platform backend. -1: use default. 0: request platform backend to not parent the platform. != 0: request platform backend to create a parent<>child relationship between the platform windows. not conforming backends are free to e.g. parent every viewport to the main viewport or not.
+    #     """
+    #     cdef ccimgui.ImGuiID res = dereference(self._ptr).ParentViewportId
+    #     return res
+    # @parent_viewport_id.setter
+    # def parent_viewport_id(self, value: int):
+    #     # dereference(self._ptr).ParentViewportId = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25167,17 +25167,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def tab_item_flags_override_set(self):
-        """
-        [experimental] tabitem flags to set when a window of this class gets submitted into a dock node tab bar. may use with imguitabitemflags_leading or imguitabitemflags_trailing.
-        """
-        cdef ccimgui.ImGuiTabItemFlags res = dereference(self._ptr).TabItemFlagsOverrideSet
-        return res
-    @tab_item_flags_override_set.setter
-    def tab_item_flags_override_set(self, value: int):
-        # dereference(self._ptr).TabItemFlagsOverrideSet = value
-        raise NotImplementedError
+    # @property
+    # def tab_item_flags_override_set(self):
+    #     """
+    #     [experimental] tabitem flags to set when a window of this class gets submitted into a dock node tab bar. may use with imguitabitemflags_leading or imguitabitemflags_trailing.
+    #     """
+    #     cdef ccimgui.ImGuiTabItemFlags res = dereference(self._ptr).TabItemFlagsOverrideSet
+    #     return res
+    # @tab_item_flags_override_set.setter
+    # def tab_item_flags_override_set(self, value: int):
+    #     # dereference(self._ptr).TabItemFlagsOverrideSet = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25186,17 +25186,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def viewport_flags_override_clear(self):
-        """
-        Viewport flags to clear when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
-        """
-        cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideClear
-        return res
-    @viewport_flags_override_clear.setter
-    def viewport_flags_override_clear(self, value: int):
-        # dereference(self._ptr).ViewportFlagsOverrideClear = value
-        raise NotImplementedError
+    # @property
+    # def viewport_flags_override_clear(self):
+    #     """
+    #     Viewport flags to clear when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
+    #     """
+    #     cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideClear
+    #     return res
+    # @viewport_flags_override_clear.setter
+    # def viewport_flags_override_clear(self, value: int):
+    #     # dereference(self._ptr).ViewportFlagsOverrideClear = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25205,17 +25205,17 @@ cdef class ImGuiWindowClass:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def viewport_flags_override_set(self):
-        """
-        Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
-        """
-        cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideSet
-        return res
-    @viewport_flags_override_set.setter
-    def viewport_flags_override_set(self, value: int):
-        # dereference(self._ptr).ViewportFlagsOverrideSet = value
-        raise NotImplementedError
+    # @property
+    # def viewport_flags_override_set(self):
+    #     """
+    #     Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
+    #     """
+    #     cdef ccimgui.ImGuiViewportFlags res = dereference(self._ptr).ViewportFlagsOverrideSet
+    #     return res
+    # @viewport_flags_override_set.setter
+    # def viewport_flags_override_set(self, value: int):
+    #     # dereference(self._ptr).ViewportFlagsOverrideSet = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25228,7 +25228,7 @@ cdef class ImGuiWindowClass:
 cdef class ImVec2:
     cdef ccimgui.ImVec2* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVec2 from_ptr(ccimgui.ImVec2* _ptr):
         if _ptr == NULL:
@@ -25237,7 +25237,7 @@ cdef class ImVec2:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVec2 from_heap_ptr(ccimgui.ImVec2* _ptr):
         wrapper = ImVec2.from_ptr(_ptr)
@@ -25245,7 +25245,7 @@ cdef class ImVec2:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25262,14 +25262,14 @@ cdef class ImVec2:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def x(self):
-        cdef float res = dereference(self._ptr).x
-        return res
-    @x.setter
-    def x(self, value: float):
-        # dereference(self._ptr).x = value
-        raise NotImplementedError
+    # @property
+    # def x(self):
+    #     cdef float res = dereference(self._ptr).x
+    #     return res
+    # @x.setter
+    # def x(self, value: float):
+    #     # dereference(self._ptr).x = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25278,14 +25278,14 @@ cdef class ImVec2:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def y(self):
-        cdef float res = dereference(self._ptr).y
-        return res
-    @y.setter
-    def y(self, value: float):
-        # dereference(self._ptr).y = value
-        raise NotImplementedError
+    # @property
+    # def y(self):
+    #     cdef float res = dereference(self._ptr).y
+    #     return res
+    # @y.setter
+    # def y(self, value: float):
+    #     # dereference(self._ptr).y = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25301,7 +25301,7 @@ cdef class ImVec4:
     """
     cdef ccimgui.ImVec4* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVec4 from_ptr(ccimgui.ImVec4* _ptr):
         if _ptr == NULL:
@@ -25310,7 +25310,7 @@ cdef class ImVec4:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVec4 from_heap_ptr(ccimgui.ImVec4* _ptr):
         wrapper = ImVec4.from_ptr(_ptr)
@@ -25318,7 +25318,7 @@ cdef class ImVec4:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25335,14 +25335,14 @@ cdef class ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def w(self):
-        cdef float res = dereference(self._ptr).w
-        return res
-    @w.setter
-    def w(self, value: float):
-        # dereference(self._ptr).w = value
-        raise NotImplementedError
+    # @property
+    # def w(self):
+    #     cdef float res = dereference(self._ptr).w
+    #     return res
+    # @w.setter
+    # def w(self, value: float):
+    #     # dereference(self._ptr).w = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25351,14 +25351,14 @@ cdef class ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def x(self):
-        cdef float res = dereference(self._ptr).x
-        return res
-    @x.setter
-    def x(self, value: float):
-        # dereference(self._ptr).x = value
-        raise NotImplementedError
+    # @property
+    # def x(self):
+    #     cdef float res = dereference(self._ptr).x
+    #     return res
+    # @x.setter
+    # def x(self, value: float):
+    #     # dereference(self._ptr).x = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25367,14 +25367,14 @@ cdef class ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def y(self):
-        cdef float res = dereference(self._ptr).y
-        return res
-    @y.setter
-    def y(self, value: float):
-        # dereference(self._ptr).y = value
-        raise NotImplementedError
+    # @property
+    # def y(self):
+    #     cdef float res = dereference(self._ptr).y
+    #     return res
+    # @y.setter
+    # def y(self, value: float):
+    #     # dereference(self._ptr).y = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25383,14 +25383,14 @@ cdef class ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    @property
-    def z(self):
-        cdef float res = dereference(self._ptr).z
-        return res
-    @z.setter
-    def z(self, value: float):
-        # dereference(self._ptr).z = value
-        raise NotImplementedError
+    # @property
+    # def z(self):
+    #     cdef float res = dereference(self._ptr).z
+    #     return res
+    # @z.setter
+    # def z(self, value: float):
+    #     # dereference(self._ptr).z = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25403,7 +25403,7 @@ cdef class ImVec4:
 cdef class ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImDrawChannel from_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
         if _ptr == NULL:
@@ -25412,7 +25412,7 @@ cdef class ImVector_ImDrawChannel:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImDrawChannel from_heap_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
         wrapper = ImVector_ImDrawChannel.from_ptr(_ptr)
@@ -25420,7 +25420,7 @@ cdef class ImVector_ImDrawChannel:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25437,14 +25437,14 @@ cdef class ImVector_ImDrawChannel:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25453,14 +25453,14 @@ cdef class ImVector_ImDrawChannel:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImDrawChannel)
-    @property
-    def data(self):
-        cdef ccimgui.ImDrawChannel* res = dereference(self._ptr).Data
-        return ImDrawChannel.from_ptr(res)
-    @data.setter
-    def data(self, value: ImDrawChannel):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImDrawChannel* res = dereference(self._ptr).Data
+    #     return ImDrawChannel.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImDrawChannel):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25469,14 +25469,14 @@ cdef class ImVector_ImDrawChannel:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25489,7 +25489,7 @@ cdef class ImVector_ImDrawChannel:
 cdef class ImVector_ImDrawCmd:
     cdef ccimgui.ImVector_ImDrawCmd* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImDrawCmd from_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
         if _ptr == NULL:
@@ -25498,7 +25498,7 @@ cdef class ImVector_ImDrawCmd:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImDrawCmd from_heap_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
         wrapper = ImVector_ImDrawCmd.from_ptr(_ptr)
@@ -25506,7 +25506,7 @@ cdef class ImVector_ImDrawCmd:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25523,14 +25523,14 @@ cdef class ImVector_ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25539,14 +25539,14 @@ cdef class ImVector_ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImDrawCmd)
-    @property
-    def data(self):
-        cdef ccimgui.ImDrawCmd* res = dereference(self._ptr).Data
-        return ImDrawCmd.from_ptr(res)
-    @data.setter
-    def data(self, value: ImDrawCmd):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImDrawCmd* res = dereference(self._ptr).Data
+    #     return ImDrawCmd.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImDrawCmd):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25555,14 +25555,14 @@ cdef class ImVector_ImDrawCmd:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25575,7 +25575,7 @@ cdef class ImVector_ImDrawCmd:
 cdef class ImVector_ImDrawIdx:
     cdef ccimgui.ImVector_ImDrawIdx* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImDrawIdx from_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
         if _ptr == NULL:
@@ -25584,7 +25584,7 @@ cdef class ImVector_ImDrawIdx:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImDrawIdx from_heap_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
         wrapper = ImVector_ImDrawIdx.from_ptr(_ptr)
@@ -25592,7 +25592,7 @@ cdef class ImVector_ImDrawIdx:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25609,14 +25609,14 @@ cdef class ImVector_ImDrawIdx:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25661,7 +25661,7 @@ cdef class ImVector_ImDrawIdx:
 cdef class ImVector_ImDrawListPtr:
     cdef ccimgui.ImVector_ImDrawListPtr* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImDrawListPtr from_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
         if _ptr == NULL:
@@ -25670,7 +25670,7 @@ cdef class ImVector_ImDrawListPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImDrawListPtr from_heap_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
         wrapper = ImVector_ImDrawListPtr.from_ptr(_ptr)
@@ -25678,7 +25678,7 @@ cdef class ImVector_ImDrawListPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25695,14 +25695,14 @@ cdef class ImVector_ImDrawListPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25711,14 +25711,14 @@ cdef class ImVector_ImDrawListPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImDrawList)
-    @property
-    def data(self):
-        cdef ccimgui.ImDrawList** res = dereference(self._ptr).Data
-        return ImDrawList.from_ptr(res)
-    @data.setter
-    def data(self, value: ImDrawList):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImDrawList** res = dereference(self._ptr).Data
+    #     return ImDrawList.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImDrawList):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25727,14 +25727,14 @@ cdef class ImVector_ImDrawListPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25747,7 +25747,7 @@ cdef class ImVector_ImDrawListPtr:
 cdef class ImVector_ImDrawVert:
     cdef ccimgui.ImVector_ImDrawVert* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImDrawVert from_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
         if _ptr == NULL:
@@ -25756,7 +25756,7 @@ cdef class ImVector_ImDrawVert:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImDrawVert from_heap_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
         wrapper = ImVector_ImDrawVert.from_ptr(_ptr)
@@ -25764,7 +25764,7 @@ cdef class ImVector_ImDrawVert:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25781,14 +25781,14 @@ cdef class ImVector_ImDrawVert:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25833,7 +25833,7 @@ cdef class ImVector_ImDrawVert:
 cdef class ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImFontAtlasCustomRect from_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
         if _ptr == NULL:
@@ -25842,7 +25842,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
         wrapper = ImVector_ImFontAtlasCustomRect.from_ptr(_ptr)
@@ -25850,7 +25850,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25867,14 +25867,14 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25883,14 +25883,14 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontAtlasCustomRect)
-    @property
-    def data(self):
-        cdef ccimgui.ImFontAtlasCustomRect* res = dereference(self._ptr).Data
-        return ImFontAtlasCustomRect.from_ptr(res)
-    @data.setter
-    def data(self, value: ImFontAtlasCustomRect):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImFontAtlasCustomRect* res = dereference(self._ptr).Data
+    #     return ImFontAtlasCustomRect.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImFontAtlasCustomRect):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25899,14 +25899,14 @@ cdef class ImVector_ImFontAtlasCustomRect:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -25919,7 +25919,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
 cdef class ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImFontConfig from_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
         if _ptr == NULL:
@@ -25928,7 +25928,7 @@ cdef class ImVector_ImFontConfig:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImFontConfig from_heap_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
         wrapper = ImVector_ImFontConfig.from_ptr(_ptr)
@@ -25936,7 +25936,7 @@ cdef class ImVector_ImFontConfig:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25953,14 +25953,14 @@ cdef class ImVector_ImFontConfig:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25969,14 +25969,14 @@ cdef class ImVector_ImFontConfig:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontConfig)
-    @property
-    def data(self):
-        cdef ccimgui.ImFontConfig* res = dereference(self._ptr).Data
-        return ImFontConfig.from_ptr(res)
-    @data.setter
-    def data(self, value: ImFontConfig):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImFontConfig* res = dereference(self._ptr).Data
+    #     return ImFontConfig.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImFontConfig):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25985,14 +25985,14 @@ cdef class ImVector_ImFontConfig:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26039,14 +26039,14 @@ cdef class ImVector_ImFontGlyph:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26055,14 +26055,14 @@ cdef class ImVector_ImFontGlyph:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFontGlyph)
-    @property
-    def data(self):
-        cdef ccimgui.ImFontGlyph* res = dereference(self._ptr).Data
-        return ImFontGlyph.from_ptr(res)
-    @data.setter
-    def data(self, value: ImFontGlyph):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImFontGlyph* res = dereference(self._ptr).Data
+    #     return ImFontGlyph.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImFontGlyph):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26071,14 +26071,14 @@ cdef class ImVector_ImFontGlyph:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26091,7 +26091,7 @@ cdef class ImVector_ImFontGlyph:
 cdef class ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImFontPtr from_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
         if _ptr == NULL:
@@ -26100,7 +26100,7 @@ cdef class ImVector_ImFontPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImFontPtr from_heap_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
         wrapper = ImVector_ImFontPtr.from_ptr(_ptr)
@@ -26108,7 +26108,7 @@ cdef class ImVector_ImFontPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26125,14 +26125,14 @@ cdef class ImVector_ImFontPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26141,14 +26141,14 @@ cdef class ImVector_ImFontPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    @property
-    def data(self):
-        cdef ccimgui.ImFont** res = dereference(self._ptr).Data
-        return ImFont.from_ptr(res)
-    @data.setter
-    def data(self, value: ImFont):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImFont** res = dereference(self._ptr).Data
+    #     return ImFont.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImFont):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26157,14 +26157,14 @@ cdef class ImVector_ImFontPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26177,7 +26177,7 @@ cdef class ImVector_ImFontPtr:
 cdef class ImVector_ImGuiPlatformMonitor:
     cdef ccimgui.ImVector_ImGuiPlatformMonitor* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImGuiPlatformMonitor from_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
         if _ptr == NULL:
@@ -26186,7 +26186,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
         wrapper = ImVector_ImGuiPlatformMonitor.from_ptr(_ptr)
@@ -26194,7 +26194,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26211,14 +26211,14 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26227,14 +26227,14 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiPlatformMonitor)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiPlatformMonitor* res = dereference(self._ptr).Data
-        return ImGuiPlatformMonitor.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiPlatformMonitor):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImGuiPlatformMonitor* res = dereference(self._ptr).Data
+    #     return ImGuiPlatformMonitor.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImGuiPlatformMonitor):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26243,14 +26243,14 @@ cdef class ImVector_ImGuiPlatformMonitor:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26263,7 +26263,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
 cdef class ImVector_ImGuiSelectionRequest:
     cdef ccimgui.ImVector_ImGuiSelectionRequest* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImGuiSelectionRequest from_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
         if _ptr == NULL:
@@ -26272,7 +26272,7 @@ cdef class ImVector_ImGuiSelectionRequest:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImGuiSelectionRequest from_heap_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
         wrapper = ImVector_ImGuiSelectionRequest.from_ptr(_ptr)
@@ -26280,7 +26280,7 @@ cdef class ImVector_ImGuiSelectionRequest:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26297,14 +26297,14 @@ cdef class ImVector_ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26313,14 +26313,14 @@ cdef class ImVector_ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiSelectionRequest)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiSelectionRequest* res = dereference(self._ptr).Data
-        return ImGuiSelectionRequest.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiSelectionRequest):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImGuiSelectionRequest* res = dereference(self._ptr).Data
+    #     return ImGuiSelectionRequest.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImGuiSelectionRequest):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26329,14 +26329,14 @@ cdef class ImVector_ImGuiSelectionRequest:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26349,7 +26349,7 @@ cdef class ImVector_ImGuiSelectionRequest:
 cdef class ImVector_ImGuiStoragePair:
     cdef ccimgui.ImVector_ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImGuiStoragePair from_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
         if _ptr == NULL:
@@ -26358,7 +26358,7 @@ cdef class ImVector_ImGuiStoragePair:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImGuiStoragePair from_heap_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
         wrapper = ImVector_ImGuiStoragePair.from_ptr(_ptr)
@@ -26366,7 +26366,7 @@ cdef class ImVector_ImGuiStoragePair:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26383,14 +26383,14 @@ cdef class ImVector_ImGuiStoragePair:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26399,14 +26399,14 @@ cdef class ImVector_ImGuiStoragePair:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiStoragePair)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiStoragePair* res = dereference(self._ptr).Data
-        return ImGuiStoragePair.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiStoragePair):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImGuiStoragePair* res = dereference(self._ptr).Data
+    #     return ImGuiStoragePair.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImGuiStoragePair):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26415,14 +26415,14 @@ cdef class ImVector_ImGuiStoragePair:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26435,7 +26435,7 @@ cdef class ImVector_ImGuiStoragePair:
 cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
         if _ptr == NULL:
@@ -26444,7 +26444,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
         wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
@@ -26452,7 +26452,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26469,14 +26469,14 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26485,14 +26485,14 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiTextFilter_ImGuiTextRange)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiTextFilter_ImGuiTextRange* res = dereference(self._ptr).Data
-        return ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiTextFilter_ImGuiTextRange):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImGuiTextFilter_ImGuiTextRange* res = dereference(self._ptr).Data
+    #     return ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImGuiTextFilter_ImGuiTextRange):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26501,14 +26501,14 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26521,7 +26521,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
 cdef class ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImGuiViewportPtr from_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
         if _ptr == NULL:
@@ -26530,7 +26530,7 @@ cdef class ImVector_ImGuiViewportPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImGuiViewportPtr from_heap_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
         wrapper = ImVector_ImGuiViewportPtr.from_ptr(_ptr)
@@ -26538,7 +26538,7 @@ cdef class ImVector_ImGuiViewportPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26555,14 +26555,14 @@ cdef class ImVector_ImGuiViewportPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26571,14 +26571,14 @@ cdef class ImVector_ImGuiViewportPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGuiViewport)
-    @property
-    def data(self):
-        cdef ccimgui.ImGuiViewport** res = dereference(self._ptr).Data
-        return ImGuiViewport.from_ptr(res)
-    @data.setter
-    def data(self, value: ImGuiViewport):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImGuiViewport** res = dereference(self._ptr).Data
+    #     return ImGuiViewport.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImGuiViewport):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26587,14 +26587,14 @@ cdef class ImVector_ImGuiViewportPtr:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26607,7 +26607,7 @@ cdef class ImVector_ImGuiViewportPtr:
 cdef class ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImTextureID from_ptr(ccimgui.ImVector_ImTextureID* _ptr):
         if _ptr == NULL:
@@ -26616,7 +26616,7 @@ cdef class ImVector_ImTextureID:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImTextureID from_heap_ptr(ccimgui.ImVector_ImTextureID* _ptr):
         wrapper = ImVector_ImTextureID.from_ptr(_ptr)
@@ -26624,7 +26624,7 @@ cdef class ImVector_ImTextureID:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26641,14 +26641,14 @@ cdef class ImVector_ImTextureID:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26657,14 +26657,14 @@ cdef class ImVector_ImTextureID:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Any)
-    @property
-    def data(self):
-        cdef ccimgui.ImTextureID* res = dereference(self._ptr).Data
-        return res
-    @data.setter
-    def data(self, value: Any):
-        # dereference(self._ptr).Data = value
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImTextureID* res = dereference(self._ptr).Data
+    #     return res
+    # @data.setter
+    # def data(self, value: Any):
+    #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26673,14 +26673,14 @@ cdef class ImVector_ImTextureID:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26693,7 +26693,7 @@ cdef class ImVector_ImTextureID:
 cdef class ImVector_ImU32:
     cdef ccimgui.ImVector_ImU32* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImU32 from_ptr(ccimgui.ImVector_ImU32* _ptr):
         if _ptr == NULL:
@@ -26702,7 +26702,7 @@ cdef class ImVector_ImU32:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImU32 from_heap_ptr(ccimgui.ImVector_ImU32* _ptr):
         wrapper = ImVector_ImU32.from_ptr(_ptr)
@@ -26710,7 +26710,7 @@ cdef class ImVector_ImU32:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26727,14 +26727,14 @@ cdef class ImVector_ImU32:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26743,14 +26743,14 @@ cdef class ImVector_ImU32:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def data(self):
-        cdef ccimgui.ImU32* res = dereference(self._ptr).Data
-        return res
-    @data.setter
-    def data(self, value: int):
-        # dereference(self._ptr).Data = value
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImU32* res = dereference(self._ptr).Data
+    #     return res
+    # @data.setter
+    # def data(self, value: int):
+    #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26759,14 +26759,14 @@ cdef class ImVector_ImU32:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26779,7 +26779,7 @@ cdef class ImVector_ImU32:
 cdef class ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImVec2 from_ptr(ccimgui.ImVector_ImVec2* _ptr):
         if _ptr == NULL:
@@ -26788,7 +26788,7 @@ cdef class ImVector_ImVec2:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImVec2 from_heap_ptr(ccimgui.ImVector_ImVec2* _ptr):
         wrapper = ImVector_ImVec2.from_ptr(_ptr)
@@ -26796,7 +26796,7 @@ cdef class ImVector_ImVec2:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26813,14 +26813,14 @@ cdef class ImVector_ImVec2:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26829,14 +26829,14 @@ cdef class ImVector_ImVec2:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVec2)
-    @property
-    def data(self):
-        cdef ccimgui.ImVec2* res = dereference(self._ptr).Data
-        return ImVec2.from_ptr(res)
-    @data.setter
-    def data(self, value: ImVec2):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImVec2* res = dereference(self._ptr).Data
+    #     return ImVec2.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImVec2):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26845,14 +26845,14 @@ cdef class ImVector_ImVec2:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26865,7 +26865,7 @@ cdef class ImVector_ImVec2:
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_ImVec4 from_ptr(ccimgui.ImVector_ImVec4* _ptr):
         if _ptr == NULL:
@@ -26874,7 +26874,7 @@ cdef class ImVector_ImVec4:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_ImVec4 from_heap_ptr(ccimgui.ImVector_ImVec4* _ptr):
         wrapper = ImVector_ImVec4.from_ptr(_ptr)
@@ -26882,7 +26882,7 @@ cdef class ImVector_ImVec4:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26899,14 +26899,14 @@ cdef class ImVector_ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26915,14 +26915,14 @@ cdef class ImVector_ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImVec4)
-    @property
-    def data(self):
-        cdef ccimgui.ImVec4* res = dereference(self._ptr).Data
-        return ImVec4.from_ptr(res)
-    @data.setter
-    def data(self, value: ImVec4):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImVec4* res = dereference(self._ptr).Data
+    #     return ImVec4.from_ptr(res)
+    # @data.setter
+    # def data(self, value: ImVec4):
+    #     # dereference(self._ptr).Data = value._ptr
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -26931,14 +26931,14 @@ cdef class ImVector_ImVec4:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -26985,14 +26985,14 @@ cdef class ImVector_ImWchar:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27001,14 +27001,14 @@ cdef class ImVector_ImWchar:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def data(self):
-        cdef ccimgui.ImWchar* res = dereference(self._ptr).Data
-        return res
-    @data.setter
-    def data(self, value: int):
-        # dereference(self._ptr).Data = value
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImWchar* res = dereference(self._ptr).Data
+    #     return res
+    # @data.setter
+    # def data(self, value: int):
+    #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27017,14 +27017,14 @@ cdef class ImVector_ImWchar:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -27037,7 +27037,7 @@ cdef class ImVector_ImWchar:
 cdef class ImVector_char:
     cdef ccimgui.ImVector_char* _ptr
     cdef bool dynamically_allocated
-
+    
     @staticmethod
     cdef ImVector_char from_ptr(ccimgui.ImVector_char* _ptr):
         if _ptr == NULL:
@@ -27046,7 +27046,7 @@ cdef class ImVector_char:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-
+    
     @staticmethod
     cdef ImVector_char from_heap_ptr(ccimgui.ImVector_char* _ptr):
         wrapper = ImVector_char.from_ptr(_ptr)
@@ -27054,7 +27054,7 @@ cdef class ImVector_char:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-
+    
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -27071,14 +27071,14 @@ cdef class ImVector_char:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27087,14 +27087,14 @@ cdef class ImVector_char:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    @property
-    def data(self):
-        cdef char* res = dereference(self._ptr).Data
-        return _from_bytes(res)
-    @data.setter
-    def data(self, value: str):
-        # dereference(self._ptr).Data = _bytes(value)
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef char* res = dereference(self._ptr).Data
+    #     return _from_bytes(res)
+    # @data.setter
+    # def data(self, value: str):
+    #     # dereference(self._ptr).Data = _bytes(value)
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27103,14 +27103,14 @@ cdef class ImVector_char:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 
@@ -27157,14 +27157,14 @@ cdef class ImVector_float:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27173,14 +27173,14 @@ cdef class ImVector_float:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Float)
-    @property
-    def data(self):
-        cdef float* res = dereference(self._ptr).Data
-        return Float(dereference(res))
-    @data.setter
-    def data(self, value: Float):
-        # dereference(self._ptr).Data = &value.value
-        raise NotImplementedError
+    # @property
+    # def data(self):
+    #     cdef float* res = dereference(self._ptr).Data
+    #     return Float(dereference(res))
+    # @data.setter
+    # def data(self, value: Float):
+    #     # dereference(self._ptr).Data = &value.value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -27189,14 +27189,14 @@ cdef class ImVector_float:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
     # [End Field]
 # [End Class]
 

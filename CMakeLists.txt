@@ -11,9 +11,9 @@ set(IMGUI_IMPL_DIRECTORY      ${IMGUI_DIRECTORY}/backends)
 set(GLFW_DIRECTORY            src/external/glfw)
 set(GLFW_INCLUDE_DIRECTORY    ${GLFW_DIRECTORY}/include)
 
-set(PYGUI_CONFIG_DIRECTORY    ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config)
-set(PYGUI_CONFIG_H            ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.h)
-set(PYGUI_CONFIG_CPP          ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_config/pygui_config.cpp)
+set(PYGUI_CONFIG_DIRECTORY    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config)
+set(PYGUI_CONFIG_H            ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.h)
+set(PYGUI_CONFIG_CPP          ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.cpp)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(Python_FIND_ABI "ANY" "ANY" "ANY")
@@ -119,7 +119,7 @@ target_link_libraries(cimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
 
 # ------------------------------------------------------------------------------
 # my_program.exe
-# - Tests the cimgui DLL using 
+# - Tests the cimgui DLL using
 # - Does not compile with the custom IM_ASSERT() function. You can verify this
 #   by clicking on the button "Click to crash cimgui" in the example provided.
 # - The main.c file is based on the minimal c++ example in the ImGui repo.
@@ -139,7 +139,7 @@ target_link_libraries(cimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
 #       opengl32             (So that opengl function calls are found).
 
 add_executable(my_program_c
-    src/main.c
+    src/c/main.c
 )
 target_include_directories(my_program_c PRIVATE
     ${IMGUI_DIRECTORY}
@@ -159,9 +159,9 @@ target_link_libraries(my_program_c cimgui_glfw_opengl3 opengl32)
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
 install(TARGETS cimgui_glfw_opengl3 my_program_c my_program_cpp glfw
-        RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui
-        LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs
-        ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/pygui/libs)
+        RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui
+        LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
+        ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs)
 
 # For debugging my_program
 message("Installing glfw and ${Python3_RUNTIME_LIBRARY} to build dir")

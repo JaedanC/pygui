@@ -17,11 +17,11 @@ class IType(ABC):
     @abstractmethod
     def is_function_pointer(self) -> bool:
         pass
-    
+
     @abstractmethod
     def is_array(self) -> bool:
         pass
-    
+
     def with_no_const(self) -> str:
         return self.to_pxd() \
             .replace("const ", "")
@@ -40,10 +40,10 @@ class IType(ABC):
 
     def is_string(self) -> bool:
         return self.with_no_const() == "char*"
-    
+
     def is_vec2(self) -> bool:
         return self.with_no_const() == "ImVec2"
-    
+
     def is_vec4(self) -> bool:
         return self.with_no_const() == "ImVec4"
 
@@ -197,11 +197,18 @@ class ITypedef(ABC, HasComment):
 
 class IBinding(ABC):
     @abstractmethod
-    def to_pxd(self) -> str:
+    def to_pxd(self, include_base: bool) -> str:
         pass
 
     @abstractmethod
-    def to_pyx(self, pxd_library_name: str, include_base: bool) -> str:
+    def to_pyx(
+            self,
+            pxd_library_name: str,
+            include_base: bool,
+            class_base: str,
+            function_base: str,
+            field_base: str
+        ) -> str:
         pass
 
     @abstractmethod
@@ -209,7 +216,7 @@ class IBinding(ABC):
         pass
 
     @abstractmethod
-    def function_to_pyx(self, template: Template, function: IFunction) -> str:
+    def function_to_pyx(self, pxd_library_name: str, function_template: Template, function: IFunction) -> str:
         pass
 
     @abstractmethod

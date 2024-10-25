@@ -1,12 +1,15 @@
 from __future__ import annotations
+import json
 import sys
 import textwrap
 from io import StringIO
 from typing import List
-from pyx_parser import *
-from model.dear_bindings.interfaces import IBinding
 
-from config import *
+# from binding.pyx_parser import *
+from binding.pyx_parser import PyxHeader, HeaderComparison, create_pyx_model
+from binding.model.dear_bindings.interfaces import IBinding
+from binding.model.dear_bindings.binding import Binding
+from binding.constants import *
 
 
 PYX_TEMPLATE_MARKER = "# ---- Start Generated Content ----\n\n"
@@ -485,13 +488,13 @@ def to_pyi(
                 pyi.write("\n")
         pyi.write("\n")
 
-    with open("core/templates/function.pyi") as f:
+    with open(PYI_FUNCTION_TEMPLATE) as f:
         function_template_base = f.read()
 
-    with open("core/templates/class.pyi") as f:
+    with open(PYI_CLASS_TEMPLATE) as f:
         class_template_base = f.read()
 
-    with open("core/templates/field.pyi") as f:
+    with open(PYI_FIELD_TEMPLATE) as f:
         field_template_base = f.read()
 
     pyi.write(model.to_pyi(
@@ -584,9 +587,16 @@ def main():
         return
 
     def trial_pyx(modules: List[IBinding], pxd_libary_name: str):
+        with open(CLASS_TEMPLATE) as f:
+            class_base = f.read()
+        with open(FUNCTION_TEMPLATE) as f:
+            function_base = f.read()
+        with open(FIELD_TEMPLATE) as f:
+            field_base = f.read()
+
         new_pyx = ""
         for i, header in enumerate(modules):
-            new_pyx += header.to_pyx(pxd_libary_name, i == 0)
+            new_pyx += header.to_pyx(pxd_libary_name, i == 0, class_base, function_base, field_base)
 
         try:
             with open(GENERATED_PYX_PATH) as f:
@@ -619,9 +629,16 @@ def main():
         # return
 
     def reset(modules: List[IBinding], pxd_libary_name: str):
+        with open(CLASS_TEMPLATE) as f:
+            class_base = f.read()
+        with open(FUNCTION_TEMPLATE) as f:
+            function_base = f.read()
+        with open(FIELD_TEMPLATE) as f:
+            field_base = f.read()
+
         new_pyx = ""
         for i, header in enumerate(modules):
-            new_pyx += header.to_pyx(pxd_libary_name, i == 0)
+            new_pyx += header.to_pyx(pxd_libary_name, i == 0, class_base, function_base, field_base)
 
         new_model = create_pyx_model(new_pyx)
         try:
@@ -655,9 +672,16 @@ def main():
         print(f"Created {CIMGUI_PXD_PATH}")
 
     def write_pyx(modules: List[IBinding], pxd_libary_name: str):
+        with open(CLASS_TEMPLATE) as f:
+            class_base = f.read()
+        with open(FUNCTION_TEMPLATE) as f:
+            function_base = f.read()
+        with open(FIELD_TEMPLATE) as f:
+            field_base = f.read()
+
         new_pyx = ""
         for i, header in enumerate(modules):
-            new_pyx += header.to_pyx(pxd_libary_name, i == 0)
+            new_pyx += header.to_pyx(pxd_libary_name, i == 0, class_base, function_base, field_base)
 
         try:
             with open(GENERATED_PYX_PATH) as f:
@@ -706,13 +730,67 @@ def main():
             f.write(py)
         print(f"Created {INIT_PYI_PATH}")
         print(f"Created {INIT_PY_PATH}")
-        pass
+
+    def load_modules():
+        modules: List[IBinding] = []
+
+        # core
+        with open("external/dear_bindings/generated/cimgui.json") as f:
+            modules.append(
+                Binding.from_json(json.load(f), "cimgui.h", defines)
+            )
+
+        # glfw
+        with open("external/dear_bindings/generated/backends/cimgui_impl_glfw.json") as f:
+            modules.append(
+                Binding.from_json(json.load(f), "cimgui_impl_glfw.h", defines)
+            )
+
+        # opengl
+        with open("external/dear_bindings/generated/backends/cimgui_impl_opengl3.json") as f:
+            modules.append(
+                Binding.from_json(json.load(f), "cimgui_impl_opengl3.h", defines)
+            )
+
+        # Error handling from cimgui_internal.h
+        with open("external/dear_bindings/generated/cimgui_internal.json") as f:
+            loaded_json = json.load(f)
+
+
+            # ImGuiErrorRecoveryState
+            structs = []
+            for struct in loaded_json["structs"]:
+                if struct["original_fully_qualified_name"] == "ImGuiErrorRecoveryState":
+                    structs = [struct]
+                    break
+
+            # ImGui::ErrorRecoveryStoreState & ImGui::ErrorRecoveryTryToRecoverState
+            functions = []
+            for function in loaded_json["functions"]:
+                if function["original_fully_qualified_name"] == "ImGui::ErrorRecoveryStoreState" or \
+                    function["original_fully_qualified_name"] == "ImGui::ErrorRecoveryTryToRecoverState":
+                    functions.append(function)
+
+            loaded_json = {
+                "enums": [],
+                "typedefs": [],
+                "structs": structs,
+                "functions": functions,
+            }
+
+            modules.append(
+                Binding.from_json(loaded_json, "cimgui_internal.h", defines)
+            )
+
+        return modules
 
     if len(sys.argv) < 2:
         _help()
         return
 
     show_comments = "--nocomments" not in sys.argv
+
+    modules = load_modules()
 
     if "--help" in sys.argv:
         _help()
