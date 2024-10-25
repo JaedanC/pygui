@@ -922,11 +922,13 @@ COLOR_EDIT_FLAGS_DATA_TYPE_MASK: int
 COLOR_EDIT_FLAGS_PICKER_MASK: int
 COLOR_EDIT_FLAGS_INPUT_MASK: int
 SLIDER_FLAGS_NONE: int
-SLIDER_FLAGS_ALWAYS_CLAMP: int           # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
 SLIDER_FLAGS_LOGARITHMIC: int            # Make the widget logarithmic (linear otherwise). consider using imguisliderflags_noroundtoformat with this if using a format-string with small amount of digits.
 SLIDER_FLAGS_NO_ROUND_TO_FORMAT: int     # Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits).
 SLIDER_FLAGS_NO_INPUT: int               # Disable ctrl+click or enter key allowing to input text directly into the widget.
-SLIDER_FLAGS_WRAP_AROUND: int            # Enable wrapping around from max to min and from min to max (only supported by dragxxx() functions for now.
+SLIDER_FLAGS_WRAP_AROUND: int            # Enable wrapping around from max to min and from min to max. only supported by dragxxx() functions for now.
+SLIDER_FLAGS_CLAMP_ON_INPUT: int         # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
+SLIDER_FLAGS_CLAMP_ZERO_RANGE: int       # Clamp even if min==max==0.0f. otherwise due to legacy reason dragxxx functions don't clamp with those values. when your clamping limits are dynamic you almost always want to use it.
+SLIDER_FLAGS_ALWAYS_CLAMP: int
 SLIDER_FLAGS_INVALID_MASK: int           # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
 MOUSE_BUTTON_LEFT: int
 MOUSE_BUTTON_RIGHT: int
@@ -1084,6 +1086,7 @@ VIEWPORT_FLAGS_IS_FOCUSED: int                 # Platform window: window is focu
 
 
 
+
 def accept_drag_drop_payload(type_: str, flags: int=0) -> ImGuiPayload:
     """
     Accept contents of a given type. if imguidragdropflags_acceptbeforedelivery is set you can peek into the payload before the mouse button is released.
@@ -1157,7 +1160,7 @@ def begin_disabled(disabled: bool=True) -> None:
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
     - Tooltips windows by exception are opted out of disabling.
-    - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
+    - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     """
     pass
 
@@ -1726,6 +1729,8 @@ def end_tooltip() -> None:
     """
     pass
 
+def error_recovery_store_state(state_out: ImGuiErrorRecoveryState) -> None: ...
+def error_recovery_try_to_recover_state(state_in: ImGuiErrorRecoveryState) -> None: ...
 # def find_viewport_by_id(id_: int) -> ImGuiViewport:
 #     """
 #     This is a helper for backends.
@@ -4386,6 +4391,46 @@ class ImGuiContext:
     """
     pass
 
+class ImGuiErrorRecoveryState:
+    """
+    sizeof() = 20
+    """
+    # size_of_begin_popup_stack: int
+    # size_of_begin_popup_stack: int
+    # size_of_color_stack: int
+    # size_of_color_stack: int
+    # size_of_disabled_stack: int
+    # size_of_disabled_stack: int
+    # size_of_focus_scope_stack: int
+    # size_of_focus_scope_stack: int
+    # size_of_font_stack: int
+    # size_of_font_stack: int
+    # size_of_group_stack: int
+    # size_of_group_stack: int
+    # size_of_id_stack: int
+    # size_of_id_stack: int
+    # size_of_item_flags_stack: int
+    # size_of_item_flags_stack: int
+    # size_of_style_var_stack: int
+    # size_of_style_var_stack: int
+    # size_of_tree_stack: int
+    # size_of_tree_stack: int
+    # size_of_window_stack: int
+    # size_of_window_stack: int
+    def create() -> ImGuiErrorRecoveryState:
+        """
+        Create a dynamically allocated instance of ImGuiErrorRecoveryState. Must
+        also be freed with destroy().
+        """
+        pass
+
+    def destroy(self: ImGuiErrorRecoveryState) -> None:
+        """
+        Explicitly frees this instance.
+        """
+        pass
+
+
 class ImGuiIO:
     """
     Only modify via setappacceptingevents()
@@ -4480,6 +4525,36 @@ class ImGuiIO:
     """
     = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
     """
+    config_error_recovery: bool
+    """
+    Options to configure Error Handling and how we handle recoverable errors [EXPERIMENTAL]
+    - Error recovery is provided as a way to facilitate:
+    - Recovery after a programming error (native code or scripting language - the later tends to facilitate iterating on code while running).
+    - Recovery after running an exception handler or any error processing which may skip code after an error has been detected.
+    - Error recovery is not perfect nor guaranteed! It is a feature to ease development.
+    You not are not supposed to rely on it in the course of a normal application run.
+    - Functions that support error recovery are using IM_ASSERT_USER_ERROR() instead of IM_ASSERT().
+    - By design, we do NOT allow error recovery to be 100% silent. One of the three options needs to be checked!
+    - Always ensure that on programmers seats you have at minimum Asserts or Tooltips enabled when making direct imgui API calls!
+    Otherwise it would severely hinder your ability to catch and correct mistakes!
+    Read https://github.com/ocornut/imgui/wiki/Error-Handling for details.
+    - Programmer seats: keep asserts (default), or disable asserts and keep error tooltips (new and nice!)
+    - Non-programmer seats: maybe disable asserts, but make sure errors are resurfaced (tooltips, visible log entries, use callback etc.)
+    - Recovery after error/exception: record stack sizes with ErrorRecoveryStoreState(), disable assert, set log callback (to e.g. trigger high-level breakpoint), recover with ErrorRecoveryTryToRecoverState(), restore settings.
+    = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
+    """
+    config_error_recovery_enable_assert: bool
+    """
+    = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
+    """
+    config_error_recovery_enable_debug_log: bool
+    """
+    = true       // enable debug log output on recoverable errors.
+    """
+    config_error_recovery_enable_tooltip: bool
+    """
+    = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
+    """
     config_flags: int
     """
     = 0  // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
@@ -4508,6 +4583,10 @@ class ImGuiIO:
     """
     = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
     """
+    # config_scrollbar_scroll_by_page: bool
+    # """
+    # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+    # """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)

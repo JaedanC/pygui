@@ -5665,6 +5665,7 @@ class crash:
     catch_message = ""
     green_colour = pygui.Vec4(0, 1, 0, 0.4)
     red_colour = pygui.Vec4(1, 0, 0, 0.4)
+    begin_open = pygui.Bool(False)
 
 
 def show_crash_test():
@@ -5804,6 +5805,46 @@ def show_crash_test():
             crash.catch_message = "Caught! You have custom exceptions on."
             crash.error_text.value = str(e)
 
+    pygui.separator()
+
+    io = pygui.get_io()
+    config_error_recovery = pygui.Bool(io.config_error_recovery)
+    config_error_recovery_enable_assert = pygui.Bool(io.config_error_recovery_enable_assert)
+    config_error_recovery_enable_debug_log = pygui.Bool(io.config_error_recovery_enable_debug_log)
+    config_error_recovery_enable_tooltip = pygui.Bool(io.config_error_recovery_enable_tooltip)
+    pygui.checkbox("io.config_error_recovery", config_error_recovery)
+    pygui.checkbox("io.config_error_recovery_enable_assert (Disable to catch)", config_error_recovery_enable_assert)
+    pygui.checkbox("io.config_error_recovery_enable_debug_log", config_error_recovery_enable_debug_log)
+    pygui.checkbox("io.config_error_recovery_enable_tooltip", config_error_recovery_enable_tooltip)
+    io.config_error_recovery = config_error_recovery.value
+    io.config_error_recovery_enable_assert = config_error_recovery_enable_assert.value
+    io.config_error_recovery_enable_debug_log = config_error_recovery_enable_debug_log.value
+    io.config_error_recovery_enable_tooltip = config_error_recovery_enable_tooltip.value
+
+    if not config_error_recovery_enable_assert:
+        pygui.push_style_color(pygui.COL_TEXT, (0, 1, 0, 1))
+        pygui.text("Catch")
+    else:
+        pygui.push_style_color(pygui.COL_TEXT, (1, 0, 0, 1))
+        pygui.text("Throw")
+    pygui.pop_style_color()
+    pygui.same_line()
+    help_marker(
+        "This will call pygui.begin() without a corresponding end() call\n"
+        "If you want this error to be caught, then io.config_error_recovery_enable_assert\n"
+        "must be disabled. Note, if io.config_error_recovery is True then one of\n"
+        "error methods must be enabled.\n"
+        "\n"
+        "    pygui.begin(\"Begin with no end\")\n"
+        "\n"
+    )
+    pygui.same_line()
+    pygui.checkbox("Open window", crash.begin_open)
+    if crash.begin_open:
+        pygui.begin("Begin with no end")
+
+    pygui.same_line()
+    pygui.text("Crash 5: pygui.begin() without pygui.end()")
     if len(crash.catch_message) > 0:
         pygui.text(crash.catch_message)
         pygui.text_wrapped("Potential Error Message: " + crash.error_text.value)

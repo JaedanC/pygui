@@ -749,11 +749,13 @@ cdef extern from "cimgui.h":
 
     ctypedef enum ImGuiSliderFlags_:
         ImGuiSliderFlags_None
-        ImGuiSliderFlags_AlwaysClamp         # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
         ImGuiSliderFlags_Logarithmic         # Make the widget logarithmic (linear otherwise). consider using imguisliderflags_noroundtoformat with this if using a format-string with small amount of digits.
         ImGuiSliderFlags_NoRoundToFormat     # Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits).
         ImGuiSliderFlags_NoInput             # Disable ctrl+click or enter key allowing to input text directly into the widget.
-        ImGuiSliderFlags_WrapAround          # Enable wrapping around from max to min and from min to max (only supported by dragxxx() functions for now.
+        ImGuiSliderFlags_WrapAround          # Enable wrapping around from max to min and from min to max. only supported by dragxxx() functions for now.
+        ImGuiSliderFlags_ClampOnInput        # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
+        ImGuiSliderFlags_ClampZeroRange      # Clamp even if min==max==0.0f. otherwise due to legacy reason dragxxx functions don't clamp with those values. when your clamping limits are dynamic you almost always want to use it.
+        ImGuiSliderFlags_AlwaysClamp
         ImGuiSliderFlags_InvalidMask_        # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
 
     ctypedef enum ImGuiMouseButton_:
@@ -1232,12 +1234,17 @@ cdef extern from "cimgui.h":
         bool ConfigDragClickToInputText            # = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
         bool ConfigWindowsResizeFromEdges          # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         bool ConfigWindowsMoveFromTitleBarOnly     # = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+        bool ConfigScrollbarScrollByPage           # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
         float ConfigMemoryCompactTimer             # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
         float MouseDoubleClickTime                 # = 0.30f          // time for a double-click, in seconds.
         float MouseDoubleClickMaxDist              # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
         float MouseDragThreshold                   # = 6.0f           // distance threshold before considering we are dragging.
         float KeyRepeatDelay                       # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
         float KeyRepeatRate                        # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
+        bool ConfigErrorRecovery                   # = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
+        bool ConfigErrorRecoveryEnableAssert       # = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
+        bool ConfigErrorRecoveryEnableDebugLog     # = true       // enable debug log output on recoverable errors.
+        bool ConfigErrorRecoveryEnableTooltip      # = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
         bool ConfigDebugIsDebuggerPresent          # = false          // enable various tools calling im_debug_break().
         bool ConfigDebugHighlightIdConflicts       # = true           // highlight and show an error message when multiple items have conflicting identifiers.
         bool ConfigDebugBeginReturnValueOnce       # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
@@ -3513,7 +3520,7 @@ cdef extern from "cimgui.h":
     # - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     # - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
     # - Tooltips windows by exception are opted out of disabling.
-    # - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
+    # - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     void ImGui_BeginDisabled(bool disabled) except +
     void ImGui_EndDisabled() except +
 
@@ -3912,4 +3919,29 @@ cdef extern from "cimgui_impl_opengl3.h":
     void cImGui_ImplOpenGL3_DestroyFontsTexture() except +
     bool cImGui_ImplOpenGL3_CreateDeviceObjects() except +
     void cImGui_ImplOpenGL3_DestroyDeviceObjects() except +
+
+cdef extern from "cimgui_internal.h":
+    ctypedef struct ImGuiErrorRecoveryState
+
+
+
+    # sizeof() = 20
+    ctypedef struct ImGuiErrorRecoveryState:
+        short SizeOfWindowStack
+        short SizeOfIDStack
+        short SizeOfTreeStack
+        short SizeOfColorStack
+        short SizeOfStyleVarStack
+        short SizeOfFontStack
+        short SizeOfFocusScopeStack
+        short SizeOfGroupStack
+        short SizeOfItemFlagsStack
+        short SizeOfBeginPopupStack
+        short SizeOfDisabledStack
+
+
+
+
+    void ImGui_ErrorRecoveryStoreState(ImGuiErrorRecoveryState* state_out) except +
+    void ImGui_ErrorRecoveryTryToRecoverState(const ImGuiErrorRecoveryState* state_in) except +
 

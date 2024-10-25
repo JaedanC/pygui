@@ -1065,11 +1065,13 @@ COLOR_EDIT_FLAGS_DATA_TYPE_MASK = ccimgui.ImGuiColorEditFlags_DataTypeMask_
 COLOR_EDIT_FLAGS_PICKER_MASK = ccimgui.ImGuiColorEditFlags_PickerMask_
 COLOR_EDIT_FLAGS_INPUT_MASK = ccimgui.ImGuiColorEditFlags_InputMask_
 SLIDER_FLAGS_NONE = ccimgui.ImGuiSliderFlags_None
-SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_LOGARITHMIC = ccimgui.ImGuiSliderFlags_Logarithmic
 SLIDER_FLAGS_NO_ROUND_TO_FORMAT = ccimgui.ImGuiSliderFlags_NoRoundToFormat
 SLIDER_FLAGS_NO_INPUT = ccimgui.ImGuiSliderFlags_NoInput
 SLIDER_FLAGS_WRAP_AROUND = ccimgui.ImGuiSliderFlags_WrapAround
+SLIDER_FLAGS_CLAMP_ON_INPUT = ccimgui.ImGuiSliderFlags_ClampOnInput
+SLIDER_FLAGS_CLAMP_ZERO_RANGE = ccimgui.ImGuiSliderFlags_ClampZeroRange
+SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_INVALID_MASK = ccimgui.ImGuiSliderFlags_InvalidMask_
 MOUSE_BUTTON_LEFT = ccimgui.ImGuiMouseButton_Left
 MOUSE_BUTTON_RIGHT = ccimgui.ImGuiMouseButton_Right
@@ -7643,7 +7645,7 @@ def begin_disabled(disabled: bool=True):
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
     - Tooltips windows by exception are opted out of disabling.
-    - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
+    - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     """
     ccimgui.ImGui_BeginDisabled(
         disabled
@@ -13337,6 +13339,25 @@ cdef class ImGuiIO:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_scrollbar_scroll_by_page(self):
+        """
+        = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+        """
+        cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
+        return res
+    @config_scrollbar_scroll_by_page.setter
+    def config_scrollbar_scroll_by_page(self, value: bool):
+        # dereference(self._ptr).ConfigScrollbarScrollByPage = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(float)
     @property
     def config_memory_compact_timer(self):
@@ -13445,6 +13466,96 @@ cdef class ImGuiIO:
     @key_repeat_rate.setter
     def key_repeat_rate(self, value: float):
         # dereference(self._ptr).KeyRepeatRate = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery(self):
+        """
+        Options to configure Error Handling and how we handle recoverable errors [EXPERIMENTAL]
+        - Error recovery is provided as a way to facilitate:
+        - Recovery after a programming error (native code or scripting language - the later tends to facilitate iterating on code while running).
+        - Recovery after running an exception handler or any error processing which may skip code after an error has been detected.
+        - Error recovery is not perfect nor guaranteed! It is a feature to ease development.
+        You not are not supposed to rely on it in the course of a normal application run.
+        - Functions that support error recovery are using IM_ASSERT_USER_ERROR() instead of IM_ASSERT().
+        - By design, we do NOT allow error recovery to be 100% silent. One of the three options needs to be checked!
+        - Always ensure that on programmers seats you have at minimum Asserts or Tooltips enabled when making direct imgui API calls!
+        Otherwise it would severely hinder your ability to catch and correct mistakes!
+        Read https://github.com/ocornut/imgui/wiki/Error-Handling for details.
+        - Programmer seats: keep asserts (default), or disable asserts and keep error tooltips (new and nice!)
+        - Non-programmer seats: maybe disable asserts, but make sure errors are resurfaced (tooltips, visible log entries, use callback etc.)
+        - Recovery after error/exception: record stack sizes with ErrorRecoveryStoreState(), disable assert, set log callback (to e.g. trigger high-level breakpoint), recover with ErrorRecoveryTryToRecoverState(), restore settings.
+        = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecovery
+        return res
+    @config_error_recovery.setter
+    def config_error_recovery(self, value: bool):
+        # dereference(self._ptr).ConfigErrorRecovery = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_assert(self):
+        """
+        = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableAssert
+        return res
+    @config_error_recovery_enable_assert.setter
+    def config_error_recovery_enable_assert(self, value: bool):
+        # dereference(self._ptr).ConfigErrorRecoveryEnableAssert = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_debug_log(self):
+        """
+        = true       // enable debug log output on recoverable errors.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableDebugLog
+        return res
+    @config_error_recovery_enable_debug_log.setter
+    def config_error_recovery_enable_debug_log(self, value: bool):
+        # dereference(self._ptr).ConfigErrorRecoveryEnableDebugLog = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_tooltip(self):
+        """
+        = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableTooltip
+        return res
+    @config_error_recovery_enable_tooltip.setter
+    def config_error_recovery_enable_tooltip(self, value: bool):
+        # dereference(self._ptr).ConfigErrorRecoveryEnableTooltip = value
         raise NotImplementedError
     # [End Field]
 
@@ -24969,6 +25080,252 @@ cdef class ImDrawData:
         cdef unsigned int ptr_int = <uintptr_t>self._ptr
         return hash(ptr_int)
     # [End Class Constants]
+
+# [End Class]
+
+
+
+# ---- Start Generated Content ----
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def error_recovery_store_state(state_out: ImGuiErrorRecoveryState):
+    ccimgui.ImGui_ErrorRecoveryStoreState(
+        state_out._ptr
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def error_recovery_try_to_recover_state(state_in: ImGuiErrorRecoveryState):
+    ccimgui.ImGui_ErrorRecoveryTryToRecoverState(
+        state_in._ptr
+    )
+# [End Function]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiErrorRecoveryState:
+    """
+    sizeof() = 20
+    """
+    cdef ccimgui.ImGuiErrorRecoveryState* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGuiErrorRecoveryState from_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiErrorRecoveryState wrapper = ImGuiErrorRecoveryState.__new__(ImGuiErrorRecoveryState)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGuiErrorRecoveryState from_heap_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
+        wrapper = ImGuiErrorRecoveryState.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_window_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfWindowStack
+        return res
+    @size_of_window_stack.setter
+    def size_of_window_stack(self, value: int):
+        # dereference(self._ptr).SizeOfWindowStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_id_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfIDStack
+        return res
+    @size_of_id_stack.setter
+    def size_of_id_stack(self, value: int):
+        # dereference(self._ptr).SizeOfIDStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_tree_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfTreeStack
+        return res
+    @size_of_tree_stack.setter
+    def size_of_tree_stack(self, value: int):
+        # dereference(self._ptr).SizeOfTreeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_color_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfColorStack
+        return res
+    @size_of_color_stack.setter
+    def size_of_color_stack(self, value: int):
+        # dereference(self._ptr).SizeOfColorStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_style_var_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfStyleVarStack
+        return res
+    @size_of_style_var_stack.setter
+    def size_of_style_var_stack(self, value: int):
+        # dereference(self._ptr).SizeOfStyleVarStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_font_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFontStack
+        return res
+    @size_of_font_stack.setter
+    def size_of_font_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFontStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_focus_scope_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
+        return res
+    @size_of_focus_scope_stack.setter
+    def size_of_focus_scope_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFocusScopeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_group_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfGroupStack
+        return res
+    @size_of_group_stack.setter
+    def size_of_group_stack(self, value: int):
+        # dereference(self._ptr).SizeOfGroupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_item_flags_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
+        return res
+    @size_of_item_flags_stack.setter
+    def size_of_item_flags_stack(self, value: int):
+        # dereference(self._ptr).SizeOfItemFlagsStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_begin_popup_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
+        return res
+    @size_of_begin_popup_stack.setter
+    def size_of_begin_popup_stack(self, value: int):
+        # dereference(self._ptr).SizeOfBeginPopupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_disabled_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfDisabledStack
+        return res
+    @size_of_disabled_stack.setter
+    def size_of_disabled_stack(self, value: int):
+        # dereference(self._ptr).SizeOfDisabledStack = value
+        raise NotImplementedError
+    # [End Field]
 
 # [End Class]
 

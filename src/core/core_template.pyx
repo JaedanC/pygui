@@ -1065,11 +1065,13 @@ COLOR_EDIT_FLAGS_DATA_TYPE_MASK = ccimgui.ImGuiColorEditFlags_DataTypeMask_
 COLOR_EDIT_FLAGS_PICKER_MASK = ccimgui.ImGuiColorEditFlags_PickerMask_
 COLOR_EDIT_FLAGS_INPUT_MASK = ccimgui.ImGuiColorEditFlags_InputMask_
 SLIDER_FLAGS_NONE = ccimgui.ImGuiSliderFlags_None
-SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_LOGARITHMIC = ccimgui.ImGuiSliderFlags_Logarithmic
 SLIDER_FLAGS_NO_ROUND_TO_FORMAT = ccimgui.ImGuiSliderFlags_NoRoundToFormat
 SLIDER_FLAGS_NO_INPUT = ccimgui.ImGuiSliderFlags_NoInput
 SLIDER_FLAGS_WRAP_AROUND = ccimgui.ImGuiSliderFlags_WrapAround
+SLIDER_FLAGS_CLAMP_ON_INPUT = ccimgui.ImGuiSliderFlags_ClampOnInput
+SLIDER_FLAGS_CLAMP_ZERO_RANGE = ccimgui.ImGuiSliderFlags_ClampZeroRange
+SLIDER_FLAGS_ALWAYS_CLAMP = ccimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_INVALID_MASK = ccimgui.ImGuiSliderFlags_InvalidMask_
 MOUSE_BUTTON_LEFT = ccimgui.ImGuiMouseButton_Left
 MOUSE_BUTTON_RIGHT = ccimgui.ImGuiMouseButton_Right
@@ -1388,7 +1390,7 @@ def begin_disabled(disabled: bool=True):
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
     - Tooltips windows by exception are opted out of disabling.
-    - BeginDisabled(false) essentially does nothing useful but is provided to facilitate use of boolean expressions. If you can avoid calling BeginDisabled(False)/EndDisabled() best to avoid it.
+    - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     """
     ccimgui.ImGui_BeginDisabled(
         disabled
@@ -2713,7 +2715,7 @@ def combo(label: str, current_item: Int, items: Sequence[str], popup_max_height_
     """
     cdef unsigned int buffer_length = sum(len(_bytes(b)) + 1 for b in items) + 1
     cdef char* c_strings = <char*>ccimgui.ImGui_MemAlloc(buffer_length)
-    
+
     # Store items in array
     cdef int counter = 0
     for p_str in items:
@@ -2722,7 +2724,7 @@ def combo(label: str, current_item: Int, items: Sequence[str], popup_max_height_
         # Null terminated string
         c_strings[counter + n_bytes] = 0
         counter += n_bytes + 1
-    
+
     # Null terminated list
     c_strings[counter] = 0
 
@@ -3341,7 +3343,7 @@ def drag_int2(label: str, int_ptrs: Sequence[Int], v_speed: float=1.0, v_min: in
     cdef int c_ints[2]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
-    
+
     cdef bool res = ccimgui.ImGui_DragInt2Ex(
         _bytes(label),
         c_ints,
@@ -3545,7 +3547,7 @@ def drag_int_range2_ex(label: str, v_current_min: Int, v_current_max: Int, v_spe
 # ?returns(bool)
 def drag_scalar(label: str, data_type: int, p_data: "Int | Long | Float | Double", v_speed: float=1.0, _min: "int | float"=None, _max: "int | float"=None, format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
-    
+
     cdef bool res
     cdef long long min_int
     cdef long long max_int
@@ -3638,7 +3640,7 @@ def drag_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Flo
     Implied v_speed = 1.0f, p_min = null, p_max = null, format = null, flags = 0
     """
     IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
-    
+
     bytes_format_ = _bytes(format_) if format_ is not None else None
     cdef long long long_long_size
 
@@ -4017,6 +4019,30 @@ def end_tooltip():
     Only call endtooltip() if begintooltip()/beginitemtooltip() returns true!
     """
     ccimgui.ImGui_EndTooltip()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def error_recovery_store_state(state_out: ImGuiErrorRecoveryState):
+    ccimgui.ImGui_ErrorRecoveryStoreState(
+        state_out._ptr
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def error_recovery_try_to_recover_state(state_in: ImGuiErrorRecoveryState):
+    ccimgui.ImGui_ErrorRecoveryTryToRecoverState(
+        state_in._ptr
+    )
 # [End Function]
 
 # [Function]
@@ -5632,7 +5658,7 @@ def input_scalar_ex(label: str, data_type: int, p_data: Any, p_step: Any=None, p
 
 def input_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Float | Double]", components: int, p_step: "int | float"=None, p_step_fast: "int | float"=None, format_: str=None, flags: int=0):
     IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
-    
+
     bytes_format_ = _bytes(format_) if format_ is not None else None
     cdef long long long_long_size
 
@@ -5815,7 +5841,7 @@ cdef int _input_text_callback(ccimgui.ImGuiInputTextCallbackData callback_data):
     cdef ccimgui.ImGuiID widget_id = <ccimgui.ImGuiID>callback_data.UserData
     if widget_id not in _input_text_user_data:
         raise RuntimeError("Did not find widget_id: {}".format(widget_id))
-    
+
     python_callback, user_data = _input_text_user_data[widget_id]
     callback_return_value = python_callback(
         ImGuiInputTextCallbackData.from_ptr(&callback_data),
@@ -6621,7 +6647,7 @@ def list_box(label: str, current_item: Int, items: Sequence[str], height_in_item
         array = <char*>ccimgui.ImGui_MemAlloc(sizeof(char) * n_bytes + 1)
         strncpy(array, temp_bytes, n_bytes + 1)
         c_strings[i] = array
-    
+
     cdef bool res = ccimgui.ImGui_ListBox(
         _bytes(label),
         &current_item.value,
@@ -7025,12 +7051,12 @@ def plot_histogram(label: str, values: Sequence[float], values_offset: int=0, ov
     cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
     if c_floats is NULL:
         raise MemoryError()
-    
+
     for i in range(len(values)):
         c_floats[i] = values[i]
-    
+
     bytes_overlay_text = _bytes(overlay_text) if overlay_text is not None else None
-    
+
     ccimgui.ImGui_PlotHistogramEx(
         _bytes(label),
         c_floats,
@@ -7142,7 +7168,7 @@ def plot_lines(label: str, values: Sequence[float], values_offset: int=0, overla
     cdef float* c_floats = <float*>ccimgui.ImGui_MemAlloc(sizeof(float) * len(values))
     if c_floats is NULL:
         raise MemoryError()
-    
+
     for i in range(len(values)):
         c_floats[i] = values[i]
 
@@ -9079,7 +9105,7 @@ def slider_float2(label: str, float_ptrs: Sequence[Float], v_min: float, v_max: 
     cdef float c_floats[2]
     c_floats[0] = float_ptrs[0].value
     c_floats[1] = float_ptrs[1].value
-    
+
     cdef bool res = ccimgui.ImGui_SliderFloat2Ex(
         _bytes(label),
         c_floats,
@@ -9307,7 +9333,7 @@ def slider_int3(label: str, int_ptrs: Sequence[Int], v_min: int, v_max: int, for
     cdef int c_ints[3]
     c_ints[0] = int_ptrs[0].value
     c_ints[1] = int_ptrs[1].value
-    c_ints[2] = int_ptrs[2].value    
+    c_ints[2] = int_ptrs[2].value
 
     cdef bool res = ccimgui.ImGui_SliderInt3Ex(
         _bytes(label),
@@ -9502,7 +9528,7 @@ def slider_scalar_ex(label: str, data_type: int, p_data: Any, p_min: Any, p_max:
 # ?returns(bool)
 def slider_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Float | Double]", components: int, p_min: "int | float", p_max: "int | float", format_: str=None, flags: int=0):
     IM_ASSERT(len(p_data) > 0, "Should probably have at least one component")
-    
+
     bytes_format_ = _bytes(format_) if format_ is not None else None
     cdef long long long_long_size
 
@@ -10556,7 +10582,7 @@ def vslider_int_ex(label: str, size: Tuple[float, float], v: Int, v_min: int, v_
 # ?returns(bool)
 def vslider_scalar(label: str, size: Tuple[float, float], data_type: int, p_data: "Int | Long | Float | Double", _min: "int | float", _max: "int | float", format_: str=None, flags: int=0):
     bytes_format_ = _bytes(format_) if format_ is not None else None
-    
+
     cdef bool res
     cdef long long min_int
     cdef long long max_int
@@ -10648,7 +10674,7 @@ def vslider_scalar_ex(label: str, size: Tuple[float, float], data_type: int, p_d
 cdef class GLFWmonitor:
     cdef ccimgui.GLFWmonitor* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef GLFWmonitor from_ptr(ccimgui.GLFWmonitor* _ptr):
         if _ptr == NULL:
@@ -10657,7 +10683,7 @@ cdef class GLFWmonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef GLFWmonitor from_heap_ptr(ccimgui.GLFWmonitor* _ptr):
         wrapper = GLFWmonitor.from_ptr(_ptr)
@@ -10665,7 +10691,7 @@ cdef class GLFWmonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10686,7 +10712,7 @@ cdef class GLFWmonitor:
 cdef class GLFWwindow:
     cdef ccimgui.GLFWwindow* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef GLFWwindow from_ptr(ccimgui.GLFWwindow* _ptr):
         if _ptr == NULL:
@@ -10695,7 +10721,7 @@ cdef class GLFWwindow:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef GLFWwindow from_heap_ptr(ccimgui.GLFWwindow* _ptr):
         wrapper = GLFWwindow.from_ptr(_ptr)
@@ -10703,7 +10729,7 @@ cdef class GLFWwindow:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10730,7 +10756,7 @@ cdef class ImColor:
     """
     cdef ccimgui.ImColor* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImColor from_ptr(ccimgui.ImColor* _ptr):
         if _ptr == NULL:
@@ -10739,7 +10765,7 @@ cdef class ImColor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImColor from_heap_ptr(ccimgui.ImColor* _ptr):
         wrapper = ImColor.from_ptr(_ptr)
@@ -10747,7 +10773,7 @@ cdef class ImColor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10806,7 +10832,7 @@ cdef class ImDrawChannel:
     """
     cdef ccimgui.ImDrawChannel* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawChannel from_ptr(ccimgui.ImDrawChannel* _ptr):
         if _ptr == NULL:
@@ -10815,7 +10841,7 @@ cdef class ImDrawChannel:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawChannel from_heap_ptr(ccimgui.ImDrawChannel* _ptr):
         wrapper = ImDrawChannel.from_ptr(_ptr)
@@ -10823,7 +10849,7 @@ cdef class ImDrawChannel:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -10883,7 +10909,7 @@ cdef class ImDrawCmd:
     """
     cdef ccimgui.ImDrawCmd* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawCmd from_ptr(ccimgui.ImDrawCmd* _ptr):
         if _ptr == NULL:
@@ -10892,7 +10918,7 @@ cdef class ImDrawCmd:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawCmd from_heap_ptr(ccimgui.ImDrawCmd* _ptr):
         wrapper = ImDrawCmd.from_ptr(_ptr)
@@ -10900,7 +10926,7 @@ cdef class ImDrawCmd:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11073,7 +11099,7 @@ cdef class ImDrawCmdHeader:
     """
     cdef ccimgui.ImDrawCmdHeader* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawCmdHeader from_ptr(ccimgui.ImDrawCmdHeader* _ptr):
         if _ptr == NULL:
@@ -11082,7 +11108,7 @@ cdef class ImDrawCmdHeader:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawCmdHeader from_heap_ptr(ccimgui.ImDrawCmdHeader* _ptr):
         wrapper = ImDrawCmdHeader.from_ptr(_ptr)
@@ -11090,7 +11116,7 @@ cdef class ImDrawCmdHeader:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11159,7 +11185,7 @@ cdef class ImDrawCmdHeader:
 cdef class ImDrawData:
     cdef ccimgui.ImDrawData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawData from_ptr(ccimgui.ImDrawData* _ptr):
         if _ptr == NULL:
@@ -11168,7 +11194,7 @@ cdef class ImDrawData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawData from_heap_ptr(ccimgui.ImDrawData* _ptr):
         wrapper = ImDrawData.from_ptr(_ptr)
@@ -11176,7 +11202,7 @@ cdef class ImDrawData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11440,7 +11466,7 @@ cdef class ImDrawList:
     """
     cdef ccimgui.ImDrawList* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawList from_ptr(ccimgui.ImDrawList* _ptr):
         if _ptr == NULL:
@@ -11449,7 +11475,7 @@ cdef class ImDrawList:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawList from_heap_ptr(ccimgui.ImDrawList* _ptr):
         wrapper = ImDrawList.from_ptr(_ptr)
@@ -11457,7 +11483,7 @@ cdef class ImDrawList:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -11879,7 +11905,7 @@ cdef class ImDrawList:
         for i, point in enumerate(points):
             c_points[i].x = point[0]
             c_points[i].y = point[1]
-        
+
         ccimgui.ImDrawList_AddConcavePolyFilled(
             self._ptr,
             c_points,
@@ -12468,7 +12494,7 @@ cdef class ImDrawList:
             c_float[1] = cpu_fine_clip_rect[1]
             c_float[2] = cpu_fine_clip_rect[2]
             c_float[3] = cpu_fine_clip_rect[3]
-        
+
         ccimgui.ImDrawList_AddTextImFontPtrEx(
             self._ptr,
             font._ptr,
@@ -13199,7 +13225,7 @@ cdef class ImDrawListSharedData:
     """
     cdef ccimgui.ImDrawListSharedData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawListSharedData from_ptr(ccimgui.ImDrawListSharedData* _ptr):
         if _ptr == NULL:
@@ -13208,7 +13234,7 @@ cdef class ImDrawListSharedData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawListSharedData from_heap_ptr(ccimgui.ImDrawListSharedData* _ptr):
         wrapper = ImDrawListSharedData.from_ptr(_ptr)
@@ -13216,7 +13242,7 @@ cdef class ImDrawListSharedData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13242,7 +13268,7 @@ cdef class ImDrawListSplitter:
     """
     cdef ccimgui.ImDrawListSplitter* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawListSplitter from_ptr(ccimgui.ImDrawListSplitter* _ptr):
         if _ptr == NULL:
@@ -13251,7 +13277,7 @@ cdef class ImDrawListSplitter:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawListSplitter from_heap_ptr(ccimgui.ImDrawListSplitter* _ptr):
         wrapper = ImDrawListSplitter.from_ptr(_ptr)
@@ -13259,7 +13285,7 @@ cdef class ImDrawListSplitter:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13389,7 +13415,7 @@ cdef class ImDrawListSplitter:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 
@@ -13444,7 +13470,7 @@ cdef class ImDrawListSplitter:
 cdef class ImDrawVert:
     cdef ccimgui.ImDrawVert* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImDrawVert from_ptr(ccimgui.ImDrawVert* _ptr):
         if _ptr == NULL:
@@ -13453,7 +13479,7 @@ cdef class ImDrawVert:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImDrawVert from_heap_ptr(ccimgui.ImDrawVert* _ptr):
         wrapper = ImDrawVert.from_ptr(_ptr)
@@ -13461,7 +13487,7 @@ cdef class ImDrawVert:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13545,7 +13571,7 @@ cdef class ImFont:
         wrapper.dynamically_allocated = False
         wrapper._const_ptr = NULL
         return wrapper
-    
+
     @staticmethod
     cdef ImFont from_const_ptr(const ccimgui.ImFont* _ptr):
         if _ptr == NULL:
@@ -13554,7 +13580,7 @@ cdef class ImFont:
         wrapper._ptr = NULL
         wrapper._const_ptr = _ptr
         return wrapper
-    
+
     @staticmethod
     cdef ImFont from_heap_ptr(ccimgui.ImFont* _ptr):
         wrapper = ImFont.from_ptr(_ptr)
@@ -13562,7 +13588,7 @@ cdef class ImFont:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -13615,7 +13641,7 @@ cdef class ImFont:
             res = dereference(self._ptr).ConfigData
         if self._const_ptr != NULL:
             res = dereference(self._const_ptr).ConfigData
-        
+
         return ImFontConfig.from_const_ptr(res)
     @config_data.setter
     def config_data(self, value: ImFontConfig):
@@ -13639,7 +13665,7 @@ cdef class ImFont:
             res = dereference(self._ptr).ConfigDataCount
         if self._const_ptr != NULL:
             res = dereference(self._const_ptr).ConfigDataCount
-        
+
         return res
     @config_data_count.setter
     def config_data_count(self, value: int):
@@ -13664,7 +13690,7 @@ cdef class ImFont:
             res = dereference(self._ptr).ContainerAtlas
         if self._const_ptr != NULL:
             res = dereference(self._const_ptr).ContainerAtlas
-        
+
         return ImFontAtlas.from_ptr(res)
     @container_atlas.setter
     def container_atlas(self, value: ImFontAtlas):
@@ -14215,7 +14241,7 @@ cdef class ImFont:
     def get_debug_name(self: ImFont):
         if self._const_ptr != NULL:
             raise NotImplementedError
-        
+
         cdef const char* res = ccimgui.ImFont_GetDebugName(
             self._ptr,
         )
@@ -14344,7 +14370,7 @@ cdef class ImFontAtlas:
     """
     cdef ccimgui.ImFontAtlas* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontAtlas from_ptr(ccimgui.ImFontAtlas* _ptr):
         if _ptr == NULL:
@@ -14353,7 +14379,7 @@ cdef class ImFontAtlas:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImFontAtlas from_heap_ptr(ccimgui.ImFontAtlas* _ptr):
         wrapper = ImFontAtlas.from_ptr(_ptr)
@@ -14361,7 +14387,7 @@ cdef class ImFontAtlas:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -15318,7 +15344,7 @@ cdef class ImFontAtlasCustomRect:
     """
     cdef ccimgui.ImFontAtlasCustomRect* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontAtlasCustomRect from_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
         if _ptr == NULL:
@@ -15327,7 +15353,7 @@ cdef class ImFontAtlasCustomRect:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImFontAtlasCustomRect* _ptr):
         wrapper = ImFontAtlasCustomRect.from_ptr(_ptr)
@@ -15335,7 +15361,7 @@ cdef class ImFontAtlasCustomRect:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -15524,7 +15550,7 @@ cdef class ImFontBuilderIO:
     """
     cdef const ccimgui.ImFontBuilderIO* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontBuilderIO from_ptr(const ccimgui.ImFontBuilderIO* _ptr):
         if _ptr == NULL:
@@ -15533,7 +15559,7 @@ cdef class ImFontBuilderIO:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImFontBuilderIO from_heap_ptr(ccimgui.ImFontBuilderIO* _ptr):
         wrapper = ImFontBuilderIO.from_ptr(_ptr)
@@ -15541,7 +15567,7 @@ cdef class ImFontBuilderIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -15563,7 +15589,7 @@ cdef class ImFontConfig:
     cdef ccimgui.ImFontConfig* _ptr
     cdef const ccimgui.ImFontConfig* _const_ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontConfig from_ptr(ccimgui.ImFontConfig* _ptr):
         if _ptr == NULL:
@@ -15573,7 +15599,7 @@ cdef class ImFontConfig:
         wrapper.dynamically_allocated = False
         wrapper._const_ptr = NULL
         return wrapper
-    
+
     @staticmethod
     cdef ImFontConfig from_heap_ptr(ccimgui.ImFontConfig* _ptr):
         wrapper = ImFontConfig.from_ptr(_ptr)
@@ -15581,7 +15607,7 @@ cdef class ImFontConfig:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     @staticmethod
     cdef ImFontConfig from_const_ptr(const ccimgui.ImFontConfig* _ptr):
         if _ptr == NULL:
@@ -15590,7 +15616,7 @@ cdef class ImFontConfig:
         wrapper._ptr = NULL
         wrapper._const_ptr = _ptr
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16143,7 +16169,7 @@ cdef class ImFontConfig:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 # [End Class]
@@ -16161,7 +16187,7 @@ cdef class ImFontGlyph:
     """
     cdef const ccimgui.ImFontGlyph* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontGlyph from_ptr(const ccimgui.ImFontGlyph* _ptr):
         if _ptr == NULL:
@@ -16170,7 +16196,7 @@ cdef class ImFontGlyph:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImFontGlyph from_heap_ptr(ccimgui.ImFontGlyph* _ptr):
         wrapper = ImFontGlyph.from_ptr(_ptr)
@@ -16178,7 +16204,7 @@ cdef class ImFontGlyph:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16432,7 +16458,7 @@ cdef class ImFontGlyphRangesBuilder:
     """
     cdef ccimgui.ImFontGlyphRangesBuilder* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImFontGlyphRangesBuilder from_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
         if _ptr == NULL:
@@ -16441,7 +16467,7 @@ cdef class ImFontGlyphRangesBuilder:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImFontGlyphRangesBuilder from_heap_ptr(ccimgui.ImFontGlyphRangesBuilder* _ptr):
         wrapper = ImFontGlyphRangesBuilder.from_ptr(_ptr)
@@ -16449,7 +16475,7 @@ cdef class ImFontGlyphRangesBuilder:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16603,7 +16629,7 @@ cdef class ImFontGlyphRangesBuilder:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 
@@ -16653,7 +16679,7 @@ cdef class ImGuiContext:
     """
     cdef ccimgui.ImGuiContext* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiContext from_ptr(ccimgui.ImGuiContext* _ptr):
         if _ptr == NULL:
@@ -16662,7 +16688,7 @@ cdef class ImGuiContext:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiContext from_heap_ptr(ccimgui.ImGuiContext* _ptr):
         wrapper = ImGuiContext.from_ptr(_ptr)
@@ -16670,7 +16696,7 @@ cdef class ImGuiContext:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -16684,6 +16710,438 @@ cdef class ImGuiContext:
 
 # [Class]
 # [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGuiErrorRecoveryState:
+    """
+    sizeof() = 20
+    """
+    cdef ccimgui.ImGuiErrorRecoveryState* _ptr
+    cdef bool dynamically_allocated
+
+    @staticmethod
+    cdef ImGuiErrorRecoveryState from_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGuiErrorRecoveryState wrapper = ImGuiErrorRecoveryState.__new__(ImGuiErrorRecoveryState)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+
+    @staticmethod
+    cdef ImGuiErrorRecoveryState from_heap_ptr(ccimgui.ImGuiErrorRecoveryState* _ptr):
+        wrapper = ImGuiErrorRecoveryState.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_begin_popup_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
+        return res
+    @size_of_begin_popup_stack.setter
+    def size_of_begin_popup_stack(self, value: int):
+        # dereference(self._ptr).SizeOfBeginPopupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_begin_popup_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfBeginPopupStack
+        return res
+    @size_of_begin_popup_stack.setter
+    def size_of_begin_popup_stack(self, value: int):
+        # dereference(self._ptr).SizeOfBeginPopupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_color_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfColorStack
+        return res
+    @size_of_color_stack.setter
+    def size_of_color_stack(self, value: int):
+        # dereference(self._ptr).SizeOfColorStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_color_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfColorStack
+        return res
+    @size_of_color_stack.setter
+    def size_of_color_stack(self, value: int):
+        # dereference(self._ptr).SizeOfColorStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_disabled_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfDisabledStack
+        return res
+    @size_of_disabled_stack.setter
+    def size_of_disabled_stack(self, value: int):
+        # dereference(self._ptr).SizeOfDisabledStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_disabled_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfDisabledStack
+        return res
+    @size_of_disabled_stack.setter
+    def size_of_disabled_stack(self, value: int):
+        # dereference(self._ptr).SizeOfDisabledStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_focus_scope_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
+        return res
+    @size_of_focus_scope_stack.setter
+    def size_of_focus_scope_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFocusScopeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_focus_scope_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFocusScopeStack
+        return res
+    @size_of_focus_scope_stack.setter
+    def size_of_focus_scope_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFocusScopeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_font_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFontStack
+        return res
+    @size_of_font_stack.setter
+    def size_of_font_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFontStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_font_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfFontStack
+        return res
+    @size_of_font_stack.setter
+    def size_of_font_stack(self, value: int):
+        # dereference(self._ptr).SizeOfFontStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_group_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfGroupStack
+        return res
+    @size_of_group_stack.setter
+    def size_of_group_stack(self, value: int):
+        # dereference(self._ptr).SizeOfGroupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_group_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfGroupStack
+        return res
+    @size_of_group_stack.setter
+    def size_of_group_stack(self, value: int):
+        # dereference(self._ptr).SizeOfGroupStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_id_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfIDStack
+        return res
+    @size_of_id_stack.setter
+    def size_of_id_stack(self, value: int):
+        # dereference(self._ptr).SizeOfIDStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_id_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfIDStack
+        return res
+    @size_of_id_stack.setter
+    def size_of_id_stack(self, value: int):
+        # dereference(self._ptr).SizeOfIDStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_item_flags_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
+        return res
+    @size_of_item_flags_stack.setter
+    def size_of_item_flags_stack(self, value: int):
+        # dereference(self._ptr).SizeOfItemFlagsStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_item_flags_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfItemFlagsStack
+        return res
+    @size_of_item_flags_stack.setter
+    def size_of_item_flags_stack(self, value: int):
+        # dereference(self._ptr).SizeOfItemFlagsStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_style_var_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfStyleVarStack
+        return res
+    @size_of_style_var_stack.setter
+    def size_of_style_var_stack(self, value: int):
+        # dereference(self._ptr).SizeOfStyleVarStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_style_var_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfStyleVarStack
+        return res
+    @size_of_style_var_stack.setter
+    def size_of_style_var_stack(self, value: int):
+        # dereference(self._ptr).SizeOfStyleVarStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_tree_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfTreeStack
+        return res
+    @size_of_tree_stack.setter
+    def size_of_tree_stack(self, value: int):
+        # dereference(self._ptr).SizeOfTreeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_tree_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfTreeStack
+        return res
+    @size_of_tree_stack.setter
+    def size_of_tree_stack(self, value: int):
+        # dereference(self._ptr).SizeOfTreeStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_window_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfWindowStack
+        return res
+    @size_of_window_stack.setter
+    def size_of_window_stack(self, value: int):
+        # dereference(self._ptr).SizeOfWindowStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size_of_window_stack(self):
+        cdef short res = dereference(self._ptr).SizeOfWindowStack
+        return res
+    @size_of_window_stack.setter
+    def size_of_window_stack(self, value: int):
+        # dereference(self._ptr).SizeOfWindowStack = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(ImGuiErrorRecoveryState)
+    @staticmethod
+    def create():
+        """
+        Create a dynamically allocated instance of ImGuiErrorRecoveryState. Must
+        also be freed with destroy().
+        """
+        cdef ccimgui.ImGuiErrorRecoveryState* clipper = <ccimgui.ImGuiErrorRecoveryState*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiErrorRecoveryState))
+        # Zero initialisation works for this struct
+        memset(clipper, 0, sizeof(ccimgui.ImGuiErrorRecoveryState))
+        return ImGuiErrorRecoveryState.from_heap_ptr(clipper)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?returns(None)
+    def destroy(self: ImGuiErrorRecoveryState):
+        """
+        Explicitly frees this instance.
+        """
+        if self._ptr != NULL:
+            ccimgui.ImGui_MemFree(self._ptr)
+            self._ptr = NULL
+    def __dealloc__(self):
+        """
+        Just in case the user forgets to free the memory.
+        """
+        if not self.dynamically_allocated:
+            return
+
+        self.destroy()
+    # [End Method]
+# [End Class]
+
+# [Class]
+# [Class Constants]
 # ?use_template(True)
 # ?active(True)
 # ?invisible(False)
@@ -16692,7 +17150,7 @@ _io_clipboard = {}
 cdef class ImGuiIO:
     cdef ccimgui.ImGuiIO* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiIO from_ptr(ccimgui.ImGuiIO* _ptr):
         if _ptr == NULL:
@@ -16706,7 +17164,7 @@ cdef class ImGuiIO:
                '_set_clipboard_text_fn': None
             }
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiIO from_heap_ptr(ccimgui.ImGuiIO* _ptr):
         wrapper = ImGuiIO.from_ptr(_ptr)
@@ -16714,7 +17172,7 @@ cdef class ImGuiIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -17147,6 +17605,96 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery(self):
+        """
+        Options to configure Error Handling and how we handle recoverable errors [EXPERIMENTAL]
+        - Error recovery is provided as a way to facilitate:
+        - Recovery after a programming error (native code or scripting language - the later tends to facilitate iterating on code while running).
+        - Recovery after running an exception handler or any error processing which may skip code after an error has been detected.
+        - Error recovery is not perfect nor guaranteed! It is a feature to ease development.
+        You not are not supposed to rely on it in the course of a normal application run.
+        - Functions that support error recovery are using IM_ASSERT_USER_ERROR() instead of IM_ASSERT().
+        - By design, we do NOT allow error recovery to be 100% silent. One of the three options needs to be checked!
+        - Always ensure that on programmers seats you have at minimum Asserts or Tooltips enabled when making direct imgui API calls!
+        Otherwise it would severely hinder your ability to catch and correct mistakes!
+        Read https://github.com/ocornut/imgui/wiki/Error-Handling for details.
+        - Programmer seats: keep asserts (default), or disable asserts and keep error tooltips (new and nice!)
+        - Non-programmer seats: maybe disable asserts, but make sure errors are resurfaced (tooltips, visible log entries, use callback etc.)
+        - Recovery after error/exception: record stack sizes with ErrorRecoveryStoreState(), disable assert, set log callback (to e.g. trigger high-level breakpoint), recover with ErrorRecoveryTryToRecoverState(), restore settings.
+        = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecovery
+        return res
+    @config_error_recovery.setter
+    def config_error_recovery(self, value: bool):
+        dereference(self._ptr).ConfigErrorRecovery = value
+        # raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_assert(self):
+        """
+        = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableAssert
+        return res
+    @config_error_recovery_enable_assert.setter
+    def config_error_recovery_enable_assert(self, value: bool):
+        dereference(self._ptr).ConfigErrorRecoveryEnableAssert = value
+        # raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_debug_log(self):
+        """
+        = true       // enable debug log output on recoverable errors.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableDebugLog
+        return res
+    @config_error_recovery_enable_debug_log.setter
+    def config_error_recovery_enable_debug_log(self, value: bool):
+        dereference(self._ptr).ConfigErrorRecoveryEnableDebugLog = value
+        # raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_error_recovery_enable_tooltip(self):
+        """
+        = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
+        """
+        cdef bool res = dereference(self._ptr).ConfigErrorRecoveryEnableTooltip
+        return res
+    @config_error_recovery_enable_tooltip.setter
+    def config_error_recovery_enable_tooltip(self, value: bool):
+        dereference(self._ptr).ConfigErrorRecoveryEnableTooltip = value
+        # raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(True)
+    # ?active(True)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(int)
     @property
     def config_flags(self):
@@ -17272,6 +17820,25 @@ cdef class ImGuiIO:
     @config_nav_swap_gamepad_buttons.setter
     def config_nav_swap_gamepad_buttons(self, value: bool):
         # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_scrollbar_scroll_by_page(self):
+        """
+        = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+        """
+        cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
+        return res
+    @config_scrollbar_scroll_by_page.setter
+    def config_scrollbar_scroll_by_page(self, value: bool):
+        # dereference(self._ptr).ConfigScrollbarScrollByPage = value
         raise NotImplementedError
     # [End Field]
 
@@ -18910,7 +19477,7 @@ cdef class ImGuiInputTextCallbackData:
     """
     cdef ccimgui.ImGuiInputTextCallbackData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiInputTextCallbackData from_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
         if _ptr == NULL:
@@ -18919,7 +19486,7 @@ cdef class ImGuiInputTextCallbackData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiInputTextCallbackData from_heap_ptr(ccimgui.ImGuiInputTextCallbackData* _ptr):
         wrapper = ImGuiInputTextCallbackData.from_ptr(_ptr)
@@ -18927,7 +19494,7 @@ cdef class ImGuiInputTextCallbackData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19185,7 +19752,7 @@ cdef class ImGuiInputTextCallbackData:
         cdef ccimgui.ImGuiID widget_id = <ccimgui.ImGuiID>dereference(self._ptr).UserData
         if widget_id not in _input_text_user_data:
             raise RuntimeError("Did not find widget_id: {}".format(widget_id))
-        
+
         callback, user_data = _input_text_user_data[widget_id]
         return user_data
     @user_data.setter
@@ -19274,7 +19841,7 @@ cdef class ImGuiKeyData:
     """
     cdef ccimgui.ImGuiKeyData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiKeyData from_ptr(ccimgui.ImGuiKeyData* _ptr):
         if _ptr == NULL:
@@ -19283,7 +19850,7 @@ cdef class ImGuiKeyData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiKeyData from_heap_ptr(ccimgui.ImGuiKeyData* _ptr):
         wrapper = ImGuiKeyData.from_ptr(_ptr)
@@ -19291,7 +19858,7 @@ cdef class ImGuiKeyData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19411,7 +19978,7 @@ cdef class ImGuiListClipper:
     """
     cdef ccimgui.ImGuiListClipper* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiListClipper from_ptr(ccimgui.ImGuiListClipper* _ptr):
         if _ptr == NULL:
@@ -19420,7 +19987,7 @@ cdef class ImGuiListClipper:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiListClipper from_heap_ptr(ccimgui.ImGuiListClipper* _ptr):
         wrapper = ImGuiListClipper.from_ptr(_ptr)
@@ -19428,7 +19995,7 @@ cdef class ImGuiListClipper:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19642,7 +20209,7 @@ cdef class ImGuiListClipper:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 
@@ -19748,7 +20315,7 @@ cdef class ImGuiMultiSelectIO:
     """
     cdef ccimgui.ImGuiMultiSelectIO* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiMultiSelectIO from_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
         if _ptr == NULL:
@@ -19757,7 +20324,7 @@ cdef class ImGuiMultiSelectIO:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiMultiSelectIO from_heap_ptr(ccimgui.ImGuiMultiSelectIO* _ptr):
         wrapper = ImGuiMultiSelectIO.from_ptr(_ptr)
@@ -19765,7 +20332,7 @@ cdef class ImGuiMultiSelectIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19904,7 +20471,7 @@ cdef class ImGuiPayload:
     """
     cdef const ccimgui.ImGuiPayload* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiPayload from_ptr(const ccimgui.ImGuiPayload* _ptr):
         if _ptr == NULL:
@@ -19913,7 +20480,7 @@ cdef class ImGuiPayload:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiPayload from_heap_ptr(ccimgui.ImGuiPayload* _ptr):
         wrapper = ImGuiPayload.from_ptr(_ptr)
@@ -19921,7 +20488,7 @@ cdef class ImGuiPayload:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -19951,7 +20518,7 @@ cdef class ImGuiPayload:
         cdef void* data = dereference(self._ptr).Data
         if data is NULL:
             return None
-        
+
         cdef float* colour
         if _type == PAYLOAD_TYPE_COLOR_3F:
             colour = <float*>data
@@ -20187,7 +20754,7 @@ cdef class ImGuiPlatformIO:
     """
     cdef ccimgui.ImGuiPlatformIO* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiPlatformIO from_ptr(ccimgui.ImGuiPlatformIO* _ptr):
         if _ptr == NULL:
@@ -20196,7 +20763,7 @@ cdef class ImGuiPlatformIO:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiPlatformIO from_heap_ptr(ccimgui.ImGuiPlatformIO* _ptr):
         wrapper = ImGuiPlatformIO.from_ptr(_ptr)
@@ -20204,7 +20771,7 @@ cdef class ImGuiPlatformIO:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -20877,7 +21444,7 @@ cdef class ImGuiPlatformImeData:
     """
     cdef ccimgui.ImGuiPlatformImeData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiPlatformImeData from_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
         if _ptr == NULL:
@@ -20886,7 +21453,7 @@ cdef class ImGuiPlatformImeData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiPlatformImeData from_heap_ptr(ccimgui.ImGuiPlatformImeData* _ptr):
         wrapper = ImGuiPlatformImeData.from_ptr(_ptr)
@@ -20894,7 +21461,7 @@ cdef class ImGuiPlatformImeData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -20976,7 +21543,7 @@ cdef class ImGuiPlatformMonitor:
     """
     cdef ccimgui.ImGuiPlatformMonitor* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiPlatformMonitor from_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
         if _ptr == NULL:
@@ -20985,7 +21552,7 @@ cdef class ImGuiPlatformMonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImGuiPlatformMonitor* _ptr):
         wrapper = ImGuiPlatformMonitor.from_ptr(_ptr)
@@ -20993,7 +21560,7 @@ cdef class ImGuiPlatformMonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21148,7 +21715,7 @@ cdef class ImGuiSelectionBasicStorage:
     cdef ccimgui.ImGuiSelectionBasicStorage* _ptr
     cdef bool dynamically_allocated
 
-    
+
     @staticmethod
     cdef ImGuiSelectionBasicStorage from_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
         if _ptr == NULL:
@@ -21157,7 +21724,7 @@ cdef class ImGuiSelectionBasicStorage:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiSelectionBasicStorage from_heap_ptr(ccimgui.ImGuiSelectionBasicStorage* _ptr):
         wrapper = ImGuiSelectionBasicStorage.from_ptr(_ptr)
@@ -21165,7 +21732,7 @@ cdef class ImGuiSelectionBasicStorage:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21361,7 +21928,7 @@ cdef class ImGuiSelectionBasicStorage:
         storage.AdapterIndexToStorageId = ImGuiSelectionBasicStorage._AdapterIndexToStorageId_getter
         storage._SelectionOrder = 1
         return ImGuiSelectionBasicStorage.from_heap_ptr(storage)
-    
+
     def _ImGuiSelectionBasicStorage_default_getter_python(ImGuiSelectionBasicStorage storage, int idx):
         return idx
 
@@ -21390,7 +21957,7 @@ cdef class ImGuiSelectionBasicStorage:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 
@@ -21491,7 +22058,7 @@ cdef class ImGuiSelectionExternalStorage:
     """
     cdef ccimgui.ImGuiSelectionExternalStorage* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiSelectionExternalStorage from_ptr(ccimgui.ImGuiSelectionExternalStorage* _ptr):
         if _ptr == NULL:
@@ -21500,7 +22067,7 @@ cdef class ImGuiSelectionExternalStorage:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiSelectionExternalStorage from_heap_ptr(ccimgui.ImGuiSelectionExternalStorage* _ptr):
         wrapper = ImGuiSelectionExternalStorage.from_ptr(_ptr)
@@ -21508,7 +22075,7 @@ cdef class ImGuiSelectionExternalStorage:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21538,7 +22105,7 @@ cdef class ImGuiSelectionExternalStorage:
         _external_storage_adapter_set_item_selected_callback[<uintptr_t>(self._ptr)] = value
         dereference(self._ptr).AdapterSetItemSelected = ImGuiSelectionExternalStorage._AdapterSetItemSelected_getter
         # raise NotImplementedError
-    
+
     @staticmethod
     cdef void _AdapterSetItemSelected_getter(ccimgui.ImGuiSelectionExternalStorage* storage, int idx, bool selected) noexcept:
         _external_storage_adapter_set_item_selected_callback[<uintptr_t>(storage)](
@@ -21619,7 +22186,7 @@ cdef class ImGuiSelectionExternalStorage:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 # [End Class]
@@ -21636,7 +22203,7 @@ cdef class ImGuiSelectionRequest:
     """
     cdef ccimgui.ImGuiSelectionRequest* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiSelectionRequest from_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
         if _ptr == NULL:
@@ -21645,7 +22212,7 @@ cdef class ImGuiSelectionRequest:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiSelectionRequest from_heap_ptr(ccimgui.ImGuiSelectionRequest* _ptr):
         wrapper = ImGuiSelectionRequest.from_ptr(_ptr)
@@ -21653,7 +22220,7 @@ cdef class ImGuiSelectionRequest:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21774,7 +22341,7 @@ cdef class ImGuiSizeCallbackData:
     """
     cdef ccimgui.ImGuiSizeCallbackData* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiSizeCallbackData from_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
         if _ptr == NULL:
@@ -21783,7 +22350,7 @@ cdef class ImGuiSizeCallbackData:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiSizeCallbackData from_heap_ptr(ccimgui.ImGuiSizeCallbackData* _ptr):
         wrapper = ImGuiSizeCallbackData.from_ptr(_ptr)
@@ -21791,7 +22358,7 @@ cdef class ImGuiSizeCallbackData:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -21899,7 +22466,7 @@ cdef class ImGuiStorage:
     """
     cdef ccimgui.ImGuiStorage* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiStorage from_ptr(ccimgui.ImGuiStorage* _ptr):
         if _ptr == NULL:
@@ -21908,7 +22475,7 @@ cdef class ImGuiStorage:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiStorage from_heap_ptr(ccimgui.ImGuiStorage* _ptr):
         wrapper = ImGuiStorage.from_ptr(_ptr)
@@ -21916,7 +22483,7 @@ cdef class ImGuiStorage:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22191,7 +22758,7 @@ cdef class ImGuiStoragePair:
     """
     cdef ccimgui.ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiStoragePair from_ptr(ccimgui.ImGuiStoragePair* _ptr):
         if _ptr == NULL:
@@ -22200,7 +22767,7 @@ cdef class ImGuiStoragePair:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiStoragePair from_heap_ptr(ccimgui.ImGuiStoragePair* _ptr):
         wrapper = ImGuiStoragePair.from_ptr(_ptr)
@@ -22208,7 +22775,7 @@ cdef class ImGuiStoragePair:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -22245,7 +22812,7 @@ cdef class ImGuiStoragePair:
 cdef class ImGuiStyle:
     cdef ccimgui.ImGuiStyle* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiStyle from_ptr(ccimgui.ImGuiStyle* _ptr):
         if _ptr == NULL:
@@ -22254,7 +22821,7 @@ cdef class ImGuiStyle:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiStyle from_heap_ptr(ccimgui.ImGuiStyle* _ptr):
         wrapper = ImGuiStyle.from_ptr(_ptr)
@@ -22262,7 +22829,7 @@ cdef class ImGuiStyle:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23324,7 +23891,7 @@ cdef class ImGuiTableColumnSortSpecs:
     """
     cdef const ccimgui.ImGuiTableColumnSortSpecs* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiTableColumnSortSpecs from_ptr(const ccimgui.ImGuiTableColumnSortSpecs* _ptr):
         if _ptr == NULL:
@@ -23333,7 +23900,7 @@ cdef class ImGuiTableColumnSortSpecs:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiTableColumnSortSpecs from_heap_ptr(ccimgui.ImGuiTableColumnSortSpecs* _ptr):
         wrapper = ImGuiTableColumnSortSpecs.from_ptr(_ptr)
@@ -23341,7 +23908,7 @@ cdef class ImGuiTableColumnSortSpecs:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23444,7 +24011,7 @@ cdef class ImGuiTableSortSpecs:
     """
     cdef ccimgui.ImGuiTableSortSpecs* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiTableSortSpecs from_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
         if _ptr == NULL:
@@ -23453,7 +24020,7 @@ cdef class ImGuiTableSortSpecs:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiTableSortSpecs from_heap_ptr(ccimgui.ImGuiTableSortSpecs* _ptr):
         wrapper = ImGuiTableSortSpecs.from_ptr(_ptr)
@@ -23461,7 +24028,7 @@ cdef class ImGuiTableSortSpecs:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23545,7 +24112,7 @@ cdef class ImGuiTextBuffer:
     """
     cdef ccimgui.ImGuiTextBuffer* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiTextBuffer from_ptr(ccimgui.ImGuiTextBuffer* _ptr):
         if _ptr == NULL:
@@ -23554,7 +24121,7 @@ cdef class ImGuiTextBuffer:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiTextBuffer from_heap_ptr(ccimgui.ImGuiTextBuffer* _ptr):
         wrapper = ImGuiTextBuffer.from_ptr(_ptr)
@@ -23562,7 +24129,7 @@ cdef class ImGuiTextBuffer:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23738,7 +24305,7 @@ cdef class ImGuiTextFilter:
     """
     cdef ccimgui.ImGuiTextFilter* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiTextFilter from_ptr(ccimgui.ImGuiTextFilter* _ptr):
         if _ptr == NULL:
@@ -23747,7 +24314,7 @@ cdef class ImGuiTextFilter:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiTextFilter from_heap_ptr(ccimgui.ImGuiTextFilter* _ptr):
         wrapper = ImGuiTextFilter.from_ptr(_ptr)
@@ -23755,7 +24322,7 @@ cdef class ImGuiTextFilter:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -23850,7 +24417,7 @@ cdef class ImGuiTextFilter:
         """
         cdef ccimgui.ImGuiTextFilter* _filter = <ccimgui.ImGuiTextFilter*>ccimgui.ImGui_MemAlloc(sizeof(ccimgui.ImGuiTextFilter))
         memset(_filter, 0, sizeof(ccimgui.ImGuiTextFilter))
-        
+
         cdef bytes default_filter_bytes = _bytes(default_filter)
         cdef unsigned int n_bytes = len(default_filter_bytes)
         if len(default_filter) > 0:
@@ -23879,7 +24446,7 @@ cdef class ImGuiTextFilter:
         """
         if not self.dynamically_allocated:
             return
-        
+
         self.destroy()
     # [End Method]
 
@@ -23942,7 +24509,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     """
     cdef ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
         if _ptr == NULL:
@@ -23951,7 +24518,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImGuiTextFilter_ImGuiTextRange* _ptr):
         wrapper = ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
@@ -23959,7 +24526,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24048,7 +24615,7 @@ cdef class ImGuiViewport:
     """
     cdef ccimgui.ImGuiViewport* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiViewport from_ptr(ccimgui.ImGuiViewport* _ptr):
         if _ptr == NULL:
@@ -24057,7 +24624,7 @@ cdef class ImGuiViewport:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiViewport from_heap_ptr(ccimgui.ImGuiViewport* _ptr):
         wrapper = ImGuiViewport.from_ptr(_ptr)
@@ -24065,7 +24632,7 @@ cdef class ImGuiViewport:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24452,7 +25019,7 @@ cdef class ImGuiWindowClass:
     """
     cdef ccimgui.ImGuiWindowClass* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImGuiWindowClass from_ptr(ccimgui.ImGuiWindowClass* _ptr):
         if _ptr == NULL:
@@ -24461,7 +25028,7 @@ cdef class ImGuiWindowClass:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImGuiWindowClass from_heap_ptr(ccimgui.ImGuiWindowClass* _ptr):
         wrapper = ImGuiWindowClass.from_ptr(_ptr)
@@ -24469,7 +25036,7 @@ cdef class ImGuiWindowClass:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24661,7 +25228,7 @@ cdef class ImGuiWindowClass:
 cdef class ImVec2:
     cdef ccimgui.ImVec2* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVec2 from_ptr(ccimgui.ImVec2* _ptr):
         if _ptr == NULL:
@@ -24670,7 +25237,7 @@ cdef class ImVec2:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVec2 from_heap_ptr(ccimgui.ImVec2* _ptr):
         wrapper = ImVec2.from_ptr(_ptr)
@@ -24678,7 +25245,7 @@ cdef class ImVec2:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24734,7 +25301,7 @@ cdef class ImVec4:
     """
     cdef ccimgui.ImVec4* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVec4 from_ptr(ccimgui.ImVec4* _ptr):
         if _ptr == NULL:
@@ -24743,7 +25310,7 @@ cdef class ImVec4:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVec4 from_heap_ptr(ccimgui.ImVec4* _ptr):
         wrapper = ImVec4.from_ptr(_ptr)
@@ -24751,7 +25318,7 @@ cdef class ImVec4:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24836,7 +25403,7 @@ cdef class ImVec4:
 cdef class ImVector_ImDrawChannel:
     cdef ccimgui.ImVector_ImDrawChannel* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImDrawChannel from_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
         if _ptr == NULL:
@@ -24845,7 +25412,7 @@ cdef class ImVector_ImDrawChannel:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImDrawChannel from_heap_ptr(ccimgui.ImVector_ImDrawChannel* _ptr):
         wrapper = ImVector_ImDrawChannel.from_ptr(_ptr)
@@ -24853,7 +25420,7 @@ cdef class ImVector_ImDrawChannel:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -24922,7 +25489,7 @@ cdef class ImVector_ImDrawChannel:
 cdef class ImVector_ImDrawCmd:
     cdef ccimgui.ImVector_ImDrawCmd* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImDrawCmd from_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
         if _ptr == NULL:
@@ -24931,7 +25498,7 @@ cdef class ImVector_ImDrawCmd:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImDrawCmd from_heap_ptr(ccimgui.ImVector_ImDrawCmd* _ptr):
         wrapper = ImVector_ImDrawCmd.from_ptr(_ptr)
@@ -24939,7 +25506,7 @@ cdef class ImVector_ImDrawCmd:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25008,7 +25575,7 @@ cdef class ImVector_ImDrawCmd:
 cdef class ImVector_ImDrawIdx:
     cdef ccimgui.ImVector_ImDrawIdx* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImDrawIdx from_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
         if _ptr == NULL:
@@ -25017,7 +25584,7 @@ cdef class ImVector_ImDrawIdx:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImDrawIdx from_heap_ptr(ccimgui.ImVector_ImDrawIdx* _ptr):
         wrapper = ImVector_ImDrawIdx.from_ptr(_ptr)
@@ -25025,7 +25592,7 @@ cdef class ImVector_ImDrawIdx:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25094,7 +25661,7 @@ cdef class ImVector_ImDrawIdx:
 cdef class ImVector_ImDrawListPtr:
     cdef ccimgui.ImVector_ImDrawListPtr* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImDrawListPtr from_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
         if _ptr == NULL:
@@ -25103,7 +25670,7 @@ cdef class ImVector_ImDrawListPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImDrawListPtr from_heap_ptr(ccimgui.ImVector_ImDrawListPtr* _ptr):
         wrapper = ImVector_ImDrawListPtr.from_ptr(_ptr)
@@ -25111,7 +25678,7 @@ cdef class ImVector_ImDrawListPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25180,7 +25747,7 @@ cdef class ImVector_ImDrawListPtr:
 cdef class ImVector_ImDrawVert:
     cdef ccimgui.ImVector_ImDrawVert* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImDrawVert from_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
         if _ptr == NULL:
@@ -25189,7 +25756,7 @@ cdef class ImVector_ImDrawVert:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImDrawVert from_heap_ptr(ccimgui.ImVector_ImDrawVert* _ptr):
         wrapper = ImVector_ImDrawVert.from_ptr(_ptr)
@@ -25197,7 +25764,7 @@ cdef class ImVector_ImDrawVert:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25266,7 +25833,7 @@ cdef class ImVector_ImDrawVert:
 cdef class ImVector_ImFontAtlasCustomRect:
     cdef ccimgui.ImVector_ImFontAtlasCustomRect* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImFontAtlasCustomRect from_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
         if _ptr == NULL:
@@ -25275,7 +25842,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImFontAtlasCustomRect from_heap_ptr(ccimgui.ImVector_ImFontAtlasCustomRect* _ptr):
         wrapper = ImVector_ImFontAtlasCustomRect.from_ptr(_ptr)
@@ -25283,7 +25850,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25352,7 +25919,7 @@ cdef class ImVector_ImFontAtlasCustomRect:
 cdef class ImVector_ImFontConfig:
     cdef ccimgui.ImVector_ImFontConfig* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImFontConfig from_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
         if _ptr == NULL:
@@ -25361,7 +25928,7 @@ cdef class ImVector_ImFontConfig:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImFontConfig from_heap_ptr(ccimgui.ImVector_ImFontConfig* _ptr):
         wrapper = ImVector_ImFontConfig.from_ptr(_ptr)
@@ -25369,7 +25936,7 @@ cdef class ImVector_ImFontConfig:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25438,7 +26005,7 @@ cdef class ImVector_ImFontConfig:
 cdef class ImVector_ImFontGlyph:
     cdef const ccimgui.ImVector_ImFontGlyph* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImFontGlyph from_ptr(const ccimgui.ImVector_ImFontGlyph* _ptr):
         if _ptr == NULL:
@@ -25447,7 +26014,7 @@ cdef class ImVector_ImFontGlyph:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImFontGlyph from_heap_ptr(ccimgui.ImVector_ImFontGlyph* _ptr):
         wrapper = ImVector_ImFontGlyph.from_ptr(_ptr)
@@ -25455,7 +26022,7 @@ cdef class ImVector_ImFontGlyph:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25524,7 +26091,7 @@ cdef class ImVector_ImFontGlyph:
 cdef class ImVector_ImFontPtr:
     cdef ccimgui.ImVector_ImFontPtr* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImFontPtr from_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
         if _ptr == NULL:
@@ -25533,7 +26100,7 @@ cdef class ImVector_ImFontPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImFontPtr from_heap_ptr(ccimgui.ImVector_ImFontPtr* _ptr):
         wrapper = ImVector_ImFontPtr.from_ptr(_ptr)
@@ -25541,7 +26108,7 @@ cdef class ImVector_ImFontPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25610,7 +26177,7 @@ cdef class ImVector_ImFontPtr:
 cdef class ImVector_ImGuiPlatformMonitor:
     cdef ccimgui.ImVector_ImGuiPlatformMonitor* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImGuiPlatformMonitor from_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
         if _ptr == NULL:
@@ -25619,7 +26186,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImGuiPlatformMonitor from_heap_ptr(ccimgui.ImVector_ImGuiPlatformMonitor* _ptr):
         wrapper = ImVector_ImGuiPlatformMonitor.from_ptr(_ptr)
@@ -25627,7 +26194,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25696,7 +26263,7 @@ cdef class ImVector_ImGuiPlatformMonitor:
 cdef class ImVector_ImGuiSelectionRequest:
     cdef ccimgui.ImVector_ImGuiSelectionRequest* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImGuiSelectionRequest from_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
         if _ptr == NULL:
@@ -25705,7 +26272,7 @@ cdef class ImVector_ImGuiSelectionRequest:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImGuiSelectionRequest from_heap_ptr(ccimgui.ImVector_ImGuiSelectionRequest* _ptr):
         wrapper = ImVector_ImGuiSelectionRequest.from_ptr(_ptr)
@@ -25713,7 +26280,7 @@ cdef class ImVector_ImGuiSelectionRequest:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25782,7 +26349,7 @@ cdef class ImVector_ImGuiSelectionRequest:
 cdef class ImVector_ImGuiStoragePair:
     cdef ccimgui.ImVector_ImGuiStoragePair* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImGuiStoragePair from_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
         if _ptr == NULL:
@@ -25791,7 +26358,7 @@ cdef class ImVector_ImGuiStoragePair:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImGuiStoragePair from_heap_ptr(ccimgui.ImVector_ImGuiStoragePair* _ptr):
         wrapper = ImVector_ImGuiStoragePair.from_ptr(_ptr)
@@ -25799,7 +26366,7 @@ cdef class ImVector_ImGuiStoragePair:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25868,7 +26435,7 @@ cdef class ImVector_ImGuiStoragePair:
 cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     cdef ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
         if _ptr == NULL:
@@ -25877,7 +26444,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_heap_ptr(ccimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
         wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
@@ -25885,7 +26452,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -25954,7 +26521,7 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
 cdef class ImVector_ImGuiViewportPtr:
     cdef ccimgui.ImVector_ImGuiViewportPtr* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImGuiViewportPtr from_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
         if _ptr == NULL:
@@ -25963,7 +26530,7 @@ cdef class ImVector_ImGuiViewportPtr:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImGuiViewportPtr from_heap_ptr(ccimgui.ImVector_ImGuiViewportPtr* _ptr):
         wrapper = ImVector_ImGuiViewportPtr.from_ptr(_ptr)
@@ -25971,7 +26538,7 @@ cdef class ImVector_ImGuiViewportPtr:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26040,7 +26607,7 @@ cdef class ImVector_ImGuiViewportPtr:
 cdef class ImVector_ImTextureID:
     cdef ccimgui.ImVector_ImTextureID* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImTextureID from_ptr(ccimgui.ImVector_ImTextureID* _ptr):
         if _ptr == NULL:
@@ -26049,7 +26616,7 @@ cdef class ImVector_ImTextureID:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImTextureID from_heap_ptr(ccimgui.ImVector_ImTextureID* _ptr):
         wrapper = ImVector_ImTextureID.from_ptr(_ptr)
@@ -26057,7 +26624,7 @@ cdef class ImVector_ImTextureID:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26126,7 +26693,7 @@ cdef class ImVector_ImTextureID:
 cdef class ImVector_ImU32:
     cdef ccimgui.ImVector_ImU32* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImU32 from_ptr(ccimgui.ImVector_ImU32* _ptr):
         if _ptr == NULL:
@@ -26135,7 +26702,7 @@ cdef class ImVector_ImU32:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImU32 from_heap_ptr(ccimgui.ImVector_ImU32* _ptr):
         wrapper = ImVector_ImU32.from_ptr(_ptr)
@@ -26143,7 +26710,7 @@ cdef class ImVector_ImU32:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26212,7 +26779,7 @@ cdef class ImVector_ImU32:
 cdef class ImVector_ImVec2:
     cdef ccimgui.ImVector_ImVec2* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImVec2 from_ptr(ccimgui.ImVector_ImVec2* _ptr):
         if _ptr == NULL:
@@ -26221,7 +26788,7 @@ cdef class ImVector_ImVec2:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImVec2 from_heap_ptr(ccimgui.ImVector_ImVec2* _ptr):
         wrapper = ImVector_ImVec2.from_ptr(_ptr)
@@ -26229,7 +26796,7 @@ cdef class ImVector_ImVec2:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26298,7 +26865,7 @@ cdef class ImVector_ImVec2:
 cdef class ImVector_ImVec4:
     cdef ccimgui.ImVector_ImVec4* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImVec4 from_ptr(ccimgui.ImVector_ImVec4* _ptr):
         if _ptr == NULL:
@@ -26307,7 +26874,7 @@ cdef class ImVector_ImVec4:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImVec4 from_heap_ptr(ccimgui.ImVector_ImVec4* _ptr):
         wrapper = ImVector_ImVec4.from_ptr(_ptr)
@@ -26315,7 +26882,7 @@ cdef class ImVector_ImVec4:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26384,7 +26951,7 @@ cdef class ImVector_ImVec4:
 cdef class ImVector_ImWchar:
     cdef const ccimgui.ImVector_ImWchar* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_ImWchar from_ptr(const ccimgui.ImVector_ImWchar* _ptr):
         if _ptr == NULL:
@@ -26393,7 +26960,7 @@ cdef class ImVector_ImWchar:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_ImWchar from_heap_ptr(ccimgui.ImVector_ImWchar* _ptr):
         wrapper = ImVector_ImWchar.from_ptr(_ptr)
@@ -26401,7 +26968,7 @@ cdef class ImVector_ImWchar:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26470,7 +27037,7 @@ cdef class ImVector_ImWchar:
 cdef class ImVector_char:
     cdef ccimgui.ImVector_char* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_char from_ptr(ccimgui.ImVector_char* _ptr):
         if _ptr == NULL:
@@ -26479,7 +27046,7 @@ cdef class ImVector_char:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_char from_heap_ptr(ccimgui.ImVector_char* _ptr):
         wrapper = ImVector_char.from_ptr(_ptr)
@@ -26487,7 +27054,7 @@ cdef class ImVector_char:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 
@@ -26556,7 +27123,7 @@ cdef class ImVector_char:
 cdef class ImVector_float:
     cdef const ccimgui.ImVector_float* _ptr
     cdef bool dynamically_allocated
-    
+
     @staticmethod
     cdef ImVector_float from_ptr(const ccimgui.ImVector_float* _ptr):
         if _ptr == NULL:
@@ -26565,7 +27132,7 @@ cdef class ImVector_float:
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
-    
+
     @staticmethod
     cdef ImVector_float from_heap_ptr(ccimgui.ImVector_float* _ptr):
         wrapper = ImVector_float.from_ptr(_ptr)
@@ -26573,7 +27140,7 @@ cdef class ImVector_float:
             return None
         wrapper.dynamically_allocated = True
         return wrapper
-    
+
     def __init__(self):
         raise TypeError("This class cannot be instantiated directly.")
 

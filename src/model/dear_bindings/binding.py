@@ -77,7 +77,7 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
         for item in _list:
             deep_json_filter(item, func, *args, **kwargs)
         return _list
-    
+
     if isinstance(_json, dict):
         return __recurse_dict(_json, func, *args, **kwargs)
     if isinstance(_json, list):
@@ -102,16 +102,16 @@ class Binding(IBinding):
                 methods.append(function)
                 continue
             functions.append(function)
-        
+
         struct_lookup = {s.get_name(): s for s in structs}
         for method in methods:
             method: IFunction
             class_name = method.get_arguments()[0].get_type().with_no_const_or_asterisk()
-            # Modify the name of the function so that it looks more like a 
+            # Modify the name of the function so that it looks more like a
             # method.
             method.set_python_name(method.get_python_name().replace(class_name + "_", "", 1))
             struct_lookup[class_name].add_method(method)
-        
+
         return Binding(enums, typedefs, structs, functions, pxd_header)
 
     def __init__(
@@ -127,14 +127,14 @@ class Binding(IBinding):
         self.structs: List[IStruct] = structs
         self.functions: List[IFunction] = functions
         self.pxd_header: str = pxd_header
-    
+
     def to_pxd(self, include_base: bool) -> str:
         base = """
         # -*- coding: utf-8 -*-
         # distutils: language = c++
 
         from libcpp cimport bool
-        
+
         cdef extern from "Python.h":
             ctypedef struct PyObject
 
@@ -250,7 +250,7 @@ class Binding(IBinding):
 
         cdef void* _pygui_malloc(size_t sz, void* user_data) noexcept:
             return malloc(sz)
-        
+
         cdef void _pygui_free(void* ptr, void* user_data) noexcept:
             free(ptr)
 
@@ -286,7 +286,7 @@ class Binding(IBinding):
             @staticmethod
             cdef bool* ptr(ptr: Bool):
                 return <bool*>(NULL if ptr is None else <void*>(&ptr.value))
-            
+
             cdef public bool value
 
             def __init__(self, initial_value: bool):
@@ -300,17 +300,17 @@ class Binding(IBinding):
             @staticmethod
             cdef int* ptr(ptr: Int):
                 return <int*>(NULL if ptr is None else <void*>(&ptr.value))
-            
+
             cdef public int value
 
             def __init__(self, initial_value: int=0):
                 self.value: int = initial_value
-        
+
         cdef class Long:
             @staticmethod
             cdef long long* ptr(ptr: Long):
                 return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
-            
+
             cdef public long long value
 
             def __init__(self, initial_value: int=0):
@@ -321,7 +321,7 @@ class Binding(IBinding):
             @staticmethod
             cdef float* ptr(ptr: Float):
                 return <float*>(NULL if ptr is None else <void*>(&ptr.value))
-            
+
             cdef public float value
 
             def __init__(self, initial_value: float=0.0):
@@ -332,7 +332,7 @@ class Binding(IBinding):
             @staticmethod
             cdef double* ptr(ptr: Double):
                 return <double*>(NULL if ptr is None else <void*>(&ptr.value))
-            
+
             cdef public double value
 
             def __init__(self, initial_value: float=0.0):
@@ -350,7 +350,7 @@ class Binding(IBinding):
                     raise MemoryError()
                 self._buffer_size: int = buffer_size
                 self.value = initial_value
-            
+
             def __dealloc__(self):
                 {pxd_library_name}.ImGui_MemFree(self.buffer)
 
@@ -382,33 +382,33 @@ class Binding(IBinding):
             def __init__(self, x: float, y: float):
                 self.x_ptr = Float(x)
                 self.y_ptr = Float(y)
-            
+
             def __add__(self, other: Vec2):
                 return Vec2(
                     self.x + other.x,
                     self.y + other.y,
                 )
-            
+
             def __sub__(self, other: Vec2):
                 return Vec2(
                     self.x - other.x,
                     self.y - other.y,
                 )
-            
+
             def __eq__(self, other: Vec2):
                 return self.x == other.x \\
                     and self.y == other.y
-            
+
             def __len__(self):
                 return 2
 
             def __getitem__(self, index: int):
                 return self.tuple()[index]
-            
+
             def __iter__(self):
                 self._n = -1
                 return self
-            
+
             def __next__(self):
                 self._n += 1
                 if self._n == 0:
@@ -416,10 +416,10 @@ class Binding(IBinding):
                 elif self._n == 1:
                     return self.y
                 raise StopIteration
-            
+
             def __repr__(self):
                 return f"Vec2({{self.x}}, {{self.y}})"
-            
+
             @staticmethod
             def zero():
                 return Vec2(0, 0)
@@ -448,7 +448,7 @@ class Binding(IBinding):
                     self.x_ptr,
                     self.y_ptr,
                 )
-            
+
             def tuple(self) -> Sequence[float, float]:
                 return (
                     self.x,
@@ -458,14 +458,14 @@ class Binding(IBinding):
             def from_tuple(self, vec: Sequence[float, float]) -> Vec2:
                 if len(vec) < 2:
                     raise IndexError
-                
+
                 self.x = vec[0]
                 self.y = vec[1]
                 return self
 
             def copy(self) -> Vec2:
                 return Vec2(*self.tuple())
-            
+
 
             cdef void from_array(self, float* array):
                 self.x_ptr.value = array[0]
@@ -487,7 +487,7 @@ class Binding(IBinding):
                 self.y_ptr = Float(y)
                 self.z_ptr = Float(z)
                 self.w_ptr = Float(w)
-            
+
             def __add__(self, other: Vec4):
                 return Vec4(
                     self.x + other.x,
@@ -495,7 +495,7 @@ class Binding(IBinding):
                     self.z + other.z,
                     self.w + other.w,
                 )
-            
+
             def __sub__(self, other: Vec4):
                 return Vec2(
                     self.x - other.x,
@@ -503,23 +503,23 @@ class Binding(IBinding):
                     self.z - other.z,
                     self.w - other.w,
                 )
-            
+
             def __eq__(self, other: Vec2):
                 return self.x == other.x \\
                     and self.y == other.y \\
                     and self.z == other.z \\
                     and self.w == other.w \\
-            
+
             def __len__(self):
                 return 4
 
             def __getitem__(self, index: int):
                 return self.tuple()[index]
-            
+
             def __iter__(self):
                 self._n = -1
                 return self
-            
+
             def __next__(self):
                 self._n += 1
                 if self._n == 0:
@@ -531,10 +531,10 @@ class Binding(IBinding):
                 elif self._n == 3:
                     return self.w
                 raise StopIteration
-            
+
             def __repr__(self):
                 return f"Vec4({{self.x}}, {{self.y}}, {{self.z}}, {{self.w}})"
-            
+
             @staticmethod
             def zero():
                 return Vec4(0, 0, 0, 0)
@@ -563,7 +563,7 @@ class Binding(IBinding):
             @w.setter
             def w(self, w):
                 self.w_ptr.value = w
-            
+
             def from_floatptrs(self, float_ptrs: Sequence[Float, Float, Float, Float]) -> Vec4:
                 IM_ASSERT(len(float_ptrs) >= 4, "Must be a sequence of length 4")
                 self.x_ptr = float_ptrs[0]
@@ -587,17 +587,17 @@ class Binding(IBinding):
                     self.z,
                     self.w,
                 )
-            
+
             def from_tuple(self, vec: Sequence[float, float, float, float]) -> Vec4:
                 if len(vec) < 4:
                     raise IndexError
-                
+
                 self.x = vec[0]
                 self.y = vec[1]
                 self.z = vec[2]
                 self.w = vec[3]
                 return self
-            
+
             def to_u32(self) -> int:
                 return IM_COL32(
                     int(self.x * 255),
@@ -620,12 +620,12 @@ class Binding(IBinding):
                 array[1] = self.y_ptr.value
                 array[2] = self.z_ptr.value
                 array[3] = self.w_ptr.value
-        
-                
+
+
         cdef class ImGlyphRange:
             cdef unsigned short* c_ranges
             cdef object p_ranges
-            
+
             def __cinit__(self, glyph_ranges: Sequence[tuple]):
                 # All elements passed need to be of length 2, and add 1 to any
                 # tuples that contain zero, because these are considered terminators
@@ -639,7 +639,7 @@ class Binding(IBinding):
                     start = start + 1 if start == 0 else start
                     IM_ASSERT(start <= end)
                     safe_ranges.append((start, end))
-                        
+
                 self.p_ranges = safe_ranges
                 self.c_ranges = <unsigned short*>{pxd_library_name}.ImGui_MemAlloc((len(safe_ranges) * 2 + 1) * sizeof(short))
                 if self.c_ranges == NULL:
@@ -648,14 +648,14 @@ class Binding(IBinding):
                     self.c_ranges[i * 2] = g_range[0]
                     self.c_ranges[i * 2 + 1] = g_range[1]
                 self.c_ranges[len(safe_ranges) * 2] = 0
-            
+
             @property
             def ranges(self):
                 return self.p_ranges
             @ranges.setter
             def ranges(self, value):
                 raise NotImplementedError
-            
+
             def destroy(self: ImGuiTextFilter):
                 """
                 Explicitly frees this instance.
@@ -668,7 +668,7 @@ class Binding(IBinding):
                 Just in case the user forgets to free the memory.
                 """
                 self.destroy()
-            
+
             @staticmethod
             cdef from_short_array(const {pxd_library_name}.ImWchar* c_glyph_ranges):
                 cdef {pxd_library_name}.ImWchar x
@@ -721,7 +721,7 @@ class Binding(IBinding):
             """
             if condition:
                 return
-            
+
             # The variable name of ImGuiError means nothing. It just makes python's
             # traceback look nicer. The actual name of the exception is defined
             # in the config.cpp
@@ -730,7 +730,7 @@ class Binding(IBinding):
                 raise AssertionError(error_message)
             else:
                 raise ImGuiError(error_message)
-        
+
         def IM_CLAMP(n, smallest, largest):
             return max(smallest, min(n, largest))
 
@@ -750,7 +750,7 @@ class Binding(IBinding):
         # Add Functions
         with open("core/templates/function.h") as f:
             function_base = f.read()
-        
+
         pyx.write("\n\n")
         pyx.write(PYX_TEMPLATE_MARKER)
         for function in self.functions:
@@ -765,7 +765,7 @@ class Binding(IBinding):
             class_base = f.read()
         with open("core/templates/field.h") as f:
             field_base = f.read()
-    
+
         for struct in self.structs:
             class_template = Template(class_base)
 
@@ -778,7 +778,7 @@ class Binding(IBinding):
             # if struct.comments.three_quote_all_comments() is not None:
             #     struct_comments = struct.comments.three_quote_all_comments() + "\n" + \
             #         comment_text(struct.comments.three_quote_all_comments())
-            
+
             struct_comments = struct.get_comment().three_quote_all_comments()
             class_template.set_condition("has_comment", struct_comments is not None)
             if struct_comments is not None:
@@ -792,10 +792,10 @@ class Binding(IBinding):
             pyx.write("# [Class Constants]\n")
             pyx.write(class_template.compile())
             pyx.write("    # [End Class Constants]\n\n")
-            
+
             for field in struct.get_fields():
                 field_template = Template(field_base)
-                
+
                 # Comments
                 field_comments = field.get_comment().three_quote_all_comments()
                 field_template.set_condition("has_comment", field_comments is not None)
@@ -895,13 +895,13 @@ class Binding(IBinding):
             function_arguments = textwrap.indent(function_arguments, "        ")
         else:
             function_arguments = ""
-        
+
         # Checking for lines required to marshalling between python and c
         function_template.set_condition("has_additional_lines", len(lines_required_for_marshalling) > 0)
         function_template.format(
             additional_lines=textwrap.indent("\n".join(lines_required_for_marshalling), "    ")
         )
-        
+
         # res
         followed_return_type = self.follow_type(function.get_return_type())
         res = self.marshall_c_to_python(followed_return_type).format("res")
@@ -916,7 +916,7 @@ class Binding(IBinding):
             function_arguments=function_arguments,
             res=res,
         ).compile()
-    
+
     def as_python_type(self, _type: IType) -> str:
         python_type_lookup = {
             "bool": "bool",
@@ -939,32 +939,32 @@ class Binding(IBinding):
             "char*": "str",
         }
         _type = self.follow_type(_type)
-        
+
         if _type.is_array() and _type.ptr_version() is not None:
             return "Sequence[" + _type.ptr_version() + "]"
-        
+
         if _type.with_no_const_or_sign() in python_type_lookup:
             return python_type_lookup[_type.with_no_const_or_sign()]
-        
+
         for struct in self.structs:
             if struct.get_name() == _type.with_no_const_or_asterisk():
                 return struct.get_name()
-        
+
         if _type.is_function_pointer():
             return "Callable"
-        
+
 
         return "Any"
 
     def marshall_c_to_python(self, _type: IType) -> str:
         _type = self.follow_type(_type)
-        
+
         if _type.is_string():
             return "_from_bytes({})"
-        
+
         if _type.is_vec2():
             return "_cast_ImVec2_tuple({})"
-        
+
         if _type.is_vec4():
             return "_cast_ImVec4_tuple({})"
 
@@ -973,9 +973,9 @@ class Binding(IBinding):
 
         if self.is_cimgui_type(_type):
             return _type.with_no_const_or_asterisk() + ".from_ptr({})"
-        
+
         return "{}"
-    
+
     def marshall_python_to_c(
             self,
             _type: IType,
@@ -993,7 +993,7 @@ class Binding(IBinding):
 
         elif _type.is_vec4():
             output = "_cast_tuple_ImVec4({name})"
-        
+
         elif _type.is_string() and default_value == "None":
             additional_lines.append(
                 "bytes_{name} = _bytes({name}) if {name} is not None else None".format(name=argument_name)
@@ -1002,7 +1002,7 @@ class Binding(IBinding):
 
         elif _type.is_string():
             output = "_bytes({name})"
-        
+
         elif _type.ptr_version() and default_value == "None":
             output = _type.ptr_version() + ".ptr({name})"
 
@@ -1011,19 +1011,19 @@ class Binding(IBinding):
                 pxd_library_name=pxd_library_name,
                 type_name=_type.with_no_const()
             )
-        
+
         elif _type.ptr_version() is not None:
             output = "&{name}.value"
 
         elif self.is_cimgui_type(_type):
             output = "{name}._ptr"
-        
+
         return output.format(name=argument_name), additional_lines
 
     def follow_type(self, _type: IType) -> IType:
         if not self.is_cimgui_type(_type):
             return _type
-        
+
         for enum in self.enums:
             if enum.get_name() == _type.with_no_const_or_asterisk():
                 return _Type(
@@ -1034,7 +1034,7 @@ class Binding(IBinding):
         for typedef in self.typedefs:
             if _type.with_no_const_or_asterisk() == typedef.get_definition():
                 return self.follow_type(typedef.get_base())
-        
+
         return _type
 
     def as_name_type_default_parameter(self, argument: IArgument) -> str:
@@ -1051,15 +1051,15 @@ class Binding(IBinding):
                 return True
             if enum.has_element(_type.with_no_const_or_asterisk()):
                 return True
-        
+
         for typedef in self.typedefs:
             if typedef.get_definition() == _type.with_no_const_or_asterisk():
                 return True
-        
+
         for struct in self.structs:
             if _type.with_no_const_or_asterisk() == struct.get_name():
                 return True
-        
+
         return False
 
     def __repr__(self):

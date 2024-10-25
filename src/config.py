@@ -41,3 +41,33 @@ with open("external/dear_bindings/generated/backends/cimgui_impl_opengl3.json") 
     modules.append(
         Binding.from_json(json.load(f), "cimgui_impl_opengl3.h", defines)
     )
+
+# Error handling from cimgui_internal.h
+with open("external/dear_bindings/generated/cimgui_internal.json") as f:
+    loaded_json = json.load(f)
+
+
+    # ImGuiErrorRecoveryState
+    structs = []
+    for struct in loaded_json["structs"]:
+        if struct["original_fully_qualified_name"] == "ImGuiErrorRecoveryState":
+            structs = [struct]
+            break
+
+    # ImGui::ErrorRecoveryStoreState & ImGui::ErrorRecoveryTryToRecoverState
+    functions = []
+    for function in loaded_json["functions"]:
+        if function["original_fully_qualified_name"] == "ImGui::ErrorRecoveryStoreState" or \
+            function["original_fully_qualified_name"] == "ImGui::ErrorRecoveryTryToRecoverState":
+            functions.append(function)
+
+    loaded_json = {
+        "enums": [],
+        "typedefs": [],
+        "structs": structs,
+        "functions": functions,
+    }
+
+    modules.append(
+        Binding.from_json(loaded_json, "cimgui_internal.h", defines)
+    )
