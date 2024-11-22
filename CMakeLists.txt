@@ -64,6 +64,9 @@ target_include_directories(my_program_cpp PRIVATE
 target_compile_definitions(my_program_cpp PRIVATE
     IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
 )
+# No Console window on startup
+# set_target_properties(my_program_cpp PROPERTIES 
+#    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
 target_link_libraries(my_program_cpp opengl32 glfw)
 
 
@@ -151,6 +154,9 @@ target_compile_definitions(my_program_c PRIVATE
     PYGUI_COMPILING_DLL_APP
     IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
 )
+# No Console window on startup
+# set_target_properties(my_program_c PROPERTIES 
+#    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
 target_link_libraries(my_program_c cimgui_glfw_opengl3 opengl32)
 
 
