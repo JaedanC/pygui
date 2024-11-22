@@ -737,6 +737,7 @@ SORT_DIRECTION_NONE = ccimgui.ImGuiSortDirection_None
 SORT_DIRECTION_ASCENDING = ccimgui.ImGuiSortDirection_Ascending
 SORT_DIRECTION_DESCENDING = ccimgui.ImGuiSortDirection_Descending
 KEY_NONE = ccimgui.ImGuiKey_None
+KEY_NAMED_KEY_BEGIN = ccimgui.ImGuiKey_NamedKey_BEGIN
 KEY_TAB = ccimgui.ImGuiKey_Tab
 KEY_LEFT_ARROW = ccimgui.ImGuiKey_LeftArrow
 KEY_RIGHT_ARROW = ccimgui.ImGuiKey_RightArrow
@@ -891,18 +892,14 @@ KEY_RESERVED_FOR_MOD_CTRL = ccimgui.ImGuiKey_ReservedForModCtrl
 KEY_RESERVED_FOR_MOD_SHIFT = ccimgui.ImGuiKey_ReservedForModShift
 KEY_RESERVED_FOR_MOD_ALT = ccimgui.ImGuiKey_ReservedForModAlt
 KEY_RESERVED_FOR_MOD_SUPER = ccimgui.ImGuiKey_ReservedForModSuper
-KEY_COUNT = ccimgui.ImGuiKey_COUNT
+KEY_NAMED_KEY_END = ccimgui.ImGuiKey_NamedKey_END
 MOD_NONE = ccimgui.ImGuiMod_None
 MOD_CTRL = ccimgui.ImGuiMod_Ctrl
 MOD_SHIFT = ccimgui.ImGuiMod_Shift
 MOD_ALT = ccimgui.ImGuiMod_Alt
 MOD_SUPER = ccimgui.ImGuiMod_Super
 MOD_MASK = ccimgui.ImGuiMod_Mask_
-KEY_NAMED_KEY_BEGIN = ccimgui.ImGuiKey_NamedKey_BEGIN
-KEY_NAMED_KEY_END = ccimgui.ImGuiKey_NamedKey_END
 KEY_NAMED_KEY_COUNT = ccimgui.ImGuiKey_NamedKey_COUNT
-KEY_KEYS_DATA_SIZE = ccimgui.ImGuiKey_KeysData_SIZE
-KEY_KEYS_DATA_OFFSET = ccimgui.ImGuiKey_KeysData_OFFSET
 INPUT_FLAGS_NONE = ccimgui.ImGuiInputFlags_None
 INPUT_FLAGS_REPEAT = ccimgui.ImGuiInputFlags_Repeat
 INPUT_FLAGS_ROUTE_ACTIVE = ccimgui.ImGuiInputFlags_RouteActive
@@ -917,8 +914,6 @@ INPUT_FLAGS_TOOLTIP = ccimgui.ImGuiInputFlags_Tooltip
 CONFIG_FLAGS_NONE = ccimgui.ImGuiConfigFlags_None
 CONFIG_FLAGS_NAV_ENABLE_KEYBOARD = ccimgui.ImGuiConfigFlags_NavEnableKeyboard
 CONFIG_FLAGS_NAV_ENABLE_GAMEPAD = ccimgui.ImGuiConfigFlags_NavEnableGamepad
-CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS = ccimgui.ImGuiConfigFlags_NavEnableSetMousePos
-CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD = ccimgui.ImGuiConfigFlags_NavNoCaptureKeyboard
 CONFIG_FLAGS_NO_MOUSE = ccimgui.ImGuiConfigFlags_NoMouse
 CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE = ccimgui.ImGuiConfigFlags_NoMouseCursorChange
 CONFIG_FLAGS_NO_KEYBOARD = ccimgui.ImGuiConfigFlags_NoKeyboard
@@ -990,7 +985,7 @@ COL_TABLE_ROW_BG_ALT = ccimgui.ImGuiCol_TableRowBgAlt
 COL_TEXT_LINK = ccimgui.ImGuiCol_TextLink
 COL_TEXT_SELECTED_BG = ccimgui.ImGuiCol_TextSelectedBg
 COL_DRAG_DROP_TARGET = ccimgui.ImGuiCol_DragDropTarget
-COL_NAV_HIGHLIGHT = ccimgui.ImGuiCol_NavHighlight
+COL_NAV_CURSOR = ccimgui.ImGuiCol_NavCursor
 COL_NAV_WINDOWING_HIGHLIGHT = ccimgui.ImGuiCol_NavWindowingHighlight
 COL_NAV_WINDOWING_DIM_BG = ccimgui.ImGuiCol_NavWindowingDimBg
 COL_MODAL_WINDOW_DIM_BG = ccimgui.ImGuiCol_ModalWindowDimBg
@@ -1035,6 +1030,7 @@ BUTTON_FLAGS_MOUSE_BUTTON_LEFT = ccimgui.ImGuiButtonFlags_MouseButtonLeft
 BUTTON_FLAGS_MOUSE_BUTTON_RIGHT = ccimgui.ImGuiButtonFlags_MouseButtonRight
 BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE = ccimgui.ImGuiButtonFlags_MouseButtonMiddle
 BUTTON_FLAGS_MOUSE_BUTTON_MASK = ccimgui.ImGuiButtonFlags_MouseButtonMask_
+BUTTON_FLAGS_ENABLE_NAV = ccimgui.ImGuiButtonFlags_EnableNav
 COLOR_EDIT_FLAGS_NONE = ccimgui.ImGuiColorEditFlags_None
 COLOR_EDIT_FLAGS_NO_ALPHA = ccimgui.ImGuiColorEditFlags_NoAlpha
 COLOR_EDIT_FLAGS_NO_PICKER = ccimgui.ImGuiColorEditFlags_NoPicker
@@ -3075,7 +3071,7 @@ def drag_float(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max
     the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
     - Format string may also be set to NULL or use the default format ("%f" or "%d").
-    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
+    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For keyboard/gamepad navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
     - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
     - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
     - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
@@ -6251,9 +6247,8 @@ def is_key_down(key: int):
     """
     Inputs Utilities: Keyboard/Mouse/Gamepad
     - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
-    - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
-    - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-    - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    - (legacy: before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https://github.com/ocornut/imgui/issues/4921)
+    - (legacy: any use of ImGuiKey will assert when key < 512 to detect passing legacy native/user indices)
     Is key being held.
     """
     cdef bool res = ccimgui.ImGui_IsKeyDown(
@@ -6370,7 +6365,7 @@ def is_mouse_double_clicked(button: int):
 # ?returns(bool)
 def is_mouse_down(button: int):
     """
-    Inputs Utilities: Mouse specific
+    Inputs Utilities: Mouse
     - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
     - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
     - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')
@@ -8131,8 +8126,7 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
 def set_item_default_focus():
     """
     Focus, Activation
-    - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
-    Make last item the default focused item of a window.
+    Make last item the default focused item of of a newly appearing window.
     """
     ccimgui.ImGui_SetItemDefaultFocus()
 # [End Function]
@@ -8228,6 +8222,22 @@ def set_mouse_cursor(cursor_type: int):
     ccimgui.ImGui_SetMouseCursor(
         cursor_type
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+# def set_nav_cursor_visible(visible: bool):
+#     """
+#     Keyboard/Gamepad Navigation
+#     Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
+#     """
+#     ccimgui.ImGui_SetNavCursorVisible(
+#         visible
+#     )
 # [End Function]
 
 # [Function]
@@ -11041,13 +11051,51 @@ cdef class ImDrawCmd:
     # @property
     # def user_callback_data(self):
     #     """
-    #     4-8  // the draw callback code can access this.
+    #     4-8  // callback user data (when usercallback != null). if called addcallback() with size == 0, this is a copy of the addcallback() argument. if called addcallback() with size > 0, this is pointing to a buffer where data is stored.
     #     """
     #     cdef void* res = dereference(self._ptr).UserCallbackData
     #     return res
     # @user_callback_data.setter
     # def user_callback_data(self, value: Any):
     #     # dereference(self._ptr).UserCallbackData = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def user_callback_data_offset(self):
+    #     """
+    #     4 // [internal] offset of callback user data when using storage, otherwise -1.
+    #     """
+    #     cdef int res = dereference(self._ptr).UserCallbackDataOffset
+    #     return res
+    # @user_callback_data_offset.setter
+    # def user_callback_data_offset(self, value: int):
+    #     # dereference(self._ptr).UserCallbackDataOffset = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def user_callback_data_size(self):
+    #     """
+    #     4 // size of callback user data when using storage, otherwise 0.
+    #     """
+    #     cdef int res = dereference(self._ptr).UserCallbackDataSize
+    #     return res
+    # @user_callback_data_size.setter
+    # def user_callback_data_size(self, value: int):
+    #     # dereference(self._ptr).UserCallbackDataSize = value
     #     raise NotImplementedError
     # [End Field]
 
@@ -11461,7 +11509,7 @@ cdef class ImDrawList:
     access the current window draw list and draw custom primitives.
     You can interleave normal ImGui:: calls and adding primitives to the current draw list.
     In single viewport mode, top-left is == GetMainViewport()->Pos (generally 0,0), bottom-right is == GetMainViewport()->Pos+Size (generally io.DisplaySize).
-    You are totally free to apply whatever transformation matrix to want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
+    You are totally free to apply whatever transformation matrix you want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
     Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.
     """
     cdef ccimgui.ImDrawList* _ptr
@@ -11493,6 +11541,25 @@ cdef class ImDrawList:
         cdef unsigned int ptr_int = <uintptr_t>self._ptr
         return hash(ptr_int)
     # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImU8)
+    # @property
+    # def callbacks_data_buf(self):
+    #     """
+    #     [internal]
+    #     """
+    #     cdef ccimgui.ImVector_ImU8 res = dereference(self._ptr)._CallbacksDataBuf
+    #     return ImVector_ImU8.from_ptr(res)
+    # @callbacks_data_buf.setter
+    # def callbacks_data_buf(self, value: ImVector_ImU8):
+    #     # dereference(self._ptr)._CallbacksDataBuf = value._ptr
+    #     raise NotImplementedError
+    # [End Field]
 
     # [Field]
     # ?use_template(False)
@@ -11831,15 +11898,38 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def add_callback(self: ImDrawList, callback: Callable, callback_data: Any):
+    # def add_callback(self: ImDrawList, callback: Callable, userdata: Any):
     #     """
-    #     Advanced
-    #     Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
+    #     Advanced: Draw Callbacks
+    #     - May be used to alter render state (change sampler, blending, current shader). May be used to emit custom rendering commands (difficult to do correctly, but possible).
+    #     - Use special ImDrawCallback_ResetRenderState callback to instruct backend to reset its render state to the default.
+    #     - Your rendering loop must check for 'UserCallback' in ImDrawCmd and call the function instead of rendering triangles. All standard backends are honoring this.
+    #     - For some backends, the callback may access selected render-states exposed by the backend in a ImGui_ImplXXXX_RenderState structure pointed to by platform_io.Renderer_RenderState.
+    #     - IMPORTANT: please be mindful of the different level of indirection between using size==0 (copying argument) and using size>0 (copying pointed data into a buffer).
+    #     - If userdata_size == 0: we copy/store the 'userdata' argument as-is. It will be available unmodified in ImDrawCmd::UserCallbackData during render.
+    #     - If userdata_size > 0,  we copy/store 'userdata_size' bytes pointed to by 'userdata'. We store them in a buffer stored inside the drawlist. ImDrawCmd::UserCallbackData will point inside that buffer so you have to retrieve data from there. Your callback may need to use ImDrawCmd::UserCallbackDataSize if you expect dynamically-sized data.
+    #     - Support for userdata_size > 0 was added in v1.91.4, October 2024. So earlier code always only allowed to copy/store a simple void*.
+    #     Implied userdata_size = 0
     #     """
     #     ccimgui.ImDrawList_AddCallback(
     #         self._ptr,
     #         callback,
-    #         callback_data
+    #         userdata
+    #     )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    # def add_callback_ex(self: ImDrawList, callback: Callable, userdata: Any, userdata_size: int=0):
+    #     ccimgui.ImDrawList_AddCallbackEx(
+    #         self._ptr,
+    #         callback,
+    #         userdata,
+    #         userdata_size
     #     )
     # [End Method]
 
@@ -11947,6 +12037,7 @@ cdef class ImDrawList:
     # ?returns(None)
     # def add_draw_cmd(self: ImDrawList):
     #     """
+    #     Advanced: Miscellaneous
     #     This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
     #     """
     #     ccimgui.ImDrawList_AddDrawCmd(
@@ -14646,7 +14737,7 @@ cdef class ImFontAtlas:
         return res
     @tex_id.setter
     def tex_id(self, value: int):
-        dereference(self._ptr).TexID = <void*>value
+        dereference(self._ptr).TexID = <ccimgui.ImTextureID>value
         # raise NotImplementedError
     # [End Field]
 
@@ -15408,6 +15499,25 @@ cdef class ImFontAtlasCustomRect:
     def glyph_advance_x(self, value: float):
         # dereference(self._ptr).GlyphAdvanceX = value
         raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def glyph_colored(self):
+    #     """
+    #     Input  // for custom font glyphs only: glyph is colored, removed tinting.
+    #     """
+    #     cdef unsigned int res = dereference(self._ptr).GlyphColored
+    #     return res
+    # @glyph_colored.setter
+    # def glyph_colored(self, value: int):
+    #     # dereference(self._ptr).GlyphColored = value
+    #     raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -17341,44 +17451,6 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def backend_using_legacy_key_arrays(self):
-        """
-        -1: unknown, 0: using addkeyevent(), 1: using legacy io.keysdown[]
-        """
-        cdef ccimgui.ImS8 res = dereference(self._ptr).BackendUsingLegacyKeyArrays
-        return res
-    @backend_using_legacy_key_arrays.setter
-    def backend_using_legacy_key_arrays(self, value: int):
-        # dereference(self._ptr).BackendUsingLegacyKeyArrays = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def backend_using_legacy_nav_input_array(self):
-        """
-        0: using addkeyanalogevent(), 1: writing to legacy io.navinputs[] directly
-        """
-        cdef bool res = dereference(self._ptr).BackendUsingLegacyNavInputArray
-        return res
-    @backend_using_legacy_nav_input_array.setter
-    def backend_using_legacy_nav_input_array(self, value: bool):
-        # dereference(self._ptr).BackendUsingLegacyNavInputArray = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(bool)
     @property
     def config_debug_begin_return_value_loop(self):
@@ -17699,7 +17771,7 @@ cdef class ImGuiIO:
     @property
     def config_flags(self):
         """
-        = 0  // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
+        = 0  // see imguiconfigflags_ enum. set by user/application. keyboard/gamepad navigation options, etc.
         """
         cdef ccimgui.ImGuiConfigFlags res = dereference(self._ptr).ConfigFlags
         return res
@@ -17806,6 +17878,120 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_capture_keyboard(self):
+    #     """
+    #     = true           // sets io.wantcapturekeyboard when io.navactive is set.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavCaptureKeyboard
+    #     return res
+    # @config_nav_capture_keyboard.setter
+    # def config_nav_capture_keyboard(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavCaptureKeyboard = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_cursor_visible_always(self):
+    #     """
+    #     = false          // navigation cursor is always visible.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAlways
+    #     return res
+    # @config_nav_cursor_visible_always.setter
+    # def config_nav_cursor_visible_always(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavCursorVisibleAlways = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_cursor_visible_auto(self):
+    #     """
+    #     = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAuto
+    #     return res
+    # @config_nav_cursor_visible_auto.setter
+    # def config_nav_cursor_visible_auto(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavCursorVisibleAuto = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_escape_clear_focus_item(self):
+    #     """
+    #     = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusItem
+    #     return res
+    # @config_nav_escape_clear_focus_item.setter
+    # def config_nav_escape_clear_focus_item(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavEscapeClearFocusItem = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_escape_clear_focus_window(self):
+    #     """
+    #     = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusWindow
+    #     return res
+    # @config_nav_escape_clear_focus_window.setter
+    # def config_nav_escape_clear_focus_window(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavEscapeClearFocusWindow = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_nav_move_set_mouse_pos(self):
+    #     """
+    #     = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigNavMoveSetMousePos
+    #     return res
+    # @config_nav_move_set_mouse_pos.setter
+    # def config_nav_move_set_mouse_pos(self, value: bool):
+    #     # dereference(self._ptr).ConfigNavMoveSetMousePos = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -17813,6 +17999,7 @@ cdef class ImGuiIO:
     @property
     def config_nav_swap_gamepad_buttons(self):
         """
+        Keyboard/Gamepad Navigation options
         = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
         """
         cdef bool res = dereference(self._ptr).ConfigNavSwapGamepadButtons
@@ -17921,6 +18108,25 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    # @property
+    # def config_windows_copy_contents_with_ctrl_c(self):
+    #     """
+    #     = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
+    #     """
+    #     cdef bool res = dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC
+    #     return res
+    # @config_windows_copy_contents_with_ctrl_c.setter
+    # def config_windows_copy_contents_with_ctrl_c(self, value: bool):
+    #     # dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -17928,7 +18134,7 @@ cdef class ImGuiIO:
     @property
     def config_windows_move_from_title_bar_only(self):
         """
-        = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+        = false      // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
         """
         cdef bool res = dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly
         return res
@@ -17947,7 +18153,7 @@ cdef class ImGuiIO:
     @property
     def config_windows_resize_from_edges(self):
         """
-        = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
+        = true           // enable resizing of windows from their edges and from the lower-left corner. this requires imguibackendflags_hasmousecursors for better mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         """
         cdef bool res = dereference(self._ptr).ConfigWindowsResizeFromEdges
         return res
@@ -18042,7 +18248,7 @@ cdef class ImGuiIO:
     @property
     def font_allow_user_scaling(self):
         """
-        = false          // allow user scaling text of individual window with ctrl+wheel.
+        = false          // [obsolete] allow user scaling text of individual window with ctrl+wheel.
         """
         cdef bool res = dereference(self._ptr).FontAllowUserScaling
         return res
@@ -19007,7 +19213,7 @@ cdef class ImGuiIO:
     @property
     def nav_visible(self):
         """
-        Keyboard/gamepad navigation is visible and allowed (will handle imguikey_navxxx events).
+        Keyboard/gamepad navigation highlight is visible and allowed (will handle imguikey_navxxx events).
         """
         cdef bool res = dereference(self._ptr).NavVisible
         return res
@@ -19146,7 +19352,7 @@ cdef class ImGuiIO:
     @property
     def want_set_mouse_pos(self):
         """
-        Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when imguiconfigflags_navenablesetmousepos flag is enabled.
+        Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when io.confignavmovesetmousepos is enabled.
         """
         cdef bool res = dereference(self._ptr).WantSetMousePos
         return res
@@ -21348,6 +21554,25 @@ cdef class ImGuiPlatformIO:
     # @renderer_destroy_window.setter
     # def renderer_destroy_window(self, value: Callable):
     #     # dereference(self._ptr).Renderer_DestroyWindow = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    # @property
+    # def renderer_render_state(self):
+    #     """
+    #     Written by some backends during ImGui_ImplXXXX_RenderDrawData() call to point backend_specific ImGui_ImplXXXX_RenderState* structure.
+    #     """
+    #     cdef void* res = dereference(self._ptr).Renderer_RenderState
+    #     return res
+    # @renderer_render_state.setter
+    # def renderer_render_state(self, value: Any):
+    #     # dereference(self._ptr).Renderer_RenderState = value
     #     raise NotImplementedError
     # [End Field]
 
@@ -26750,6 +26975,140 @@ cdef class ImVector_ImU32:
     # @data.setter
     # def data(self, value: int):
     #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
+    #     raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImU8:
+    cdef ccimgui.ImVector_ImU8* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImU8 from_ptr(ccimgui.ImVector_ImU8* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImU8 wrapper = ImVector_ImU8.__new__(ImVector_ImU8)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImU8 from_heap_ptr(ccimgui.ImVector_ImU8* _ptr):
+        wrapper = ImVector_ImU8.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def capacity(self):
+    #     cdef int res = dereference(self._ptr).Capacity
+    #     return res
+    # @capacity.setter
+    # def capacity(self, value: int):
+    #     # dereference(self._ptr).Capacity = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImU8* res = dereference(self._ptr).Data
+    #     return res
+    # @data.setter
+    # def data(self, value: int):
+    #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def data(self):
+    #     cdef ccimgui.ImU8* res = dereference(self._ptr).Data
+    #     return res
+    # @data.setter
+    # def data(self, value: int):
+    #     # dereference(self._ptr).Data = value
+    #     raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    # @property
+    # def size(self):
+    #     cdef int res = dereference(self._ptr).Size
+    #     return res
+    # @size.setter
+    # def size(self, value: int):
+    #     # dereference(self._ptr).Size = value
     #     raise NotImplementedError
     # [End Field]
 

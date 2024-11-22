@@ -431,11 +431,11 @@ class HeaderComparison:
 
             if not all(results):
                 print(f"Failed to apply patch to comments in {comparable_lookup}:")
-                print("Old options ---------------------------")
+                print("Old comments ---------------------------------")
                 print(old_obj.comment)
-                print("New implementation ---------------------------")
+                print("New comments ---------------------------------")
                 print(new_obj.comment)
-                print("Template implementation ----------------------")
+                print("Template comments ----------------------------")
                 print(write_to_comparable.comment)
                 print("We got to ------------------------------------")
                 print(applied_template_comments)

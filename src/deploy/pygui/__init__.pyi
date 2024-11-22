@@ -400,8 +400,8 @@ WINDOW_FLAGS_NO_FOCUS_ON_APPEARING: int           # Disable taking focus when tr
 WINDOW_FLAGS_NO_BRING_TO_FRONT_ON_FOCUS: int      # Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
 WINDOW_FLAGS_ALWAYS_VERTICAL_SCROLLBAR: int       # Always show vertical scrollbar (even if contentsize.y < size.y)
 WINDOW_FLAGS_ALWAYS_HORIZONTAL_SCROLLBAR: int     # Always show horizontal scrollbar (even if contentsize.x < size.x)
-WINDOW_FLAGS_NO_NAV_INPUTS: int                   # No gamepad/keyboard navigation within the window
-WINDOW_FLAGS_NO_NAV_FOCUS: int                    # No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by ctrl+tab)
+WINDOW_FLAGS_NO_NAV_INPUTS: int                   # No keyboard/gamepad navigation within the window
+WINDOW_FLAGS_NO_NAV_FOCUS: int                    # No focusing toward this window with keyboard/gamepad navigation (e.g. skipped by ctrl+tab)
 WINDOW_FLAGS_UNSAVED_DOCUMENT: int                # Display a dot next to the title. when used in a tab/docking context, tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
 WINDOW_FLAGS_NO_DOCKING: int                      # Disable docking of this window
 WINDOW_FLAGS_NO_NAV: int
@@ -422,7 +422,7 @@ CHILD_FLAGS_AUTO_RESIZE_X: int                 # Enable auto-resizing width. rea
 CHILD_FLAGS_AUTO_RESIZE_Y: int                 # Enable auto-resizing height. read 'important: size measurement' details above.
 CHILD_FLAGS_ALWAYS_AUTO_RESIZE: int            # Combined with autoresizex/autoresizey. always measure size even when child is hidden, always return true, always disable clipping optimization! not recommended.
 CHILD_FLAGS_FRAME_STYLE: int                   # Style the child window like a framed item: use framebg, framerounding, framebordersize, framepadding instead of childbg, childrounding, childbordersize, windowpadding.
-CHILD_FLAGS_NAV_FLATTENED: int                 # [beta] share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+CHILD_FLAGS_NAV_FLATTENED: int                 # [beta] share focus scope, allow keyboard/gamepad navigation to cross over parent border to this child or between sibling child windows.
 ITEM_FLAGS_NONE: int                     # (default)
 ITEM_FLAGS_NO_TAB_STOP: int              # False    // disable keyboard tabbing. this is a 'lighter' version of imguiitemflags_nonav.
 ITEM_FLAGS_NO_NAV: int                   # False    // disable any form of focusing (keyboard/gamepad directional navigation and setkeyboardfocushere() calls).
@@ -437,7 +437,7 @@ INPUT_TEXT_FLAGS_CHARS_SCIENTIFIC: int            # Allow 0123456789.+-*/ee (sci
 INPUT_TEXT_FLAGS_CHARS_UPPERCASE: int             # Turn a..z into a..z
 INPUT_TEXT_FLAGS_CHARS_NO_BLANK: int              # Filter out spaces, tabs
 INPUT_TEXT_FLAGS_ALLOW_TAB_INPUT: int             # Pressing tab input a '\t' character into the text field
-INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE: int          # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider looking at the isitemdeactivatedafteredit() function.
+INPUT_TEXT_FLAGS_ENTER_RETURNS_TRUE: int          # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider using isitemdeactivatedafteredit() instead!
 INPUT_TEXT_FLAGS_ESCAPE_CLEARS_ALL: int           # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
 INPUT_TEXT_FLAGS_CTRL_ENTER_FOR_NEW_LINE: int     # In multi-line mode, validate with enter, add new line with ctrl+enter (default is opposite: validate with ctrl+enter, add line with enter).
 INPUT_TEXT_FLAGS_READ_ONLY: int                   # Read-only mode
@@ -541,7 +541,7 @@ HOVERED_FLAGS_ALLOW_WHEN_BLOCKED_BY_ACTIVE_ITEM: int     # Return true even if a
 HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_ITEM: int         # Isitemhovered() only: return true even if the item uses allowoverlap mode and is overlapped by another hoverable item.
 HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED_BY_WINDOW: int       # Isitemhovered() only: return true even if the position is obstructed or overlapped by another window.
 HOVERED_FLAGS_ALLOW_WHEN_DISABLED: int                   # Isitemhovered() only: return true even if the item is disabled
-HOVERED_FLAGS_NO_NAV_OVERRIDE: int                       # Isitemhovered() only: disable using gamepad/keyboard navigation state when active, always query mouse
+HOVERED_FLAGS_NO_NAV_OVERRIDE: int                       # Isitemhovered() only: disable using keyboard/gamepad navigation state when active, always query mouse
 HOVERED_FLAGS_ALLOW_WHEN_OVERLAPPED: int
 HOVERED_FLAGS_RECT_ONLY: int
 HOVERED_FLAGS_ROOT_AND_CHILD_WINDOWS: int
@@ -594,6 +594,7 @@ SORT_DIRECTION_NONE: int
 SORT_DIRECTION_ASCENDING: int      # Ascending = 0->9, a->z etc.
 SORT_DIRECTION_DESCENDING: int     # Descending = 9->0, z->a etc.
 KEY_NONE: int
+KEY_NAMED_KEY_BEGIN: int            # First valid key value (other than 0)
 KEY_TAB: int                        # == imguikey_namedkey_begin
 KEY_LEFT_ARROW: int
 KEY_RIGHT_ARROW: int
@@ -748,18 +749,14 @@ KEY_RESERVED_FOR_MOD_CTRL: int
 KEY_RESERVED_FOR_MOD_SHIFT: int
 KEY_RESERVED_FOR_MOD_ALT: int
 KEY_RESERVED_FOR_MOD_SUPER: int
-KEY_COUNT: int
+KEY_NAMED_KEY_END: int
 MOD_NONE: int
 MOD_CTRL: int                       # Ctrl (non-macos), cmd (macos)
 MOD_SHIFT: int                      # Shift
 MOD_ALT: int                        # Option/menu
 MOD_SUPER: int                      # Windows/super (non-macos), ctrl (macos)
 MOD_MASK: int                       # 4-bits
-KEY_NAMED_KEY_BEGIN: int
-KEY_NAMED_KEY_END: int
 KEY_NAMED_KEY_COUNT: int
-KEY_KEYS_DATA_SIZE: int             # Size of keysdata[]: only hold named keys
-KEY_KEYS_DATA_OFFSET: int           # Accesses to io.keysdata[] must use (key - imguikey_keysdata_offset) index.
 INPUT_FLAGS_NONE: int
 INPUT_FLAGS_REPEAT: int                      # Enable repeat. return true on successive repeats. default for legacy iskeypressed(). not default for legacy ismouseclicked(). must be == 1.
 INPUT_FLAGS_ROUTE_ACTIVE: int                # Route to active item only.
@@ -774,8 +771,6 @@ INPUT_FLAGS_TOOLTIP: int                     # Automatically display a tooltip w
 CONFIG_FLAGS_NONE: int
 CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int            # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
 CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int             # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
-CONFIG_FLAGS_NAV_ENABLE_SET_MOUSE_POS: int       # Instruct navigation to move the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is awkward. will update io.mousepos and set io.wantsetmousepos=true. if enabled you must honor io.wantsetmousepos requests in your backend, otherwise imgui will react as if the mouse is jumping around back and forth.
-CONFIG_FLAGS_NAV_NO_CAPTURE_KEYBOARD: int        # Instruct navigation to not set the io.wantcapturekeyboard flag when io.navactive is set.
 CONFIG_FLAGS_NO_MOUSE: int                       # Instruct dear imgui to disable mouse inputs and interactions.
 CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int         # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
 CONFIG_FLAGS_NO_KEYBOARD: int                    # Instruct dear imgui to disable keyboard inputs and interactions. this is done by ignoring keyboard events and clearing existing states.
@@ -788,7 +783,7 @@ CONFIG_FLAGS_IS_TOUCH_SCREEN: int                # Application is using a touch 
 BACKEND_FLAGS_NONE: int
 BACKEND_FLAGS_HAS_GAMEPAD: int                    # Backend platform supports gamepad and currently has one connected.
 BACKEND_FLAGS_HAS_MOUSE_CURSORS: int              # Backend platform supports honoring getmousecursor() value to change the os cursor shape.
-BACKEND_FLAGS_HAS_SET_MOUSE_POS: int              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if imguiconfigflags_navenablesetmousepos is set).
+BACKEND_FLAGS_HAS_SET_MOUSE_POS: int              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if io.confignavmovesetmousepos is set).
 BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: int        # Backend renderer supports imdrawcmd::vtxoffset. this enables output of large meshes (64k+ vertices) while still using 16-bit indices.
 BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: int         # Backend platform supports multiple viewports.
 BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int     # Backend platform supports calling io.addmouseviewportevent() with the viewport under the mouse. if possible, ignore viewports with the imguiviewportflags_noinputs flag (win32 backend, glfw 3.30+ backend can do this, sdl backend cannot). if this cannot be done, dear imgui needs to use a flawed heuristic to find the viewport under.
@@ -847,7 +842,7 @@ COL_TABLE_ROW_BG_ALT: int                 # Table row background (odd rows)
 COL_TEXT_LINK: int                        # Hyperlink color
 COL_TEXT_SELECTED_BG: int
 COL_DRAG_DROP_TARGET: int                 # Rectangle highlighting a drop target
-COL_NAV_HIGHLIGHT: int                    # Gamepad/keyboard: current highlighted item
+COL_NAV_CURSOR: int                       # Color of keyboard/gamepad navigation cursor/rectangle, when visible
 COL_NAV_WINDOWING_HIGHLIGHT: int          # Highlight window when using ctrl+tab
 COL_NAV_WINDOWING_DIM_BG: int             # Darken/colorize entire screen behind the ctrl+tab window list, when active
 COL_MODAL_WINDOW_DIM_BG: int              # Darken/colorize entire screen behind a modal window, when one is active
@@ -892,6 +887,7 @@ BUTTON_FLAGS_MOUSE_BUTTON_LEFT: int       # React on left mouse button (default)
 BUTTON_FLAGS_MOUSE_BUTTON_RIGHT: int      # React on right mouse button
 BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE: int     # React on center mouse button
 BUTTON_FLAGS_MOUSE_BUTTON_MASK: int       # [internal]
+BUTTON_FLAGS_ENABLE_NAV: int              # Invisiblebutton(): do not disable navigation/tabbing. otherwise disabled by default.
 COLOR_EDIT_FLAGS_NONE: int
 COLOR_EDIT_FLAGS_NO_ALPHA: int               # Coloredit, colorpicker, colorbutton: ignore alpha component (will only read 3 components from the input pointer).
 COLOR_EDIT_FLAGS_NO_PICKER: int              # Coloredit: disable picker when clicking on color square.
@@ -1588,7 +1584,7 @@ def drag_float(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max
     the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
     - Format string may also be set to NULL or use the default format ("%f" or "%d").
-    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
+    - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For keyboard/gamepad navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
     - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
     - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
     - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
@@ -2292,9 +2288,8 @@ def is_key_down(key: int) -> bool:
     """
     Inputs Utilities: Keyboard/Mouse/Gamepad
     - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
-    - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
-    - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-    - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    - (legacy: before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https://github.com/ocornut/imgui/issues/4921)
+    - (legacy: any use of ImGuiKey will assert when key < 512 to detect passing legacy native/user indices)
     Is key being held.
     """
     pass
@@ -2325,7 +2320,7 @@ def is_mouse_double_clicked(button: int) -> bool:
 
 def is_mouse_down(button: int) -> bool:
     """
-    Inputs Utilities: Mouse specific
+    Inputs Utilities: Mouse
     - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
     - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
     - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')
@@ -2781,8 +2776,7 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
 def set_item_default_focus() -> None:
     """
     Focus, Activation
-    - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
-    Make last item the default focused item of a window.
+    Make last item the default focused item of of a newly appearing window.
     """
     pass
 
@@ -2815,6 +2809,13 @@ def set_mouse_cursor(cursor_type: int) -> None:
     Set desired mouse cursor shape
     """
     pass
+
+# def set_nav_cursor_visible(visible: bool) -> None:
+#     """
+#     Keyboard/Gamepad Navigation
+#     Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
+#     """
+#     pass
 
 # def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool) -> None:
 #     """
@@ -3449,7 +3450,15 @@ class ImDrawCmd:
     # """
     # user_callback_data: Any
     # """
-    # 4-8  // the draw callback code can access this.
+    # 4-8  // callback user data (when usercallback != null). if called addcallback() with size == 0, this is a copy of the addcallback() argument. if called addcallback() with size > 0, this is pointing to a buffer where data is stored.
+    # """
+    # user_callback_data_offset: int
+    # """
+    # 4 // [internal] offset of callback user data when using storage, otherwise -1.
+    # """
+    # user_callback_data_size: int
+    # """
+    # 4 // size of callback user data when using storage, otherwise 0.
     # """
     vtx_offset: int
     """
@@ -3531,9 +3540,13 @@ class ImDrawList:
     access the current window draw list and draw custom primitives.
     You can interleave normal ImGui:: calls and adding primitives to the current draw list.
     In single viewport mode, top-left is == GetMainViewport()->Pos (generally 0,0), bottom-right is == GetMainViewport()->Pos+Size (generally io.DisplaySize).
-    You are totally free to apply whatever transformation matrix to want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
+    You are totally free to apply whatever transformation matrix you want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
     Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.
     """
+    # callbacks_data_buf: ImVector_ImU8
+    # """
+    # [internal]
+    # """
     cmd_buffer: List[ImDrawCmd]
     """
     This is what you have to render
@@ -3567,19 +3580,29 @@ class ImDrawList:
         """
         pass
 
-    # def add_callback(self: ImDrawList, callback: Callable, callback_data: Any) -> None:
+    # def add_callback(self: ImDrawList, callback: Callable, userdata: Any) -> None:
     #     """
-    #     Advanced
-    #     Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
+    #     Advanced: Draw Callbacks
+    #     - May be used to alter render state (change sampler, blending, current shader). May be used to emit custom rendering commands (difficult to do correctly, but possible).
+    #     - Use special ImDrawCallback_ResetRenderState callback to instruct backend to reset its render state to the default.
+    #     - Your rendering loop must check for 'UserCallback' in ImDrawCmd and call the function instead of rendering triangles. All standard backends are honoring this.
+    #     - For some backends, the callback may access selected render-states exposed by the backend in a ImGui_ImplXXXX_RenderState structure pointed to by platform_io.Renderer_RenderState.
+    #     - IMPORTANT: please be mindful of the different level of indirection between using size==0 (copying argument) and using size>0 (copying pointed data into a buffer).
+    #     - If userdata_size == 0: we copy/store the 'userdata' argument as-is. It will be available unmodified in ImDrawCmd::UserCallbackData during render.
+    #     - If userdata_size > 0,  we copy/store 'userdata_size' bytes pointed to by 'userdata'. We store them in a buffer stored inside the drawlist. ImDrawCmd::UserCallbackData will point inside that buffer so you have to retrieve data from there. Your callback may need to use ImDrawCmd::UserCallbackDataSize if you expect dynamically-sized data.
+    #     - Support for userdata_size > 0 was added in v1.91.4, October 2024. So earlier code always only allowed to copy/store a simple void*.
+    #     Implied userdata_size = 0
     #     """
     #     pass
 
+    # def add_callback_ex(self: ImDrawList, callback: Callable, userdata: Any, userdata_size: int=0) -> None: ...
     def add_circle(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0, thickness: float=1.0) -> None: ...
     def add_circle_filled(self: ImDrawList, center: Tuple[float, float], radius: float, col: int, num_segments: int=0) -> None: ...
     def add_concave_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int) -> None: ...
     def add_convex_poly_filled(self: ImDrawList, points: Sequence[tuple], col: int) -> None: ...
     # def add_draw_cmd(self: ImDrawList) -> None:
     #     """
+    #     Advanced: Miscellaneous
     #     This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
     #     """
     #     pass
@@ -4141,6 +4164,10 @@ class ImFontAtlasCustomRect:
     """
     Input    // for custom font glyphs only: glyph xadvance
     """
+    # glyph_colored: int
+    # """
+    # Input  // for custom font glyphs only: glyph is colored, removed tinting.
+    # """
     glyph_id: int
     """
     Input    // for custom font glyphs only (id < 0x110000)
@@ -4456,14 +4483,6 @@ class ImGuiIO:
     """
     = null
     """
-    backend_using_legacy_key_arrays: int
-    """
-    -1: unknown, 0: using addkeyevent(), 1: using legacy io.keysdown[]
-    """
-    backend_using_legacy_nav_input_array: bool
-    """
-    0: using addkeyanalogevent(), 1: writing to legacy io.navinputs[] directly
-    """
     config_debug_begin_return_value_loop: bool
     """
     = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
@@ -4557,7 +4576,7 @@ class ImGuiIO:
     """
     config_flags: int
     """
-    = 0  // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
+    = 0  // see imguiconfigflags_ enum. set by user/application. keyboard/gamepad navigation options, etc.
     """
     config_input_text_cursor_blink: bool
     """
@@ -4579,8 +4598,33 @@ class ImGuiIO:
     """
     = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
     """
+    # config_nav_capture_keyboard: bool
+    # """
+    # = true           // sets io.wantcapturekeyboard when io.navactive is set.
+    # """
+    # config_nav_cursor_visible_always: bool
+    # """
+    # = false          // navigation cursor is always visible.
+    # """
+    # config_nav_cursor_visible_auto: bool
+    # """
+    # = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
+    # """
+    # config_nav_escape_clear_focus_item: bool
+    # """
+    # = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
+    # """
+    # config_nav_escape_clear_focus_window: bool
+    # """
+    # = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
+    # """
+    # config_nav_move_set_mouse_pos: bool
+    # """
+    # = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
+    # """
     config_nav_swap_gamepad_buttons: bool
     """
+    Keyboard/Gamepad Navigation options
     = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
     """
     # config_scrollbar_scroll_by_page: bool
@@ -4604,13 +4648,17 @@ class ImGuiIO:
     """
     = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
     """
+    # config_windows_copy_contents_with_ctrl_c: bool
+    # """
+    # = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
+    # """
     config_windows_move_from_title_bar_only: bool
     """
-    = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+    = false      // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
     """
     config_windows_resize_from_edges: bool
     """
-    = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
+    = true           // enable resizing of windows from their edges and from the lower-left corner. this requires imguibackendflags_hasmousecursors for better mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
     """
     ctx: ImGuiContext
     """
@@ -4630,7 +4678,7 @@ class ImGuiIO:
     """
     font_allow_user_scaling: bool
     """
-    = false          // allow user scaling text of individual window with ctrl+wheel.
+    = false          // [obsolete] allow user scaling text of individual window with ctrl+wheel.
     """
     font_default: ImFont
     """
@@ -4839,7 +4887,7 @@ class ImGuiIO:
     """
     nav_visible: bool
     """
-    Keyboard/gamepad navigation is visible and allowed (will handle imguikey_navxxx events).
+    Keyboard/gamepad navigation highlight is visible and allowed (will handle imguikey_navxxx events).
     """
     pen_pressure: float
     """
@@ -4868,7 +4916,7 @@ class ImGuiIO:
     """
     want_set_mouse_pos: bool
     """
-    Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when imguiconfigflags_navenablesetmousepos flag is enabled.
+    Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when io.confignavmovesetmousepos is enabled.
     """
     want_text_input: bool
     """
@@ -5369,6 +5417,10 @@ class ImGuiPlatformIO:
     # renderer_destroy_window: Callable
     # """
     # N . u . d  // destroy swap chain, frame buffers etc. (called before platform_destroywindow)
+    # """
+    # renderer_render_state: Any
+    # """
+    # Written by some backends during ImGui_ImplXXXX_RenderDrawData() call to point backend_specific ImGui_ImplXXXX_RenderState* structure.
     # """
     # renderer_render_window: Callable
     # """
@@ -6088,6 +6140,14 @@ class ImVector_ImGuiStoragePair: ...
 class ImVector_ImU32: ...
     # capacity: int
     # data: int
+    # size: int
+
+class ImVector_ImU8: ...
+    # capacity: int
+    # capacity: int
+    # data: int
+    # data: int
+    # size: int
     # size: int
 
 class ImVector_ImWchar: ...

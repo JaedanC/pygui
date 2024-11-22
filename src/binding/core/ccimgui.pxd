@@ -29,6 +29,7 @@ cdef extern from "cimgui.h":
     ctypedef struct ImVector_ImVec2
     ctypedef struct ImVector_ImVec4
     ctypedef struct ImVector_ImTextureID
+    ctypedef struct ImVector_ImU8
     ctypedef struct ImVector_ImDrawListPtr
     ctypedef struct ImVector_ImU32
     ctypedef struct ImVector_ImFontPtr
@@ -138,7 +139,7 @@ cdef extern from "cimgui.h":
     ctypedef int ImGuiTreeNodeFlags           # -> enum imguitreenodeflags_   // flags: for treenode(), treenodeex(), collapsingheader()
     ctypedef int ImGuiViewportFlags           # -> enum imguiviewportflags_   // flags: for imguiviewport
     ctypedef int ImGuiWindowFlags             # -> enum imguiwindowflags_     // flags: for begin(), beginchild()
-    ctypedef void* ImTextureID                # Default: store a pointer or an integer fitting in a pointer (most renderer backends are ok with that)
+    ctypedef ImU64 ImTextureID                # Default: store a pointer or an integer fitting in a pointer (most renderer backends are ok with that)
     ctypedef unsigned short ImDrawIdx         # Default: 16-bit (for maximum compatibility with renderer backends)
 
     # Character types
@@ -177,8 +178,8 @@ cdef extern from "cimgui.h":
         ImGuiWindowFlags_NoBringToFrontOnFocus         # Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
         ImGuiWindowFlags_AlwaysVerticalScrollbar       # Always show vertical scrollbar (even if contentsize.y < size.y)
         ImGuiWindowFlags_AlwaysHorizontalScrollbar     # Always show horizontal scrollbar (even if contentsize.x < size.x)
-        ImGuiWindowFlags_NoNavInputs                   # No gamepad/keyboard navigation within the window
-        ImGuiWindowFlags_NoNavFocus                    # No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by ctrl+tab)
+        ImGuiWindowFlags_NoNavInputs                   # No keyboard/gamepad navigation within the window
+        ImGuiWindowFlags_NoNavFocus                    # No focusing toward this window with keyboard/gamepad navigation (e.g. skipped by ctrl+tab)
         ImGuiWindowFlags_UnsavedDocument               # Display a dot next to the title. when used in a tab/docking context, tab is selected when clicking the x + closure is not assumed (will wait for user to stop submitting the tab). otherwise closure is assumed when pressing the x, so if you keep submitting the tab may reappear at end of tab bar.
         ImGuiWindowFlags_NoDocking                     # Disable docking of this window
         ImGuiWindowFlags_NoNav
@@ -201,7 +202,7 @@ cdef extern from "cimgui.h":
         ImGuiChildFlags_AutoResizeY                # Enable auto-resizing height. read 'important: size measurement' details above.
         ImGuiChildFlags_AlwaysAutoResize           # Combined with autoresizex/autoresizey. always measure size even when child is hidden, always return true, always disable clipping optimization! not recommended.
         ImGuiChildFlags_FrameStyle                 # Style the child window like a framed item: use framebg, framerounding, framebordersize, framepadding instead of childbg, childrounding, childbordersize, windowpadding.
-        ImGuiChildFlags_NavFlattened               # [beta] share focus scope, allow gamepad/keyboard navigation to cross over parent border to this child or between sibling child windows.
+        ImGuiChildFlags_NavFlattened               # [beta] share focus scope, allow keyboard/gamepad navigation to cross over parent border to this child or between sibling child windows.
 
     ctypedef enum ImGuiItemFlags_:
         ImGuiItemFlags_None                  # (default)
@@ -220,7 +221,7 @@ cdef extern from "cimgui.h":
         ImGuiInputTextFlags_CharsUppercase          # Turn a..z into a..z
         ImGuiInputTextFlags_CharsNoBlank            # Filter out spaces, tabs
         ImGuiInputTextFlags_AllowTabInput           # Pressing tab input a '\t' character into the text field
-        ImGuiInputTextFlags_EnterReturnsTrue        # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider looking at the isitemdeactivatedafteredit() function.
+        ImGuiInputTextFlags_EnterReturnsTrue        # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider using isitemdeactivatedafteredit() instead!
         ImGuiInputTextFlags_EscapeClearsAll         # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
         ImGuiInputTextFlags_CtrlEnterForNewLine     # In multi-line mode, validate with enter, add new line with ctrl+enter (default is opposite: validate with ctrl+enter, add line with enter).
         ImGuiInputTextFlags_ReadOnly                # Read-only mode
@@ -340,7 +341,7 @@ cdef extern from "cimgui.h":
         ImGuiHoveredFlags_AllowWhenOverlappedByItem        # Isitemhovered() only: return true even if the item uses allowoverlap mode and is overlapped by another hoverable item.
         ImGuiHoveredFlags_AllowWhenOverlappedByWindow      # Isitemhovered() only: return true even if the position is obstructed or overlapped by another window.
         ImGuiHoveredFlags_AllowWhenDisabled                # Isitemhovered() only: return true even if the item is disabled
-        ImGuiHoveredFlags_NoNavOverride                    # Isitemhovered() only: disable using gamepad/keyboard navigation state when active, always query mouse
+        ImGuiHoveredFlags_NoNavOverride                    # Isitemhovered() only: disable using keyboard/gamepad navigation state when active, always query mouse
         ImGuiHoveredFlags_AllowWhenOverlapped
         ImGuiHoveredFlags_RectOnly
         ImGuiHoveredFlags_RootAndChildWindows
@@ -405,6 +406,7 @@ cdef extern from "cimgui.h":
 
     ctypedef enum ImGuiKey:
         ImGuiKey_None
+        ImGuiKey_NamedKey_BEGIN          # First valid key value (other than 0)
         ImGuiKey_Tab                     # == imguikey_namedkey_begin
         ImGuiKey_LeftArrow
         ImGuiKey_RightArrow
@@ -559,18 +561,14 @@ cdef extern from "cimgui.h":
         ImGuiKey_ReservedForModShift
         ImGuiKey_ReservedForModAlt
         ImGuiKey_ReservedForModSuper
-        ImGuiKey_COUNT
+        ImGuiKey_NamedKey_END
         ImGuiMod_None
         ImGuiMod_Ctrl                    # Ctrl (non-macos), cmd (macos)
         ImGuiMod_Shift                   # Shift
         ImGuiMod_Alt                     # Option/menu
         ImGuiMod_Super                   # Windows/super (non-macos), ctrl (macos)
         ImGuiMod_Mask_                   # 4-bits
-        ImGuiKey_NamedKey_BEGIN
-        ImGuiKey_NamedKey_END
         ImGuiKey_NamedKey_COUNT
-        ImGuiKey_KeysData_SIZE           # Size of keysdata[]: only hold named keys
-        ImGuiKey_KeysData_OFFSET         # Accesses to io.keysdata[] must use (key - imguikey_keysdata_offset) index.
 
     ctypedef enum ImGuiInputFlags_:
         ImGuiInputFlags_None
@@ -589,8 +587,6 @@ cdef extern from "cimgui.h":
         ImGuiConfigFlags_None
         ImGuiConfigFlags_NavEnableKeyboard           # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
         ImGuiConfigFlags_NavEnableGamepad            # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
-        ImGuiConfigFlags_NavEnableSetMousePos        # Instruct navigation to move the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is awkward. will update io.mousepos and set io.wantsetmousepos=true. if enabled you must honor io.wantsetmousepos requests in your backend, otherwise imgui will react as if the mouse is jumping around back and forth.
-        ImGuiConfigFlags_NavNoCaptureKeyboard        # Instruct navigation to not set the io.wantcapturekeyboard flag when io.navactive is set.
         ImGuiConfigFlags_NoMouse                     # Instruct dear imgui to disable mouse inputs and interactions.
         ImGuiConfigFlags_NoMouseCursorChange         # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
         ImGuiConfigFlags_NoKeyboard                  # Instruct dear imgui to disable keyboard inputs and interactions. this is done by ignoring keyboard events and clearing existing states.
@@ -605,7 +601,7 @@ cdef extern from "cimgui.h":
         ImGuiBackendFlags_None
         ImGuiBackendFlags_HasGamepad                  # Backend platform supports gamepad and currently has one connected.
         ImGuiBackendFlags_HasMouseCursors             # Backend platform supports honoring getmousecursor() value to change the os cursor shape.
-        ImGuiBackendFlags_HasSetMousePos              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if imguiconfigflags_navenablesetmousepos is set).
+        ImGuiBackendFlags_HasSetMousePos              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if io.confignavmovesetmousepos is set).
         ImGuiBackendFlags_RendererHasVtxOffset        # Backend renderer supports imdrawcmd::vtxoffset. this enables output of large meshes (64k+ vertices) while still using 16-bit indices.
         ImGuiBackendFlags_PlatformHasViewports        # Backend platform supports multiple viewports.
         ImGuiBackendFlags_HasMouseHoveredViewport     # Backend platform supports calling io.addmouseviewportevent() with the viewport under the mouse. if possible, ignore viewports with the imguiviewportflags_noinputs flag (win32 backend, glfw 3.30+ backend can do this, sdl backend cannot). if this cannot be done, dear imgui needs to use a flawed heuristic to find the viewport under.
@@ -666,7 +662,7 @@ cdef extern from "cimgui.h":
         ImGuiCol_TextLink                      # Hyperlink color
         ImGuiCol_TextSelectedBg
         ImGuiCol_DragDropTarget                # Rectangle highlighting a drop target
-        ImGuiCol_NavHighlight                  # Gamepad/keyboard: current highlighted item
+        ImGuiCol_NavCursor                     # Color of keyboard/gamepad navigation cursor/rectangle, when visible
         ImGuiCol_NavWindowingHighlight         # Highlight window when using ctrl+tab
         ImGuiCol_NavWindowingDimBg             # Darken/colorize entire screen behind the ctrl+tab window list, when active
         ImGuiCol_ModalWindowDimBg              # Darken/colorize entire screen behind a modal window, when one is active
@@ -715,6 +711,7 @@ cdef extern from "cimgui.h":
         ImGuiButtonFlags_MouseButtonRight      # React on right mouse button
         ImGuiButtonFlags_MouseButtonMiddle     # React on center mouse button
         ImGuiButtonFlags_MouseButtonMask_      # [internal]
+        ImGuiButtonFlags_EnableNav             # Invisiblebutton(): do not disable navigation/tabbing. otherwise disabled by default.
 
     ctypedef enum ImGuiColorEditFlags_:
         ImGuiColorEditFlags_None
@@ -1071,6 +1068,13 @@ cdef extern from "cimgui.h":
 
 
 
+    ctypedef struct ImVector_ImU8:
+        int Size
+        int Capacity
+        ImU8* Data
+
+
+
     ctypedef struct ImVector_ImDrawListPtr:
         int Size
         int Capacity
@@ -1204,108 +1208,113 @@ cdef extern from "cimgui.h":
 
 
     ctypedef struct ImGuiIO:
-        ImGuiConfigFlags ConfigFlags               # = 0              // see imguiconfigflags_ enum. set by user/application. gamepad/keyboard navigation options, etc.
-        ImGuiBackendFlags BackendFlags             # = 0              // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
-        ImVec2 DisplaySize                         # <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
-        float DeltaTime                            # = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
-        float IniSavingRate                        # = 5.0f           // minimum time between saving positions/sizes to .ini file, in seconds.
-        const char* IniFilename                    # = 'imgui.ini'    // path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
-        const char* LogFilename                    # = 'imgui_log.txt'// path to .log file (default parameter to imgui::logtofile when no file is specified).
-        void* UserData                             # = null           // store your own data.
-        ImFontAtlas* Fonts                         # <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
-        float FontGlobalScale                      # = 1.0f           // global scale all fonts
-        bool FontAllowUserScaling                  # = false          // allow user scaling text of individual window with ctrl+wheel.
-        ImFont* FontDefault                        # = null           // font to use on newframe(). use null to uses fonts->fonts[0].
-        ImVec2 DisplayFramebufferScale             # = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
-        bool ConfigDockingNoSplit                  # = false          // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
-        bool ConfigDockingWithShift                # = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
-        bool ConfigDockingAlwaysTabBar             # = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
-        bool ConfigDockingTransparentPayload       # = false          // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
-        bool ConfigViewportsNoAutoMerge            # = false;         // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
-        bool ConfigViewportsNoTaskBarIcon          # = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
-        bool ConfigViewportsNoDecoration           # = true           // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
-        bool ConfigViewportsNoDefaultParent        # = false          // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
-        bool MouseDrawCursor                       # = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
-        bool ConfigMacOSXBehaviors                 # = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
-        bool ConfigNavSwapGamepadButtons           # = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
-        bool ConfigInputTrickleEventQueue          # = true           // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
-        bool ConfigInputTextCursorBlink            # = true           // enable blinking cursor (optional as some users consider it to be distracting).
-        bool ConfigInputTextEnterKeepActive        # = false          // [beta] pressing enter will keep item active and select contents (single-line only).
-        bool ConfigDragClickToInputText            # = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
-        bool ConfigWindowsResizeFromEdges          # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires (io.backendflags & imguibackendflags_hasmousecursors) because it needs mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
-        bool ConfigWindowsMoveFromTitleBarOnly     # = false       // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
-        bool ConfigScrollbarScrollByPage           # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
-        float ConfigMemoryCompactTimer             # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
-        float MouseDoubleClickTime                 # = 0.30f          // time for a double-click, in seconds.
-        float MouseDoubleClickMaxDist              # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
-        float MouseDragThreshold                   # = 6.0f           // distance threshold before considering we are dragging.
-        float KeyRepeatDelay                       # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
-        float KeyRepeatRate                        # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
-        bool ConfigErrorRecovery                   # = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
-        bool ConfigErrorRecoveryEnableAssert       # = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
-        bool ConfigErrorRecoveryEnableDebugLog     # = true       // enable debug log output on recoverable errors.
-        bool ConfigErrorRecoveryEnableTooltip      # = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
-        bool ConfigDebugIsDebuggerPresent          # = false          // enable various tools calling im_debug_break().
-        bool ConfigDebugHighlightIdConflicts       # = true           // highlight and show an error message when multiple items have conflicting identifiers.
-        bool ConfigDebugBeginReturnValueOnce       # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
-        bool ConfigDebugBeginReturnValueLoop       # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
-        bool ConfigDebugIgnoreFocusLoss            # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
-        bool ConfigDebugIniSettings                # = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
-        const char* BackendPlatformName            # = null
-        const char* BackendRendererName            # = null
-        void* BackendPlatformUserData              # = null           // user data for platform backend
-        void* BackendRendererUserData              # = null           // user data for renderer backend
-        void* BackendLanguageUserData              # = null           // user data for non c++ programming language backend
-        bool WantCaptureMouse                      # Set when dear imgui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).
-        bool WantCaptureKeyboard                   # Set when dear imgui will use keyboard inputs, in this case do not dispatch them to your main game/application (either way, always pass keyboard inputs to imgui). (e.g. inputtext active, or an imgui window is focused and navigation is enabled, etc.).
-        bool WantTextInput                         # Mobile/console: when set, you may display an on-screen keyboard. this is set by dear imgui when it wants textual keyboard input to happen (e.g. when a inputtext widget is active).
-        bool WantSetMousePos                       # Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when imguiconfigflags_navenablesetmousepos flag is enabled.
-        bool WantSaveIniSettings                   # When manual .ini load/save is active (io.inifilename == null), this will be set to notify your application that you can call saveinisettingstomemory() and save yourself. important: clear io.wantsaveinisettings yourself after saving!
-        bool NavActive                             # Keyboard/gamepad navigation is currently allowed (will handle imguikey_navxxx events) = a window is focused and it doesn't use the imguiwindowflags_nonavinputs flag.
-        bool NavVisible                            # Keyboard/gamepad navigation is visible and allowed (will handle imguikey_navxxx events).
-        float Framerate                            # Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
-        int MetricsRenderVertices                  # Vertices output during last call to render()
-        int MetricsRenderIndices                   # Indices output during last call to render() = number of triangles * 3
-        int MetricsRenderWindows                   # Number of visible windows
-        int MetricsActiveWindows                   # Number of active windows
-        ImVec2 MouseDelta                          # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
-        ImGuiContext* Ctx                          # Parent ui context (needs to be set explicitly by parent).
-        ImVec2 MousePos                            # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
-        bool* MouseDown                            # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
-        float MouseWheel                           # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
-        float MouseWheelH                          # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
-        ImGuiMouseSource MouseSource               # Mouse actual input peripheral (mouse/touchscreen/pen).
-        ImGuiID MouseHoveredViewport               # (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
-        bool KeyCtrl                               # Keyboard modifier down: control
-        bool KeyShift                              # Keyboard modifier down: shift
-        bool KeyAlt                                # Keyboard modifier down: alt
-        bool KeySuper                              # Keyboard modifier down: cmd/super/windows
-        ImGuiKeyChord KeyMods                      # Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. read-only, updated by newframe()
-        ImGuiKeyData* KeysData                     # Key state for all known keys. use iskeyxxx() functions to access this.
-        bool WantCaptureMouseUnlessPopupClose      # Alternative to wantcapturemouse: (wantcapturemouse == true && wantcapturemouseunlesspopupclose == false) when a click over void is expected to close a popup.
-        ImVec2 MousePosPrev                        # Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
-        ImVec2* MouseClickedPos                    # Position at time of clicking
-        double* MouseClickedTime                   # Time of last click (used to figure out double-click)
-        bool* MouseClicked                         # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
-        bool* MouseDoubleClicked                   # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
-        ImU16* MouseClickedCount                   # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
-        ImU16* MouseClickedLastCount               # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
-        bool* MouseReleased                        # Mouse button went from down to !down
-        bool* MouseDownOwned                       # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
-        bool* MouseDownOwnedUnlessPopupClose       # Track if button was clicked inside a dear imgui window.
-        bool MouseWheelRequestAxisSwap             # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
-        bool MouseCtrlLeftAsRightClick             # (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
-        float* MouseDownDuration                   # Duration the mouse button has been down (0.0f == just clicked)
-        float* MouseDownDurationPrev               # Previous time the mouse button has been down
-        ImVec2* MouseDragMaxDistanceAbs            # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
-        float* MouseDragMaxDistanceSqr             # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
-        float PenPressure                          # Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
-        bool AppFocusLost                          # Only modify via addfocusevent()
-        bool AppAcceptingEvents                    # Only modify via setappacceptingevents()
-        ImS8 BackendUsingLegacyKeyArrays           # -1: unknown, 0: using addkeyevent(), 1: using legacy io.keysdown[]
-        bool BackendUsingLegacyNavInputArray       # 0: using addkeyanalogevent(), 1: writing to legacy io.navinputs[] directly
-        ImWchar16 InputQueueSurrogate              # For addinputcharacterutf16()
-        ImVector_ImWchar InputQueueCharacters      # Queue of _characters_ input (obtained by platform backend). fill using addinputcharacter() helper.
+        ImGuiConfigFlags ConfigFlags                # = 0              // see imguiconfigflags_ enum. set by user/application. keyboard/gamepad navigation options, etc.
+        ImGuiBackendFlags BackendFlags              # = 0              // see imguibackendflags_ enum. set by backend (imgui_impl_xxx files or custom backend) to communicate features supported by the backend.
+        ImVec2 DisplaySize                          # <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+        float DeltaTime                             # = 1.0f/60.0f     // time elapsed since last frame, in seconds. may change every frame.
+        float IniSavingRate                         # = 5.0f           // minimum time between saving positions/sizes to .ini file, in seconds.
+        const char* IniFilename                     # = 'imgui.ini'    // path to .ini file (important: default 'imgui.ini' is relative to current working dir!). set null to disable automatic .ini loading/saving or if you want to manually call loadinisettingsxxx() / saveinisettingsxxx() functions.
+        const char* LogFilename                     # = 'imgui_log.txt'// path to .log file (default parameter to imgui::logtofile when no file is specified).
+        void* UserData                              # = null           // store your own data.
+        ImFontAtlas* Fonts                          # <auto>           // font atlas: load, rasterize and pack one or more fonts into a single texture.
+        float FontGlobalScale                       # = 1.0f           // global scale all fonts
+        bool FontAllowUserScaling                   # = false          // [obsolete] allow user scaling text of individual window with ctrl+wheel.
+        ImFont* FontDefault                         # = null           // font to use on newframe(). use null to uses fonts->fonts[0].
+        ImVec2 DisplayFramebufferScale              # = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+        bool ConfigNavSwapGamepadButtons            # = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
+        bool ConfigNavMoveSetMousePos               # = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
+        bool ConfigNavCaptureKeyboard               # = true           // sets io.wantcapturekeyboard when io.navactive is set.
+        bool ConfigNavEscapeClearFocusItem          # = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
+        bool ConfigNavEscapeClearFocusWindow        # = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
+        bool ConfigNavCursorVisibleAuto             # = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
+        bool ConfigNavCursorVisibleAlways           # = false          // navigation cursor is always visible.
+        bool ConfigDockingNoSplit                   # = false          // simplified docking mode: disable window splitting, so docking is limited to merging multiple windows together into tab-bars.
+        bool ConfigDockingWithShift                 # = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
+        bool ConfigDockingAlwaysTabBar              # = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
+        bool ConfigDockingTransparentPayload        # = false          // [beta] make window or viewport transparent when docking and only display docking boxes on the target viewport. useful if rendering of multiple viewport cannot be synced. best used with configviewportsnoautomerge.
+        bool ConfigViewportsNoAutoMerge             # = false;         // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
+        bool ConfigViewportsNoTaskBarIcon           # = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
+        bool ConfigViewportsNoDecoration            # = true           // disable default os window decoration flag for secondary viewports. when a viewport doesn't want window decorations, imguiviewportflags_nodecoration will be set on it. enabling decoration can create subsequent issues at os levels (e.g. minimum window size).
+        bool ConfigViewportsNoDefaultParent         # = false          // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
+        bool MouseDrawCursor                        # = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
+        bool ConfigMacOSXBehaviors                  # = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
+        bool ConfigInputTrickleEventQueue           # = true           // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
+        bool ConfigInputTextCursorBlink             # = true           // enable blinking cursor (optional as some users consider it to be distracting).
+        bool ConfigInputTextEnterKeepActive         # = false          // [beta] pressing enter will keep item active and select contents (single-line only).
+        bool ConfigDragClickToInputText             # = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
+        bool ConfigWindowsResizeFromEdges           # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires imguibackendflags_hasmousecursors for better mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
+        bool ConfigWindowsMoveFromTitleBarOnly      # = false      // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
+        bool ConfigWindowsCopyContentsWithCtrlC     # = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
+        bool ConfigScrollbarScrollByPage            # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+        float ConfigMemoryCompactTimer              # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
+        float MouseDoubleClickTime                  # = 0.30f          // time for a double-click, in seconds.
+        float MouseDoubleClickMaxDist               # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
+        float MouseDragThreshold                    # = 6.0f           // distance threshold before considering we are dragging.
+        float KeyRepeatDelay                        # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
+        float KeyRepeatRate                         # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
+        bool ConfigErrorRecovery                    # = true       // enable error recovery support. some errors won't be detected and lead to direct crashes if recovery is disabled.
+        bool ConfigErrorRecoveryEnableAssert        # = true       // enable asserts on recoverable error. by default call im_assert() when returning from a failing im_assert_user_error()
+        bool ConfigErrorRecoveryEnableDebugLog      # = true       // enable debug log output on recoverable errors.
+        bool ConfigErrorRecoveryEnableTooltip       # = true       // enable tooltip on recoverable errors. the tooltip include a way to enable asserts if they were disabled.
+        bool ConfigDebugIsDebuggerPresent           # = false          // enable various tools calling im_debug_break().
+        bool ConfigDebugHighlightIdConflicts        # = true           // highlight and show an error message when multiple items have conflicting identifiers.
+        bool ConfigDebugBeginReturnValueOnce        # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
+        bool ConfigDebugBeginReturnValueLoop        # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
+        bool ConfigDebugIgnoreFocusLoss             # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
+        bool ConfigDebugIniSettings                 # = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
+        const char* BackendPlatformName             # = null
+        const char* BackendRendererName             # = null
+        void* BackendPlatformUserData               # = null           // user data for platform backend
+        void* BackendRendererUserData               # = null           // user data for renderer backend
+        void* BackendLanguageUserData               # = null           // user data for non c++ programming language backend
+        bool WantCaptureMouse                       # Set when dear imgui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).
+        bool WantCaptureKeyboard                    # Set when dear imgui will use keyboard inputs, in this case do not dispatch them to your main game/application (either way, always pass keyboard inputs to imgui). (e.g. inputtext active, or an imgui window is focused and navigation is enabled, etc.).
+        bool WantTextInput                          # Mobile/console: when set, you may display an on-screen keyboard. this is set by dear imgui when it wants textual keyboard input to happen (e.g. when a inputtext widget is active).
+        bool WantSetMousePos                        # Mousepos has been altered, backend should reposition mouse on next frame. rarely used! set only when io.confignavmovesetmousepos is enabled.
+        bool WantSaveIniSettings                    # When manual .ini load/save is active (io.inifilename == null), this will be set to notify your application that you can call saveinisettingstomemory() and save yourself. important: clear io.wantsaveinisettings yourself after saving!
+        bool NavActive                              # Keyboard/gamepad navigation is currently allowed (will handle imguikey_navxxx events) = a window is focused and it doesn't use the imguiwindowflags_nonavinputs flag.
+        bool NavVisible                             # Keyboard/gamepad navigation highlight is visible and allowed (will handle imguikey_navxxx events).
+        float Framerate                             # Estimate of application framerate (rolling average over 60 frames, based on io.deltatime), in frame per second. solely for convenience. slow applications may not want to use a moving average or may want to reset underlying buffers occasionally.
+        int MetricsRenderVertices                   # Vertices output during last call to render()
+        int MetricsRenderIndices                    # Indices output during last call to render() = number of triangles * 3
+        int MetricsRenderWindows                    # Number of visible windows
+        int MetricsActiveWindows                    # Number of active windows
+        ImVec2 MouseDelta                           # Mouse delta. note that this is zero if either current or previous position are invalid (-flt_max,-flt_max), so a disappearing/reappearing mouse won't have a huge delta.
+        ImGuiContext* Ctx                           # Parent ui context (needs to be set explicitly by parent).
+        ImVec2 MousePos                             # Mouse position, in pixels. set to imvec2(-flt_max, -flt_max) if mouse is unavailable (on another screen, etc.)
+        bool* MouseDown                             # Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
+        float MouseWheel                            # Mouse wheel vertical: 1 unit scrolls about 5 lines text. >0 scrolls up, <0 scrolls down. hold shift to turn vertical scroll into horizontal scroll.
+        float MouseWheelH                           # Mouse wheel horizontal. >0 scrolls left, <0 scrolls right. most users don't have a mouse with a horizontal wheel, may not be filled by all backends.
+        ImGuiMouseSource MouseSource                # Mouse actual input peripheral (mouse/touchscreen/pen).
+        ImGuiID MouseHoveredViewport                # (optional) modify using io.addmouseviewportevent(). with multi-viewports: viewport the os mouse is hovering. if possible _ignoring_ viewports with the imguiviewportflags_noinputs flag is much better (few backends can handle that). set io.backendflags |= imguibackendflags_hasmousehoveredviewport if you can provide this info. if you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other os windows).
+        bool KeyCtrl                                # Keyboard modifier down: control
+        bool KeyShift                               # Keyboard modifier down: shift
+        bool KeyAlt                                 # Keyboard modifier down: alt
+        bool KeySuper                               # Keyboard modifier down: cmd/super/windows
+        ImGuiKeyChord KeyMods                       # Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. read-only, updated by newframe()
+        ImGuiKeyData* KeysData                      # Key state for all known keys. use iskeyxxx() functions to access this.
+        bool WantCaptureMouseUnlessPopupClose       # Alternative to wantcapturemouse: (wantcapturemouse == true && wantcapturemouseunlesspopupclose == false) when a click over void is expected to close a popup.
+        ImVec2 MousePosPrev                         # Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
+        ImVec2* MouseClickedPos                     # Position at time of clicking
+        double* MouseClickedTime                    # Time of last click (used to figure out double-click)
+        bool* MouseClicked                          # Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
+        bool* MouseDoubleClicked                    # Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
+        ImU16* MouseClickedCount                    # == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
+        ImU16* MouseClickedLastCount                # Count successive number of clicks. stays valid after mouse release. reset after another click is done.
+        bool* MouseReleased                         # Mouse button went from down to !down
+        bool* MouseDownOwned                        # Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
+        bool* MouseDownOwnedUnlessPopupClose        # Track if button was clicked inside a dear imgui window.
+        bool MouseWheelRequestAxisSwap              # On a non-mac system, holding shift requests wheely to perform the equivalent of a wheelx event. on a mac system this is already enforced by the system.
+        bool MouseCtrlLeftAsRightClick              # (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+        float* MouseDownDuration                    # Duration the mouse button has been down (0.0f == just clicked)
+        float* MouseDownDurationPrev                # Previous time the mouse button has been down
+        ImVec2* MouseDragMaxDistanceAbs             # Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
+        float* MouseDragMaxDistanceSqr              # Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
+        float PenPressure                           # Touch/pen pressure (0.0f to 1.0f, should be >0.0f only when mousedown[0] == true). helper storage currently unused by dear imgui.
+        bool AppFocusLost                           # Only modify via addfocusevent()
+        bool AppAcceptingEvents                     # Only modify via setappacceptingevents()
+        ImWchar16 InputQueueSurrogate               # For addinputcharacterutf16()
+        ImVector_ImWchar InputQueueCharacters       # Queue of _characters_ input (obtained by platform backend). fill using addinputcharacter() helper.
 
 
     # Input Functions
@@ -1689,7 +1698,9 @@ cdef extern from "cimgui.h":
         unsigned int IdxOffset          # 4    // start offset in index buffer.
         unsigned int ElemCount          # 4    // number of indices (multiple of 3) to be rendered as triangles. vertices are stored in the callee imdrawlist's vtx_buffer[] array, indices in idx_buffer[].
         ImDrawCallback UserCallback     # 4-8  // if != null, call the function instead of rendering the vertices. clip_rect and texture_id will be set normally.
-        void* UserCallbackData          # 4-8  // the draw callback code can access this.
+        void* UserCallbackData          # 4-8  // callback user data (when usercallback != null). if called addcallback() with size == 0, this is a copy of the addcallback() argument. if called addcallback() with size > 0, this is pointing to a buffer where data is stored.
+        int UserCallbackDataSize        # 4 // size of callback user data when using storage, otherwise 0.
+        int UserCallbackDataOffset      # 4 // [internal] offset of callback user data when using storage, otherwise -1.
 
 
     # Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
@@ -1741,7 +1752,7 @@ cdef extern from "cimgui.h":
     # access the current window draw list and draw custom primitives.
     # You can interleave normal ImGui:: calls and adding primitives to the current draw list.
     # In single viewport mode, top-left is == GetMainViewport()->Pos (generally 0,0), bottom-right is == GetMainViewport()->Pos+Size (generally io.DisplaySize).
-    # You are totally free to apply whatever transformation matrix to want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
+    # You are totally free to apply whatever transformation matrix you want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)
     # Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.
     ctypedef struct ImDrawList:
         ImVector_ImDrawCmd CmdBuffer             # Draw commands. typically 1 command = 1 gpu draw call, unless the command is a callback.
@@ -1757,6 +1768,7 @@ cdef extern from "cimgui.h":
         ImDrawListSplitter _Splitter             # [internal] for channels api (note: prefer using your own persistent instance of imdrawlistsplitter!)
         ImVector_ImVec4 _ClipRectStack           # [internal]
         ImVector_ImTextureID _TextureIdStack     # [internal]
+        ImVector_ImU8 _CallbacksDataBuf          # [internal]
         float _FringeScale                       # [internal] anti-alias fringe is scaled by this value, this helps to keep things sharp while zooming at vertex buffer content
         const char* _OwnerName                   # Pointer to owner window's name for debugging
 
@@ -1827,8 +1839,8 @@ cdef extern from "cimgui.h":
     void ImDrawList_AddTextEx(ImDrawList* self, ImVec2 pos, ImU32 col, const char* text_begin, const char* text_end) except +
 
     # Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
-    void ImDrawList_AddTextImFontPtr(ImDrawList* self, const ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin) except +
-    void ImDrawList_AddTextImFontPtrEx(ImDrawList* self, const ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect) except +
+    void ImDrawList_AddTextImFontPtr(ImDrawList* self, ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin) except +
+    void ImDrawList_AddTextImFontPtrEx(ImDrawList* self, ImFont* font, float font_size, ImVec2 pos, ImU32 col, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect) except +
 
     # Cubic bezier (4 control points)
     void ImDrawList_AddBezierCubic(ImDrawList* self, ImVec2 p1, ImVec2 p2, ImVec2 p3, ImVec2 p4, ImU32 col, float thickness, int num_segments) except +
@@ -1883,10 +1895,20 @@ cdef extern from "cimgui.h":
     void ImDrawList_PathBezierQuadraticCurveTo(ImDrawList* self, ImVec2 p2, ImVec2 p3, int num_segments) except +
     void ImDrawList_PathRect(ImDrawList* self, ImVec2 rect_min, ImVec2 rect_max, float rounding, ImDrawFlags flags) except +
 
-    # Advanced
-    # Your rendering function must check for 'usercallback' in imdrawcmd and call the function instead of rendering triangles.
-    void ImDrawList_AddCallback(ImDrawList* self, ImDrawCallback callback, void* callback_data) except +
+    # Advanced: Draw Callbacks
+    # - May be used to alter render state (change sampler, blending, current shader). May be used to emit custom rendering commands (difficult to do correctly, but possible).
+    # - Use special ImDrawCallback_ResetRenderState callback to instruct backend to reset its render state to the default.
+    # - Your rendering loop must check for 'UserCallback' in ImDrawCmd and call the function instead of rendering triangles. All standard backends are honoring this.
+    # - For some backends, the callback may access selected render-states exposed by the backend in a ImGui_ImplXXXX_RenderState structure pointed to by platform_io.Renderer_RenderState.
+    # - IMPORTANT: please be mindful of the different level of indirection between using size==0 (copying argument) and using size>0 (copying pointed data into a buffer).
+    # - If userdata_size == 0: we copy/store the 'userdata' argument as-is. It will be available unmodified in ImDrawCmd::UserCallbackData during render.
+    # - If userdata_size > 0,  we copy/store 'userdata_size' bytes pointed to by 'userdata'. We store them in a buffer stored inside the drawlist. ImDrawCmd::UserCallbackData will point inside that buffer so you have to retrieve data from there. Your callback may need to use ImDrawCmd::UserCallbackDataSize if you expect dynamically-sized data.
+    # - Support for userdata_size > 0 was added in v1.91.4, October 2024. So earlier code always only allowed to copy/store a simple void*.
+    # Implied userdata_size = 0
+    void ImDrawList_AddCallback(ImDrawList* self, ImDrawCallback callback, void* userdata) except +
+    void ImDrawList_AddCallbackEx(ImDrawList* self, ImDrawCallback callback, void* userdata, size_t userdata_size) except +
 
+    # Advanced: Miscellaneous
     # This is useful if you need to forcefully create a new draw call (to allow for dependent rendering / blending). otherwise primitives are merged into the same draw-call as much as possible
     void ImDrawList_AddDrawCmd(ImDrawList* self) except +
 
@@ -2029,14 +2051,15 @@ cdef extern from "cimgui.h":
 
     # See ImFontAtlas::AddCustomRectXXX functions.
     ctypedef struct ImFontAtlasCustomRect:
-        unsigned short Width      # Input    // desired rectangle dimension
-        unsigned short Height     # Input    // desired rectangle dimension
-        unsigned short X          # Output   // packed position in atlas
-        unsigned short Y          # Output   // packed position in atlas
-        unsigned int GlyphID      # Input    // for custom font glyphs only (id < 0x110000)
-        float GlyphAdvanceX       # Input    // for custom font glyphs only: glyph xadvance
-        ImVec2 GlyphOffset        # Input    // for custom font glyphs only: glyph display offset
-        ImFont* Font              # Input    // for custom font glyphs only: target font
+        unsigned short Width          # Input    // desired rectangle dimension
+        unsigned short Height         # Input    // desired rectangle dimension
+        unsigned short X              # Output   // packed position in atlas
+        unsigned short Y              # Output   // packed position in atlas
+        unsigned int GlyphID          # Input    // for custom font glyphs only (id < 0x110000)
+        unsigned int GlyphColored     # Input  // for custom font glyphs only: glyph is colored, removed tinting.
+        float GlyphAdvanceX           # Input    // for custom font glyphs only: glyph xadvance
+        ImVec2 GlyphOffset            # Input    // for custom font glyphs only: glyph display offset
+        ImFont* Font                  # Input    // for custom font glyphs only: target font
 
     bool ImFontAtlasCustomRect_IsPacked(const ImFontAtlasCustomRect* self) except +
 
@@ -2196,22 +2219,22 @@ cdef extern from "cimgui.h":
         int MetricsTotalSurface              # 4     // out //            // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
         ImU8* Used4kPagesMap                 # 2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
 
-    const ImFontGlyph* ImFont_FindGlyph(const ImFont* self, ImWchar c) except +
-    const ImFontGlyph* ImFont_FindGlyphNoFallback(const ImFont* self, ImWchar c) except +
-    float ImFont_GetCharAdvance(const ImFont* self, ImWchar c) except +
+    const ImFontGlyph* ImFont_FindGlyph(ImFont* self, ImWchar c) except +
+    const ImFontGlyph* ImFont_FindGlyphNoFallback(ImFont* self, ImWchar c) except +
+    float ImFont_GetCharAdvance(ImFont* self, ImWchar c) except +
     bool ImFont_IsLoaded(const ImFont* self) except +
     const char* ImFont_GetDebugName(const ImFont* self) except +
 
     # 'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
     # 'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
     # Implied text_end = null, remaining = null
-    ImVec2 ImFont_CalcTextSizeA(const ImFont* self, float size, float max_width, float wrap_width, const char* text_begin) except +
+    ImVec2 ImFont_CalcTextSizeA(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin) except +
 
     # Utf8
-    ImVec2 ImFont_CalcTextSizeAEx(const ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end, const char** remaining) except +
-    const char* ImFont_CalcWordWrapPositionA(const ImFont* self, float scale, const char* text, const char* text_end, float wrap_width) except +
-    void ImFont_RenderChar(const ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c) except +
-    void ImFont_RenderText(const ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip) except +
+    ImVec2 ImFont_CalcTextSizeAEx(ImFont* self, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end, const char** remaining) except +
+    const char* ImFont_CalcWordWrapPositionA(ImFont* self, float scale, const char* text, const char* text_end, float wrap_width) except +
+    void ImFont_RenderChar(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImWchar c) except +
+    void ImFont_RenderText(ImFont* self, ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, ImVec4 clip_rect, const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip) except +
 
     # [Internal] Don't use!
     void ImFont_BuildLookupTable(ImFont* self) except +
@@ -2267,6 +2290,7 @@ cdef extern from "cimgui.h":
         void (*Platform_SetImeDataFn)(ImGuiContext* ctx, ImGuiViewport* viewport, ImGuiPlatformImeData* data)
         void* Platform_ImeUserData
         ImWchar Platform_LocaleDecimalPoint                                                                                     # '.'
+        void* Renderer_RenderState
         void (*Platform_CreateWindow)(ImGuiViewport* vp)                                                                        # . . u . .  // create a new platform window for the given viewport
         void (*Platform_DestroyWindow)(ImGuiViewport* vp)                                                                       # N . u . d  //
         void (*Platform_ShowWindow)(ImGuiViewport* vp)                                                                          # . . u . .  // newly created windows are initially hidden so setwindowpos/size/title can be called on them before showing the window
@@ -2871,7 +2895,7 @@ cdef extern from "cimgui.h":
     # the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
     # - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
     # - Format string may also be set to NULL or use the default format ("%f" or "%d").
-    # - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For gamepad/keyboard navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
+    # - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For keyboard/gamepad navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
     # - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
     # - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
     # - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
@@ -3530,8 +3554,7 @@ cdef extern from "cimgui.h":
     void ImGui_PopClipRect() except +
 
     # Focus, Activation
-    # - Prefer using "SetItemDefaultFocus()" over "if (IsWindowAppearing()) SetScrollHereY()" when applicable to signify "this is the default item"
-    # Make last item the default focused item of a window.
+    # Make last item the default focused item of of a newly appearing window.
     void ImGui_SetItemDefaultFocus() except +
 
     # Implied offset = 0
@@ -3539,6 +3562,10 @@ cdef extern from "cimgui.h":
 
     # Focus keyboard on the next widget. use positive 'offset' to access sub components of a multiple component widget. use -1 to access previous widget.
     void ImGui_SetKeyboardFocusHereEx(int offset) except +
+
+    # Keyboard/Gamepad Navigation
+    # Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
+    void ImGui_SetNavCursorVisible(bool visible) except +
 
     # Overlapping mode
     # Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
@@ -3657,9 +3684,8 @@ cdef extern from "cimgui.h":
 
     # Inputs Utilities: Keyboard/Mouse/Gamepad
     # - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
-    # - before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. About use of those legacy ImGuiKey values:
-    # - without IMGUI_DISABLE_OBSOLETE_KEYIO (legacy support): you can still use your legacy native/user indices (< 512) according to how your backend/engine stored them in io.KeysDown[], but need to cast them to ImGuiKey.
-    # - with    IMGUI_DISABLE_OBSOLETE_KEYIO (this is the way forward): any use of ImGuiKey will assert with key < 512. GetKeyIndex() is pass-through and therefore deprecated (gone if IMGUI_DISABLE_OBSOLETE_KEYIO is defined).
+    # - (legacy: before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https://github.com/ocornut/imgui/issues/4921)
+    # - (legacy: any use of ImGuiKey will assert when key < 512 to detect passing legacy native/user indices)
     # Is key being held.
     bool ImGui_IsKeyDown(ImGuiKey key) except +
 
@@ -3711,7 +3737,7 @@ cdef extern from "cimgui.h":
     # Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
     void ImGui_SetItemKeyOwner(ImGuiKey key) except +
 
-    # Inputs Utilities: Mouse specific
+    # Inputs Utilities: Mouse
     # - To refer to a mouse button, you may use named enums in your code e.g. ImGuiMouseButton_Left, ImGuiMouseButton_Right.
     # - You can also use regular integer: it is forever guaranteed that 0=Left, 1=Right, 2=Middle.
     # - Dragging operations are only reported after mouse has moved a certain distance away from the initial clicking position (see 'lock_threshold' and 'io.MouseDraggingThreshold')

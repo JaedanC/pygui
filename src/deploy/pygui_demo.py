@@ -3960,8 +3960,6 @@ def show_random_extras():
             pygui.menu_item("io.backend_flags:                          {}".format(io.backend_flags))
             pygui.menu_item("io.backend_platform_name:                  {}".format(io.backend_platform_name))
             pygui.menu_item("io.backend_renderer_name:                  {}".format(io.backend_renderer_name))
-            pygui.menu_item("io.backend_using_legacy_key_arrays:        {}".format(io.backend_using_legacy_key_arrays))
-            pygui.menu_item("io.backend_using_legacy_nav_input_array:   {}".format(io.backend_using_legacy_nav_input_array))
             pygui.menu_item("io.config_debug_begin_return_value_loop:   {}".format(io.config_debug_begin_return_value_loop))
             pygui.menu_item("io.config_debug_begin_return_value_once:   {}".format(io.config_debug_begin_return_value_once))
             pygui.menu_item("io.config_debug_highlight_id_conflicts:    {}".format(io.config_debug_highlight_id_conflicts))
