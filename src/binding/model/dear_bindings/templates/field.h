@@ -8,9 +8,9 @@ def {field_name}(self):
     #if has_comment
 {comment}
     #endif
-    cdef {field_type} res = dereference(self._ptr).{cimgui_field_name}
+    cdef {field_type} res = dereference(self._ptr).{dcimgui_field_name}
     return {res}
 @{field_name}.setter
 def {field_name}(self, value: {python_type}):
-    # dereference(self._ptr).{cimgui_field_name} = {value}
+    # dereference(self._ptr).{dcimgui_field_name} = {value}
     raise NotImplementedError

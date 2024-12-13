@@ -448,6 +448,7 @@ INPUT_TEXT_FLAGS_PARSE_EMPTY_REF_VAL: int         # Inputfloat(), inputint(), in
 INPUT_TEXT_FLAGS_DISPLAY_EMPTY_REF_VAL: int       # Inputfloat(), inputint(), inputscalar() etc. only: when value is zero, do not display it. generally used with imguiinputtextflags_parseemptyrefval.
 INPUT_TEXT_FLAGS_NO_HORIZONTAL_SCROLL: int        # Disable following the cursor horizontally
 INPUT_TEXT_FLAGS_NO_UNDO_REDO: int                # Disable undo/redo. note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call clearactiveid().
+INPUT_TEXT_FLAGS_ELIDE_LEFT: int                  # When text doesn't fit, elide left side to ensure right side stays visible. useful for path/filenames. single-line only!
 INPUT_TEXT_FLAGS_CALLBACK_COMPLETION: int         # Callback on pressing tab (for completion handling)
 INPUT_TEXT_FLAGS_CALLBACK_HISTORY: int            # Callback on pressing up/down arrows (for history handling)
 INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int             # Callback on each iteration. user code may query cursor position, modify text buffer.
@@ -2136,6 +2137,7 @@ def image(user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 
     - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
     - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
+    - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     """
     pass
@@ -3755,7 +3757,7 @@ class ImDrawListSplitter:
 
     def destroy(self: ImDrawListSplitter) -> None:
         """
-        Mimics the destructor of ccimgui.ImDrawListSplitter
+        Mimics the destructor of dcimgui.ImDrawListSplitter
         """
         pass
 
@@ -3779,7 +3781,7 @@ class ImFont:
     """
     config_data: ImFontConfig
     """
-    4-8   // in  //// pointer within containeratlas->configdata
+    4-8   // in  //// pointer within containeratlas->configdata to configdatacount instances
     pygui note: Returns a const ImFontConfig. Fields should only be read,
     not modified.
     """
@@ -3789,7 +3791,8 @@ class ImFont:
     """
     container_atlas: ImFontAtlas
     """
-    Members: Cold ~32/40 bytes
+    [Internal] Members: Cold ~32/40 bytes
+    Conceptually ConfigData[] is the list of font sources merged to create this font.
     4-8   // out //// what we has been loaded into
     """
     descent: float
@@ -3802,7 +3805,7 @@ class ImFont:
     """
     ellipsis_char: int
     """
-    2 // out // = '...'/'.'// character used for ellipsis rendering.
+    2-4// out // = '...'/'.'// character used for ellipsis rendering.
     """
     ellipsis_char_count: int
     """
@@ -3822,7 +3825,7 @@ class ImFont:
     """
     fallback_char: int
     """
-    2 // out // = fffd/'?' // character used if a glyph isn't found.
+    2-4// out // = fffd/'?' // character used if a glyph isn't found.
     """
     fallback_glyph: ImFontGlyph
     """
@@ -3838,12 +3841,12 @@ class ImFont:
     """
     index_advance_x: List[float]
     """
-    Members: Hot ~20/24 bytes (for CalcTextSize)
+    [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
     12-16 // out //// sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
     """
     index_lookup: List[int]
     """
-    Members: Hot ~28/40 bytes (for CalcTextSize + render loop)
+    [Internal] Members: Hot ~28/40 bytes (for RenderText loop)
     12-16 // out //// sparse. index glyphs by unicode code-point.
     """
     metrics_total_surface: int
@@ -3943,7 +3946,7 @@ class ImFontAtlas:
     """
     tex_glyph_padding: int
     """
-    Padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
+    Fixme: should be called 'texpackpadding'. padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
     """
     tex_height: int
     """
@@ -4178,10 +4181,12 @@ class ImFontAtlasCustomRect:
     """
     height: int
     """
+    [Internal]
     Input    // desired rectangle dimension
     """
     width: int
     """
+    [Internal]
     Input    // desired rectangle dimension
     """
     x: int
@@ -4227,7 +4232,7 @@ class ImFontConfig:
     """
     glyph_extra_spacing: Tuple[float, float]
     """
-    0, 0 // extra spacing (in pixels) between glyphs. only x axis is supported for now.
+    0, 0 // extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->advancex. only x axis is supported for now.
     """
     glyph_max_advance_x: float
     """
@@ -4264,7 +4269,7 @@ class ImFontConfig:
     """
     pixel_snap_h: bool
     """
-    False// align every glyph to pixel boundary. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
+    False// align every glyph advancex to pixel boundaries. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
     """
     rasterizer_density: float
     """
@@ -4476,6 +4481,7 @@ class ImGuiIO:
     """
     backend_platform_name: str
     """
+    Nowadays those would be stored in ImGuiPlatformIO but we are leaving them here for legacy reasons.
     Optional: Platform/Renderer backend name (informational only! will be displayed in About Window) + User data for backend/wrappers to store their own stuff.
     = null
     """
@@ -5556,7 +5562,7 @@ class ImGuiSelectionBasicStorage:
 
     def destroy(self: ImGuiSelectionBasicStorage) -> None:
         """
-        Mimics the destructor of ccimgui.ImGuiSelectionBasicStorage. (Currently none)
+        Mimics the destructor of dcimgui.ImGuiSelectionBasicStorage. (Currently none)
         """
         pass
 
@@ -5627,7 +5633,7 @@ class ImGuiSelectionExternalStorage:
 
     def destroy(self: ImGuiSelectionExternalStorage) -> None:
         """
-        Mimics the destructor of ccimgui.ImGuiSelectionExternalStorage. (Currently none)
+        Mimics the destructor of dcimgui.ImGuiSelectionExternalStorage. (Currently none)
         """
         pass
 
@@ -6107,42 +6113,72 @@ class ImGuiWindowClass:
     # Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
     # """
 
-class ImVector_ImDrawCmd: ...
+class ImVector_ImDrawCmd:
+    """
+    Instantiation of imvector<imdrawcmd>
+    """
+    pass
     # capacity: int
     # data: ImDrawCmd
     # size: int
 
 class ImVector_ImDrawIdx:
+    """
+    Instantiation of imvector<imdrawidx>
+    """
     # capacity: int
     data: int
     size: int
 
-class ImVector_ImDrawListPtr: ...
+class ImVector_ImDrawListPtr:
+    """
+    Instantiation of imvector<imdrawlist*>
+    """
+    pass
     # capacity: int
     # data: ImDrawList
     # size: int
 
 class ImVector_ImDrawVert:
+    """
+    Instantiation of imvector<imdrawvert>
+    """
     # capacity: int
     data: ImDrawVert
     size: int
 
-class ImVector_ImGuiSelectionRequest: ...
+class ImVector_ImGuiSelectionRequest:
+    """
+    Instantiation of imvector<imguiselectionrequest>
+    """
+    pass
     # capacity: int
     # data: ImGuiSelectionRequest
     # size: int
 
-class ImVector_ImGuiStoragePair: ...
+class ImVector_ImGuiStoragePair:
+    """
+    Instantiation of imvector<imguistoragepair>
+    """
+    pass
     # capacity: int
     # data: ImGuiStoragePair
     # size: int
 
-class ImVector_ImU32: ...
+class ImVector_ImU32:
+    """
+    Instantiation of imvector<imu32>
+    """
+    pass
     # capacity: int
     # data: int
     # size: int
 
-class ImVector_ImU8: ...
+class ImVector_ImU8:
+    """
+    Instantiation of imvector<imu8>
+    """
+    pass
     # capacity: int
     # capacity: int
     # data: int
@@ -6150,12 +6186,20 @@ class ImVector_ImU8: ...
     # size: int
     # size: int
 
-class ImVector_ImWchar: ...
+class ImVector_ImWchar:
+    """
+    Instantiation of imvector<imwchar>
+    """
+    pass
     # capacity: int
     # data: int
     # size: int
 
-class ImVector_char: ...
+class ImVector_char:
+    """
+    Instantiation of imvector<char>
+    """
+    pass
     # capacity: int
     # data: str
     # size: int

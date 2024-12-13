@@ -232,7 +232,7 @@ class IBinding(ABC):
         pass
 
     @abstractmethod
-    def is_cimgui_type(self, _type: IType) -> bool:
+    def is_dcimgui_type(self, _type: IType) -> bool:
         pass
 
     @abstractmethod

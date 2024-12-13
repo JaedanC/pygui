@@ -18,7 +18,7 @@
     */
     void __py_assert(const char* msg) {
         init_exception();
-        
+
         // At first, set the Python exception state so we don't need to provide
         // custom exception translation function everywhere in Cython code
         // PyErr_SetString(PyExc_RuntimeError, msg);
@@ -27,7 +27,7 @@
         // Throw anything so on the Cython side we can can catch it with
         // something like:
         //
-        //     cdef extern from "cimgui.h":
+        //     cdef extern from "dcimgui.h":
         //         void PopStyleVar(int) except +
         throw msg;
     }
@@ -45,4 +45,4 @@
     CIMGUI_API PyObject* get_imgui_error() { return nullptr; }
 #endif //USE_CUSTOM_PYTHON_ERROR
 
-#endif //PYGUI_COMPILING_CIMGUI
+#endif //PYGUI_COMPILING_DCIMGUI

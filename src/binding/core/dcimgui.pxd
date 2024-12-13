@@ -232,6 +232,7 @@ cdef extern from "dcimgui.h":
         ImGuiInputTextFlags_DisplayEmptyRefVal      # Inputfloat(), inputint(), inputscalar() etc. only: when value is zero, do not display it. generally used with imguiinputtextflags_parseemptyrefval.
         ImGuiInputTextFlags_NoHorizontalScroll      # Disable following the cursor horizontally
         ImGuiInputTextFlags_NoUndoRedo              # Disable undo/redo. note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call clearactiveid().
+        ImGuiInputTextFlags_ElideLeft               # When text doesn't fit, elide left side to ensure right side stays visible. useful for path/filenames. single-line only!
         ImGuiInputTextFlags_CallbackCompletion      # Callback on pressing tab (for completion handling)
         ImGuiInputTextFlags_CallbackHistory         # Callback on pressing up/down arrows (for history handling)
         ImGuiInputTextFlags_CallbackAlways          # Callback on each iteration. user code may query cursor position, modify text buffer.
@@ -495,7 +496,7 @@ cdef extern from "dcimgui.h":
         ImGuiKey_Comma                   # ,
         ImGuiKey_Minus                   # -
         ImGuiKey_Period                  # .
-        ImGuiKey_Slash                   #
+        ImGuiKey_Slash                   # 
         ImGuiKey_Semicolon               # ;
         ImGuiKey_Equal                   # =
         ImGuiKey_LeftBracket             # [
@@ -984,6 +985,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imwchar>
     ctypedef struct ImVector_ImWchar:
         int Size
         int Capacity
@@ -991,6 +993,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imguitextfilter_imguitextrange>
     ctypedef struct ImVector_ImGuiTextFilter_ImGuiTextRange:
         int Size
         int Capacity
@@ -998,6 +1001,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<char>
     ctypedef struct ImVector_char:
         int Size
         int Capacity
@@ -1005,6 +1009,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imguistoragepair>
     ctypedef struct ImVector_ImGuiStoragePair:
         int Size
         int Capacity
@@ -1012,6 +1017,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imguiselectionrequest>
     ctypedef struct ImVector_ImGuiSelectionRequest:
         int Size
         int Capacity
@@ -1019,6 +1025,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imdrawcmd>
     ctypedef struct ImVector_ImDrawCmd:
         int Size
         int Capacity
@@ -1026,6 +1033,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imdrawidx>
     ctypedef struct ImVector_ImDrawIdx:
         int Size
         int Capacity
@@ -1033,6 +1041,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imdrawchannel>
     ctypedef struct ImVector_ImDrawChannel:
         int Size
         int Capacity
@@ -1040,6 +1049,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imdrawvert>
     ctypedef struct ImVector_ImDrawVert:
         int Size
         int Capacity
@@ -1047,6 +1057,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imvec2>
     ctypedef struct ImVector_ImVec2:
         int Size
         int Capacity
@@ -1054,6 +1065,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imvec4>
     ctypedef struct ImVector_ImVec4:
         int Size
         int Capacity
@@ -1061,6 +1073,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imtextureid>
     ctypedef struct ImVector_ImTextureID:
         int Size
         int Capacity
@@ -1068,6 +1081,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imu8>
     ctypedef struct ImVector_ImU8:
         int Size
         int Capacity
@@ -1075,6 +1089,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imdrawlist*>
     ctypedef struct ImVector_ImDrawListPtr:
         int Size
         int Capacity
@@ -1082,6 +1097,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imu32>
     ctypedef struct ImVector_ImU32:
         int Size
         int Capacity
@@ -1089,6 +1105,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imfont*>
     ctypedef struct ImVector_ImFontPtr:
         int Size
         int Capacity
@@ -1096,6 +1113,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imfontatlascustomrect>
     ctypedef struct ImVector_ImFontAtlasCustomRect:
         int Size
         int Capacity
@@ -1103,6 +1121,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imfontconfig>
     ctypedef struct ImVector_ImFontConfig:
         int Size
         int Capacity
@@ -1110,6 +1129,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<float>
     ctypedef struct ImVector_float:
         int Size
         int Capacity
@@ -1117,6 +1137,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imfontglyph>
     ctypedef struct ImVector_ImFontGlyph:
         int Size
         int Capacity
@@ -1124,6 +1145,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imguiplatformmonitor>
     ctypedef struct ImVector_ImGuiPlatformMonitor:
         int Size
         int Capacity
@@ -1131,6 +1153,7 @@ cdef extern from "dcimgui.h":
 
 
 
+    # Instantiation of imvector<imguiviewport*>
     ctypedef struct ImVector_ImGuiViewportPtr:
         int Size
         int Capacity
@@ -1989,8 +2012,8 @@ cdef extern from "dcimgui.h":
         float SizePixels                  # Size in pixels for rasterizer (more or less maps to the resulting font height).
         int OversampleH                   # 2        // rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
         int OversampleV                   # 1        // rasterize at higher quality for sub-pixel positioning. this is not really useful as we don't use sub-pixel positions on the y axis.
-        bool PixelSnapH                   # False    // align every glyph to pixel boundary. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
-        ImVec2 GlyphExtraSpacing          # 0, 0     // extra spacing (in pixels) between glyphs. only x axis is supported for now.
+        bool PixelSnapH                   # False    // align every glyph advancex to pixel boundaries. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
+        ImVec2 GlyphExtraSpacing          # 0, 0     // extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->advancex. only x axis is supported for now.
         ImVec2 GlyphOffset                # 0, 0     // offset all glyphs from this font input.
         const ImWchar* GlyphRanges        # Null     // the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
         float GlyphMinAdvanceX            # 0        // minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font
@@ -2051,10 +2074,10 @@ cdef extern from "dcimgui.h":
 
     # See ImFontAtlas::AddCustomRectXXX functions.
     ctypedef struct ImFontAtlasCustomRect:
-        unsigned short Width          # Input    // desired rectangle dimension
-        unsigned short Height         # Input    // desired rectangle dimension
         unsigned short X              # Output   // packed position in atlas
         unsigned short Y              # Output   // packed position in atlas
+        unsigned short Width          # Input    // desired rectangle dimension
+        unsigned short Height         # Input    // desired rectangle dimension
         unsigned int GlyphID          # Input    // for custom font glyphs only (id < 0x110000)
         unsigned int GlyphColored     # Input  // for custom font glyphs only: glyph is colored, removed tinting.
         float GlyphAdvanceX           # Input    // for custom font glyphs only: glyph xadvance
@@ -2085,7 +2108,7 @@ cdef extern from "dcimgui.h":
         ImFontAtlasFlags Flags                         # Build flags (see imfontatlasflags_)
         ImTextureID TexID                              # User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
         int TexDesiredWidth                            # Texture width desired by user before build(). must be a power-of-two. if have many glyphs your graphics api have texture size restrictions you may want to increase texture width to decrease height.
-        int TexGlyphPadding                            # Padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
+        int TexGlyphPadding                            # Fixme: should be called 'texpackpadding'. padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
         bool Locked                                    # Marked as locked by imgui::newframe() so attempt to modify the atlas will assert.
         void* UserData                                 # Store your own atlas related user-data (if e.g. you have multiple font atlas).
         bool TexReady                                  # Set when texture was built matching current font input
@@ -2205,11 +2228,11 @@ cdef extern from "dcimgui.h":
         ImVector_ImFontGlyph Glyphs          # 12-16 // out //            // all glyphs.
         const ImFontGlyph* FallbackGlyph     # 4-8   // out // = findglyph(fontfallbackchar)
         ImFontAtlas* ContainerAtlas          # 4-8   // out //            // what we has been loaded into
-        const ImFontConfig* ConfigData       # 4-8   // in  //            // pointer within containeratlas->configdata
+        const ImFontConfig* ConfigData       # 4-8   // in  //            // pointer within containeratlas->configdata to configdatacount instances
         short ConfigDataCount                # 2     // in  // ~ 1        // number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
-        ImWchar FallbackChar                 # 2     // out // = fffd/'?' // character used if a glyph isn't found.
-        ImWchar EllipsisChar                 # 2     // out // = '...'/'.'// character used for ellipsis rendering.
         short EllipsisCharCount              # 1     // out // 1 or 3
+        ImWchar EllipsisChar                 # 2-4   // out // = '...'/'.'// character used for ellipsis rendering.
+        ImWchar FallbackChar                 # 2-4   // out // = fffd/'?' // character used if a glyph isn't found.
         float EllipsisWidth                  # 4     // out               // width
         float EllipsisCharStep               # 4     // out               // step between characters when ellipsiscount > 0
         bool DirtyLookupTables               # 1     // out //
@@ -2859,6 +2882,7 @@ cdef extern from "dcimgui.h":
     # - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     # - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
     # - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
+    # - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
     void ImGui_Image(ImTextureID user_texture_id, ImVec2 image_size) except +
     void ImGui_ImageEx(ImTextureID user_texture_id, ImVec2 image_size, ImVec2 uv0, ImVec2 uv1, ImVec4 tint_col, ImVec4 border_col) except +
@@ -3786,7 +3810,7 @@ cdef extern from "dcimgui.h":
     # Implied button = 0
     void ImGui_ResetMouseDragDelta() except +
 
-    #
+    # 
     void ImGui_ResetMouseDragDeltaEx(ImGuiMouseButton button) except +
 
     # Get desired mouse cursor shape. important: reset in imgui::newframe(), this is updated during the frame. valid before render(). if you use software rendering by setting io.mousedrawcursor imgui will render those for you
@@ -3922,7 +3946,7 @@ cdef extern from "dcimgui_impl_glfw.h":
     # GLFW helpers
     void cImGui_ImplGlfw_Sleep(int milliseconds) except +
 
-cdef extern from "cimgui_impl_opengl3.h":
+cdef extern from "dcimgui_impl_opengl3.h":
     ctypedef struct ImDrawData
 
 
@@ -3946,7 +3970,7 @@ cdef extern from "cimgui_impl_opengl3.h":
     bool cImGui_ImplOpenGL3_CreateDeviceObjects() except +
     void cImGui_ImplOpenGL3_DestroyDeviceObjects() except +
 
-cdef extern from "cimgui_internal.h":
+cdef extern from "dcimgui_internal.h":
     ctypedef struct ImGuiErrorRecoveryState
 
 

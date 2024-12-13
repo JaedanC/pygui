@@ -87,17 +87,17 @@ def deep_json_filter(_json: dict | list, func: Callable, *args, **kwargs):
 
 class Binding(IBinding):
     @staticmethod
-    def from_json(cimgui_json, pxd_header: str, definitions: List[Tuple[str, bool]]):
-        cimgui_json = deep_json_filter(cimgui_json, passes_conditional, definitions)
-        cimgui_json = deep_json_filter(cimgui_json, ignore_anonymous)
+    def from_json(dcimgui_json, pxd_header: str, definitions: List[Tuple[str, bool]]):
+        dcimgui_json = deep_json_filter(dcimgui_json, passes_conditional, definitions)
+        dcimgui_json = deep_json_filter(dcimgui_json, ignore_anonymous)
 
-        enums = [_Enum.from_json(e) for e in cimgui_json["enums"]]
-        typedefs = [Typedef.from_json(e) for e in cimgui_json["typedefs"]]
-        structs = [Struct.from_json(e) for e in cimgui_json["structs"]]
+        enums = [_Enum.from_json(e) for e in dcimgui_json["enums"]]
+        typedefs = [Typedef.from_json(e) for e in dcimgui_json["typedefs"]]
+        structs = [Struct.from_json(e) for e in dcimgui_json["structs"]]
         functions = []
 
         methods: List[IFunction] = []
-        for function in cimgui_json["functions"]:
+        for function in dcimgui_json["functions"]:
             function = Function.from_json(function)
             if len(function.get_arguments()) > 0 and function.get_arguments()[0].get_name() == "self":
                 methods.append(function)
@@ -225,7 +225,7 @@ class Binding(IBinding):
         from cython.operator import dereference
         from typing import Callable, Any, Sequence, Tuple, NamedTuple, Optional
 
-        cimport ccimgui
+        cimport dcimgui
         from libcpp cimport bool
         from libc.stdint cimport uintptr_t
         from libc.stdlib cimport malloc, free
@@ -724,7 +724,7 @@ class Binding(IBinding):
 
         def IM_ASSERT(condition: bool, error_message: str=""):
             """
-            If cimgui exposes us a custom exception, we will use that. Otherwise,
+            If dcimgui exposes us a custom exception, we will use that. Otherwise,
             we will use Python's AssertionError.
             """
             if condition:
@@ -773,7 +773,7 @@ class Binding(IBinding):
             # twice. This will make the pyx parser only edit the first comment
             # keeping the old comment in the implementation. This is mainly to let
             # diff_match_patch find the old comment to apply changes to if the
-            # comment changes in cimgui.
+            # comment changes in dcimgui.
             # struct_comments = None
             # if struct.comments.three_quote_all_comments() is not None:
             #     struct_comments = struct.comments.three_quote_all_comments() + "\n" + \
@@ -808,7 +808,7 @@ class Binding(IBinding):
                 # Field type
                 if field.get_type().is_function_pointer():
                     field_type = "Callable"
-                elif self.is_cimgui_type(field.get_type()):
+                elif self.is_dcimgui_type(field.get_type()):
                     field_type = "{}.{}".format(pxd_library_name, field.get_type().with_no_const())
                 else:
                     field_type = field.get_type().to_pxd()
@@ -819,8 +819,8 @@ class Binding(IBinding):
                 # Field name
                 field_name = pythonise_string(field.get_name())
 
-                # Cimgui field name
-                cimgui_field_name = field.get_name()
+                # dcimgui field name
+                dcimgui_field_name = field.get_name()
 
                 # Value
                 value, _ = self.marshall_python_to_c(field.get_type(), "value", pxd_library_name)
@@ -830,7 +830,7 @@ class Binding(IBinding):
                     python_type=python_type,
                     field_name=field_name,
                     field_type=field_type,
-                    cimgui_field_name=cimgui_field_name,
+                    dcimgui_field_name=dcimgui_field_name,
                     res=res,
                     value=value,
                 ).compile(), "    "))
@@ -870,7 +870,7 @@ class Binding(IBinding):
         function_template.set_condition("has_return_type", not function.get_return_type().is_void_type())
         if function.get_return_type().is_function_pointer():
             return_type = "Callable"
-        elif self.is_cimgui_type(function.get_return_type()):
+        elif self.is_dcimgui_type(function.get_return_type()):
             return_type = "{}.{}".format(pxd_library_name, function.get_return_type().with_no_const())
         else:
             return_type = function.get_return_type().to_pxd()
@@ -971,7 +971,7 @@ class Binding(IBinding):
         if _type.ptr_version() is not None:
             return _type.ptr_version() + "(dereference({}))"
 
-        if self.is_cimgui_type(_type):
+        if self.is_dcimgui_type(_type):
             return _type.with_no_const_or_asterisk() + ".from_ptr({})"
 
         return "{}"
@@ -1006,7 +1006,7 @@ class Binding(IBinding):
         elif _type.ptr_version() and default_value == "None":
             output = _type.ptr_version() + ".ptr({name})"
 
-        elif self.is_cimgui_type(_type) and default_value == "None":
+        elif self.is_dcimgui_type(_type) and default_value == "None":
             output = "<{pxd_library_name}.{type_name}>(NULL if {{name}} is None else {{name}}._ptr)".format(
                 pxd_library_name=pxd_library_name,
                 type_name=_type.with_no_const()
@@ -1015,13 +1015,13 @@ class Binding(IBinding):
         elif _type.ptr_version() is not None:
             output = "&{name}.value"
 
-        elif self.is_cimgui_type(_type):
+        elif self.is_dcimgui_type(_type):
             output = "{name}._ptr"
 
         return output.format(name=argument_name), additional_lines
 
     def follow_type(self, _type: IType) -> IType:
-        if not self.is_cimgui_type(_type):
+        if not self.is_dcimgui_type(_type):
             return _type
 
         for enum in self.enums:
@@ -1045,7 +1045,7 @@ class Binding(IBinding):
         )
         return parameter_format
 
-    def is_cimgui_type(self, _type: IType) -> bool:
+    def is_dcimgui_type(self, _type: IType) -> bool:
         for enum in self.enums:
             if _type.with_no_const_or_asterisk() == enum:
                 return True

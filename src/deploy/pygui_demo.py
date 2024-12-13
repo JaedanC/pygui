@@ -5682,7 +5682,7 @@ def show_crash_test():
     else:
         pygui.text_colored((1, 0, 0, 1), "Custom Exceptions Off")
 
-    # TODO: I believe this specific crash test is not working since cimgui
+    # TODO: I believe this specific crash test is not working since dcimgui
     # wrapped IM_ASSERT with their own implementation. Can this be fixed? The
     # other errors are caught fine. Perhaps this error is unrecoverable and thus
     # cannot show the text to screen?
@@ -5798,7 +5798,7 @@ def show_crash_test():
             assert pygui.IM_ASSERT(False, "Haha, can't catch me")
         except pygui.get_imgui_error() as e:
             # Prefer to use pygui.ImGuiError as it is safer. This value could
-            # be None if cimgui is not using a custom python exception. For this
+            # be None if dcimgui is not using a custom python exception. For this
             # example this is exactly what we want.
             crash.catch_message = "Caught! You have custom exceptions on."
             crash.error_text.value = str(e)

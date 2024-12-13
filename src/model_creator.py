@@ -559,7 +559,6 @@ def to_py(extension_name: str):
         # clean up afterwards
         gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
         return texture
-
     """.lstrip("\n"))
     return py
 
@@ -667,9 +666,9 @@ def main():
         for i, header in enumerate(modules):
             pxd += header.to_pxd(i == 0)
 
-        with open(CIMGUI_PXD_PATH, "w") as f:
+        with open(DCIMGUI_PXD_PATH, "w") as f:
             f.write(pxd)
-        print(f"Created {CIMGUI_PXD_PATH}")
+        print(f"Created {DCIMGUI_PXD_PATH}")
 
     def write_pyx(modules: List[IBinding], pxd_libary_name: str):
         with open(CLASS_TEMPLATE) as f:
@@ -735,25 +734,25 @@ def main():
         modules: List[IBinding] = []
 
         # core
-        with open("external/dear_bindings/generated/cimgui.json") as f:
+        with open("external/dear_bindings/generated/dcimgui.json") as f:
             modules.append(
-                Binding.from_json(json.load(f), "cimgui.h", defines)
+                Binding.from_json(json.load(f), "dcimgui.h", defines)
             )
 
         # glfw
-        with open("external/dear_bindings/generated/backends/cimgui_impl_glfw.json") as f:
+        with open("external/dear_bindings/generated/backends/dcimgui_impl_glfw.json") as f:
             modules.append(
-                Binding.from_json(json.load(f), "cimgui_impl_glfw.h", defines)
+                Binding.from_json(json.load(f), "dcimgui_impl_glfw.h", defines)
             )
 
         # opengl
-        with open("external/dear_bindings/generated/backends/cimgui_impl_opengl3.json") as f:
+        with open("external/dear_bindings/generated/backends/dcimgui_impl_opengl3.json") as f:
             modules.append(
-                Binding.from_json(json.load(f), "cimgui_impl_opengl3.h", defines)
+                Binding.from_json(json.load(f), "dcimgui_impl_opengl3.h", defines)
             )
 
-        # Error handling from cimgui_internal.h
-        with open("external/dear_bindings/generated/cimgui_internal.json") as f:
+        # Error handling from dcimgui_internal.h
+        with open("external/dear_bindings/generated/dcimgui_internal.json") as f:
             loaded_json = json.load(f)
 
 
@@ -779,7 +778,7 @@ def main():
             }
 
             modules.append(
-                Binding.from_json(loaded_json, "cimgui_internal.h", defines)
+                Binding.from_json(loaded_json, "dcimgui_internal.h", defines)
             )
 
         return modules
@@ -797,11 +796,11 @@ def main():
         return
 
     if "--trial" in sys.argv:
-        trial_pyx(modules, CIMGUI_LIBRARY_NAME)
+        trial_pyx(modules, DCIMGUI_LIBRARY_NAME)
         return
 
     if "--reset" in sys.argv:
-        reset(modules, CIMGUI_LIBRARY_NAME)
+        reset(modules, DCIMGUI_LIBRARY_NAME)
         return
 
     if "--pxd" in sys.argv:
@@ -809,7 +808,7 @@ def main():
         return
 
     if "--pyx" in sys.argv:
-        write_pyx(modules, CIMGUI_LIBRARY_NAME)
+        write_pyx(modules, DCIMGUI_LIBRARY_NAME)
         return
 
     if "--pyi" in sys.argv:
@@ -818,7 +817,7 @@ def main():
 
     if "--all" in sys.argv:
         write_pxd(modules)
-        write_pyx(modules, CIMGUI_LIBRARY_NAME)
+        write_pyx(modules, DCIMGUI_LIBRARY_NAME)
         write_pyi(modules, EXTENSION_NAME, show_comments)
         return
 

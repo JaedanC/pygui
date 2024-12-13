@@ -7,9 +7,9 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
 
-#include "cimgui.h"
-#include "cimgui_impl_glfw.h"
-#include "cimgui_impl_opengl3.h"
+#include "dcimgui.h"
+#include "dcimgui_impl_glfw.h"
+#include "dcimgui_impl_opengl3.h"
 #include <stdio.h>
 #include <float.h>
 #define GL_SILENCE_DEPRECATION
@@ -262,22 +262,22 @@ int main(int argc, char* argv[])
 		{
 			static float f = 0.0f;
 			static int counter = 0;
-		
+
 			ImGui_Begin("Hello, world!", NULL, 0);
 			ImGui_Text("This is some useful text");
 			ImGui_Checkbox("Demo window", &show_demo_window);
 			ImGui_Checkbox("Another window", &show_another_window);
 			ImGui_Text("New Char: ∮");
-		
+
 			example_function();
-		
+
 			ImGui_SliderFloatEx("Float", &f, 0.0f, 1.0f, "%.3f", 0);
 			ImGui_ColorEdit3("clear color", (float*)&clear_color, 0);
-		
+
 			static int current_item = 0;
 			const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange" };
 			ImGui_ListBox("List box", &current_item, items, 6, 4);
-		
+
 			ImVec2 button_size;
 			button_size.x = 0;
 			button_size.y = 0;
@@ -285,12 +285,12 @@ int main(int argc, char* argv[])
 				counter++;
 			ImGui_SameLineEx(0.0f, -1.0f);
 			ImGui_Text("counter = %d", counter);
-		
+
 			ImGui_Text("Application average %.3f ms/frame (%.1f FPS)",
 				1000.0f / ImGui_GetIO()->Framerate, ImGui_GetIO()->Framerate);
 			if (ImGui_Button("Click to crash ImGui in Dev Builds"))
-				IM_ASSERT(false && "If you're reading this, cimgui is crashing visibly!");
-		
+				IM_ASSERT(false && "If you're reading this, dcimgui is crashing visibly!");
+
 			ImGui_End();
 		}
 

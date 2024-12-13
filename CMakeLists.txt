@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 project(pygui)
 
 
-set(CIMGUI_DIRECTORY          src/external/dear_bindings/generated)
-set(CIMGUI_IMPL_DIRECTORY     ${CIMGUI_DIRECTORY}/backends)
+set(DCIMGUI_DIRECTORY          src/external/dear_bindings/generated)
+set(DCIMGUI_IMPL_DIRECTORY     ${DCIMGUI_DIRECTORY}/backends)
 
 set(IMGUI_DIRECTORY           src/external/imgui)
 set(IMGUI_IMPL_DIRECTORY      ${IMGUI_DIRECTORY}/backends)
@@ -18,6 +18,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(Python_FIND_ABI "ANY" "ANY" "ANY")
 find_package(Python3 COMPONENTS Development)
+message("Python_FOUND:${Python3_FOUND}")
+message("Python_VERSION:${Python3_VERSION}")
+message("Python_Development_FOUND:${Python3_Development_FOUND}")
+message("Python_LIBRARIES:${Python3_LIBRARIES}")
 
 # ------------------------------------------------------------------------------
 # glfw.dll
@@ -65,15 +69,15 @@ target_compile_definitions(my_program_cpp PRIVATE
     IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
 )
 # No Console window on startup
-# set_target_properties(my_program_cpp PROPERTIES 
+# set_target_properties(my_program_cpp PROPERTIES
 #    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
 target_link_libraries(my_program_cpp opengl32 glfw)
 
 
 # ------------------------------------------------------------------------------
-# cimgui_glfw_opengl3.dll
-# - Contains: imgui, cimgui, and cimgui glfw & opengl3 backend.
-# - Exports only the cimgui functions
+# dcimgui_glfw_opengl3.dll
+# - Contains: imgui, dcimgui, and dcimgui glfw & opengl3 backend.
+# - Exports only the dcimgui functions
 
 # Layout:
 #  - define: PYGUI_COMPILING_DLL
@@ -81,50 +85,50 @@ target_link_libraries(my_program_cpp opengl32 glfw)
 #       CIMGUI_API        __declspec(dllexport)
 #  - include:
 #       {imgui headers}
-#       {cimgui headers}
-#       {cimgui backend headers}
+#       {dcimgui headers}
+#       {dcimgui backend headers}
 #       {glfw headers}
 #       {python headers} -> For custom assertion
 #  - src:
 #       {imgui  src}
-#       {cimgui src}
-#       {cimgui backend src}
+#       {dcimgui src}
+#       {dcimgui backend src}
 #       {python assert src}
 
 file(
     GLOB
-    CIMGUI_AND_IMPL_FILES
+    DCIMGUI_AND_IMPL_FILES
     ${IMGUI_DIRECTORY}/*.cpp
-    ${CIMGUI_DIRECTORY}/*.cpp
+    ${DCIMGUI_DIRECTORY}/*.cpp
     ${IMGUI_IMPL_DIRECTORY}/imgui_impl_glfw.cpp
     ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
-    ${CIMGUI_IMPL_DIRECTORY}/cimgui_impl_glfw.cpp
-    ${CIMGUI_IMPL_DIRECTORY}/cimgui_impl_opengl3.cpp
+    ${DCIMGUI_IMPL_DIRECTORY}/dcimgui_impl_glfw.cpp
+    ${DCIMGUI_IMPL_DIRECTORY}/dcimgui_impl_opengl3.cpp
     ${PYGUI_CONFIG_CPP}                             # Custom Python assertion
 )
-add_library(cimgui_glfw_opengl3 SHARED ${CIMGUI_AND_IMPL_FILES})
-target_include_directories(cimgui_glfw_opengl3 PRIVATE
+add_library(dcimgui_glfw_opengl3 SHARED ${DCIMGUI_AND_IMPL_FILES})
+target_include_directories(dcimgui_glfw_opengl3 PRIVATE
     ${IMGUI_DIRECTORY}
     ${IMGUI_IMPL_DIRECTORY}
-    ${CIMGUI_DIRECTORY}
-    ${CIMGUI_IMPL_DIRECTORY}
+    ${DCIMGUI_DIRECTORY}
+    ${DCIMGUI_IMPL_DIRECTORY}
     ${GLFW_INCLUDE_DIRECTORY}
     ${Python3_INCLUDE_DIRS}
     ${PYGUI_CONFIG_DIRECTORY}
 )
-target_compile_definitions(cimgui_glfw_opengl3 PRIVATE
+target_compile_definitions(dcimgui_glfw_opengl3 PRIVATE
     USE_CUSTOM_PYTHON_ERROR                     # Comment this to disable custom assert
     PYGUI_COMPILING_DLL
     IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
 )
-target_link_libraries(cimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
+target_link_libraries(dcimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
 
 
 # ------------------------------------------------------------------------------
 # my_program.exe
-# - Tests the cimgui DLL using
+# - Tests the dcimgui DLL using
 # - Does not compile with the custom IM_ASSERT() function. You can verify this
-#   by clicking on the button "Click to crash cimgui" in the example provided.
+#   by clicking on the button "Click to crash dcimgui" in the example provided.
 # - The main.c file is based on the minimal c++ example in the ImGui repo.
 
 # Layout:
@@ -133,21 +137,21 @@ target_link_libraries(cimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
 #       CIMGUI_IMPL_API    __declspec(dllimport)
 #  - include
 #       {imgui headers}
-#       {cimgui headers}
-#       {cimgui backend headers}
+#       {dcimgui headers}
+#       {dcimgui backend headers}
 #  - src:
 #       main.c
 #  - links:
-#       cimgui_glfw_opengl3  (CIMGUI_API import. Includes cimgui and backend).
-#       opengl32             (So that opengl function calls are found).
+#       dcimgui_glfw_opengl3  (CIMGUI_API import. Includes dcimgui and backend).
+#       opengl32              (So that opengl function calls are found).
 
 add_executable(my_program_c
     src/c/main.c
 )
 target_include_directories(my_program_c PRIVATE
     ${IMGUI_DIRECTORY}
-    ${CIMGUI_DIRECTORY}
-    ${CIMGUI_IMPL_DIRECTORY}
+    ${DCIMGUI_DIRECTORY}
+    ${DCIMGUI_IMPL_DIRECTORY}
     ${PYGUI_CONFIG_DIRECTORY}
 )
 target_compile_definitions(my_program_c PRIVATE
@@ -155,16 +159,16 @@ target_compile_definitions(my_program_c PRIVATE
     IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
 )
 # No Console window on startup
-# set_target_properties(my_program_c PROPERTIES 
+# set_target_properties(my_program_c PROPERTIES
 #    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
-target_link_libraries(my_program_c cimgui_glfw_opengl3 opengl32)
+target_link_libraries(my_program_c dcimgui_glfw_opengl3 opengl32)
 
 
 # Since we are compiling SHARED dll's, then we are mostly interesting in
 # the runtime (dll) and the archive (associated .lib). The .lib file is
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
-install(TARGETS cimgui_glfw_opengl3 my_program_c my_program_cpp glfw
+install(TARGETS dcimgui_glfw_opengl3 my_program_c my_program_cpp glfw
         RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui
         LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
         ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs)

@@ -30,14 +30,14 @@ def main():
             # the functions we defined in our pxd file.
             include_dirs=[
                 "c/cpp_config",                              # pygui_config.h
-                "external/dear_bindings/generated",          # cimgui.h
+                "external/dear_bindings/generated",          # dcimgui.h
                 "external/dear_bindings/generated/backends", # imgui_impl_*.h
                 "external/imgui",                            # imconfig.h (Ununsed)
             ],
             library_dirs=[
                 "deploy/pygui/libs",
             ],
-            libraries=["cimgui_glfw_opengl3", "glfw3dll"],
+            libraries=["dcimgui_glfw_opengl3", "glfw3dll"],
             define_macros=[
                 ("PYGUI_COMPILING_DLL", True),
                 ("USE_CUSTOM_PYTHON_ERROR", True),

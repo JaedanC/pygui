@@ -584,7 +584,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
             if not line.strip().startswith("# ?"):
                 return options
 
-            options_found = re.match(".*?# \?(.*?)\((.*)\)", line)
+            options_found = re.match(r".*?# \?(.*?)\((.*)\)", line)
             if options_found is None:
                 return options
 
@@ -592,6 +592,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         return options
 
     def parse_other_than_options_and_comment(src: str) -> str:
+        i = 0
         for i, line in enumerate(src.split("\n")):
             if not line.strip().startswith("# ?"):
                 break
@@ -608,7 +609,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
 
     def parse_function(src_containing_name: str) -> Tuple[str, str]:
         for line in src_containing_name.split("\n"):
-            found_name = re.match(".*def (.*?)\((.*?)\):", line.strip())
+            found_name = re.match(r".*def (.*?)\((.*?)\):", line.strip())
 
             if found_name is not None:
                 # Name, Inferred Parameters
@@ -617,7 +618,7 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
 
     def parse_class(src_containing_class: str) -> str:
         for line in src_containing_class.split("\n"):
-            class_name_found = re.match("cdef class (.*?):", line)
+            class_name_found = re.match(r"cdef class (.*?):", line)
 
             if class_name_found is not None:
                 return class_name_found.group(1)
