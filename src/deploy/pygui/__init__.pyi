@@ -3343,23 +3343,17 @@ def text_disabled(fmt: str) -> None:
     """
     pass
 
-# def text_link(label: str) -> bool:
-#     """
-#     Hyperlink text button, return true when clicked
-#     """
-#     pass
+def text_link(label: str) -> bool:
+    """
+    Hyperlink text button, return true when clicked
+    """
+    pass
 
-# def text_link_open_url(label: str) -> None:
-#     """
-#     Implied url = null
-#     """
-#     pass
-
-# def text_link_open_url_ex(label: str, url: str=None) -> None:
-#     """
-#     Hyperlink text button, automatically open file/url when clicked
-#     """
-#     pass
+def text_link_open_url(label: str, url: str=None) -> None:
+    """
+    Hyperlink text button, automatically open file/url when clicked
+    """
+    pass
 
 def text_unformatted(text: str, text_end: str=None) -> None:
     """

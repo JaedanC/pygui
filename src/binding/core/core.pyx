@@ -10144,39 +10144,42 @@ def text_disabled(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-# def text_link(label: str):
-#     """
-#     Hyperlink text button, return true when clicked
-#     """
-#     cdef bool res = dcimgui.ImGui_TextLink(
-#         _bytes(label)
-#     )
-#     return res
+def text_link(label: str):
+    """
+    Hyperlink text button, return true when clicked
+    """
+    cdef bool res = dcimgui.ImGui_TextLink(
+        _bytes(label)
+    )
+    return res
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def text_link_open_url(label: str):
-#     """
-#     Implied url = null
-#     """
-#     dcimgui.ImGui_TextLinkOpenURL(
-#         _bytes(label)
-#     )
+def text_link_open_url(label: str, url: str=None):
+    """
+    Hyperlink text button, automatically open file/url when clicked
+    """
+    bytes_url = _bytes(url) if url is not None else None
+
+    dcimgui.ImGui_TextLinkOpenURLEx(
+        _bytes(label),
+        ((<char*>bytes_url if url is not None else NULL))
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
 # def text_link_open_url_ex(label: str, url: str=None):

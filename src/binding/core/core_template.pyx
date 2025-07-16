@@ -10144,7 +10144,7 @@ def text_disabled_v(fmt: str):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
@@ -10159,24 +10159,27 @@ def text_link(label: str):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
-# ?active(False)
+# ?use_template(True)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def text_link_open_url(label: str):
+def text_link_open_url(label: str, url: str=None):
     """
-    Implied url = null
+    Hyperlink text button, automatically open file/url when clicked
     """
-    dcimgui.ImGui_TextLinkOpenURL(
-        _bytes(label)
+    bytes_url = _bytes(url) if url is not None else None
+
+    dcimgui.ImGui_TextLinkOpenURLEx(
+        _bytes(label),
+        ((<char*>bytes_url if url is not None else NULL))
     )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
 # ?active(False)
-# ?invisible(False)
+# ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
 def text_link_open_url_ex(label: str, url: str=None):
