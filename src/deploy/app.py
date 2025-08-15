@@ -84,7 +84,7 @@ def main():
         else:
             print("pygui.ImGuiError")
 
-    demo_fonts_init()
+    # demo_fonts_init()
 
     try:
         while not glfw.window_should_close(window):

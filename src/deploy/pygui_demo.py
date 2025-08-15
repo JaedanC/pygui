@@ -1278,7 +1278,7 @@ class widget:
     tab_tab_bar_flags = pygui.Int(
         pygui.TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS | \
         pygui.TAB_BAR_FLAGS_REORDERABLE | \
-        pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
+        pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL)
     plotting_animate = pygui.Bool(True)
     plotting_arr = [
         0.6, 0.1, 1.0, 0.5, 0.92, 0.1, 0.2
@@ -2387,14 +2387,19 @@ def show_demo_widgets():
             pygui.checkbox_flags("ImGuiTabBarFlags_AutoSelectNewTabs", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_AUTO_SELECT_NEW_TABS)
             pygui.checkbox_flags("ImGuiTabBarFlags_TabListPopupButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON)
             pygui.checkbox_flags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON)
+            pygui.checkbox_flags("ImGuiTabBarFlags_DrawSelectedOverline", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_DRAW_SELECTED_OVERLINE)
             if widget.tab_tab_bar_flags.value & pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK == 0:
                 widget.tab_tab_bar_flags.value |= pygui.TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT
-            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyResizeDown", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN):
-                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyMixed", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_MIXED):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_MIXED)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyShrink", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SHRINK):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SHRINK)
             if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyScroll", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL):
                 widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL)
 
             # Tab Bar
+            pygui.align_text_to_frame_padding()
+            pygui.text("Opened:")
             names = ["Artichoke", "Beetroot", "Celery", "Daikon"]
             for n, tab in enumerate(widget.tab_opened):
                 if n > 0:
@@ -2428,8 +2433,12 @@ def show_demo_widgets():
 
             # Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
             pygui.checkbox_flags("ImGuiTabBarFlags_TabListPopupButton", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_TAB_LIST_POPUP_BUTTON)
-            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyResizeDown", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN):
-                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN)
+            if widget.tab_tab_bar_flags.value & pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK == 0:
+                widget.tab_tab_bar_flags.value |= pygui.TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyMixed", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_MIXED):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_MIXED)
+            if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyShrink", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SHRINK):
+                widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SHRINK)
             if pygui.checkbox_flags("ImGuiTabBarFlags_FittingPolicyScroll", widget.tab_tab_bar_flags, pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL):
                 widget.tab_tab_bar_flags.value &= ~(pygui.TAB_BAR_FLAGS_FITTING_POLICY_MASK ^ pygui.TAB_BAR_FLAGS_FITTING_POLICY_SCROLL)
 

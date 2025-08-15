@@ -44,27 +44,6 @@ void show_imfontconfig(ImFontConfig* config)
 }
 
 
-void show_imfont_atlas(ImFontAtlas* atlas)
-{
-    if (ImGui_BeginMenu("atlas.config_data"))
-    {
-        char config_data_size[32];
-        sprintf(config_data_size, "atlas->ConfigData.size(): %d", atlas->ConfigData.Size);
-        ImGui_MenuItem(config_data_size);
-        for (int i = 0; i < atlas->ConfigData.Size; i++)
-        {
-            char config_text[32];
-            sprintf(config_text, "Config %d", i);
-            if (ImGui_BeginMenu(config_text))
-            {
-                show_imfontconfig(&atlas->ConfigData.Data[i]);
-                ImGui_EndMenu();
-            }
-        }
-        ImGui_EndMenu();
-    }
-}
-
 static const char* ExampleNames[] =
 {
     "Artichoke", "Arugula", "Asparagus", "Avocado", "Bamboo Shoots", "Bean Sprouts", "Beans", "Beet", "Belgian Endive", "Bell Pepper",
@@ -128,13 +107,6 @@ void multi_select_test()
         ImGui_EndChild();
         ImGui_TreePop();
     }
-}
-
-
-void example_function()
-{
-    ImFont* font = ImGui_GetFont();
-    show_imfont_atlas(font->ContainerAtlas);
 }
 
 
@@ -268,8 +240,6 @@ int main(int argc, char* argv[])
 			ImGui_Checkbox("Demo window", &show_demo_window);
 			ImGui_Checkbox("Another window", &show_another_window);
 			ImGui_Text("New Char: ∮");
-
-			example_function();
 
 			ImGui_SliderFloatEx("Float", &f, 0.0f, 1.0f, "%.3f", 0);
 			ImGui_ColorEdit3("clear color", (float*)&clear_color, 0);

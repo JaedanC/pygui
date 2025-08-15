@@ -550,12 +550,12 @@ WINDOW_FLAGS_NO_DOCKING = dcimgui.ImGuiWindowFlags_NoDocking
 WINDOW_FLAGS_NO_NAV = dcimgui.ImGuiWindowFlags_NoNav
 WINDOW_FLAGS_NO_DECORATION = dcimgui.ImGuiWindowFlags_NoDecoration
 WINDOW_FLAGS_NO_INPUTS = dcimgui.ImGuiWindowFlags_NoInputs
+WINDOW_FLAGS_DOCK_NODE_HOST = dcimgui.ImGuiWindowFlags_DockNodeHost
 WINDOW_FLAGS_CHILD_WINDOW = dcimgui.ImGuiWindowFlags_ChildWindow
 WINDOW_FLAGS_TOOLTIP = dcimgui.ImGuiWindowFlags_Tooltip
 WINDOW_FLAGS_POPUP = dcimgui.ImGuiWindowFlags_Popup
 WINDOW_FLAGS_MODAL = dcimgui.ImGuiWindowFlags_Modal
 WINDOW_FLAGS_CHILD_MENU = dcimgui.ImGuiWindowFlags_ChildMenu
-WINDOW_FLAGS_DOCK_NODE_HOST = dcimgui.ImGuiWindowFlags_DockNodeHost
 CHILD_FLAGS_NONE = dcimgui.ImGuiChildFlags_None
 CHILD_FLAGS_BORDERS = dcimgui.ImGuiChildFlags_Borders
 CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING = dcimgui.ImGuiChildFlags_AlwaysUseWindowPadding
@@ -612,10 +612,14 @@ TREE_NODE_FLAGS_BULLET = dcimgui.ImGuiTreeNodeFlags_Bullet
 TREE_NODE_FLAGS_FRAME_PADDING = dcimgui.ImGuiTreeNodeFlags_FramePadding
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH = dcimgui.ImGuiTreeNodeFlags_SpanAvailWidth
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH = dcimgui.ImGuiTreeNodeFlags_SpanFullWidth
-TREE_NODE_FLAGS_SPAN_TEXT_WIDTH = dcimgui.ImGuiTreeNodeFlags_SpanTextWidth
+TREE_NODE_FLAGS_SPAN_LABEL_WIDTH = dcimgui.ImGuiTreeNodeFlags_SpanLabelWidth
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS = dcimgui.ImGuiTreeNodeFlags_SpanAllColumns
-TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE = dcimgui.ImGuiTreeNodeFlags_NavLeftJumpsBackHere
+TREE_NODE_FLAGS_LABEL_SPAN_ALL_COLUMNS = dcimgui.ImGuiTreeNodeFlags_LabelSpanAllColumns
+TREE_NODE_FLAGS_NAV_LEFT_JUMPS_TO_PARENT = dcimgui.ImGuiTreeNodeFlags_NavLeftJumpsToParent
 TREE_NODE_FLAGS_COLLAPSING_HEADER = dcimgui.ImGuiTreeNodeFlags_CollapsingHeader
+TREE_NODE_FLAGS_DRAW_LINES_NONE = dcimgui.ImGuiTreeNodeFlags_DrawLinesNone
+TREE_NODE_FLAGS_DRAW_LINES_FULL = dcimgui.ImGuiTreeNodeFlags_DrawLinesFull
+TREE_NODE_FLAGS_DRAW_LINES_TO_NODES = dcimgui.ImGuiTreeNodeFlags_DrawLinesToNodes
 POPUP_FLAGS_NONE = dcimgui.ImGuiPopupFlags_None
 POPUP_FLAGS_MOUSE_BUTTON_LEFT = dcimgui.ImGuiPopupFlags_MouseButtonLeft
 POPUP_FLAGS_MOUSE_BUTTON_RIGHT = dcimgui.ImGuiPopupFlags_MouseButtonRight
@@ -653,7 +657,8 @@ TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON = dcimgui.ImGuiTabBarFlags_NoClo
 TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS = dcimgui.ImGuiTabBarFlags_NoTabListScrollingButtons
 TAB_BAR_FLAGS_NO_TOOLTIP = dcimgui.ImGuiTabBarFlags_NoTooltip
 TAB_BAR_FLAGS_DRAW_SELECTED_OVERLINE = dcimgui.ImGuiTabBarFlags_DrawSelectedOverline
-TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN = dcimgui.ImGuiTabBarFlags_FittingPolicyResizeDown
+TAB_BAR_FLAGS_FITTING_POLICY_MIXED = dcimgui.ImGuiTabBarFlags_FittingPolicyMixed
+TAB_BAR_FLAGS_FITTING_POLICY_SHRINK = dcimgui.ImGuiTabBarFlags_FittingPolicyShrink
 TAB_BAR_FLAGS_FITTING_POLICY_SCROLL = dcimgui.ImGuiTabBarFlags_FittingPolicyScroll
 TAB_BAR_FLAGS_FITTING_POLICY_MASK = dcimgui.ImGuiTabBarFlags_FittingPolicyMask_
 TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT = dcimgui.ImGuiTabBarFlags_FittingPolicyDefault_
@@ -727,6 +732,7 @@ DATA_TYPE_U64 = dcimgui.ImGuiDataType_U64
 DATA_TYPE_FLOAT = dcimgui.ImGuiDataType_Float
 DATA_TYPE_DOUBLE = dcimgui.ImGuiDataType_Double
 DATA_TYPE_BOOL = dcimgui.ImGuiDataType_Bool
+DATA_TYPE_STRING = dcimgui.ImGuiDataType_String
 DATA_TYPE_COUNT = dcimgui.ImGuiDataType_COUNT
 DIR_NONE = dcimgui.ImGuiDir_None
 DIR_LEFT = dcimgui.ImGuiDir_Left
@@ -858,6 +864,7 @@ KEY_KEYPAD_ENTER = dcimgui.ImGuiKey_KeypadEnter
 KEY_KEYPAD_EQUAL = dcimgui.ImGuiKey_KeypadEqual
 KEY_APP_BACK = dcimgui.ImGuiKey_AppBack
 KEY_APP_FORWARD = dcimgui.ImGuiKey_AppForward
+KEY_OEM102 = dcimgui.ImGuiKey_Oem102
 KEY_GAMEPAD_START = dcimgui.ImGuiKey_GamepadStart
 KEY_GAMEPAD_BACK = dcimgui.ImGuiKey_GamepadBack
 KEY_GAMEPAD_FACE_LEFT = dcimgui.ImGuiKey_GamepadFaceLeft
@@ -894,13 +901,13 @@ KEY_RESERVED_FOR_MOD_SHIFT = dcimgui.ImGuiKey_ReservedForModShift
 KEY_RESERVED_FOR_MOD_ALT = dcimgui.ImGuiKey_ReservedForModAlt
 KEY_RESERVED_FOR_MOD_SUPER = dcimgui.ImGuiKey_ReservedForModSuper
 KEY_NAMED_KEY_END = dcimgui.ImGuiKey_NamedKey_END
+KEY_NAMED_KEY_COUNT = dcimgui.ImGuiKey_NamedKey_COUNT
 MOD_NONE = dcimgui.ImGuiMod_None
 MOD_CTRL = dcimgui.ImGuiMod_Ctrl
 MOD_SHIFT = dcimgui.ImGuiMod_Shift
 MOD_ALT = dcimgui.ImGuiMod_Alt
 MOD_SUPER = dcimgui.ImGuiMod_Super
 MOD_MASK = dcimgui.ImGuiMod_Mask_
-KEY_NAMED_KEY_COUNT = dcimgui.ImGuiKey_NamedKey_COUNT
 INPUT_FLAGS_NONE = dcimgui.ImGuiInputFlags_None
 INPUT_FLAGS_REPEAT = dcimgui.ImGuiInputFlags_Repeat
 INPUT_FLAGS_ROUTE_ACTIVE = dcimgui.ImGuiInputFlags_RouteActive
@@ -920,8 +927,6 @@ CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE = dcimgui.ImGuiConfigFlags_NoMouseCursorChan
 CONFIG_FLAGS_NO_KEYBOARD = dcimgui.ImGuiConfigFlags_NoKeyboard
 CONFIG_FLAGS_DOCKING_ENABLE = dcimgui.ImGuiConfigFlags_DockingEnable
 CONFIG_FLAGS_VIEWPORTS_ENABLE = dcimgui.ImGuiConfigFlags_ViewportsEnable
-CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS = dcimgui.ImGuiConfigFlags_DpiEnableScaleViewports
-CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS = dcimgui.ImGuiConfigFlags_DpiEnableScaleFonts
 CONFIG_FLAGS_IS_S_RGB = dcimgui.ImGuiConfigFlags_IsSRGB
 CONFIG_FLAGS_IS_TOUCH_SCREEN = dcimgui.ImGuiConfigFlags_IsTouchScreen
 BACKEND_FLAGS_NONE = dcimgui.ImGuiBackendFlags_None
@@ -929,6 +934,7 @@ BACKEND_FLAGS_HAS_GAMEPAD = dcimgui.ImGuiBackendFlags_HasGamepad
 BACKEND_FLAGS_HAS_MOUSE_CURSORS = dcimgui.ImGuiBackendFlags_HasMouseCursors
 BACKEND_FLAGS_HAS_SET_MOUSE_POS = dcimgui.ImGuiBackendFlags_HasSetMousePos
 BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET = dcimgui.ImGuiBackendFlags_RendererHasVtxOffset
+BACKEND_FLAGS_RENDERER_HAS_TEXTURES = dcimgui.ImGuiBackendFlags_RendererHasTextures
 BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS = dcimgui.ImGuiBackendFlags_PlatformHasViewports
 BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT = dcimgui.ImGuiBackendFlags_HasMouseHoveredViewport
 BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS = dcimgui.ImGuiBackendFlags_RendererHasViewports
@@ -965,6 +971,7 @@ COL_SEPARATOR_ACTIVE = dcimgui.ImGuiCol_SeparatorActive
 COL_RESIZE_GRIP = dcimgui.ImGuiCol_ResizeGrip
 COL_RESIZE_GRIP_HOVERED = dcimgui.ImGuiCol_ResizeGripHovered
 COL_RESIZE_GRIP_ACTIVE = dcimgui.ImGuiCol_ResizeGripActive
+COL_INPUT_TEXT_CURSOR = dcimgui.ImGuiCol_InputTextCursor
 COL_TAB_HOVERED = dcimgui.ImGuiCol_TabHovered
 COL_TAB = dcimgui.ImGuiCol_Tab
 COL_TAB_SELECTED = dcimgui.ImGuiCol_TabSelected
@@ -985,6 +992,7 @@ COL_TABLE_ROW_BG = dcimgui.ImGuiCol_TableRowBg
 COL_TABLE_ROW_BG_ALT = dcimgui.ImGuiCol_TableRowBgAlt
 COL_TEXT_LINK = dcimgui.ImGuiCol_TextLink
 COL_TEXT_SELECTED_BG = dcimgui.ImGuiCol_TextSelectedBg
+COL_TREE_LINES = dcimgui.ImGuiCol_TreeLines
 COL_DRAG_DROP_TARGET = dcimgui.ImGuiCol_DragDropTarget
 COL_NAV_CURSOR = dcimgui.ImGuiCol_NavCursor
 COL_NAV_WINDOWING_HIGHLIGHT = dcimgui.ImGuiCol_NavWindowingHighlight
@@ -1013,12 +1021,17 @@ STYLE_VAR_SCROLLBAR_SIZE = dcimgui.ImGuiStyleVar_ScrollbarSize
 STYLE_VAR_SCROLLBAR_ROUNDING = dcimgui.ImGuiStyleVar_ScrollbarRounding
 STYLE_VAR_GRAB_MIN_SIZE = dcimgui.ImGuiStyleVar_GrabMinSize
 STYLE_VAR_GRAB_ROUNDING = dcimgui.ImGuiStyleVar_GrabRounding
+STYLE_VAR_IMAGE_BORDER_SIZE = dcimgui.ImGuiStyleVar_ImageBorderSize
 STYLE_VAR_TAB_ROUNDING = dcimgui.ImGuiStyleVar_TabRounding
 STYLE_VAR_TAB_BORDER_SIZE = dcimgui.ImGuiStyleVar_TabBorderSize
+STYLE_VAR_TAB_MIN_WIDTH_BASE = dcimgui.ImGuiStyleVar_TabMinWidthBase
+STYLE_VAR_TAB_MIN_WIDTH_SHRINK = dcimgui.ImGuiStyleVar_TabMinWidthShrink
 STYLE_VAR_TAB_BAR_BORDER_SIZE = dcimgui.ImGuiStyleVar_TabBarBorderSize
 STYLE_VAR_TAB_BAR_OVERLINE_SIZE = dcimgui.ImGuiStyleVar_TabBarOverlineSize
 STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE = dcimgui.ImGuiStyleVar_TableAngledHeadersAngle
 STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN = dcimgui.ImGuiStyleVar_TableAngledHeadersTextAlign
+STYLE_VAR_TREE_LINES_SIZE = dcimgui.ImGuiStyleVar_TreeLinesSize
+STYLE_VAR_TREE_LINES_ROUNDING = dcimgui.ImGuiStyleVar_TreeLinesRounding
 STYLE_VAR_BUTTON_TEXT_ALIGN = dcimgui.ImGuiStyleVar_ButtonTextAlign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN = dcimgui.ImGuiStyleVar_SelectableTextAlign
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE = dcimgui.ImGuiStyleVar_SeparatorTextBorderSize
@@ -1043,9 +1056,10 @@ COLOR_EDIT_FLAGS_NO_LABEL = dcimgui.ImGuiColorEditFlags_NoLabel
 COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW = dcimgui.ImGuiColorEditFlags_NoSidePreview
 COLOR_EDIT_FLAGS_NO_DRAG_DROP = dcimgui.ImGuiColorEditFlags_NoDragDrop
 COLOR_EDIT_FLAGS_NO_BORDER = dcimgui.ImGuiColorEditFlags_NoBorder
-COLOR_EDIT_FLAGS_ALPHA_BAR = dcimgui.ImGuiColorEditFlags_AlphaBar
-COLOR_EDIT_FLAGS_ALPHA_PREVIEW = dcimgui.ImGuiColorEditFlags_AlphaPreview
+COLOR_EDIT_FLAGS_ALPHA_OPAQUE = dcimgui.ImGuiColorEditFlags_AlphaOpaque
+COLOR_EDIT_FLAGS_ALPHA_NO_BG = dcimgui.ImGuiColorEditFlags_AlphaNoBg
 COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF = dcimgui.ImGuiColorEditFlags_AlphaPreviewHalf
+COLOR_EDIT_FLAGS_ALPHA_BAR = dcimgui.ImGuiColorEditFlags_AlphaBar
 COLOR_EDIT_FLAGS_HDR = dcimgui.ImGuiColorEditFlags_HDR
 COLOR_EDIT_FLAGS_DISPLAY_RGB = dcimgui.ImGuiColorEditFlags_DisplayRGB
 COLOR_EDIT_FLAGS_DISPLAY_HSV = dcimgui.ImGuiColorEditFlags_DisplayHSV
@@ -1057,6 +1071,7 @@ COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL = dcimgui.ImGuiColorEditFlags_PickerHueWheel
 COLOR_EDIT_FLAGS_INPUT_RGB = dcimgui.ImGuiColorEditFlags_InputRGB
 COLOR_EDIT_FLAGS_INPUT_HSV = dcimgui.ImGuiColorEditFlags_InputHSV
 COLOR_EDIT_FLAGS_DEFAULT_OPTIONS = dcimgui.ImGuiColorEditFlags_DefaultOptions_
+COLOR_EDIT_FLAGS_ALPHA_MASK = dcimgui.ImGuiColorEditFlags_AlphaMask_
 COLOR_EDIT_FLAGS_DISPLAY_MASK = dcimgui.ImGuiColorEditFlags_DisplayMask_
 COLOR_EDIT_FLAGS_DATA_TYPE_MASK = dcimgui.ImGuiColorEditFlags_DataTypeMask_
 COLOR_EDIT_FLAGS_PICKER_MASK = dcimgui.ImGuiColorEditFlags_PickerMask_
@@ -1068,6 +1083,7 @@ SLIDER_FLAGS_NO_INPUT = dcimgui.ImGuiSliderFlags_NoInput
 SLIDER_FLAGS_WRAP_AROUND = dcimgui.ImGuiSliderFlags_WrapAround
 SLIDER_FLAGS_CLAMP_ON_INPUT = dcimgui.ImGuiSliderFlags_ClampOnInput
 SLIDER_FLAGS_CLAMP_ZERO_RANGE = dcimgui.ImGuiSliderFlags_ClampZeroRange
+SLIDER_FLAGS_NO_SPEED_TWEAKS = dcimgui.ImGuiSliderFlags_NoSpeedTweaks
 SLIDER_FLAGS_ALWAYS_CLAMP = dcimgui.ImGuiSliderFlags_AlwaysClamp
 SLIDER_FLAGS_INVALID_MASK = dcimgui.ImGuiSliderFlags_InvalidMask_
 MOUSE_BUTTON_LEFT = dcimgui.ImGuiMouseButton_Left
@@ -1083,6 +1099,8 @@ MOUSE_CURSOR_RESIZE_EW = dcimgui.ImGuiMouseCursor_ResizeEW
 MOUSE_CURSOR_RESIZE_NESW = dcimgui.ImGuiMouseCursor_ResizeNESW
 MOUSE_CURSOR_RESIZE_NWSE = dcimgui.ImGuiMouseCursor_ResizeNWSE
 MOUSE_CURSOR_HAND = dcimgui.ImGuiMouseCursor_Hand
+MOUSE_CURSOR_WAIT = dcimgui.ImGuiMouseCursor_Wait
+MOUSE_CURSOR_PROGRESS = dcimgui.ImGuiMouseCursor_Progress
 MOUSE_CURSOR_NOT_ALLOWED = dcimgui.ImGuiMouseCursor_NotAllowed
 MOUSE_CURSOR_COUNT = dcimgui.ImGuiMouseCursor_COUNT
 MOUSE_SOURCE_MOUSE = dcimgui.ImGuiMouseSource_Mouse
@@ -1204,10 +1222,21 @@ IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES = dcimgui.ImDrawListFlags_AntiAliasedLines
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES_USE_TEX = dcimgui.ImDrawListFlags_AntiAliasedLinesUseTex
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_FILL = dcimgui.ImDrawListFlags_AntiAliasedFill
 IM_DRAW_LIST_FLAGS_ALLOW_VTX_OFFSET = dcimgui.ImDrawListFlags_AllowVtxOffset
+IM_TEXTURE_FORMAT_RGBA_32 = dcimgui.ImTextureFormat_RGBA32
+IM_TEXTURE_FORMAT_ALPHA8 = dcimgui.ImTextureFormat_Alpha8
+IM_TEXTURE_STATUS_OK = dcimgui.ImTextureStatus_OK
+IM_TEXTURE_STATUS_DESTROYED = dcimgui.ImTextureStatus_Destroyed
+IM_TEXTURE_STATUS_WANT_CREATE = dcimgui.ImTextureStatus_WantCreate
+IM_TEXTURE_STATUS_WANT_UPDATES = dcimgui.ImTextureStatus_WantUpdates
+IM_TEXTURE_STATUS_WANT_DESTROY = dcimgui.ImTextureStatus_WantDestroy
 IM_FONT_ATLAS_FLAGS_NONE = dcimgui.ImFontAtlasFlags_None
 IM_FONT_ATLAS_FLAGS_NO_POWER_OF_TWO_HEIGHT = dcimgui.ImFontAtlasFlags_NoPowerOfTwoHeight
 IM_FONT_ATLAS_FLAGS_NO_MOUSE_CURSORS = dcimgui.ImFontAtlasFlags_NoMouseCursors
 IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES = dcimgui.ImFontAtlasFlags_NoBakedLines
+IM_FONT_FLAGS_NONE = dcimgui.ImFontFlags_None
+IM_FONT_FLAGS_NO_LOAD_ERROR = dcimgui.ImFontFlags_NoLoadError
+IM_FONT_FLAGS_NO_LOAD_GLYPHS = dcimgui.ImFontFlags_NoLoadGlyphs
+IM_FONT_FLAGS_LOCK_BAKED_SIZES = dcimgui.ImFontFlags_LockBakedSizes
 VIEWPORT_FLAGS_NONE = dcimgui.ImGuiViewportFlags_None
 VIEWPORT_FLAGS_IS_PLATFORM_WINDOW = dcimgui.ImGuiViewportFlags_IsPlatformWindow
 VIEWPORT_FLAGS_IS_PLATFORM_MONITOR = dcimgui.ImGuiViewportFlags_IsPlatformMonitor
@@ -1470,8 +1499,9 @@ def begin_list_box(label: str, size: Tuple[float, float]=(0, 0)):
     """
     Widgets: List Boxes
     - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
+    - If you don't need a label you can probably simply use BeginChild() with the ImGuiChildFlags_FrameStyle flag for the same result.
     - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.
-    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
+    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analogous to how Combos are created.
     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
     Open a framed scrolling region
@@ -1992,6 +2022,32 @@ def c_impl_glfw_cursor_pos_callback(window: GLFWwindow, x: float, y: float):
 # [End Function]
 
 # [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(float)
+def c_impl_glfw_get_content_scale_for_monitor(monitor: GLFWmonitor):
+    cdef float res = dcimgui.cImGui_ImplGlfw_GetContentScaleForMonitor(
+        monitor._ptr
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(float)
+def c_impl_glfw_get_content_scale_for_window(window: GLFWwindow):
+    cdef float res = dcimgui.cImGui_ImplGlfw_GetContentScaleForWindow(
+        window._ptr
+    )
+    return res
+# [End Function]
+
+# [Function]
 # ?use_template(True)
 # ?active(True)
 # ?invisible(False)
@@ -2199,21 +2255,10 @@ def c_impl_glfw_window_focus_callback(window: GLFWwindow, focused: int):
 # ?custom_comment_only(False)
 # ?returns(bool)
 def c_impl_open_gl3_create_device_objects():
-    cdef bool res = dcimgui.cImGui_ImplOpenGL3_CreateDeviceObjects()
-    return res
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(bool)
-def c_impl_open_gl3_create_fonts_texture():
     """
     (Optional) Called by Init/NewFrame/Shutdown
     """
-    cdef bool res = dcimgui.cImGui_ImplOpenGL3_CreateFontsTexture()
+    cdef bool res = dcimgui.cImGui_ImplOpenGL3_CreateDeviceObjects()
     return res
 # [End Function]
 
@@ -2225,16 +2270,6 @@ def c_impl_open_gl3_create_fonts_texture():
 # ?returns(None)
 def c_impl_open_gl3_destroy_device_objects():
     dcimgui.cImGui_ImplOpenGL3_DestroyDeviceObjects()
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
-def c_impl_open_gl3_destroy_fonts_texture():
-    dcimgui.cImGui_ImplOpenGL3_DestroyFontsTexture()
 # [End Function]
 
 # [Function]
@@ -2299,6 +2334,21 @@ def c_impl_open_gl3_render_draw_data(draw_data: ImDrawData):
 # ?returns(None)
 def c_impl_open_gl3_shutdown():
     dcimgui.cImGui_ImplOpenGL3_Shutdown()
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def c_impl_open_gl3_update_texture(tex: Any):
+    """
+    (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = NULL to handle this manually.
+    """
+    dcimgui.cImGui_ImplOpenGL3_UpdateTexture(
+        tex
+    )
 # [End Function]
 
 # [Function]
@@ -4405,7 +4455,7 @@ def get_drag_drop_payload():
 # ?returns(ImDrawData)
 def get_draw_data():
     """
-    Valid after render() and until the next call to newframe(). this is what you have to render.
+    Valid after render() and until the next call to newframe(). call imgui_implxxxx_renderdrawdata() function in your renderer backend to render.
     """
     cdef dcimgui.ImDrawData* res = dcimgui.ImGui_GetDrawData()
     return ImDrawData.from_ptr(res)
@@ -4433,13 +4483,25 @@ def get_draw_list_shared_data():
 # ?returns(ImFont)
 def get_font():
     """
-    Style read access
-    - Use the ShowStyleEditor() function to interactively see/edit the colors.
     Get current font
     pygui note: Returns a const ImFont. Fields should only be read, not modified.
     """
     cdef const dcimgui.ImFont* res = dcimgui.ImGui_GetFont()
     return ImFont.from_const_ptr(res)
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImFontBaked)
+def get_font_baked():
+    """
+    Get current font bound at current size // == getfont()->getfontbaked(getfontsize())
+    """
+    cdef dcimgui.ImFontBaked* res = dcimgui.ImGui_GetFontBaked()
+    return ImFontBaked.from_ptr(res)
 # [End Function]
 
 # [Function]
@@ -4450,7 +4512,7 @@ def get_font():
 # ?returns(float)
 def get_font_size():
     """
-    Get current font size (= height in pixels) of current font with current scale applied
+    Get current scaled font size (= height in pixels). after global scale factors applied. *important* do not pass this value to pushfont()! use imgui::getstyle().fontsizebase to get value before global scale factors.
     """
     cdef float res = dcimgui.ImGui_GetFontSize()
     return res
@@ -4464,6 +4526,8 @@ def get_font_size():
 # ?returns(Tuple[float, float])
 def get_font_tex_uv_white_pixel():
     """
+    Style read access
+    - Use the ShowStyleEditor() function to interactively see/edit the colors.
     Get uv coordinate for a white pixel, useful to draw custom shapes via the imdrawlist api
     """
     cdef dcimgui.ImVec2 res = dcimgui.ImGui_GetFontTexUvWhitePixel()
@@ -4679,7 +4743,7 @@ def get_item_rect_size():
 # ?returns(str)
 def get_key_name(key: int):
     """
-    [debug] returns english name of the key. those names a provided for debugging purpose and are not meant to be saved persistently not compared.
+    [debug] returns english name of the key. those names are provided for debugging purpose and are not meant to be saved persistently nor compared.
     """
     cdef const char* res = dcimgui.ImGui_GetKeyName(
         key
@@ -5159,22 +5223,21 @@ def im_vector_destruct(vector: Any):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image(user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)):
+def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)):
     """
     Widgets: Images
-    - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+    - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-    - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
+    - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
     - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
-    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
+    - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1)
     """
     dcimgui.ImGui_ImageEx(
-        <dcimgui.ImTextureID><uintptr_t>user_texture_id,
+        dereference(tex_ref._ptr),
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
-        _cast_tuple_ImVec4(tint_col),
-        _cast_tuple_ImVec4(border_col)
     )
 # [End Function]
 
@@ -5184,13 +5247,13 @@ def image(user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+def image_button(str_id: str, tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
     cdef bool res = dcimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
-        <dcimgui.ImTextureID>user_texture_id,
+        dereference(tex_ref._ptr),
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -5206,10 +5269,10 @@ def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, flo
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def image_button_ex(str_id: str, user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)):
+def image_button_ex(str_id: str, tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)):
     cdef bool res = dcimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
-        user_texture_id,
+        tex_ref._ptr,
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -5225,14 +5288,105 @@ def image_button_ex(str_id: str, user_texture_id: Any, image_size: Tuple[float, 
 # ?invisible(True)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image_ex(user_texture_id: Any, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1), border_col: Tuple[float, float, float, float]=(0, 0, 0, 0)):
+def image_ex(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1)):
     dcimgui.ImGui_ImageEx(
-        user_texture_id,
+        tex_ref._ptr,
+        _cast_tuple_ImVec2(image_size),
+        _cast_tuple_ImVec2(uv0),
+        _cast_tuple_ImVec2(uv1)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def image_with_bg(tex_ref: ImTextureRef, image_size: Tuple[float, float]):
+    """
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
+    """
+    dcimgui.ImGui_ImageWithBg(
+        tex_ref._ptr,
+        _cast_tuple_ImVec2(image_size)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def image_with_bg_ex(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)):
+    dcimgui.ImGui_ImageWithBgEx(
+        tex_ref._ptr,
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
-        _cast_tuple_ImVec4(tint_col),
-        _cast_tuple_ImVec4(border_col)
+        _cast_tuple_ImVec4(bg_col),
+        _cast_tuple_ImVec4(tint_col)
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def imgui_platform_io_set_platform_get_window_framebuffer_scale(getWindowFramebufferScaleFunc: Callable):
+    """
+    Set imguiplatformio::platform_getwindowframebufferscale in a c-compatible mannner
+    """
+    dcimgui.ImGuiPlatformIO_SetPlatform_GetWindowFramebufferScale(
+        getWindowFramebufferScaleFunc
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def imgui_platform_io_set_platform_get_window_pos(getWindowPosFunc: Callable):
+    """
+    Set imguiplatformio::platform_getwindowpos in a c-compatible mannner
+    """
+    dcimgui.ImGuiPlatformIO_SetPlatform_GetWindowPos(
+        getWindowPosFunc
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def imgui_platform_io_set_platform_get_window_size(getWindowSizeFunc: Callable):
+    """
+    Set imguiplatformio::platform_getwindowsize in a c-compatible mannner
+    """
+    dcimgui.ImGuiPlatformIO_SetPlatform_GetWindowSize(
+        getWindowSizeFunc
+    )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(None)
+def imgui_platform_io_set_platform_get_window_work_area_insets(getWindowWorkAreaInsetsFunc: Callable):
+    """
+    Set imguiplatformio::platform_getwindowworkareainsets in a c-compatible mannner
+    """
+    dcimgui.ImGuiPlatformIO_SetPlatform_GetWindowWorkAreaInsets(
+        getWindowWorkAreaInsetsFunc
     )
 # [End Function]
 
@@ -6471,6 +6625,23 @@ def is_mouse_released(button: int):
 
 # [Function]
 # ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def is_mouse_released_with_delay(button: int, delay: float):
+    """
+    Delayed mouse release (use very sparingly!). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test. this is a very rarely used ui idiom, but some apps use this: e.g. ms explorer single click on an icon to rename.
+    """
+    cdef bool res = dcimgui.ImGui_IsMouseReleasedWithDelay(
+        button,
+        delay
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
@@ -7412,17 +7583,33 @@ def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[floa
 
 # [Function]
 # ?use_template(False)
-# ?active(True)
+# ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_font(font: ImFont):
+def push_font_float(font: ImFont, font_size_base_unscaled: float):
     """
-    Parameters stacks (shared)
-    Use null as a shortcut to push default font
+    Parameters stacks (font)
+    - PushFont(font, 0.0f)                       // Change font and keep current size
+    - PushFont(NULL, 20.0f)                      // Keep font and change current size
+    - PushFont(font, 20.0f)                      // Change font and set size to 20.0f
+    - PushFont(font, style.FontSizeBase * 2.0f)  // Change font and set size to be twice bigger than current size.
+    - PushFont(font, font->LegacySize)           // Change font and set size to size passed to AddFontXXX() function. Same as pre-1.92 behavior.
+    *IMPORTANT* before 1.92, fonts had a single size. They can now be dynamically be adjusted.
+    - In 1.92 we have REMOVED the single parameter version of PushFont() because it seems like the easiest way to provide an error-proof transition.
+    - PushFont(font) before 1.92 = PushFont(font, font->LegacySize) after 1.92          // Use default font size as passed to AddFontXXX() function.
+    *IMPORTANT* global scale factors are applied over the provided size.
+    - Global scale factors are: 'style.FontScaleMain', 'style.FontScaleDpi' and maybe more.
+    -  If you want to apply a factor to the _current_ font size:
+    - CORRECT:   PushFont(NULL, style.FontSizeBase)         // use current unscaled size    == does nothing
+    - CORRECT:   PushFont(NULL, style.FontSizeBase * 2.0f)  // use current unscaled size x2 == make text twice bigger
+    - INCORRECT: PushFont(NULL, GetFontSize())              // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+    - INCORRECT: PushFont(NULL, GetFontSize() * 2.0f)       // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+    Use null as a shortcut to keep current font. use 0.0f to keep current size.
     """
-    dcimgui.ImGui_PushFont(
-        font._ptr
+    dcimgui.ImGui_PushFontFloat(
+        font._ptr,
+        font_size_base_unscaled
     )
 # [End Function]
 
@@ -7544,6 +7731,7 @@ def push_item_width(item_width: float):
 # ?returns(None)
 def push_style_color(idx: int, col: "int | tuple"):
     """
+    Parameters stacks (shared)
     Modify a style color. always use this if you modify the style after newframe().
     pygui note: You can pass a u32 color or a 0-1, length 4 tuple for color.
     """
@@ -7932,7 +8120,7 @@ def separator():
 # ?returns(None)
 def separator_text(label: str):
     """
-    Currently: formatted text with an horizontal line
+    Currently: formatted text with a horizontal line
     """
     dcimgui.ImGui_SeparatorText(
         _bytes(label)
@@ -8128,7 +8316,7 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0):
 def set_item_default_focus():
     """
     Focus, Activation
-    Make last item the default focused item of of a newly appearing window.
+    Make last item the default focused item of a newly appearing window.
     """
     dcimgui.ImGui_SetItemDefaultFocus()
 # [End Function]
@@ -8265,7 +8453,7 @@ def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
 # ?returns(None)
 def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
     """
-    Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+    Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
     """
     dcimgui.ImGui_SetNextFrameWantCaptureMouse(
         want_capture_mouse
@@ -8772,21 +8960,6 @@ def set_window_focus_str(name: str):
     """
     dcimgui.ImGui_SetWindowFocusStr(
         _bytes(name)
-    )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
-# ?returns(None)
-def set_window_font_scale(scale: float):
-    """
-    [obsolete] set font scale. adjust io.fontglobalscale if you want to scale all windows. this is an old api! for correct scaling, prefer to reload font + rebuild imfontatlas + call style.scaleallsizes().
-    """
-    dcimgui.ImGui_SetWindowFontScale(
-        scale
     )
 # [End Function]
 
@@ -9865,7 +10038,7 @@ def table_get_hovered_column():
 # ?returns(int)
 def table_get_row_index():
     """
-    Return current row index.
+    Return current row index (header rows are accounted for)
     """
     cdef int res = dcimgui.ImGui_TableGetRowIndex()
     return res
@@ -10163,17 +10336,18 @@ def text_link(label: str):
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def text_link_open_url(label: str, url: str=None):
     """
     Hyperlink text button, automatically open file/url when clicked
     """
     bytes_url = _bytes(url) if url is not None else None
 
-    dcimgui.ImGui_TextLinkOpenURLEx(
+    cdef bool res = dcimgui.ImGui_TextLinkOpenURLEx(
         _bytes(label),
         ((<char*>bytes_url if url is not None else NULL))
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -10181,17 +10355,18 @@ def text_link_open_url(label: str, url: str=None):
 # ?active(False)
 # ?invisible(True)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def text_link_open_url_ex(label: str, url: str=None):
     """
     Hyperlink text button, automatically open file/url when clicked
     """
     bytes_url = _bytes(url) if url is not None else None
 
-    dcimgui.ImGui_TextLinkOpenURLEx(
+    cdef bool res = dcimgui.ImGui_TextLinkOpenURLEx(
         _bytes(label),
         ((<char*>bytes_url if url is not None else NULL))
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -10920,7 +11095,7 @@ cdef class ImDrawCmd:
     - VtxOffset: When 'io.BackendFlags & ImGuiBackendFlags_RendererHasVtxOffset' is enabled,
     this fields allow us to render meshes larger than 64K vertices while keeping 16-bit indices.
     Backends made for <1.71. will typically ignore the VtxOffset fields.
-    - The ClipRect/TextureId/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
+    - The ClipRect/TexRef/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
     """
     cdef dcimgui.ImDrawCmd* _ptr
     cdef bool dynamically_allocated
@@ -11014,17 +11189,17 @@ cdef class ImDrawCmd:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(object)
+    # ?returns(ImTextureRef)
     @property
-    def texture_id(self):
+    def tex_ref(self):
         """
-        4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
+        16   // reference to a font/texture atlas (where backend called imtexturedata::settexid()) or to a user-provided texture id (via e.g. imgui::image() calls). both will lead to a imtextureid value.
         """
-        cdef dcimgui.ImTextureID res = dereference(self._ptr).TextureId
-        return res
-    @texture_id.setter
-    def texture_id(self, value: Any):
-        # dereference(self._ptr).TextureId = value
+        cdef dcimgui.ImTextureRef res = dereference(self._ptr).TexRef
+        return ImTextureRef.from_ptr(res)
+    @tex_ref.setter
+    def tex_ref(self, value: ImTextureRef):
+        # dereference(self._ptr).TexRef = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -11132,6 +11307,8 @@ cdef class ImDrawCmd:
     def get_tex_id(self: ImDrawCmd):
         """
         Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
+        Since 1.92: removed ImDrawCmd::TextureId field, the getter function must be used!
+        == (texref._texdata ? texref._texdata->texid : texref._texid
         """
         cdef dcimgui.ImTextureID res = dcimgui.ImDrawCmd_GetTexID(
             self._ptr
@@ -11201,14 +11378,14 @@ cdef class ImDrawCmdHeader:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Any)
+    # ?returns(ImTextureRef)
     @property
-    def texture_id(self):
-        cdef dcimgui.ImTextureID res = dereference(self._ptr).TextureId
-        return res
-    @texture_id.setter
-    def texture_id(self, value: Any):
-        # dereference(self._ptr).TextureId = value
+    def tex_ref(self):
+        cdef dcimgui.ImTextureRef res = dereference(self._ptr).TexRef
+        return ImTextureRef.from_ptr(res)
+    @tex_ref.setter
+    def tex_ref(self, value: ImTextureRef):
+        # dereference(self._ptr).TexRef = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -11296,7 +11473,7 @@ cdef class ImDrawData:
     @property
     def cmd_lists_count(self):
         """
-        Number of imdrawlist* to render
+        == cmdlists.size. (obsolete: exists for legacy reasons). number of imdrawlist* to render.
         """
         cdef int res = dereference(self._ptr).CmdListsCount
         return res
@@ -11353,7 +11530,7 @@ cdef class ImDrawData:
     @property
     def framebuffer_scale(self):
         """
-        Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
+        Amount of pixels for each unit of displaysize. copied from viewport->framebufferscale (== io.displayframebufferscale for main viewport). generally (1,1) on normal display, (2,2) on osx with retina display.
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).FramebufferScale
         return _cast_ImVec2_tuple(res)
@@ -11379,6 +11556,25 @@ cdef class ImDrawData:
     @owner_viewport.setter
     def owner_viewport(self, value: ImGuiViewport):
         # dereference(self._ptr).OwnerViewport = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImTextureDataPtr)
+    @property
+    def textures(self):
+        """
+        List of textures to update. most of the times the list is shared by all imdrawdata, has only 1 texture and it doesn't need any update. this almost always points to imgui::getplatformio().textures[]. may be overriden or set to null if you want to manually update textures.
+        """
+        cdef dcimgui.ImVector_ImTextureDataPtr* res = dereference(self._ptr).Textures
+        return ImVector_ImTextureDataPtr.from_ptr(res)
+    @textures.setter
+    def textures(self, value: ImVector_ImTextureDataPtr):
+        # dereference(self._ptr).Textures = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -11779,19 +11975,19 @@ cdef class ImDrawList:
     # [Field]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImVector_ImTextureID)
+    # ?returns(ImVector_ImTextureRef)
     @property
-    def texture_id_stack(self):
+    def texture_stack(self):
         """
         [internal]
         """
-        cdef dcimgui.ImVector_ImTextureID res = dereference(self._ptr)._TextureIdStack
-        return ImVector_ImTextureID.from_ptr(res)
-    @texture_id_stack.setter
-    def texture_id_stack(self, value: ImVector_ImTextureID):
-        # dereference(self._ptr)._TextureIdStack = value._ptr
+        cdef dcimgui.ImVector_ImTextureRef res = dereference(self._ptr)._TextureStack
+        return ImVector_ImTextureRef.from_ptr(res)
+    @texture_stack.setter
+    def texture_stack(self, value: ImVector_ImTextureRef):
+        # dereference(self._ptr)._TextureStack = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -12126,17 +12322,17 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
+    def add_image(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE):
         """
         Image primitives
-        - Read FAQ to understand what ImTextureID is.
+        - Read FAQ to understand what ImTextureID/ImTextureRef are.
         - "p_min" and "p_max" represent the upper-left and lower-right corners of the rectangle.
         - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
         Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
         """
         dcimgui.ImDrawList_AddImageEx(
             self._ptr,
-            <dcimgui.ImTextureID><uintptr_t>user_texture_id,
+            dereference(tex_ref._ptr),
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
             _cast_tuple_ImVec2(uv_min),
@@ -12151,10 +12347,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_ex(self: ImDrawList, user_texture_id: Any, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float]=(0, 0), uv_max: Tuple[float, float]=(1, 1), col: int=IM_COL32_WHITE):
+    def add_image_ex(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float]=(0, 0), uv_max: Tuple[float, float]=(1, 1), col: int=IM_COL32_WHITE):
         dcimgui.ImDrawList_AddImageEx(
             self._ptr,
-            user_texture_id,
+            tex_ref._ptr,
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
             _cast_tuple_ImVec2(uv_min),
@@ -12169,10 +12365,10 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_quad(self: ImDrawList, user_texture_id: int, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
+    def add_image_quad(self: ImDrawList, tex_ref: ImTextureRef, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE):
         dcimgui.ImDrawList_AddImageQuadEx(
             self._ptr,
-            <dcimgui.ImTextureID><uintptr_t>user_texture_id,
+            dereference(tex_ref._ptr),
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
@@ -12191,10 +12387,10 @@ cdef class ImDrawList:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_quad_ex(self: ImDrawList, user_texture_id: Any, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: Tuple[float, float]=(0, 0), uv2: Tuple[float, float]=(1, 0), uv3: Tuple[float, float]=(1, 1), uv4: Tuple[float, float]=(0, 1), col: int=IM_COL32_WHITE):
+    def add_image_quad_ex(self: ImDrawList, tex_ref: ImTextureRef, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: Tuple[float, float]=(0, 0), uv2: Tuple[float, float]=(1, 0), uv3: Tuple[float, float]=(1, 1), uv4: Tuple[float, float]=(0, 1), col: int=IM_COL32_WHITE):
         dcimgui.ImDrawList_AddImageQuadEx(
             self._ptr,
-            user_texture_id,
+            tex_ref._ptr,
             _cast_tuple_ImVec2(p1),
             _cast_tuple_ImVec2(p2),
             _cast_tuple_ImVec2(p3),
@@ -12213,10 +12409,10 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0):
+    def add_image_rounded(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0):
         dcimgui.ImDrawList_AddImageRounded(
             self._ptr,
-            <dcimgui.ImTextureID><uintptr_t>user_texture_id,
+            dereference(tex_ref._ptr),
             _cast_tuple_ImVec2(p_min),
             _cast_tuple_ImVec2(p_max),
             _cast_tuple_ImVec2(uv_min),
@@ -12328,7 +12524,7 @@ cdef class ImDrawList:
         """
         General polygon
         - Only simple polygons are supported by filling functions (no self-intersections, no holes).
-        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience fo user but not used by main library.
+        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience for the user but not used by the main library.
         """
         cdef dcimgui.ImVec2* c_points = <dcimgui.ImVec2*>dcimgui.ImGui_MemAlloc(len(points) * sizeof(dcimgui.ImVec2))
 
@@ -12583,33 +12779,6 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: Tuple[float, float, float, float]=None):
-        cdef float c_float[4]
-        if cpu_fine_clip_rect is not None:
-            c_float[0] = cpu_fine_clip_rect[0]
-            c_float[1] = cpu_fine_clip_rect[1]
-            c_float[2] = cpu_fine_clip_rect[2]
-            c_float[3] = cpu_fine_clip_rect[3]
-
-        dcimgui.ImDrawList_AddTextImFontPtrEx(
-            self._ptr,
-            font._ptr,
-            font_size,
-            _cast_tuple_ImVec2(pos),
-            col,
-            _bytes(text),
-            NULL,
-            wrap_width,
-            <dcimgui.ImVec4*>(NULL if cpu_fine_clip_rect is None else c_float)
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
     def add_triangle(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float=1.0):
         dcimgui.ImDrawList_AddTriangleEx(
             self._ptr,
@@ -12783,11 +12952,11 @@ cdef class ImDrawList:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def on_changed_texture_id(self: ImDrawList):
-        dcimgui.ImDrawList__OnChangedTextureID(
+    def on_changed_texture(self: ImDrawList):
+        dcimgui.ImDrawList__OnChangedTexture(
             self._ptr
         )
     # [End Method]
@@ -13072,8 +13241,8 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def pop_texture_id(self: ImDrawList):
-        dcimgui.ImDrawList_PopTextureID(
+    def pop_texture(self: ImDrawList):
+        dcimgui.ImDrawList_PopTexture(
             self._ptr
         )
     # [End Method]
@@ -13261,10 +13430,10 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def push_texture_id(self: ImDrawList, texture_id: Any):
-        dcimgui.ImDrawList_PushTextureID(
+    def push_texture(self: ImDrawList, tex_ref: ImTextureRef):
+        dcimgui.ImDrawList_PushTexture(
             self._ptr,
-            texture_id
+            tex_ref._ptr
         )
     # [End Method]
 
@@ -13275,9 +13444,6 @@ cdef class ImDrawList:
     # ?custom_comment_only(False)
     # ?returns(None)
     def reset_for_new_frame(self: ImDrawList):
-        """
-        [Internal helpers]
-        """
         dcimgui.ImDrawList__ResetForNewFrame(
             self._ptr
         )
@@ -13289,10 +13455,26 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_texture_id(self: ImDrawList, texture_id: Any):
-        dcimgui.ImDrawList__SetTextureID(
+    def set_draw_list_shared_data(self: ImDrawList, data: ImDrawListSharedData):
+        """
+        [Internal helpers]
+        """
+        dcimgui.ImDrawList__SetDrawListSharedData(
             self._ptr,
-            texture_id
+            data._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_texture(self: ImDrawList, tex_ref: ImTextureRef):
+        dcimgui.ImDrawList__SetTexture(
+            self._ptr,
+            tex_ref._ptr
         )
     # [End Method]
 
@@ -13652,7 +13834,10 @@ cdef class ImDrawVert:
 cdef class ImFont:
     """
     Font runtime data and rendering
-    ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
+    - ImFontAtlas automatically loads a default embedded font for you if you didn't load one manually.
+    - Since 1.92.X a font may be rendered as any size! Therefore a font doesn't have one specific size.
+    - Use 'font->GetFontBaked(size)' to retrieve the ImFontBaked* corresponding to a given size.
+    - If you used g.Font + g.FontSize (which is frequent from the ImGui layer), you can use g.FontBaked as a shortcut, as g.FontBaked == g.Font->GetFontBaked(g.FontSize).
     """
     cdef dcimgui.ImFont* _ptr
     cdef bool dynamically_allocated
@@ -13701,86 +13886,11 @@ cdef class ImFont:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def ascent(self):
-        """
-        4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
-        """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).Ascent
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).Ascent
-        return res
-    @ascent.setter
-    def ascent(self, value: float):
-        # dereference(self._ptr).Ascent = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImFontConfig)
-    @property
-    def config_data(self):
-        """
-        4-8   // in  //// pointer within containeratlas->configdata to configdatacount instances
-        pygui note: Returns a const ImFontConfig. Fields should only be read,
-        not modified.
-        """
-        cdef const dcimgui.ImFontConfig* res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).ConfigData
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).ConfigData
-
-        return ImFontConfig.from_const_ptr(res)
-    @config_data.setter
-    def config_data(self, value: ImFontConfig):
-        # dereference(self._ptr).ConfigData = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def config_data_count(self):
-        """
-        2 // in  // ~ 1// number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
-        """
-        cdef short res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).ConfigDataCount
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).ConfigDataCount
-
-        return res
-    @config_data_count.setter
-    def config_data_count(self, value: int):
-        # dereference(self._ptr).ConfigDataCount = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(ImFontAtlas)
     @property
     def container_atlas(self):
         """
-        [Internal] Members: Cold ~32/40 bytes
-        Conceptually ConfigData[] is the list of font sources merged to create this font.
-        4-8   // out //// what we has been loaded into
+        4-8 what we have been loaded into.
         """
         cdef dcimgui.ImFontAtlas* res
         if self._ptr != NULL:
@@ -13796,48 +13906,40 @@ cdef class ImFont:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
     @property
-    def descent(self):
+    def current_rasterizer_density(self):
         """
-        4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+        Current rasterizer density. this is a varying state of the font.
         """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).Descent
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).Descent
+        cdef float res = dereference(self._ptr).CurrentRasterizerDensity
         return res
-    @descent.setter
-    def descent(self, value: float):
-        # dereference(self._ptr).Descent = value
+    @current_rasterizer_density.setter
+    def current_rasterizer_density(self, value: float):
+        # dereference(self._ptr).CurrentRasterizerDensity = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
     @property
-    def dirty_lookup_tables(self):
+    def ellipsis_auto_bake(self):
         """
-        1 // out //
+        1     //     // mark when the '...' glyph needs to be generated.
         """
-        cdef bool res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).DirtyLookupTables
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).DirtyLookupTables
+        cdef bool res = dereference(self._ptr).EllipsisAutoBake
         return res
-    @dirty_lookup_tables.setter
-    def dirty_lookup_tables(self, value: bool):
-        # dereference(self._ptr).DirtyLookupTables = value
+    @ellipsis_auto_bake.setter
+    def ellipsis_auto_bake(self, value: bool):
+        # dereference(self._ptr).EllipsisAutoBake = value
         raise NotImplementedError
     # [End Field]
 
@@ -13850,7 +13952,7 @@ cdef class ImFont:
     @property
     def ellipsis_char(self):
         """
-        2-4// out // = '...'/'.'// character used for ellipsis rendering.
+        2-4// out // character used for ellipsis rendering ('...').
         """
         cdef dcimgui.ImWchar res
         if self._ptr != NULL:
@@ -13871,101 +13973,9 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def ellipsis_char_count(self):
-        """
-        1 // out // 1 or 3
-        """
-        cdef short res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).EllipsisCharCount
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).EllipsisCharCount
-        return res
-    @ellipsis_char_count.setter
-    def ellipsis_char_count(self, value: int):
-        # dereference(self._ptr).EllipsisCharCount = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def ellipsis_char_step(self):
-        """
-        4 // out   // step between characters when ellipsiscount > 0
-        """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).EllipsisCharStep
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).EllipsisCharStep
-        return res
-    @ellipsis_char_step.setter
-    def ellipsis_char_step(self, value: float):
-        # dereference(self._ptr).EllipsisCharStep = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def ellipsis_width(self):
-        """
-        4 // out   // width
-        """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).EllipsisWidth
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).EllipsisWidth
-        return res
-    @ellipsis_width.setter
-    def ellipsis_width(self, value: float):
-        # dereference(self._ptr).EllipsisWidth = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def fallback_advance_x(self):
-        """
-        4 // out // = fallbackglyph->advancex
-        """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).FallbackAdvanceX
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).FallbackAdvanceX
-        return res
-    @fallback_advance_x.setter
-    def fallback_advance_x(self, value: float):
-        # dereference(self._ptr).FallbackAdvanceX = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
     def fallback_char(self):
         """
-        2-4// out // = fffd/'?' // character used if a glyph isn't found.
+        2-4// out // character used if a glyph isn't found (u+fffd, '?')
         """
         cdef dcimgui.ImWchar res
         if self._ptr != NULL:
@@ -13980,179 +13990,138 @@ cdef class ImFont:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImFontGlyph)
-    @property
-    def fallback_glyph(self):
-        """
-        4-8   // out // = findglyph(fontfallbackchar)
-        """
-        cdef const dcimgui.ImFontGlyph* res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).FallbackGlyph
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).FallbackGlyph
-        return ImFontGlyph.from_ptr(res)
-    @fallback_glyph.setter
-    def fallback_glyph(self, value: ImFontGlyph):
-        # dereference(self._ptr).FallbackGlyph = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def font_size(self):
-        """
-        4 // in  //// height of characters/line, set during loading (don't change after loading)
-        """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).FontSize
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).FontSize
-        return res
-    @font_size.setter
-    def font_size(self, value: float):
-        # dereference(self._ptr).FontSize = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(List[ImFontGlyph])
-    @property
-    def glyphs(self):
-        """
-        12-16 // out //// all glyphs.
-        """
-        cdef const dcimgui.ImVector_ImFontGlyph* res = &dereference(self._ptr).Glyphs
-        return [ImFontGlyph.from_ptr(&res.Data[i]) for i in range(res.Size)]
-        # return ImVector_ImFontGlyph.from_ptr(res)
-    @glyphs.setter
-    def glyphs(self, value: ImVector_ImFontGlyph):
-        # dereference(self._ptr).Glyphs = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(List[float])
-    @property
-    def index_advance_x(self):
-        """
-        [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
-        12-16 // out //// sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
-        """
-        cdef const dcimgui.ImVector_float* res = &dereference(self._ptr).IndexAdvanceX
-        return [res.Data[i] for i in range(res.Size)]
-        # return ImVector_float.from_ptr(res)
-    @index_advance_x.setter
-    def index_advance_x(self, value: ImVector_float):
-        # dereference(self._ptr).IndexAdvanceX = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(List[int])
-    @property
-    def index_lookup(self):
-        """
-        [Internal] Members: Hot ~28/40 bytes (for RenderText loop)
-        12-16 // out //// sparse. index glyphs by unicode code-point.
-        """
-        cdef const dcimgui.ImVector_ImWchar* res = &dereference(self._ptr).IndexLookup
-        return [res.Data[i] for i in range(res.Size)]
-        # return ImVector_ImWchar.from_ptr(res)
-    @index_lookup.setter
-    def index_lookup(self, value: ImVector_ImWchar):
-        # dereference(self._ptr).IndexLookup = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def metrics_total_surface(self):
+    def flags(self):
         """
-        4 // out //// total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+        4     // font flags.
         """
-        cdef int res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).MetricsTotalSurface
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).MetricsTotalSurface
+        cdef dcimgui.ImFontFlags res = dereference(self._ptr).Flags
         return res
-    @metrics_total_surface.setter
-    def metrics_total_surface(self, value: int):
-        # dereference(self._ptr).MetricsTotalSurface = value
+    @flags.setter
+    def flags(self, value: int):
+        # dereference(self._ptr).Flags = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def font_id(self):
+        """
+        [Internal] Members: Cold ~24-52 bytes
+        Conceptually Sources[] is the list of font sources merged to create this font.
+        Unique identifier for the font
+        """
+        cdef dcimgui.ImGuiID res = dereference(self._ptr).FontId
+        return res
+    @font_id.setter
+    def font_id(self, value: int):
+        # dereference(self._ptr).FontId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontBaked)
+    @property
+    def last_baked(self):
+        """
+        [Internal] Members: Hot ~12-20 bytes
+        4-8   // cache last bound baked. never use directly. use getfontbaked().
+        """
+        cdef dcimgui.ImFontBaked* res = dereference(self._ptr).LastBaked
+        return ImFontBaked.from_ptr(res)
+    @last_baked.setter
+    def last_baked(self, value: ImFontBaked):
+        # dereference(self._ptr).LastBaked = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
     @property
-    def scale(self):
+    def legacy_size(self):
         """
-        4 // in  // = 1.f  // base font scale, multiplied by the per-window font scale which you can adjust with setwindowfontscale()
+        4     // in  // font size passed to addfont(). use for old code calling pushfont() expecting to use that size. (use imgui::getfontbaked() to get font baked at current bound size).
         """
-        cdef float res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).Scale
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).Scale
+        cdef float res = dereference(self._ptr).LegacySize
         return res
-    @scale.setter
-    def scale(self, value: float):
-        # dereference(self._ptr).Scale = value
+    @legacy_size.setter
+    def legacy_size(self, value: float):
+        # dereference(self._ptr).LegacySize = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bytes)
+    # ?returns(ImGuiStorage)
     @property
-    def used4k_pages_map(self):
+    def remap_pairs(self):
         """
-        2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+        16    //     // remapping pairs when using addremapchar(), otherwise empty.
         """
-        cdef unsigned char* res
-        if self._ptr != NULL:
-            res = <dcimgui.ImU8*>dereference(self._ptr).Used4kPagesMap
-        if self._const_ptr != NULL:
-            res = <dcimgui.ImU8*>dereference(self._const_ptr).Used4kPagesMap
-        return bytes(res)
-    @used4k_pages_map.setter
-    def used4k_pages_map(self, value: int):
-        # dereference(self._ptr).Used4kPagesMap = value
+        cdef dcimgui.ImGuiStorage res = dereference(self._ptr).RemapPairs
+        return ImGuiStorage.from_ptr(res)
+    @remap_pairs.setter
+    def remap_pairs(self, value: ImGuiStorage):
+        # dereference(self._ptr).RemapPairs = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImFontConfigPtr)
+    @property
+    def sources(self):
+        """
+        16    // in  // list of sources. pointers within containeratlas->sources[]
+        """
+        cdef dcimgui.ImVector_ImFontConfigPtr res = dereference(self._ptr).Sources
+        return ImVector_ImFontConfigPtr.from_ptr(res)
+    @sources.setter
+    def sources(self, value: ImVector_ImFontConfigPtr):
+        # dereference(self._ptr).Sources = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def used8k_pages_map(self):
+        """
+        1 bytes if imwchar=imwchar16, 16 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+        """
+        cdef dcimgui.ImU8* res = dereference(self._ptr).Used8kPagesMap
+        return res
+    @used8k_pages_map.setter
+    def used8k_pages_map(self, value: int):
+        # dereference(self._ptr).Used8kPagesMap = value
         raise NotImplementedError
     # [End Field]
 
@@ -14162,53 +14131,14 @@ cdef class ImFont:
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_glyph(self: ImFont, src_cfg: ImFontConfig, c: int, x0: float, y0: float, x1: float, y1: float, u0: float, v0: float, u1: float, v1: float, advance_x: float):
-        dcimgui.ImFont_AddGlyph(
-            self._ptr,
-            src_cfg._ptr,
-            c,
-            x0,
-            y0,
-            x1,
-            y1,
-            u0,
-            v0,
-            u1,
-            v1,
-            advance_x
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(True)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def add_remap_char(self: ImFont, dst: int, src: int, overwrite_dst: bool=True):
+    def add_remap_char(self: ImFont, from_codepoint: int, to_codepoint: int):
         """
-        Makes 'dst' character/glyph points to 'src' character/glyph. currently needs to be called after fonts have been built.
+        Makes 'from_codepoint' character points to 'to_codepoint' glyph.
         """
         dcimgui.ImFont_AddRemapChar(
             self._ptr,
-            dst,
-            src,
-            overwrite_dst
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(True)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def build_lookup_table(self: ImFont):
-        """
-        [Internal] Don't use!
-        """
-        dcimgui.ImFont_BuildLookupTable(
-            self._ptr
+            from_codepoint,
+            to_codepoint
         )
     # [End Method]
 
@@ -14220,8 +14150,6 @@ cdef class ImFont:
     # ?returns(Tuple[float, float])
     def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str):
         """
-        'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
-        'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
         Implied text_end = null, remaining = null
         """
         cdef dcimgui.ImVec2 res = dcimgui.ImFont_CalcTextSizeA(
@@ -14264,10 +14192,10 @@ cdef class ImFont:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(str)
-    def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float):
-        cdef const char* res = dcimgui.ImFont_CalcWordWrapPositionA(
+    def calc_word_wrap_position(self: ImFont, size: float, text: str, text_end: str, wrap_width: float):
+        cdef const char* res = dcimgui.ImFont_CalcWordWrapPosition(
             self._ptr,
-            scale,
+            size,
             _bytes(text),
             _bytes(text_end),
             wrap_width
@@ -14282,51 +14210,12 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(None)
     def clear_output_data(self: ImFont):
+        """
+        [Internal] Don't use!
+        """
         dcimgui.ImFont_ClearOutputData(
             self._ptr
         )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImFontGlyph)
-    def find_glyph(self: ImFont, c: int):
-        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFont_FindGlyph(
-            self._ptr,
-            c
-        )
-        return ImFontGlyph.from_ptr(res)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImFontGlyph)
-    def find_glyph_no_fallback(self: ImFont, c: int):
-        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFont_FindGlyphNoFallback(
-            self._ptr,
-            c
-        )
-        return ImFontGlyph.from_ptr(res)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(True)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    def get_char_advance(self: ImFont, c: int):
-        cdef float res = dcimgui.ImFont_GetCharAdvance(
-            self._ptr,
-            c
-        )
-        return res
     # [End Method]
 
     # [Method]
@@ -14336,6 +14225,9 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(str)
     def get_debug_name(self: ImFont):
+        """
+        Fill imfontconfig::name.
+        """
         if self._const_ptr != NULL:
             raise NotImplementedError
 
@@ -14348,14 +14240,53 @@ cdef class ImFont:
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(True)
+    # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(None)
-    def grow_index(self: ImFont, new_size: int):
-        dcimgui.ImFont_GrowIndex(
+    # ?returns(ImFontBaked)
+    def get_font_baked(self: ImFont, font_size: float):
+        """
+        [Internal] Don't use!
+        'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
+        'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
+        Implied density = -1.0f
+        """
+        cdef dcimgui.ImFontBaked* res = dcimgui.ImFont_GetFontBaked(
             self._ptr,
-            new_size
+            font_size
         )
+        return ImFontBaked.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontBaked)
+    def get_font_baked_ex(self: ImFont, font_size: float, density: float=-1.0):
+        """
+        Get or create baked data for given size
+        """
+        cdef dcimgui.ImFontBaked* res = dcimgui.ImFont_GetFontBakedEx(
+            self._ptr,
+            font_size,
+            density
+        )
+        return ImFontBaked.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    def is_glyph_in_font(self: ImFont, c: int):
+        cdef bool res = dcimgui.ImFont_IsGlyphInFont(
+            self._ptr,
+            c
+        )
+        return res
     # [End Method]
 
     # [Method]
@@ -14393,6 +14324,9 @@ cdef class ImFont:
     # ?custom_comment_only(False)
     # ?returns(None)
     def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int):
+        """
+        Implied cpu_fine_clip = null
+        """
         dcimgui.ImFont_RenderChar(
             self._ptr,
             draw_list._ptr,
@@ -14400,6 +14334,24 @@ cdef class ImFont:
             _cast_tuple_ImVec2(pos),
             col,
             c
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def render_char_ex(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int, cpu_fine_clip: ImVec4=None):
+        dcimgui.ImFont_RenderCharEx(
+            self._ptr,
+            draw_list._ptr,
+            size,
+            _cast_tuple_ImVec2(pos),
+            col,
+            c,
+            <dcimgui.ImVec4*>(NULL if cpu_fine_clip is None else cpu_fine_clip._ptr)
         )
     # [End Method]
 
@@ -14423,20 +14375,6 @@ cdef class ImFont:
             cpu_fine_clip
         )
     # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(True)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def set_glyph_visible(self: ImFont, c: int, visible: bool):
-        dcimgui.ImFont_SetGlyphVisible(
-            self._ptr,
-            c,
-            visible
-        )
-    # [End Method]
 # [End Class]
 
 # [Class]
@@ -14451,12 +14389,14 @@ cdef class ImFontAtlas:
     - One or more fonts.
     - Custom graphics data needed to render the shapes needed by Dear ImGui.
     - Mouse cursor shapes for software cursor rendering (unless setting 'Flags |= ImFontAtlasFlags_NoMouseCursors' in the font atlas).
-    It is the user-code responsibility to setup/build the atlas, then upload the pixel data into a texture accessible by your graphics api.
-    - Optionally, call any of the AddFont*** functions. If you don't call any, the default font embedded in the code will be loaded for you.
-    - Call GetTexDataAsAlpha8() or GetTexDataAsRGBA32() to build and retrieve pixels data.
-    - Upload the pixels data into a texture within your graphics system (see imgui_impl_xxxx.cpp examples)
+    - If you don't call any AddFont*** functions, the default font embedded in the code will be loaded for you.
+    It is the rendering backend responsibility to upload texture into your graphics API:
+    - ImGui_ImplXXXX_RenderDrawData() functions generally iterate platform_io->Textures[] to create/update/destroy each ImTextureData instance.
+    - Backend then set ImTextureData's TexID and BackendUserData.
+    - Texture id are passed back to you during rendering to identify the texture. Read FAQ entry about ImTextureID/ImTextureRef for more details.
+    Legacy path:
+    - Call Build() + GetTexDataAsAlpha8() or GetTexDataAsRGBA32() to build and retrieve pixels data.
     - Call SetTexID(my_tex_id); and pass the pointer/identifier to your texture in a format natural to your graphics API.
-    This value will be passed back to you during rendering to identify the texture. Read FAQ entry about ImTextureID for more details.
     Common pitfalls:
     - If you pass a 'glyph_ranges' array to AddFont*** functions, you need to make sure that your array persist up until the
     atlas is build (when calling GetTexData*** or Build()). We only copy the pointer, not the data.
@@ -14496,42 +14436,40 @@ cdef class ImFontAtlas:
     # [End Class Constants]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(List[ImFontConfig])
+    # ?returns(ImFontAtlasBuilder)
     @property
-    def config_data(self):
+    def builder(self):
         """
-        Configuration data
+        Opaque interface to our data that doesn't need to be public and may be discarded when rebuilding.
         """
-        cdef dcimgui.ImVector_ImFontConfig* res = &dereference(self._ptr).ConfigData
-        return [ImFontConfig.from_ptr(&res.Data[i]) for i in range(res.Size)]
-        # return ImVector_ImFontConfig.from_ptr(res)
-    @config_data.setter
-    def config_data(self, value: ImVector_ImFontConfig):
-        # dereference(self._ptr).ConfigData = value._ptr
+        cdef dcimgui.ImFontAtlasBuilder* res = dereference(self._ptr).Builder
+        return ImFontAtlasBuilder.from_ptr(res)
+    @builder.setter
+    def builder(self, value: ImFontAtlasBuilder):
+        # dereference(self._ptr).Builder = value._ptr
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(List[ImFontAtlasCustomRect])
+    # ?returns(ImVector_ImDrawListSharedDataPtr)
     @property
-    def custom_rects(self):
+    def draw_list_shared_datas(self):
         """
-        Rectangles for packing custom texture data into the atlas.
+        List of users for this atlas. typically one per dear imgui context.
         """
-        cdef dcimgui.ImVector_ImFontAtlasCustomRect* res = &dereference(self._ptr).CustomRects
-        return [ImFontAtlasCustomRect.from_ptr(&res.Data[i]) for i in range(res.Size)]
-        # return ImVector_ImFontAtlasCustomRect.from_ptr(res)
-    @custom_rects.setter
-    def custom_rects(self, value: ImVector_ImFontAtlasCustomRect):
-        # dereference(self._ptr).CustomRects = value._ptr
+        cdef dcimgui.ImVector_ImDrawListSharedDataPtr res = dereference(self._ptr).DrawListSharedDatas
+        return ImVector_ImDrawListSharedDataPtr.from_ptr(res)
+    @draw_list_shared_datas.setter
+    def draw_list_shared_datas(self, value: ImVector_ImDrawListSharedDataPtr):
+        # dereference(self._ptr).DrawListSharedDatas = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -14544,6 +14482,7 @@ cdef class ImFontAtlas:
     @property
     def flags(self):
         """
+        Input
         Build flags (see imfontatlasflags_)
         """
         cdef dcimgui.ImFontAtlasFlags res = dereference(self._ptr).Flags
@@ -14556,40 +14495,96 @@ cdef class ImFontAtlas:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(ImFontLoader)
     @property
-    def font_builder_flags(self):
+    def font_loader(self):
         """
-        Shared flags (for all fonts) for custom font builder. this is build implementation dependent. per-font override is also available in imfontconfig.
+        Font loader opaque interface (default to use freetype when imgui_enable_freetype is defined, otherwise default to use stb_truetype). use setfontloader() to change this at runtime.
         """
-        cdef unsigned int res = dereference(self._ptr).FontBuilderFlags
-        return res
-    @font_builder_flags.setter
-    def font_builder_flags(self, value: int):
-        # dereference(self._ptr).FontBuilderFlags = value
+        cdef dcimgui.ImFontLoader* res = dereference(self._ptr).FontLoader
+        return ImFontLoader.from_ptr(res)
+    @font_loader.setter
+    def font_loader(self, value: ImFontLoader):
+        # dereference(self._ptr).FontLoader = value._ptr
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImFontBuilderIO)
+    # ?returns(Any)
     @property
-    def font_builder_io(self):
+    def font_loader_data(self):
         """
-        [Internal] Font builder
-        Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
+        Font backend opaque storage
         """
-        cdef const dcimgui.ImFontBuilderIO* res = dereference(self._ptr).FontBuilderIO
-        return ImFontBuilderIO.from_ptr(res)
-    @font_builder_io.setter
-    def font_builder_io(self, value: ImFontBuilderIO):
-        # dereference(self._ptr).FontBuilderIO = value._ptr
+        cdef void* res = dereference(self._ptr).FontLoaderData
+        return res
+    @font_loader_data.setter
+    def font_loader_data(self, value: Any):
+        # dereference(self._ptr).FontLoaderData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def font_loader_flags(self):
+        """
+        Shared flags (for all fonts) for font loader. this is build implementation dependent (e.g. per-font override is also available in imfontconfig).
+        """
+        cdef unsigned int res = dereference(self._ptr).FontLoaderFlags
+        return res
+    @font_loader_flags.setter
+    def font_loader_flags(self, value: int):
+        # dereference(self._ptr).FontLoaderFlags = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    @property
+    def font_loader_name(self):
+        """
+        Font loader name (for display e.g. in about box) == fontloader->name
+        """
+        cdef const char* res = dereference(self._ptr).FontLoaderName
+        return _from_bytes(res)
+    @font_loader_name.setter
+    def font_loader_name(self, value: str):
+        # dereference(self._ptr).FontLoaderName = _bytes(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def font_next_unique_id(self):
+        """
+        Next value to be stored in imfont->fontid
+        """
+        cdef int res = dereference(self._ptr).FontNextUniqueID
+        return res
+    @font_next_unique_id.setter
+    def font_next_unique_id(self, value: int):
+        # dereference(self._ptr).FontNextUniqueID = value
         raise NotImplementedError
     # [End Field]
 
@@ -14622,7 +14617,7 @@ cdef class ImFontAtlas:
     @property
     def locked(self):
         """
-        Marked as locked by imgui::newframe() so attempt to modify the atlas will assert.
+        Marked as locked during imgui::newframe()..endframe() scope if texupdates are not supported. any attempt to modify the atlas will assert.
         """
         cdef bool res = dereference(self._ptr).Locked
         return res
@@ -14634,59 +14629,115 @@ cdef class ImFontAtlas:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(ImGuiContext)
     @property
-    def pack_id_lines(self):
+    def owner_context(self):
         """
-        Custom texture rectangle id for baked anti-aliased lines
+        Context which own the atlas will be in charge of updating and destroying it.
         """
-        cdef int res = dereference(self._ptr).PackIdLines
-        return res
-    @pack_id_lines.setter
-    def pack_id_lines(self, value: int):
-        # dereference(self._ptr).PackIdLines = value
+        cdef dcimgui.ImGuiContext* res = dereference(self._ptr).OwnerContext
+        return ImGuiContext.from_ptr(res)
+    @owner_context.setter
+    def owner_context(self, value: ImGuiContext):
+        # dereference(self._ptr).OwnerContext = value._ptr
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def pack_id_mouse_cursors(self):
+    def ref_count(self):
         """
-        [Internal] Packing data
-        Custom texture rectangle id for white pixel and mouse cursors
+        Number of contexts using this atlas
         """
-        cdef int res = dereference(self._ptr).PackIdMouseCursors
+        cdef int res = dereference(self._ptr).RefCount
         return res
-    @pack_id_mouse_cursors.setter
-    def pack_id_mouse_cursors(self, value: int):
-        # dereference(self._ptr).PackIdMouseCursors = value
+    @ref_count.setter
+    def ref_count(self, value: int):
+        # dereference(self._ptr).RefCount = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(bool)
     @property
-    def tex_desired_width(self):
+    def renderer_has_textures(self):
         """
-        Texture width desired by user before build(). must be a power-of-two. if have many glyphs your graphics api have texture size restrictions you may want to increase texture width to decrease height.
+        Copy of (backendflags & imguibackendflags_rendererhastextures) from supporting context.
         """
-        cdef int res = dereference(self._ptr).TexDesiredWidth
+        cdef bool res = dereference(self._ptr).RendererHasTextures
         return res
-    @tex_desired_width.setter
-    def tex_desired_width(self, value: int):
-        # dereference(self._ptr).TexDesiredWidth = value
+    @renderer_has_textures.setter
+    def renderer_has_textures(self, value: bool):
+        # dereference(self._ptr).RendererHasTextures = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImFontConfig)
+    @property
+    def sources(self):
+        """
+        Source/configuration data
+        """
+        cdef dcimgui.ImVector_ImFontConfig res = dereference(self._ptr).Sources
+        return ImVector_ImFontConfig.from_ptr(res)
+    @sources.setter
+    def sources(self, value: ImVector_ImFontConfig):
+        # dereference(self._ptr).Sources = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureData)
+    @property
+    def tex_data(self):
+        """
+        Latest texture.
+        """
+        cdef dcimgui.ImTextureData* res = dereference(self._ptr).TexData
+        return ImTextureData.from_ptr(res)
+    @tex_data.setter
+    def tex_data(self, value: ImTextureData):
+        # dereference(self._ptr).TexData = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def tex_desired_format(self):
+        """
+        Desired texture format (default to imtextureformat_rgba32 but may be changed to imtextureformat_alpha8).
+        """
+        cdef ImTextureFormat res = dereference(self._ptr).TexDesiredFormat
+        return res
+    @tex_desired_format.setter
+    def tex_desired_format(self, value: Any):
+        # dereference(self._ptr).TexDesiredFormat = value
         raise NotImplementedError
     # [End Field]
 
@@ -14711,77 +14762,135 @@ cdef class ImFontAtlas:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(bool)
     @property
-    def tex_height(self):
+    def tex_is_built(self):
         """
-        Texture height calculated during build().
+        Set when texture was built matching current font input. mostly useful for legacy isbuilt() call.
         """
-        cdef int res = dereference(self._ptr).TexHeight
+        cdef bool res = dereference(self._ptr).TexIsBuilt
         return res
-    @tex_height.setter
-    def tex_height(self, value: int):
-        # dereference(self._ptr).TexHeight = value
+    @tex_is_built.setter
+    def tex_is_built(self, value: bool):
+        # dereference(self._ptr).TexIsBuilt = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(ImVector_ImTextureDataPtr)
     @property
-    def tex_id(self):
+    def tex_list(self):
         """
-        User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
+        [Internal]
+        Texture list (most often texlist.size == 1). texdata is always == texlist.back(). do not use directly, use getdrawdata().textures[]/getplatformio().textures[] instead!
         """
-        cdef unsigned int res = <uintptr_t>dereference(self._ptr).TexID
-        return res
-    @tex_id.setter
-    def tex_id(self, value: int):
-        dereference(self._ptr).TexID = <dcimgui.ImTextureID>value
-        # raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bytes)
-    @property
-    def tex_pixels_alpha8(self):
-        """
-        1 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight
-        """
-        cdef unsigned char* res = dereference(self._ptr).TexPixelsAlpha8
-        return bytes(res[:self.tex_width * self.tex_height])
-    @tex_pixels_alpha8.setter
-    def tex_pixels_alpha8(self, value: str):
-        # dereference(self._ptr).TexPixelsAlpha8 = value
+        cdef dcimgui.ImVector_ImTextureDataPtr res = dereference(self._ptr).TexList
+        return ImVector_ImTextureDataPtr.from_ptr(res)
+    @tex_list.setter
+    def tex_list(self, value: ImVector_ImTextureDataPtr):
+        # dereference(self._ptr).TexList = value._ptr
         raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bytes)
+    # ?returns(int)
     @property
-    def tex_pixels_rgba_32(self):
+    def tex_max_height(self):
         """
-        4 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight * 4
+        Maximum desired texture height. must be a power of two. default to 8192.
         """
-        cdef unsigned char* res = <unsigned char*>dereference(self._ptr).TexPixelsRGBA32
-        return bytes(res[:self.tex_width * self.tex_height * 4])
-    @tex_pixels_rgba_32.setter
-    def tex_pixels_rgba_32(self, value: Int):
-        # dereference(self._ptr).TexPixelsRGBA32 = &value.value
+        cdef int res = dereference(self._ptr).TexMaxHeight
+        return res
+    @tex_max_height.setter
+    def tex_max_height(self, value: int):
+        # dereference(self._ptr).TexMaxHeight = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def tex_max_width(self):
+        """
+        Maximum desired texture width. must be a power of two. default to 8192.
+        """
+        cdef int res = dereference(self._ptr).TexMaxWidth
+        return res
+    @tex_max_width.setter
+    def tex_max_width(self, value: int):
+        # dereference(self._ptr).TexMaxWidth = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def tex_min_height(self):
+        """
+        Minimum desired texture height. must be a power of two. default to 128.
+        """
+        cdef int res = dereference(self._ptr).TexMinHeight
+        return res
+    @tex_min_height.setter
+    def tex_min_height(self, value: int):
+        # dereference(self._ptr).TexMinHeight = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def tex_min_width(self):
+        """
+        Minimum desired texture width. must be a power of two. default to 512.
+        """
+        cdef int res = dereference(self._ptr).TexMinWidth
+        return res
+    @tex_min_width.setter
+    def tex_min_width(self, value: int):
+        # dereference(self._ptr).TexMinWidth = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def tex_next_unique_id(self):
+        """
+        Next value to be stored in texdata->uniqueid
+        """
+        cdef int res = dereference(self._ptr).TexNextUniqueID
+        return res
+    @tex_next_unique_id.setter
+    def tex_next_unique_id(self, value: int):
+        # dereference(self._ptr).TexNextUniqueID = value
         raise NotImplementedError
     # [End Field]
 
@@ -14794,7 +14903,7 @@ cdef class ImFontAtlas:
     @property
     def tex_pixels_use_colors(self):
         """
-        Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format.
+        Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format or conversion process.
         """
         cdef bool res = dereference(self._ptr).TexPixelsUseColors
         return res
@@ -14806,22 +14915,20 @@ cdef class ImFontAtlas:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(ImTextureRef)
     @property
-    def tex_ready(self):
+    def tex_ref(self):
         """
-        [Internal]
-        NB: Access texture data via GetTexData*() calls! Which will setup a default font for you.
-        Set when texture was built matching current font input
+        Latest texture identifier == texdata->gettexref().
         """
-        cdef bool res = dereference(self._ptr).TexReady
-        return res
-    @tex_ready.setter
-    def tex_ready(self, value: bool):
-        # dereference(self._ptr).TexReady = value
+        cdef dcimgui.ImTextureRef res = dereference(self._ptr).TexRef
+        return ImTextureRef.from_ptr(res)
+    @tex_ref.setter
+    def tex_ref(self, value: ImTextureRef):
+        # dereference(self._ptr).TexRef = value._ptr
         raise NotImplementedError
     # [End Field]
 
@@ -14855,7 +14962,7 @@ cdef class ImFontAtlas:
     @property
     def tex_uv_scale(self):
         """
-        = (1.0f/texwidth, 1.0f/texheight)
+        = (1.0f/texdata->texwidth, 1.0f/texdata->texheight). may change as new texture gets created.
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).TexUvScale
         return _cast_ImVec2_tuple(res)
@@ -14874,32 +14981,13 @@ cdef class ImFontAtlas:
     @property
     def tex_uv_white_pixel(self):
         """
-        Texture coordinates to a white pixel
+        Texture coordinates to a white pixel. may change as new texture gets created.
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).TexUvWhitePixel
         return _cast_ImVec2_tuple(res)
     @tex_uv_white_pixel.setter
     def tex_uv_white_pixel(self, value: Tuple[float, float]):
         # dereference(self._ptr).TexUvWhitePixel = _cast_tuple_ImVec2(value)
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def tex_width(self):
-        """
-        Texture width calculated during build().
-        """
-        cdef int res = dereference(self._ptr).TexWidth
-        return res
-    @tex_width.setter
-    def tex_width(self, value: int):
-        # dereference(self._ptr).TexWidth = value
         raise NotImplementedError
     # [End Field]
 
@@ -14928,39 +15016,32 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: Tuple[float, float]=(0, 0)):
-        cdef int res = dcimgui.ImFontAtlas_AddCustomRectFontGlyph(
+    def add_custom_rect(self: ImFontAtlas, width: int, height: int, out_r: ImFontAtlasRect=None):
+        """
+        Register and retrieve custom rectangles
+        - You can request arbitrary rectangles to be packed into the atlas, for your own purpose.
+        - Since 1.92.X, packing is done immediately in the function call (previously packing was done during the Build call)
+        - You can render your pixels into the texture right after calling the AddCustomRect() functions.
+        - VERY IMPORTANT:
+        - Texture may be created/resized at any time when calling ImGui or ImFontAtlas functions.
+        - IT WILL INVALIDATE RECTANGLE DATA SUCH AS UV COORDINATES. Always use latest values from GetCustomRect().
+        - UV coordinates are associated to the current texture identifier aka 'atlas->TexRef'. Both TexRef and UV coordinates are typically changed at the same time.
+        - If you render colored output into your custom rectangles: set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
+        - Read docs/FONTS.md for more details about using colorful icons.
+        - Note: this API may be reworked further in order to facilitate supporting e.g. multi-monitor, varying DPI settings.
+        - (Pre-1.92 names) ------------> (1.92 names)
+        - GetCustomRectByIndex()   --> Use GetCustomRect()
+        - CalcCustomRectUV()       --> Use GetCustomRect() and read uv0, uv1 fields.
+        - AddCustomRectRegular()   --> Renamed to AddCustomRect()
+        - AddCustomRectFontGlyph() --> Prefer using custom ImFontLoader inside ImFontConfig
+        - ImFontAtlasCustomRect    --> Renamed to ImFontAtlasRect
+        Register a rectangle. return -1 (imfontatlasrectid_invalid) on error.
+        """
+        cdef dcimgui.ImFontAtlasRectId res = dcimgui.ImFontAtlas_AddCustomRect(
             self._ptr,
-            font._ptr,
-            id_,
             width,
             height,
-            advance_x,
-            _cast_tuple_ImVec2(offset)
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int):
-        """
-        You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
-        - After calling Build(), you can query the rectangle position and render your pixels.
-        - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
-        - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
-        so you can render e.g. custom colorful icons and use them as regular glyphs.
-        - Read docs/FONTS.md for more details about using colorful icons.
-        - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
-        """
-        cdef int res = dcimgui.ImFontAtlas_AddCustomRectRegular(
-            self._ptr,
-            width,
-            height
+            <dcimgui.ImFontAtlasRect*>(NULL if out_r is None else out_r._ptr)
         )
         return res
     # [End Method]
@@ -14999,7 +15080,7 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None):
+    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None):
         """
         pygui note: The ImFontConfig is copied in ImGui so there is no need to
         keep the object alive after calling this function.
@@ -15020,7 +15101,7 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
         'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
         """
@@ -15040,7 +15121,7 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
         'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
         """
@@ -15061,7 +15142,7 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImFont)
-    def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
+    def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None):
         """
         Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
         """
@@ -15078,52 +15159,13 @@ cdef class ImFontAtlas:
 
     # [Method]
     # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    def build(self: ImFontAtlas):
-        """
-        Build atlas, retrieve pixel data.
-        User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
-        The pitch is always = Width * BytesPerPixels (1 or 4)
-        Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
-        the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
-        Build pixels data. this is called automatically for you by the gettexdata*** functions.
-        """
-        cdef bool res = dcimgui.ImFontAtlas_Build(
-            self._ptr
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2):
-        """
-        [Internal]
-        """
-        dcimgui.ImFontAtlas_CalcCustomRectUV(
-            self._ptr,
-            rect._ptr,
-            out_uv_min._ptr,
-            out_uv_max._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
     def clear(self: ImFontAtlas):
         """
-        Clear all input and output.
+        Clear everything (input fonts, output glyphs/textures)
         """
         dcimgui.ImFontAtlas_Clear(
             self._ptr
@@ -15138,7 +15180,7 @@ cdef class ImFontAtlas:
     # ?returns(None)
     def clear_fonts(self: ImFontAtlas):
         """
-        Clear output font data (glyphs storage, uv coordinates).
+        [obsolete] clear input+output font data (same as clearinputdata() + glyphs storage, uv coordinates).
         """
         dcimgui.ImFontAtlas_ClearFonts(
             self._ptr
@@ -15153,7 +15195,8 @@ cdef class ImFontAtlas:
     # ?returns(None)
     def clear_input_data(self: ImFontAtlas):
         """
-        Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+        As we are transitioning toward a new font system, we expect to obsolete those soon:
+        [obsolete] clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
         """
         dcimgui.ImFontAtlas_ClearInputData(
             self._ptr
@@ -15168,7 +15211,7 @@ cdef class ImFontAtlas:
     # ?returns(None)
     def clear_tex_data(self: ImFontAtlas):
         """
-        Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
+        [obsolete] clear cpu-side copy of the texture data. saves ram once the texture has been copied to graphics memory.
         """
         dcimgui.ImFontAtlas_ClearTexData(
             self._ptr
@@ -15180,29 +15223,14 @@ cdef class ImFontAtlas:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImFontAtlasCustomRect)
-    def get_custom_rect_by_index(self: ImFontAtlas, index: int):
-        cdef dcimgui.ImFontAtlasCustomRect* res = dcimgui.ImFontAtlas_GetCustomRectByIndex(
-            self._ptr,
-            index
-        )
-        return ImFontAtlasCustomRect.from_ptr(res)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGlyphRange)
-    def get_glyph_ranges_chinese_full(self: ImFontAtlas):
+    # ?returns(None)
+    def compact_cache(self: ImFontAtlas):
         """
-        Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
+        Compact cached glyphs and texture.
         """
-        cdef const dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesChineseFull(
+        dcimgui.ImFontAtlas_CompactCache(
             self._ptr
         )
-        return ImGlyphRange.from_short_array(res)
     # [End Method]
 
     # [Method]
@@ -15210,13 +15238,15 @@ cdef class ImFontAtlas:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas):
+    # ?returns(bool)
+    def get_custom_rect(self: ImFontAtlas, id_: int, out_r: ImFontAtlasRect):
         """
-        Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
+        Get rectangle coordinates for current texture. valid immediately, never store this (read above)!
         """
-        cdef dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesChineseSimplifiedCommon(
-            self._ptr
+        cdef bool res = dcimgui.ImFontAtlas_GetCustomRect(
+            self._ptr,
+            id_,
+            out_r._ptr
         )
         return res
     # [End Method]
@@ -15227,28 +15257,9 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(ImGlyphRange)
-    def get_glyph_ranges_cyrillic(self: ImFontAtlas):
-        """
-        Default + about 400 cyrillic characters
-        """
-        cdef const dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesCyrillic(
-            self._ptr
-        )
-        return ImGlyphRange.from_short_array(res)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGlyphRange)
     def get_glyph_ranges_default(self: ImFontAtlas):
         """
-        Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
-        NB: Make sure that your string are UTF-8 and NOT in your local code page.
-        Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
-        NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
+        Since 1.92: specifying glyph ranges is only useful/necessary if your backend doesn't support ImGuiBackendFlags_RendererHasTextures!
         Basic latin, extended latin
         """
         cdef const dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesDefault(
@@ -15262,157 +15273,15 @@ cdef class ImFontAtlas:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
-    def get_glyph_ranges_greek(self: ImFontAtlas):
+    # ?returns(None)
+    def remove_custom_rect(self: ImFontAtlas, id_: int):
         """
-        Default + greek and coptic
+        Unregister a rectangle. existing pixels will stay in texture until resized / garbage collected.
         """
-        cdef dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesGreek(
-            self._ptr
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGlyphRange)
-    def get_glyph_ranges_japanese(self: ImFontAtlas):
-        """
-        Default + hiragana, katakana, half-width, selection of 2999 ideographs
-        """
-        cdef const dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesJapanese(
-            self._ptr
-        )
-        return ImGlyphRange.from_short_array(res)
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImGlyphRange)
-    def get_glyph_ranges_korean(self: ImFontAtlas):
-        """
-        Default + korean characters
-        """
-        cdef dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesKorean(
-            self._ptr
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    def get_glyph_ranges_thai(self: ImFontAtlas):
-        """
-        Default + thai characters
-        """
-        cdef dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesThai(
-            self._ptr
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    def get_glyph_ranges_vietnamese(self: ImFontAtlas):
-        """
-        Default + vietnamese characters
-        """
-        cdef dcimgui.ImWchar* res = dcimgui.ImFontAtlas_GetGlyphRangesVietnamese(
-            self._ptr
-        )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2):
-        cdef bool res = dcimgui.ImFontAtlas_GetMouseCursorTexData(
+        dcimgui.ImFontAtlas_RemoveCustomRect(
             self._ptr,
-            cursor,
-            out_offset._ptr,
-            out_size._ptr,
-            out_uv_border._ptr,
-            out_uv_fill._ptr
+            id_
         )
-        return res
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bytes)
-    def get_tex_data_as_alpha8(self: ImFontAtlas, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None):
-        """
-        1 byte per-pixel
-        """
-        cdef unsigned char* pixels
-
-        dcimgui.ImFontAtlas_GetTexDataAsAlpha8(
-            self._ptr,
-            &pixels,
-            &out_width.value,
-            &out_height.value,
-            Int.ptr(out_bytes_per_pixel)
-        )
-        return bytes(pixels[:out_width.value*out_height.value])
-    # [End Method]
-
-    # [Method]
-    # ?use_template(True)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bytes)
-    def get_tex_data_as_rgba_32(self: ImFontAtlas, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None):
-        """
-        4 bytes-per-pixel
-        """
-        cdef unsigned char* pixels
-
-        dcimgui.ImFontAtlas_GetTexDataAsRGBA32(
-            self._ptr,
-            &pixels,
-            &out_width.value,
-            &out_height.value,
-            Int.ptr(out_bytes_per_pixel)
-        )
-        return bytes(pixels[:out_width.value*out_height.value*4])
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    def is_built(self: ImFontAtlas):
-        """
-        Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
-        """
-        cdef bool res = dcimgui.ImFontAtlas_IsBuilt(
-            self._ptr
-        )
-        return res
     # [End Method]
 
     # [Method]
@@ -15421,10 +15290,26 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def set_tex_id(self: ImFontAtlas, id_: Any):
-        dcimgui.ImFontAtlas_SetTexID(
+    def remove_font(self: ImFontAtlas, font: ImFont):
+        dcimgui.ImFontAtlas_RemoveFont(
             self._ptr,
-            id_
+            font._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_font_loader(self: ImFontAtlas, font_loader: ImFontLoader):
+        """
+        Change font loader at runtime.
+        """
+        dcimgui.ImFontAtlas_SetFontLoader(
+            self._ptr,
+            font_loader._ptr
         )
     # [End Method]
 # [End Class]
@@ -15435,25 +15320,68 @@ cdef class ImFontAtlas:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImFontAtlasCustomRect:
+cdef class ImFontAtlasBuilder:
     """
-    See ImFontAtlas::AddCustomRectXXX functions.
+    Opaque storage for building a imfontatlas
     """
-    cdef dcimgui.ImFontAtlasCustomRect* _ptr
+    cdef dcimgui.ImFontAtlasBuilder* _ptr
     cdef bool dynamically_allocated
     
     @staticmethod
-    cdef ImFontAtlasCustomRect from_ptr(dcimgui.ImFontAtlasCustomRect* _ptr):
+    cdef ImFontAtlasBuilder from_ptr(dcimgui.ImFontAtlasBuilder* _ptr):
         if _ptr == NULL:
             return None
-        cdef ImFontAtlasCustomRect wrapper = ImFontAtlasCustomRect.__new__(ImFontAtlasCustomRect)
+        cdef ImFontAtlasBuilder wrapper = ImFontAtlasBuilder.__new__(ImFontAtlasBuilder)
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
     
     @staticmethod
-    cdef ImFontAtlasCustomRect from_heap_ptr(dcimgui.ImFontAtlasCustomRect* _ptr):
-        wrapper = ImFontAtlasCustomRect.from_ptr(_ptr)
+    cdef ImFontAtlasBuilder from_heap_ptr(dcimgui.ImFontAtlasBuilder* _ptr):
+        wrapper = ImFontAtlasBuilder.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImFontAtlasRect:
+    """
+    Output of ImFontAtlas::GetCustomRect() when using custom rectangles.
+    Those values may not be cached/stored as they are only valid for the current value of atlas->TexRef
+    (this is in theory derived from ImTextureRect but we use separate structures for reasons)
+    """
+    cdef dcimgui.ImFontAtlasRect* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImFontAtlasRect from_ptr(dcimgui.ImFontAtlasRect* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImFontAtlasRect wrapper = ImFontAtlasRect.__new__(ImFontAtlasRect)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontAtlasRect from_heap_ptr(dcimgui.ImFontAtlasRect* _ptr):
+        wrapper = ImFontAtlasRect.from_ptr(_ptr)
         if wrapper is None:
             return None
         wrapper.dynamically_allocated = True
@@ -15471,39 +15399,20 @@ cdef class ImFontAtlasCustomRect:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImFont)
+    # ?returns(int)
     @property
-    def font(self):
+    def h(self):
         """
-        Input    // for custom font glyphs only: target font
+        Size
         """
-        cdef dcimgui.ImFont* res = dereference(self._ptr).Font
-        return ImFont.from_ptr(res)
-    @font.setter
-    def font(self, value: ImFont):
-        # dereference(self._ptr).Font = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def glyph_advance_x(self):
-        """
-        Input    // for custom font glyphs only: glyph xadvance
-        """
-        cdef float res = dereference(self._ptr).GlyphAdvanceX
+        cdef unsigned short res = dereference(self._ptr).h
         return res
-    @glyph_advance_x.setter
-    def glyph_advance_x(self, value: float):
-        # dereference(self._ptr).GlyphAdvanceX = value
+    @h.setter
+    def h(self, value: int):
+        # dereference(self._ptr).h = value
         raise NotImplementedError
     # [End Field]
 
@@ -15514,143 +15423,1048 @@ cdef class ImFontAtlasCustomRect:
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def glyph_colored(self):
+    def h(self):
         """
-        Input  // for custom font glyphs only: glyph is colored, removed tinting.
+        Size
         """
-        cdef unsigned int res = dereference(self._ptr).GlyphColored
+        cdef unsigned short res = dereference(self._ptr).h
         return res
-    @glyph_colored.setter
-    def glyph_colored(self, value: int):
-        # dereference(self._ptr).GlyphColored = value
+    @h.setter
+    def h(self, value: int):
+        # dereference(self._ptr).h = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def glyph_id(self):
-        """
-        Input    // for custom font glyphs only (id < 0x110000)
-        """
-        cdef unsigned int res = dereference(self._ptr).GlyphID
-        return res
-    @glyph_id.setter
-    def glyph_id(self, value: int):
-        # dereference(self._ptr).GlyphID = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(Tuple[float, float])
     @property
-    def glyph_offset(self):
+    def uv0(self):
         """
-        Input    // for custom font glyphs only: glyph display offset
+        Uv coordinates (in current texture)
         """
-        cdef dcimgui.ImVec2 res = dereference(self._ptr).GlyphOffset
+        cdef dcimgui.ImVec2 res = dereference(self._ptr).uv0
         return _cast_ImVec2_tuple(res)
-    @glyph_offset.setter
-    def glyph_offset(self, value: Tuple[float, float]):
-        # dereference(self._ptr).GlyphOffset = _cast_tuple_ImVec2(value)
+    @uv0.setter
+    def uv0(self, value: Tuple[float, float]):
+        # dereference(self._ptr).uv0 = _cast_tuple_ImVec2(value)
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def uv0(self):
+        """
+        Uv coordinates (in current texture)
+        """
+        cdef dcimgui.ImVec2 res = dereference(self._ptr).uv0
+        return _cast_ImVec2_tuple(res)
+    @uv0.setter
+    def uv0(self, value: Tuple[float, float]):
+        # dereference(self._ptr).uv0 = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def uv1(self):
+        """
+        Uv coordinates (in current texture)
+        """
+        cdef dcimgui.ImVec2 res = dereference(self._ptr).uv1
+        return _cast_ImVec2_tuple(res)
+    @uv1.setter
+    def uv1(self, value: Tuple[float, float]):
+        # dereference(self._ptr).uv1 = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def uv1(self):
+        """
+        Uv coordinates (in current texture)
+        """
+        cdef dcimgui.ImVec2 res = dereference(self._ptr).uv1
+        return _cast_ImVec2_tuple(res)
+    @uv1.setter
+    def uv1(self, value: Tuple[float, float]):
+        # dereference(self._ptr).uv1 = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def height(self):
+    def w(self):
         """
-        [Internal]
-        Input    // desired rectangle dimension
+        Size
         """
-        cdef unsigned short res = dereference(self._ptr).Height
+        cdef unsigned short res = dereference(self._ptr).w
         return res
-    @height.setter
-    def height(self, value: int):
-        # dereference(self._ptr).Height = value
+    @w.setter
+    def w(self, value: int):
+        # dereference(self._ptr).w = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def width(self):
+    def w(self):
         """
-        [Internal]
-        Input    // desired rectangle dimension
+        Size
         """
-        cdef unsigned short res = dereference(self._ptr).Width
+        cdef unsigned short res = dereference(self._ptr).w
         return res
-    @width.setter
-    def width(self, value: int):
-        # dereference(self._ptr).Width = value
+    @w.setter
+    def w(self, value: int):
+        # dereference(self._ptr).w = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
     def x(self):
         """
-        Output   // packed position in atlas
+        Position (in current texture)
         """
-        cdef unsigned short res = dereference(self._ptr).X
+        cdef unsigned short res = dereference(self._ptr).x
         return res
     @x.setter
     def x(self, value: int):
-        # dereference(self._ptr).X = value
+        # dereference(self._ptr).x = value
         raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def x(self):
+        """
+        Position (in current texture)
+        """
+        cdef unsigned short res = dereference(self._ptr).x
+        return res
+    @x.setter
+    def x(self, value: int):
+        # dereference(self._ptr).x = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
     def y(self):
         """
-        Output   // packed position in atlas
+        Position (in current texture)
         """
-        cdef unsigned short res = dereference(self._ptr).Y
+        cdef unsigned short res = dereference(self._ptr).y
         return res
     @y.setter
     def y(self, value: int):
-        # dereference(self._ptr).Y = value
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def y(self):
+        """
+        Position (in current texture)
+        """
+        cdef unsigned short res = dereference(self._ptr).y
+        return res
+    @y.setter
+    def y(self, value: int):
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImFontBaked:
+    """
+    Font runtime data for a given size
+    Important: pointers to ImFontBaked are only valid for the current frame.
+    """
+    cdef dcimgui.ImFontBaked* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImFontBaked from_ptr(dcimgui.ImFontBaked* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImFontBaked wrapper = ImFontBaked.__new__(ImFontBaked)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontBaked from_heap_ptr(dcimgui.ImFontBaked* _ptr):
+        wrapper = ImFontBaked.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def ascent(self):
+        """
+        [Internal] Members: Cold
+        4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+        """
+        cdef float res = dereference(self._ptr).Ascent
+        return res
+    @ascent.setter
+    def ascent(self, value: float):
+        # dereference(self._ptr).Ascent = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def ascent(self):
+        """
+        [Internal] Members: Cold
+        4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+        """
+        cdef float res = dereference(self._ptr).Ascent
+        return res
+    @ascent.setter
+    def ascent(self, value: float):
+        # dereference(self._ptr).Ascent = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def baked_id(self):
+        """
+        4     //
+        """
+        cdef dcimgui.ImGuiID res = dereference(self._ptr).BakedId
+        return res
+    @baked_id.setter
+    def baked_id(self, value: int):
+        # dereference(self._ptr).BakedId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def baked_id(self):
+        """
+        4     //     // unique id for this baked storage
+        """
+        cdef dcimgui.ImGuiID res = dereference(self._ptr).BakedId
+        return res
+    @baked_id.setter
+    def baked_id(self, value: int):
+        # dereference(self._ptr).BakedId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    @property
+    def container_font(self):
+        """
+        4-8   // in  // parent font
+        """
+        cdef dcimgui.ImFont* res = dereference(self._ptr).ContainerFont
+        return ImFont.from_ptr(res)
+    @container_font.setter
+    def container_font(self, value: ImFont):
+        # dereference(self._ptr).ContainerFont = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFont)
+    @property
+    def container_font(self):
+        """
+        4-8   // in  // parent font
+        """
+        cdef dcimgui.ImFont* res = dereference(self._ptr).ContainerFont
+        return ImFont.from_ptr(res)
+    @container_font.setter
+    def container_font(self, value: ImFont):
+        # dereference(self._ptr).ContainerFont = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def descent(self):
+        """
+        [Internal] Members: Cold
+        4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+        """
+        cdef float res = dereference(self._ptr).Descent
+        return res
+    @descent.setter
+    def descent(self, value: float):
+        # dereference(self._ptr).Descent = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def descent(self):
+        """
+        [Internal] Members: Cold
+        4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+        """
+        cdef float res = dereference(self._ptr).Descent
+        return res
+    @descent.setter
+    def descent(self, value: float):
+        # dereference(self._ptr).Descent = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def fallback_advance_x(self):
+        """
+        4     // out // findglyph(fallbackchar)->advancex
+        """
+        cdef float res = dereference(self._ptr).FallbackAdvanceX
+        return res
+    @fallback_advance_x.setter
+    def fallback_advance_x(self, value: float):
+        # dereference(self._ptr).FallbackAdvanceX = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def fallback_advance_x(self):
+        """
+        4     // out // findglyph(fallbackchar)->advancex
+        """
+        cdef float res = dereference(self._ptr).FallbackAdvanceX
+        return res
+    @fallback_advance_x.setter
+    def fallback_advance_x(self, value: float):
+        # dereference(self._ptr).FallbackAdvanceX = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def fallback_glyph_index(self):
+        """
+        4     // out // index of fontfallbackchar
+        """
+        cdef int res = dereference(self._ptr).FallbackGlyphIndex
+        return res
+    @fallback_glyph_index.setter
+    def fallback_glyph_index(self, value: int):
+        # dereference(self._ptr).FallbackGlyphIndex = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def fallback_glyph_index(self):
+        """
+        4     // out // index of fontfallbackchar
+        """
+        cdef int res = dereference(self._ptr).FallbackGlyphIndex
+        return res
+    @fallback_glyph_index.setter
+    def fallback_glyph_index(self, value: int):
+        # dereference(self._ptr).FallbackGlyphIndex = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def font_loader_datas(self):
+        """
+        4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
+        """
+        cdef void* res = dereference(self._ptr).FontLoaderDatas
+        return res
+    @font_loader_datas.setter
+    def font_loader_datas(self, value: Any):
+        # dereference(self._ptr).FontLoaderDatas = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def font_loader_datas(self):
+        """
+        4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
+        """
+        cdef void* res = dereference(self._ptr).FontLoaderDatas
+        return res
+    @font_loader_datas.setter
+    def font_loader_datas(self, value: Any):
+        # dereference(self._ptr).FontLoaderDatas = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImFontGlyph)
+    @property
+    def glyphs(self):
+        """
+        12-16 // out // all glyphs.
+        """
+        cdef dcimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
+        return ImVector_ImFontGlyph.from_ptr(res)
+    @glyphs.setter
+    def glyphs(self, value: ImVector_ImFontGlyph):
+        # dereference(self._ptr).Glyphs = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImFontGlyph)
+    @property
+    def glyphs(self):
+        """
+        12-16 // out // all glyphs.
+        """
+        cdef dcimgui.ImVector_ImFontGlyph res = dereference(self._ptr).Glyphs
+        return ImVector_ImFontGlyph.from_ptr(res)
+    @glyphs.setter
+    def glyphs(self, value: ImVector_ImFontGlyph):
+        # dereference(self._ptr).Glyphs = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_float)
+    @property
+    def index_advance_x(self):
+        """
+        [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
+        12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
+        """
+        cdef dcimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
+        return ImVector_float.from_ptr(res)
+    @index_advance_x.setter
+    def index_advance_x(self, value: ImVector_float):
+        # dereference(self._ptr).IndexAdvanceX = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_float)
+    @property
+    def index_advance_x(self):
+        """
+        [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
+        12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
+        """
+        cdef dcimgui.ImVector_float res = dereference(self._ptr).IndexAdvanceX
+        return ImVector_float.from_ptr(res)
+    @index_advance_x.setter
+    def index_advance_x(self, value: ImVector_float):
+        # dereference(self._ptr).IndexAdvanceX = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImU16)
+    @property
+    def index_lookup(self):
+        """
+        [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
+        12-16 // out // sparse. index glyphs by unicode code-point.
+        """
+        cdef dcimgui.ImVector_ImU16 res = dereference(self._ptr).IndexLookup
+        return ImVector_ImU16.from_ptr(res)
+    @index_lookup.setter
+    def index_lookup(self, value: ImVector_ImU16):
+        # dereference(self._ptr).IndexLookup = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImU16)
+    @property
+    def index_lookup(self):
+        """
+        [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
+        12-16 // out // sparse. index glyphs by unicode code-point.
+        """
+        cdef dcimgui.ImVector_ImU16 res = dereference(self._ptr).IndexLookup
+        return ImVector_ImU16.from_ptr(res)
+    @index_lookup.setter
+    def index_lookup(self, value: ImVector_ImU16):
+        # dereference(self._ptr).IndexLookup = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def last_used_frame(self):
+        """
+        4     //     // record of that time this was bounds
+        """
+        cdef int res = dereference(self._ptr).LastUsedFrame
+        return res
+    @last_used_frame.setter
+    def last_used_frame(self, value: int):
+        # dereference(self._ptr).LastUsedFrame = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def last_used_frame(self):
+        """
+        4  //     // record of that time this was bounds
+        """
+        cdef int res = dereference(self._ptr).LastUsedFrame
+        return res
+    @last_used_frame.setter
+    def last_used_frame(self, value: int):
+        # dereference(self._ptr).LastUsedFrame = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def load_no_fallback(self):
+        """
+        0  //     // disable loading fallback in lower-level calls.
+        """
+        cdef unsigned int res = dereference(self._ptr).LoadNoFallback
+        return res
+    @load_no_fallback.setter
+    def load_no_fallback(self, value: int):
+        # dereference(self._ptr).LoadNoFallback = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def load_no_render_on_layout(self):
+        """
+        0  //     // enable a two-steps mode where calctextsize() calls will load advancex *without* rendering/packing glyphs. only advantagous if you know that the glyph is unlikely to actually be rendered, otherwise it is slower because we'd do one query on the first calctextsize and one query on the first draw.
+        """
+        cdef unsigned int res = dereference(self._ptr).LoadNoRenderOnLayout
+        return res
+    @load_no_render_on_layout.setter
+    def load_no_render_on_layout(self, value: int):
+        # dereference(self._ptr).LoadNoRenderOnLayout = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def lock_loading_fallback(self):
+        """
+        0  //     //
+        """
+        cdef unsigned int res = dereference(self._ptr).LockLoadingFallback
+        return res
+    @lock_loading_fallback.setter
+    def lock_loading_fallback(self, value: int):
+        # dereference(self._ptr).LockLoadingFallback = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def lock_loading_fallback(self):
+        """
+        0  //     //
+        """
+        cdef unsigned int res = dereference(self._ptr).LockLoadingFallback
+        return res
+    @lock_loading_fallback.setter
+    def lock_loading_fallback(self, value: int):
+        # dereference(self._ptr).LockLoadingFallback = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def metrics_total_surface(self):
+        """
+        3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+        """
+        cdef unsigned int res = dereference(self._ptr).MetricsTotalSurface
+        return res
+    @metrics_total_surface.setter
+    def metrics_total_surface(self, value: int):
+        # dereference(self._ptr).MetricsTotalSurface = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def metrics_total_surface(self):
+        """
+        3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+        """
+        cdef unsigned int res = dereference(self._ptr).MetricsTotalSurface
+        return res
+    @metrics_total_surface.setter
+    def metrics_total_surface(self, value: int):
+        # dereference(self._ptr).MetricsTotalSurface = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def rasterizer_density(self):
+        """
+        4     // in  // density this is baked at
+        """
+        cdef float res = dereference(self._ptr).RasterizerDensity
+        return res
+    @rasterizer_density.setter
+    def rasterizer_density(self, value: float):
+        # dereference(self._ptr).RasterizerDensity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def rasterizer_density(self):
+        """
+        4     // in  // density this is baked at
+        """
+        cdef float res = dereference(self._ptr).RasterizerDensity
+        return res
+    @rasterizer_density.setter
+    def rasterizer_density(self, value: float):
+        # dereference(self._ptr).RasterizerDensity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def size(self):
+        """
+        4     // in  // height of characters/line, set during loading (doesn't change after loading)
+        """
+        cdef float res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: float):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def size(self):
+        """
+        4     // in  // height of characters/line, set during loading (doesn't change after loading)
+        """
+        cdef float res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: float):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def want_destroy(self):
+        """
+        0  //     // queued for destroy
+        """
+        cdef unsigned int res = dereference(self._ptr).WantDestroy
+        return res
+    @want_destroy.setter
+    def want_destroy(self, value: int):
+        # dereference(self._ptr).WantDestroy = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def want_destroy(self):
+        """
+        0  //     // queued for destroy
+        """
+        cdef unsigned int res = dereference(self._ptr).WantDestroy
+        return res
+    @want_destroy.setter
+    def want_destroy(self, value: int):
+        # dereference(self._ptr).WantDestroy = value
         raise NotImplementedError
     # [End Field]
 
     # [Method]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def clear_output_data(self: ImFontBaked):
+        dcimgui.ImFontBaked_ClearOutputData(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def clear_output_data(self: ImFontBaked):
+        dcimgui.ImFontBaked_ClearOutputData(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    def find_glyph(self: ImFontBaked, c: int):
+        """
+        Return u+fffd glyph if requested glyph doesn't exists.
+        """
+        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFontBaked_FindGlyph(
+            self._ptr,
+            c
+        )
+        return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    def find_glyph(self: ImFontBaked, c: int):
+        """
+        Return u+fffd glyph if requested glyph doesn't exists.
+        """
+        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFontBaked_FindGlyph(
+            self._ptr,
+            c
+        )
+        return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    def find_glyph_no_fallback(self: ImFontBaked, c: int):
+        """
+        Return null if glyph doesn't exist
+        """
+        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFontBaked_FindGlyphNoFallback(
+            self._ptr,
+            c
+        )
+        return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontGlyph)
+    def find_glyph_no_fallback(self: ImFontBaked, c: int):
+        """
+        Return null if glyph doesn't exist
+        """
+        cdef dcimgui.ImFontGlyph* res = dcimgui.ImFontBaked_FindGlyphNoFallback(
+            self._ptr,
+            c
+        )
+        return ImFontGlyph.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    def get_char_advance(self: ImFontBaked, c: int):
+        cdef float res = dcimgui.ImFontBaked_GetCharAdvance(
+            self._ptr,
+            c
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    def get_char_advance(self: ImFontBaked, c: int):
+        cdef float res = dcimgui.ImFontBaked_GetCharAdvance(
+            self._ptr,
+            c
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    def is_packed(self: ImFontAtlasCustomRect):
-        cdef bool res = dcimgui.ImFontAtlasCustomRect_IsPacked(
-            self._ptr
+    def is_glyph_loaded(self: ImFontBaked, c: int):
+        cdef bool res = dcimgui.ImFontBaked_IsGlyphLoaded(
+            self._ptr,
+            c
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    def is_glyph_loaded(self: ImFontBaked, c: int):
+        cdef bool res = dcimgui.ImFontBaked_IsGlyphLoaded(
+            self._ptr,
+            c
         )
         return res
     # [End Method]
@@ -15662,48 +16476,10 @@ cdef class ImFontAtlasCustomRect:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImFontBuilderIO:
-    """
-    Opaque interface to a font builder (stb_truetype or freetype).
-    """
-    cdef const dcimgui.ImFontBuilderIO* _ptr
-    cdef bool dynamically_allocated
-
-    @staticmethod
-    cdef ImFontBuilderIO from_ptr(const dcimgui.ImFontBuilderIO* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImFontBuilderIO wrapper = ImFontBuilderIO.__new__(ImFontBuilderIO)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
-
-    @staticmethod
-    cdef ImFontBuilderIO from_heap_ptr(dcimgui.ImFontBuilderIO* _ptr):
-        wrapper = ImFontBuilderIO.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
-
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
-    # [End Class Constants]
-# [End Class]
-
-# [Class]
-# [Class Constants]
-# ?use_template(True)
-# ?active(True)
-# ?invisible(False)
-# ?custom_comment_only(True)
 cdef class ImFontConfig:
+    """
+    0        // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
+    """
     cdef dcimgui.ImFontConfig* _ptr
     cdef const dcimgui.ImFontConfig* _const_ptr
     cdef bool dynamically_allocated
@@ -15754,6 +16530,9 @@ cdef class ImFontConfig:
     # ?returns(ImFont)
     @property
     def dst_font(self):
+        """
+        Target font (as we merging fonts, multiple imfontconfig may target the same font)
+        """
         cdef dcimgui.ImFont* res
         if self._ptr != NULL:
             res = dereference(self._ptr).DstFont
@@ -15777,7 +16556,7 @@ cdef class ImFontConfig:
     @property
     def ellipsis_char(self):
         """
-        -1   // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
+        0        // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
         """
         cdef dcimgui.ImWchar res
         if self._ptr != NULL:
@@ -15794,27 +16573,23 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def font_builder_flags(self):
+    def flags(self):
         """
-        0// settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
+        [Internal]
+        Font flags (don't use just yet, will be exposed in upcoming 1.92.x updates)
         """
-        cdef unsigned int res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).FontBuilderFlags
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).FontBuilderFlags
+        cdef dcimgui.ImFontFlags res = dereference(self._ptr).Flags
         return res
-    @font_builder_flags.setter
-    def font_builder_flags(self, value: int):
-        if self._const_ptr != NULL:
-            raise NotImplementedError
-        dereference(self._ptr).FontBuilderFlags = value
+    @flags.setter
+    def flags(self, value: int):
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15869,9 +16644,6 @@ cdef class ImFontConfig:
     # ?returns(int)
     @property
     def font_data_size(self):
-        """
-        Ttf/otf data size
-        """
         cdef int res
         if self._ptr != NULL:
             res = dereference(self._ptr).FontDataSize
@@ -15887,6 +16659,63 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontLoader)
+    @property
+    def font_loader(self):
+        """
+        Custom font backend for this source (default source is the one stored in imfontatlas)
+        """
+        cdef dcimgui.ImFontLoader* res = dereference(self._ptr).FontLoader
+        return ImFontLoader.from_ptr(res)
+    @font_loader.setter
+    def font_loader(self, value: ImFontLoader):
+        # dereference(self._ptr).FontLoader = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def font_loader_data(self):
+        """
+        Font loader opaque storage (per font config)
+        """
+        cdef void* res = dereference(self._ptr).FontLoaderData
+        return res
+    @font_loader_data.setter
+    def font_loader_data(self, value: Any):
+        # dereference(self._ptr).FontLoaderData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def font_loader_flags(self):
+        """
+        0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
+        """
+        cdef unsigned int res = dereference(self._ptr).FontLoaderFlags
+        return res
+    @font_loader_flags.setter
+    def font_loader_flags(self, value: int):
+        # dereference(self._ptr).FontLoaderFlags = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
     # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
@@ -15897,7 +16726,7 @@ cdef class ImFontConfig:
         """
         0// index of font within ttf/otf file
         """
-        cdef int res
+        cdef dcimgui.ImU32 res
         if self._ptr != NULL:
             res = dereference(self._ptr).FontNo
         if self._const_ptr != NULL:
@@ -15912,28 +16741,41 @@ cdef class ImFontConfig:
     # [End Field]
 
     # [Field]
-    # ?use_template(True)
-    # ?active(True)
+    # ?use_template(False)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Tuple[float, float])
+    # ?returns(int)
     @property
-    def glyph_extra_spacing(self):
+    def glyph_exclude_ranges(self):
         """
-        0, 0 // extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->advancex. only x axis is supported for now.
+        Null     // pointer to a small user-provided list of unicode ranges (2 value per range, values are inclusive, zero-terminated list). this is very close to glyphranges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. use 'input glyphs overlap detection tool' to find about your overlapping ranges.
         """
-        cdef dcimgui.ImVec2 res
-        if self._ptr != NULL:
-            res = dereference(self._ptr).GlyphExtraSpacing
-        if self._const_ptr != NULL:
-            res = dereference(self._const_ptr).GlyphExtraSpacing
-        return _cast_ImVec2_tuple(res)
-    @glyph_extra_spacing.setter
-    def glyph_extra_spacing(self, value: Tuple[float, float]):
-        if self._const_ptr != NULL:
-            raise NotImplementedError
-        dereference(self._ptr).GlyphExtraSpacing = _cast_tuple_ImVec2(value)
-        # raise NotImplementedError
+        cdef dcimgui.ImWchar* res = dereference(self._ptr).GlyphExcludeRanges
+        return res
+    @glyph_exclude_ranges.setter
+    def glyph_exclude_ranges(self, value: int):
+        # dereference(self._ptr).GlyphExcludeRanges = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def glyph_extra_advance_x(self):
+        """
+        0        // extra spacing (in pixels) between glyphs. please contact us if you are using this. // fixme-newatlas: intentionally unscaled
+        """
+        cdef float res = dereference(self._ptr).GlyphExtraAdvanceX
+        return res
+    @glyph_extra_advance_x.setter
+    def glyph_extra_advance_x(self, value: float):
+        # dereference(self._ptr).GlyphExtraAdvanceX = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -15970,7 +16812,7 @@ cdef class ImFontConfig:
     @property
     def glyph_min_advance_x(self):
         """
-        0// minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font
+        0// minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font. absolute value for default size, other sizes will scale this value.
         """
         cdef float res
         if self._ptr != NULL:
@@ -15995,7 +16837,8 @@ cdef class ImFontConfig:
     @property
     def glyph_offset(self):
         """
-        0, 0 // offset all glyphs from this font input.
+        ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
+        0, 0 // offset (in pixels) all glyphs from this font input. absolute value for default size, other sizes will scale this value.
         """
         cdef dcimgui.ImVec2 res
         if self._ptr != NULL:
@@ -16020,7 +16863,7 @@ cdef class ImFontConfig:
     @property
     def glyph_ranges(self):
         """
-        Null // the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
+        Null // *legacy* the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
         """
         int_list = []
         cdef unsigned char* res = <unsigned char*>dereference(self._ptr).GlyphRanges
@@ -16047,6 +16890,7 @@ cdef class ImFontConfig:
     @property
     def merge_mode(self):
         """
+        Options
         False// merge into previous imfont, so you can combine multiple inputs font into one imfont (e.g. ascii font + icons + japanese glyphs). you may want to use glyphoffset.y when merge font of different heights.
         """
         cdef bool res
@@ -16072,8 +16916,8 @@ cdef class ImFontConfig:
     @property
     def name(self):
         """
-        [Internal]
-        Name (strictly to ease debugging)
+        Data Source
+        <auto>   // name (strictly to ease debugging, hence limited size buffer)
         """
         if self._ptr != NULL:
             return _from_bytes(dereference(self._ptr).Name)
@@ -16099,9 +16943,9 @@ cdef class ImFontConfig:
     @property
     def oversample_h(self):
         """
-        2// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
+        0 (2)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1 or 2 depending on size. 0 == auto == 1 or 2 depending on size. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
         """
-        cdef int res
+        cdef dcimgui.ImS8 res
         if self._ptr != NULL:
             res = dereference(self._ptr).OversampleH
         if self._const_ptr != NULL:
@@ -16124,9 +16968,9 @@ cdef class ImFontConfig:
     @property
     def oversample_v(self):
         """
-        1// rasterize at higher quality for sub-pixel positioning. this is not really useful as we don't use sub-pixel positions on the y axis.
+        0 (1)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. 0 == auto == 1. this is not really useful as we don't use sub-pixel positions on the y axis.
         """
-        cdef int res
+        cdef dcimgui.ImS8 res
         if self._ptr != NULL:
             res = dereference(self._ptr).OversampleV
         if self._const_ptr != NULL:
@@ -16167,6 +17011,25 @@ cdef class ImFontConfig:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def pixel_snap_v(self):
+        """
+        True     // align scaled glyphoffset.y to pixel boundaries.
+        """
+        cdef bool res = dereference(self._ptr).PixelSnapV
+        return res
+    @pixel_snap_v.setter
+    def pixel_snap_v(self, value: bool):
+        # dereference(self._ptr).PixelSnapV = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -16174,7 +17037,7 @@ cdef class ImFontConfig:
     @property
     def rasterizer_density(self):
         """
-        1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+        1.0f     // [legacy: this only makes sense when imguibackendflags_rendererhastextures is not supported] dpi scale multiplier for rasterization. not altering other font metrics: makes it easy to swap between e.g. a 100% and a 400% fonts for a zooming display, or handle retina screen. important: if you change this it is expected that you increase/decrease font scale roughly to the inverse of this, otherwise quality may look lowered.
         """
         cdef float res = dereference(self._ptr).RasterizerDensity
         return res
@@ -16193,6 +17056,7 @@ cdef class ImFontConfig:
     @property
     def rasterizer_multiply(self):
         """
+        unsigned int  FontBuilderFlags;       // --       // [Renamed in 1.92] Ue FontLoaderFlags.
         1.0f // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
         """
         cdef float res
@@ -16302,7 +17166,7 @@ cdef class ImFontConfig:
 cdef class ImFontGlyph:
     """
     Hold rendering data for one glyph.
-    (Note: some language parsers may fail to convert the 31+1 bitfield members, in this case maybe drop store a single u32 or we can rework this)
+    (Note: some language parsers may fail to convert the bitfield members, in this case maybe drop store a single u32 or we can rework this)
     """
     cdef const dcimgui.ImFontGlyph* _ptr
     cdef bool dynamically_allocated
@@ -16343,7 +17207,7 @@ cdef class ImFontGlyph:
     @property
     def advance_x(self):
         """
-        Distance to next character (= data from font + imfontconfig::glyphextraspacing.x baked in)
+        Horizontal distance to advance cursor/layout position.
         """
         cdef float res = dereference(self._ptr).AdvanceX
         return res
@@ -16393,6 +17257,44 @@ cdef class ImFontGlyph:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def pack_id(self):
+        """
+        [internal] imfontatlasrectid value (fixme: cold data, could be moved elsewhere?)
+        """
+        cdef int res = dereference(self._ptr).PackId
+        return res
+    @pack_id.setter
+    def pack_id(self, value: int):
+        # dereference(self._ptr).PackId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def source_idx(self):
+        """
+        Index of source in parent font
+        """
+        cdef unsigned int res = dereference(self._ptr).SourceIdx
+        return res
+    @source_idx.setter
+    def source_idx(self, value: int):
+        # dereference(self._ptr).SourceIdx = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -16400,7 +17302,7 @@ cdef class ImFontGlyph:
     @property
     def u0(self):
         """
-        Texture coordinates
+        Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
         """
         cdef float res = dereference(self._ptr).U0
         return res
@@ -16419,7 +17321,7 @@ cdef class ImFontGlyph:
     @property
     def u1(self):
         """
-        Texture coordinates
+        Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
         """
         cdef float res = dereference(self._ptr).U1
         return res
@@ -16438,7 +17340,7 @@ cdef class ImFontGlyph:
     @property
     def v0(self):
         """
-        Texture coordinates
+        Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
         """
         cdef float res = dereference(self._ptr).V0
         return res
@@ -16457,7 +17359,7 @@ cdef class ImFontGlyph:
     @property
     def v1(self):
         """
-        Texture coordinates
+        Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
         """
         cdef float res = dereference(self._ptr).V1
         return res
@@ -16495,7 +17397,7 @@ cdef class ImFontGlyph:
     @property
     def x0(self):
         """
-        Glyph corners
+        Glyph corners. offsets from current cursor/layout position.
         """
         cdef float res = dereference(self._ptr).X0
         return res
@@ -16514,7 +17416,7 @@ cdef class ImFontGlyph:
     @property
     def x1(self):
         """
-        Glyph corners
+        Glyph corners. offsets from current cursor/layout position.
         """
         cdef float res = dereference(self._ptr).X1
         return res
@@ -16533,7 +17435,7 @@ cdef class ImFontGlyph:
     @property
     def y0(self):
         """
-        Glyph corners
+        Glyph corners. offsets from current cursor/layout position.
         """
         cdef float res = dereference(self._ptr).Y0
         return res
@@ -16552,7 +17454,7 @@ cdef class ImFontGlyph:
     @property
     def y1(self):
         """
-        Glyph corners
+        Glyph corners. offsets from current cursor/layout position.
         """
         cdef float res = dereference(self._ptr).Y1
         return res
@@ -16792,8 +17694,50 @@ cdef class ImFontGlyphRangesBuilder:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+cdef class ImFontLoader:
+    """
+    Opaque interface to a font loading backend (stb_truetype, freetype etc.).
+    """
+    cdef dcimgui.ImFontLoader* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImFontLoader from_ptr(dcimgui.ImFontLoader* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImFontLoader wrapper = ImFontLoader.__new__(ImFontLoader)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImFontLoader from_heap_ptr(dcimgui.ImFontLoader* _ptr):
+        wrapper = ImFontLoader.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
 cdef class ImGuiContext:
     """
+    Forward declarations: ImGui layer
     Dear imgui context (opaque structure, unless including imgui_internal.h)
     """
     cdef dcimgui.ImGuiContext* _ptr
@@ -17511,13 +18455,32 @@ cdef class ImGuiIO:
         - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
         - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
         - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
-        = true           // highlight and show an error message when multiple items have conflicting identifiers.
+        = true           // highlight and show an error message popup when multiple items have conflicting identifiers.
         """
         cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflicts
         return res
     @config_debug_highlight_id_conflicts.setter
     def config_debug_highlight_id_conflicts(self, value: bool):
         # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_debug_highlight_id_conflicts_show_item_picker(self):
+        """
+        =true // show 'item picker' button in aforementioned popup.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker
+        return res
+    @config_debug_highlight_id_conflicts_show_item_picker.setter
+    def config_debug_highlight_id_conflicts_show_item_picker(self, value: bool):
+        # dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker = value
         raise NotImplementedError
     # [End Field]
 
@@ -17660,6 +18623,46 @@ cdef class ImGuiIO:
     @config_docking_with_shift.setter
     def config_docking_with_shift(self, value: bool):
         # dereference(self._ptr).ConfigDockingWithShift = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_dpi_scale_fonts(self):
+        """
+        DPI/Scaling options
+        This may keep evolving during 1.92.x releases. Expect some turbulence.
+        = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDpiScaleFonts
+        return res
+    @config_dpi_scale_fonts.setter
+    def config_dpi_scale_fonts(self, value: bool):
+        # dereference(self._ptr).ConfigDpiScaleFonts = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_dpi_scale_viewports(self):
+        """
+        = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDpiScaleViewports
+        return res
+    @config_dpi_scale_viewports.setter
+    def config_dpi_scale_viewports(self, value: bool):
+        # dereference(self._ptr).ConfigDpiScaleViewports = value
         raise NotImplementedError
     # [End Field]
 
@@ -18041,6 +19044,25 @@ cdef class ImGuiIO:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_viewport_platform_focus_sets_imgui_focus(self):
+        """
+        = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
+        """
+        cdef bool res = dereference(self._ptr).ConfigViewportPlatformFocusSetsImGuiFocus
+        return res
+    @config_viewport_platform_focus_sets_imgui_focus.setter
+    def config_viewport_platform_focus_sets_imgui_focus(self, value: bool):
+        # dereference(self._ptr).ConfigViewportPlatformFocusSetsImGuiFocus = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18220,7 +19242,7 @@ cdef class ImGuiIO:
     @property
     def display_framebuffer_scale(self):
         """
-        = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+        = (1, 1)         // main display density. for retina display where window coordinates are different from framebuffer coordinates. this will affect font density + will end up in imdrawdata::framebufferscale.
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).DisplayFramebufferScale
         return _cast_ImVec2_tuple(res)
@@ -18239,7 +19261,7 @@ cdef class ImGuiIO:
     @property
     def display_size(self):
         """
-        <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+        <unset>          // main display size, in pixels (== getmainviewport()->size). may change every frame.
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).DisplaySize
         return _cast_ImVec2_tuple(res)
@@ -18284,25 +19306,6 @@ cdef class ImGuiIO:
     @font_default.setter
     def font_default(self, value: ImFont):
         # dereference(self._ptr).FontDefault = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(True)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(float)
-    @property
-    def font_global_scale(self):
-        """
-        = 1.0f           // global scale all fonts
-        """
-        cdef float res = dereference(self._ptr).FontGlobalScale
-        return res
-    @font_global_scale.setter
-    def font_global_scale(self, value: float):
-        # dereference(self._ptr).FontGlobalScale = value
         raise NotImplementedError
     # [End Field]
 
@@ -18450,7 +19453,7 @@ cdef class ImGuiIO:
     @property
     def key_ctrl(self):
         """
-        Keyboard modifier down: control
+        Keyboard modifier down: ctrl (non-macos), cmd (macos)
         """
         cdef bool res = dereference(self._ptr).KeyCtrl
         return res
@@ -18546,7 +19549,7 @@ cdef class ImGuiIO:
     @property
     def key_super(self):
         """
-        Keyboard modifier down: cmd/super/windows
+        Keyboard modifier down: windows/super (non-macos), ctrl (macos)
         """
         cdef bool res = dereference(self._ptr).KeySuper
         return res
@@ -18565,7 +19568,7 @@ cdef class ImGuiIO:
     @property
     def keys_data(self):
         """
-        Key state for all known keys. use iskeyxxx() functions to access this.
+        Key state for all known keys. must use 'key - imguikey_namedkey_begin' as index. use iskeyxxx() functions to access this.
         """
         cdef dcimgui.ImGuiKeyData* res = dereference(self._ptr).KeysData
         return ImGuiKeyData.from_ptr(res)
@@ -18774,7 +19777,7 @@ cdef class ImGuiIO:
     @property
     def mouse_ctrl_left_as_right_click(self):
         """
-        (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+        (osx) set to true when the current click was a ctrl+click that spawned a simulated right click
         """
         cdef bool res = dereference(self._ptr).MouseCtrlLeftAsRightClick
         return res
@@ -19116,6 +20119,25 @@ cdef class ImGuiIO:
     @mouse_released.setter
     def mouse_released(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseReleased = &value.value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Sequence[Double])
+    @property
+    def mouse_released_time(self):
+        """
+        Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
+        """
+        cdef double* res = dereference(self._ptr).MouseReleasedTime
+        return Double(dereference(res))
+    @mouse_released_time.setter
+    def mouse_released_time(self, value: Sequence[Double]):
+        # dereference(self._ptr).MouseReleasedTime = &value.value
         raise NotImplementedError
     # [End Field]
 
@@ -19684,7 +20706,7 @@ cdef class ImGuiInputTextCallbackData:
     Shared state of InputText(), passed as an argument to your callback when a ImGuiInputTextFlags_Callback* flag is used.
     The callback function should return 0 by default.
     Callbacks (follow a flag name and see comments in ImGuiInputTextFlags_ declarations for more details)
-    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit. Note that InputText() already returns true on edit + you can always use IsItemEdited(). The callback is useful to manipulate the underlying buffer while focus is active.
     - ImGuiInputTextFlags_CallbackAlways:      Callback on each iteration
     - ImGuiInputTextFlags_CallbackCompletion:  Callback on pressing TAB
     - ImGuiInputTextFlags_CallbackHistory:     Callback on pressing Up/Down arrows
@@ -20328,7 +21350,7 @@ cdef class ImGuiListClipper:
         """
         [internal] cursor position at the time of begin() or after table frozen rows are all processed
         """
-        cdef float res = dereference(self._ptr).StartPosY
+        cdef double res = dereference(self._ptr).StartPosY
         return res
     @start_pos_y.setter
     def start_pos_y(self, value: float):
@@ -21160,6 +22182,25 @@ cdef class ImGuiPlatformIO:
     # ?custom_comment_only(False)
     # ?returns(Callable)
     @property
+    def platform_get_window_framebuffer_scale(self):
+        """
+        N . . . .  // return viewport density. always 1,1 on windows, often 2,2 on retina display on macos/ios. must be integer values. (use imguiplatformio_setplatform_getwindowframebufferscale() to set this from c, otherwise you will likely encounter stack corruption)
+        """
+        cdef Callable res = dereference(self._ptr).Platform_GetWindowFramebufferScale
+        return res
+    @platform_get_window_framebuffer_scale.setter
+    def platform_get_window_framebuffer_scale(self, value: Callable):
+        # dereference(self._ptr).Platform_GetWindowFramebufferScale = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
     def platform_get_window_minimized(self):
         """
         N . . . .  // get platform window minimized state. when minimized, we generally won't attempt to get/set size and contents will be culled more easily
@@ -21181,7 +22222,7 @@ cdef class ImGuiPlatformIO:
     @property
     def platform_get_window_pos(self):
         """
-        N . . . .  //
+        N . . . .  // (use imguiplatformio_setplatform_getwindowpos() to set this from c, otherwise you will likely encounter stack corruption)
         """
         cdef Callable res = dereference(self._ptr).Platform_GetWindowPos
         return res
@@ -21200,7 +22241,7 @@ cdef class ImGuiPlatformIO:
     @property
     def platform_get_window_size(self):
         """
-        N . . . .  // get platform window client area size
+        N . . . .  // get platform window client area size (use imguiplatformio_setplatform_getwindowsize() to set this from c, otherwise you will likely encounter stack corruption)
         """
         cdef Callable res = dereference(self._ptr).Platform_GetWindowSize
         return res
@@ -21219,7 +22260,7 @@ cdef class ImGuiPlatformIO:
     @property
     def platform_get_window_work_area_insets(self):
         """
-        N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
+        N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land. (use imguiplatformio_setplatform_getwindowworkareainsets() to set this from c, otherwise you will likely encounter stack corruption)
         """
         cdef Callable res = dereference(self._ptr).Platform_GetWindowWorkAreaInsets
         return res
@@ -21295,7 +22336,7 @@ cdef class ImGuiPlatformIO:
     def platform_open_in_shell_fn(self):
         """
         Optional: Open link/folder/file in OS Shell
-        (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
+        (default to use ShellExecuteW() on Windows, system() on Linux/Mac)
         """
         cdef Callable res = dereference(self._ptr).Platform_OpenInShellFn
         return res
@@ -21644,6 +22685,62 @@ cdef class ImGuiPlatformIO:
     # [End Field]
 
     # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def renderer_texture_max_height(self):
+        cdef int res = dereference(self._ptr).Renderer_TextureMaxHeight
+        return res
+    @renderer_texture_max_height.setter
+    def renderer_texture_max_height(self, value: int):
+        # dereference(self._ptr).Renderer_TextureMaxHeight = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def renderer_texture_max_width(self):
+        """
+        Optional: Maximum texture size supported by renderer (used to adjust how we size textures). 0 if not known.
+        """
+        cdef int res = dereference(self._ptr).Renderer_TextureMaxWidth
+        return res
+    @renderer_texture_max_width.setter
+    def renderer_texture_max_width(self, value: int):
+        # dereference(self._ptr).Renderer_TextureMaxWidth = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImTextureDataPtr)
+    @property
+    def textures(self):
+        """
+        Textures list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
+        The ImGui_ImplXXXX_RenderDrawData() function of each backend generally access this via ImDrawData::Textures which points to this. The array is available here mostly because backends will want to destroy textures on shutdown.
+        List of textures used by dear imgui (most often 1) + contents of external texture list is automatically appended into this.
+        """
+        cdef dcimgui.ImVector_ImTextureDataPtr res = dereference(self._ptr).Textures
+        return ImVector_ImTextureDataPtr.from_ptr(res)
+    @textures.setter
+    def textures(self, value: ImVector_ImTextureDataPtr):
+        # dereference(self._ptr).Textures = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
     # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
@@ -21675,7 +22772,7 @@ cdef class ImGuiPlatformIO:
 # ?custom_comment_only(False)
 cdef class ImGuiPlatformImeData:
     """
-    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function.
+    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function. Handler is called during EndFrame().
     """
     cdef dcimgui.ImGuiPlatformImeData* _ptr
     cdef bool dynamically_allocated
@@ -21716,7 +22813,7 @@ cdef class ImGuiPlatformImeData:
     @property
     def input_line_height(self):
         """
-        Line height
+        Line height (for ime).
         """
         cdef float res = dereference(self._ptr).InputLineHeight
         return res
@@ -21735,7 +22832,7 @@ cdef class ImGuiPlatformImeData:
     @property
     def input_pos(self):
         """
-        Position of the input cursor
+        Position of input cursor (for ime).
         """
         cdef dcimgui.ImVec2 res = dereference(self._ptr).InputPos
         return _cast_ImVec2_tuple(res)
@@ -21750,11 +22847,49 @@ cdef class ImGuiPlatformImeData:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def viewport_id(self):
+        """
+        Id of platform window/viewport.
+        """
+        cdef dcimgui.ImGuiID res = dereference(self._ptr).ViewportId
+        return res
+    @viewport_id.setter
+    def viewport_id(self, value: int):
+        # dereference(self._ptr).ViewportId = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def want_text_input(self):
+        """
+        A widget wants text input, not necessarily ime to be visible. this is automatically set to the upcoming value of io.wanttextinput.
+        """
+        cdef bool res = dereference(self._ptr).WantTextInput
+        return res
+    @want_text_input.setter
+    def want_text_input(self, value: bool):
+        # dereference(self._ptr).WantTextInput = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(bool)
     @property
     def want_visible(self):
         """
-        A widget wants the ime to be visible
+        A widget wants the ime to be visible.
         """
         cdef bool res = dereference(self._ptr).WantVisible
         return res
@@ -23273,6 +24408,9 @@ cdef class ImGuiStyle:
     # ?returns(tuple)
     @property
     def colors(self):
+        """
+        Colors
+        """
         cdef dcimgui.ImVec4* res = dereference(self._ptr).Colors
         return _cast_ImVec4_tuple(dereference(res))
     @colors.setter
@@ -23392,6 +24530,65 @@ cdef class ImGuiStyle:
     @docking_separator_size.setter
     def docking_separator_size(self, value: float):
         # dereference(self._ptr).DockingSeparatorSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def font_scale_dpi(self):
+        """
+        Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
+        """
+        cdef float res = dereference(self._ptr).FontScaleDpi
+        return res
+    @font_scale_dpi.setter
+    def font_scale_dpi(self, value: float):
+        # dereference(self._ptr).FontScaleDpi = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def font_scale_main(self):
+        """
+        Main global scale factor. may be set by application once, or exposed to end-user.
+        """
+        cdef float res = dereference(self._ptr).FontScaleMain
+        return res
+    @font_scale_main.setter
+    def font_scale_main(self, value: float):
+        # dereference(self._ptr).FontScaleMain = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def font_size_base(self):
+        """
+        Font scaling
+        - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
+        Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
+        """
+        cdef float res = dereference(self._ptr).FontSizeBase
+        return res
+    @font_size_base.setter
+    def font_size_base(self, value: float):
+        # dereference(self._ptr).FontSizeBase = value
         raise NotImplementedError
     # [End Field]
 
@@ -23589,6 +24786,25 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def image_border_size(self):
+        """
+        Thickness of border around image() calls.
+        """
+        cdef float res = dereference(self._ptr).ImageBorderSize
+        return res
+    @image_border_size.setter
+    def image_border_size(self, value: float):
+        # dereference(self._ptr).ImageBorderSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -23665,6 +24881,26 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def main_scale(self):
+        """
+        [Internal]
+        Fixme-wip: reference scale, as applied by scaleallsizes().
+        """
+        cdef float res = dereference(self._ptr)._MainScale
+        return res
+    @main_scale.setter
+    def main_scale(self, value: float):
+        # dereference(self._ptr)._MainScale = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -23679,6 +24915,25 @@ cdef class ImGuiStyle:
     @mouse_cursor_scale.setter
     def mouse_cursor_scale(self, value: float):
         # dereference(self._ptr).MouseCursorScale = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def next_frame_font_size_base(self):
+        """
+        Fixme: temporary hack until we finish remaining work.
+        """
+        cdef float res = dereference(self._ptr)._NextFrameFontSizeBase
+        return res
+    @next_frame_font_size_base.setter
+    def next_frame_font_size_base(self, value: float):
+        # dereference(self._ptr)._NextFrameFontSizeBase = value
         raise NotImplementedError
     # [End Field]
 
@@ -23893,20 +25148,77 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(True)
+    # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
     @property
-    def tab_min_width_for_close_button(self):
+    def tab_close_button_min_width_selected(self):
         """
-        Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
+        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
         """
-        cdef float res = dereference(self._ptr).TabMinWidthForCloseButton
+        cdef float res = dereference(self._ptr).TabCloseButtonMinWidthSelected
         return res
-    @tab_min_width_for_close_button.setter
-    def tab_min_width_for_close_button(self, value: float):
-        # dereference(self._ptr).TabMinWidthForCloseButton = value
+    @tab_close_button_min_width_selected.setter
+    def tab_close_button_min_width_selected(self, value: float):
+        # dereference(self._ptr).TabCloseButtonMinWidthSelected = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def tab_close_button_min_width_unselected(self):
+        """
+        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
+        """
+        cdef float res = dereference(self._ptr).TabCloseButtonMinWidthUnselected
+        return res
+    @tab_close_button_min_width_unselected.setter
+    def tab_close_button_min_width_unselected(self, value: float):
+        # dereference(self._ptr).TabCloseButtonMinWidthUnselected = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def tab_min_width_base(self):
+        """
+        Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
+        """
+        cdef float res = dereference(self._ptr).TabMinWidthBase
+        return res
+    @tab_min_width_base.setter
+    def tab_min_width_base(self, value: float):
+        # dereference(self._ptr).TabMinWidthBase = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def tab_min_width_shrink(self):
+        """
+        Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
+        """
+        cdef float res = dereference(self._ptr).TabMinWidthShrink
+        return res
+    @tab_min_width_shrink.setter
+    def tab_min_width_shrink(self, value: float):
+        # dereference(self._ptr).TabMinWidthShrink = value
         raise NotImplementedError
     # [End Field]
 
@@ -23983,6 +25295,82 @@ cdef class ImGuiStyle:
     @touch_extra_padding.setter
     def touch_extra_padding(self, value: Tuple[float, float]):
         # dereference(self._ptr).TouchExtraPadding = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def tree_lines_flags(self):
+        """
+        Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
+        """
+        cdef dcimgui.ImGuiTreeNodeFlags res = dereference(self._ptr).TreeLinesFlags
+        return res
+    @tree_lines_flags.setter
+    def tree_lines_flags(self, value: int):
+        # dereference(self._ptr).TreeLinesFlags = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def tree_lines_rounding(self):
+        """
+        Radius of lines connecting child nodes to the vertical line.
+        """
+        cdef float res = dereference(self._ptr).TreeLinesRounding
+        return res
+    @tree_lines_rounding.setter
+    def tree_lines_rounding(self, value: float):
+        # dereference(self._ptr).TreeLinesRounding = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def tree_lines_size(self):
+        """
+        Thickness of outlines when using imguitreenodeflags_drawlines.
+        """
+        cdef float res = dereference(self._ptr).TreeLinesSize
+        return res
+    @tree_lines_size.setter
+    def tree_lines_size(self, value: float):
+        # dereference(self._ptr).TreeLinesSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def window_border_hover_padding(self):
+        """
+        Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
+        """
+        cdef float res = dereference(self._ptr).WindowBorderHoverPadding
+        return res
+    @window_border_hover_padding.setter
+    def window_border_hover_padding(self, value: float):
+        # dereference(self._ptr).WindowBorderHoverPadding = value
         raise NotImplementedError
     # [End Field]
 
@@ -24107,6 +25495,9 @@ cdef class ImGuiStyle:
     # ?custom_comment_only(False)
     # ?returns(None)
     def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
+        """
+        Scale all spacing/padding/thickness values. do not scale fonts.
+        """
         dcimgui.ImGuiStyle_ScaleAllSizes(
             self._ptr,
             scale_factor
@@ -24518,6 +25909,22 @@ cdef class ImGuiTextBuffer:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(None)
+    def resize(self: ImGuiTextBuffer, size: int):
+        """
+        Similar to resize(0) on imvector: empty string but don't free buffer.
+        """
+        dcimgui.ImGuiTextBuffer_resize(
+            self._ptr,
+            size
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(int)
     def size(self: ImGuiTextBuffer):
         cdef int res = dcimgui.ImGuiTextBuffer_size(
@@ -24589,13 +25996,13 @@ cdef class ImGuiTextFilter:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImVector_ImGuiTextFilter_ImGuiTextRange)
+    # ?returns(ImVector_ImGuiTextRange)
     @property
     def filters(self):
-        cdef dcimgui.ImVector_ImGuiTextFilter_ImGuiTextRange res = dereference(self._ptr).Filters
-        return ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
+        cdef dcimgui.ImVector_ImGuiTextRange res = dereference(self._ptr).Filters
+        return ImVector_ImGuiTextRange.from_ptr(res)
     @filters.setter
-    def filters(self, value: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    def filters(self, value: ImVector_ImGuiTextRange):
         # dereference(self._ptr).Filters = value._ptr
         raise NotImplementedError
     # [End Field]
@@ -24823,7 +26230,7 @@ cdef class ImGuiTextFilter_ImGuiTextRange:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextFilter_ImGuiTextRange):
+    def split(self: ImGuiTextFilter_ImGuiTextRange, separator: int, out: ImVector_ImGuiTextRange):
         dcimgui.ImGuiTextFilter_ImGuiTextRange_split(
             self._ptr,
             separator,
@@ -24937,6 +26344,25 @@ cdef class ImGuiViewport:
 
     # [Field]
     # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Tuple[float, float])
+    @property
+    def framebuffer_scale(self):
+        """
+        Density of the viewport for retina display (always 1,1 on windows, may be 2,2 etc on macos/ios). this will affect font rasterizer density.
+        """
+        cdef dcimgui.ImVec2 res = dereference(self._ptr).FramebufferScale
+        return _cast_ImVec2_tuple(res)
+    @framebuffer_scale.setter
+    def framebuffer_scale(self, value: Tuple[float, float]):
+        # dereference(self._ptr).FramebufferScale = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -24982,7 +26408,7 @@ cdef class ImGuiViewport:
     @property
     def platform_handle(self):
         """
-        Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
+        Void* to hold higher-level, platform window handle (e.g. hwnd for win32 backend, uint32 windowid for sdl, glfwwindow* for glfw), for findviewportbyplatformhandle().
         """
         cdef void* res = dereference(self._ptr).PlatformHandle
         return res
@@ -25001,7 +26427,7 @@ cdef class ImGuiViewport:
     @property
     def platform_handle_raw(self):
         """
-        Void* to hold lower-level, platform-native window handle (under win32 this is expected to be a hwnd, unused for other platforms), when using an abstraction layer like glfw or sdl (where platformhandle would be a sdl_window*)
+        Void* to hold lower-level, platform-native window handle (always hwnd on win32 platform, unused for other platforms).
         """
         cdef void* res = dereference(self._ptr).PlatformHandleRaw
         return res
@@ -25452,6 +26878,1286 @@ cdef class ImGuiWindowClass:
         # dereference(self._ptr).ViewportFlagsOverrideSet = value
         raise NotImplementedError
     # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImTextureData:
+    """
+    Specs and pixel storage for a texture used by Dear ImGui.
+    This is only useful for (1) core library and (2) backends. End-user/applications do not need to care about this.
+    Renderer Backends will create a GPU-side version of this.
+    Why does we store two identifiers: TexID and BackendUserData?
+    - ImTextureID    TexID           = lower-level identifier stored in ImDrawCmd. ImDrawCmd can refer to textures not created by the backend, and for which there's no ImTextureData.
+    - void*          BackendUserData = higher-level opaque storage for backend own book-keeping. Some backends may have enough with TexID and not need both.
+    In columns below: who reads/writes each fields? 'r'=read, 'w'=write, 'core'=main library, 'backend'=renderer backend
+    """
+    cdef dcimgui.ImTextureData* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImTextureData from_ptr(dcimgui.ImTextureData* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImTextureData wrapper = ImTextureData.__new__(ImTextureData)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImTextureData from_heap_ptr(dcimgui.ImTextureData* _ptr):
+        wrapper = ImTextureData.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def backend_user_data(self):
+        """
+        -    rw  // convenience storage for backend. some backends may have enough with texid.
+        """
+        cdef void* res = dereference(self._ptr).BackendUserData
+        return res
+    @backend_user_data.setter
+    def backend_user_data(self, value: Any):
+        # dereference(self._ptr).BackendUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def backend_user_data(self):
+        """
+        -    rw  // convenience storage for backend. some backends may have enough with texid.
+        """
+        cdef void* res = dereference(self._ptr).BackendUserData
+        return res
+    @backend_user_data.setter
+    def backend_user_data(self, value: Any):
+        # dereference(self._ptr).BackendUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def bytes_per_pixel(self):
+        """
+        W    r   // 4 or 1
+        """
+        cdef int res = dereference(self._ptr).BytesPerPixel
+        return res
+    @bytes_per_pixel.setter
+    def bytes_per_pixel(self, value: int):
+        # dereference(self._ptr).BytesPerPixel = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def bytes_per_pixel(self):
+        """
+        W    r   // 4 or 1
+        """
+        cdef int res = dereference(self._ptr).BytesPerPixel
+        return res
+    @bytes_per_pixel.setter
+    def bytes_per_pixel(self, value: int):
+        # dereference(self._ptr).BytesPerPixel = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def format(self):
+        """
+        W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
+        """
+        cdef ImTextureFormat res = dereference(self._ptr).Format
+        return res
+    @format.setter
+    def format(self, value: Any):
+        # dereference(self._ptr).Format = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def format(self):
+        """
+        W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
+        """
+        cdef ImTextureFormat res = dereference(self._ptr).Format
+        return res
+    @format.setter
+    def format(self, value: Any):
+        # dereference(self._ptr).Format = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def height(self):
+        """
+        W    r   // texture height
+        """
+        cdef int res = dereference(self._ptr).Height
+        return res
+    @height.setter
+    def height(self, value: int):
+        # dereference(self._ptr).Height = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def height(self):
+        """
+        W    r   // texture height
+        """
+        cdef int res = dereference(self._ptr).Height
+        return res
+    @height.setter
+    def height(self, value: int):
+        # dereference(self._ptr).Height = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    @property
+    def pixels(self):
+        """
+        W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+        """
+        cdef unsigned char* res = dereference(self._ptr).Pixels
+        return res
+    @pixels.setter
+    def pixels(self, value: str):
+        # dereference(self._ptr).Pixels = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    @property
+    def pixels(self):
+        """
+        W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+        """
+        cdef unsigned char* res = dereference(self._ptr).Pixels
+        return res
+    @pixels.setter
+    def pixels(self, value: str):
+        # dereference(self._ptr).Pixels = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def ref_count(self):
+        """
+        W    r   // number of contexts using this texture. used during backend shutdown.
+        """
+        cdef unsigned short res = dereference(self._ptr).RefCount
+        return res
+    @ref_count.setter
+    def ref_count(self, value: int):
+        # dereference(self._ptr).RefCount = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def ref_count(self):
+        """
+        W    r   // number of contexts using this texture. used during backend shutdown.
+        """
+        cdef unsigned short res = dereference(self._ptr).RefCount
+        return res
+    @ref_count.setter
+    def ref_count(self, value: int):
+        # dereference(self._ptr).RefCount = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def status(self):
+        """
+        Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
+        """
+        cdef ImTextureStatus res = dereference(self._ptr).Status
+        return res
+    @status.setter
+    def status(self, value: Any):
+        # dereference(self._ptr).Status = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def status(self):
+        """
+        Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
+        """
+        cdef ImTextureStatus res = dereference(self._ptr).Status
+        return res
+    @status.setter
+    def status(self, value: Any):
+        # dereference(self._ptr).Status = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def tex_id(self):
+        """
+        R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
+        """
+        cdef dcimgui.ImTextureID res = dereference(self._ptr).TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, value: Any):
+        # dereference(self._ptr).TexID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def tex_id(self):
+        """
+        R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
+        """
+        cdef dcimgui.ImTextureID res = dereference(self._ptr).TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, value: Any):
+        # dereference(self._ptr).TexID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def unique_id(self):
+        """
+        ------------------------------------------ core / backend ---------------------------------------
+        W    -   // sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
+        """
+        cdef int res = dereference(self._ptr).UniqueID
+        return res
+    @unique_id.setter
+    def unique_id(self, value: int):
+        # dereference(self._ptr).UniqueID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def unique_id(self):
+        """
+        ------------------------------------------ core / backend ---------------------------------------
+        W    -   // [debug] sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
+        """
+        cdef int res = dereference(self._ptr).UniqueID
+        return res
+    @unique_id.setter
+    def unique_id(self, value: int):
+        # dereference(self._ptr).UniqueID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def unused_frames(self):
+        """
+        W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
+        """
+        cdef int res = dereference(self._ptr).UnusedFrames
+        return res
+    @unused_frames.setter
+    def unused_frames(self, value: int):
+        # dereference(self._ptr).UnusedFrames = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def unused_frames(self):
+        """
+        W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
+        """
+        cdef int res = dereference(self._ptr).UnusedFrames
+        return res
+    @unused_frames.setter
+    def unused_frames(self, value: int):
+        # dereference(self._ptr).UnusedFrames = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def update_rect(self):
+        """
+        W    r   // bounding box encompassing all queued updates[].
+        """
+        cdef dcimgui.ImTextureRect res = dereference(self._ptr).UpdateRect
+        return ImTextureRect.from_ptr(res)
+    @update_rect.setter
+    def update_rect(self, value: ImTextureRect):
+        # dereference(self._ptr).UpdateRect = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def update_rect(self):
+        """
+        W    r   // bounding box encompassing all queued updates[].
+        """
+        cdef dcimgui.ImTextureRect res = dereference(self._ptr).UpdateRect
+        return ImTextureRect.from_ptr(res)
+    @update_rect.setter
+    def update_rect(self, value: ImTextureRect):
+        # dereference(self._ptr).UpdateRect = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImTextureRect)
+    @property
+    def updates(self):
+        """
+        W    r   // array of individual updates.
+        """
+        cdef dcimgui.ImVector_ImTextureRect res = dereference(self._ptr).Updates
+        return ImVector_ImTextureRect.from_ptr(res)
+    @updates.setter
+    def updates(self, value: ImVector_ImTextureRect):
+        # dereference(self._ptr).Updates = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImVector_ImTextureRect)
+    @property
+    def updates(self):
+        """
+        W    r   // array of individual updates.
+        """
+        cdef dcimgui.ImVector_ImTextureRect res = dereference(self._ptr).Updates
+        return ImVector_ImTextureRect.from_ptr(res)
+    @updates.setter
+    def updates(self, value: ImVector_ImTextureRect):
+        # dereference(self._ptr).Updates = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def use_colors(self):
+        """
+        W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
+        """
+        cdef bool res = dereference(self._ptr).UseColors
+        return res
+    @use_colors.setter
+    def use_colors(self, value: bool):
+        # dereference(self._ptr).UseColors = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def use_colors(self):
+        """
+        W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
+        """
+        cdef bool res = dereference(self._ptr).UseColors
+        return res
+    @use_colors.setter
+    def use_colors(self, value: bool):
+        # dereference(self._ptr).UseColors = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def used_rect(self):
+        """
+        W    r   // bounding box encompassing all past and queued updates[].
+        """
+        cdef dcimgui.ImTextureRect res = dereference(self._ptr).UsedRect
+        return ImTextureRect.from_ptr(res)
+    @used_rect.setter
+    def used_rect(self, value: ImTextureRect):
+        # dereference(self._ptr).UsedRect = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def used_rect(self):
+        """
+        W    r   // bounding box encompassing all past and queued updates[].
+        """
+        cdef dcimgui.ImTextureRect res = dereference(self._ptr).UsedRect
+        return ImTextureRect.from_ptr(res)
+    @used_rect.setter
+    def used_rect(self, value: ImTextureRect):
+        # dereference(self._ptr).UsedRect = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def want_destroy_next_frame(self):
+        """
+        Rw   -   // [internal] queued to set imtexturestatus_wantdestroy next frame. may still be used in the current frame.
+        """
+        cdef bool res = dereference(self._ptr).WantDestroyNextFrame
+        return res
+    @want_destroy_next_frame.setter
+    def want_destroy_next_frame(self, value: bool):
+        # dereference(self._ptr).WantDestroyNextFrame = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def want_destroy_next_frame(self):
+        """
+        Rw   -   // [internal] queued to set imtexturestatus_wantdestroy next frame. may still be used in the current frame.
+        """
+        cdef bool res = dereference(self._ptr).WantDestroyNextFrame
+        return res
+    @want_destroy_next_frame.setter
+    def want_destroy_next_frame(self, value: bool):
+        # dereference(self._ptr).WantDestroyNextFrame = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def width(self):
+        """
+        W    r   // texture width
+        """
+        cdef int res = dereference(self._ptr).Width
+        return res
+    @width.setter
+    def width(self, value: int):
+        # dereference(self._ptr).Width = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def width(self):
+        """
+        W    r   // texture width
+        """
+        cdef int res = dereference(self._ptr).Width
+        return res
+    @width.setter
+    def width(self, value: int):
+        # dereference(self._ptr).Width = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def create(self: ImTextureData, format_: Any, w: int, h: int):
+        dcimgui.ImTextureData_Create(
+            self._ptr,
+            format_,
+            w,
+            h
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def create(self: ImTextureData, format_: Any, w: int, h: int):
+        dcimgui.ImTextureData_Create(
+            self._ptr,
+            format_,
+            w,
+            h
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def destroy_pixels(self: ImTextureData):
+        dcimgui.ImTextureData_DestroyPixels(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def destroy_pixels(self: ImTextureData):
+        dcimgui.ImTextureData_DestroyPixels(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    def get_pitch(self: ImTextureData):
+        cdef int res = dcimgui.ImTextureData_GetPitch(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    def get_pitch(self: ImTextureData):
+        cdef int res = dcimgui.ImTextureData_GetPitch(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_pixels(self: ImTextureData):
+        cdef void* res = dcimgui.ImTextureData_GetPixels(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_pixels(self: ImTextureData):
+        cdef void* res = dcimgui.ImTextureData_GetPixels(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_pixels_at(self: ImTextureData, x: int, y: int):
+        cdef void* res = dcimgui.ImTextureData_GetPixelsAt(
+            self._ptr,
+            x,
+            y
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_pixels_at(self: ImTextureData, x: int, y: int):
+        cdef void* res = dcimgui.ImTextureData_GetPixelsAt(
+            self._ptr,
+            x,
+            y
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    def get_size_in_bytes(self: ImTextureData):
+        cdef int res = dcimgui.ImTextureData_GetSizeInBytes(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    def get_size_in_bytes(self: ImTextureData):
+        cdef int res = dcimgui.ImTextureData_GetSizeInBytes(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_tex_id(self: ImTextureData):
+        cdef dcimgui.ImTextureID res = dcimgui.ImTextureData_GetTexID(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_tex_id(self: ImTextureData):
+        cdef dcimgui.ImTextureID res = dcimgui.ImTextureData_GetTexID(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRef)
+    def get_tex_ref(self: ImTextureData):
+        cdef dcimgui.ImTextureRef res = dcimgui.ImTextureData_GetTexRef(
+            self._ptr
+        )
+        return ImTextureRef.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRef)
+    def get_tex_ref(self: ImTextureData):
+        cdef dcimgui.ImTextureRef res = dcimgui.ImTextureData_GetTexRef(
+            self._ptr
+        )
+        return ImTextureRef.from_ptr(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_status(self: ImTextureData, status: Any):
+        """
+        Call after honoring a request. never modify status directly!
+        """
+        dcimgui.ImTextureData_SetStatus(
+            self._ptr,
+            status
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_status(self: ImTextureData, status: Any):
+        """
+        Call after honoring a request. never modify status directly!
+        """
+        dcimgui.ImTextureData_SetStatus(
+            self._ptr,
+            status
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_tex_id(self: ImTextureData, tex_id: Any):
+        """
+        Called by Renderer backend
+        Call after creating or destroying the texture. never modify texid directly!
+        """
+        dcimgui.ImTextureData_SetTexID(
+            self._ptr,
+            tex_id
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def set_tex_id(self: ImTextureData, tex_id: Any):
+        """
+        Called by Renderer backend
+        Call after creating or destroying the texture. never modify texid directly!
+        """
+        dcimgui.ImTextureData_SetTexID(
+            self._ptr,
+            tex_id
+        )
+    # [End Method]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImTextureRect:
+    """
+    Coordinates of a rectangle within a texture.
+    When a texture is in ImTextureStatus_WantUpdates state, we provide a list of individual rectangles to copy to the graphics system.
+    You may use ImTextureData::Updates[] for the list, or ImTextureData::UpdateBox for a single bounding box.
+    """
+    cdef dcimgui.ImTextureRect* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImTextureRect from_ptr(dcimgui.ImTextureRect* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImTextureRect wrapper = ImTextureRect.__new__(ImTextureRect)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImTextureRect from_heap_ptr(dcimgui.ImTextureRect* _ptr):
+        wrapper = ImTextureRect.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def h(self):
+        """
+        Size of rectangle to update (in pixels)
+        """
+        cdef unsigned short res = dereference(self._ptr).h
+        return res
+    @h.setter
+    def h(self, value: int):
+        # dereference(self._ptr).h = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def h(self):
+        """
+        Size of rectangle to update (in pixels)
+        """
+        cdef unsigned short res = dereference(self._ptr).h
+        return res
+    @h.setter
+    def h(self, value: int):
+        # dereference(self._ptr).h = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def w(self):
+        """
+        Size of rectangle to update (in pixels)
+        """
+        cdef unsigned short res = dereference(self._ptr).w
+        return res
+    @w.setter
+    def w(self, value: int):
+        # dereference(self._ptr).w = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def w(self):
+        """
+        Size of rectangle to update (in pixels)
+        """
+        cdef unsigned short res = dereference(self._ptr).w
+        return res
+    @w.setter
+    def w(self, value: int):
+        # dereference(self._ptr).w = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def x(self):
+        """
+        Upper-left coordinates of rectangle to update
+        """
+        cdef unsigned short res = dereference(self._ptr).x
+        return res
+    @x.setter
+    def x(self, value: int):
+        # dereference(self._ptr).x = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def x(self):
+        """
+        Upper-left coordinates of rectangle to update
+        """
+        cdef unsigned short res = dereference(self._ptr).x
+        return res
+    @x.setter
+    def x(self, value: int):
+        # dereference(self._ptr).x = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def y(self):
+        """
+        Upper-left coordinates of rectangle to update
+        """
+        cdef unsigned short res = dereference(self._ptr).y
+        return res
+    @y.setter
+    def y(self, value: int):
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def y(self):
+        """
+        Upper-left coordinates of rectangle to update
+        """
+        cdef unsigned short res = dereference(self._ptr).y
+        return res
+    @y.setter
+    def y(self, value: int):
+        # dereference(self._ptr).y = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImTextureRef:
+    cdef dcimgui.ImTextureRef* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImTextureRef from_ptr(dcimgui.ImTextureRef* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImTextureRef wrapper = ImTextureRef.__new__(ImTextureRef)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImTextureRef from_heap_ptr(dcimgui.ImTextureRef* _ptr):
+        wrapper = ImTextureRef.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureData)
+    @property
+    def tex_data(self):
+        """
+        Members (either are set, never both!)
+        A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
+        """
+        cdef dcimgui.ImTextureData* res = dereference(self._ptr)._TexData
+        return ImTextureData.from_ptr(res)
+    @tex_data.setter
+    def tex_data(self, value: ImTextureData):
+        # dereference(self._ptr)._TexData = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureData)
+    @property
+    def tex_data(self):
+        """
+        Members (either are set, never both!)
+        A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
+        """
+        cdef dcimgui.ImTextureData* res = dereference(self._ptr)._TexData
+        return ImTextureData.from_ptr(res)
+    @tex_data.setter
+    def tex_data(self, value: ImTextureData):
+        # dereference(self._ptr)._TexData = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def tex_id(self):
+        """
+        _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
+        """
+        cdef dcimgui.ImTextureID res = dereference(self._ptr)._TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, value: Any):
+        # dereference(self._ptr)._TexID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def tex_id(self):
+        """
+        _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
+        """
+        cdef dcimgui.ImTextureID res = dereference(self._ptr)._TexID
+        return res
+    @tex_id.setter
+    def tex_id(self, value: Any):
+        # dereference(self._ptr)._TexID = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_tex_id(self: ImTextureRef):
+        """
+        == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
+        """
+        cdef dcimgui.ImTextureID res = dcimgui.ImTextureRef_GetTexID(
+            self._ptr
+        )
+        return res
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    def get_tex_id(self: ImTextureRef):
+        """
+        == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
+        """
+        cdef dcimgui.ImTextureID res = dcimgui.ImTextureRef_GetTexID(
+            self._ptr
+        )
+        return res
+    # [End Method]
 # [End Class]
 
 # [Class]
@@ -25991,6 +28697,143 @@ cdef class ImVector_ImDrawListPtr:
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
+cdef class ImVector_ImDrawListSharedDataPtr:
+    """
+    Instantiation of imvector<imdrawlistshareddata*>
+    """
+    cdef dcimgui.ImVector_ImDrawListSharedDataPtr* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImDrawListSharedDataPtr from_ptr(dcimgui.ImVector_ImDrawListSharedDataPtr* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImDrawListSharedDataPtr wrapper = ImVector_ImDrawListSharedDataPtr.__new__(ImVector_ImDrawListSharedDataPtr)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImDrawListSharedDataPtr from_heap_ptr(dcimgui.ImVector_ImDrawListSharedDataPtr* _ptr):
+        wrapper = ImVector_ImDrawListSharedDataPtr.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImDrawListSharedData)
+    @property
+    def data(self):
+        cdef dcimgui.ImDrawListSharedData** res = dereference(self._ptr).Data
+        return ImDrawListSharedData.from_ptr(res)
+    @data.setter
+    def data(self, value: ImDrawListSharedData):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImDrawListSharedData)
+    @property
+    def data(self):
+        cdef dcimgui.ImDrawListSharedData** res = dereference(self._ptr).Data
+        return ImDrawListSharedData.from_ptr(res)
+    @data.setter
+    def data(self, value: ImDrawListSharedData):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
 cdef class ImVector_ImDrawVert:
     """
     Instantiation of imvector<imdrawvert>
@@ -26080,95 +28923,6 @@ cdef class ImVector_ImDrawVert:
 # ?active(True)
 # ?invisible(True)
 # ?custom_comment_only(False)
-cdef class ImVector_ImFontAtlasCustomRect:
-    """
-    Instantiation of imvector<imfontatlascustomrect>
-    """
-    cdef dcimgui.ImVector_ImFontAtlasCustomRect* _ptr
-    cdef bool dynamically_allocated
-    
-    @staticmethod
-    cdef ImVector_ImFontAtlasCustomRect from_ptr(dcimgui.ImVector_ImFontAtlasCustomRect* _ptr):
-        if _ptr == NULL:
-            return None
-        cdef ImVector_ImFontAtlasCustomRect wrapper = ImVector_ImFontAtlasCustomRect.__new__(ImVector_ImFontAtlasCustomRect)
-        wrapper._ptr = _ptr
-        wrapper.dynamically_allocated = False
-        return wrapper
-    
-    @staticmethod
-    cdef ImVector_ImFontAtlasCustomRect from_heap_ptr(dcimgui.ImVector_ImFontAtlasCustomRect* _ptr):
-        wrapper = ImVector_ImFontAtlasCustomRect.from_ptr(_ptr)
-        if wrapper is None:
-            return None
-        wrapper.dynamically_allocated = True
-        return wrapper
-    
-    def __init__(self):
-        raise TypeError("This class cannot be instantiated directly.")
-
-    def __hash__(self) -> int:
-        if self._ptr == NULL:
-            raise RuntimeError("Won't hash a NULL pointer")
-        cdef unsigned int ptr_int = <uintptr_t>self._ptr
-        return hash(ptr_int)
-    # [End Class Constants]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def capacity(self):
-        cdef int res = dereference(self._ptr).Capacity
-        return res
-    @capacity.setter
-    def capacity(self, value: int):
-        # dereference(self._ptr).Capacity = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(ImFontAtlasCustomRect)
-    @property
-    def data(self):
-        cdef dcimgui.ImFontAtlasCustomRect* res = dereference(self._ptr).Data
-        return ImFontAtlasCustomRect.from_ptr(res)
-    @data.setter
-    def data(self, value: ImFontAtlasCustomRect):
-        # dereference(self._ptr).Data = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def size(self):
-        cdef int res = dereference(self._ptr).Size
-        return res
-    @size.setter
-    def size(self, value: int):
-        # dereference(self._ptr).Size = value
-        raise NotImplementedError
-    # [End Field]
-# [End Class]
-
-# [Class]
-# [Class Constants]
-# ?use_template(False)
-# ?active(True)
-# ?invisible(True)
-# ?custom_comment_only(False)
 cdef class ImVector_ImFontConfig:
     """
     Instantiation of imvector<imfontconfig>
@@ -26232,6 +28986,143 @@ cdef class ImVector_ImFontConfig:
     @data.setter
     def data(self, value: ImFontConfig):
         # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImFontConfigPtr:
+    """
+    Instantiation of imvector<imfontconfig*>
+    """
+    cdef dcimgui.ImVector_ImFontConfigPtr* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImFontConfigPtr from_ptr(dcimgui.ImVector_ImFontConfigPtr* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImFontConfigPtr wrapper = ImVector_ImFontConfigPtr.__new__(ImVector_ImFontConfigPtr)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImFontConfigPtr from_heap_ptr(dcimgui.ImVector_ImFontConfigPtr* _ptr):
+        wrapper = ImVector_ImFontConfigPtr.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontConfig)
+    @property
+    def data(self):
+        cdef dcimgui.ImFontConfig** res = dereference(self._ptr).Data
+        return ImFontConfig.from_ptr(res)
+    @data.setter
+    def data(self, value: ImFontConfig):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImFontConfig)
+    @property
+    def data(self):
+        cdef dcimgui.ImFontConfig** res = dereference(self._ptr).Data
+        return ImFontConfig.from_ptr(res)
+    @data.setter
+    def data(self, value: ImFontConfig):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
         raise NotImplementedError
     # [End Field]
 
@@ -26701,27 +29592,27 @@ cdef class ImVector_ImGuiStoragePair:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(True)
+# ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
+cdef class ImVector_ImGuiTextRange:
     """
-    Instantiation of imvector<imguitextfilter_imguitextrange>
+    Instantiation of imvector<imguitextrange>
     """
-    cdef dcimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr
+    cdef dcimgui.ImVector_ImGuiTextRange* _ptr
     cdef bool dynamically_allocated
     
     @staticmethod
-    cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_ptr(dcimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
+    cdef ImVector_ImGuiTextRange from_ptr(dcimgui.ImVector_ImGuiTextRange* _ptr):
         if _ptr == NULL:
             return None
-        cdef ImVector_ImGuiTextFilter_ImGuiTextRange wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.__new__(ImVector_ImGuiTextFilter_ImGuiTextRange)
+        cdef ImVector_ImGuiTextRange wrapper = ImVector_ImGuiTextRange.__new__(ImVector_ImGuiTextRange)
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
     
     @staticmethod
-    cdef ImVector_ImGuiTextFilter_ImGuiTextRange from_heap_ptr(dcimgui.ImVector_ImGuiTextFilter_ImGuiTextRange* _ptr):
-        wrapper = ImVector_ImGuiTextFilter_ImGuiTextRange.from_ptr(_ptr)
+    cdef ImVector_ImGuiTextRange from_heap_ptr(dcimgui.ImVector_ImGuiTextRange* _ptr):
+        wrapper = ImVector_ImGuiTextRange.from_ptr(_ptr)
         if wrapper is None:
             return None
         wrapper.dynamically_allocated = True
@@ -26758,6 +29649,22 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(ImGuiTextFilter_ImGuiTextRange)
     @property
     def data(self):
@@ -26766,6 +29673,38 @@ cdef class ImVector_ImGuiTextFilter_ImGuiTextRange:
     @data.setter
     def data(self, value: ImGuiTextFilter_ImGuiTextRange):
         # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImGuiTextFilter_ImGuiTextRange)
+    @property
+    def data(self):
+        cdef dcimgui.ImGuiTextFilter_ImGuiTextRange* res = dereference(self._ptr).Data
+        return ImGuiTextFilter_ImGuiTextRange.from_ptr(res)
+    @data.setter
+    def data(self, value: ImGuiTextFilter_ImGuiTextRange):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
         raise NotImplementedError
     # [End Field]
 
@@ -26879,27 +29818,27 @@ cdef class ImVector_ImGuiViewportPtr:
 # [Class Constants]
 # ?use_template(False)
 # ?active(True)
-# ?invisible(True)
+# ?invisible(False)
 # ?custom_comment_only(False)
-cdef class ImVector_ImTextureID:
+cdef class ImVector_ImTextureDataPtr:
     """
-    Instantiation of imvector<imtextureid>
+    Instantiation of imvector<imtexturedata*>
     """
-    cdef dcimgui.ImVector_ImTextureID* _ptr
+    cdef dcimgui.ImVector_ImTextureDataPtr* _ptr
     cdef bool dynamically_allocated
     
     @staticmethod
-    cdef ImVector_ImTextureID from_ptr(dcimgui.ImVector_ImTextureID* _ptr):
+    cdef ImVector_ImTextureDataPtr from_ptr(dcimgui.ImVector_ImTextureDataPtr* _ptr):
         if _ptr == NULL:
             return None
-        cdef ImVector_ImTextureID wrapper = ImVector_ImTextureID.__new__(ImVector_ImTextureID)
+        cdef ImVector_ImTextureDataPtr wrapper = ImVector_ImTextureDataPtr.__new__(ImVector_ImTextureDataPtr)
         wrapper._ptr = _ptr
         wrapper.dynamically_allocated = False
         return wrapper
     
     @staticmethod
-    cdef ImVector_ImTextureID from_heap_ptr(dcimgui.ImVector_ImTextureID* _ptr):
-        wrapper = ImVector_ImTextureID.from_ptr(_ptr)
+    cdef ImVector_ImTextureDataPtr from_heap_ptr(dcimgui.ImVector_ImTextureDataPtr* _ptr):
+        wrapper = ImVector_ImTextureDataPtr.from_ptr(_ptr)
         if wrapper is None:
             return None
         wrapper.dynamically_allocated = True
@@ -26936,14 +29875,473 @@ cdef class ImVector_ImTextureID:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Any)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureData)
     @property
     def data(self):
-        cdef dcimgui.ImTextureID* res = dereference(self._ptr).Data
+        cdef dcimgui.ImTextureData** res = dereference(self._ptr).Data
+        return ImTextureData.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureData):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureData)
+    @property
+    def data(self):
+        cdef dcimgui.ImTextureData** res = dereference(self._ptr).Data
+        return ImTextureData.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureData):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImTextureRect:
+    """
+    Instantiation of imvector<imtexturerect>
+    """
+    cdef dcimgui.ImVector_ImTextureRect* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImTextureRect from_ptr(dcimgui.ImVector_ImTextureRect* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImTextureRect wrapper = ImVector_ImTextureRect.__new__(ImVector_ImTextureRect)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImTextureRect from_heap_ptr(dcimgui.ImVector_ImTextureRect* _ptr):
+        wrapper = ImVector_ImTextureRect.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def data(self):
+        cdef dcimgui.ImTextureRect* res = dereference(self._ptr).Data
+        return ImTextureRect.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureRect):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRect)
+    @property
+    def data(self):
+        cdef dcimgui.ImTextureRect* res = dereference(self._ptr).Data
+        return ImTextureRect.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureRect):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImTextureRef:
+    """
+    Instantiation of imvector<imtextureref>
+    """
+    cdef dcimgui.ImVector_ImTextureRef* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImTextureRef from_ptr(dcimgui.ImVector_ImTextureRef* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImTextureRef wrapper = ImVector_ImTextureRef.__new__(ImVector_ImTextureRef)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImTextureRef from_heap_ptr(dcimgui.ImVector_ImTextureRef* _ptr):
+        wrapper = ImVector_ImTextureRef.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRef)
+    @property
+    def data(self):
+        cdef dcimgui.ImTextureRef* res = dereference(self._ptr).Data
+        return ImTextureRef.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureRef):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(ImTextureRef)
+    @property
+    def data(self):
+        cdef dcimgui.ImTextureRef* res = dereference(self._ptr).Data
+        return ImTextureRef.from_ptr(res)
+    @data.setter
+    def data(self, value: ImTextureRef):
+        # dereference(self._ptr).Data = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
+        raise NotImplementedError
+    # [End Field]
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImVector_ImU16:
+    """
+    Instantiation of imvector<imu16>
+    """
+    cdef dcimgui.ImVector_ImU16* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImVector_ImU16 from_ptr(dcimgui.ImVector_ImU16* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImVector_ImU16 wrapper = ImVector_ImU16.__new__(ImVector_ImU16)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImVector_ImU16 from_heap_ptr(dcimgui.ImVector_ImU16* _ptr):
+        wrapper = ImVector_ImU16.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def capacity(self):
+        cdef int res = dereference(self._ptr).Capacity
+        return res
+    @capacity.setter
+    def capacity(self, value: int):
+        # dereference(self._ptr).Capacity = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def data(self):
+        cdef dcimgui.ImU16* res = dereference(self._ptr).Data
         return res
     @data.setter
-    def data(self, value: Any):
+    def data(self, value: int):
         # dereference(self._ptr).Data = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def data(self):
+        cdef dcimgui.ImU16* res = dereference(self._ptr).Data
+        return res
+    @data.setter
+    def data(self, value: int):
+        # dereference(self._ptr).Data = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def size(self):
+        cdef int res = dereference(self._ptr).Size
+        return res
+    @size.setter
+    def size(self, value: int):
+        # dereference(self._ptr).Size = value
         raise NotImplementedError
     # [End Field]
 

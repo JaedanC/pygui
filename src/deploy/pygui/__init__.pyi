@@ -407,12 +407,12 @@ WINDOW_FLAGS_NO_DOCKING: int                      # Disable docking of this wind
 WINDOW_FLAGS_NO_NAV: int
 WINDOW_FLAGS_NO_DECORATION: int
 WINDOW_FLAGS_NO_INPUTS: int
+WINDOW_FLAGS_DOCK_NODE_HOST: int                  # Don't use! for internal use by begin()/newframe()
 WINDOW_FLAGS_CHILD_WINDOW: int                    # Don't use! for internal use by beginchild()
 WINDOW_FLAGS_TOOLTIP: int                         # Don't use! for internal use by begintooltip()
 WINDOW_FLAGS_POPUP: int                           # Don't use! for internal use by beginpopup()
 WINDOW_FLAGS_MODAL: int                           # Don't use! for internal use by beginpopupmodal()
 WINDOW_FLAGS_CHILD_MENU: int                      # Don't use! for internal use by beginmenu()
-WINDOW_FLAGS_DOCK_NODE_HOST: int                  # Don't use! for internal use by begin()/newframe()
 CHILD_FLAGS_NONE: int
 CHILD_FLAGS_BORDERS: int                       # Show an outer border and enable windowpadding. (important: this is always == 1 == true for legacy reason)
 CHILD_FLAGS_ALWAYS_USE_WINDOW_PADDING: int     # Pad with style.windowpadding even if no border are drawn (no padding by default for non-bordered child windows because it makes more sense)
@@ -454,7 +454,7 @@ INPUT_TEXT_FLAGS_CALLBACK_HISTORY: int            # Callback on pressing up/down
 INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int             # Callback on each iteration. user code may query cursor position, modify text buffer.
 INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: int        # Callback on character inputs to replace or discard them. modify 'eventchar' to replace or discard, or return 1 in callback to discard.
 INPUT_TEXT_FLAGS_CALLBACK_RESIZE: int             # Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. notify when the string wants to be resized (for string types which hold a cache of their size). you will be provided a new bufsize in the callback and need to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
-INPUT_TEXT_FLAGS_CALLBACK_EDIT: int               # Callback on any edit (note that inputtext() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+INPUT_TEXT_FLAGS_CALLBACK_EDIT: int               # Callback on any edit. note that inputtext() already returns true on edit + you can always use isitemedited(). the callback is useful to manipulate the underlying buffer while focus is active.
 TREE_NODE_FLAGS_NONE: int
 TREE_NODE_FLAGS_SELECTED: int                     # Draw as selected
 TREE_NODE_FLAGS_FRAMED: int                       # Draw frame with background (e.g. for collapsingheader)
@@ -469,10 +469,14 @@ TREE_NODE_FLAGS_BULLET: int                       # Display a bullet instead of 
 TREE_NODE_FLAGS_FRAME_PADDING: int                # Use framepadding (even for an unframed text node) to vertically align text baseline to regular widget height. equivalent to calling aligntexttoframepadding() before the node.
 TREE_NODE_FLAGS_SPAN_AVAIL_WIDTH: int             # Extend hit box to the right-most edge, even if not framed. this is not the default in order to allow adding other items on the same line without using allowoverlap mode.
 TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-most and right-most edges (cover the indent area).
-TREE_NODE_FLAGS_SPAN_TEXT_WIDTH: int              # Narrow hit box + narrow hovering highlight, will only cover the label text.
-TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (text will still fit in current column)
-TREE_NODE_FLAGS_NAV_LEFT_JUMPS_BACK_HERE: int     # (wip) nav: left direction may move to this treenode() from any of its child (items submitted between treenode and treepop)
+TREE_NODE_FLAGS_SPAN_LABEL_WIDTH: int             # Narrow hit box + narrow hovering highlight, will only cover the label text.
+TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (label will still fit in current column)
+TREE_NODE_FLAGS_LABEL_SPAN_ALL_COLUMNS: int       # Label will span all columns of its container table
+TREE_NODE_FLAGS_NAV_LEFT_JUMPS_TO_PARENT: int     # Nav: left arrow moves back to parent. this is processed in treepop() when there's an unfullfilled left nav request remaining.
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
+TREE_NODE_FLAGS_DRAW_LINES_NONE: int              # No lines drawn
+TREE_NODE_FLAGS_DRAW_LINES_FULL: int              # Horizontal lines to child nodes. vertical line drawn down to treepop() position: cover full contents. faster (for large trees).
+TREE_NODE_FLAGS_DRAW_LINES_TO_NODES: int          # Horizontal lines to child nodes. vertical line drawn down to bottom-most child node. slower (for large trees).
 POPUP_FLAGS_NONE: int
 POPUP_FLAGS_MOUSE_BUTTON_LEFT: int               # For beginpopupcontext*(): open on left mouse release. guaranteed to always be == 0 (same as imguimousebutton_left)
 POPUP_FLAGS_MOUSE_BUTTON_RIGHT: int              # For beginpopupcontext*(): open on right mouse release. guaranteed to always be == 1 (same as imguimousebutton_right)
@@ -510,8 +514,9 @@ TAB_BAR_FLAGS_NO_CLOSE_WITH_MIDDLE_MOUSE_BUTTON: int     # Disable behavior of c
 TAB_BAR_FLAGS_NO_TAB_LIST_SCROLLING_BUTTONS: int         # Disable scrolling buttons (apply when fitting policy is imguitabbarflags_fittingpolicyscroll)
 TAB_BAR_FLAGS_NO_TOOLTIP: int                            # Disable tooltips when hovering a tab
 TAB_BAR_FLAGS_DRAW_SELECTED_OVERLINE: int                # Draw selected overline markers over selected tab
-TAB_BAR_FLAGS_FITTING_POLICY_RESIZE_DOWN: int            # Resize tabs when they don't fit
-TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int                 # Add scroll buttons when tabs don't fit
+TAB_BAR_FLAGS_FITTING_POLICY_MIXED: int                  # Shrink down tabs when they don't fit, until width is style.tabminwidthshrink, then enable scrolling buttons.
+TAB_BAR_FLAGS_FITTING_POLICY_SHRINK: int                 # Shrink down tabs when they don't fit
+TAB_BAR_FLAGS_FITTING_POLICY_SCROLL: int                 # Enable scrolling buttons when tabs don't fit
 TAB_BAR_FLAGS_FITTING_POLICY_MASK: int
 TAB_BAR_FLAGS_FITTING_POLICY_DEFAULT: int
 TAB_ITEM_FLAGS_NONE: int
@@ -584,6 +589,7 @@ DATA_TYPE_U64: int        # Unsigned long long / unsigned __int64
 DATA_TYPE_FLOAT: int      # Float
 DATA_TYPE_DOUBLE: int     # Double
 DATA_TYPE_BOOL: int       # Bool (provided for user convenience, not supported by scalar widgets)
+DATA_TYPE_STRING: int     # Char* (provided for user convenience, not supported by scalar widgets)
 DATA_TYPE_COUNT: int
 DIR_NONE: int
 DIR_LEFT: int
@@ -614,7 +620,7 @@ KEY_ESCAPE: int
 KEY_LEFT_CTRL: int
 KEY_LEFT_SHIFT: int
 KEY_LEFT_ALT: int
-KEY_LEFT_SUPER: int
+KEY_LEFT_SUPER: int                 # Also see imguimod_ctrl, imguimod_shift, imguimod_alt, imguimod_super below!
 KEY_RIGHT_CTRL: int
 KEY_RIGHT_SHIFT: int
 KEY_RIGHT_ALT: int
@@ -715,30 +721,31 @@ KEY_KEYPAD_ENTER: int
 KEY_KEYPAD_EQUAL: int
 KEY_APP_BACK: int                   # Available on some keyboard/mouses. often referred as 'browser back'
 KEY_APP_FORWARD: int
-KEY_GAMEPAD_START: int              # Menu (xbox)      + (switch)   start/options (ps)
-KEY_GAMEPAD_BACK: int               # View (xbox)      - (switch)   share (ps)
-KEY_GAMEPAD_FACE_LEFT: int          # X (xbox)         y (switch)   square (ps)        // tap: toggle menu. hold: windowing mode (focus/move/resize windows)
-KEY_GAMEPAD_FACE_RIGHT: int         # B (xbox)         a (switch)   circle (ps)        // cancel / close / exit
-KEY_GAMEPAD_FACE_UP: int            # Y (xbox)         x (switch)   triangle (ps)      // text input / on-screen keyboard
-KEY_GAMEPAD_FACE_DOWN: int          # A (xbox)         b (switch)   cross (ps)         // activate / open / toggle / tweak
-KEY_GAMEPAD_DPAD_LEFT: int          # D-pad left                                       // move / tweak / resize window (in windowing mode)
-KEY_GAMEPAD_DPAD_RIGHT: int         # D-pad right                                      // move / tweak / resize window (in windowing mode)
-KEY_GAMEPAD_DPAD_UP: int            # D-pad up                                         // move / tweak / resize window (in windowing mode)
-KEY_GAMEPAD_DPAD_DOWN: int          # D-pad down                                       // move / tweak / resize window (in windowing mode)
-KEY_GAMEPAD_L1: int                 # L bumper (xbox)  l (switch)   l1 (ps)            // tweak slower / focus previous (in windowing mode)
-KEY_GAMEPAD_R1: int                 # R bumper (xbox)  r (switch)   r1 (ps)            // tweak faster / focus next (in windowing mode)
-KEY_GAMEPAD_L2: int                 # L trig. (xbox)   zl (switch)  l2 (ps) [analog]
-KEY_GAMEPAD_R2: int                 # R trig. (xbox)   zr (switch)  r2 (ps) [analog]
-KEY_GAMEPAD_L3: int                 # L stick (xbox)   l3 (switch)  l3 (ps)
-KEY_GAMEPAD_R3: int                 # R stick (xbox)   r3 (switch)  r3 (ps)
-KEY_GAMEPAD_LSTICK_LEFT: int        # [analog]                                         // move window (in windowing mode)
-KEY_GAMEPAD_LSTICK_RIGHT: int       # [analog]                                         // move window (in windowing mode)
-KEY_GAMEPAD_LSTICK_UP: int          # [analog]                                         // move window (in windowing mode)
-KEY_GAMEPAD_LSTICK_DOWN: int        # [analog]                                         // move window (in windowing mode)
-KEY_GAMEPAD_RSTICK_LEFT: int        # [analog]
-KEY_GAMEPAD_RSTICK_RIGHT: int       # [analog]
-KEY_GAMEPAD_RSTICK_UP: int          # [analog]
-KEY_GAMEPAD_RSTICK_DOWN: int        # [analog]
+KEY_OEM102: int                     # Non-us backslash.
+KEY_GAMEPAD_START: int              # Menu        | +       | options  |
+KEY_GAMEPAD_BACK: int               # View        | -       | share    |
+KEY_GAMEPAD_FACE_LEFT: int          # X           | y       | square   | tap: toggle menu. hold: windowing mode (focus/move/resize windows)
+KEY_GAMEPAD_FACE_RIGHT: int         # B           | a       | circle   | cancel / close / exit
+KEY_GAMEPAD_FACE_UP: int            # Y           | x       | triangle | text input / on-screen keyboard
+KEY_GAMEPAD_FACE_DOWN: int          # A           | b       | cross    | activate / open / toggle / tweak
+KEY_GAMEPAD_DPAD_LEFT: int          # D-pad left  | '       | '        | move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_RIGHT: int         # D-pad right | '       | '        | move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_UP: int            # D-pad up    | '       | '        | move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_DPAD_DOWN: int          # D-pad down  | '       | '        | move / tweak / resize window (in windowing mode)
+KEY_GAMEPAD_L1: int                 # L bumper    | l       | l1       | tweak slower / focus previous (in windowing mode)
+KEY_GAMEPAD_R1: int                 # R bumper    | r       | r1       | tweak faster / focus next (in windowing mode)
+KEY_GAMEPAD_L2: int                 # L trigger   | zl      | l2       | [analog]
+KEY_GAMEPAD_R2: int                 # R trigger   | zr      | r2       | [analog]
+KEY_GAMEPAD_L3: int                 # L stick     | l3      | l3       |
+KEY_GAMEPAD_R3: int                 # R stick     | r3      | r3       |
+KEY_GAMEPAD_LSTICK_LEFT: int        # |         |          | [analog] move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_RIGHT: int       # |         |          | [analog] move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_UP: int          # |         |          | [analog] move window (in windowing mode)
+KEY_GAMEPAD_LSTICK_DOWN: int        # |         |          | [analog] move window (in windowing mode)
+KEY_GAMEPAD_RSTICK_LEFT: int        # |         |          | [analog]
+KEY_GAMEPAD_RSTICK_RIGHT: int       # |         |          | [analog]
+KEY_GAMEPAD_RSTICK_UP: int          # |         |          | [analog]
+KEY_GAMEPAD_RSTICK_DOWN: int        # |         |          | [analog]
 KEY_MOUSE_LEFT: int
 KEY_MOUSE_RIGHT: int
 KEY_MOUSE_MIDDLE: int
@@ -751,13 +758,13 @@ KEY_RESERVED_FOR_MOD_SHIFT: int
 KEY_RESERVED_FOR_MOD_ALT: int
 KEY_RESERVED_FOR_MOD_SUPER: int
 KEY_NAMED_KEY_END: int
+KEY_NAMED_KEY_COUNT: int
 MOD_NONE: int
 MOD_CTRL: int                       # Ctrl (non-macos), cmd (macos)
 MOD_SHIFT: int                      # Shift
 MOD_ALT: int                        # Option/menu
 MOD_SUPER: int                      # Windows/super (non-macos), ctrl (macos)
 MOD_MASK: int                       # 4-bits
-KEY_NAMED_KEY_COUNT: int
 INPUT_FLAGS_NONE: int
 INPUT_FLAGS_REPEAT: int                      # Enable repeat. return true on successive repeats. default for legacy iskeypressed(). not default for legacy ismouseclicked(). must be == 1.
 INPUT_FLAGS_ROUTE_ACTIVE: int                # Route to active item only.
@@ -770,22 +777,21 @@ INPUT_FLAGS_ROUTE_UNLESS_BG_FOCUSED: int     # Option: global route: will not be
 INPUT_FLAGS_ROUTE_FROM_ROOT_WINDOW: int      # Option: route evaluated from the point of view of root window rather than current window.
 INPUT_FLAGS_TOOLTIP: int                     # Automatically display a tooltip when hovering item [beta] unsure of right api (opt-in/opt-out)
 CONFIG_FLAGS_NONE: int
-CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int            # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
-CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int             # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
-CONFIG_FLAGS_NO_MOUSE: int                       # Instruct dear imgui to disable mouse inputs and interactions.
-CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int         # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
-CONFIG_FLAGS_NO_KEYBOARD: int                    # Instruct dear imgui to disable keyboard inputs and interactions. this is done by ignoring keyboard events and clearing existing states.
-CONFIG_FLAGS_DOCKING_ENABLE: int                 # Docking enable flags.
-CONFIG_FLAGS_VIEWPORTS_ENABLE: int               # Viewport enable flags (require both imguibackendflags_platformhasviewports + imguibackendflags_rendererhasviewports set by the respective backends)
-CONFIG_FLAGS_DPI_ENABLE_SCALE_VIEWPORTS: int     # [beta: don't use] fixme-dpi: reposition and resize imgui windows when the dpiscale of a viewport changed (mostly useful for the main viewport hosting other window). note that resizing the main window itself is up to your application.
-CONFIG_FLAGS_DPI_ENABLE_SCALE_FONTS: int         # [beta: don't use] fixme-dpi: request bitmap-scaled fonts to match dpiscale. this is a very low-quality workaround. the correct way to handle dpi is _currently_ to replace the atlas and/or fonts in the platform_onchangedviewport callback, but this is all early work in progress.
-CONFIG_FLAGS_IS_S_RGB: int                       # Application is srgb-aware.
-CONFIG_FLAGS_IS_TOUCH_SCREEN: int                # Application is using a touch screen instead of a mouse.
+CONFIG_FLAGS_NAV_ENABLE_KEYBOARD: int        # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
+CONFIG_FLAGS_NAV_ENABLE_GAMEPAD: int         # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
+CONFIG_FLAGS_NO_MOUSE: int                   # Instruct dear imgui to disable mouse inputs and interactions.
+CONFIG_FLAGS_NO_MOUSE_CURSOR_CHANGE: int     # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
+CONFIG_FLAGS_NO_KEYBOARD: int                # Instruct dear imgui to disable keyboard inputs and interactions. this is done by ignoring keyboard events and clearing existing states.
+CONFIG_FLAGS_DOCKING_ENABLE: int             # Docking enable flags.
+CONFIG_FLAGS_VIEWPORTS_ENABLE: int           # Viewport enable flags (require both imguibackendflags_platformhasviewports + imguibackendflags_rendererhasviewports set by the respective backends)
+CONFIG_FLAGS_IS_S_RGB: int                   # Application is srgb-aware.
+CONFIG_FLAGS_IS_TOUCH_SCREEN: int            # Application is using a touch screen instead of a mouse.
 BACKEND_FLAGS_NONE: int
 BACKEND_FLAGS_HAS_GAMEPAD: int                    # Backend platform supports gamepad and currently has one connected.
 BACKEND_FLAGS_HAS_MOUSE_CURSORS: int              # Backend platform supports honoring getmousecursor() value to change the os cursor shape.
 BACKEND_FLAGS_HAS_SET_MOUSE_POS: int              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if io.confignavmovesetmousepos is set).
 BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: int        # Backend renderer supports imdrawcmd::vtxoffset. this enables output of large meshes (64k+ vertices) while still using 16-bit indices.
+BACKEND_FLAGS_RENDERER_HAS_TEXTURES: int          # Backend renderer supports imtexturedata requests to create/update/destroy textures. this enables incremental texture updates and texture reloads. see https://github.com/ocornut/imgui/blob/master/docs/backends.md for instructions on how to upgrade your custom backend.
 BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: int         # Backend platform supports multiple viewports.
 BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int     # Backend platform supports calling io.addmouseviewportevent() with the viewport under the mouse. if possible, ignore viewports with the imguiviewportflags_noinputs flag (win32 backend, glfw 3.30+ backend can do this, sdl backend cannot). if this cannot be done, dear imgui needs to use a flawed heuristic to find the viewport under.
 BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int         # Backend renderer supports multiple viewports.
@@ -822,6 +828,7 @@ COL_SEPARATOR_ACTIVE: int
 COL_RESIZE_GRIP: int                      # Resize grip in lower-right and lower-left corners of windows.
 COL_RESIZE_GRIP_HOVERED: int
 COL_RESIZE_GRIP_ACTIVE: int
+COL_INPUT_TEXT_CURSOR: int                # Inputtext cursor/caret
 COL_TAB_HOVERED: int                      # Tab background, when hovered
 COL_TAB: int                              # Tab background, when tab-bar is focused & tab is unselected
 COL_TAB_SELECTED: int                     # Tab background, when tab-bar is focused & tab is selected
@@ -841,7 +848,8 @@ COL_TABLE_BORDER_LIGHT: int               # Table inner borders (prefer using al
 COL_TABLE_ROW_BG: int                     # Table row background (even rows)
 COL_TABLE_ROW_BG_ALT: int                 # Table row background (odd rows)
 COL_TEXT_LINK: int                        # Hyperlink color
-COL_TEXT_SELECTED_BG: int
+COL_TEXT_SELECTED_BG: int                 # Selected text inside an inputtext
+COL_TREE_LINES: int                       # Tree node hierarchy outlines when using imguitreenodeflags_drawlines
 COL_DRAG_DROP_TARGET: int                 # Rectangle highlighting a drop target
 COL_NAV_CURSOR: int                       # Color of keyboard/gamepad navigation cursor/rectangle, when visible
 COL_NAV_WINDOWING_HIGHLIGHT: int          # Highlight window when using ctrl+tab
@@ -870,12 +878,17 @@ STYLE_VAR_SCROLLBAR_SIZE: int                      # Float     scrollbarsize
 STYLE_VAR_SCROLLBAR_ROUNDING: int                  # Float     scrollbarrounding
 STYLE_VAR_GRAB_MIN_SIZE: int                       # Float     grabminsize
 STYLE_VAR_GRAB_ROUNDING: int                       # Float     grabrounding
+STYLE_VAR_IMAGE_BORDER_SIZE: int                   # Float     imagebordersize
 STYLE_VAR_TAB_ROUNDING: int                        # Float     tabrounding
 STYLE_VAR_TAB_BORDER_SIZE: int                     # Float     tabbordersize
+STYLE_VAR_TAB_MIN_WIDTH_BASE: int                  # Float     tabminwidthbase
+STYLE_VAR_TAB_MIN_WIDTH_SHRINK: int                # Float     tabminwidthshrink
 STYLE_VAR_TAB_BAR_BORDER_SIZE: int                 # Float     tabbarbordersize
 STYLE_VAR_TAB_BAR_OVERLINE_SIZE: int               # Float     tabbaroverlinesize
 STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE: int          # Float     tableangledheadersangle
 STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN: int     # Imvec2  tableangledheaderstextalign
+STYLE_VAR_TREE_LINES_SIZE: int                     # Float     treelinessize
+STYLE_VAR_TREE_LINES_ROUNDING: int                 # Float     treelinesrounding
 STYLE_VAR_BUTTON_TEXT_ALIGN: int                   # Imvec2    buttontextalign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN: int               # Imvec2    selectabletextalign
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE: int          # Float     separatortextbordersize
@@ -900,9 +913,10 @@ COLOR_EDIT_FLAGS_NO_LABEL: int               # Coloredit, colorpicker: disable d
 COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW: int        # Colorpicker: disable bigger color preview on right side of the picker, use small color square preview instead.
 COLOR_EDIT_FLAGS_NO_DRAG_DROP: int           # Coloredit: disable drag and drop target. colorbutton: disable drag and drop source.
 COLOR_EDIT_FLAGS_NO_BORDER: int              # Colorbutton: disable border (which is enforced by default)
+COLOR_EDIT_FLAGS_ALPHA_OPAQUE: int           # Coloredit, colorpicker, colorbutton: disable alpha in the preview,. contrary to _noalpha it may still be edited when calling coloredit4()/colorpicker4(). for colorbutton() this does the same as _noalpha.
+COLOR_EDIT_FLAGS_ALPHA_NO_BG: int            # Coloredit, colorpicker, colorbutton: disable rendering a checkerboard background behind transparent color.
+COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF: int     # Coloredit, colorpicker, colorbutton: display half opaque / half transparent preview.
 COLOR_EDIT_FLAGS_ALPHA_BAR: int              # Coloredit, colorpicker: show vertical alpha bar/gradient in picker.
-COLOR_EDIT_FLAGS_ALPHA_PREVIEW: int          # Coloredit, colorpicker, colorbutton: display preview as a transparent color over a checkerboard, instead of opaque.
-COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF: int     # Coloredit, colorpicker, colorbutton: display half opaque / half checkerboard, instead of opaque.
 COLOR_EDIT_FLAGS_HDR: int                    # (wip) coloredit: currently only disable 0.0f..1.0f limits in rgba edition (note: you probably want to use imguicoloreditflags_float flag as well).
 COLOR_EDIT_FLAGS_DISPLAY_RGB: int            # [display]    // coloredit: override _display_ type among rgb/hsv/hex. colorpicker: select any combination using one or more of rgb/hsv/hex.
 COLOR_EDIT_FLAGS_DISPLAY_HSV: int            # [display]    // '
@@ -914,6 +928,7 @@ COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL: int       # [picker]     // colorpicker: whee
 COLOR_EDIT_FLAGS_INPUT_RGB: int              # [input]      // coloredit, colorpicker: input and output data in rgb format.
 COLOR_EDIT_FLAGS_INPUT_HSV: int              # [input]      // coloredit, colorpicker: input and output data in hsv format.
 COLOR_EDIT_FLAGS_DEFAULT_OPTIONS: int
+COLOR_EDIT_FLAGS_ALPHA_MASK: int
 COLOR_EDIT_FLAGS_DISPLAY_MASK: int
 COLOR_EDIT_FLAGS_DATA_TYPE_MASK: int
 COLOR_EDIT_FLAGS_PICKER_MASK: int
@@ -925,6 +940,7 @@ SLIDER_FLAGS_NO_INPUT: int               # Disable ctrl+click or enter key allow
 SLIDER_FLAGS_WRAP_AROUND: int            # Enable wrapping around from max to min and from min to max. only supported by dragxxx() functions for now.
 SLIDER_FLAGS_CLAMP_ON_INPUT: int         # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
 SLIDER_FLAGS_CLAMP_ZERO_RANGE: int       # Clamp even if min==max==0.0f. otherwise due to legacy reason dragxxx functions don't clamp with those values. when your clamping limits are dynamic you almost always want to use it.
+SLIDER_FLAGS_NO_SPEED_TWEAKS: int        # Disable keyboard modifiers altering tweak speed. useful if you want to alter tweak speed yourself based on your own logic.
 SLIDER_FLAGS_ALWAYS_CLAMP: int
 SLIDER_FLAGS_INVALID_MASK: int           # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
 MOUSE_BUTTON_LEFT: int
@@ -940,6 +956,8 @@ MOUSE_CURSOR_RESIZE_EW: int       # When hovering over a vertical border or a co
 MOUSE_CURSOR_RESIZE_NESW: int     # When hovering over the bottom-left corner of a window
 MOUSE_CURSOR_RESIZE_NWSE: int     # When hovering over the bottom-right corner of a window
 MOUSE_CURSOR_HAND: int            # (unused by dear imgui functions. use for e.g. hyperlinks)
+MOUSE_CURSOR_WAIT: int            # When waiting for something to process/load.
+MOUSE_CURSOR_PROGRESS: int        # When waiting for something to process/load, but application is still interactive.
 MOUSE_CURSOR_NOT_ALLOWED: int     # When hovering something with disallowed interaction. usually a crossed circle.
 MOUSE_CURSOR_COUNT: int
 MOUSE_SOURCE_MOUSE: int            # Input is coming from an actual mouse.
@@ -1061,10 +1079,21 @@ IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES: int             # Enable anti-aliased lin
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES_USE_TEX: int     # Enable anti-aliased lines/borders using textures when possible. require backend to render with bilinear filtering (not point/nearest filtering).
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_FILL: int              # Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
 IM_DRAW_LIST_FLAGS_ALLOW_VTX_OFFSET: int               # Can emit 'vtxoffset > 0' to allow large meshes. set when 'imguibackendflags_rendererhasvtxoffset' is enabled.
+IM_TEXTURE_FORMAT_RGBA_32: int     # 4 components per pixel, each is unsigned 8-bit. total size = texwidth * texheight * 4
+IM_TEXTURE_FORMAT_ALPHA8: int      # 1 component per pixel, each is unsigned 8-bit. total size = texwidth * texheight
+IM_TEXTURE_STATUS_OK: int
+IM_TEXTURE_STATUS_DESTROYED: int        # Backend destroyed the texture.
+IM_TEXTURE_STATUS_WANT_CREATE: int      # Requesting backend to create the texture. set status ok when done.
+IM_TEXTURE_STATUS_WANT_UPDATES: int     # Requesting backend to update specific blocks of pixels (write to texture portions which have never been used before). set status ok when done.
+IM_TEXTURE_STATUS_WANT_DESTROY: int     # Requesting backend to destroy the texture. set status to destroyed when done.
 IM_FONT_ATLAS_FLAGS_NONE: int
 IM_FONT_ATLAS_FLAGS_NO_POWER_OF_TWO_HEIGHT: int     # Don't round the height to next power of two
 IM_FONT_ATLAS_FLAGS_NO_MOUSE_CURSORS: int           # Don't build software mouse cursors into the atlas (save a little texture memory)
 IM_FONT_ATLAS_FLAGS_NO_BAKED_LINES: int             # Don't build thick line textures into the atlas (save a little texture memory, allow support for point/nearest filtering). the antialiasedlinesusetex features uses them, otherwise they will be rendered using polygons (more expensive for cpu/gpu).
+IM_FONT_FLAGS_NONE: int
+IM_FONT_FLAGS_NO_LOAD_ERROR: int        # Disable throwing an error/assert when calling addfontxxx() with missing file/data. calling code is expected to check addfontxxx() return value.
+IM_FONT_FLAGS_NO_LOAD_GLYPHS: int       # [internal] disable loading new glyphs.
+IM_FONT_FLAGS_LOCK_BAKED_SIZES: int     # [internal] disable loading new baked sizes, disable garbage collecting current ones. e.g. if you want to lock a font to a single size. important: if you use this to preload given sizes, consider the possibility of multiple font density used on retina display.
 VIEWPORT_FLAGS_NONE: int
 VIEWPORT_FLAGS_IS_PLATFORM_WINDOW: int         # Represent a platform window
 VIEWPORT_FLAGS_IS_PLATFORM_MONITOR: int        # Represent a platform monitor (unused yet)
@@ -1198,8 +1227,9 @@ def begin_list_box(label: str, size: Tuple[float, float]=(0, 0)) -> bool:
     """
     Widgets: List Boxes
     - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.
+    - If you don't need a label you can probably simply use BeginChild() with the ImGuiChildFlags_FrameStyle flag for the same result.
     - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.
-    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analoguous to how Combos are created.
+    - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analogous to how Combos are created.
     - Choose frame width:   size.x > 0.0f: custom  /  size.x < 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth
     - Choose frame height:  size.y > 0.0f: custom  /  size.y < 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items
     Open a framed scrolling region
@@ -1373,6 +1403,8 @@ def button(label: str, size: tuple=(0, 0)) -> bool:
 #     """
 #     pass
 
+# def c_impl_glfw_get_content_scale_for_monitor(monitor: GLFWmonitor) -> float: ...
+# def c_impl_glfw_get_content_scale_for_window(window: GLFWwindow) -> float: ...
 def c_impl_glfw_init_for_open_gl(window, install_callbacks: bool) -> bool:
     """
     Follow "Getting Started" link and check examples/ folder to learn about using backends!
@@ -1416,15 +1448,13 @@ def c_impl_glfw_shutdown() -> None: ...
 #     """
 #     pass
 
-# def c_impl_open_gl3_create_device_objects() -> bool: ...
-# def c_impl_open_gl3_create_fonts_texture() -> bool:
+# def c_impl_open_gl3_create_device_objects() -> bool:
 #     """
 #     (Optional) Called by Init/NewFrame/Shutdown
 #     """
 #     pass
 
 # def c_impl_open_gl3_destroy_device_objects() -> None: ...
-# def c_impl_open_gl3_destroy_fonts_texture() -> None: ...
 def c_impl_open_gl3_init(glsl_version: str=None) -> bool:
     """
     Follow "Getting Started" link and check examples/ folder to learn about using backends!
@@ -1435,6 +1465,12 @@ def c_impl_open_gl3_init(glsl_version: str=None) -> bool:
 def c_impl_open_gl3_new_frame() -> None: ...
 def c_impl_open_gl3_render_draw_data(draw_data: ImDrawData) -> None: ...
 def c_impl_open_gl3_shutdown() -> None: ...
+# def c_impl_open_gl3_update_texture(tex: Any) -> None:
+#     """
+#     (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = NULL to handle this manually.
+#     """
+#     pass
+
 def calc_item_width() -> float:
     """
     Width of item given pushed settings and current cursor position. not necessarily the width of last item unlike most 'item' functions.
@@ -1858,27 +1894,33 @@ def get_drag_drop_payload() -> ImGuiPayload:
 
 def get_draw_data() -> ImDrawData:
     """
-    Valid after render() and until the next call to newframe(). this is what you have to render.
+    Valid after render() and until the next call to newframe(). call imgui_implxxxx_renderdrawdata() function in your renderer backend to render.
     """
     pass
 
 def get_font() -> ImFont:
     """
-    Style read access
-    - Use the ShowStyleEditor() function to interactively see/edit the colors.
     Get current font
     pygui note: Returns a const ImFont. Fields should only be read, not modified.
     """
     pass
 
+# def get_font_baked() -> ImFontBaked:
+#     """
+#     Get current font bound at current size // == getfont()->getfontbaked(getfontsize())
+#     """
+#     pass
+
 def get_font_size() -> float:
     """
-    Get current font size (= height in pixels) of current font with current scale applied
+    Get current scaled font size (= height in pixels). after global scale factors applied. *important* do not pass this value to pushfont()! use imgui::getstyle().fontsizebase to get value before global scale factors.
     """
     pass
 
 def get_font_tex_uv_white_pixel() -> Tuple[float, float]:
     """
+    Style read access
+    - Use the ShowStyleEditor() function to interactively see/edit the colors.
     Get uv coordinate for a white pixel, useful to draw custom shapes via the imdrawlist api
     """
     pass
@@ -2131,22 +2173,54 @@ def get_window_width() -> float:
 #     """
 #     pass
 
-def image(user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), tint_col: tuple=(1, 1, 1, 1), border_col: tuple=(0, 0, 0, 0)) -> None:
+def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)) -> None:
     """
     Widgets: Images
-    - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
+    - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-    - Note that Image() may add +2.0f to provided size if a border is visible, ImageButton() adds style.FramePadding*2.0f to provided size.
+    - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
     - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
-    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), tint_col = imvec4(1, 1, 1, 1), border_col = imvec4(0, 0, 0, 0)
+    - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
+    Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1)
     """
     pass
 
-def image_button(str_id: str, user_texture_id: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
+def image_button(str_id: str, tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
     pass
+
+# def image_with_bg(tex_ref: ImTextureRef, image_size: Tuple[float, float]) -> None:
+#     """
+#     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
+#     """
+#     pass
+
+# def image_with_bg_ex(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: Tuple[float, float]=(0, 0), uv1: Tuple[float, float]=(1, 1), bg_col: Tuple[float, float, float, float]=(0, 0, 0, 0), tint_col: Tuple[float, float, float, float]=(1, 1, 1, 1)) -> None: ...
+# def imgui_platform_io_set_platform_get_window_framebuffer_scale(getWindowFramebufferScaleFunc: Callable) -> None:
+#     """
+#     Set imguiplatformio::platform_getwindowframebufferscale in a c-compatible mannner
+#     """
+#     pass
+
+# def imgui_platform_io_set_platform_get_window_pos(getWindowPosFunc: Callable) -> None:
+#     """
+#     Set imguiplatformio::platform_getwindowpos in a c-compatible mannner
+#     """
+#     pass
+
+# def imgui_platform_io_set_platform_get_window_size(getWindowSizeFunc: Callable) -> None:
+#     """
+#     Set imguiplatformio::platform_getwindowsize in a c-compatible mannner
+#     """
+#     pass
+
+# def imgui_platform_io_set_platform_get_window_work_area_insets(getWindowWorkAreaInsetsFunc: Callable) -> None:
+#     """
+#     Set imguiplatformio::platform_getwindowworkareainsets in a c-compatible mannner
+#     """
+#     pass
 
 def indent(indent_w: float=0.0) -> None:
     """
@@ -2353,6 +2427,12 @@ def is_mouse_released(button: int) -> bool:
     Did mouse button released? (went from down to !down)
     """
     pass
+
+# def is_mouse_released_with_delay(button: int, delay: float) -> bool:
+#     """
+#     Delayed mouse release (use very sparingly!). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test. this is a very rarely used ui idiom, but some apps use this: e.g. ms explorer single click on an icon to rename.
+#     """
+#     pass
 
 def is_popup_open(str_id: str, flags: int=0) -> bool:
     """
@@ -2563,12 +2643,27 @@ def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), o
 #     """
 #     pass
 
-def push_font(font: ImFont) -> None:
-    """
-    Parameters stacks (shared)
-    Use null as a shortcut to push default font
-    """
-    pass
+# def push_font_float(font: ImFont, font_size_base_unscaled: float) -> None:
+#     """
+#     Parameters stacks (font)
+#     - PushFont(font, 0.0f)                       // Change font and keep current size
+#     - PushFont(NULL, 20.0f)                      // Keep font and change current size
+#     - PushFont(font, 20.0f)                      // Change font and set size to 20.0f
+#     - PushFont(font, style.FontSizeBase * 2.0f)  // Change font and set size to be twice bigger than current size.
+#     - PushFont(font, font->LegacySize)           // Change font and set size to size passed to AddFontXXX() function. Same as pre-1.92 behavior.
+#     *IMPORTANT* before 1.92, fonts had a single size. They can now be dynamically be adjusted.
+#     - In 1.92 we have REMOVED the single parameter version of PushFont() because it seems like the easiest way to provide an error-proof transition.
+#     - PushFont(font) before 1.92 = PushFont(font, font->LegacySize) after 1.92          // Use default font size as passed to AddFontXXX() function.
+#     *IMPORTANT* global scale factors are applied over the provided size.
+#     - Global scale factors are: 'style.FontScaleMain', 'style.FontScaleDpi' and maybe more.
+#     -  If you want to apply a factor to the _current_ font size:
+#     - CORRECT:   PushFont(NULL, style.FontSizeBase)         // use current unscaled size    == does nothing
+#     - CORRECT:   PushFont(NULL, style.FontSizeBase * 2.0f)  // use current unscaled size x2 == make text twice bigger
+#     - INCORRECT: PushFont(NULL, GetFontSize())              // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+#     - INCORRECT: PushFont(NULL, GetFontSize() * 2.0f)       // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+#     Use null as a shortcut to keep current font. use 0.0f to keep current size.
+#     """
+#     pass
 
 def push_id(obj: object) -> None:
     """
@@ -2608,6 +2703,7 @@ def push_item_width(item_width: float) -> None:
 
 def push_style_color(idx: int, col: "int | tuple") -> None:
     """
+    Parameters stacks (shared)
     Modify a style color. always use this if you modify the style after newframe().
     pygui note: You can pass a u32 color or a 0-1, length 4 tuple for color.
     """
@@ -2718,7 +2814,7 @@ def separator() -> None:
 
 def separator_text(label: str) -> None:
     """
-    Currently: formatted text with an horizontal line
+    Currently: formatted text with a horizontal line
     """
     pass
 
@@ -2778,7 +2874,7 @@ def set_drag_drop_payload(type_: str, data: Any, cond: int=0) -> bool:
 def set_item_default_focus() -> None:
     """
     Focus, Activation
-    Make last item the default focused item of of a newly appearing window.
+    Make last item the default focused item of a newly appearing window.
     """
     pass
 
@@ -2827,7 +2923,7 @@ def set_mouse_cursor(cursor_type: int) -> None:
 
 # def set_next_frame_want_capture_mouse(want_capture_mouse: bool) -> None:
 #     """
-#     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instucts your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+#     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
 #     """
 #     pass
 
@@ -3001,12 +3097,6 @@ def set_tooltip(fmt: str) -> None:
 # def set_window_focus_str(name: str) -> None:
 #     """
 #     Set named window to be focused / top-most. use null to remove focus.
-#     """
-#     pass
-
-# def set_window_font_scale(scale: float) -> None:
-#     """
-#     [obsolete] set font scale. adjust io.fontglobalscale if you want to scale all windows. this is an old api! for correct scaling, prefer to reload font + rebuild imfontatlas + call style.scaleallsizes().
 #     """
 #     pass
 
@@ -3247,7 +3337,7 @@ def tab_item_button(label: str, flags: int=0) -> bool:
 
 # def table_get_row_index() -> int:
 #     """
-#     Return current row index.
+#     Return current row index (header rows are accounted for)
 #     """
 #     pass
 
@@ -3349,7 +3439,7 @@ def text_link(label: str) -> bool:
     """
     pass
 
-def text_link_open_url(label: str, url: str=None) -> None:
+def text_link_open_url(label: str, url: str=None) -> bool:
     """
     Hyperlink text button, automatically open file/url when clicked
     """
@@ -3422,7 +3512,7 @@ class ImDrawCmd:
     - VtxOffset: When 'io.BackendFlags & ImGuiBackendFlags_RendererHasVtxOffset' is enabled,
     this fields allow us to render meshes larger than 64K vertices while keeping 16-bit indices.
     Backends made for <1.71. will typically ignore the VtxOffset fields.
-    - The ClipRect/TextureId/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
+    - The ClipRect/TexRef/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).
     """
     clip_rect: Tuple[float, float, float, float]
     """
@@ -3436,9 +3526,9 @@ class ImDrawCmd:
     """
     4    // start offset in index buffer.
     """
-    # texture_id: object
+    # tex_ref: ImTextureRef
     # """
-    # 4-8  // user-provided texture id. set by user in imfontatlas::settexid() for fonts or passed to image*() functions. ignore if never using images or multiple fonts atlas.
+    # 16   // reference to a font/texture atlas (where backend called imtexturedata::settexid()) or to a user-provided texture id (via e.g. imgui::image() calls). both will lead to a imtextureid value.
     # """
     # user_callback: Callable
     # """
@@ -3463,6 +3553,8 @@ class ImDrawCmd:
     # def get_tex_id(self: ImDrawCmd) -> Any:
     #     """
     #     Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
+    #     Since 1.92: removed ImDrawCmd::TextureId field, the getter function must be used!
+    #     == (texref._texdata ? texref._texdata->texid : texref._texid
     #     """
     #     pass
 
@@ -3477,7 +3569,7 @@ class ImDrawData:
     """
     cmd_lists_count: int
     """
-    Number of imdrawlist* to render
+    == cmdlists.size. (obsolete: exists for legacy reasons). number of imdrawlist* to render.
     """
     # display_pos: Tuple[float, float]
     # """
@@ -3489,11 +3581,15 @@ class ImDrawData:
     # """
     # framebuffer_scale: Tuple[float, float]
     # """
-    # Amount of pixels for each unit of displaysize. based on io.displayframebufferscale. generally (1,1) on normal display, (2,2) on osx with retina display.
+    # Amount of pixels for each unit of displaysize. copied from viewport->framebufferscale (== io.displayframebufferscale for main viewport). generally (1,1) on normal display, (2,2) on osx with retina display.
     # """
     # owner_viewport: ImGuiViewport
     # """
     # Viewport carrying the imdrawdata instance, might be of use to the renderer (generally not).
+    # """
+    # textures: ImVector_ImTextureDataPtr
+    # """
+    # List of textures to update. most of the times the list is shared by all imdrawdata, has only 1 texture and it doesn't need any update. this almost always points to imgui::getplatformio().textures[]. may be overriden or set to null if you want to manually update textures.
     # """
     # total_idx_count: int
     # """
@@ -3560,6 +3656,10 @@ class ImDrawList:
     """
     Pointer to owner window's name for debugging
     """
+    # texture_stack: ImVector_ImTextureRef
+    # """
+    # [internal]
+    # """
     vtx_buffer: List[ImDrawVert]
     """
     Vertex buffer.
@@ -3605,18 +3705,18 @@ class ImDrawList:
 
     def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
     def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0) -> None: ...
-    def add_image(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
+    def add_image(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
         """
         Image primitives
-        - Read FAQ to understand what ImTextureID is.
+        - Read FAQ to understand what ImTextureID/ImTextureRef are.
         - "p_min" and "p_max" represent the upper-left and lower-right corners of the rectangle.
         - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
         Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
         """
         pass
 
-    def add_image_quad(self: ImDrawList, user_texture_id: int, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
-    def add_image_rounded(self: ImDrawList, user_texture_id: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0) -> None: ...
+    def add_image_quad(self: ImDrawList, tex_ref: ImTextureRef, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
+    def add_image_rounded(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0) -> None: ...
     def add_line(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], col: int, thickness: float=1.0) -> None:
         """
         Primitives
@@ -3635,7 +3735,7 @@ class ImDrawList:
         """
         General polygon
         - Only simple polygons are supported by filling functions (no self-intersections, no holes).
-        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience fo user but not used by main library.
+        - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience for the user but not used by the main library.
         """
         pass
 
@@ -3655,7 +3755,6 @@ class ImDrawList:
 
     def add_rect_filled_multi_color(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col_upr_left: int, col_upr_right: int, col_bot_right: int, col_bot_left: int) -> None: ...
     def add_text(self: ImDrawList, pos: Tuple[float, float], col: int, text: str) -> None: ...
-    def add_text_imfont(self: ImDrawList, font: ImFont, font_size: float, pos: tuple, col: int, text: str, wrap_width: float=0.0, cpu_fine_clip_rect: Tuple[float, float, float, float]=None) -> None: ...
     def add_triangle(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int, thickness: float=1.0) -> None: ...
     def add_triangle_filled(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], col: int) -> None: ...
     def channels_merge(self: ImDrawList) -> None: ...
@@ -3677,6 +3776,7 @@ class ImDrawList:
     #     """
     #     pass
 
+    # def on_changed_texture(self: ImDrawList) -> None: ...
     def path_arc_to(self: ImDrawList, center: Tuple[float, float], radius: float, a_min: float, a_max: float, num_segments: int=0) -> None: ...
     def path_arc_to_fast(self: ImDrawList, center: Tuple[float, float], radius: float, a_min_of_12: int, a_max_of_12: int) -> None:
         """
@@ -3725,7 +3825,7 @@ class ImDrawList:
     def path_rect(self: ImDrawList, rect_min: Tuple[float, float], rect_max: Tuple[float, float], rounding: float=0.0, flags: int=0) -> None: ...
     def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0) -> None: ...
     def pop_clip_rect(self: ImDrawList) -> None: ...
-    # def pop_texture_id(self: ImDrawList) -> None: ...
+    # def pop_texture(self: ImDrawList) -> None: ...
     def push_clip_rect(self: ImDrawList, clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[float, float], intersect_with_current_clip_rect: bool=False) -> None:
         """
         Render-level scissoring. this is passed down to your render function but not used for cpu-side coarse clipping. prefer using higher-level imgui::pushcliprect() to affect logic (hit-testing and widget culling)
@@ -3733,8 +3833,14 @@ class ImDrawList:
         pass
 
     # def push_clip_rect_full_screen(self: ImDrawList) -> None: ...
-    # def push_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
-    # def set_texture_id(self: ImDrawList, texture_id: Any) -> None: ...
+    # def push_texture(self: ImDrawList, tex_ref: ImTextureRef) -> None: ...
+    # def set_draw_list_shared_data(self: ImDrawList, data: ImDrawListSharedData) -> None:
+    #     """
+    #     [Internal helpers]
+    #     """
+    #     pass
+
+    # def set_texture(self: ImDrawList, tex_ref: ImTextureRef) -> None: ...
 
 class ImDrawListSplitter:
     """
@@ -3767,98 +3873,64 @@ class ImDrawVert:
 class ImFont:
     """
     Font runtime data and rendering
-    ImFontAtlas automatically loads a default embedded font for you when you call GetTexDataAsAlpha8() or GetTexDataAsRGBA32().
-    """
-    ascent: float
-    """
-    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
-    """
-    config_data: ImFontConfig
-    """
-    4-8   // in  //// pointer within containeratlas->configdata to configdatacount instances
-    pygui note: Returns a const ImFontConfig. Fields should only be read,
-    not modified.
-    """
-    config_data_count: int
-    """
-    2 // in  // ~ 1// number of imfontconfig involved in creating this font. bigger than 1 when merging multiple font sources into one imfont.
+    - ImFontAtlas automatically loads a default embedded font for you if you didn't load one manually.
+    - Since 1.92.X a font may be rendered as any size! Therefore a font doesn't have one specific size.
+    - Use 'font->GetFontBaked(size)' to retrieve the ImFontBaked* corresponding to a given size.
+    - If you used g.Font + g.FontSize (which is frequent from the ImGui layer), you can use g.FontBaked as a shortcut, as g.FontBaked == g.Font->GetFontBaked(g.FontSize).
     """
     container_atlas: ImFontAtlas
     """
-    [Internal] Members: Cold ~32/40 bytes
-    Conceptually ConfigData[] is the list of font sources merged to create this font.
-    4-8   // out //// what we has been loaded into
+    4-8 what we have been loaded into.
     """
-    descent: float
-    """
-    4+4   // out //// ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
-    """
-    dirty_lookup_tables: bool
-    """
-    1 // out //
-    """
+    # current_rasterizer_density: float
+    # """
+    # Current rasterizer density. this is a varying state of the font.
+    # """
+    # ellipsis_auto_bake: bool
+    # """
+    # 1     //     // mark when the '...' glyph needs to be generated.
+    # """
     ellipsis_char: int
     """
-    2-4// out // = '...'/'.'// character used for ellipsis rendering.
-    """
-    ellipsis_char_count: int
-    """
-    1 // out // 1 or 3
-    """
-    ellipsis_char_step: float
-    """
-    4 // out   // step between characters when ellipsiscount > 0
-    """
-    ellipsis_width: float
-    """
-    4 // out   // width
-    """
-    fallback_advance_x: float
-    """
-    4 // out // = fallbackglyph->advancex
+    2-4// out // character used for ellipsis rendering ('...').
     """
     fallback_char: int
     """
-    2-4// out // = fffd/'?' // character used if a glyph isn't found.
+    2-4// out // character used if a glyph isn't found (u+fffd, '?')
     """
-    fallback_glyph: ImFontGlyph
-    """
-    4-8   // out // = findglyph(fontfallbackchar)
-    """
-    font_size: float
-    """
-    4 // in  //// height of characters/line, set during loading (don't change after loading)
-    """
-    glyphs: List[ImFontGlyph]
-    """
-    12-16 // out //// all glyphs.
-    """
-    index_advance_x: List[float]
-    """
-    [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
-    12-16 // out //// sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
-    """
-    index_lookup: List[int]
-    """
-    [Internal] Members: Hot ~28/40 bytes (for RenderText loop)
-    12-16 // out //// sparse. index glyphs by unicode code-point.
-    """
-    metrics_total_surface: int
-    """
-    4 // out //// total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
-    """
-    scale: float
-    """
-    4 // in  // = 1.f  // base font scale, multiplied by the per-window font scale which you can adjust with setwindowfontscale()
-    """
-    used4k_pages_map: bytes
-    """
-    2 bytes if imwchar=imwchar16, 34 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
-    """
+    # flags: int
+    # """
+    # 4     // font flags.
+    # """
+    # font_id: int
+    # """
+    # [Internal] Members: Cold ~24-52 bytes
+    # Conceptually Sources[] is the list of font sources merged to create this font.
+    # Unique identifier for the font
+    # """
+    # last_baked: ImFontBaked
+    # """
+    # [Internal] Members: Hot ~12-20 bytes
+    # 4-8   // cache last bound baked. never use directly. use getfontbaked().
+    # """
+    # legacy_size: float
+    # """
+    # 4     // in  // font size passed to addfont(). use for old code calling pushfont() expecting to use that size. (use imgui::getfontbaked() to get font baked at current bound size).
+    # """
+    # remap_pairs: ImGuiStorage
+    # """
+    # 16    //     // remapping pairs when using addremapchar(), otherwise empty.
+    # """
+    # sources: ImVector_ImFontConfigPtr
+    # """
+    # 16    // in  // list of sources. pointers within containeratlas->sources[]
+    # """
+    # used8k_pages_map: int
+    # """
+    # 1 bytes if imwchar=imwchar16, 16 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+    # """
     # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str) -> Tuple[float, float]:
     #     """
-    #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
-    #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
     #     Implied text_end = null, remaining = null
     #     """
     #     pass
@@ -3869,11 +3941,36 @@ class ImFont:
     #     """
     #     pass
 
-    # def calc_word_wrap_position_a(self: ImFont, scale: float, text: str, text_end: str, wrap_width: float) -> str: ...
-    # def find_glyph(self: ImFont, c: int) -> ImFontGlyph: ...
-    # def find_glyph_no_fallback(self: ImFont, c: int) -> ImFontGlyph: ...
-    def get_debug_name(self: ImFont) -> str: ...
-    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int) -> None: ...
+    # def calc_word_wrap_position(self: ImFont, size: float, text: str, text_end: str, wrap_width: float) -> str: ...
+    def get_debug_name(self: ImFont) -> str:
+        """
+        Fill imfontconfig::name.
+        """
+        pass
+
+    # def get_font_baked(self: ImFont, font_size: float) -> ImFontBaked:
+    #     """
+    #     [Internal] Don't use!
+    #     'max_width' stops rendering after a certain width (could be turned into a 2d size). FLT_MAX to disable.
+    #     'wrap_width' enable automatic word-wrapping across multiple lines to fit into given width. 0.0f to disable.
+    #     Implied density = -1.0f
+    #     """
+    #     pass
+
+    # def get_font_baked_ex(self: ImFont, font_size: float, density: float=-1.0) -> ImFontBaked:
+    #     """
+    #     Get or create baked data for given size
+    #     """
+    #     pass
+
+    # def is_glyph_in_font(self: ImFont, c: int) -> bool: ...
+    # def render_char(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int) -> None:
+    #     """
+    #     Implied cpu_fine_clip = null
+    #     """
+    #     pass
+
+    # def render_char_ex(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int, cpu_fine_clip: ImVec4=None) -> None: ...
     # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False) -> None: ...
 
 class ImFontAtlas:
@@ -3882,12 +3979,14 @@ class ImFontAtlas:
     - One or more fonts.
     - Custom graphics data needed to render the shapes needed by Dear ImGui.
     - Mouse cursor shapes for software cursor rendering (unless setting 'Flags |= ImFontAtlasFlags_NoMouseCursors' in the font atlas).
-    It is the user-code responsibility to setup/build the atlas, then upload the pixel data into a texture accessible by your graphics api.
-    - Optionally, call any of the AddFont*** functions. If you don't call any, the default font embedded in the code will be loaded for you.
-    - Call GetTexDataAsAlpha8() or GetTexDataAsRGBA32() to build and retrieve pixels data.
-    - Upload the pixels data into a texture within your graphics system (see imgui_impl_xxxx.cpp examples)
+    - If you don't call any AddFont*** functions, the default font embedded in the code will be loaded for you.
+    It is the rendering backend responsibility to upload texture into your graphics API:
+    - ImGui_ImplXXXX_RenderDrawData() functions generally iterate platform_io->Textures[] to create/update/destroy each ImTextureData instance.
+    - Backend then set ImTextureData's TexID and BackendUserData.
+    - Texture id are passed back to you during rendering to identify the texture. Read FAQ entry about ImTextureID/ImTextureRef for more details.
+    Legacy path:
+    - Call Build() + GetTexDataAsAlpha8() or GetTexDataAsRGBA32() to build and retrieve pixels data.
     - Call SetTexID(my_tex_id); and pass the pointer/identifier to your texture in a format natural to your graphics API.
-    This value will be passed back to you during rendering to identify the texture. Read FAQ entry about ImTextureID for more details.
     Common pitfalls:
     - If you pass a 'glyph_ranges' array to AddFont*** functions, you need to make sure that your array persist up until the
     atlas is build (when calling GetTexData*** or Build()). We only copy the pointer, not the data.
@@ -3896,381 +3995,575 @@ class ImFontAtlas:
     - Even though many functions are suffixed with "TTF", OTF data is supported just as well.
     - This is an old API and it is currently awkward for those and various other reasons! We will address them in the future!
     """
-    config_data: List[ImFontConfig]
-    """
-    Configuration data
-    """
-    custom_rects: List[ImFontAtlasCustomRect]
-    """
-    Rectangles for packing custom texture data into the atlas.
-    """
+    # builder: ImFontAtlasBuilder
+    # """
+    # Opaque interface to our data that doesn't need to be public and may be discarded when rebuilding.
+    # """
+    # draw_list_shared_datas: ImVector_ImDrawListSharedDataPtr
+    # """
+    # List of users for this atlas. typically one per dear imgui context.
+    # """
     flags: int
     """
+    Input
     Build flags (see imfontatlasflags_)
     """
-    font_builder_flags: int
-    """
-    Shared flags (for all fonts) for custom font builder. this is build implementation dependent. per-font override is also available in imfontconfig.
-    """
-    font_builder_io: ImFontBuilderIO
-    """
-    [Internal] Font builder
-    Opaque interface to a font builder (default to stb_truetype, can be changed to use freetype by defining imgui_enable_freetype).
-    """
+    # font_loader: ImFontLoader
+    # """
+    # Font loader opaque interface (default to use freetype when imgui_enable_freetype is defined, otherwise default to use stb_truetype). use setfontloader() to change this at runtime.
+    # """
+    # font_loader_data: Any
+    # """
+    # Font backend opaque storage
+    # """
+    # font_loader_flags: int
+    # """
+    # Shared flags (for all fonts) for font loader. this is build implementation dependent (e.g. per-font override is also available in imfontconfig).
+    # """
+    # font_loader_name: str
+    # """
+    # Font loader name (for display e.g. in about box) == fontloader->name
+    # """
+    # font_next_unique_id: int
+    # """
+    # Next value to be stored in imfont->fontid
+    # """
     fonts: List[ImFont]
     """
     Hold all the fonts returned by addfont*. fonts[0] is the default font upon calling imgui::newframe(), use imgui::pushfont()/popfont() to change the current font.
     """
     locked: bool
     """
-    Marked as locked by imgui::newframe() so attempt to modify the atlas will assert.
+    Marked as locked during imgui::newframe()..endframe() scope if texupdates are not supported. any attempt to modify the atlas will assert.
     """
-    pack_id_lines: int
-    """
-    Custom texture rectangle id for baked anti-aliased lines
-    """
-    pack_id_mouse_cursors: int
-    """
-    [Internal] Packing data
-    Custom texture rectangle id for white pixel and mouse cursors
-    """
-    tex_desired_width: int
-    """
-    Texture width desired by user before build(). must be a power-of-two. if have many glyphs your graphics api have texture size restrictions you may want to increase texture width to decrease height.
-    """
+    # owner_context: ImGuiContext
+    # """
+    # Context which own the atlas will be in charge of updating and destroying it.
+    # """
+    # ref_count: int
+    # """
+    # Number of contexts using this atlas
+    # """
+    # renderer_has_textures: bool
+    # """
+    # Copy of (backendflags & imguibackendflags_rendererhastextures) from supporting context.
+    # """
+    # sources: ImVector_ImFontConfig
+    # """
+    # Source/configuration data
+    # """
+    # tex_data: ImTextureData
+    # """
+    # Latest texture.
+    # """
+    # tex_desired_format: Any
+    # """
+    # Desired texture format (default to imtextureformat_rgba32 but may be changed to imtextureformat_alpha8).
+    # """
     tex_glyph_padding: int
     """
     Fixme: should be called 'texpackpadding'. padding between glyphs within texture in pixels. defaults to 1. if your rendering method doesn't rely on bilinear filtering you may set this to 0 (will also need to set antialiasedlinesusetex = false).
     """
-    tex_height: int
-    """
-    Texture height calculated during build().
-    """
-    tex_id: int
-    """
-    User data to refer to the texture once it has been uploaded to user's graphic systems. it is passed back to you during rendering via the imdrawcmd structure.
-    """
-    tex_pixels_alpha8: bytes
-    """
-    1 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight
-    """
-    tex_pixels_rgba_32: bytes
-    """
-    4 component per pixel, each component is unsigned 8-bit. total size = texwidth * texheight * 4
-    """
+    # tex_is_built: bool
+    # """
+    # Set when texture was built matching current font input. mostly useful for legacy isbuilt() call.
+    # """
+    # tex_list: ImVector_ImTextureDataPtr
+    # """
+    # [Internal]
+    # Texture list (most often texlist.size == 1). texdata is always == texlist.back(). do not use directly, use getdrawdata().textures[]/getplatformio().textures[] instead!
+    # """
+    # tex_max_height: int
+    # """
+    # Maximum desired texture height. must be a power of two. default to 8192.
+    # """
+    # tex_max_width: int
+    # """
+    # Maximum desired texture width. must be a power of two. default to 8192.
+    # """
+    # tex_min_height: int
+    # """
+    # Minimum desired texture height. must be a power of two. default to 128.
+    # """
+    # tex_min_width: int
+    # """
+    # Minimum desired texture width. must be a power of two. default to 512.
+    # """
+    # tex_next_unique_id: int
+    # """
+    # Next value to be stored in texdata->uniqueid
+    # """
     tex_pixels_use_colors: bool
     """
-    Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format.
+    Tell whether our texture data is known to use colors (rather than just alpha channel), in order to help backend select a format or conversion process.
     """
-    tex_ready: bool
-    """
-    [Internal]
-    NB: Access texture data via GetTexData*() calls! Which will setup a default font for you.
-    Set when texture was built matching current font input
-    """
+    # tex_ref: ImTextureRef
+    # """
+    # Latest texture identifier == texdata->gettexref().
+    # """
     tex_uv_lines: Vec4
     """
     Uvs for baked anti-aliased lines
     """
     tex_uv_scale: Tuple[float, float]
     """
-    = (1.0f/texwidth, 1.0f/texheight)
+    = (1.0f/texdata->texwidth, 1.0f/texdata->texheight). may change as new texture gets created.
     """
     tex_uv_white_pixel: Tuple[float, float]
     """
-    Texture coordinates to a white pixel
-    """
-    tex_width: int
-    """
-    Texture width calculated during build().
+    Texture coordinates to a white pixel. may change as new texture gets created.
     """
     # user_data: Any
     # """
     # Store your own atlas related user-data (if e.g. you have multiple font atlas).
     # """
-    # def add_custom_rect_font_glyph(self: ImFontAtlas, font: ImFont, id_: int, width: int, height: int, advance_x: float, offset: Tuple[float, float]=(0, 0)) -> int: ...
-    # def add_custom_rect_regular(self: ImFontAtlas, width: int, height: int) -> int:
+    # def add_custom_rect(self: ImFontAtlas, width: int, height: int, out_r: ImFontAtlasRect=None) -> int:
     #     """
-    #     You can request arbitrary rectangles to be packed into the atlas, for your own purposes.
-    #     - After calling Build(), you can query the rectangle position and render your pixels.
-    #     - If you render colored output, set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
-    #     - You can also request your rectangles to be mapped as font glyph (given a font + Unicode point),
-    #     so you can render e.g. custom colorful icons and use them as regular glyphs.
+    #     Register and retrieve custom rectangles
+    #     - You can request arbitrary rectangles to be packed into the atlas, for your own purpose.
+    #     - Since 1.92.X, packing is done immediately in the function call (previously packing was done during the Build call)
+    #     - You can render your pixels into the texture right after calling the AddCustomRect() functions.
+    #     - VERY IMPORTANT:
+    #     - Texture may be created/resized at any time when calling ImGui or ImFontAtlas functions.
+    #     - IT WILL INVALIDATE RECTANGLE DATA SUCH AS UV COORDINATES. Always use latest values from GetCustomRect().
+    #     - UV coordinates are associated to the current texture identifier aka 'atlas->TexRef'. Both TexRef and UV coordinates are typically changed at the same time.
+    #     - If you render colored output into your custom rectangles: set 'atlas->TexPixelsUseColors = true' as this may help some backends decide of preferred texture format.
     #     - Read docs/FONTS.md for more details about using colorful icons.
-    #     - Note: this API may be redesigned later in order to support multi-monitor varying DPI settings.
+    #     - Note: this API may be reworked further in order to facilitate supporting e.g. multi-monitor, varying DPI settings.
+    #     - (Pre-1.92 names) ------------> (1.92 names)
+    #     - GetCustomRectByIndex()   --> Use GetCustomRect()
+    #     - CalcCustomRectUV()       --> Use GetCustomRect() and read uv0, uv1 fields.
+    #     - AddCustomRectRegular()   --> Renamed to AddCustomRect()
+    #     - AddCustomRectFontGlyph() --> Prefer using custom ImFontLoader inside ImFontConfig
+    #     - ImFontAtlasCustomRect    --> Renamed to ImFontAtlasRect
+    #     Register a rectangle. return -1 (imfontatlasrectid_invalid) on error.
     #     """
     #     pass
 
     # def add_font(self: ImFontAtlas, font_cfg: ImFontConfig) -> ImFont: ...
     def add_font_default(self: ImFontAtlas, font_cfg: ImFontConfig=None) -> ImFont: ...
-    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None) -> ImFont:
+    def add_font_from_file_ttf(self: ImFontAtlas, filename: str, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: ImGlyphRange=None) -> ImFont:
         """
         pygui note: The ImFontConfig is copied in ImGui so there is no need to
         keep the object alive after calling this function.
         """
         pass
 
-    # def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
+    # def add_font_from_memory_compressed_base85_ttf(self: ImFontAtlas, compressed_font_data_base85: str, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
     #     """
     #     pass
 
-    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
+    # def add_font_from_memory_compressed_ttf(self: ImFontAtlas, compressed_font_data: Any, compressed_font_data_size: int, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     'compressed_font_data' still owned by caller. compress with binary_to_compressed_c.cpp.
     #     """
     #     pass
 
-    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
+    # def add_font_from_memory_ttf(self: ImFontAtlas, font_data: Any, font_data_size: int, size_pixels: float=0.0, font_cfg: ImFontConfig=None, glyph_ranges: int=None) -> ImFont:
     #     """
     #     Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
     #     """
     #     pass
 
-    def build(self: ImFontAtlas) -> bool:
-        """
-        Build atlas, retrieve pixel data.
-        User is in charge of copying the pixels into graphics memory (e.g. create a texture with your engine). Then store your texture handle with SetTexID().
-        The pitch is always = Width * BytesPerPixels (1 or 4)
-        Building in RGBA32 format is provided for convenience and compatibility, but note that unless you manually manipulate or copy color data into
-        the texture (e.g. when using the AddCustomRect*** api), then the RGB pixels emitted will always be white (~75% of memory/bandwidth waste.
-        Build pixels data. this is called automatically for you by the gettexdata*** functions.
-        """
-        pass
-
-    # def calc_custom_rect_uv(self: ImFontAtlas, rect: ImFontAtlasCustomRect, out_uv_min: ImVec2, out_uv_max: ImVec2) -> None:
-    #     """
-    #     [Internal]
-    #     """
-    #     pass
-
     # def clear(self: ImFontAtlas) -> None:
     #     """
-    #     Clear all input and output.
+    #     Clear everything (input fonts, output glyphs/textures)
     #     """
     #     pass
 
     # def clear_fonts(self: ImFontAtlas) -> None:
     #     """
-    #     Clear output font data (glyphs storage, uv coordinates).
+    #     [obsolete] clear input+output font data (same as clearinputdata() + glyphs storage, uv coordinates).
     #     """
     #     pass
 
     # def clear_input_data(self: ImFontAtlas) -> None:
     #     """
-    #     Clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+    #     As we are transitioning toward a new font system, we expect to obsolete those soon:
+    #     [obsolete] clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
     #     """
     #     pass
 
     def clear_tex_data(self: ImFontAtlas) -> None:
         """
-        Clear output texture data (cpu side). saves ram once the texture has been copied to graphics memory.
+        [obsolete] clear cpu-side copy of the texture data. saves ram once the texture has been copied to graphics memory.
         """
         pass
 
-    # def get_custom_rect_by_index(self: ImFontAtlas, index: int) -> ImFontAtlasCustomRect: ...
-    def get_glyph_ranges_chinese_full(self: ImFontAtlas) -> ImGlyphRange:
-        """
-        Default + half-width + japanese hiragana/katakana + full set of about 21000 cjk unified ideographs
-        """
-        pass
-
-    # def get_glyph_ranges_chinese_simplified_common(self: ImFontAtlas) -> int:
+    # def compact_cache(self: ImFontAtlas) -> None:
     #     """
-    #     Default + half-width + japanese hiragana/katakana + set of 2500 cjk unified ideographs for common simplified chinese
+    #     Compact cached glyphs and texture.
     #     """
     #     pass
 
-    def get_glyph_ranges_cyrillic(self: ImFontAtlas) -> ImGlyphRange:
-        """
-        Default + about 400 cyrillic characters
-        """
-        pass
+    # def get_custom_rect(self: ImFontAtlas, id_: int, out_r: ImFontAtlasRect) -> bool:
+    #     """
+    #     Get rectangle coordinates for current texture. valid immediately, never store this (read above)!
+    #     """
+    #     pass
 
     def get_glyph_ranges_default(self: ImFontAtlas) -> ImGlyphRange:
         """
-        Helpers to retrieve list of common Unicode ranges (2 value per range, values are inclusive, zero-terminated list)
-        NB: Make sure that your string are UTF-8 and NOT in your local code page.
-        Read https://github.com/ocornut/imgui/blob/master/docs/FONTS.md/#about-utf-8-encoding for details.
-        NB: Consider using ImFontGlyphRangesBuilder to build glyph ranges from textual data.
+        Since 1.92: specifying glyph ranges is only useful/necessary if your backend doesn't support ImGuiBackendFlags_RendererHasTextures!
         Basic latin, extended latin
         """
         pass
 
-    # def get_glyph_ranges_greek(self: ImFontAtlas) -> int:
+    # def remove_custom_rect(self: ImFontAtlas, id_: int) -> None:
     #     """
-    #     Default + greek and coptic
-    #     """
-    #     pass
-
-    def get_glyph_ranges_japanese(self: ImFontAtlas) -> ImGlyphRange:
-        """
-        Default + hiragana, katakana, half-width, selection of 2999 ideographs
-        """
-        pass
-
-    # def get_glyph_ranges_korean(self: ImFontAtlas) -> ImGlyphRange:
-    #     """
-    #     Default + korean characters
+    #     Unregister a rectangle. existing pixels will stay in texture until resized / garbage collected.
     #     """
     #     pass
 
-    # def get_glyph_ranges_thai(self: ImFontAtlas) -> int:
+    # def remove_font(self: ImFontAtlas, font: ImFont) -> None: ...
+    # def set_font_loader(self: ImFontAtlas, font_loader: ImFontLoader) -> None:
     #     """
-    #     Default + thai characters
-    #     """
-    #     pass
-
-    # def get_glyph_ranges_vietnamese(self: ImFontAtlas) -> int:
-    #     """
-    #     Default + vietnamese characters
+    #     Change font loader at runtime.
     #     """
     #     pass
 
-    # def get_mouse_cursor_tex_data(self: ImFontAtlas, cursor: int, out_offset: ImVec2, out_size: ImVec2, out_uv_border: ImVec2, out_uv_fill: ImVec2) -> bool: ...
-    def get_tex_data_as_alpha8(self: ImFontAtlas, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None) -> bytes:
-        """
-        1 byte per-pixel
-        """
-        pass
 
-    def get_tex_data_as_rgba_32(self: ImFontAtlas, out_width: Int, out_height: Int, out_bytes_per_pixel: Int=None) -> bytes:
-        """
-        4 bytes-per-pixel
-        """
-        pass
-
-    # def is_built(self: ImFontAtlas) -> bool:
-    #     """
-    #     Bit ambiguous: used to detect when user didn't build texture but effectively we should check texid != 0 except that would be backend dependent...
-    #     """
-    #     pass
-
-    # def set_tex_id(self: ImFontAtlas, id_: Any) -> None: ...
-
-class ImFontAtlasCustomRect:
+class ImFontAtlasBuilder:
     """
-    See ImFontAtlas::AddCustomRectXXX functions.
-    """
-    font: ImFont
-    """
-    Input    // for custom font glyphs only: target font
-    """
-    glyph_advance_x: float
-    """
-    Input    // for custom font glyphs only: glyph xadvance
-    """
-    # glyph_colored: int
-    # """
-    # Input  // for custom font glyphs only: glyph is colored, removed tinting.
-    # """
-    glyph_id: int
-    """
-    Input    // for custom font glyphs only (id < 0x110000)
-    """
-    glyph_offset: Tuple[float, float]
-    """
-    Input    // for custom font glyphs only: glyph display offset
-    """
-    height: int
-    """
-    [Internal]
-    Input    // desired rectangle dimension
-    """
-    width: int
-    """
-    [Internal]
-    Input    // desired rectangle dimension
-    """
-    x: int
-    """
-    Output   // packed position in atlas
-    """
-    y: int
-    """
-    Output   // packed position in atlas
-    """
-    def is_packed(self: ImFontAtlasCustomRect) -> bool: ...
-
-class ImFontBuilderIO:
-    """
-    Opaque interface to a font builder (stb_truetype or freetype).
+    Opaque storage for building a imfontatlas
     """
     pass
 
+class ImFontAtlasRect:
+    """
+    Output of ImFontAtlas::GetCustomRect() when using custom rectangles.
+    Those values may not be cached/stored as they are only valid for the current value of atlas->TexRef
+    (this is in theory derived from ImTextureRect but we use separate structures for reasons)
+    """
+    pass
+    # h: int
+    # """
+    # Size
+    # """
+    # h: int
+    # """
+    # Size
+    # """
+    # uv0: Tuple[float, float]
+    # """
+    # Uv coordinates (in current texture)
+    # """
+    # uv0: Tuple[float, float]
+    # """
+    # Uv coordinates (in current texture)
+    # """
+    # uv1: Tuple[float, float]
+    # """
+    # Uv coordinates (in current texture)
+    # """
+    # uv1: Tuple[float, float]
+    # """
+    # Uv coordinates (in current texture)
+    # """
+    # w: int
+    # """
+    # Size
+    # """
+    # w: int
+    # """
+    # Size
+    # """
+    # x: int
+    # """
+    # Position (in current texture)
+    # """
+    # x: int
+    # """
+    # Position (in current texture)
+    # """
+    # y: int
+    # """
+    # Position (in current texture)
+    # """
+    # y: int
+    # """
+    # Position (in current texture)
+    # """
+
+class ImFontBaked:
+    """
+    Font runtime data for a given size
+    Important: pointers to ImFontBaked are only valid for the current frame.
+    """
+    pass
+    # ascent: float
+    # """
+    # [Internal] Members: Cold
+    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+    # """
+    # ascent: float
+    # """
+    # [Internal] Members: Cold
+    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+    # """
+    # baked_id: int
+    # """
+    # 4     //
+    # """
+    # baked_id: int
+    # """
+    # 4     //     // unique id for this baked storage
+    # """
+    # container_font: ImFont
+    # """
+    # 4-8   // in  // parent font
+    # """
+    # container_font: ImFont
+    # """
+    # 4-8   // in  // parent font
+    # """
+    # descent: float
+    # """
+    # [Internal] Members: Cold
+    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+    # """
+    # descent: float
+    # """
+    # [Internal] Members: Cold
+    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
+    # """
+    # fallback_advance_x: float
+    # """
+    # 4     // out // findglyph(fallbackchar)->advancex
+    # """
+    # fallback_advance_x: float
+    # """
+    # 4     // out // findglyph(fallbackchar)->advancex
+    # """
+    # fallback_glyph_index: int
+    # """
+    # 4     // out // index of fontfallbackchar
+    # """
+    # fallback_glyph_index: int
+    # """
+    # 4     // out // index of fontfallbackchar
+    # """
+    # font_loader_datas: Any
+    # """
+    # 4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
+    # """
+    # font_loader_datas: Any
+    # """
+    # 4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
+    # """
+    # glyphs: ImVector_ImFontGlyph
+    # """
+    # 12-16 // out // all glyphs.
+    # """
+    # glyphs: ImVector_ImFontGlyph
+    # """
+    # 12-16 // out // all glyphs.
+    # """
+    # index_advance_x: ImVector_float
+    # """
+    # [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
+    # 12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
+    # """
+    # index_advance_x: ImVector_float
+    # """
+    # [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
+    # 12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
+    # """
+    # index_lookup: ImVector_ImU16
+    # """
+    # [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
+    # 12-16 // out // sparse. index glyphs by unicode code-point.
+    # """
+    # index_lookup: ImVector_ImU16
+    # """
+    # [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
+    # 12-16 // out // sparse. index glyphs by unicode code-point.
+    # """
+    # last_used_frame: int
+    # """
+    # 4     //     // record of that time this was bounds
+    # """
+    # last_used_frame: int
+    # """
+    # 4  //     // record of that time this was bounds
+    # """
+    # load_no_fallback: int
+    # """
+    # 0  //     // disable loading fallback in lower-level calls.
+    # """
+    # load_no_render_on_layout: int
+    # """
+    # 0  //     // enable a two-steps mode where calctextsize() calls will load advancex *without* rendering/packing glyphs. only advantagous if you know that the glyph is unlikely to actually be rendered, otherwise it is slower because we'd do one query on the first calctextsize and one query on the first draw.
+    # """
+    # lock_loading_fallback: int
+    # """
+    # 0  //     //
+    # """
+    # lock_loading_fallback: int
+    # """
+    # 0  //     //
+    # """
+    # metrics_total_surface: int
+    # """
+    # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+    # """
+    # metrics_total_surface: int
+    # """
+    # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+    # """
+    # rasterizer_density: float
+    # """
+    # 4     // in  // density this is baked at
+    # """
+    # rasterizer_density: float
+    # """
+    # 4     // in  // density this is baked at
+    # """
+    # size: float
+    # """
+    # 4     // in  // height of characters/line, set during loading (doesn't change after loading)
+    # """
+    # size: float
+    # """
+    # 4     // in  // height of characters/line, set during loading (doesn't change after loading)
+    # """
+    # want_destroy: int
+    # """
+    # 0  //     // queued for destroy
+    # """
+    # want_destroy: int
+    # """
+    # 0  //     // queued for destroy
+    # """
+    # def clear_output_data(self: ImFontBaked) -> None: ...
+    # def clear_output_data(self: ImFontBaked) -> None: ...
+    # def find_glyph(self: ImFontBaked, c: int) -> ImFontGlyph:
+    #     """
+    #     Return u+fffd glyph if requested glyph doesn't exists.
+    #     """
+    #     pass
+
+    # def find_glyph(self: ImFontBaked, c: int) -> ImFontGlyph:
+    #     """
+    #     Return u+fffd glyph if requested glyph doesn't exists.
+    #     """
+    #     pass
+
+    # def find_glyph_no_fallback(self: ImFontBaked, c: int) -> ImFontGlyph:
+    #     """
+    #     Return null if glyph doesn't exist
+    #     """
+    #     pass
+
+    # def find_glyph_no_fallback(self: ImFontBaked, c: int) -> ImFontGlyph:
+    #     """
+    #     Return null if glyph doesn't exist
+    #     """
+    #     pass
+
+    # def get_char_advance(self: ImFontBaked, c: int) -> float: ...
+    # def get_char_advance(self: ImFontBaked, c: int) -> float: ...
+    # def is_glyph_loaded(self: ImFontBaked, c: int) -> bool: ...
+    # def is_glyph_loaded(self: ImFontBaked, c: int) -> bool: ...
+
 class ImFontConfig:
     """
-    -1   // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
+    0        // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
     """
     dst_font: ImFont
+    """
+    Target font (as we merging fonts, multiple imfontconfig may target the same font)
+    """
     ellipsis_char: int
     """
-    -1   // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
+    0        // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
     """
-    font_builder_flags: int
-    """
-    0// settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
-    """
+    # flags: int
+    # """
+    # [Internal]
+    # Font flags (don't use just yet, will be exposed in upcoming 1.92.x updates)
+    # """
     font_data_owned_by_atlas: bool
     """
     True // ttf/otf data ownership taken by the container imfontatlas (will delete memory itself).
     """
     font_data_size: int
-    """
-    Ttf/otf data size
-    """
+    # font_loader: ImFontLoader
+    # """
+    # Custom font backend for this source (default source is the one stored in imfontatlas)
+    # """
+    # font_loader_data: Any
+    # """
+    # Font loader opaque storage (per font config)
+    # """
+    # font_loader_flags: int
+    # """
+    # 0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
+    # """
     font_no: int
     """
     0// index of font within ttf/otf file
     """
-    glyph_extra_spacing: Tuple[float, float]
-    """
-    0, 0 // extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->advancex. only x axis is supported for now.
-    """
+    # glyph_exclude_ranges: int
+    # """
+    # Null     // pointer to a small user-provided list of unicode ranges (2 value per range, values are inclusive, zero-terminated list). this is very close to glyphranges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. use 'input glyphs overlap detection tool' to find about your overlapping ranges.
+    # """
+    # glyph_extra_advance_x: float
+    # """
+    # 0        // extra spacing (in pixels) between glyphs. please contact us if you are using this. // fixme-newatlas: intentionally unscaled
+    # """
     glyph_max_advance_x: float
     """
     Flt_max  // maximum advancex for glyphs
     """
     glyph_min_advance_x: float
     """
-    0// minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font
+    0// minimum advancex for glyphs, set min to align font icons, set both min/max to enforce mono-space font. absolute value for default size, other sizes will scale this value.
     """
     glyph_offset: Tuple[float, float]
     """
-    0, 0 // offset all glyphs from this font input.
+    ImVec2        GlyphExtraSpacing;      // 0, 0     // (REMOVED AT IT SEEMS LARGELY OBSOLETE. PLEASE REPORT IF YOU WERE USING THIS). Extra spacing (in pixels) between glyphs when rendered: essentially add to glyph->AdvanceX. Only X axis is supported for now.
+    0, 0 // offset (in pixels) all glyphs from this font input. absolute value for default size, other sizes will scale this value.
     """
     glyph_ranges: List[int]
     """
-    Null // the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
+    Null // *legacy* the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
     """
     merge_mode: bool
     """
+    Options
     False// merge into previous imfont, so you can combine multiple inputs font into one imfont (e.g. ascii font + icons + japanese glyphs). you may want to use glyphoffset.y when merge font of different heights.
     """
     name: int
     """
-    [Internal]
-    Name (strictly to ease debugging)
+    Data Source
+    <auto>   // name (strictly to ease debugging, hence limited size buffer)
     """
     oversample_h: int
     """
-    2// rasterize at higher quality for sub-pixel positioning. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
+    0 (2)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1 or 2 depending on size. 0 == auto == 1 or 2 depending on size. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
     """
     oversample_v: int
     """
-    1// rasterize at higher quality for sub-pixel positioning. this is not really useful as we don't use sub-pixel positions on the y axis.
+    0 (1)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. 0 == auto == 1. this is not really useful as we don't use sub-pixel positions on the y axis.
     """
     pixel_snap_h: bool
     """
     False// align every glyph advancex to pixel boundaries. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
     """
+    # pixel_snap_v: bool
+    # """
+    # True     // align scaled glyphoffset.y to pixel boundaries.
+    # """
     rasterizer_density: float
     """
-    1.0f     // dpi scale for rasterization, not altering other font metrics: make it easy to swap between e.g. a 100% and a 400% fonts for a zooming display. important: if you increase this it is expected that you increase font scale accordingly, otherwise quality may look lowered.
+    1.0f     // [legacy: this only makes sense when imguibackendflags_rendererhastextures is not supported] dpi scale multiplier for rasterization. not altering other font metrics: makes it easy to swap between e.g. a 100% and a 400% fonts for a zooming display, or handle retina screen. important: if you change this it is expected that you increase/decrease font scale roughly to the inverse of this, otherwise quality may look lowered.
     """
     rasterizer_multiply: float
     """
+    unsigned int  FontBuilderFlags;       // --       // [Renamed in 1.92] Ue FontLoaderFlags.
     1.0f // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
     """
     size_pixels: float
@@ -4294,11 +4587,11 @@ class ImFontConfig:
 class ImFontGlyph:
     """
     Hold rendering data for one glyph.
-    (Note: some language parsers may fail to convert the 31+1 bitfield members, in this case maybe drop store a single u32 or we can rework this)
+    (Note: some language parsers may fail to convert the bitfield members, in this case maybe drop store a single u32 or we can rework this)
     """
     advance_x: float
     """
-    Distance to next character (= data from font + imfontconfig::glyphextraspacing.x baked in)
+    Horizontal distance to advance cursor/layout position.
     """
     codepoint: int
     """
@@ -4308,21 +4601,29 @@ class ImFontGlyph:
     """
     Flag to indicate glyph is colored and should generally ignore tinting (make it usable with no shift on little-endian as this is used in loops)
     """
+    # pack_id: int
+    # """
+    # [internal] imfontatlasrectid value (fixme: cold data, could be moved elsewhere?)
+    # """
+    # source_idx: int
+    # """
+    # Index of source in parent font
+    # """
     u0: float
     """
-    Texture coordinates
+    Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
     """
     u1: float
     """
-    Texture coordinates
+    Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
     """
     v0: float
     """
-    Texture coordinates
+    Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
     """
     v1: float
     """
-    Texture coordinates
+    Texture coordinates for the current value of imfontatlas->texref. cached equivalent of calling getcustomrect() with packid.
     """
     visible: int
     """
@@ -4330,19 +4631,19 @@ class ImFontGlyph:
     """
     x0: float
     """
-    Glyph corners
+    Glyph corners. offsets from current cursor/layout position.
     """
     x1: float
     """
-    Glyph corners
+    Glyph corners. offsets from current cursor/layout position.
     """
     y0: float
     """
-    Glyph corners
+    Glyph corners. offsets from current cursor/layout position.
     """
     y1: float
     """
-    Glyph corners
+    Glyph corners. offsets from current cursor/layout position.
     """
 
 class ImFontGlyphRangesBuilder:
@@ -4411,8 +4712,15 @@ class ImFontGlyphRangesBuilder:
         pass
 
 
+class ImFontLoader:
+    """
+    Opaque interface to a font loading backend (stb_truetype, freetype etc.).
+    """
+    pass
+
 class ImGuiContext:
     """
+    Forward declarations: ImGui layer
     Dear imgui context (opaque structure, unless including imgui_internal.h)
     """
     pass
@@ -4501,8 +4809,12 @@ class ImGuiIO:
     - Code should use PushID()/PopID() in loops, or append "##xx" to same-label identifiers.
     - Empty label e.g. Button("") == same ID as parent widget/node. Use Button("##xx") instead!
     - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
-    = true           // highlight and show an error message when multiple items have conflicting identifiers.
+    = true           // highlight and show an error message popup when multiple items have conflicting identifiers.
     """
+    # config_debug_highlight_id_conflicts_show_item_picker: bool
+    # """
+    # =true // show 'item picker' button in aforementioned popup.
+    # """
     config_debug_ignore_focus_loss: bool
     """
     Option to deactivate io.AddFocusEvent(false) handling.
@@ -4540,6 +4852,16 @@ class ImGuiIO:
     """
     = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
     """
+    # config_dpi_scale_fonts: bool
+    # """
+    # DPI/Scaling options
+    # This may keep evolving during 1.92.x releases. Expect some turbulence.
+    # = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
+    # """
+    # config_dpi_scale_viewports: bool
+    # """
+    # = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
+    # """
     config_drag_click_to_input_text: bool
     """
     = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
@@ -4631,6 +4953,10 @@ class ImGuiIO:
     # """
     # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
     # """
+    # config_viewport_platform_focus_sets_imgui_focus: bool
+    # """
+    # = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
+    # """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
@@ -4670,11 +4996,11 @@ class ImGuiIO:
     """
     display_framebuffer_scale: Tuple[float, float]
     """
-    = (1, 1)         // for retina display or other situations where window coordinates are different from framebuffer coordinates. this generally ends up in imdrawdata::framebufferscale.
+    = (1, 1)         // main display density. for retina display where window coordinates are different from framebuffer coordinates. this will affect font density + will end up in imdrawdata::framebufferscale.
     """
     display_size: Tuple[float, float]
     """
-    <unset>          // main display size, in pixels (generally == getmainviewport()->size). may change every frame.
+    <unset>          // main display size, in pixels (== getmainviewport()->size). may change every frame.
     """
     font_allow_user_scaling: bool
     """
@@ -4683,10 +5009,6 @@ class ImGuiIO:
     font_default: ImFont
     """
     = null           // font to use on newframe(). use null to uses fonts->fonts[0].
-    """
-    font_global_scale: float
-    """
-    = 1.0f           // global scale all fonts
     """
     fonts: ImFontAtlas
     """
@@ -4719,7 +5041,7 @@ class ImGuiIO:
     """
     key_ctrl: bool
     """
-    Keyboard modifier down: control
+    Keyboard modifier down: ctrl (non-macos), cmd (macos)
     """
     key_mods: int
     """
@@ -4740,11 +5062,11 @@ class ImGuiIO:
     """
     key_super: bool
     """
-    Keyboard modifier down: cmd/super/windows
+    Keyboard modifier down: windows/super (non-macos), ctrl (macos)
     """
     keys_data: ImGuiKeyData
     """
-    Key state for all known keys. use iskeyxxx() functions to access this.
+    Key state for all known keys. must use 'key - imguikey_namedkey_begin' as index. use iskeyxxx() functions to access this.
     """
     log_filename: str
     """
@@ -4788,7 +5110,7 @@ class ImGuiIO:
     """
     mouse_ctrl_left_as_right_click: bool
     """
-    (osx) set to true when the current click was a ctrl-click that spawned a simulated right click
+    (osx) set to true when the current click was a ctrl+click that spawned a simulated right click
     """
     mouse_delta: Tuple[float, float]
     """
@@ -4865,6 +5187,10 @@ class ImGuiIO:
     """
     Mouse button went from down to !down
     """
+    # mouse_released_time: Sequence[Double]
+    # """
+    # Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
+    # """
     mouse_source: int
     """
     Mouse actual input peripheral (mouse/touchscreen/pen).
@@ -5031,7 +5357,7 @@ class ImGuiInputTextCallbackData:
     Shared state of InputText(), passed as an argument to your callback when a ImGuiInputTextFlags_Callback* flag is used.
     The callback function should return 0 by default.
     Callbacks (follow a flag name and see comments in ImGuiInputTextFlags_ declarations for more details)
-    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    - ImGuiInputTextFlags_CallbackEdit:        Callback on buffer edit. Note that InputText() already returns true on edit + you can always use IsItemEdited(). The callback is useful to manipulate the underlying buffer while focus is active.
     - ImGuiInputTextFlags_CallbackAlways:      Callback on each iteration
     - ImGuiInputTextFlags_CallbackCompletion:  Callback on pressing TAB
     - ImGuiInputTextFlags_CallbackHistory:     Callback on pressing Up/Down arrows
@@ -5334,21 +5660,25 @@ class ImGuiPlatformIO:
     # """
     # . . u . .  //
     # """
+    # platform_get_window_framebuffer_scale: Callable
+    # """
+    # N . . . .  // return viewport density. always 1,1 on windows, often 2,2 on retina display on macos/ios. must be integer values. (use imguiplatformio_setplatform_getwindowframebufferscale() to set this from c, otherwise you will likely encounter stack corruption)
+    # """
     # platform_get_window_minimized: Callable
     # """
     # N . . . .  // get platform window minimized state. when minimized, we generally won't attempt to get/set size and contents will be culled more easily
     # """
     # platform_get_window_pos: Callable
     # """
-    # N . . . .  //
+    # N . . . .  // (use imguiplatformio_setplatform_getwindowpos() to set this from c, otherwise you will likely encounter stack corruption)
     # """
     # platform_get_window_size: Callable
     # """
-    # N . . . .  // get platform window client area size
+    # N . . . .  // get platform window client area size (use imguiplatformio_setplatform_getwindowsize() to set this from c, otherwise you will likely encounter stack corruption)
     # """
     # platform_get_window_work_area_insets: Callable
     # """
-    # N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land.
+    # N . . . .  // (optional) [beta] get initial work area inset for the viewport (won't be covered by main menu bar, dockspace over viewport etc.). default to (0,0),(0,0). 'safeareainsets' in ios land, 'displaycutout' in android land. (use imguiplatformio_setplatform_getwindowworkareainsets() to set this from c, otherwise you will likely encounter stack corruption)
     # """
     # platform_ime_user_data: Any
     # platform_locale_decimal_point: int
@@ -5364,7 +5694,7 @@ class ImGuiPlatformIO:
     # platform_open_in_shell_fn: Callable
     # """
     # Optional: Open link/folder/file in OS Shell
-    # (default to use ShellExecuteA() on Windows, system() on Linux/Mac)
+    # (default to use ShellExecuteW() on Windows, system() on Linux/Mac)
     # """
     # platform_open_in_shell_user_data: Any
     # platform_render_window: Callable
@@ -5434,6 +5764,17 @@ class ImGuiPlatformIO:
     # """
     # . . . r .  // (optional) call present/swapbuffers. 'render_arg' is the value passed to renderplatformwindowsdefault().
     # """
+    # renderer_texture_max_height: int
+    # renderer_texture_max_width: int
+    # """
+    # Optional: Maximum texture size supported by renderer (used to adjust how we size textures). 0 if not known.
+    # """
+    # textures: ImVector_ImTextureDataPtr
+    # """
+    # Textures list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
+    # The ImGui_ImplXXXX_RenderDrawData() function of each backend generally access this via ImDrawData::Textures which points to this. The array is available here mostly because backends will want to destroy textures on shutdown.
+    # List of textures used by dear imgui (most often 1) + contents of external texture list is automatically appended into this.
+    # """
     viewports: List[ImGuiViewport]
     """
     Viewports list (the list is updated by calling ImGui::EndFrame or ImGui::Render)
@@ -5443,20 +5784,28 @@ class ImGuiPlatformIO:
 
 class ImGuiPlatformImeData:
     """
-    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function.
+    (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function. Handler is called during EndFrame().
     """
     pass
     # input_line_height: float
     # """
-    # Line height
+    # Line height (for ime).
     # """
     # input_pos: Tuple[float, float]
     # """
-    # Position of the input cursor
+    # Position of input cursor (for ime).
+    # """
+    # viewport_id: int
+    # """
+    # Id of platform window/viewport.
+    # """
+    # want_text_input: bool
+    # """
+    # A widget wants text input, not necessarily ime to be visible. this is automatically set to the upcoming value of io.wanttextinput.
     # """
     # want_visible: bool
     # """
-    # A widget wants the ime to be visible
+    # A widget wants the ime to be visible.
     # """
 
 class ImGuiPlatformMonitor:
@@ -5733,6 +6082,9 @@ class ImGuiStyle:
     Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
     """
     colors: tuple
+    """
+    Colors
+    """
     columns_min_spacing: float
     """
     Minimum horizontal spacing between two columns. preferably > (framepadding.x + 1).
@@ -5757,6 +6109,20 @@ class ImGuiStyle:
     """
     Thickness of resizing border between docked windows
     """
+    # font_scale_dpi: float
+    # """
+    # Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
+    # """
+    # font_scale_main: float
+    # """
+    # Main global scale factor. may be set by application once, or exposed to end-user.
+    # """
+    # font_size_base: float
+    # """
+    # Font scaling
+    # - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
+    # Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
+    # """
     frame_border_size: float
     """
     Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -5799,6 +6165,10 @@ class ImGuiStyle:
     (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
     Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
     """
+    # image_border_size: float
+    # """
+    # Thickness of border around image() calls.
+    # """
     indent_spacing: float
     """
     Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
@@ -5815,10 +6185,19 @@ class ImGuiStyle:
     """
     The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
     """
+    # main_scale: float
+    # """
+    # [Internal]
+    # Fixme-wip: reference scale, as applied by scaleallsizes().
+    # """
     mouse_cursor_scale: float
     """
     Scale software rendered mouse cursor (when io.mousedrawcursor is enabled). we apply per-monitor dpi scaling over this scale. may be removed later.
     """
+    # next_frame_font_size_base: float
+    # """
+    # Fixme: temporary hack until we finish remaining work.
+    # """
     popup_border_size: float
     """
     Thickness of border around popup/tooltip windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -5863,10 +6242,22 @@ class ImGuiStyle:
     """
     Thickness of border around tabs.
     """
-    tab_min_width_for_close_button: float
-    """
-    Minimum width for close button to appear on an unselected tab when hovered. set to 0.0f to always show when hovering, set to flt_max to never show close button unless selected.
-    """
+    # tab_close_button_min_width_selected: float
+    # """
+    # -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
+    # """
+    # tab_close_button_min_width_unselected: float
+    # """
+    # -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
+    # """
+    # tab_min_width_base: float
+    # """
+    # Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
+    # """
+    # tab_min_width_shrink: float
+    # """
+    # Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
+    # """
     tab_rounding: float
     """
     Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
@@ -5883,6 +6274,22 @@ class ImGuiStyle:
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
     """
+    # tree_lines_flags: int
+    # """
+    # Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
+    # """
+    # tree_lines_rounding: float
+    # """
+    # Radius of lines connecting child nodes to the vertical line.
+    # """
+    # tree_lines_size: float
+    # """
+    # Thickness of outlines when using imguitreenodeflags_drawlines.
+    # """
+    # window_border_hover_padding: float
+    # """
+    # Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
+    # """
     window_border_size: float
     """
     Thickness of border around windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -5907,7 +6314,12 @@ class ImGuiStyle:
     """
     Alignment for title bar text. defaults to (0.0f,0.5f) for left-aligned,vertically centered.
     """
-    # def scale_all_sizes(self: ImGuiStyle, scale_factor: float) -> None: ...
+    # def scale_all_sizes(self: ImGuiStyle, scale_factor: float) -> None:
+    #     """
+    #     Scale all spacing/padding/thickness values. do not scale fonts.
+    #     """
+    #     pass
+
 
 class ImGuiTableColumnSortSpecs:
     """
@@ -5956,7 +6368,7 @@ class ImGuiTextFilter:
     pygui note: This class is instantiable with ImGuiTextFilter.create()
     """
     # count_grep: int
-    # filters: ImVector_ImGuiTextFilter_ImGuiTextRange
+    # filters: ImVector_ImGuiTextRange
     # input_buf: int
     # def build(self: ImGuiTextFilter) -> None: ...
     # def clear(self: ImGuiTextFilter) -> None: ...
@@ -6003,6 +6415,10 @@ class ImGuiViewport:
     """
     See imguiviewportflags_
     """
+    # framebuffer_scale: Tuple[float, float]
+    # """
+    # Density of the viewport for retina display (always 1,1 on windows, may be 2,2 etc on macos/ios). this will affect font rasterizer density.
+    # """
     id: int
     """
     Unique identifier for the viewport
@@ -6013,11 +6429,11 @@ class ImGuiViewport:
     """
     # platform_handle: Any
     # """
-    # Void* to hold higher-level, platform window handle (e.g. hwnd, glfwwindow*, sdl_window*), for findviewportbyplatformhandle().
+    # Void* to hold higher-level, platform window handle (e.g. hwnd for win32 backend, uint32 windowid for sdl, glfwwindow* for glfw), for findviewportbyplatformhandle().
     # """
     # platform_handle_raw: Any
     # """
-    # Void* to hold lower-level, platform-native window handle (under win32 this is expected to be a hwnd, unused for other platforms), when using an abstraction layer like glfw or sdl (where platformhandle would be a sdl_window*)
+    # Void* to hold lower-level, platform-native window handle (always hwnd on win32 platform, unused for other platforms).
     # """
     platform_request_close: bool
     """
@@ -6107,6 +6523,267 @@ class ImGuiWindowClass:
     # Viewport flags to set when a window of this class owns a viewport. this allows you to enforce os decoration or task bar icon, override the defaults on a per-window basis.
     # """
 
+class ImTextureData:
+    """
+    Specs and pixel storage for a texture used by Dear ImGui.
+    This is only useful for (1) core library and (2) backends. End-user/applications do not need to care about this.
+    Renderer Backends will create a GPU-side version of this.
+    Why does we store two identifiers: TexID and BackendUserData?
+    - ImTextureID    TexID           = lower-level identifier stored in ImDrawCmd. ImDrawCmd can refer to textures not created by the backend, and for which there's no ImTextureData.
+    - void*          BackendUserData = higher-level opaque storage for backend own book-keeping. Some backends may have enough with TexID and not need both.
+    In columns below: who reads/writes each fields? 'r'=read, 'w'=write, 'core'=main library, 'backend'=renderer backend
+    """
+    pass
+    # backend_user_data: Any
+    # """
+    # -    rw  // convenience storage for backend. some backends may have enough with texid.
+    # """
+    # backend_user_data: Any
+    # """
+    # -    rw  // convenience storage for backend. some backends may have enough with texid.
+    # """
+    # bytes_per_pixel: int
+    # """
+    # W    r   // 4 or 1
+    # """
+    # bytes_per_pixel: int
+    # """
+    # W    r   // 4 or 1
+    # """
+    # format: Any
+    # """
+    # W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
+    # """
+    # format: Any
+    # """
+    # W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
+    # """
+    # height: int
+    # """
+    # W    r   // texture height
+    # """
+    # height: int
+    # """
+    # W    r   // texture height
+    # """
+    # pixels: str
+    # """
+    # W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+    # """
+    # pixels: str
+    # """
+    # W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+    # """
+    # ref_count: int
+    # """
+    # W    r   // number of contexts using this texture. used during backend shutdown.
+    # """
+    # ref_count: int
+    # """
+    # W    r   // number of contexts using this texture. used during backend shutdown.
+    # """
+    # status: Any
+    # """
+    # Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
+    # """
+    # status: Any
+    # """
+    # Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
+    # """
+    # tex_id: Any
+    # """
+    # R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
+    # """
+    # tex_id: Any
+    # """
+    # R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
+    # """
+    # unique_id: int
+    # """
+    # ------------------------------------------ core / backend ---------------------------------------
+    # W    -   // sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
+    # """
+    # unique_id: int
+    # """
+    # ------------------------------------------ core / backend ---------------------------------------
+    # W    -   // [debug] sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
+    # """
+    # unused_frames: int
+    # """
+    # W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
+    # """
+    # unused_frames: int
+    # """
+    # W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
+    # """
+    # update_rect: ImTextureRect
+    # """
+    # W    r   // bounding box encompassing all queued updates[].
+    # """
+    # update_rect: ImTextureRect
+    # """
+    # W    r   // bounding box encompassing all queued updates[].
+    # """
+    # updates: ImVector_ImTextureRect
+    # """
+    # W    r   // array of individual updates.
+    # """
+    # updates: ImVector_ImTextureRect
+    # """
+    # W    r   // array of individual updates.
+    # """
+    # use_colors: bool
+    # """
+    # W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
+    # """
+    # use_colors: bool
+    # """
+    # W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
+    # """
+    # used_rect: ImTextureRect
+    # """
+    # W    r   // bounding box encompassing all past and queued updates[].
+    # """
+    # used_rect: ImTextureRect
+    # """
+    # W    r   // bounding box encompassing all past and queued updates[].
+    # """
+    # want_destroy_next_frame: bool
+    # """
+    # Rw   -   // [internal] queued to set imtexturestatus_wantdestroy next frame. may still be used in the current frame.
+    # """
+    # want_destroy_next_frame: bool
+    # """
+    # Rw   -   // [internal] queued to set imtexturestatus_wantdestroy next frame. may still be used in the current frame.
+    # """
+    # width: int
+    # """
+    # W    r   // texture width
+    # """
+    # width: int
+    # """
+    # W    r   // texture width
+    # """
+    # def create(self: ImTextureData, format_: Any, w: int, h: int) -> None: ...
+    # def create(self: ImTextureData, format_: Any, w: int, h: int) -> None: ...
+    # def destroy_pixels(self: ImTextureData) -> None: ...
+    # def destroy_pixels(self: ImTextureData) -> None: ...
+    # def get_pitch(self: ImTextureData) -> int: ...
+    # def get_pitch(self: ImTextureData) -> int: ...
+    # def get_pixels(self: ImTextureData) -> Any: ...
+    # def get_pixels(self: ImTextureData) -> Any: ...
+    # def get_pixels_at(self: ImTextureData, x: int, y: int) -> Any: ...
+    # def get_pixels_at(self: ImTextureData, x: int, y: int) -> Any: ...
+    # def get_size_in_bytes(self: ImTextureData) -> int: ...
+    # def get_size_in_bytes(self: ImTextureData) -> int: ...
+    # def get_tex_id(self: ImTextureData) -> Any: ...
+    # def get_tex_id(self: ImTextureData) -> Any: ...
+    # def get_tex_ref(self: ImTextureData) -> ImTextureRef: ...
+    # def get_tex_ref(self: ImTextureData) -> ImTextureRef: ...
+    # def set_status(self: ImTextureData, status: Any) -> None:
+    #     """
+    #     Call after honoring a request. never modify status directly!
+    #     """
+    #     pass
+
+    # def set_status(self: ImTextureData, status: Any) -> None:
+    #     """
+    #     Call after honoring a request. never modify status directly!
+    #     """
+    #     pass
+
+    # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
+    #     """
+    #     Called by Renderer backend
+    #     Call after creating or destroying the texture. never modify texid directly!
+    #     """
+    #     pass
+
+    # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
+    #     """
+    #     Called by Renderer backend
+    #     Call after creating or destroying the texture. never modify texid directly!
+    #     """
+    #     pass
+
+
+class ImTextureRect:
+    """
+    Coordinates of a rectangle within a texture.
+    When a texture is in ImTextureStatus_WantUpdates state, we provide a list of individual rectangles to copy to the graphics system.
+    You may use ImTextureData::Updates[] for the list, or ImTextureData::UpdateBox for a single bounding box.
+    """
+    pass
+    # h: int
+    # """
+    # Size of rectangle to update (in pixels)
+    # """
+    # h: int
+    # """
+    # Size of rectangle to update (in pixels)
+    # """
+    # w: int
+    # """
+    # Size of rectangle to update (in pixels)
+    # """
+    # w: int
+    # """
+    # Size of rectangle to update (in pixels)
+    # """
+    # x: int
+    # """
+    # Upper-left coordinates of rectangle to update
+    # """
+    # x: int
+    # """
+    # Upper-left coordinates of rectangle to update
+    # """
+    # y: int
+    # """
+    # Upper-left coordinates of rectangle to update
+    # """
+    # y: int
+    # """
+    # Upper-left coordinates of rectangle to update
+    # """
+
+class ImTextureRef:
+    """
+    Members (either are set, never both!)
+    A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
+    """
+    pass
+    # tex_data: ImTextureData
+    # """
+    # Members (either are set, never both!)
+    # A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
+    # """
+    # tex_data: ImTextureData
+    # """
+    # Members (either are set, never both!)
+    # A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
+    # """
+    # tex_id: Any
+    # """
+    # _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
+    # """
+    # tex_id: Any
+    # """
+    # _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
+    # """
+    # def get_tex_id(self: ImTextureRef) -> Any:
+    #     """
+    #     == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
+    #     """
+    #     pass
+
+    # def get_tex_id(self: ImTextureRef) -> Any:
+    #     """
+    #     == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
+    #     """
+    #     pass
+
+
 class ImVector_ImDrawCmd:
     """
     Instantiation of imvector<imdrawcmd>
@@ -6133,6 +6810,18 @@ class ImVector_ImDrawListPtr:
     # data: ImDrawList
     # size: int
 
+class ImVector_ImDrawListSharedDataPtr:
+    """
+    Instantiation of imvector<imdrawlistshareddata*>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImDrawListSharedData
+    # data: ImDrawListSharedData
+    # size: int
+    # size: int
+
 class ImVector_ImDrawVert:
     """
     Instantiation of imvector<imdrawvert>
@@ -6140,6 +6829,18 @@ class ImVector_ImDrawVert:
     # capacity: int
     data: ImDrawVert
     size: int
+
+class ImVector_ImFontConfigPtr:
+    """
+    Instantiation of imvector<imfontconfig*>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImFontConfig
+    # data: ImFontConfig
+    # size: int
+    # size: int
 
 class ImVector_ImGuiSelectionRequest:
     """
@@ -6157,6 +6858,66 @@ class ImVector_ImGuiStoragePair:
     pass
     # capacity: int
     # data: ImGuiStoragePair
+    # size: int
+
+class ImVector_ImGuiTextRange:
+    """
+    Instantiation of imvector<imguitextrange>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImGuiTextFilter_ImGuiTextRange
+    # data: ImGuiTextFilter_ImGuiTextRange
+    # size: int
+    # size: int
+
+class ImVector_ImTextureDataPtr:
+    """
+    Instantiation of imvector<imtexturedata*>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImTextureData
+    # data: ImTextureData
+    # size: int
+    # size: int
+
+class ImVector_ImTextureRect:
+    """
+    Instantiation of imvector<imtexturerect>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImTextureRect
+    # data: ImTextureRect
+    # size: int
+    # size: int
+
+class ImVector_ImTextureRef:
+    """
+    Instantiation of imvector<imtextureref>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: ImTextureRef
+    # data: ImTextureRef
+    # size: int
+    # size: int
+
+class ImVector_ImU16:
+    """
+    Instantiation of imvector<imu16>
+    """
+    pass
+    # capacity: int
+    # capacity: int
+    # data: int
+    # data: int
+    # size: int
     # size: int
 
 class ImVector_ImU32:
