@@ -2908,24 +2908,24 @@ def set_mouse_cursor(cursor_type: int) -> None:
     """
     pass
 
-# def set_nav_cursor_visible(visible: bool) -> None:
-#     """
-#     Keyboard/Gamepad Navigation
-#     Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
-#     """
-#     pass
+def set_nav_cursor_visible(visible: bool) -> None:
+    """
+    Keyboard/Gamepad Navigation
+    Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
+    """
+    pass
 
-# def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool) -> None:
-#     """
-#     Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
-#     """
-#     pass
+def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool) -> None:
+    """
+    Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
+    """
+    pass
 
-# def set_next_frame_want_capture_mouse(want_capture_mouse: bool) -> None:
-#     """
-#     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
-#     """
-#     pass
+def set_next_frame_want_capture_mouse(want_capture_mouse: bool) -> None:
+    """
+    Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+    """
+    pass
 
 # def set_next_item_allow_overlap() -> None:
 #     """

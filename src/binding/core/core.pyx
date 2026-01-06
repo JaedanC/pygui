@@ -8416,48 +8416,48 @@ def set_mouse_cursor(cursor_type: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def set_nav_cursor_visible(visible: bool):
-#     """
-#     Keyboard/Gamepad Navigation
-#     Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
-#     """
-#     dcimgui.ImGui_SetNavCursorVisible(
-#         visible
-#     )
+def set_nav_cursor_visible(visible: bool):
+    """
+    Keyboard/Gamepad Navigation
+    Alter visibility of keyboard/gamepad cursor. by default: show when using an arrow key, hide when clicking with mouse.
+    """
+    dcimgui.ImGui_SetNavCursorVisible(
+        visible
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
-#     """
-#     Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
-#     """
-#     dcimgui.ImGui_SetNextFrameWantCaptureKeyboard(
-#         want_capture_keyboard
-#     )
+def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
+    """
+    Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
+    """
+    dcimgui.ImGui_SetNextFrameWantCaptureKeyboard(
+        want_capture_keyboard
+    )
 # [End Function]
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
-#     """
-#     Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
-#     """
-#     dcimgui.ImGui_SetNextFrameWantCaptureMouse(
-#         want_capture_mouse
-#     )
+def set_next_frame_want_capture_mouse(want_capture_mouse: bool):
+    """
+    Override io.wantcapturemouse flag next frame (said flag is left for your application to handle, typical when true it instructs your app to ignore inputs). this is equivalent to setting 'io.wantcapturemouse = want_capture_mouse;' after the next newframe() call.
+    """
+    dcimgui.ImGui_SetNextFrameWantCaptureMouse(
+        want_capture_mouse
+    )
 # [End Function]
 
 # [Function]
@@ -20300,7 +20300,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20314,12 +20314,12 @@ cdef class ImGuiIO:
         return res
     @want_capture_keyboard.setter
     def want_capture_keyboard(self, value: bool):
-        # dereference(self._ptr).WantCaptureKeyboard = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureKeyboard = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20333,12 +20333,12 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse.setter
     def want_capture_mouse(self, value: bool):
-        # dereference(self._ptr).WantCaptureMouse = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureMouse = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20352,8 +20352,8 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse_unless_popup_close.setter
     def want_capture_mouse_unless_popup_close(self, value: bool):
-        # dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]

@@ -8416,7 +8416,7 @@ def set_mouse_cursor(cursor_type: int):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -8432,7 +8432,7 @@ def set_nav_cursor_visible(visible: bool):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -8447,7 +8447,7 @@ def set_next_frame_want_capture_keyboard(want_capture_keyboard: bool):
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -20300,7 +20300,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20314,12 +20314,12 @@ cdef class ImGuiIO:
         return res
     @want_capture_keyboard.setter
     def want_capture_keyboard(self, value: bool):
-        # dereference(self._ptr).WantCaptureKeyboard = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureKeyboard = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20333,12 +20333,12 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse.setter
     def want_capture_mouse(self, value: bool):
-        # dereference(self._ptr).WantCaptureMouse = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureMouse = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -20352,8 +20352,8 @@ cdef class ImGuiIO:
         return res
     @want_capture_mouse_unless_popup_close.setter
     def want_capture_mouse_unless_popup_close(self, value: bool):
-        # dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
-        raise NotImplementedError
+        dereference(self._ptr).WantCaptureMouseUnlessPopupClose = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
