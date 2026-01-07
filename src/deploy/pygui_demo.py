@@ -3845,11 +3845,9 @@ def show_random_extras():
                 show_imfont(config.dst_font)
                 pygui.end_menu()
             pygui.menu_item("config.ellipsis_char:            {} {}".format(config.ellipsis_char, chr(config.ellipsis_char)))
-            pygui.menu_item("config.font_builder_flags:       {}".format(config.font_builder_flags))
             pygui.menu_item("config.font_data_owned_by_atlas: {}".format(config.font_data_owned_by_atlas))
             pygui.menu_item("config.font_data_size:           {}".format(config.font_data_size))
             pygui.menu_item("config.font_no:                  {}".format(config.font_no))
-            pygui.menu_item("config.glyph_extra_spacing:      {}".format(config.glyph_extra_spacing))
             pygui.menu_item("config.glyph_max_advance_x:      {}".format(config.glyph_max_advance_x))
             pygui.menu_item("config.glyph_min_advance_x:      {}".format(config.glyph_min_advance_x))
             pygui.menu_item("config.glyph_offset:             {}".format(config.glyph_offset))
@@ -3862,21 +3860,7 @@ def show_random_extras():
             pygui.menu_item("config.rasterizer_multiply:      {}".format(config.rasterizer_multiply))
 
         def show_imfontatlas(atlas: pygui.ImFontAtlas):
-            if pygui.begin_menu("atlas.config_data"):
-                for i, config in enumerate(atlas.config_data):
-                    if pygui.begin_menu(f"Config:  {i}"):
-                        show_imfontconfig(config)
-                        pygui.end_menu()
-                pygui.end_menu()
-            if pygui.begin_menu("atlas.custom_rects"):
-                for i, rect in enumerate(atlas.custom_rects):
-                    if pygui.begin_menu(f"Custom Rect:  {i}"):
-                        show_imfontatlascustomrect(rect)
-                        pygui.end_menu()
-                pygui.end_menu()
             pygui.menu_item("atlas.flags:                   {}".format(atlas.flags))
-            pygui.menu_item("atlas.font_builder_flags:      {}".format(atlas.font_builder_flags))
-            pygui.menu_item("atlas.font_builder_io:         {}".format(atlas.font_builder_io))
             if pygui.begin_menu("atlas.fonts"):
                 for i, font in enumerate(atlas.fonts):
                     if pygui.begin_menu(f"Font:  {i}"):
@@ -3884,84 +3868,15 @@ def show_random_extras():
                         pygui.end_menu()
                 pygui.end_menu()
             pygui.menu_item("atlas.locked:                  {}".format(atlas.locked))
-            pygui.menu_item("atlas.pack_id_lines:           {}".format(atlas.pack_id_lines))
-            pygui.menu_item("atlas.pack_id_mouse_cursors:   {}".format(atlas.pack_id_mouse_cursors))
-            pygui.menu_item("atlas.tex_desired_width:       {}".format(atlas.tex_desired_width))
             pygui.menu_item("atlas.tex_glyph_padding:       {}".format(atlas.tex_glyph_padding))
-            pygui.menu_item("atlas.tex_height:              {}".format(atlas.tex_height))
-            pygui.menu_item("atlas.tex_id:                  {}".format(atlas.tex_id))
-            if pygui.begin_menu("atlas.tex_pixels_alpha8"):
-                for i, byte in enumerate(atlas.tex_pixels_alpha8):
-                    pygui.menu_item("Byte {}:  {}".format(i, byte))
-                pygui.end_menu()
-            if pygui.begin_menu("atlas.tex_pixels_rgba_32"):
-                bytes_ = atlas.tex_pixels_rgba_32
-                for i in range(len(bytes_) // 4):
-                    cur = int.from_bytes(bytes_[i:i+4], "big")
-                    pygui.menu_item("Byte {}:  {}".format(i, cur))
-                pygui.end_menu()
             pygui.menu_item("atlas.tex_pixels_use_colors:   {}".format(atlas.tex_pixels_use_colors))
-            pygui.menu_item("atlas.tex_ready:               {}".format(atlas.tex_ready))
             pygui.menu_item("atlas.tex_uv_lines:            {}".format(atlas.tex_uv_lines.tuple()))
             pygui.menu_item("atlas.tex_uv_scale:            {}".format(atlas.tex_uv_scale))
             pygui.menu_item("atlas.tex_uv_white_pixel:      {}".format(atlas.tex_uv_white_pixel))
-            pygui.menu_item("atlas.tex_width:               {}".format(atlas.tex_width))
-
-        def show_imfontatlascustomrect(rect: pygui.ImFontAtlasCustomRect):
-            if rect.font is not None:
-                if pygui.begin_menu("rect.font"):
-                    show_imfont(rect.font)
-                    pygui.end_menu()
-            else:
-                pygui.menu_item("rect.font:             {}".format(None))
-            pygui.menu_item("rect.glyph_advance_x:  {}".format(rect.glyph_advance_x))
-            pygui.menu_item("rect.glyph_id:         {}".format(rect.glyph_id))
-            pygui.menu_item("rect.glyph_offset:     {}".format(rect.glyph_offset))
-            pygui.menu_item("rect.height:           {}".format(rect.height))
-            pygui.menu_item("rect.width:            {}".format(rect.width))
-            pygui.menu_item("rect.x:                {}".format(rect.x))
-            pygui.menu_item("rect.y:                {}".format(rect.y))
-            pygui.menu_item("rect.is_packed():      {}".format(rect.is_packed()))
 
         def show_imfont(font: pygui.ImFont):
-            pygui.menu_item("font.ascent:                {}".format(font.ascent))
-            if pygui.begin_menu("font.config_data"):
-                show_imfontconfig(font.config_data)
-                pygui.end_menu()
-            pygui.menu_item("font.config_data_count:     {}".format(font.config_data_count))
-            if pygui.begin_menu("font.container_atlas"):
-                show_imfontatlas(font.container_atlas)
-                pygui.end_menu()
-            pygui.menu_item("font.descent:               {}".format(font.descent))
-            pygui.menu_item("font.dirty_lookup_tables:   {}".format(font.dirty_lookup_tables))
             pygui.menu_item("font.ellipsis_char:         {} {}".format(font.ellipsis_char, chr(font.ellipsis_char)))
-            pygui.menu_item("font.ellipsis_char_count:   {}".format(font.ellipsis_char_count))
-            pygui.menu_item("font.ellipsis_char_step:    {}".format(font.ellipsis_char_step))
-            pygui.menu_item("font.ellipsis_width:        {}".format(font.ellipsis_width))
-            pygui.menu_item("font.fallback_advance_x:    {}".format(font.fallback_advance_x))
             pygui.menu_item("font.fallback_char:         {} {}".format(font.fallback_char, chr(font.fallback_char)))
-            if pygui.begin_menu("font.fallback_glyph"):
-                show_imfontglyph(font.fallback_glyph)
-                pygui.end_menu()
-            pygui.menu_item("font.font_size:             {}".format(font.font_size))
-            if pygui.begin_menu("font.glyphs"):
-                for glyph in font.glyphs:
-                    if pygui.begin_menu("Glyph {}:    {}  ".format(glyph.codepoint, chr(glyph.codepoint))):
-                        show_imfontglyph(glyph)
-                        pygui.end_menu()
-                pygui.end_menu()
-            if pygui.begin_menu("font.index_advance_x"):
-                for i, flt in enumerate(font.index_advance_x):
-                    # chr(0) turns into a null character which terminates the string in c.
-                    # Very interesting that I can control that.
-                    pygui.menu_item("For char {} '{}':  {}".format(i, chr(i) if i != 0 else "\\0", flt))
-                pygui.end_menu()
-            if pygui.begin_menu("font.index_lookup"):
-                for i, _int in enumerate(font.index_lookup):
-                    pygui.menu_item("For char {} '{}':  {}".format(i, chr(i) if i != 0 else "\\0", _int))
-                pygui.end_menu()
-            pygui.menu_item("font.metrics_total_surface: {}".format(font.metrics_total_surface))
-            pygui.menu_item("font.scale:                 {}".format(font.scale))
 
         def show_imguiio(io: pygui.ImGuiIO):
             pygui.menu_item("io.app_accepting_events:                   {}".format(io.app_accepting_events))
@@ -3998,14 +3913,12 @@ def show_random_extras():
             pygui.menu_item("io.display_framebuffer_scale:              {}".format(io.display_framebuffer_scale))
             pygui.menu_item("io.display_size:                           {}".format(io.display_size))
             pygui.menu_item("io.font_allow_user_scaling:                {}".format(io.font_allow_user_scaling))
-            pygui.menu_item("io.font_allow_user_scaling:                {}".format(io.font_allow_user_scaling))
             if io.font_default is not None:
                 if pygui.begin_menu("io.font_default"):
                     show_imfont(io.font_default)
                     pygui.end_menu()
             else:
                 pygui.menu_item("io.font_default:                           {}".format(None))
-            pygui.menu_item("io.font_global_scale:                      {}".format(io.font_global_scale))
             if pygui.begin_menu("io.fonts"):
                 show_imfontatlas(io.fonts)
                 pygui.end_menu()
@@ -4117,7 +4030,6 @@ def show_random_extras():
             pygui.menu_item("style.tab_bar_border_size:             {}".format(style.tab_bar_border_size))
             pygui.menu_item("style.tab_bar_overline_size:           {}".format(style.tab_bar_overline_size))
             pygui.menu_item("style.tab_border_size:                 {}".format(style.tab_border_size))
-            pygui.menu_item("style.tab_min_width_for_close_button:  {}".format(style.tab_min_width_for_close_button))
             pygui.menu_item("style.tab_rounding:                    {}".format(style.tab_rounding))
             pygui.menu_item("style.touch_extra_padding:             {}".format(style.touch_extra_padding))
             pygui.menu_item("style.table_angled_headers_angle:      {}".format(style.table_angled_headers_angle))
@@ -4628,20 +4540,6 @@ def show_random_extras():
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.30, 1, 0.8)),
             0,
             2
-        )
-        pygui.dummy((50, 50))
-        pygui.same_line()
-
-        cx, cy = pygui.get_cursor_screen_pos()
-        fonts = pygui.get_io().fonts.fonts
-        font_index = math.floor(rand.frame_delta_count * 10) % len(fonts)
-        selected_font = fonts[font_index]
-        dl.add_text_imfont(
-            selected_font,
-            13,
-            (cx, cy),
-            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.35, 1, 0.8)),
-            f"Hello\nworld\nfont: {font_index}"
         )
         pygui.dummy((50, 50))
 
@@ -5746,7 +5644,7 @@ def show_crash_test():
     pygui.text("Crash 2: pygui.IM_ASSERT(False) except with pygui.Error")
     if pressed:
         try:
-            pygui.IM_ASSERT(False, "You should not see this :(")
+            pygui.IM_ASSERT(False, "You should not see this during a crash :(")
         except pygui.ImGuiError as e:
             crash.catch_message = "Caught! This should never crash."
             crash.error_text.value = str(e)
@@ -5819,21 +5717,44 @@ def show_crash_test():
     config_error_recovery_enable_assert = pygui.Bool(io.config_error_recovery_enable_assert)
     config_error_recovery_enable_debug_log = pygui.Bool(io.config_error_recovery_enable_debug_log)
     config_error_recovery_enable_tooltip = pygui.Bool(io.config_error_recovery_enable_tooltip)
-    pygui.checkbox("io.config_error_recovery", config_error_recovery)
-    pygui.checkbox("io.config_error_recovery_enable_assert (Disable to catch)", config_error_recovery_enable_assert)
+    pygui.text("Error Recovery")
+    pygui.same_line()
+    help_marker(
+        "From ImGui implementation:\n"
+        "\"Error handling: we do not accept 100% silent recovery! Please contact me if you feel this is getting in your way.\"\n"
+        "\n"
+        "if (g.IO.ConfigErrorRecovery)\n"
+        "    IM_ASSERT(g.IO.ConfigErrorRecoveryEnableAssert || g.IO.ConfigErrorRecoveryEnableDebugLog || g.IO.ConfigErrorRecoveryEnableTooltip || g.ErrorCallback != NULL);\n"
+        "\n"
+        "Thus if we enable error recovery then we need at least one option to be enabled.\n"
+    )
+
+    pygui.checkbox("io.config_error_recovery_enable_assert (Disable to not crash)", config_error_recovery_enable_assert)
     pygui.checkbox("io.config_error_recovery_enable_debug_log", config_error_recovery_enable_debug_log)
     pygui.checkbox("io.config_error_recovery_enable_tooltip", config_error_recovery_enable_tooltip)
+
+    silent_error = not (config_error_recovery_enable_assert or config_error_recovery_enable_debug_log or config_error_recovery_enable_tooltip)
+    if silent_error:
+        config_error_recovery.value = False
+
+    if silent_error:
+        pygui.begin_disabled()
+    pygui.checkbox("io.config_error_recovery", config_error_recovery)
+    if silent_error:
+        pygui.end_disabled()
+
     io.config_error_recovery = config_error_recovery.value
     io.config_error_recovery_enable_assert = config_error_recovery_enable_assert.value
     io.config_error_recovery_enable_debug_log = config_error_recovery_enable_debug_log.value
     io.config_error_recovery_enable_tooltip = config_error_recovery_enable_tooltip.value
 
-    if not config_error_recovery_enable_assert:
+
+    if not config_error_recovery_enable_assert and config_error_recovery:
         pygui.push_style_color(pygui.COL_TEXT, (0, 1, 0, 1))
-        pygui.text("Catch")
+        pygui.text("Recover")
     else:
         pygui.push_style_color(pygui.COL_TEXT, (1, 0, 0, 1))
-        pygui.text("Throw")
+        pygui.text("Crash")
     pygui.pop_style_color()
     pygui.same_line()
     help_marker(

@@ -455,6 +455,7 @@ INPUT_TEXT_FLAGS_CALLBACK_ALWAYS: int             # Callback on each iteration. 
 INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER: int        # Callback on character inputs to replace or discard them. modify 'eventchar' to replace or discard, or return 1 in callback to discard.
 INPUT_TEXT_FLAGS_CALLBACK_RESIZE: int             # Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow. notify when the string wants to be resized (for string types which hold a cache of their size). you will be provided a new bufsize in the callback and need to honor it. (see misc/cpp/imgui_stdlib.h for an example of using this)
 INPUT_TEXT_FLAGS_CALLBACK_EDIT: int               # Callback on any edit. note that inputtext() already returns true on edit + you can always use isitemedited(). the callback is useful to manipulate the underlying buffer while focus is active.
+INPUT_TEXT_FLAGS_WORD_WRAP: int                   # Inputtextmultiline(): word-wrap lines that are too long.
 TREE_NODE_FLAGS_NONE: int
 TREE_NODE_FLAGS_SELECTED: int                     # Draw as selected
 TREE_NODE_FLAGS_FRAMED: int                       # Draw frame with background (e.g. for collapsingheader)
@@ -472,7 +473,7 @@ TREE_NODE_FLAGS_SPAN_FULL_WIDTH: int              # Extend hit box to the left-m
 TREE_NODE_FLAGS_SPAN_LABEL_WIDTH: int             # Narrow hit box + narrow hovering highlight, will only cover the label text.
 TREE_NODE_FLAGS_SPAN_ALL_COLUMNS: int             # Frame will span all columns of its container table (label will still fit in current column)
 TREE_NODE_FLAGS_LABEL_SPAN_ALL_COLUMNS: int       # Label will span all columns of its container table
-TREE_NODE_FLAGS_NAV_LEFT_JUMPS_TO_PARENT: int     # Nav: left arrow moves back to parent. this is processed in treepop() when there's an unfullfilled left nav request remaining.
+TREE_NODE_FLAGS_NAV_LEFT_JUMPS_TO_PARENT: int     # Nav: left arrow moves back to parent. this is processed in treepop() when there's an unfulfilled left nav request remaining.
 TREE_NODE_FLAGS_COLLAPSING_HEADER: int
 TREE_NODE_FLAGS_DRAW_LINES_NONE: int              # No lines drawn
 TREE_NODE_FLAGS_DRAW_LINES_FULL: int              # Horizontal lines to child nodes. vertical line drawn down to treepop() position: cover full contents. faster (for large trees).
@@ -496,6 +497,7 @@ SELECTABLE_FLAGS_ALLOW_DOUBLE_CLICK: int       # Generate press events on double
 SELECTABLE_FLAGS_DISABLED: int                 # Cannot be selected, display grayed out text
 SELECTABLE_FLAGS_ALLOW_OVERLAP: int            # (wip) hit testing to allow subsequent widgets to overlap this one
 SELECTABLE_FLAGS_HIGHLIGHT: int                # Make the item be displayed as if it is hovered
+SELECTABLE_FLAGS_SELECT_ON_NAV: int            # Auto-select when moved into, unless ctrl is held. automatic when in a beginmultiselect() block.
 COMBO_FLAGS_NONE: int
 COMBO_FLAGS_POPUP_ALIGN_LEFT: int      # Align the popup toward the left by default
 COMBO_FLAGS_HEIGHT_SMALL: int          # Max ~4 items visible. tip: if you want your combo popup to be a specific size you can use setnextwindowsizeconstraints() prior to calling begincombo()
@@ -577,6 +579,7 @@ DRAG_DROP_FLAGS_PAYLOAD_NO_CROSS_PROCESS: int          # Hint to specify that th
 DRAG_DROP_FLAGS_ACCEPT_BEFORE_DELIVERY: int            # Acceptdragdroppayload() will returns true even before the mouse button is released. you can then call isdelivery() to test if the payload needs to be delivered.
 DRAG_DROP_FLAGS_ACCEPT_NO_DRAW_DEFAULT_RECT: int       # Do not draw the default highlight rectangle when hovering over target.
 DRAG_DROP_FLAGS_ACCEPT_NO_PREVIEW_TOOLTIP: int         # Request hiding the begindragdropsource tooltip from the begindragdroptarget site.
+DRAG_DROP_FLAGS_ACCEPT_DRAW_AS_HOVERED: int            # Accepting item will render as if hovered. useful for e.g. a button() used as a drop target.
 DRAG_DROP_FLAGS_ACCEPT_PEEK_ONLY: int                  # For peeking ahead and inspecting the payload before delivery.
 DATA_TYPE_S8: int         # Signed char / char (with sensible compilers)
 DATA_TYPE_U8: int         # Unsigned char
@@ -792,9 +795,10 @@ BACKEND_FLAGS_HAS_MOUSE_CURSORS: int              # Backend platform supports ho
 BACKEND_FLAGS_HAS_SET_MOUSE_POS: int              # Backend platform supports io.wantsetmousepos requests to reposition the os mouse position (only used if io.confignavmovesetmousepos is set).
 BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: int        # Backend renderer supports imdrawcmd::vtxoffset. this enables output of large meshes (64k+ vertices) while still using 16-bit indices.
 BACKEND_FLAGS_RENDERER_HAS_TEXTURES: int          # Backend renderer supports imtexturedata requests to create/update/destroy textures. this enables incremental texture updates and texture reloads. see https://github.com/ocornut/imgui/blob/master/docs/backends.md for instructions on how to upgrade your custom backend.
+BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int         # Backend renderer supports multiple viewports.
 BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: int         # Backend platform supports multiple viewports.
 BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: int     # Backend platform supports calling io.addmouseviewportevent() with the viewport under the mouse. if possible, ignore viewports with the imguiviewportflags_noinputs flag (win32 backend, glfw 3.30+ backend can do this, sdl backend cannot). if this cannot be done, dear imgui needs to use a flawed heuristic to find the viewport under.
-BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: int         # Backend renderer supports multiple viewports.
+BACKEND_FLAGS_HAS_PARENT_VIEWPORT: int            # Backend platform supports honoring viewport->parentviewport/parentviewportid value, by applying the corresponding parent/child relation at the platform level.
 COL_TEXT: int
 COL_TEXT_DISABLED: int
 COL_WINDOW_BG: int                        # Background of normal windows
@@ -850,7 +854,9 @@ COL_TABLE_ROW_BG_ALT: int                 # Table row background (odd rows)
 COL_TEXT_LINK: int                        # Hyperlink color
 COL_TEXT_SELECTED_BG: int                 # Selected text inside an inputtext
 COL_TREE_LINES: int                       # Tree node hierarchy outlines when using imguitreenodeflags_drawlines
-COL_DRAG_DROP_TARGET: int                 # Rectangle highlighting a drop target
+COL_DRAG_DROP_TARGET: int                 # Rectangle border highlighting a drop target
+COL_DRAG_DROP_TARGET_BG: int              # Rectangle background highlighting a drop target
+COL_UNSAVED_MARKER: int                   # Unsaved document marker (in window title and tabs)
 COL_NAV_CURSOR: int                       # Color of keyboard/gamepad navigation cursor/rectangle, when visible
 COL_NAV_WINDOWING_HIGHLIGHT: int          # Highlight window when using ctrl+tab
 COL_NAV_WINDOWING_DIM_BG: int             # Darken/colorize entire screen behind the ctrl+tab window list, when active
@@ -876,6 +882,7 @@ STYLE_VAR_INDENT_SPACING: int                      # Float     indentspacing
 STYLE_VAR_CELL_PADDING: int                        # Imvec2    cellpadding
 STYLE_VAR_SCROLLBAR_SIZE: int                      # Float     scrollbarsize
 STYLE_VAR_SCROLLBAR_ROUNDING: int                  # Float     scrollbarrounding
+STYLE_VAR_SCROLLBAR_PADDING: int                   # Float     scrollbarpadding
 STYLE_VAR_GRAB_MIN_SIZE: int                       # Float     grabminsize
 STYLE_VAR_GRAB_ROUNDING: int                       # Float     grabrounding
 STYLE_VAR_IMAGE_BORDER_SIZE: int                   # Float     imagebordersize
@@ -1040,6 +1047,8 @@ TABLE_BG_TARGET_NONE: int
 TABLE_BG_TARGET_ROW_BG0: int     # Set row background color 0 (generally used for background, automatically set when imguitableflags_rowbg is used)
 TABLE_BG_TARGET_ROW_BG1: int     # Set row background color 1 (generally used for selection marking)
 TABLE_BG_TARGET_CELL_BG: int     # Set cell background color (top-most color)
+LIST_CLIPPER_FLAGS_NONE: int
+LIST_CLIPPER_FLAGS_NO_SET_TABLE_ROW_COUNTERS: int     # [internal] disabled modifying table row counters. avoid assumption that 1 clipper item == 1 table row.
 MULTI_SELECT_FLAGS_NONE: int
 MULTI_SELECT_FLAGS_SINGLE_SELECT: int                 # Disable selecting more than one item. this is available to allow single-selection code to share same code/logic if desired. it essentially disables the main purpose of beginmultiselect() tho!
 MULTI_SELECT_FLAGS_NO_SELECT_ALL: int                 # Disable ctrl+a shortcut to select all.
@@ -1057,6 +1066,7 @@ MULTI_SELECT_FLAGS_SCOPE_RECT: int                    # Scope for _boxselect and
 MULTI_SELECT_FLAGS_SELECT_ON_CLICK: int               # Apply selection on mouse down when clicking on unselected item. (default)
 MULTI_SELECT_FLAGS_SELECT_ON_CLICK_RELEASE: int       # Apply selection on mouse release when clicking an unselected item. allow dragging an unselected item without altering selection.
 MULTI_SELECT_FLAGS_NAV_WRAP_X: int                    # [temporary] enable navigation wrapping on x axis. provided as a convenience because we don't have a design for the general nav api for this yet. when the more general feature be public we may obsolete this flag in favor of new one.
+MULTI_SELECT_FLAGS_NO_SELECT_ON_RIGHT_CLICK: int      # Disable default right-click processing, which selects item on mouse down, and is designed for context-menus.
 SELECTION_REQUEST_TYPE_NONE: int
 SELECTION_REQUEST_TYPE_SET_ALL: int       # Request app to clear selection (if selected==false) or select all items (if selected==true). we cannot set rangefirstitem/rangelastitem as its contents is entirely up to user (not necessarily an index)
 SELECTION_REQUEST_TYPE_SET_RANGE: int     # Request app to select/unselect [rangefirstitem..rangelastitem] items (inclusive) based on value of selected. only endmultiselect() request this, app code can read after beginmultiselect() and it will always be false.
@@ -1185,7 +1195,7 @@ def begin_disabled(disabled: bool=True) -> None:
     Disabling [BETA API]
     - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
-    - Tooltips windows by exception are opted out of disabling.
+    - Tooltips windows are automatically opted out of disabling. Note that IsItemHovered() by default returns false on disabled items, unless using ImGuiHoveredFlags_AllowWhenDisabled. 
     - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     """
     pass
@@ -1262,7 +1272,7 @@ def begin_menu_bar() -> bool:
 def begin_multi_select(flags: int, selection_size: int=-1, items_count: int=-1) -> ImGuiMultiSelectIO:
     """
     Multi-selection system for Selectable(), Checkbox(), TreeNode() functions [BETA]
-    - This enables standard multi-selection/range-selection idioms (CTRL+Mouse/Keyboard, SHIFT+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
+    - This enables standard multi-selection/range-selection idioms (Ctrl+Mouse/Keyboard, Shift+Mouse/Keyboard, etc.) in a way that also allow a clipper to be used.
     - ImGuiSelectionUserData is often used to store your item index within the current view (but may store something else).
     - Read comments near ImGuiMultiSelectIO for instructions/details and see 'Demo->Widgets->Selection State & Multi-Select' for demo.
     - TreeNode() is technically supported but... using this correctly is more complicated. You need some sort of linear/random access to your tree,
@@ -1591,18 +1601,24 @@ def destroy_context(ctx: ImGuiContext=None) -> None:
 def dock_space(dockspace_id: int, size: tuple=(0, 0), flags: int=0, window_class: ImGuiWindowClass=None) -> int:
     """
     Docking
-    [BETA API] Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
-    Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
+    - Read https://github.com/ocornut/imgui/wiki/Docking for details.
+    - Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
+    - You can use most Docking facilities without calling any API. You don't necessarily need to call a DockSpaceXXX function to use Docking!
     - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
     - Drag from window menu button (upper-left button) to undock an entire node (all windows).
     - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
-    About dockspaces:
-    - Use DockSpaceOverViewport() to create a window covering the screen or a specific viewport + a dockspace inside it.
-    This is often used with ImGuiDockNodeFlags_PassthruCentralNode to make it transparent.
-    - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
-    - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
-    - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
-    e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
+    - Dockspaces:
+    - If you want to dock windows into the edge of your screen, most application can simply call DockSpaceOverViewport():
+    e.g. ImGui::NewFrame(); then ImGui::DockSpaceOverViewport();  // Create a dockspace in main viewport.
+    or: ImGui::NewFrame(); then ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);  // Create a dockspace in main viewport, where central node is transparent.
+    - A dockspace is an explicit dock node within an existing window.
+    - DockSpaceOverViewport() basically creates an invisible window covering a viewport, and submit a DockSpace() into it.
+    - IMPORTANT: Dockspaces need to be submitted _before_ any window they can host. Submit them early in your frame!
+    - IMPORTANT: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
+    If you have e.g. multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
+    - Programmatic docking:
+    - There is no public API yet other than the very limited SetNextWindowDockID() function. Sorry for that!
+    - Read https://github.com/ocornut/imgui/wiki/Docking for examples of how to use current internal API.
     Implied size = imvec2(0, 0), flags = 0, window_class = null
     """
     pass
@@ -1616,13 +1632,13 @@ def dock_space_over_viewport(dockspace_id: int, viewport: ImGuiViewport=None, fl
 def drag_float(label: str, v: Float, v_speed: float=1.0, v_min: float=0.0, v_max: float=0.0, format_: str="%.3f", flags: int=0) -> bool:
     """
     Widgets: Drag Sliders
-    - CTRL+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - Ctrl+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
     - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',
     the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &myvector.x
     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
     - Format string may also be set to NULL or use the default format ("%f" or "%d").
     - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For keyboard/gamepad navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).
-    - Use v_min < v_max to clamp edits to given limits. Note that CTRL+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
+    - Use v_min < v_max to clamp edits to given limits. Note that Ctrl+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.
     - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.
     - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.
     - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
@@ -1764,7 +1780,7 @@ def end_tooltip() -> None:
 
 def error_recovery_store_state(state_out: ImGuiErrorRecoveryState) -> None: ...
 def error_recovery_try_to_recover_state(state_in: ImGuiErrorRecoveryState) -> None: ...
-# def find_viewport_by_id(id_: int) -> ImGuiViewport:
+# def find_viewport_by_id(viewport_id: int) -> ImGuiViewport:
 #     """
 #     This is a helper for backends.
 #     """
@@ -2247,7 +2263,7 @@ def input_scalar_n(label: str, data_type: int, p_data: "Sequence[Int | Long | Fl
 def input_text(label: str, buf: String, flags: int=0, callback: "Callable[[ImGuiInputTextCallbackData, Any], int]"=None, user_data: Any=None) -> bool:
     """
     Widgets: Input with Keyboard
-    - If you want to use InputText() with std::string or any custom dynamic string type, see misc/cpp/imgui_stdlib.h and comments in imgui_demo.cpp.
+    - If you want to use InputText() with std::string or any custom dynamic string type, use the wrapper in misc/cpp/imgui_stdlib.h/.cpp!
     - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.
     Implied callback = null, user_data = null
     """
@@ -3128,8 +3144,8 @@ def shortcut(key_chord: int, flags: int=0) -> bool:
     """
     Inputs Utilities: Shortcut Testing & Routing [BETA]
     - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
-    ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments)
-    ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments)
+    ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments
+    ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments
     only ImGuiMod_XXX values are legal to combine with an ImGuiKey. You CANNOT combine two ImGuiKey values.
     - The general idea is that several callers may register interest in a shortcut, and only one owner gets it.
     Parent   -> call Shortcut(Ctrl+S)    // When Parent is focused, Parent gets the shortcut.
@@ -3208,7 +3224,7 @@ def slider_angle(label: str, v_rad: Float, v_degrees_min: float=-360.0, v_degree
 def slider_float(label: str, value: Float, v_min: float, v_max: float, format_: str="%.3f", flags: int=0) -> bool:
     """
     Widgets: Regular Sliders
-    - CTRL+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
+    - Ctrl+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.
     - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -> 1.234; "%5.2f secs" -> 01.23 secs; "Biscuit: %.0f" -> Biscuit: 1; etc.
     - Format string may also be set to NULL or use the default format ("%f" or "%d").
     - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.
@@ -3466,7 +3482,7 @@ def tree_node(label: str, flags: int=0) -> bool:
 
 def tree_node_str(str_id: str, fmt: str) -> bool:
     """
-    Helper variation to easily decorelate the id from the displayed string. read the faq about why and how to use id. to align arbitrary text at the same level as a treenode() you can use bullet().
+    Helper variation to easily decorrelate the id from the displayed string. read the faq about why and how to use id. to align arbitrary text at the same level as a treenode() you can use bullet().
     """
     pass
 
@@ -3554,7 +3570,7 @@ class ImDrawCmd:
     #     """
     #     Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
     #     Since 1.92: removed ImDrawCmd::TextureId field, the getter function must be used!
-    #     == (texref._texdata ? texref._texdata->texid : texref._texid
+    #     == (texref._texdata ? texref._texdata->texid : texref._texid)
     #     """
     #     pass
 
@@ -3589,7 +3605,7 @@ class ImDrawData:
     # """
     # textures: ImVector_ImTextureDataPtr
     # """
-    # List of textures to update. most of the times the list is shared by all imdrawdata, has only 1 texture and it doesn't need any update. this almost always points to imgui::getplatformio().textures[]. may be overriden or set to null if you want to manually update textures.
+    # List of textures to update. most of the times the list is shared by all imdrawdata, has only 1 texture and it doesn't need any update. this almost always points to imgui::getplatformio().textures[]. may be overridden or set to null if you want to manually update textures.
     # """
     # total_idx_count: int
     # """
@@ -3705,7 +3721,7 @@ class ImDrawList:
 
     def add_ellipse(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0, thickness: float=1.0) -> None: ...
     def add_ellipse_filled(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], col: int, rot: float=0.0, num_segments: int=0) -> None: ...
-    def add_image(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
+    def add_image(self: ImDrawList, tex_ref: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: tuple=(0, 0), uv_max: tuple=(1, 1), col: int=IM_COL32_WHITE) -> None:
         """
         Image primitives
         - Read FAQ to understand what ImTextureID/ImTextureRef are.
@@ -3715,8 +3731,8 @@ class ImDrawList:
         """
         pass
 
-    def add_image_quad(self: ImDrawList, tex_ref: ImTextureRef, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
-    def add_image_rounded(self: ImDrawList, tex_ref: ImTextureRef, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0) -> None: ...
+    def add_image_quad(self: ImDrawList, tex_ref: int, p1: Tuple[float, float], p2: Tuple[float, float], p3: Tuple[float, float], p4: Tuple[float, float], uv1: tuple=(0, 0), uv2: tuple=(1, 0), uv3: tuple=(1, 1), uv4: tuple=(0, 1), col: int=IM_COL32_WHITE) -> None: ...
+    def add_image_rounded(self: ImDrawList, tex_ref: int, p_min: Tuple[float, float], p_max: Tuple[float, float], uv_min: Tuple[float, float], uv_max: Tuple[float, float], col: int, rounding: float, flags: int=0) -> None: ...
     def add_line(self: ImDrawList, p1: Tuple[float, float], p2: Tuple[float, float], col: int, thickness: float=1.0) -> None:
         """
         Primitives
@@ -3772,7 +3788,7 @@ class ImDrawList:
 
     # def clone_output(self: ImDrawList) -> ImDrawList:
     #     """
-    #     Create a clone of the cmdbuffer/idxbuffer/vtxbuffer.
+    #     Create a clone of the cmdbuffer/idxbuffer/vtxbuffer. for multi-threaded rendering, consider using `imgui_threaded_rendering` from https://github.com/ocornut/imgui_club instead.
     #     """
     #     pass
 
@@ -3874,13 +3890,9 @@ class ImFont:
     """
     Font runtime data and rendering
     - ImFontAtlas automatically loads a default embedded font for you if you didn't load one manually.
-    - Since 1.92.X a font may be rendered as any size! Therefore a font doesn't have one specific size.
+    - Since 1.92.0 a font may be rendered as any size! Therefore a font doesn't have one specific size.
     - Use 'font->GetFontBaked(size)' to retrieve the ImFontBaked* corresponding to a given size.
     - If you used g.Font + g.FontSize (which is frequent from the ImGui layer), you can use g.FontBaked as a shortcut, as g.FontBaked == g.Font->GetFontBaked(g.FontSize).
-    """
-    container_atlas: ImFontAtlas
-    """
-    4-8 what we have been loaded into.
     """
     # current_rasterizer_density: float
     # """
@@ -3917,13 +3929,17 @@ class ImFont:
     # """
     # 4     // in  // font size passed to addfont(). use for old code calling pushfont() expecting to use that size. (use imgui::getfontbaked() to get font baked at current bound size).
     # """
+    # owner_atlas: ImFontAtlas
+    # """
+    # 4-8   // what we have been loaded into.
+    # """
     # remap_pairs: ImGuiStorage
     # """
     # 16    //     // remapping pairs when using addremapchar(), otherwise empty.
     # """
     # sources: ImVector_ImFontConfigPtr
     # """
-    # 16    // in  // list of sources. pointers within containeratlas->sources[]
+    # 16    // in  // list of sources. pointers within owneratlas->sources[]
     # """
     # used8k_pages_map: int
     # """
@@ -3931,16 +3947,11 @@ class ImFont:
     # """
     # def calc_text_size_a(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str) -> Tuple[float, float]:
     #     """
-    #     Implied text_end = null, remaining = null
+    #     Implied text_end = null, out_remaining = null
     #     """
     #     pass
 
-    # def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, remaining: Any=None) -> Tuple[float, float]:
-    #     """
-    #     Utf8
-    #     """
-    #     pass
-
+    # def calc_text_size_a_ex(self: ImFont, size: float, max_width: float, wrap_width: float, text_begin: str, text_end: str=None, out_remaining: Any=None) -> Tuple[float, float]: ...
     # def calc_word_wrap_position(self: ImFont, size: float, text: str, text_end: str, wrap_width: float) -> str: ...
     def get_debug_name(self: ImFont) -> str:
         """
@@ -3971,7 +3982,7 @@ class ImFont:
     #     pass
 
     # def render_char_ex(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, c: int, cpu_fine_clip: ImVec4=None) -> None: ...
-    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, cpu_fine_clip: bool=False) -> None: ...
+    # def render_text(self: ImFont, draw_list: ImDrawList, size: float, pos: Tuple[float, float], col: int, clip_rect: Tuple[float, float, float, float], text_begin: str, text_end: str, wrap_width: float=0.0, flags: int=0) -> None: ...
 
 class ImFontAtlas:
     """
@@ -4121,7 +4132,7 @@ class ImFontAtlas:
     #     """
     #     Register and retrieve custom rectangles
     #     - You can request arbitrary rectangles to be packed into the atlas, for your own purpose.
-    #     - Since 1.92.X, packing is done immediately in the function call (previously packing was done during the Build call)
+    #     - Since 1.92.0, packing is done immediately in the function call (previously packing was done during the Build call)
     #     - You can render your pixels into the texture right after calling the AddCustomRect() functions.
     #     - VERY IMPORTANT:
     #     - Texture may be created/resized at any time when calling ImGui or ImFontAtlas functions.
@@ -4169,7 +4180,7 @@ class ImFontAtlas:
 
     # def clear(self: ImFontAtlas) -> None:
     #     """
-    #     Clear everything (input fonts, output glyphs/textures)
+    #     Clear everything (input fonts, output glyphs/textures).
     #     """
     #     pass
 
@@ -4311,14 +4322,6 @@ class ImFontBaked:
     # """
     # 4     //     // unique id for this baked storage
     # """
-    # container_font: ImFont
-    # """
-    # 4-8   // in  // parent font
-    # """
-    # container_font: ImFont
-    # """
-    # 4-8   // in  // parent font
-    # """
     # descent: float
     # """
     # [Internal] Members: Cold
@@ -4397,14 +4400,6 @@ class ImFontBaked:
     # """
     # 0  //     // enable a two-steps mode where calctextsize() calls will load advancex *without* rendering/packing glyphs. only advantagous if you know that the glyph is unlikely to actually be rendered, otherwise it is slower because we'd do one query on the first calctextsize and one query on the first draw.
     # """
-    # lock_loading_fallback: int
-    # """
-    # 0  //     //
-    # """
-    # lock_loading_fallback: int
-    # """
-    # 0  //     //
-    # """
     # metrics_total_surface: int
     # """
     # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
@@ -4412,6 +4407,10 @@ class ImFontBaked:
     # metrics_total_surface: int
     # """
     # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
+    # """
+    # owner_font: ImFont
+    # """
+    # 4-8   // in  // parent font
     # """
     # rasterizer_density: float
     # """
@@ -4487,7 +4486,7 @@ class ImFontConfig:
     # """
     font_data_owned_by_atlas: bool
     """
-    True // ttf/otf data ownership taken by the container imfontatlas (will delete memory itself).
+    True // ttf/otf data ownership taken by the owner imfontatlas (will delete memory itself).
     """
     font_data_size: int
     # font_loader: ImFontLoader
@@ -4832,13 +4831,17 @@ class ImGuiIO:
     Option to enable various debug tools showing buttons that will call the IM_DEBUG_BREAK() macro.
     - The Item Picker tool will be available regardless of this being enabled, in order to maximize its discoverability.
     - Requires a debugger being attached, otherwise IM_DEBUG_BREAK() options will appear to crash your application.
-    e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version).
+    e.g. io.ConfigDebugIsDebuggerPresent = ::IsDebuggerPresent() on Win32, or refer to ImOsIsDebuggerPresent() imgui_test_engine/imgui_te_utils.cpp for a Unix compatible version.
     = false          // enable various tools calling im_debug_break().
     """
     config_docking_always_tab_bar: bool
     """
     = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
     """
+    # config_docking_no_docking_over: bool
+    # """
+    # = false          // simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
+    # """
     config_docking_no_split: bool
     """
     Docking options (when ImGuiConfigFlags_DockingEnable is set)
@@ -4953,10 +4956,6 @@ class ImGuiIO:
     # """
     # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
     # """
-    # config_viewport_platform_focus_sets_imgui_focus: bool
-    # """
-    # = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
-    # """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
@@ -4968,12 +4967,16 @@ class ImGuiIO:
     """
     config_viewports_no_default_parent: bool
     """
-    = false          // disable default os parenting to main viewport for secondary viewports. by default, viewports are marked with parentviewportid = <main_viewport>, expecting the platform backend to setup a parent/child relationship between the os windows (some backend may ignore this). set to true if you want the default to be 0, then all viewports will be top-level os windows.
+    = true           // when false: set secondary viewports' parentviewportid to main viewport id by default. expects the platform backend to setup a parent/child relationship between the os windows based on this value. some backend may ignore this. set to true if you want viewports to automatically be parent of main viewport, otherwise all viewports will be top-level os windows.
     """
     config_viewports_no_task_bar_icon: bool
     """
     = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
     """
+    # config_viewports_platform_focus_sets_imgui_focus: bool
+    # """
+    # = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
+    # """
     # config_windows_copy_contents_with_ctrl_c: bool
     # """
     # = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
@@ -5004,7 +5007,7 @@ class ImGuiIO:
     """
     font_allow_user_scaling: bool
     """
-    = false          // [obsolete] allow user scaling text of individual window with ctrl+wheel.
+    = false          // allow user scaling text of individual window with ctrl+wheel.
     """
     font_default: ImFont
     """
@@ -5046,7 +5049,7 @@ class ImGuiIO:
     key_mods: int
     """
     Other state maintained from data above + IO function calls
-    Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags. read-only, updated by newframe()
+    Key mods flags (any of imguimod_ctrl/imguimod_shift/imguimod_alt/imguimod_super flags, same as io.keyctrl/keyshift/keyalt/keysuper but merged into flags). read-only, updated by newframe()
     """
     key_repeat_delay: float
     """
@@ -5374,7 +5377,7 @@ class ImGuiInputTextCallbackData:
     """
     buf_size: int
     """
-    Buffer size (in bytes) = capacity+1  // read-only    // [resize,completion,history,always] include zero-terminator storage. in c land == arraysize(my_char_array), in c++ land: string.capacity()+1
+    Buffer size (in bytes) = capacity+1  // read-only    // [resize,completion,history,always] include zero-terminator storage. in c land: == arraysize(my_char_array), in c++ land: string.capacity()+1
     """
     buf_text_len: int
     """
@@ -5415,7 +5418,7 @@ class ImGuiInputTextCallbackData:
     """
     selection_start: int
     """
-    Read-write   // [completion,history,always] == to selectionend when no selection)
+    Read-write   // [completion,history,always] == to selectionend when no selection
     """
     user_data: Any
     """
@@ -5485,6 +5488,10 @@ class ImGuiListClipper:
     """
     First item to display, updated by each call to step()
     """
+    # flags: int
+    # """
+    # [internal] flags, currently not yet well exposed.
+    # """
     # start_seek_offset_y: float
     # """
     # [internal] account for frozen rows in a table and initial loss of precision in very large windows.
@@ -5694,7 +5701,7 @@ class ImGuiPlatformIO:
     # platform_open_in_shell_fn: Callable
     # """
     # Optional: Open link/folder/file in OS Shell
-    # (default to use ShellExecuteW() on Windows, system() on Linux/Mac)
+    # (default to use ShellExecuteW() on Windows, system() on Linux/Mac. expected to return false on failure, but some platforms may always return true)
     # """
     # platform_open_in_shell_user_data: Any
     # platform_render_window: Callable
@@ -5781,6 +5788,18 @@ class ImGuiPlatformIO:
     (in the future we will attempt to organize this feature to remove the need for a "main viewport")
     Main viewports, followed by all secondary viewports.
     """
+    # def clear_platform_handlers(self: ImGuiPlatformIO) -> None:
+    #     """
+    #     Clear all platform_xxx fields. typically called on platform backend shutdown.
+    #     """
+    #     pass
+
+    # def clear_renderer_handlers(self: ImGuiPlatformIO) -> None:
+    #     """
+    #     Clear all renderer_xxx fields. typically called on renderer backend shutdown.
+    #     """
+    #     pass
+
 
 class ImGuiPlatformImeData:
     """
@@ -6105,10 +6124,26 @@ class ImGuiStyle:
     """
     Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
     """
+    # docking_node_has_close_button: bool
+    # """
+    # Docking node has their own closebutton() to close all docked windows.
+    # """
     docking_separator_size: float
     """
     Thickness of resizing border between docked windows
     """
+    # drag_drop_target_border_size: float
+    # """
+    # Thickness of the drag and drop target border.
+    # """
+    # drag_drop_target_padding: float
+    # """
+    # Size to expand the drag and drop target from actual target item size.
+    # """
+    # drag_drop_target_rounding: float
+    # """
+    # Radius of the drag and drop target frame.
+    # """
     # font_scale_dpi: float
     # """
     # Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
@@ -6206,6 +6241,10 @@ class ImGuiStyle:
     """
     Radius of popup window corners rounding. (note that tooltip windows use windowrounding)
     """
+    # scrollbar_padding: float
+    # """
+    # Padding of scrollbar grab within its frame (same for both axes).
+    # """
     scrollbar_rounding: float
     """
     Radius of grab corners for scrollbar.
@@ -6423,6 +6462,10 @@ class ImGuiViewport:
     """
     Unique identifier for the viewport
     """
+    # parent_viewport: ImGuiViewport
+    # """
+    # (advanced) direct shortcut to imgui::findviewportbyid(parentviewportid). null: no parent.
+    # """
     parent_viewport_id: int
     """
     (advanced) 0: no parent. instruct the platform backend to setup a parent/child relationship between platform windows.
@@ -6686,12 +6729,7 @@ class ImTextureData:
     #     """
     #     pass
 
-    # def set_status(self: ImTextureData, status: Any) -> None:
-    #     """
-    #     Call after honoring a request. never modify status directly!
-    #     """
-    #     pass
-
+    # def set_status(self: ImTextureData, status: Any) -> None: ...
     # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
     #     """
     #     Called by Renderer backend
@@ -6702,7 +6740,8 @@ class ImTextureData:
     # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
     #     """
     #     Called by Renderer backend
-    #     Call after creating or destroying the texture. never modify texid directly!
+    #     - Call SetTexID() and SetStatus() after honoring texture requests. Never modify TexID and Status directly!
+    #     - A backend may decide to destroy a texture that we did not request to destroy, which is fine (e.g. freeing resources), but we immediately set the texture back in _WantCreate mode.
     #     """
     #     pass
 
