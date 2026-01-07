@@ -7599,34 +7599,34 @@ def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), o
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-# def push_font_float(font: ImFont, font_size_base_unscaled: float):
-#     """
-#     Parameters stacks (font)
-#     - PushFont(font, 0.0f)                       // Change font and keep current size
-#     - PushFont(NULL, 20.0f)                      // Keep font and change current size
-#     - PushFont(font, 20.0f)                      // Change font and set size to 20.0f
-#     - PushFont(font, style.FontSizeBase * 2.0f)  // Change font and set size to be twice bigger than current size.
-#     - PushFont(font, font->LegacySize)           // Change font and set size to size passed to AddFontXXX() function. Same as pre-1.92 behavior.
-#     *IMPORTANT* before 1.92, fonts had a single size. They can now be dynamically be adjusted.
-#     - In 1.92 we have REMOVED the single parameter version of PushFont() because it seems like the easiest way to provide an error-proof transition.
-#     - PushFont(font) before 1.92 = PushFont(font, font->LegacySize) after 1.92          // Use default font size as passed to AddFontXXX() function.
-#     *IMPORTANT* global scale factors are applied over the provided size.
-#     - Global scale factors are: 'style.FontScaleMain', 'style.FontScaleDpi' and maybe more.
-#     -  If you want to apply a factor to the _current_ font size:
-#     - CORRECT:   PushFont(NULL, style.FontSizeBase)         // use current unscaled size    == does nothing
-#     - CORRECT:   PushFont(NULL, style.FontSizeBase * 2.0f)  // use current unscaled size x2 == make text twice bigger
-#     - INCORRECT: PushFont(NULL, GetFontSize())              // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
-#     - INCORRECT: PushFont(NULL, GetFontSize() * 2.0f)       // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
-#     Use null as a shortcut to keep current font. use 0.0f to keep current size.
-#     """
-#     dcimgui.ImGui_PushFontFloat(
-#         font._ptr,
-#         font_size_base_unscaled
-#     )
+def push_font_float(font: ImFont, font_size_base_unscaled: float):
+    """
+    Parameters stacks (font)
+    - PushFont(font, 0.0f)                       // Change font and keep current size
+    - PushFont(NULL, 20.0f)                      // Keep font and change current size
+    - PushFont(font, 20.0f)                      // Change font and set size to 20.0f
+    - PushFont(font, style.FontSizeBase * 2.0f)  // Change font and set size to be twice bigger than current size.
+    - PushFont(font, font->LegacySize)           // Change font and set size to size passed to AddFontXXX() function. Same as pre-1.92 behavior.
+    *IMPORTANT* before 1.92, fonts had a single size. They can now be dynamically be adjusted.
+    - In 1.92 we have REMOVED the single parameter version of PushFont() because it seems like the easiest way to provide an error-proof transition.
+    - PushFont(font) before 1.92 = PushFont(font, font->LegacySize) after 1.92          // Use default font size as passed to AddFontXXX() function.
+    *IMPORTANT* global scale factors are applied over the provided size.
+    - Global scale factors are: 'style.FontScaleMain', 'style.FontScaleDpi' and maybe more.
+    -  If you want to apply a factor to the _current_ font size:
+    - CORRECT:   PushFont(NULL, style.FontSizeBase)         // use current unscaled size    == does nothing
+    - CORRECT:   PushFont(NULL, style.FontSizeBase * 2.0f)  // use current unscaled size x2 == make text twice bigger
+    - INCORRECT: PushFont(NULL, GetFontSize())              // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+    - INCORRECT: PushFont(NULL, GetFontSize() * 2.0f)       // INCORRECT! using size after global factors already applied == GLOBAL SCALING FACTORS WILL APPLY TWICE!
+    Use null as a shortcut to keep current font. use 0.0f to keep current size.
+    """
+    dcimgui.ImGui_PushFontFloat(
+        font._ptr,
+        font_size_base_unscaled
+    )
 # [End Function]
 
 # [Function]
@@ -12346,6 +12346,8 @@ cdef class ImDrawList:
         - "uv_min" and "uv_max" represent the normalized texture coordinates to use for those corners. Using (0,0)->(1,1) texture coordinates will generally display the entire texture.
         Implied uv_min = imvec2(0, 0), uv_max = imvec2(1, 1), col = im_col32_white
         """
+        # https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-what-are-imtextureidimtextureref
+        # "Members (either are set, never both!)"
         cdef dcimgui.ImTextureRef t_ref
         t_ref._TexID = tex_ref
         t_ref._TexData = NULL
@@ -16875,7 +16877,7 @@ cdef class ImFontConfig:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def name(self):
         """

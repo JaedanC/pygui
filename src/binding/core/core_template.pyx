@@ -7599,7 +7599,7 @@ def push_clip_rect(clip_rect_min: Tuple[float, float], clip_rect_max: Tuple[floa
 
 # [Function]
 # ?use_template(False)
-# ?active(False)
+# ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
@@ -16877,7 +16877,7 @@ cdef class ImFontConfig:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(str)
     @property
     def name(self):
         """

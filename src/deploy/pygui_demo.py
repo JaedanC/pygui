@@ -3882,6 +3882,16 @@ def show_random_extras():
             pygui.menu_item("io.app_accepting_events:                   {}".format(io.app_accepting_events))
             pygui.menu_item("io.app_focus_lost:                         {}".format(io.app_focus_lost))
             pygui.menu_item("io.backend_flags:                          {}".format(io.backend_flags))
+            pygui.menu_item("   BACKEND_FLAGS_NONE: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_NONE > 0))
+            pygui.menu_item("   BACKEND_FLAGS_HAS_GAMEPAD: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_HAS_GAMEPAD > 0))
+            pygui.menu_item("   BACKEND_FLAGS_HAS_MOUSE_CURSORS: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_HAS_MOUSE_CURSORS > 0))
+            pygui.menu_item("   BACKEND_FLAGS_HAS_SET_MOUSE_POS: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_HAS_SET_MOUSE_POS > 0))
+            pygui.menu_item("   BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_RENDERER_HAS_VTX_OFFSET > 0))
+            pygui.menu_item("   BACKEND_FLAGS_RENDERER_HAS_TEXTURES: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_RENDERER_HAS_TEXTURES > 0))
+            pygui.menu_item("   BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_RENDERER_HAS_VIEWPORTS > 0))
+            pygui.menu_item("   BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_PLATFORM_HAS_VIEWPORTS > 0))
+            pygui.menu_item("   BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_HAS_MOUSE_HOVERED_VIEWPORT > 0))
+            pygui.menu_item("   BACKEND_FLAGS_HAS_PARENT_VIEWPORT: {}".format(io.backend_flags & pygui.BACKEND_FLAGS_HAS_PARENT_VIEWPORT > 0))
             pygui.menu_item("io.backend_platform_name:                  {}".format(io.backend_platform_name))
             pygui.menu_item("io.backend_renderer_name:                  {}".format(io.backend_renderer_name))
             pygui.menu_item("io.config_debug_begin_return_value_loop:   {}".format(io.config_debug_begin_return_value_loop))
@@ -6348,83 +6358,67 @@ def demo_fonts_init():
 
     io.fonts.add_font_default()
 
-    # utf-8 ranges from above
-    builder = pygui.ImFontGlyphRangesBuilder.create()
-    builder.add_text(font.utf8_test)
-    ranges = builder.build_ranges()
-    builder.destroy()
+    # Example from FAQ: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
+    # ImFont* font = io.Fonts->AddFontDefault();
+    # ImFontConfig config;
+    # config.MergeMode = true;
+    # io.Fonts->AddFontFromFileTTF("DroidSans.ttf", 0.0f, &config);           // Merge into first font to add e.g. Asian characters
+    # io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 0.0f, &config); // Merge into first font to add Icons
 
-    # CascadiaMono font
-    config = pygui.ImFontConfig.create()
-    config.name = "CascadiaMono-SemiBold.otf without range"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/CascadiaMono-SemiBold.otf", 14, config)
-    config.name = "CascadiaMono-SemiBold.otf with range"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/CascadiaMono-SemiBold.otf", 14, config, ranges)
-    config.destroy()
+    cascadia_mono_semi_bold_otf = "pygui/fonts/CascadiaMono-SemiBold.otf"
+    noto_sans_math_regular_ttf =  "pygui/fonts/NotoSansMath-Regular.ttf"
+    selawk_ttf =                  "pygui/fonts/selawk.ttf"
+    proggy_clean_ttf =            "pygui/fonts/ProggyClean.ttf"
+    droid_sans_ttf =              "pygui/fonts/DroidSans.ttf"
+    unifont_otf =                 "pygui/fonts/unifont-15.0.01.otf"
 
-    # NotoSansMath font
-    config = pygui.ImFontConfig.create()
-    config.name = "NotoSansMath-Regular.ttf without range"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/NotoSansMath-Regular.ttf", 20, config)
-    config.name = "NotoSansMath-Regular.ttf with range"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/NotoSansMath-Regular.ttf", 20, config, ranges)
-    config.destroy()
+    io.fonts.add_font_from_file_ttf(cascadia_mono_semi_bold_otf)
+    io.fonts.add_font_from_file_ttf(noto_sans_math_regular_ttf)
+    io.fonts.add_font_from_file_ttf(selawk_ttf)
 
-    # Selawk font
+    # Selawk font (Mono)
     config = pygui.ImFontConfig.create()
-    config.name = "selawk.ttf without range"
+    config.name = "(Mono) selawk.ttf"
     config.glyph_min_advance_x = 7.15
     config.glyph_max_advance_x = 7.15
-    io.fonts.add_font_from_file_ttf("pygui/fonts/selawk.ttf", 15, config)
-    config.name = "selawk.ttf with range"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/selawk.ttf", 15, config, ranges)
+    io.fonts.add_font_from_file_ttf(selawk_ttf, 15, config)
     config.destroy()
+
+    io.fonts.add_font_from_file_ttf(droid_sans_ttf)
+
+     # Droid Sans font (Mono)
+    config = pygui.ImFontConfig.create()
+    config.name = "(Mono) DroidSans.ttf"
+    config.glyph_min_advance_x = 7.15
+    config.glyph_max_advance_x = 7.15
+    io.fonts.add_font_from_file_ttf(droid_sans_ttf, 15, config)
+    config.destroy()
+
+    io.fonts.add_font_from_file_ttf(unifont_otf)
 
     # Merging multiple fonts together
     config = pygui.ImFontConfig.create()
-    config.name = "CascadiaMono + Selawk + NotoSansMath"
+    config.name = "(Mono) ProggyClean + DroidSans"
     config.glyph_min_advance_x = 7.15
     config.glyph_max_advance_x = 7.15
-    io.fonts.add_font_from_file_ttf("pygui/fonts/CascadiaMono-SemiBold.otf", 14, config, ranges)
+    io.fonts.add_font_from_file_ttf(proggy_clean_ttf, 15, config)
     config.merge_mode = True
-    io.fonts.add_font_from_file_ttf("pygui/fonts/NotoSansMath-Regular.ttf", 20, config, ranges)
-    io.fonts.add_font_from_file_ttf("pygui/fonts/selawk.ttf", 15, config, ranges)
+    io.fonts.add_font_from_file_ttf(droid_sans_ttf, 15, config)
     config.destroy()
 
-    # Showing the font glyph builder.
-    builder = pygui.ImFontGlyphRangesBuilder.create()
-    builder.add_text("Should not be visible")
-    builder.clear()
-    omega = ord("Ω")
-    builder.add_text("asciiASCII")
-    assert not builder.get_bit(omega)
-    builder.set_bit(omega)
-    assert builder.get_bit(omega)
-    builder.add_char(ord("b"))
-    custom_range = builder.build_ranges()
-    builder.destroy()
-
+    # Try to capture everything in the demo
     config = pygui.ImFontConfig.create()
-    config.name = "Proggy + Droid Minimal"
-    io.fonts.add_font_from_file_ttf("pygui/fonts/ProggyClean.ttf", 20, config, custom_range)
+    config.name = "(Mono) Cas, Sel, NotoMath, Unifont"
+    config.glyph_min_advance_x = 7.15
+    config.glyph_max_advance_x = 7.15
+    io.fonts.add_font_from_file_ttf(cascadia_mono_semi_bold_otf, 14, config)
     config.merge_mode = True
-    io.fonts.add_font_from_file_ttf("pygui/fonts/DroidSans.ttf", 11, config, ranges)
+    io.fonts.add_font_from_file_ttf(noto_sans_math_regular_ttf, 20, config)
+    io.fonts.add_font_from_file_ttf(selawk_ttf, 15, config)
+    config.glyph_min_advance_x = 0
+    config.glyph_max_advance_x = pygui.FLT_MAX
+    io.fonts.add_font_from_file_ttf(unifont_otf, 15, config) # Let Unifont clean up the rest
     config.destroy()
-
-    # More fonts
-    io.fonts.add_font_from_file_ttf("pygui/fonts/unifont-15.0.01.otf", 13, None, ranges)
-
-    # Any fonts that need to be added should call build()
-    io.fonts.build()
-
-    # Since we need the ranges to be valid for the call to build, Python's gc
-    # might clean up the ImGlyphRange before the call to build, resulting in
-    # accessing freed memory. This is why we defer the destruction explicitly to
-    # ensure the memory still availble for the build above. Aat that point. The
-    # gc can safetly clean up the python ImFontConfig instance whenever it
-    # needs.
-    custom_range.destroy()
-    ranges.destroy()
 
 
 def show_fonts_demo():
@@ -6439,7 +6433,7 @@ def show_fonts_demo():
                 pygui.show_style_editor()
         pygui.end()
 
-        pygui.push_font(selected_font if font.use_font else fonts[0])
+        pygui.push_font_float(selected_font if font.use_font else fonts[0], 0)
         pygui.text("After push こんにちは！テスト")
         pygui.text("©땔땕땗😀☠️⭐")
         pygui.text_unformatted(font.utf8_test)
