@@ -13130,29 +13130,30 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float):
-    #     """
-    #     Implied num_segments = 0
-    #     """
-    #     dcimgui.ImDrawList_PathEllipticalArcTo(
-    #         self._ptr,
-    #         _cast_tuple_ImVec2(center),
-    #         _cast_tuple_ImVec2(radius),
-    #         rot,
-    #         a_min,
-    #         a_max
-    #     )
+    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
+        """
+        Implied num_segments = 0
+        """
+        dcimgui.ImDrawList_PathEllipticalArcToEx(
+            self._ptr,
+            _cast_tuple_ImVec2(center),
+            _cast_tuple_ImVec2(radius),
+            rot,
+            a_min,
+            a_max,
+            num_segments
+        )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
     # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
@@ -13172,15 +13173,15 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def path_fill_concave(self: ImDrawList, col: int):
-    #     dcimgui.ImDrawList_PathFillConcave(
-    #         self._ptr,
-    #         col
-    #     )
+    def path_fill_concave(self: ImDrawList, col: int):
+        dcimgui.ImDrawList_PathFillConcave(
+            self._ptr,
+            col
+        )
     # [End Method]
 
     # [Method]
@@ -18366,7 +18367,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18380,12 +18381,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_loop.setter
     def config_debug_begin_return_value_loop(self, value: bool):
-        # dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18403,12 +18404,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_once.setter
     def config_debug_begin_return_value_once(self, value: bool):
-        # dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18426,31 +18427,31 @@ cdef class ImGuiIO:
         return res
     @config_debug_highlight_id_conflicts.setter
     def config_debug_highlight_id_conflicts(self, value: bool):
-        # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_debug_highlight_id_conflicts_show_item_picker(self):
-    #     """
-    #     =true // show 'item picker' button in aforementioned popup.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker
-    #     return res
-    # @config_debug_highlight_id_conflicts_show_item_picker.setter
-    # def config_debug_highlight_id_conflicts_show_item_picker(self, value: bool):
-    #     # dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker = value
-    #     raise NotImplementedError
+    @property
+    def config_debug_highlight_id_conflicts_show_item_picker(self):
+        """
+        =true // show 'item picker' button in aforementioned popup.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker
+        return res
+    @config_debug_highlight_id_conflicts_show_item_picker.setter
+    def config_debug_highlight_id_conflicts_show_item_picker(self, value: bool):
+        dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18467,8 +18468,8 @@ cdef class ImGuiIO:
         return res
     @config_debug_ignore_focus_loss.setter
     def config_debug_ignore_focus_loss(self, value: bool):
-        # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18492,7 +18493,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18510,12 +18511,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_is_debugger_present.setter
     def config_debug_is_debugger_present(self, value: bool):
-        # dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18529,31 +18530,31 @@ cdef class ImGuiIO:
         return res
     @config_docking_always_tab_bar.setter
     def config_docking_always_tab_bar(self, value: bool):
-        # dereference(self._ptr).ConfigDockingAlwaysTabBar = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingAlwaysTabBar = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_docking_no_docking_over(self):
-    #     """
-    #     = false          // simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDockingNoDockingOver
-    #     return res
-    # @config_docking_no_docking_over.setter
-    # def config_docking_no_docking_over(self, value: bool):
-    #     # dereference(self._ptr).ConfigDockingNoDockingOver = value
-    #     raise NotImplementedError
+    @property
+    def config_docking_no_docking_over(self):
+        """
+        = false          // simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDockingNoDockingOver
+        return res
+    @config_docking_no_docking_over.setter
+    def config_docking_no_docking_over(self, value: bool):
+        dereference(self._ptr).ConfigDockingNoDockingOver = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18568,12 +18569,12 @@ cdef class ImGuiIO:
         return res
     @config_docking_no_split.setter
     def config_docking_no_split(self, value: bool):
-        # dereference(self._ptr).ConfigDockingNoSplit = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingNoSplit = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18587,12 +18588,12 @@ cdef class ImGuiIO:
         return res
     @config_docking_transparent_payload.setter
     def config_docking_transparent_payload(self, value: bool):
-        # dereference(self._ptr).ConfigDockingTransparentPayload = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingTransparentPayload = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18606,52 +18607,52 @@ cdef class ImGuiIO:
         return res
     @config_docking_with_shift.setter
     def config_docking_with_shift(self, value: bool):
-        # dereference(self._ptr).ConfigDockingWithShift = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingWithShift = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_dpi_scale_fonts(self):
-    #     """
-    #     DPI/Scaling options
-    #     This may keep evolving during 1.92.x releases. Expect some turbulence.
-    #     = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDpiScaleFonts
-    #     return res
-    # @config_dpi_scale_fonts.setter
-    # def config_dpi_scale_fonts(self, value: bool):
-    #     # dereference(self._ptr).ConfigDpiScaleFonts = value
-    #     raise NotImplementedError
+    @property
+    def config_dpi_scale_fonts(self):
+        """
+        DPI/Scaling options
+        This may keep evolving during 1.92.x releases. Expect some turbulence.
+        = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDpiScaleFonts
+        return res
+    @config_dpi_scale_fonts.setter
+    def config_dpi_scale_fonts(self, value: bool):
+        dereference(self._ptr).ConfigDpiScaleFonts = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_dpi_scale_viewports(self):
-    #     """
-    #     = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigDpiScaleViewports
-    #     return res
-    # @config_dpi_scale_viewports.setter
-    # def config_dpi_scale_viewports(self, value: bool):
-    #     # dereference(self._ptr).ConfigDpiScaleViewports = value
-    #     raise NotImplementedError
+    @property
+    def config_dpi_scale_viewports(self):
+        """
+        = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
+        """
+        cdef bool res = dereference(self._ptr).ConfigDpiScaleViewports
+        return res
+    @config_dpi_scale_viewports.setter
+    def config_dpi_scale_viewports(self, value: bool):
+        dereference(self._ptr).ConfigDpiScaleViewports = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18665,8 +18666,8 @@ cdef class ImGuiIO:
         return res
     @config_drag_click_to_input_text.setter
     def config_drag_click_to_input_text(self, value: bool):
-        # dereference(self._ptr).ConfigDragClickToInputText = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDragClickToInputText = value
+        #raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18779,7 +18780,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18793,12 +18794,12 @@ cdef class ImGuiIO:
         return res
     @config_input_text_cursor_blink.setter
     def config_input_text_cursor_blink(self, value: bool):
-        # dereference(self._ptr).ConfigInputTextCursorBlink = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTextCursorBlink = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18812,12 +18813,12 @@ cdef class ImGuiIO:
         return res
     @config_input_text_enter_keep_active.setter
     def config_input_text_enter_keep_active(self, value: bool):
-        # dereference(self._ptr).ConfigInputTextEnterKeepActive = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18831,12 +18832,12 @@ cdef class ImGuiIO:
         return res
     @config_input_trickle_event_queue.setter
     def config_input_trickle_event_queue(self, value: bool):
-        # dereference(self._ptr).ConfigInputTrickleEventQueue = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTrickleEventQueue = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18850,12 +18851,12 @@ cdef class ImGuiIO:
         return res
     @config_mac_osx_behaviors.setter
     def config_mac_osx_behaviors(self, value: bool):
-        # dereference(self._ptr).ConfigMacOSXBehaviors = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigMacOSXBehaviors = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18869,126 +18870,126 @@ cdef class ImGuiIO:
         return res
     @config_memory_compact_timer.setter
     def config_memory_compact_timer(self, value: float):
-        # dereference(self._ptr).ConfigMemoryCompactTimer = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigMemoryCompactTimer = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_capture_keyboard(self):
-    #     """
-    #     = true           // sets io.wantcapturekeyboard when io.navactive is set.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavCaptureKeyboard
-    #     return res
-    # @config_nav_capture_keyboard.setter
-    # def config_nav_capture_keyboard(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavCaptureKeyboard = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_capture_keyboard(self):
+        """
+        = true           // sets io.wantcapturekeyboard when io.navactive is set.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavCaptureKeyboard
+        return res
+    @config_nav_capture_keyboard.setter
+    def config_nav_capture_keyboard(self, value: bool):
+        dereference(self._ptr).ConfigNavCaptureKeyboard = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_cursor_visible_always(self):
-    #     """
-    #     = false          // navigation cursor is always visible.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAlways
-    #     return res
-    # @config_nav_cursor_visible_always.setter
-    # def config_nav_cursor_visible_always(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavCursorVisibleAlways = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_cursor_visible_always(self):
+        """
+        = false          // navigation cursor is always visible.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAlways
+        return res
+    @config_nav_cursor_visible_always.setter
+    def config_nav_cursor_visible_always(self, value: bool):
+        dereference(self._ptr).ConfigNavCursorVisibleAlways = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_cursor_visible_auto(self):
-    #     """
-    #     = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAuto
-    #     return res
-    # @config_nav_cursor_visible_auto.setter
-    # def config_nav_cursor_visible_auto(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavCursorVisibleAuto = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_cursor_visible_auto(self):
+        """
+        = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavCursorVisibleAuto
+        return res
+    @config_nav_cursor_visible_auto.setter
+    def config_nav_cursor_visible_auto(self, value: bool):
+        dereference(self._ptr).ConfigNavCursorVisibleAuto = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_escape_clear_focus_item(self):
-    #     """
-    #     = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusItem
-    #     return res
-    # @config_nav_escape_clear_focus_item.setter
-    # def config_nav_escape_clear_focus_item(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavEscapeClearFocusItem = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_escape_clear_focus_item(self):
+        """
+        = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusItem
+        return res
+    @config_nav_escape_clear_focus_item.setter
+    def config_nav_escape_clear_focus_item(self, value: bool):
+        dereference(self._ptr).ConfigNavEscapeClearFocusItem = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_escape_clear_focus_window(self):
-    #     """
-    #     = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusWindow
-    #     return res
-    # @config_nav_escape_clear_focus_window.setter
-    # def config_nav_escape_clear_focus_window(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavEscapeClearFocusWindow = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_escape_clear_focus_window(self):
+        """
+        = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavEscapeClearFocusWindow
+        return res
+    @config_nav_escape_clear_focus_window.setter
+    def config_nav_escape_clear_focus_window(self, value: bool):
+        dereference(self._ptr).ConfigNavEscapeClearFocusWindow = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_nav_move_set_mouse_pos(self):
-    #     """
-    #     = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigNavMoveSetMousePos
-    #     return res
-    # @config_nav_move_set_mouse_pos.setter
-    # def config_nav_move_set_mouse_pos(self, value: bool):
-    #     # dereference(self._ptr).ConfigNavMoveSetMousePos = value
-    #     raise NotImplementedError
+    @property
+    def config_nav_move_set_mouse_pos(self):
+        """
+        = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
+        """
+        cdef bool res = dereference(self._ptr).ConfigNavMoveSetMousePos
+        return res
+    @config_nav_move_set_mouse_pos.setter
+    def config_nav_move_set_mouse_pos(self, value: bool):
+        dereference(self._ptr).ConfigNavMoveSetMousePos = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19003,31 +19004,31 @@ cdef class ImGuiIO:
         return res
     @config_nav_swap_gamepad_buttons.setter
     def config_nav_swap_gamepad_buttons(self, value: bool):
-        # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavSwapGamepadButtons = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_scrollbar_scroll_by_page(self):
-    #     """
-    #     = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
-    #     return res
-    # @config_scrollbar_scroll_by_page.setter
-    # def config_scrollbar_scroll_by_page(self, value: bool):
-    #     # dereference(self._ptr).ConfigScrollbarScrollByPage = value
-    #     raise NotImplementedError
+    @property
+    def config_scrollbar_scroll_by_page(self):
+        """
+        = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+        """
+        cdef bool res = dereference(self._ptr).ConfigScrollbarScrollByPage
+        return res
+    @config_scrollbar_scroll_by_page.setter
+    def config_scrollbar_scroll_by_page(self, value: bool):
+        dereference(self._ptr).ConfigScrollbarScrollByPage = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19042,12 +19043,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_auto_merge.setter
     def config_viewports_no_auto_merge(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoAutoMerge = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoAutoMerge = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19061,12 +19062,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_decoration.setter
     def config_viewports_no_decoration(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoDecoration = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoDecoration = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19080,12 +19081,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_default_parent.setter
     def config_viewports_no_default_parent(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoDefaultParent = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoDefaultParent = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19099,50 +19100,50 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_task_bar_icon.setter
     def config_viewports_no_task_bar_icon(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_viewports_platform_focus_sets_imgui_focus(self):
-    #     """
-    #     = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus
-    #     return res
-    # @config_viewports_platform_focus_sets_imgui_focus.setter
-    # def config_viewports_platform_focus_sets_imgui_focus(self, value: bool):
-    #     # dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus = value
-    #     raise NotImplementedError
+    @property
+    def config_viewports_platform_focus_sets_imgui_focus(self):
+        """
+        = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
+        """
+        cdef bool res = dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus
+        return res
+    @config_viewports_platform_focus_sets_imgui_focus.setter
+    def config_viewports_platform_focus_sets_imgui_focus(self, value: bool):
+        dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def config_windows_copy_contents_with_ctrl_c(self):
-    #     """
-    #     = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
-    #     """
-    #     cdef bool res = dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC
-    #     return res
-    # @config_windows_copy_contents_with_ctrl_c.setter
-    # def config_windows_copy_contents_with_ctrl_c(self, value: bool):
-    #     # dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC = value
-    #     raise NotImplementedError
+    @property
+    def config_windows_copy_contents_with_ctrl_c(self):
+        """
+        = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
+        """
+        cdef bool res = dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC
+        return res
+    @config_windows_copy_contents_with_ctrl_c.setter
+    def config_windows_copy_contents_with_ctrl_c(self, value: bool):
+        dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19156,12 +19157,12 @@ cdef class ImGuiIO:
         return res
     @config_windows_move_from_title_bar_only.setter
     def config_windows_move_from_title_bar_only(self, value: bool):
-        # dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19175,8 +19176,8 @@ cdef class ImGuiIO:
         return res
     @config_windows_resize_from_edges.setter
     def config_windows_resize_from_edges(self, value: bool):
-        # dereference(self._ptr).ConfigWindowsResizeFromEdges = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigWindowsResizeFromEdges = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20092,7 +20093,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(bool)
     @property
     def mouse_released(self):
         """
@@ -20107,22 +20108,22 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[Double])
-    # @property
-    # def mouse_released_time(self):
-    #     """
-    #     Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
-    #     """
-    #     cdef double* res = dereference(self._ptr).MouseReleasedTime
-    #     return Double(dereference(res))
-    # @mouse_released_time.setter
-    # def mouse_released_time(self, value: Sequence[Double]):
-    #     # dereference(self._ptr).MouseReleasedTime = &value.value
-    #     raise NotImplementedError
+    # ?returns(float)
+    @property
+    def mouse_released_time(self):
+        """
+        Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
+        """
+        cdef double* res = dereference(self._ptr).MouseReleasedTime
+        return dereference(res)
+    @mouse_released_time.setter
+    def mouse_released_time(self, value: Double):
+        # dereference(self._ptr).MouseReleasedTime = &value.value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24549,21 +24550,21 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
-    # @property
-    # def docking_node_has_close_button(self):
-    #     """
-    #     Docking node has their own closebutton() to close all docked windows.
-    #     """
-    #     cdef bool res = dereference(self._ptr).DockingNodeHasCloseButton
-    #     return res
-    # @docking_node_has_close_button.setter
-    # def docking_node_has_close_button(self, value: bool):
-    #     # dereference(self._ptr).DockingNodeHasCloseButton = value
-    #     raise NotImplementedError
+    @property
+    def docking_node_has_close_button(self):
+        """
+        Docking node has their own closebutton() to close all docked windows.
+        """
+        cdef bool res = dereference(self._ptr).DockingNodeHasCloseButton
+        return res
+    @docking_node_has_close_button.setter
+    def docking_node_has_close_button(self, value: bool):
+        # dereference(self._ptr).DockingNodeHasCloseButton = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24587,118 +24588,118 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def drag_drop_target_border_size(self):
-    #     """
-    #     Thickness of the drag and drop target border.
-    #     """
-    #     cdef float res = dereference(self._ptr).DragDropTargetBorderSize
-    #     return res
-    # @drag_drop_target_border_size.setter
-    # def drag_drop_target_border_size(self, value: float):
-    #     # dereference(self._ptr).DragDropTargetBorderSize = value
-    #     raise NotImplementedError
+    @property
+    def drag_drop_target_border_size(self):
+        """
+        Thickness of the drag and drop target border.
+        """
+        cdef float res = dereference(self._ptr).DragDropTargetBorderSize
+        return res
+    @drag_drop_target_border_size.setter
+    def drag_drop_target_border_size(self, value: float):
+        # dereference(self._ptr).DragDropTargetBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def drag_drop_target_padding(self):
-    #     """
-    #     Size to expand the drag and drop target from actual target item size.
-    #     """
-    #     cdef float res = dereference(self._ptr).DragDropTargetPadding
-    #     return res
-    # @drag_drop_target_padding.setter
-    # def drag_drop_target_padding(self, value: float):
-    #     # dereference(self._ptr).DragDropTargetPadding = value
-    #     raise NotImplementedError
+    @property
+    def drag_drop_target_padding(self):
+        """
+        Size to expand the drag and drop target from actual target item size.
+        """
+        cdef float res = dereference(self._ptr).DragDropTargetPadding
+        return res
+    @drag_drop_target_padding.setter
+    def drag_drop_target_padding(self, value: float):
+        # dereference(self._ptr).DragDropTargetPadding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def drag_drop_target_rounding(self):
-    #     """
-    #     Radius of the drag and drop target frame.
-    #     """
-    #     cdef float res = dereference(self._ptr).DragDropTargetRounding
-    #     return res
-    # @drag_drop_target_rounding.setter
-    # def drag_drop_target_rounding(self, value: float):
-    #     # dereference(self._ptr).DragDropTargetRounding = value
-    #     raise NotImplementedError
+    @property
+    def drag_drop_target_rounding(self):
+        """
+        Radius of the drag and drop target frame.
+        """
+        cdef float res = dereference(self._ptr).DragDropTargetRounding
+        return res
+    @drag_drop_target_rounding.setter
+    def drag_drop_target_rounding(self, value: float):
+        # dereference(self._ptr).DragDropTargetRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def font_scale_dpi(self):
-    #     """
-    #     Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
-    #     """
-    #     cdef float res = dereference(self._ptr).FontScaleDpi
-    #     return res
-    # @font_scale_dpi.setter
-    # def font_scale_dpi(self, value: float):
-    #     # dereference(self._ptr).FontScaleDpi = value
-    #     raise NotImplementedError
+    @property
+    def font_scale_dpi(self):
+        """
+        Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
+        """
+        cdef float res = dereference(self._ptr).FontScaleDpi
+        return res
+    @font_scale_dpi.setter
+    def font_scale_dpi(self, value: float):
+        # dereference(self._ptr).FontScaleDpi = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def font_scale_main(self):
-    #     """
-    #     Main global scale factor. may be set by application once, or exposed to end-user.
-    #     """
-    #     cdef float res = dereference(self._ptr).FontScaleMain
-    #     return res
-    # @font_scale_main.setter
-    # def font_scale_main(self, value: float):
-    #     # dereference(self._ptr).FontScaleMain = value
-    #     raise NotImplementedError
+    @property
+    def font_scale_main(self):
+        """
+        Main global scale factor. may be set by application once, or exposed to end-user.
+        """
+        cdef float res = dereference(self._ptr).FontScaleMain
+        return res
+    @font_scale_main.setter
+    def font_scale_main(self, value: float):
+        # dereference(self._ptr).FontScaleMain = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def font_size_base(self):
-    #     """
-    #     Font scaling
-    #     - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
-    #     Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
-    #     """
-    #     cdef float res = dereference(self._ptr).FontSizeBase
-    #     return res
-    # @font_size_base.setter
-    # def font_size_base(self, value: float):
-    #     # dereference(self._ptr).FontSizeBase = value
-    #     raise NotImplementedError
+    @property
+    def font_size_base(self):
+        """
+        Font scaling
+        - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
+        Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
+        """
+        cdef float res = dereference(self._ptr).FontSizeBase
+        return res
+    @font_size_base.setter
+    def font_size_base(self, value: float):
+        # dereference(self._ptr).FontSizeBase = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24895,21 +24896,21 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def image_border_size(self):
-    #     """
-    #     Thickness of border around image() calls.
-    #     """
-    #     cdef float res = dereference(self._ptr).ImageBorderSize
-    #     return res
-    # @image_border_size.setter
-    # def image_border_size(self, value: float):
-    #     # dereference(self._ptr).ImageBorderSize = value
-    #     raise NotImplementedError
+    @property
+    def image_border_size(self):
+        """
+        Thickness of border around image() calls.
+        """
+        cdef float res = dereference(self._ptr).ImageBorderSize
+        return res
+    @image_border_size.setter
+    def image_border_size(self, value: float):
+        # dereference(self._ptr).ImageBorderSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -24990,22 +24991,22 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def main_scale(self):
-    #     """
-    #     [Internal]
-    #     Fixme-wip: reference scale, as applied by scaleallsizes().
-    #     """
-    #     cdef float res = dereference(self._ptr)._MainScale
-    #     return res
-    # @main_scale.setter
-    # def main_scale(self, value: float):
-    #     # dereference(self._ptr)._MainScale = value
-    #     raise NotImplementedError
+    @property
+    def main_scale(self):
+        """
+        [Internal]
+        Fixme-wip: reference scale, as applied by scaleallsizes().
+        """
+        cdef float res = dereference(self._ptr)._MainScale
+        return res
+    @main_scale.setter
+    def main_scale(self, value: float):
+        # dereference(self._ptr)._MainScale = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25029,21 +25030,21 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def next_frame_font_size_base(self):
-    #     """
-    #     Fixme: temporary hack until we finish remaining work.
-    #     """
-    #     cdef float res = dereference(self._ptr)._NextFrameFontSizeBase
-    #     return res
-    # @next_frame_font_size_base.setter
-    # def next_frame_font_size_base(self, value: float):
-    #     # dereference(self._ptr)._NextFrameFontSizeBase = value
-    #     raise NotImplementedError
+    @property
+    def next_frame_font_size_base(self):
+        """
+        Fixme: temporary hack until we finish remaining work.
+        """
+        cdef float res = dereference(self._ptr)._NextFrameFontSizeBase
+        return res
+    @next_frame_font_size_base.setter
+    def next_frame_font_size_base(self, value: float):
+        # dereference(self._ptr)._NextFrameFontSizeBase = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25086,21 +25087,21 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def scrollbar_padding(self):
-    #     """
-    #     Padding of scrollbar grab within its frame (same for both axes).
-    #     """
-    #     cdef float res = dereference(self._ptr).ScrollbarPadding
-    #     return res
-    # @scrollbar_padding.setter
-    # def scrollbar_padding(self, value: float):
-    #     # dereference(self._ptr).ScrollbarPadding = value
-    #     raise NotImplementedError
+    @property
+    def scrollbar_padding(self):
+        """
+        Padding of scrollbar grab within its frame (same for both axes).
+        """
+        cdef float res = dereference(self._ptr).ScrollbarPadding
+        return res
+    @scrollbar_padding.setter
+    def scrollbar_padding(self, value: float):
+        # dereference(self._ptr).ScrollbarPadding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25276,78 +25277,78 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_close_button_min_width_selected(self):
-    #     """
-    #     -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabCloseButtonMinWidthSelected
-    #     return res
-    # @tab_close_button_min_width_selected.setter
-    # def tab_close_button_min_width_selected(self, value: float):
-    #     # dereference(self._ptr).TabCloseButtonMinWidthSelected = value
-    #     raise NotImplementedError
+    @property
+    def tab_close_button_min_width_selected(self):
+        """
+        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
+        """
+        cdef float res = dereference(self._ptr).TabCloseButtonMinWidthSelected
+        return res
+    @tab_close_button_min_width_selected.setter
+    def tab_close_button_min_width_selected(self, value: float):
+        # dereference(self._ptr).TabCloseButtonMinWidthSelected = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_close_button_min_width_unselected(self):
-    #     """
-    #     -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabCloseButtonMinWidthUnselected
-    #     return res
-    # @tab_close_button_min_width_unselected.setter
-    # def tab_close_button_min_width_unselected(self, value: float):
-    #     # dereference(self._ptr).TabCloseButtonMinWidthUnselected = value
-    #     raise NotImplementedError
+    @property
+    def tab_close_button_min_width_unselected(self):
+        """
+        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
+        """
+        cdef float res = dereference(self._ptr).TabCloseButtonMinWidthUnselected
+        return res
+    @tab_close_button_min_width_unselected.setter
+    def tab_close_button_min_width_unselected(self, value: float):
+        # dereference(self._ptr).TabCloseButtonMinWidthUnselected = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_min_width_base(self):
-    #     """
-    #     Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabMinWidthBase
-    #     return res
-    # @tab_min_width_base.setter
-    # def tab_min_width_base(self, value: float):
-    #     # dereference(self._ptr).TabMinWidthBase = value
-    #     raise NotImplementedError
+    @property
+    def tab_min_width_base(self):
+        """
+        Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
+        """
+        cdef float res = dereference(self._ptr).TabMinWidthBase
+        return res
+    @tab_min_width_base.setter
+    def tab_min_width_base(self, value: float):
+        # dereference(self._ptr).TabMinWidthBase = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tab_min_width_shrink(self):
-    #     """
-    #     Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
-    #     """
-    #     cdef float res = dereference(self._ptr).TabMinWidthShrink
-    #     return res
-    # @tab_min_width_shrink.setter
-    # def tab_min_width_shrink(self, value: float):
-    #     # dereference(self._ptr).TabMinWidthShrink = value
-    #     raise NotImplementedError
+    @property
+    def tab_min_width_shrink(self):
+        """
+        Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
+        """
+        cdef float res = dereference(self._ptr).TabMinWidthShrink
+        return res
+    @tab_min_width_shrink.setter
+    def tab_min_width_shrink(self, value: float):
+        # dereference(self._ptr).TabMinWidthShrink = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -25428,78 +25429,78 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
-    # @property
-    # def tree_lines_flags(self):
-    #     """
-    #     Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
-    #     """
-    #     cdef dcimgui.ImGuiTreeNodeFlags res = dereference(self._ptr).TreeLinesFlags
-    #     return res
-    # @tree_lines_flags.setter
-    # def tree_lines_flags(self, value: int):
-    #     # dereference(self._ptr).TreeLinesFlags = value
-    #     raise NotImplementedError
+    @property
+    def tree_lines_flags(self):
+        """
+        Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
+        """
+        cdef dcimgui.ImGuiTreeNodeFlags res = dereference(self._ptr).TreeLinesFlags
+        return res
+    @tree_lines_flags.setter
+    def tree_lines_flags(self, value: int):
+        # dereference(self._ptr).TreeLinesFlags = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tree_lines_rounding(self):
-    #     """
-    #     Radius of lines connecting child nodes to the vertical line.
-    #     """
-    #     cdef float res = dereference(self._ptr).TreeLinesRounding
-    #     return res
-    # @tree_lines_rounding.setter
-    # def tree_lines_rounding(self, value: float):
-    #     # dereference(self._ptr).TreeLinesRounding = value
-    #     raise NotImplementedError
+    @property
+    def tree_lines_rounding(self):
+        """
+        Radius of lines connecting child nodes to the vertical line.
+        """
+        cdef float res = dereference(self._ptr).TreeLinesRounding
+        return res
+    @tree_lines_rounding.setter
+    def tree_lines_rounding(self, value: float):
+        # dereference(self._ptr).TreeLinesRounding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def tree_lines_size(self):
-    #     """
-    #     Thickness of outlines when using imguitreenodeflags_drawlines.
-    #     """
-    #     cdef float res = dereference(self._ptr).TreeLinesSize
-    #     return res
-    # @tree_lines_size.setter
-    # def tree_lines_size(self, value: float):
-    #     # dereference(self._ptr).TreeLinesSize = value
-    #     raise NotImplementedError
+    @property
+    def tree_lines_size(self):
+        """
+        Thickness of outlines when using imguitreenodeflags_drawlines.
+        """
+        cdef float res = dereference(self._ptr).TreeLinesSize
+        return res
+    @tree_lines_size.setter
+    def tree_lines_size(self, value: float):
+        # dereference(self._ptr).TreeLinesSize = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
-    # @property
-    # def window_border_hover_padding(self):
-    #     """
-    #     Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
-    #     """
-    #     cdef float res = dereference(self._ptr).WindowBorderHoverPadding
-    #     return res
-    # @window_border_hover_padding.setter
-    # def window_border_hover_padding(self, value: float):
-    #     # dereference(self._ptr).WindowBorderHoverPadding = value
-    #     raise NotImplementedError
+    @property
+    def window_border_hover_padding(self):
+        """
+        Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
+        """
+        cdef float res = dereference(self._ptr).WindowBorderHoverPadding
+        return res
+    @window_border_hover_padding.setter
+    def window_border_hover_padding(self, value: float):
+        # dereference(self._ptr).WindowBorderHoverPadding = value
+        raise NotImplementedError
     # [End Field]
 
     # [Field]

@@ -165,6 +165,7 @@ class PyxHeader:
 
             function_template = Template(function_template_base)
             function_template.set_condition("has_comment", function.comment is not None and show_comments)
+            function_template.set_condition("is_static_method", False)
             function_template.format(
                 function_name=function.name,
                 function_parameters=function.parameters,
@@ -216,6 +217,7 @@ class PyxHeader:
 
                 method_template = Template(function_template_base)
                 method_template.set_condition("has_comment", method.comment is not None and show_comments)
+                method_template.set_condition("is_static_method", method.is_static_method)
                 method_template.format(
                     function_name=method.name,
                     function_parameters=method.parameters,
@@ -267,12 +269,13 @@ class PyxClass:
             )
 
     class Method:
-        def __init__(self, name, parameters: str, options: dict, impl: str, comment: str):
+        def __init__(self, name, parameters: str, options: dict, impl: str, comment: str, is_static_method: bool):
             self.name: str = name
             self.parameters: str = parameters
             self.options: dict = options
             self.impl: str = impl
             self.comment: str | None = comment
+            self.is_static_method = is_static_method
 
         def copy(self):
             return PyxClass.Method(
@@ -281,6 +284,7 @@ class PyxClass:
                 self.options.copy(),
                 self.impl,
                 self.comment,
+                self.is_static_method,
             )
 
     def __init__(self, name, options: dict, impl: str,
@@ -635,6 +639,9 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
         multiline_comments = multiline_comments.strip("\n")
         return multiline_comments
 
+    def parse_if_method_is_static_method(src_containing_staticmethod_line: str) -> bool:
+        return "@staticmethod" in src_containing_staticmethod_line
+
 
     parsed_functions: List[PyxFunction] = []
     for function_src in get_sections(pyx_src, "Function"):
@@ -677,12 +684,14 @@ def create_pyx_model(pyx_src: str) -> PyxHeader:
             method_name, method_parameters = parse_function(class_method)
             method_body = parse_other_than_options_and_comment(class_method)
             method_comment = parse_multiline_comment(class_method)
+            is_static_method = parse_if_method_is_static_method(class_method)
             parsed_methods.append(PyxClass.Method(
                 method_name,
                 method_parameters,
                 method_options,
                 method_body,
                 method_comment,
+                is_static_method,
             ))
 
         parsed_classes.append(PyxClass(

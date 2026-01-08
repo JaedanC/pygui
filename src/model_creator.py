@@ -81,6 +81,7 @@ def to_pyi(
     base = textwrap.dedent('''
     # This file is auto-generated. If you need to edit this file then edit the
     # template this is created from instead.
+    from __future__ import annotations
     from typing import Any, Callable, Tuple, List, Sequence, Optional
     from PIL import Image
 

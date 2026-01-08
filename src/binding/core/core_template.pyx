@@ -13130,29 +13130,30 @@ cdef class ImDrawList:
     # [End Method]
 
     # [Method]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float):
+    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
         """
         Implied num_segments = 0
         """
-        dcimgui.ImDrawList_PathEllipticalArcTo(
+        dcimgui.ImDrawList_PathEllipticalArcToEx(
             self._ptr,
             _cast_tuple_ImVec2(center),
             _cast_tuple_ImVec2(radius),
             rot,
             a_min,
-            a_max
+            a_max,
+            num_segments
         )
     # [End Method]
 
     # [Method]
     # ?use_template(False)
     # ?active(False)
-    # ?invisible(False)
+    # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
     def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0):
@@ -13172,7 +13173,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
@@ -18366,7 +18367,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18380,12 +18381,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_loop.setter
     def config_debug_begin_return_value_loop(self, value: bool):
-        # dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugBeginReturnValueLoop = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18403,12 +18404,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_begin_return_value_once.setter
     def config_debug_begin_return_value_once(self, value: bool):
-        # dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugBeginReturnValueOnce = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18426,13 +18427,13 @@ cdef class ImGuiIO:
         return res
     @config_debug_highlight_id_conflicts.setter
     def config_debug_highlight_id_conflicts(self, value: bool):
-        # dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugHighlightIdConflicts = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18445,12 +18446,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_highlight_id_conflicts_show_item_picker.setter
     def config_debug_highlight_id_conflicts_show_item_picker(self, value: bool):
-        # dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugHighlightIdConflictsShowItemPicker = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18467,8 +18468,8 @@ cdef class ImGuiIO:
         return res
     @config_debug_ignore_focus_loss.setter
     def config_debug_ignore_focus_loss(self, value: bool):
-        # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18492,7 +18493,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18510,12 +18511,12 @@ cdef class ImGuiIO:
         return res
     @config_debug_is_debugger_present.setter
     def config_debug_is_debugger_present(self, value: bool):
-        # dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDebugIsDebuggerPresent = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18529,13 +18530,13 @@ cdef class ImGuiIO:
         return res
     @config_docking_always_tab_bar.setter
     def config_docking_always_tab_bar(self, value: bool):
-        # dereference(self._ptr).ConfigDockingAlwaysTabBar = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingAlwaysTabBar = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18548,12 +18549,12 @@ cdef class ImGuiIO:
         return res
     @config_docking_no_docking_over.setter
     def config_docking_no_docking_over(self, value: bool):
-        # dereference(self._ptr).ConfigDockingNoDockingOver = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingNoDockingOver = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18568,12 +18569,12 @@ cdef class ImGuiIO:
         return res
     @config_docking_no_split.setter
     def config_docking_no_split(self, value: bool):
-        # dereference(self._ptr).ConfigDockingNoSplit = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingNoSplit = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18587,12 +18588,12 @@ cdef class ImGuiIO:
         return res
     @config_docking_transparent_payload.setter
     def config_docking_transparent_payload(self, value: bool):
-        # dereference(self._ptr).ConfigDockingTransparentPayload = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingTransparentPayload = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18606,13 +18607,13 @@ cdef class ImGuiIO:
         return res
     @config_docking_with_shift.setter
     def config_docking_with_shift(self, value: bool):
-        # dereference(self._ptr).ConfigDockingWithShift = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDockingWithShift = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18627,13 +18628,13 @@ cdef class ImGuiIO:
         return res
     @config_dpi_scale_fonts.setter
     def config_dpi_scale_fonts(self, value: bool):
-        # dereference(self._ptr).ConfigDpiScaleFonts = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDpiScaleFonts = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18646,12 +18647,12 @@ cdef class ImGuiIO:
         return res
     @config_dpi_scale_viewports.setter
     def config_dpi_scale_viewports(self, value: bool):
-        # dereference(self._ptr).ConfigDpiScaleViewports = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDpiScaleViewports = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18665,8 +18666,8 @@ cdef class ImGuiIO:
         return res
     @config_drag_click_to_input_text.setter
     def config_drag_click_to_input_text(self, value: bool):
-        # dereference(self._ptr).ConfigDragClickToInputText = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigDragClickToInputText = value
+        #raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -18779,7 +18780,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18793,12 +18794,12 @@ cdef class ImGuiIO:
         return res
     @config_input_text_cursor_blink.setter
     def config_input_text_cursor_blink(self, value: bool):
-        # dereference(self._ptr).ConfigInputTextCursorBlink = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTextCursorBlink = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18812,12 +18813,12 @@ cdef class ImGuiIO:
         return res
     @config_input_text_enter_keep_active.setter
     def config_input_text_enter_keep_active(self, value: bool):
-        # dereference(self._ptr).ConfigInputTextEnterKeepActive = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18831,12 +18832,12 @@ cdef class ImGuiIO:
         return res
     @config_input_trickle_event_queue.setter
     def config_input_trickle_event_queue(self, value: bool):
-        # dereference(self._ptr).ConfigInputTrickleEventQueue = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigInputTrickleEventQueue = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18850,12 +18851,12 @@ cdef class ImGuiIO:
         return res
     @config_mac_osx_behaviors.setter
     def config_mac_osx_behaviors(self, value: bool):
-        # dereference(self._ptr).ConfigMacOSXBehaviors = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigMacOSXBehaviors = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18869,13 +18870,13 @@ cdef class ImGuiIO:
         return res
     @config_memory_compact_timer.setter
     def config_memory_compact_timer(self, value: float):
-        # dereference(self._ptr).ConfigMemoryCompactTimer = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigMemoryCompactTimer = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18888,13 +18889,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_capture_keyboard.setter
     def config_nav_capture_keyboard(self, value: bool):
-        # dereference(self._ptr).ConfigNavCaptureKeyboard = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavCaptureKeyboard = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18907,13 +18908,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_cursor_visible_always.setter
     def config_nav_cursor_visible_always(self, value: bool):
-        # dereference(self._ptr).ConfigNavCursorVisibleAlways = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavCursorVisibleAlways = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18926,13 +18927,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_cursor_visible_auto.setter
     def config_nav_cursor_visible_auto(self, value: bool):
-        # dereference(self._ptr).ConfigNavCursorVisibleAuto = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavCursorVisibleAuto = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18945,13 +18946,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_escape_clear_focus_item.setter
     def config_nav_escape_clear_focus_item(self, value: bool):
-        # dereference(self._ptr).ConfigNavEscapeClearFocusItem = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavEscapeClearFocusItem = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18964,13 +18965,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_escape_clear_focus_window.setter
     def config_nav_escape_clear_focus_window(self, value: bool):
-        # dereference(self._ptr).ConfigNavEscapeClearFocusWindow = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavEscapeClearFocusWindow = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -18983,12 +18984,12 @@ cdef class ImGuiIO:
         return res
     @config_nav_move_set_mouse_pos.setter
     def config_nav_move_set_mouse_pos(self, value: bool):
-        # dereference(self._ptr).ConfigNavMoveSetMousePos = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavMoveSetMousePos = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19003,13 +19004,13 @@ cdef class ImGuiIO:
         return res
     @config_nav_swap_gamepad_buttons.setter
     def config_nav_swap_gamepad_buttons(self, value: bool):
-        # dereference(self._ptr).ConfigNavSwapGamepadButtons = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigNavSwapGamepadButtons = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -19022,12 +19023,12 @@ cdef class ImGuiIO:
         return res
     @config_scrollbar_scroll_by_page.setter
     def config_scrollbar_scroll_by_page(self, value: bool):
-        # dereference(self._ptr).ConfigScrollbarScrollByPage = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigScrollbarScrollByPage = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19042,12 +19043,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_auto_merge.setter
     def config_viewports_no_auto_merge(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoAutoMerge = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoAutoMerge = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19061,12 +19062,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_decoration.setter
     def config_viewports_no_decoration(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoDecoration = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoDecoration = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19080,12 +19081,12 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_default_parent.setter
     def config_viewports_no_default_parent(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoDefaultParent = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoDefaultParent = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19099,13 +19100,13 @@ cdef class ImGuiIO:
         return res
     @config_viewports_no_task_bar_icon.setter
     def config_viewports_no_task_bar_icon(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsNoTaskBarIcon = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -19118,13 +19119,13 @@ cdef class ImGuiIO:
         return res
     @config_viewports_platform_focus_sets_imgui_focus.setter
     def config_viewports_platform_focus_sets_imgui_focus(self, value: bool):
-        # dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigViewportsPlatformFocusSetsImGuiFocus = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -19137,12 +19138,12 @@ cdef class ImGuiIO:
         return res
     @config_windows_copy_contents_with_ctrl_c.setter
     def config_windows_copy_contents_with_ctrl_c(self, value: bool):
-        # dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigWindowsCopyContentsWithCtrlC = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19156,12 +19157,12 @@ cdef class ImGuiIO:
         return res
     @config_windows_move_from_title_bar_only.setter
     def config_windows_move_from_title_bar_only(self, value: bool):
-        # dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigWindowsMoveFromTitleBarOnly = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -19175,8 +19176,8 @@ cdef class ImGuiIO:
         return res
     @config_windows_resize_from_edges.setter
     def config_windows_resize_from_edges(self, value: bool):
-        # dereference(self._ptr).ConfigWindowsResizeFromEdges = value
-        raise NotImplementedError
+        dereference(self._ptr).ConfigWindowsResizeFromEdges = value
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
@@ -20092,7 +20093,7 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(bool)
     @property
     def mouse_released(self):
         """
@@ -20107,20 +20108,20 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
-    # ?active(False)
+    # ?use_template(True)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[Double])
+    # ?returns(float)
     @property
     def mouse_released_time(self):
         """
         Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
         """
         cdef double* res = dereference(self._ptr).MouseReleasedTime
-        return Double(dereference(res))
+        return dereference(res)
     @mouse_released_time.setter
-    def mouse_released_time(self, value: Sequence[Double]):
+    def mouse_released_time(self, value: Double):
         # dereference(self._ptr).MouseReleasedTime = &value.value
         raise NotImplementedError
     # [End Field]
@@ -24549,7 +24550,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(bool)
@@ -24587,7 +24588,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24606,7 +24607,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24625,7 +24626,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24644,7 +24645,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24663,7 +24664,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24682,7 +24683,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24895,7 +24896,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -24990,7 +24991,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25029,7 +25030,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25086,7 +25087,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25276,7 +25277,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25295,7 +25296,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25314,7 +25315,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25333,7 +25334,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25428,7 +25429,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(int)
@@ -25447,7 +25448,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25466,7 +25467,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)
@@ -25485,7 +25486,7 @@ cdef class ImGuiStyle:
 
     # [Field]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(float)

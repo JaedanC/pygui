@@ -1,8 +1,8 @@
 import glfw
 import OpenGL.GL as gl
 
-import pygui
 from pygui_demo import demo_fonts_init, pygui_demo_window
+import pygui
 
 
 vsync_enabled = pygui.Bool(True)

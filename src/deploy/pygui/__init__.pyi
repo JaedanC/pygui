@@ -1,5 +1,6 @@
 # This file is auto-generated. If you need to edit this file then edit the
 # template this is created from instead.
+from __future__ import annotations
 from typing import Any, Callable, Tuple, List, Sequence, Optional
 from PIL import Image
 
@@ -3822,19 +3823,13 @@ class ImDrawList:
         """
         pass
 
-    # def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float) -> None:
-    #     """
-    #     Implied num_segments = 0
-    #     """
-    #     pass
+    def path_elliptical_arc_to(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
+        """
+        Implied num_segments = 0
+        """
+        pass
 
-    # def path_elliptical_arc_to_ex(self: ImDrawList, center: Tuple[float, float], radius: Tuple[float, float], rot: float, a_min: float, a_max: float, num_segments: int=0) -> None:
-    #     """
-    #     Ellipse
-    #     """
-    #     pass
-
-    # def path_fill_concave(self: ImDrawList, col: int) -> None: ...
+    def path_fill_concave(self: ImDrawList, col: int) -> None: ...
     def path_fill_convex(self: ImDrawList, col: int) -> None: ...
     def path_line_to(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
     def path_line_to_merge_duplicate(self: ImDrawList, pos: Tuple[float, float]) -> None: ...
@@ -3864,6 +3859,7 @@ class ImDrawListSplitter:
     This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.
     pygui note: This class is instantiable with ImGuiListClipper.create()
     """
+    @staticmethod
     def create() -> ImDrawListSplitter:
         """
         Create a dynamically allocated instance of ImDrawListSplitter. Must
@@ -4569,6 +4565,7 @@ class ImFontConfig:
     """
     Size in pixels for rasterizer (more or less maps to the resulting font height).
     """
+    @staticmethod
     def create() -> ImFontConfig:
         """
         Create a dynamically allocated instance of ImFontConfig. Must
@@ -4685,6 +4682,7 @@ class ImFontGlyphRangesBuilder:
         pass
 
     def clear(self: ImFontGlyphRangesBuilder) -> None: ...
+    @staticmethod
     def create() -> ImFontGlyphRangesBuilder:
         """
         Create a dynamically allocated instance of ImFontGlyphRangesBuilder. Must
@@ -4750,6 +4748,7 @@ class ImGuiErrorRecoveryState:
     # size_of_tree_stack: int
     # size_of_window_stack: int
     # size_of_window_stack: int
+    @staticmethod
     def create() -> ImGuiErrorRecoveryState:
         """
         Create a dynamically allocated instance of ImGuiErrorRecoveryState. Must
@@ -4810,10 +4809,10 @@ class ImGuiIO:
     - See FAQ https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system
     = true           // highlight and show an error message popup when multiple items have conflicting identifiers.
     """
-    # config_debug_highlight_id_conflicts_show_item_picker: bool
-    # """
-    # =true // show 'item picker' button in aforementioned popup.
-    # """
+    config_debug_highlight_id_conflicts_show_item_picker: bool
+    """
+    =true // show 'item picker' button in aforementioned popup.
+    """
     config_debug_ignore_focus_loss: bool
     """
     Option to deactivate io.AddFocusEvent(false) handling.
@@ -4838,10 +4837,10 @@ class ImGuiIO:
     """
     = false          // [beta] [fixme: this currently creates regression with auto-sizing and general overhead] make every single floating window display within a docking node.
     """
-    # config_docking_no_docking_over: bool
-    # """
-    # = false          // simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
-    # """
+    config_docking_no_docking_over: bool
+    """
+    = false          // simplified docking mode: disable window merging into a same tab-bar, so docking is limited to splitting windows.
+    """
     config_docking_no_split: bool
     """
     Docking options (when ImGuiConfigFlags_DockingEnable is set)
@@ -4855,16 +4854,16 @@ class ImGuiIO:
     """
     = false          // enable docking with holding shift key (reduce visual noise, allows dropping in wider space)
     """
-    # config_dpi_scale_fonts: bool
-    # """
-    # DPI/Scaling options
-    # This may keep evolving during 1.92.x releases. Expect some turbulence.
-    # = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
-    # """
-    # config_dpi_scale_viewports: bool
-    # """
-    # = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
-    # """
+    config_dpi_scale_fonts: bool
+    """
+    DPI/Scaling options
+    This may keep evolving during 1.92.x releases. Expect some turbulence.
+    = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
+    """
+    config_dpi_scale_viewports: bool
+    """
+    = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
+    """
     config_drag_click_to_input_text: bool
     """
     = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
@@ -4923,39 +4922,39 @@ class ImGuiIO:
     """
     = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
     """
-    # config_nav_capture_keyboard: bool
-    # """
-    # = true           // sets io.wantcapturekeyboard when io.navactive is set.
-    # """
-    # config_nav_cursor_visible_always: bool
-    # """
-    # = false          // navigation cursor is always visible.
-    # """
-    # config_nav_cursor_visible_auto: bool
-    # """
-    # = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
-    # """
-    # config_nav_escape_clear_focus_item: bool
-    # """
-    # = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
-    # """
-    # config_nav_escape_clear_focus_window: bool
-    # """
-    # = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
-    # """
-    # config_nav_move_set_mouse_pos: bool
-    # """
-    # = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
-    # """
+    config_nav_capture_keyboard: bool
+    """
+    = true           // sets io.wantcapturekeyboard when io.navactive is set.
+    """
+    config_nav_cursor_visible_always: bool
+    """
+    = false          // navigation cursor is always visible.
+    """
+    config_nav_cursor_visible_auto: bool
+    """
+    = true           // using directional navigation key makes the cursor visible. mouse click hides the cursor.
+    """
+    config_nav_escape_clear_focus_item: bool
+    """
+    = true           // pressing escape can clear focused item + navigation id/highlight. set to false if you want to always keep highlight on.
+    """
+    config_nav_escape_clear_focus_window: bool
+    """
+    = false          // pressing escape can clear focused window as well (super set of io.confignavescapeclearfocusitem).
+    """
+    config_nav_move_set_mouse_pos: bool
+    """
+    = false          // directional/tabbing navigation teleports the mouse cursor. may be useful on tv/console systems where moving a virtual mouse is difficult. will update io.mousepos and set io.wantsetmousepos=true.
+    """
     config_nav_swap_gamepad_buttons: bool
     """
     Keyboard/Gamepad Navigation options
     = false          // swap activate<>cancel (a<>b) buttons, matching typical 'nintendo/japanese style' gamepad layout.
     """
-    # config_scrollbar_scroll_by_page: bool
-    # """
-    # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
-    # """
+    config_scrollbar_scroll_by_page: bool
+    """
+    = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+    """
     config_viewports_no_auto_merge: bool
     """
     Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
@@ -4973,14 +4972,14 @@ class ImGuiIO:
     """
     = false          // disable default os task bar icon flag for secondary viewports. when a viewport doesn't want a task bar icon, imguiviewportflags_notaskbaricon will be set on it.
     """
-    # config_viewports_platform_focus_sets_imgui_focus: bool
-    # """
-    # = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
-    # """
-    # config_windows_copy_contents_with_ctrl_c: bool
-    # """
-    # = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
-    # """
+    config_viewports_platform_focus_sets_imgui_focus: bool
+    """
+    = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
+    """
+    config_windows_copy_contents_with_ctrl_c: bool
+    """
+    = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
+    """
     config_windows_move_from_title_bar_only: bool
     """
     = false      // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
@@ -5186,14 +5185,14 @@ class ImGuiIO:
     """
     Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
     """
-    mouse_released: Sequence[bool]
+    mouse_released: bool
     """
     Mouse button went from down to !down
     """
-    # mouse_released_time: Sequence[Double]
-    # """
-    # Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
-    # """
+    mouse_released_time: float
+    """
+    Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
+    """
     mouse_source: int
     """
     Mouse actual input peripheral (mouse/touchscreen/pen).
@@ -5497,6 +5496,7 @@ class ImGuiListClipper:
     # [internal] account for frozen rows in a table and initial loss of precision in very large windows.
     # """
     def begin(self: ImGuiListClipper, items_count: int, items_height: float=-1.0) -> None: ...
+    @staticmethod
     def create() -> ImGuiListClipper:
         """
         Create a dynamically allocated instance of ImGuiListClipper. Must
@@ -5915,6 +5915,7 @@ class ImGuiSelectionBasicStorage:
         """
         pass
 
+    @staticmethod
     def create() -> ImGuiSelectionBasicStorage:
         """
         Create a dynamically allocated instance of ImGuiSelectionBasicStorage. Must
@@ -5986,6 +5987,7 @@ class ImGuiSelectionExternalStorage:
         """
         pass
 
+    @staticmethod
     def create() -> ImGuiSelectionExternalStorage:
         """
         Create a dynamically allocated instance of ImGuiSelectionExternalStorage. Must
@@ -6124,40 +6126,40 @@ class ImGuiStyle:
     """
     Apply to regular windows: amount which we enforce to keep visible when moving near edges of your screen.
     """
-    # docking_node_has_close_button: bool
-    # """
-    # Docking node has their own closebutton() to close all docked windows.
-    # """
+    docking_node_has_close_button: bool
+    """
+    Docking node has their own closebutton() to close all docked windows.
+    """
     docking_separator_size: float
     """
     Thickness of resizing border between docked windows
     """
-    # drag_drop_target_border_size: float
-    # """
-    # Thickness of the drag and drop target border.
-    # """
-    # drag_drop_target_padding: float
-    # """
-    # Size to expand the drag and drop target from actual target item size.
-    # """
-    # drag_drop_target_rounding: float
-    # """
-    # Radius of the drag and drop target frame.
-    # """
-    # font_scale_dpi: float
-    # """
-    # Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
-    # """
-    # font_scale_main: float
-    # """
-    # Main global scale factor. may be set by application once, or exposed to end-user.
-    # """
-    # font_size_base: float
-    # """
-    # Font scaling
-    # - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
-    # Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
-    # """
+    drag_drop_target_border_size: float
+    """
+    Thickness of the drag and drop target border.
+    """
+    drag_drop_target_padding: float
+    """
+    Size to expand the drag and drop target from actual target item size.
+    """
+    drag_drop_target_rounding: float
+    """
+    Radius of the drag and drop target frame.
+    """
+    font_scale_dpi: float
+    """
+    Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
+    """
+    font_scale_main: float
+    """
+    Main global scale factor. may be set by application once, or exposed to end-user.
+    """
+    font_size_base: float
+    """
+    Font scaling
+    - recap: ImGui::GetFontSize() == FontSizeBase * (FontScaleMain * FontScaleDpi * other_scaling_factors)
+    Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
+    """
     frame_border_size: float
     """
     Thickness of border around frames. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -6200,10 +6202,10 @@ class ImGuiStyle:
     (It is possible to modify those fields mid-frame if specific behavior need it, unlike e.g. configuration fields in ImGuiIO)
     Delay for isitemhovered(imguihoveredflags_stationary). time required to consider mouse stationary.
     """
-    # image_border_size: float
-    # """
-    # Thickness of border around image() calls.
-    # """
+    image_border_size: float
+    """
+    Thickness of border around image() calls.
+    """
     indent_spacing: float
     """
     Horizontal indentation when e.g. entering a tree node. generally == (fontsize + framepadding.x*2).
@@ -6220,19 +6222,19 @@ class ImGuiStyle:
     """
     The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
     """
-    # main_scale: float
-    # """
-    # [Internal]
-    # Fixme-wip: reference scale, as applied by scaleallsizes().
-    # """
+    main_scale: float
+    """
+    [Internal]
+    Fixme-wip: reference scale, as applied by scaleallsizes().
+    """
     mouse_cursor_scale: float
     """
     Scale software rendered mouse cursor (when io.mousedrawcursor is enabled). we apply per-monitor dpi scaling over this scale. may be removed later.
     """
-    # next_frame_font_size_base: float
-    # """
-    # Fixme: temporary hack until we finish remaining work.
-    # """
+    next_frame_font_size_base: float
+    """
+    Fixme: temporary hack until we finish remaining work.
+    """
     popup_border_size: float
     """
     Thickness of border around popup/tooltip windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -6241,10 +6243,10 @@ class ImGuiStyle:
     """
     Radius of popup window corners rounding. (note that tooltip windows use windowrounding)
     """
-    # scrollbar_padding: float
-    # """
-    # Padding of scrollbar grab within its frame (same for both axes).
-    # """
+    scrollbar_padding: float
+    """
+    Padding of scrollbar grab within its frame (same for both axes).
+    """
     scrollbar_rounding: float
     """
     Radius of grab corners for scrollbar.
@@ -6281,22 +6283,22 @@ class ImGuiStyle:
     """
     Thickness of border around tabs.
     """
-    # tab_close_button_min_width_selected: float
-    # """
-    # -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
-    # """
-    # tab_close_button_min_width_unselected: float
-    # """
-    # -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
-    # """
-    # tab_min_width_base: float
-    # """
-    # Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
-    # """
-    # tab_min_width_shrink: float
-    # """
-    # Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
-    # """
+    tab_close_button_min_width_selected: float
+    """
+    -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
+    """
+    tab_close_button_min_width_unselected: float
+    """
+    -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never show close button when unselected.
+    """
+    tab_min_width_base: float
+    """
+    Minimum tab width, to make tabs larger than their contents. tabbar buttons are not affected.
+    """
+    tab_min_width_shrink: float
+    """
+    Minimum tab width after shrinking, when using imguitabbarflags_fittingpolicymixed policy.
+    """
     tab_rounding: float
     """
     Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
@@ -6313,22 +6315,22 @@ class ImGuiStyle:
     """
     Expand reactive bounding box for touch-based system where touch position is not accurate enough. unfortunately we don't sort widgets so priority on overlap will always be given to the first widget. so don't grow this too much!
     """
-    # tree_lines_flags: int
-    # """
-    # Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
-    # """
-    # tree_lines_rounding: float
-    # """
-    # Radius of lines connecting child nodes to the vertical line.
-    # """
-    # tree_lines_size: float
-    # """
-    # Thickness of outlines when using imguitreenodeflags_drawlines.
-    # """
-    # window_border_hover_padding: float
-    # """
-    # Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
-    # """
+    tree_lines_flags: int
+    """
+    Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
+    """
+    tree_lines_rounding: float
+    """
+    Radius of lines connecting child nodes to the vertical line.
+    """
+    tree_lines_size: float
+    """
+    Thickness of outlines when using imguitreenodeflags_drawlines.
+    """
+    window_border_hover_padding: float
+    """
+    Hit-testing extent outside/inside resizing border. also extend determination of hovered window. generally meaningfully larger than windowbordersize to make it easy to reach borders.
+    """
     window_border_size: float
     """
     Thickness of border around windows. generally set to 0.0f or 1.0f. (other values are not well tested and more cpu/gpu costly).
@@ -6411,6 +6413,7 @@ class ImGuiTextFilter:
     # input_buf: int
     # def build(self: ImGuiTextFilter) -> None: ...
     # def clear(self: ImGuiTextFilter) -> None: ...
+    @staticmethod
     def create(default_filter: str="") -> ImGuiTextFilter:
         """
         Mimics the constructor for struct ImGuiTextFilter

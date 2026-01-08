@@ -7,7 +7,7 @@ class Template:
     """
     def __init__(self, base_template: str):
         self.base: str = base_template
-    
+
     def set_condition(self, condition: str, value: bool) -> Template:
         """Any conditions in the file will be included or excluded based on
         value. Example:
@@ -43,12 +43,12 @@ class Template:
                 in_correct_block = True
                 in_correct_if_block = True
                 include_this_line = False
-            
+
             if in_correct_block and line_stripped.startswith("#if"):
                 if_block_stack += 1 
             elif in_correct_block and line_stripped.startswith("#endif"):
                 if_block_stack -= 1
-            
+
             if line_stripped.startswith("#else") and in_correct_block and if_block_stack == 1:
                 in_correct_else_block = True
                 in_correct_if_block = False
@@ -63,7 +63,7 @@ class Template:
             show_line = (in_correct_if_block and value) or (in_correct_else_block and not value) or not in_correct_block
             if show_line and include_this_line:
                 filtered_lines.append(line)
-        
+
         self.base = "\n".join(filtered_lines)
         return self
 
@@ -78,10 +78,10 @@ class Template:
                 return "{" + key + "}"
         try:
             self.base = self.base.format_map(IgnoreMissing(**kwargs))
-        except ValueError:
+        except ValueError as e:
             print(self.base)
             print(kwargs)
-            raise ValueError
+            raise ValueError(e) from e
         return self
 
     def compile(self) -> str:
@@ -93,4 +93,3 @@ class Template:
                  {placeholders}
         """
         return self.base
-
