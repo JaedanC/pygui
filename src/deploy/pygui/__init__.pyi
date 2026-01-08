@@ -4249,19 +4249,7 @@ class ImFontAtlasRect:
     # """
     # Size
     # """
-    # h: int
-    # """
-    # Size
-    # """
     # uv0: Tuple[float, float]
-    # """
-    # Uv coordinates (in current texture)
-    # """
-    # uv0: Tuple[float, float]
-    # """
-    # Uv coordinates (in current texture)
-    # """
-    # uv1: Tuple[float, float]
     # """
     # Uv coordinates (in current texture)
     # """
@@ -4273,19 +4261,7 @@ class ImFontAtlasRect:
     # """
     # Size
     # """
-    # w: int
-    # """
-    # Size
-    # """
     # x: int
-    # """
-    # Position (in current texture)
-    # """
-    # x: int
-    # """
-    # Position (in current texture)
-    # """
-    # y: int
     # """
     # Position (in current texture)
     # """
@@ -4305,15 +4281,6 @@ class ImFontBaked:
     # [Internal] Members: Cold
     # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
     # """
-    # ascent: float
-    # """
-    # [Internal] Members: Cold
-    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
-    # """
-    # baked_id: int
-    # """
-    # 4     //
-    # """
     # baked_id: int
     # """
     # 4     //     // unique id for this baked storage
@@ -4323,15 +4290,6 @@ class ImFontBaked:
     # [Internal] Members: Cold
     # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
     # """
-    # descent: float
-    # """
-    # [Internal] Members: Cold
-    # 4+4   // out // ascent: distance from top to bottom of e.g. 'a' [0..fontsize] (unscaled)
-    # """
-    # fallback_advance_x: float
-    # """
-    # 4     // out // findglyph(fallbackchar)->advancex
-    # """
     # fallback_advance_x: float
     # """
     # 4     // out // findglyph(fallbackchar)->advancex
@@ -4340,21 +4298,9 @@ class ImFontBaked:
     # """
     # 4     // out // index of fontfallbackchar
     # """
-    # fallback_glyph_index: int
-    # """
-    # 4     // out // index of fontfallbackchar
-    # """
     # font_loader_datas: Any
     # """
     # 4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
-    # """
-    # font_loader_datas: Any
-    # """
-    # 4-8   //     // font loader opaque storage (per baked font * sources): single contiguous buffer allocated by imgui, passed to loader.
-    # """
-    # glyphs: ImVector_ImFontGlyph
-    # """
-    # 12-16 // out // all glyphs.
     # """
     # glyphs: ImVector_ImFontGlyph
     # """
@@ -4365,24 +4311,10 @@ class ImFontBaked:
     # [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
     # 12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
     # """
-    # index_advance_x: ImVector_float
-    # """
-    # [Internal] Members: Hot ~20/24 bytes (for CalcTextSize)
-    # 12-16 // out // sparse. glyphs->advancex in a directly indexable way (cache-friendly for calctextsize functions which only this info, and are often bottleneck in large ui).
-    # """
     # index_lookup: ImVector_ImU16
     # """
     # [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
     # 12-16 // out // sparse. index glyphs by unicode code-point.
-    # """
-    # index_lookup: ImVector_ImU16
-    # """
-    # [Internal] Members: Hot ~28/36 bytes (for RenderText loop)
-    # 12-16 // out // sparse. index glyphs by unicode code-point.
-    # """
-    # last_used_frame: int
-    # """
-    # 4     //     // record of that time this was bounds
     # """
     # last_used_frame: int
     # """
@@ -4400,10 +4332,6 @@ class ImFontBaked:
     # """
     # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
     # """
-    # metrics_total_surface: int
-    # """
-    # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
-    # """
     # owner_font: ImFont
     # """
     # 4-8   // in  // parent font
@@ -4412,14 +4340,6 @@ class ImFontBaked:
     # """
     # 4     // in  // density this is baked at
     # """
-    # rasterizer_density: float
-    # """
-    # 4     // in  // density this is baked at
-    # """
-    # size: float
-    # """
-    # 4     // in  // height of characters/line, set during loading (doesn't change after loading)
-    # """
     # size: float
     # """
     # 4     // in  // height of characters/line, set during loading (doesn't change after loading)
@@ -4428,18 +4348,7 @@ class ImFontBaked:
     # """
     # 0  //     // queued for destroy
     # """
-    # want_destroy: int
-    # """
-    # 0  //     // queued for destroy
-    # """
     # def clear_output_data(self: ImFontBaked) -> None: ...
-    # def clear_output_data(self: ImFontBaked) -> None: ...
-    # def find_glyph(self: ImFontBaked, c: int) -> ImFontGlyph:
-    #     """
-    #     Return u+fffd glyph if requested glyph doesn't exists.
-    #     """
-    #     pass
-
     # def find_glyph(self: ImFontBaked, c: int) -> ImFontGlyph:
     #     """
     #     Return u+fffd glyph if requested glyph doesn't exists.
@@ -4452,15 +4361,7 @@ class ImFontBaked:
     #     """
     #     pass
 
-    # def find_glyph_no_fallback(self: ImFontBaked, c: int) -> ImFontGlyph:
-    #     """
-    #     Return null if glyph doesn't exist
-    #     """
-    #     pass
-
     # def get_char_advance(self: ImFontBaked, c: int) -> float: ...
-    # def get_char_advance(self: ImFontBaked, c: int) -> float: ...
-    # def is_glyph_loaded(self: ImFontBaked, c: int) -> bool: ...
     # def is_glyph_loaded(self: ImFontBaked, c: int) -> bool: ...
 
 class ImFontConfig:
@@ -4726,42 +4627,18 @@ class ImGuiErrorRecoveryState:
     """
     sizeof() = 20
     """
-    # size_of_begin_popup_stack: int
+    pass
     # size_of_begin_popup_stack: int
     # size_of_color_stack: int
-    # size_of_color_stack: int
-    # size_of_disabled_stack: int
     # size_of_disabled_stack: int
     # size_of_focus_scope_stack: int
-    # size_of_focus_scope_stack: int
-    # size_of_font_stack: int
     # size_of_font_stack: int
     # size_of_group_stack: int
-    # size_of_group_stack: int
-    # size_of_id_stack: int
     # size_of_id_stack: int
     # size_of_item_flags_stack: int
-    # size_of_item_flags_stack: int
-    # size_of_style_var_stack: int
     # size_of_style_var_stack: int
     # size_of_tree_stack: int
-    # size_of_tree_stack: int
     # size_of_window_stack: int
-    # size_of_window_stack: int
-    @staticmethod
-    def create() -> ImGuiErrorRecoveryState:
-        """
-        Create a dynamically allocated instance of ImGuiErrorRecoveryState. Must
-        also be freed with destroy().
-        """
-        pass
-
-    def destroy(self: ImGuiErrorRecoveryState) -> None:
-        """
-        Explicitly frees this instance.
-        """
-        pass
-
 
 class ImGuiIO:
     """
@@ -6584,21 +6461,9 @@ class ImTextureData:
     # """
     # -    rw  // convenience storage for backend. some backends may have enough with texid.
     # """
-    # backend_user_data: Any
-    # """
-    # -    rw  // convenience storage for backend. some backends may have enough with texid.
-    # """
     # bytes_per_pixel: int
     # """
     # W    r   // 4 or 1
-    # """
-    # bytes_per_pixel: int
-    # """
-    # W    r   // 4 or 1
-    # """
-    # format: Any
-    # """
-    # W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
     # """
     # format: Any
     # """
@@ -6608,21 +6473,9 @@ class ImTextureData:
     # """
     # W    r   // texture height
     # """
-    # height: int
-    # """
-    # W    r   // texture height
-    # """
     # pixels: str
     # """
     # W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
-    # """
-    # pixels: str
-    # """
-    # W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
-    # """
-    # ref_count: int
-    # """
-    # W    r   // number of contexts using this texture. used during backend shutdown.
     # """
     # ref_count: int
     # """
@@ -6632,22 +6485,9 @@ class ImTextureData:
     # """
     # Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
     # """
-    # status: Any
-    # """
-    # Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
-    # """
     # tex_id: Any
     # """
     # R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
-    # """
-    # tex_id: Any
-    # """
-    # R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
-    # """
-    # unique_id: int
-    # """
-    # ------------------------------------------ core / backend ---------------------------------------
-    # W    -   // sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
     # """
     # unique_id: int
     # """
@@ -6658,21 +6498,9 @@ class ImTextureData:
     # """
     # W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
     # """
-    # unused_frames: int
-    # """
-    # W    r   // in order to facilitate handling status==wantdestroy in some backend: this is a count successive frames where the texture was not used. always >0 when status==wantdestroy.
-    # """
     # update_rect: ImTextureRect
     # """
     # W    r   // bounding box encompassing all queued updates[].
-    # """
-    # update_rect: ImTextureRect
-    # """
-    # W    r   // bounding box encompassing all queued updates[].
-    # """
-    # updates: ImVector_ImTextureRect
-    # """
-    # W    r   // array of individual updates.
     # """
     # updates: ImVector_ImTextureRect
     # """
@@ -6682,21 +6510,9 @@ class ImTextureData:
     # """
     # W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
     # """
-    # use_colors: bool
-    # """
-    # W    r   // tell whether our texture data is known to use colors (rather than just white + alpha).
-    # """
     # used_rect: ImTextureRect
     # """
     # W    r   // bounding box encompassing all past and queued updates[].
-    # """
-    # used_rect: ImTextureRect
-    # """
-    # W    r   // bounding box encompassing all past and queued updates[].
-    # """
-    # want_destroy_next_frame: bool
-    # """
-    # Rw   -   // [internal] queued to set imtexturestatus_wantdestroy next frame. may still be used in the current frame.
     # """
     # want_destroy_next_frame: bool
     # """
@@ -6706,40 +6522,15 @@ class ImTextureData:
     # """
     # W    r   // texture width
     # """
-    # width: int
-    # """
-    # W    r   // texture width
-    # """
-    # def create(self: ImTextureData, format_: Any, w: int, h: int) -> None: ...
     # def create(self: ImTextureData, format_: Any, w: int, h: int) -> None: ...
     # def destroy_pixels(self: ImTextureData) -> None: ...
-    # def destroy_pixels(self: ImTextureData) -> None: ...
-    # def get_pitch(self: ImTextureData) -> int: ...
     # def get_pitch(self: ImTextureData) -> int: ...
     # def get_pixels(self: ImTextureData) -> Any: ...
-    # def get_pixels(self: ImTextureData) -> Any: ...
-    # def get_pixels_at(self: ImTextureData, x: int, y: int) -> Any: ...
     # def get_pixels_at(self: ImTextureData, x: int, y: int) -> Any: ...
     # def get_size_in_bytes(self: ImTextureData) -> int: ...
-    # def get_size_in_bytes(self: ImTextureData) -> int: ...
-    # def get_tex_id(self: ImTextureData) -> Any: ...
     # def get_tex_id(self: ImTextureData) -> Any: ...
     # def get_tex_ref(self: ImTextureData) -> ImTextureRef: ...
-    # def get_tex_ref(self: ImTextureData) -> ImTextureRef: ...
-    # def set_status(self: ImTextureData, status: Any) -> None:
-    #     """
-    #     Call after honoring a request. never modify status directly!
-    #     """
-    #     pass
-
     # def set_status(self: ImTextureData, status: Any) -> None: ...
-    # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
-    #     """
-    #     Called by Renderer backend
-    #     Call after creating or destroying the texture. never modify texid directly!
-    #     """
-    #     pass
-
     # def set_tex_id(self: ImTextureData, tex_id: Any) -> None:
     #     """
     #     Called by Renderer backend
@@ -6760,27 +6551,11 @@ class ImTextureRect:
     # """
     # Size of rectangle to update (in pixels)
     # """
-    # h: int
-    # """
-    # Size of rectangle to update (in pixels)
-    # """
-    # w: int
-    # """
-    # Size of rectangle to update (in pixels)
-    # """
     # w: int
     # """
     # Size of rectangle to update (in pixels)
     # """
     # x: int
-    # """
-    # Upper-left coordinates of rectangle to update
-    # """
-    # x: int
-    # """
-    # Upper-left coordinates of rectangle to update
-    # """
-    # y: int
     # """
     # Upper-left coordinates of rectangle to update
     # """
@@ -6800,25 +6575,10 @@ class ImTextureRef:
     # Members (either are set, never both!)
     # A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
     # """
-    # tex_data: ImTextureData
-    # """
-    # Members (either are set, never both!)
-    # A texture, generally owned by a imfontatlas. will convert to imtextureid during render loop, after texture has been uploaded.
-    # """
     # tex_id: Any
     # """
     # _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
     # """
-    # tex_id: Any
-    # """
-    # _or_ low-level backend texture identifier, if already uploaded or created by user/app. generally provided to e.g. imgui::image() calls.
-    # """
-    # def get_tex_id(self: ImTextureRef) -> Any:
-    #     """
-    #     == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
-    #     """
-    #     pass
-
     # def get_tex_id(self: ImTextureRef) -> Any:
     #     """
     #     == (_texdata ? _texdata->texid : _texid) // implemented below in the file.
@@ -6858,10 +6618,7 @@ class ImVector_ImDrawListSharedDataPtr:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImDrawListSharedData
-    # data: ImDrawListSharedData
-    # size: int
     # size: int
 
 class ImVector_ImDrawVert:
@@ -6878,10 +6635,7 @@ class ImVector_ImFontConfigPtr:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImFontConfig
-    # data: ImFontConfig
-    # size: int
     # size: int
 
 class ImVector_ImGuiSelectionRequest:
@@ -6908,10 +6662,7 @@ class ImVector_ImGuiTextRange:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImGuiTextFilter_ImGuiTextRange
-    # data: ImGuiTextFilter_ImGuiTextRange
-    # size: int
     # size: int
 
 class ImVector_ImTextureDataPtr:
@@ -6920,10 +6671,7 @@ class ImVector_ImTextureDataPtr:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImTextureData
-    # data: ImTextureData
-    # size: int
     # size: int
 
 class ImVector_ImTextureRect:
@@ -6932,10 +6680,7 @@ class ImVector_ImTextureRect:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImTextureRect
-    # data: ImTextureRect
-    # size: int
     # size: int
 
 class ImVector_ImTextureRef:
@@ -6944,10 +6689,7 @@ class ImVector_ImTextureRef:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: ImTextureRef
-    # data: ImTextureRef
-    # size: int
     # size: int
 
 class ImVector_ImU16:
@@ -6956,10 +6698,7 @@ class ImVector_ImU16:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: int
-    # data: int
-    # size: int
     # size: int
 
 class ImVector_ImU32:
@@ -6977,10 +6716,7 @@ class ImVector_ImU8:
     """
     pass
     # capacity: int
-    # capacity: int
     # data: int
-    # data: int
-    # size: int
     # size: int
 
 class ImVector_ImWchar:

@@ -88,9 +88,9 @@ class PyxHeader:
             found_class: PyxClass = self.get_comparable(search_for_class)
             assert found_class is not None, "Can't just add a field/method to a non-existing class"
             if isinstance(comparable, PyxClass.Field):
-                found_class.fields.append(comparable)
+                found_class.add_field(comparable)
             elif isinstance(comparable, PyxClass.Method):
-                found_class.methods.append(comparable)
+                found_class.add_method(comparable)
 
         self._rebuild_comparable()
         self.sort()
@@ -301,6 +301,25 @@ class PyxClass:
             if comparable_is_active(comparable):
                 return True
         return False
+
+    def add_field(self, field: Field):
+        # Make sure we're not adding the same field a second time. This is
+        # required when a new class in added in the spec for ImGui, as where
+        # this function is called, the class and the field will not be found
+        # in the new header. Thus it will add the class, and attempt to add the
+        # field to this class. If left as a simple .append, every field and
+        # method in new classes which be duplicated.
+        field_names = [f.name for f in self.fields]
+        if field.name in field_names:
+            return
+        self.fields.append(field)
+    
+    def add_method(self, method: Method):
+        # See comment above
+        method_names = [m.name for m in self.methods]
+        if method.name in method_names:
+            return
+        self.methods.append(method)
 
     def copy(self):
         return PyxClass(
