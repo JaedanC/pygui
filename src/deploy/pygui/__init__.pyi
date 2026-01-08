@@ -2190,7 +2190,7 @@ def get_window_width() -> float:
 #     """
 #     pass
 
-def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)) -> None:
+def image(tex_ref: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)) -> None:
     """
     Widgets: Images
     - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
@@ -2202,7 +2202,7 @@ def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0,
     """
     pass
 
-def image_button(str_id: str, tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
+def image_button(str_id: str, tex_ref: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)) -> bool:
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """

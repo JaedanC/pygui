@@ -5239,7 +5239,7 @@ def get_window_width():
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)):
+def image(tex_ref: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1)):
     """
     Widgets: Images
     - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
@@ -5249,8 +5249,12 @@ def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0,
     - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1)
     """
+    cdef dcimgui.ImTextureRef t_ref
+    t_ref._TexID = tex_ref
+    t_ref._TexData = NULL
+
     dcimgui.ImGui_ImageEx(
-        dereference(tex_ref._ptr),
+        t_ref,
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
@@ -5263,13 +5267,17 @@ def image(tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0,
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def image_button(str_id: str, tex_ref: ImTextureRef, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
+def image_button(str_id: str, tex_ref: int, image_size: Tuple[float, float], uv0: tuple=(0, 0), uv1: tuple=(1, 1), bg_col: tuple=(0, 0, 0, 0), tint_col: tuple=(1, 1, 1, 1)):
     """
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1), bg_col = imvec4(0, 0, 0, 0), tint_col = imvec4(1, 1, 1, 1)
     """
+    cdef dcimgui.ImTextureRef t_ref
+    t_ref._TexID = tex_ref
+    t_ref._TexData = NULL
+
     cdef bool res = dcimgui.ImGui_ImageButtonEx(
         _bytes(str_id),
-        dereference(tex_ref._ptr),
+        t_ref,
         _cast_tuple_ImVec2(image_size),
         _cast_tuple_ImVec2(uv0),
         _cast_tuple_ImVec2(uv1),
