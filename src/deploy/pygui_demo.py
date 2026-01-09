@@ -4013,11 +4013,20 @@ def show_random_extras():
             pygui.menu_item("io.want_set_mouse_pos:                     {}".format(io.want_set_mouse_pos))
             pygui.menu_item("io.want_text_input:                        {}".format(io.want_text_input))
 
-        def show_imguikeydata(kd: pygui.ImGuiKeyData):
-            pygui.menu_item("kd.analog_value: {}".format(kd.analog_value))
-            pygui.menu_item("kd.down: {}".format(kd.down))
-            pygui.menu_item("kd.down_duration: {}".format(kd.down_duration))
-            pygui.menu_item("kd.down_duration_prev: {}".format(kd.down_duration_prev))
+        def show_imguikeydata(kd: List[pygui.ImGuiKeyData]):
+            for i, key in enumerate(kd):
+                if key.down:
+                    pygui.push_style_color(pygui.COL_TEXT, pygui.Vec4(0, 1, 0, 1).to_u32())
+                
+                if pygui.begin_menu("ImGuiKeyData: {}".format(i)):
+                    pygui.menu_item("kd.analog_value: {}".format(key.analog_value))
+                    pygui.menu_item("kd.down: {}".format(key.down))
+                    pygui.menu_item("kd.down_duration: {:.05f}".format(key.down_duration))
+                    pygui.menu_item("kd.down_duration_prev: {:.05f}".format(key.down_duration_prev))
+                    pygui.end_menu()
+                
+                if key.down:
+                    pygui.pop_style_color()
 
         def show_imguistyle(style: pygui.ImGuiStyle):
             pygui.menu_item("style.alpha:                                 {}".format(style.alpha))

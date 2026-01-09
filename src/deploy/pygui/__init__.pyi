@@ -4943,7 +4943,7 @@ class ImGuiIO:
     """
     Keyboard modifier down: windows/super (non-macos), ctrl (macos)
     """
-    keys_data: ImGuiKeyData
+    keys_data: List[ImGuiKeyData]
     """
     Key state for all known keys. must use 'key - imguikey_namedkey_begin' as index. use iskeyxxx() functions to access this.
     """
@@ -4967,23 +4967,23 @@ class ImGuiIO:
     """
     Number of visible windows
     """
-    mouse_clicked: Sequence[bool]
+    mouse_clicked: Tuple[bool, bool, bool, bool, bool]
     """
     Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
     """
-    mouse_clicked_count: int
+    mouse_clicked_count: Tuple[int, int, int, int, int]
     """
     == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
     """
-    mouse_clicked_last_count: int
+    mouse_clicked_last_count: Tuple[int, int, int, int, int]
     """
     Count successive number of clicks. stays valid after mouse release. reset after another click is done.
     """
-    mouse_clicked_pos: tuple
+    mouse_clicked_pos: Tuple[tuple, tuple, tuple, tuple, tuple]
     """
     Position at time of clicking
     """
-    mouse_clicked_time: float
+    mouse_clicked_time: Tuple[float, float, float, float, float]
     """
     Time of last click (used to figure out double-click)
     """
@@ -5005,35 +5005,35 @@ class ImGuiIO:
     (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
     = 0.30f          // time for a double-click, in seconds.
     """
-    mouse_double_clicked: Sequence[bool]
+    mouse_double_clicked: Tuple[bool, bool, bool, bool, bool]
     """
     Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
     """
-    mouse_down: Sequence[bool]
+    mouse_down: Tuple[bool, bool, bool, bool, bool]
     """
     Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
     """
-    mouse_down_duration: Sequence[float]
+    mouse_down_duration: Tuple[float, float, float, float, float]
     """
     Duration the mouse button has been down (0.0f == just clicked)
     """
-    mouse_down_duration_prev: Sequence[float]
+    mouse_down_duration_prev: Tuple[float, float, float, float, float]
     """
     Previous time the mouse button has been down
     """
-    mouse_down_owned: Sequence[bool]
+    mouse_down_owned: Tuple[bool, bool, bool, bool, bool]
     """
     Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
     """
-    mouse_down_owned_unless_popup_close: Sequence[bool]
+    mouse_down_owned_unless_popup_close: Tuple[bool, bool, bool, bool, bool]
     """
     Track if button was clicked inside a dear imgui window.
     """
-    mouse_drag_max_distance_abs: tuple
+    mouse_drag_max_distance_abs: Tuple[tuple, tuple, tuple, tuple, tuple]
     """
     Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
     """
-    mouse_drag_max_distance_sqr: Sequence[float]
+    mouse_drag_max_distance_sqr: Tuple[float, float, float, float, float]
     """
     Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
     """
@@ -5062,11 +5062,11 @@ class ImGuiIO:
     """
     Previous mouse position (note that mousedelta is not necessary == mousepos-mouseposprev, in case either position is invalid)
     """
-    mouse_released: bool
+    mouse_released: Tuple[bool, bool, bool, bool, bool]
     """
     Mouse button went from down to !down
     """
-    mouse_released_time: float
+    mouse_released_time: Tuple[float, float, float, float, float]
     """
     Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
     """

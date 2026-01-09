@@ -29,7 +29,7 @@ def main():
             # directory added here. Cython will attempt to statically compile
             # the functions we defined in our pxd file.
             include_dirs=[
-                "c/cpp_config",                              # pygui_config.h
+                "c/cpp_config",                              # custom_python_error.h
                 "external/dear_bindings/generated",          # dcimgui.h
                 "external/dear_bindings/generated/backends", # imgui_impl_*.h
                 "external/imgui",                            # imconfig.h (Ununsed)
@@ -39,7 +39,7 @@ def main():
             ],
             libraries=["dcimgui_glfw_opengl3", "glfw3dll"],
             define_macros=[
-                ("PYGUI_COMPILING_DLL", True),
+                # ("PYGUI_COMPILING_DLL", True),
                 ("USE_CUSTOM_PYTHON_ERROR", True),
             ],
             extra_compile_args=([compile_option])

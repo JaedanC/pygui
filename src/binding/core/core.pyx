@@ -18880,18 +18880,20 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImGuiKeyData)
+    # ?returns(List[ImGuiKeyData])
     @property
     def keys_data(self):
         """
         Key state for all known keys. must use 'key - imguikey_namedkey_begin' as index. use iskeyxxx() functions to access this.
         """
         cdef dcimgui.ImGuiKeyData* res = dereference(self._ptr).KeysData
-        return ImGuiKeyData.from_ptr(res)
+        return [
+            ImGuiKeyData.from_ptr(&(res[i])) for i in range(KEY_NAMED_KEY_COUNT)
+        ]
     @keys_data.setter
     def keys_data(self, value: ImGuiKeyData):
         # dereference(self._ptr).KeysData = value._ptr
@@ -18998,14 +19000,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_clicked(self):
         """
         Mouse button went from !down to down (same as mouseclickedcount[x] != 0)
         """
         cdef bool* res = dereference(self._ptr).MouseClicked
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_clicked.setter
     def mouse_clicked(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseClicked = &value.value
@@ -19017,14 +19025,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(Tuple[int, int, int, int, int])
     @property
     def mouse_clicked_count(self):
         """
         == 0 (not clicked), == 1 (same as mouseclicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !down to down
         """
         cdef dcimgui.ImU16* res = dereference(self._ptr).MouseClickedCount
-        return dereference(res)
+        return (
+            <int>(res[0]),
+            <int>(res[1]),
+            <int>(res[2]),
+            <int>(res[3]),
+            <int>(res[4]),
+        )
     @mouse_clicked_count.setter
     def mouse_clicked_count(self, value: int):
         # dereference(self._ptr).MouseClickedCount = value
@@ -19036,14 +19050,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(int)
+    # ?returns(Tuple[int, int, int, int, int])
     @property
     def mouse_clicked_last_count(self):
         """
         Count successive number of clicks. stays valid after mouse release. reset after another click is done.
         """
         cdef dcimgui.ImU16* res = dereference(self._ptr).MouseClickedLastCount
-        return dereference(res)
+        return (
+            <int>(res[0]),
+            <int>(res[1]),
+            <int>(res[2]),
+            <int>(res[3]),
+            <int>(res[4]),
+        )
     @mouse_clicked_last_count.setter
     def mouse_clicked_last_count(self, value: int):
         # dereference(self._ptr).MouseClickedLastCount = value
@@ -19055,14 +19075,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(tuple)
+    # ?returns(Tuple[tuple, tuple, tuple, tuple, tuple])
     @property
     def mouse_clicked_pos(self):
         """
         Position at time of clicking
         """
         cdef dcimgui.ImVec2* res = dereference(self._ptr).MouseClickedPos
-        return _cast_ImVec2_tuple(dereference(res))
+        return (
+            _cast_ImVec2_tuple(res[0]),
+            _cast_ImVec2_tuple(res[1]),
+            _cast_ImVec2_tuple(res[2]),
+            _cast_ImVec2_tuple(res[3]),
+            _cast_ImVec2_tuple(res[4]),
+        )
     @mouse_clicked_pos.setter
     def mouse_clicked_pos(self, value: ImVec2):
         # dereference(self._ptr).MouseClickedPos = value._ptr
@@ -19074,14 +19100,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
+    # ?returns(Tuple[float, float, float, float, float])
     @property
     def mouse_clicked_time(self):
         """
         Time of last click (used to figure out double-click)
         """
         cdef double* res = dereference(self._ptr).MouseClickedTime
-        return <float>dereference(res)
+        return (
+            <float>(res[0]),
+            <float>(res[1]),
+            <float>(res[2]),
+            <float>(res[3]),
+            <float>(res[4]),
+        )
     @mouse_clicked_time.setter
     def mouse_clicked_time(self, value: float):
         # dereference(self._ptr).MouseClickedTime = &value.value
@@ -19171,14 +19203,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_double_clicked(self):
         """
         Has mouse button been double-clicked? (same as mouseclickedcount[x] == 2)
         """
         cdef bool* res = dereference(self._ptr).MouseDoubleClicked
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_double_clicked.setter
     def mouse_double_clicked(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDoubleClicked = &value.value
@@ -19190,14 +19228,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_down(self):
         """
         Mouse buttons: 0=left, 1=right, 2=middle + extras (imguimousebutton_count == 5). dear imgui mostly uses left and right buttons. other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via ismouse** api.
         """
         cdef bool* res = dereference(self._ptr).MouseDown
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_down.setter
     def mouse_down(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDown = &value.value
@@ -19209,14 +19253,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[float])
+    # ?returns(Tuple[float, float, float, float, float])
     @property
     def mouse_down_duration(self):
         """
         Duration the mouse button has been down (0.0f == just clicked)
         """
         cdef float* res = dereference(self._ptr).MouseDownDuration
-        return dereference(res)
+        return (
+            <float>(res[0]),
+            <float>(res[1]),
+            <float>(res[2]),
+            <float>(res[3]),
+            <float>(res[4]),
+        )
     @mouse_down_duration.setter
     def mouse_down_duration(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDownDuration = &value.value
@@ -19228,14 +19278,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[float])
+    # ?returns(Tuple[float, float, float, float, float])
     @property
     def mouse_down_duration_prev(self):
         """
         Previous time the mouse button has been down
         """
         cdef float* res = dereference(self._ptr).MouseDownDurationPrev
-        return dereference(res)
+        return (
+            <float>(res[0]),
+            <float>(res[1]),
+            <float>(res[2]),
+            <float>(res[3]),
+            <float>(res[4]),
+        )
     @mouse_down_duration_prev.setter
     def mouse_down_duration_prev(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDownDurationPrev = &value.value
@@ -19247,14 +19303,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_down_owned(self):
         """
         Track if button was clicked inside a dear imgui window or over void blocked by a popup. we don't request mouse capture from the application if click started outside imgui bounds.
         """
         cdef bool* res = dereference(self._ptr).MouseDownOwned
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_down_owned.setter
     def mouse_down_owned(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDownOwned = &value.value
@@ -19266,14 +19328,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[bool])
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_down_owned_unless_popup_close(self):
         """
         Track if button was clicked inside a dear imgui window.
         """
         cdef bool* res = dereference(self._ptr).MouseDownOwnedUnlessPopupClose
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_down_owned_unless_popup_close.setter
     def mouse_down_owned_unless_popup_close(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseDownOwnedUnlessPopupClose = &value.value
@@ -19285,14 +19353,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(tuple)
+    # ?returns(Tuple[tuple, tuple, tuple, tuple, tuple])
     @property
     def mouse_drag_max_distance_abs(self):
         """
         Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point
         """
         cdef dcimgui.ImVec2* res = dereference(self._ptr).MouseDragMaxDistanceAbs
-        return _cast_ImVec2_tuple(dereference(res))
+        return (
+            _cast_ImVec2_tuple(res[0]),
+            _cast_ImVec2_tuple(res[1]),
+            _cast_ImVec2_tuple(res[2]),
+            _cast_ImVec2_tuple(res[3]),
+            _cast_ImVec2_tuple(res[4]),
+        )
     @mouse_drag_max_distance_abs.setter
     def mouse_drag_max_distance_abs(self, value: ImVec2):
         # dereference(self._ptr).MouseDragMaxDistanceAbs = value._ptr
@@ -19304,14 +19378,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(Sequence[float])
+    # ?returns(Tuple[float, float, float, float, float])
     @property
     def mouse_drag_max_distance_sqr(self):
         """
         Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)
         """
         cdef float* res = dereference(self._ptr).MouseDragMaxDistanceSqr
-        return dereference(res)
+        return (
+            <float>(res[0]),
+            <float>(res[1]),
+            <float>(res[2]),
+            <float>(res[3]),
+            <float>(res[4]),
+        )
     @mouse_drag_max_distance_sqr.setter
     def mouse_drag_max_distance_sqr(self, value: Sequence[Float]):
         # dereference(self._ptr).MouseDragMaxDistanceSqr = &value.value
@@ -19428,14 +19508,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(bool)
+    # ?returns(Tuple[bool, bool, bool, bool, bool])
     @property
     def mouse_released(self):
         """
         Mouse button went from down to !down
         """
         cdef bool* res = dereference(self._ptr).MouseReleased
-        return dereference(res)
+        return (
+            res[0],
+            res[1],
+            res[2],
+            res[3],
+            res[4],
+        )
     @mouse_released.setter
     def mouse_released(self, value: Sequence[Bool]):
         # dereference(self._ptr).MouseReleased = &value.value
@@ -19447,14 +19533,20 @@ cdef class ImGuiIO:
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(float)
+    # ?returns(Tuple[float, float, float, float, float])
     @property
     def mouse_released_time(self):
         """
         Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).
         """
         cdef double* res = dereference(self._ptr).MouseReleasedTime
-        return dereference(res)
+        return (
+            <float>(res[0]),
+            <float>(res[1]),
+            <float>(res[2]),
+            <float>(res[3]),
+            <float>(res[4]),
+        )
     @mouse_released_time.setter
     def mouse_released_time(self, value: Double):
         # dereference(self._ptr).MouseReleasedTime = &value.value

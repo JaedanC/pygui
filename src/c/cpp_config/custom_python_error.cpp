@@ -1,5 +1,4 @@
-#ifdef PYGUI_COMPILING_DLL
-#include "pygui_config.h"
+#include "imgui_config_export_dll.h"
 
 #ifdef USE_CUSTOM_PYTHON_ERROR
 
@@ -44,5 +43,3 @@
 #else
     CIMGUI_API PyObject* get_imgui_error() { return nullptr; }
 #endif //USE_CUSTOM_PYTHON_ERROR
-
-#endif //PYGUI_COMPILING_DCIMGUI

@@ -6,7 +6,7 @@ from libcpp cimport bool
 cdef extern from "Python.h":
     ctypedef struct PyObject
 
-cdef extern from "pygui_config.h":
+cdef extern from "custom_python_error.h":
     PyObject* get_imgui_error()
 
 cdef extern from "dcimgui.h":

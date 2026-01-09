@@ -5,15 +5,19 @@ project(pygui)
 set(DCIMGUI_DIRECTORY          src/external/dear_bindings/generated)
 set(DCIMGUI_IMPL_DIRECTORY     ${DCIMGUI_DIRECTORY}/backends)
 
-set(IMGUI_DIRECTORY           src/external/imgui)
-set(IMGUI_IMPL_DIRECTORY      ${IMGUI_DIRECTORY}/backends)
+set(IMGUI_DIRECTORY            src/external/imgui)
+set(IMGUI_IMPL_DIRECTORY       ${IMGUI_DIRECTORY}/backends)
 
-set(GLFW_DIRECTORY            src/external/glfw)
-set(GLFW_INCLUDE_DIRECTORY    ${GLFW_DIRECTORY}/include)
+set(GLFW_DIRECTORY             src/external/glfw)
+set(GLFW_INCLUDE_DIRECTORY     ${GLFW_DIRECTORY}/include)
 
-set(PYGUI_CONFIG_DIRECTORY    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config)
-set(PYGUI_CONFIG_H            ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.h)
-set(PYGUI_CONFIG_CPP          ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.cpp)
+set(PYGUI_CONFIG_DIRECTORY     ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config)
+set(PYGUI_CONFIG_H             ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.h)
+set(PYGUI_CONFIG_CPP           ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.cpp)
+set(IMGUI_CONFIG_H             ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config.h)
+set(IMGUI_CONFIG_EXPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_export_dll.h)
+set(IMGUI_CONFIG_IMPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_import_dll.h)
+set(CUSTOM_PYTHON_ERROR_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/custom_python_error.cpp)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(Python_FIND_ABI "ANY" "ANY" "ANY")
@@ -66,7 +70,7 @@ target_include_directories(my_program_cpp PRIVATE
     ${IMGUI_IMPL_DIRECTORY}
 )
 target_compile_definitions(my_program_cpp PRIVATE
-    IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
+    IMGUI_USER_CONFIG="${IMGUI_CONFIG_H}"
 )
 # No Console window on startup
 # set_target_properties(my_program_cpp PROPERTIES
@@ -104,7 +108,7 @@ file(
     ${IMGUI_IMPL_DIRECTORY}/imgui_impl_opengl3.cpp
     ${DCIMGUI_IMPL_DIRECTORY}/dcimgui_impl_glfw.cpp
     ${DCIMGUI_IMPL_DIRECTORY}/dcimgui_impl_opengl3.cpp
-    ${PYGUI_CONFIG_CPP}                             # Custom Python assertion
+    ${CUSTOM_PYTHON_ERROR_CPP}   # Only a stub if USE_CUSTOM_PYTHON_ERROR not defined.
 )
 add_library(dcimgui_glfw_opengl3 SHARED ${DCIMGUI_AND_IMPL_FILES})
 target_include_directories(dcimgui_glfw_opengl3 PRIVATE
@@ -117,9 +121,8 @@ target_include_directories(dcimgui_glfw_opengl3 PRIVATE
     ${PYGUI_CONFIG_DIRECTORY}
 )
 target_compile_definitions(dcimgui_glfw_opengl3 PRIVATE
-    USE_CUSTOM_PYTHON_ERROR                     # Comment this to disable custom assert
-    PYGUI_COMPILING_DLL
-    IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
+    USE_CUSTOM_PYTHON_ERROR      # Comment this to disable custom assert
+    IMGUI_USER_CONFIG="${IMGUI_CONFIG_EXPORT_DLL_H}"
 )
 target_link_libraries(dcimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
 
@@ -155,8 +158,7 @@ target_include_directories(my_program_c PRIVATE
     ${PYGUI_CONFIG_DIRECTORY}
 )
 target_compile_definitions(my_program_c PRIVATE
-    PYGUI_COMPILING_DLL_APP
-    IMGUI_USER_CONFIG="${PYGUI_CONFIG_H}"
+    IMGUI_USER_CONFIG="${IMGUI_CONFIG_IMPORT_DLL_H}"
 )
 # No Console window on startup
 # set_target_properties(my_program_c PROPERTIES
