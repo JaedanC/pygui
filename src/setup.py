@@ -38,10 +38,6 @@ def main():
                 "deploy/pygui/libs",
             ],
             libraries=["dcimgui_glfw_opengl3", "glfw3dll"],
-            define_macros=[
-                # ("PYGUI_COMPILING_DLL", True),
-                ("USE_CUSTOM_PYTHON_ERROR", True),
-            ],
             extra_compile_args=([compile_option])
         )
     ]
