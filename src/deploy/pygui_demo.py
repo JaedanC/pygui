@@ -1228,7 +1228,7 @@ class widget:
 
     def __init__(self):
         self.widgets_image = Image.open(resource_path("pygui/img/code.png"))
-        self.widgets_image_texture = pygui.load_image(self.widgets_image)
+        self.widgets_image_texture_ref = pygui.ImTextureRef.create(pygui.load_image(self.widgets_image))
 
     general_clicked = 0
     general_check = pygui.Bool(True)
@@ -1338,11 +1338,7 @@ class widget:
     plotting_progress = 0
     plotting_progress_dir = 1
     colour_color = pygui.Vec4(114 / 255, 144 / 255, 154 / 255, 200 / 255)
-    colour_alpha_preview = pygui.Bool(True)
-    colour_alpha_half_preview = pygui.Bool(False)
-    colour_drag_and_drop = pygui.Bool(True)
-    colour_options_menu = pygui.Bool(True)
-    colour_hdr = pygui.Bool(False)
+    colour_base_flags = pygui.Int(pygui.COLOR_EDIT_FLAGS_NONE)
     colour_saved_palette_init = pygui.Bool(True)
     colour_saved_palette = [pygui.Vec4.zero() for _ in range(32)]
     colour_backup_color = pygui.Vec4.zero()
@@ -1828,7 +1824,7 @@ def show_demo_widgets():
     if pygui.tree_node("Images"):
         if pygui.tree_node("Custom Pygui Image"):
             pygui.image(
-                widget.instance().widgets_image_texture,
+                widget.instance().widgets_image_texture_ref,
                 (widget.instance().widgets_image.width / 2,
                 widget.instance().widgets_image.height / 2))
             pygui.tree_pop()
@@ -1840,23 +1836,23 @@ def show_demo_widgets():
                 "Use the 'ImTextureID' type as storage to pass pointers or identifier to your own texture data. "
                 "Hover the texture for a zoomed view!")
 
-            my_tex_id: int = io.fonts.tex_id
-            my_tex_w = io.fonts.tex_width
-            my_tex_h = io.fonts.tex_height
+            my_tex_id: pygui.ImTextureRef = io.fonts.tex_ref
+            my_tex_w = io.fonts.tex_data.width
+            my_tex_h = io.fonts.tex_data.height
 
-            pygui.checkbox("Use Text Color for Tint", widget.image_use_text_color_for_tint)
+            pygui.text("Tex: {}".format(my_tex_id))
+            pygui.text("Tex Id: {}".format(my_tex_id.tex_id))
+            pygui.text("Tex Data: {}".format(my_tex_id.tex_data))
+            pygui.text("Tex Data.height: {}".format(my_tex_id.tex_data and my_tex_id.tex_data.height))
+            pygui.text("Tex Data.width: {}".format(my_tex_id.tex_data and my_tex_id.tex_data.width))
+
             pygui.text("{}x{}".format(my_tex_w, my_tex_h))
             pos = pygui.get_cursor_screen_pos()
             uv_min = (0, 0) # Top-left
             uv_max = (1, 1) # Lower-right
-            if widget.image_use_text_color_for_tint:
-                tint_col = pygui.get_style_color_vec4(pygui.COL_TEXT)
-            else:
-                tint_col = (1, 1, 1, 1)
-            border_col = pygui.get_style_color_vec4(pygui.COL_BORDER)
-            pygui.image(my_tex_id, (my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col)
-
-            if pygui.is_item_hovered() and pygui.begin_tooltip():
+            pygui.push_style_var(pygui.STYLE_VAR_IMAGE_BORDER_SIZE, max(1, pygui.get_style().image_border_size))
+            pygui.image_with_bg(my_tex_id, (my_tex_w, my_tex_h), uv_min, uv_max)
+            if pygui.begin_item_tooltip():
                 region_sz = 32
                 region_x = io.mouse_pos[0] - pos[0] - region_sz * 0.5
                 region_y = io.mouse_pos[1] - pos[1] - region_sz * 0.5
@@ -1865,18 +1861,17 @@ def show_demo_widgets():
                     region_x = 0
                 elif region_x > my_tex_w - region_sz:
                     region_x = my_tex_w - region_sz
-
                 if region_y < 0:
                     region_y = 0
                 elif region_y > my_tex_h - region_sz:
                     region_y = my_tex_h - region_sz
-
                 pygui.text("Min: ({:.2f}, {:.2f})".format(region_x, region_y))
                 pygui.text("Max: ({:.2f}, {:.2f})".format(region_x + region_sz, region_y + region_sz))
-                uv0 = (region_x) / my_tex_w, (region_y) / my_tex_h
-                uv1 = (region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h
-                pygui.image(my_tex_id, (region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col)
+                uv0 = ((region_x) / my_tex_w, (region_y) / my_tex_h)
+                uv1 = ((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h)
+                pygui.image_with_bg(my_tex_id, (region_sz * zoom, region_sz * zoom), uv0, uv1, (0, 0, 0, 1))
                 pygui.end_tooltip()
+            pygui.pop_style_var()
 
             pygui.text_wrapped("And now some textured buttons..")
             for i in range(8):
@@ -2600,21 +2595,18 @@ def show_demo_widgets():
 
     if pygui.tree_node("Color/Picker Widgets"):
         pygui.separator_text("Options")
-        pygui.checkbox("With Alpha Preview", widget.colour_alpha_preview)
-        pygui.checkbox("With Half Alpha Preview", widget.colour_alpha_half_preview)
-        pygui.checkbox("With Drag and Drop", widget.colour_drag_and_drop)
-        pygui.checkbox("With Options Menu", widget.colour_options_menu)
+        pygui.checkbox_flags("ImGuiColorEditFlags_NoAlpha", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_NO_ALPHA)
+        pygui.checkbox_flags("ImGuiColorEditFlags_AlphaOpaque", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_OPAQUE)
+        pygui.checkbox_flags("ImGuiColorEditFlags_AlphaNoBg", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_NO_BG)
+        pygui.checkbox_flags("ImGuiColorEditFlags_AlphaPreviewHalf", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF)
+        pygui.checkbox_flags("ImGuiColorEditFlags_NoOptions", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_NO_OPTIONS)
         pygui.same_line()
         help_marker("Right-click on the individual color widget to show options.")
-        pygui.checkbox("With HDR", widget.colour_hdr)
+        pygui.checkbox_flags("ImGuiColorEditFlags_NoDragDrop", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_NO_DRAG_DROP)
+        pygui.checkbox_flags("ImGuiColorEditFlags_NoColorMarkers", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_NO_COLOR_MARKERS)
+        pygui.checkbox_flags("ImGuiColorEditFlags_HDR", widget.colour_base_flags, pygui.COLOR_EDIT_FLAGS_HDR)
         pygui.same_line()
         help_marker("Currently all this does is to lift the 0..1 limits on dragging widgets.")
-        misc_flags = \
-            (pygui.COLOR_EDIT_FLAGS_HDR if widget.colour_hdr else 0) | \
-            (0 if widget.colour_drag_and_drop else pygui.COLOR_EDIT_FLAGS_NO_DRAG_DROP) | \
-            (pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW_HALF if widget.colour_alpha_half_preview else \
-                (pygui.COLOR_EDIT_FLAGS_ALPHA_PREVIEW if widget.colour_alpha_preview else 0)) | \
-            (0 if widget.colour_options_menu else pygui.COLOR_EDIT_FLAGS_NO_OPTIONS)
 
         pygui.separator_text("Inline color editor")
         pygui.text("Color widget:")
@@ -2622,13 +2614,13 @@ def show_demo_widgets():
         help_marker(
             "Click on the color square to open a color picker.\n"
             "CTRL+click on individual component to input value.\n")
-        pygui.color_edit3("MyColor##1", widget.colour_color, misc_flags)
+        pygui.color_edit3("MyColor##1", widget.colour_color, widget.colour_base_flags.value)
 
         pygui.text("Color widget HSV with Alpha:")
-        pygui.color_edit4("MyColor##2", widget.colour_color, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV | misc_flags)
+        pygui.color_edit4("MyColor##2", widget.colour_color, pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV | widget.colour_base_flags.value)
 
         pygui.text("Color widget with Float Display:")
-        pygui.color_edit4("MyColor##2f", widget.colour_color, pygui.COLOR_EDIT_FLAGS_FLOAT | misc_flags)
+        pygui.color_edit4("MyColor##2f", widget.colour_color, pygui.COLOR_EDIT_FLAGS_FLOAT | widget.colour_base_flags.value)
 
         pygui.text("Color button with Picker:")
         pygui.same_line()
@@ -2636,7 +2628,7 @@ def show_demo_widgets():
             "With the ImGuiColorEditFlags_NoInputs flag you can hide all the slider/text inputs.\n"
             "With the ImGuiColorEditFlags_NoLabel flag you can pass a non-empty label which will only "
             "be used for the tooltip and picker popup.")
-        pygui.color_edit4("MyColor##3", widget.colour_color, pygui.COLOR_EDIT_FLAGS_NO_INPUTS | pygui.COLOR_EDIT_FLAGS_NO_LABEL | misc_flags)
+        pygui.color_edit4("MyColor##3", widget.colour_color, pygui.COLOR_EDIT_FLAGS_NO_INPUTS | pygui.COLOR_EDIT_FLAGS_NO_LABEL | widget.colour_base_flags.value)
 
         pygui.text("Color button with Custom Picker Popup:")
 
@@ -2651,7 +2643,7 @@ def show_demo_widgets():
                 widget.colour_saved_palette[n].w = 1 # Alpha
             widget.colour_saved_palette_init.value = False
 
-        open_popup = pygui.color_button("MyColor##3b", widget.colour_color.tuple(), misc_flags)
+        open_popup = pygui.color_button("MyColor##3b", widget.colour_color.tuple(), widget.colour_base_flags.value)
         pygui.same_line(0, pygui.get_style().item_inner_spacing[0])
         open_popup = open_popup or pygui.button("Palette")
         if open_popup:
@@ -2660,7 +2652,7 @@ def show_demo_widgets():
         if pygui.begin_popup("mypicker"):
             pygui.text("MY CUSTOM COLOR PICKER WITH AN AMAZING PALETTE!")
             pygui.separator()
-            pygui.color_picker4("##picker", widget.colour_color, misc_flags | pygui.COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW)
+            pygui.color_picker4("##picker", widget.colour_color, widget.colour_base_flags.value | pygui.COLOR_EDIT_FLAGS_NO_SIDE_PREVIEW | pygui.COLOR_EDIT_FLAGS_NO_SMALL_PREVIEW)
             pygui.same_line()
 
             pygui.begin_group()
@@ -2715,7 +2707,7 @@ def show_demo_widgets():
         pygui.color_button(
             "MyColor##3c",
             widget.colour_color.tuple(),
-            misc_flags | (pygui.COLOR_EDIT_FLAGS_NO_BORDER if widget.colour_no_border else 0),
+            widget.colour_base_flags.value | (pygui.COLOR_EDIT_FLAGS_NO_BORDER if widget.colour_no_border else 0),
             (80, 80))
 
         pygui.separator_text("Color picker")
@@ -2727,7 +2719,7 @@ def show_demo_widgets():
             pygui.checkbox("With Ref Color", widget.colour_ref_color)
             if widget.colour_ref_color:
                 pygui.same_line()
-                pygui.color_edit4("##RefColor", widget.colour_ref_color_v, pygui.COLOR_EDIT_FLAGS_NO_INPUTS | misc_flags)
+                pygui.color_edit4("##RefColor", widget.colour_ref_color_v, pygui.COLOR_EDIT_FLAGS_NO_INPUTS | widget.colour_base_flags.value)
         pygui.combo("Display Mode", widget.colour_display_mode, ["Auto/Current", "None", "RGB Only", "HSV Only", "Hex Only"])
         pygui.same_line()
         help_marker(
@@ -2736,7 +2728,7 @@ def show_demo_widgets():
             "if you don't specify a display mode.\n\nYou can change the defaults using SetColorEditOptions().")
         pygui.same_line()
         help_marker("When not specified explicitly (Auto/Current mode), user can right-click the picker to change mode.")
-        flags = misc_flags
+        flags = widget.colour_base_flags.value
         if not widget.colour_alpha: # This is by default if you call ColorPicker3() instead of ColorPicker4()
             flags |= pygui.COLOR_EDIT_FLAGS_NO_ALPHA
         if widget.colour_alpha_bar:
@@ -4308,13 +4300,13 @@ def show_random_extras():
 
         cx, cy = pygui.get_cursor_screen_pos()
         image =  widget.instance().widgets_image
-        texture_id =  widget.instance().widgets_image_texture
+        texture_ref =  widget.instance().widgets_image_texture_ref
         show_tl = (126, 30)
         show_br = (176, 80)
         uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
         uv_br =   (show_br[0] / image.width, show_br[1] / image.height)
         dl.add_image(
-            texture_id,
+            texture_ref,
             (cx, cy),
             (cx + 50, cy + 50),
             uv_tl,
@@ -4333,7 +4325,7 @@ def show_random_extras():
         uv_br = (show_br[0] / image.width, show_br[1] / image.height)
         uv_bl = (show_bl[0] / image.width, show_bl[1] / image.height)
         dl.add_image_quad(
-            texture_id,
+            texture_ref,
             (cx, cy),
             (cx + 40, cy),
             (cx + 50, cy + 50),
@@ -4352,7 +4344,7 @@ def show_random_extras():
         uv_tl = (show_tl[0] / image.width, show_tl[1] / image.height)
         uv_br = (show_br[0] / image.width, show_br[1] / image.height)
         dl.add_image_rounded(
-            texture_id,
+            texture_ref,
             (cx, cy),
             (cx + 50, cy + 50),
             uv_tl,

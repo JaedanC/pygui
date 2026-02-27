@@ -453,8 +453,18 @@ def to_pyi(
 
     def load_image(image: Image) -> int:
         """
-        Loads a PIL image into ImGui. Returns a texture handle that can be used
-        in any `pygui.image` function.
+        Loads a PIL image into OpenGL. Returns a texture id. See the example
+        for drawing the image in Pygui.
+                           
+        ```python
+        image = Image.open(resource_path("pygui/img/code.png"))
+        texture_id = pygui.load_image(image)
+        texture_ref = pygui.ImTextureRef.create(texture_id)
+        
+        ...
+        
+        pygui.image(texture_ref, (100, 100))
+        ```
         """
         pass
 
