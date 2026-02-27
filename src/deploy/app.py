@@ -1,11 +1,14 @@
+import sys
+
+import pygui
 import glfw
 import OpenGL.GL as gl
-
-from pygui_demo import demo_fonts_init, pygui_demo_window
-import pygui
+from pygui_demo import demo_fonts_init, pygui_demo_window, limit_fps
 
 
 vsync_enabled = pygui.Bool(True)
+enable_framecap = pygui.Bool(False)
+max_framerate = pygui.Int(60)
 show_imgui_demo = pygui.Bool(True)
 show_pygui_demo = pygui.Bool(True)
 
@@ -18,6 +21,13 @@ def render():
     pygui.checkbox("Show pygui Demo", show_pygui_demo)
     pygui.same_line()
     pygui.checkbox("Show ImGui Demo", show_imgui_demo)
+    pygui.checkbox("Limit FPS", enable_framecap)
+    if enable_framecap:
+        pygui.same_line()
+        pygui.set_next_item_width(-1)
+        pygui.input_int("###Limit", max_framerate)
+        limit_fps(max_framerate.value)
+    
     pygui.end()
 
     if show_imgui_demo:
@@ -67,6 +77,8 @@ def main():
     print("Opengl version: {}".format(gl.glGetString(gl.GL_VERSION).decode()))
     print("glfw version: {}.{}.{}".format(glfw.VERSION_MAJOR, glfw.VERSION_MINOR, glfw.VERSION_REVISION))
     print("ImGui version: {}".format(pygui.get_version()))
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        print("Running PyInstaller")
 
     # Try out different styles
     pygui.style_colors_dark()
@@ -93,10 +105,12 @@ def main():
             pygui.c_impl_glfw_new_frame()
             pygui.new_frame()
 
-            render()
-
-            pygui.render()
+            # Making the context current before the render lets the user enable
+            # and disable vsync inside pygui if desired.
             glfw.make_context_current(window)
+
+            render()
+            pygui.render()
 
             gl.glViewport(0, 0, int(io.display_size[0]), int(io.display_size[1]))
             gl.glClearColor(*clear_color)

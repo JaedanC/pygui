@@ -3,11 +3,13 @@ A demo for pygui that implements some functions from imgui_demo.cpp
 Run the demo with `pygui.show_demo_window()`
 """
 from __future__ import annotations
+import os
 import math
 import sys
 import time
 from enum import Enum, auto
 from typing import List, Tuple
+
 from PIL import Image
 import pygui
 
@@ -32,6 +34,50 @@ def show_docking_disabled_message():
 
 def clamp(n, smallest, largest):
     return max(smallest, min(n, largest))
+
+
+def resource_path(relative_path):
+    """Makes pygui compatible with PyInstaller"""
+    try:
+        # PyInstaller creates a temporary folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
+def limit_fps(fps: int):
+    if not hasattr(limit_fps, "previous_frame"):
+        limit_fps.previous_frame = time.time()
+
+    if not hasattr(limit_fps, "last_fps"):
+        limit_fps.last_fps = fps
+
+    if not hasattr(limit_fps, "change_to_fps"):
+        limit_fps.change_to_fps = fps
+
+    if not hasattr(limit_fps, "fps_change_timer"):
+        limit_fps.fps_change_timer = 0
+
+    this_frame = time.time()
+
+    if fps != limit_fps.change_to_fps:
+        limit_fps.change_to_fps = fps
+        limit_fps.fps_change_timer = time.time() + 1
+    
+    if this_frame >= limit_fps.fps_change_timer:
+        limit_fps.last_fps = fps
+    
+
+    expected_time_slice = 1 / max(limit_fps.last_fps, 1)
+    time_slice = this_frame - limit_fps.previous_frame
+    undershoot = max(0, expected_time_slice - time_slice)
+    # If the frame took was faster than (e.g) 60 fps, then we wait out the
+    # difference
+    if undershoot > 0:
+        time.sleep(undershoot)
+
+    limit_fps.previous_frame = this_frame + undershoot
 
 
 class ExampleAppConsole:
@@ -1181,7 +1227,7 @@ class widget:
         return widget._singleton_instance
 
     def __init__(self):
-        self.widgets_image = Image.open("pygui/img/code.png")
+        self.widgets_image = Image.open(resource_path("pygui/img/code.png"))
         self.widgets_image_texture = pygui.load_image(self.widgets_image)
 
     general_clicked = 0
@@ -6463,12 +6509,12 @@ def demo_fonts_init():
     # io.Fonts->AddFontFromFileTTF("DroidSans.ttf", 0.0f, &config);           // Merge into first font to add e.g. Asian characters
     # io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 0.0f, &config); // Merge into first font to add Icons
 
-    cascadia_mono_semi_bold_otf = "pygui/fonts/CascadiaMono-SemiBold.otf"
-    noto_sans_math_regular_ttf =  "pygui/fonts/NotoSansMath-Regular.ttf"
-    selawk_ttf =                  "pygui/fonts/selawk.ttf"
-    proggy_clean_ttf =            "pygui/fonts/ProggyClean.ttf"
-    droid_sans_ttf =              "pygui/fonts/DroidSans.ttf"
-    unifont_otf =                 "pygui/fonts/unifont-15.0.01.otf"
+    cascadia_mono_semi_bold_otf = resource_path("pygui/fonts/CascadiaMono-SemiBold.otf")
+    noto_sans_math_regular_ttf =  resource_path("pygui/fonts/NotoSansMath-Regular.ttf")
+    selawk_ttf =                  resource_path("pygui/fonts/selawk.ttf")
+    proggy_clean_ttf =            resource_path("pygui/fonts/ProggyClean.ttf")
+    droid_sans_ttf =              resource_path("pygui/fonts/DroidSans.ttf")
+    unifont_otf =                 resource_path("pygui/fonts/unifont-15.0.01.otf")
 
     io.fonts.add_font_from_file_ttf(cascadia_mono_semi_bold_otf)
     io.fonts.add_font_from_file_ttf(noto_sans_math_regular_ttf)
