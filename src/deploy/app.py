@@ -12,22 +12,26 @@ max_framerate = pygui.Int(60)
 show_imgui_demo = pygui.Bool(True)
 show_pygui_demo = pygui.Bool(True)
 
+clear_color = pygui.Vec4(0.45, 0.55, 0.60, 1)
+
 
 def render():
     pygui.begin("Hello from pygui!")
-    pygui.text("FPS: {}".format(round(pygui.get_io().framerate)))
     if pygui.checkbox("Enable vsync", vsync_enabled):
         glfw.swap_interval(int(vsync_enabled.value))
+
     pygui.checkbox("Show pygui Demo", show_pygui_demo)
-    pygui.same_line()
     pygui.checkbox("Show ImGui Demo", show_imgui_demo)
     pygui.checkbox("Limit FPS", enable_framecap)
+    pygui.same_line()
+    pygui.set_next_item_width(-1)
+    pygui.input_int("###Limit", max_framerate)
     if enable_framecap:
-        pygui.same_line()
-        pygui.set_next_item_width(-1)
-        pygui.input_int("###Limit", max_framerate)
         limit_fps(max_framerate.value)
-    
+
+    pygui.color_edit3("clear color", clear_color) # Edit 3 floats representing a color
+    io = pygui.get_io()
+    pygui.text("Application average {:.3f} ms/frame ({:.1f} FPS)".format(1000 / io.framerate, io.framerate))
     pygui.end()
 
     if show_imgui_demo:

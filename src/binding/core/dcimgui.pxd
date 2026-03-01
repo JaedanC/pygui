@@ -228,6 +228,7 @@ cdef extern from "dcimgui.h":
         ImGuiItemFlags_ButtonRepeat          # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
         ImGuiItemFlags_AutoClosePopups       # True     // menuitem()/selectable() automatically close their parent popup window.
         ImGuiItemFlags_AllowDuplicateId      # False    // allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.configdebughighlightidconflicts is set.
+        ImGuiItemFlags_Disabled              # False    // [internal] disable interactions. does not affect visuals. this is used by begindisabled()/enddisabled() and only provided here so you can read back via getitemflags().
 
     ctypedef enum ImGuiInputTextFlags_:
         ImGuiInputTextFlags_None
@@ -283,17 +284,18 @@ cdef extern from "dcimgui.h":
 
     ctypedef enum ImGuiPopupFlags_:
         ImGuiPopupFlags_None
-        ImGuiPopupFlags_MouseButtonLeft             # For beginpopupcontext*(): open on left mouse release. guaranteed to always be == 0 (same as imguimousebutton_left)
-        ImGuiPopupFlags_MouseButtonRight            # For beginpopupcontext*(): open on right mouse release. guaranteed to always be == 1 (same as imguimousebutton_right)
-        ImGuiPopupFlags_MouseButtonMiddle           # For beginpopupcontext*(): open on middle mouse release. guaranteed to always be == 2 (same as imguimousebutton_middle)
-        ImGuiPopupFlags_MouseButtonMask_
-        ImGuiPopupFlags_MouseButtonDefault_
+        ImGuiPopupFlags_MouseButtonLeft             # For beginpopupcontext*(): open on left mouse release. only one button allowed!
+        ImGuiPopupFlags_MouseButtonRight            # For beginpopupcontext*(): open on right mouse release. only one button allowed! (default)
+        ImGuiPopupFlags_MouseButtonMiddle           # For beginpopupcontext*(): open on middle mouse release. only one button allowed!
         ImGuiPopupFlags_NoReopen                    # For openpopup*(), beginpopupcontext*(): don't reopen same popup if already open (won't reposition, won't reinitialize navigation)
         ImGuiPopupFlags_NoOpenOverExistingPopup     # For openpopup*(), beginpopupcontext*(): don't open if there's already a popup at the same level of the popup stack
         ImGuiPopupFlags_NoOpenOverItems             # For beginpopupcontextwindow(): don't return true when hovering items, only when hovering empty space
         ImGuiPopupFlags_AnyPopupId                  # For ispopupopen(): ignore the imguiid parameter and test for any popup.
         ImGuiPopupFlags_AnyPopupLevel               # For ispopupopen(): search/test at any level of the popup stack (default test in the current level)
         ImGuiPopupFlags_AnyPopup
+        ImGuiPopupFlags_MouseButtonShift_           # [internal]
+        ImGuiPopupFlags_MouseButtonMask_            # [internal]
+        ImGuiPopupFlags_InvalidMask_                # [internal] reserve legacy bits 0-1 to detect incorrectly passing 1 or 2 to the function.
 
     ctypedef enum ImGuiSelectableFlags_:
         ImGuiSelectableFlags_None
@@ -612,7 +614,7 @@ cdef extern from "dcimgui.h":
 
     ctypedef enum ImGuiConfigFlags_:
         ImGuiConfigFlags_None
-        ImGuiConfigFlags_NavEnableKeyboard       # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate.
+        ImGuiConfigFlags_NavEnableKeyboard       # Master keyboard navigation enable flag. enable full tabbing + directional arrows + space/enter to activate. note: some features such as basic tabbing and ctrl+tab are enabled by regardless of this flag (and may be disabled via other means, see #4828, #9218).
         ImGuiConfigFlags_NavEnableGamepad        # Master gamepad navigation enable flag. backend also needs to set imguibackendflags_hasgamepad.
         ImGuiConfigFlags_NoMouse                 # Instruct dear imgui to disable mouse inputs and interactions.
         ImGuiConfigFlags_NoMouseCursorChange     # Instruct backend to not alter mouse cursor shape and visibility. use if the backend cursor changes are interfering with yours and you don't want to use setmousecursor() to change mouse cursor. you may want to honor requests from imgui by reading getmousecursor() yourself instead.
@@ -723,6 +725,7 @@ cdef extern from "dcimgui.h":
         ImGuiStyleVar_ScrollbarPadding                # Float     scrollbarpadding
         ImGuiStyleVar_GrabMinSize                     # Float     grabminsize
         ImGuiStyleVar_GrabRounding                    # Float     grabrounding
+        ImGuiStyleVar_ImageRounding                   # Float     imagerounding
         ImGuiStyleVar_ImageBorderSize                 # Float     imagebordersize
         ImGuiStyleVar_TabRounding                     # Float     tabrounding
         ImGuiStyleVar_TabBorderSize                   # Float     tabbordersize
@@ -760,8 +763,9 @@ cdef extern from "dcimgui.h":
         ImGuiColorEditFlags_NoTooltip            # Coloredit, colorpicker, colorbutton: disable tooltip when hovering the preview.
         ImGuiColorEditFlags_NoLabel              # Coloredit, colorpicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
         ImGuiColorEditFlags_NoSidePreview        # Colorpicker: disable bigger color preview on right side of the picker, use small color square preview instead.
-        ImGuiColorEditFlags_NoDragDrop           # Coloredit: disable drag and drop target. colorbutton: disable drag and drop source.
+        ImGuiColorEditFlags_NoDragDrop           # Coloredit: disable drag and drop target/source. colorbutton: disable drag and drop source.
         ImGuiColorEditFlags_NoBorder             # Colorbutton: disable border (which is enforced by default)
+        ImGuiColorEditFlags_NoColorMarkers       # Coloredit: disable rendering r/g/b/a color marker. may also be disabled globally by setting style.colormarkersize = 0.
         ImGuiColorEditFlags_AlphaOpaque          # Coloredit, colorpicker, colorbutton: disable alpha in the preview,. contrary to _noalpha it may still be edited when calling coloredit4()/colorpicker4(). for colorbutton() this does the same as _noalpha.
         ImGuiColorEditFlags_AlphaNoBg            # Coloredit, colorpicker, colorbutton: disable rendering a checkerboard background behind transparent color.
         ImGuiColorEditFlags_AlphaPreviewHalf     # Coloredit, colorpicker, colorbutton: display half opaque / half transparent preview.
@@ -792,8 +796,9 @@ cdef extern from "dcimgui.h":
         ImGuiSliderFlags_ClampOnInput        # Clamp value to min/max bounds when input manually with ctrl+click. by default ctrl+click allows going out of bounds.
         ImGuiSliderFlags_ClampZeroRange      # Clamp even if min==max==0.0f. otherwise due to legacy reason dragxxx functions don't clamp with those values. when your clamping limits are dynamic you almost always want to use it.
         ImGuiSliderFlags_NoSpeedTweaks       # Disable keyboard modifiers altering tweak speed. useful if you want to alter tweak speed yourself based on your own logic.
+        ImGuiSliderFlags_ColorMarkers        # Dragscalarn(), sliderscalarn(): draw r/g/b/a color markers on each component.
         ImGuiSliderFlags_AlwaysClamp
-        ImGuiSliderFlags_InvalidMask_        # [internal] we treat using those bits as being potentially a 'float power' argument from the previous api that has got miscast to this enum, and will trigger an assert if needed.
+        ImGuiSliderFlags_InvalidMask_        # [internal] we treat using those bits as being potentially a 'float power' argument from legacy api (obsoleted 2020-08) that has got miscast to this enum, and will trigger an assert if needed.
 
     ctypedef enum ImGuiMouseButton_:
         ImGuiMouseButton_Left
@@ -835,7 +840,7 @@ cdef extern from "dcimgui.h":
         ImGuiTableFlags_Reorderable                    # Enable reordering columns in header row (need calling tablesetupcolumn() + tableheadersrow() to display headers)
         ImGuiTableFlags_Hideable                       # Enable hiding/disabling columns in context menu.
         ImGuiTableFlags_Sortable                       # Enable sorting. call tablegetsortspecs() to obtain sort specs. also see imguitableflags_sortmulti and imguitableflags_sorttristate.
-        ImGuiTableFlags_NoSavedSettings                # Disable persisting columns order, width and sort settings in the .ini file.
+        ImGuiTableFlags_NoSavedSettings                # Disable persisting columns order, width, visibility and sort settings in the .ini file.
         ImGuiTableFlags_ContextMenuInBody              # Right-click on columns body/contents will display table context menu. by default it is available in tableheadersrow().
         ImGuiTableFlags_RowBg                          # Set each rowbg color with imguicol_tablerowbg or imguicol_tablerowbgalt (equivalent of calling tablesetbgcolor with imguitablebgflags_rowbg0 on each row manually)
         ImGuiTableFlags_BordersInnerH                  # Draw horizontal borders between rows.
@@ -1273,7 +1278,7 @@ cdef extern from "dcimgui.h":
     ctypedef struct ImGuiStyle:
         float FontSizeBase                              # Current base font size before external global factors are applied. use pushfont(null, size) to modify. use imgui::getfontsize() to obtain scaled value.
         float FontScaleMain                             # Main global scale factor. may be set by application once, or exposed to end-user.
-        float FontScaleDpi                              # Additional global scale factor from viewport/monitor contents scale. when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
+        float FontScaleDpi                              # Additional global scale factor from viewport/monitor contents scale. in docking branch: when io.configdpiscalefonts is enabled, this is automatically overwritten when changing monitor dpi.
         float Alpha                                     # Global alpha applies to everything in dear imgui.
         float DisabledAlpha                             # Additional alpha multiplier applied by begindisabled(). multiply over current value of alpha.
         ImVec2 WindowPadding                            # Padding within a window.
@@ -1302,6 +1307,7 @@ cdef extern from "dcimgui.h":
         float GrabMinSize                               # Minimum width/height of a grab box for slider/scrollbar.
         float GrabRounding                              # Radius of grabs corners rounding. set to 0.0f to have rectangular slider grabs.
         float LogSliderDeadzone                         # The size in pixels of the dead-zone around zero on logarithmic sliders that cross zero.
+        float ImageRounding                             # Rounding of image() calls.
         float ImageBorderSize                           # Thickness of border around image() calls.
         float TabRounding                               # Radius of upper corners of a tab. set to 0.0f to have rectangular tabs.
         float TabBorderSize                             # Thickness of border around tabs.
@@ -1319,6 +1325,7 @@ cdef extern from "dcimgui.h":
         float DragDropTargetRounding                    # Radius of the drag and drop target frame.
         float DragDropTargetBorderSize                  # Thickness of the drag and drop target border.
         float DragDropTargetPadding                     # Size to expand the drag and drop target from actual target item size.
+        float ColorMarkerSize                           # Size of r/g/b/a color markers for coloredit4() and for drags/sliders when using imguisliderflags_colormarkers.
         ImGuiDir ColorButtonPosition                    # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
         ImVec2 ButtonTextAlign                          # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
         ImVec2 SelectableTextAlign                      # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
@@ -1541,12 +1548,14 @@ cdef extern from "dcimgui.h":
         ImGuiInputTextFlags EventFlag     # One imguiinputtextflags_callback*    // read-only
         ImGuiInputTextFlags Flags         # What user passed to inputtext()      // read-only
         void* UserData                    # What user passed to inputtext()      // read-only
-        ImWchar EventChar                 # Character input                      // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
+        ImGuiID ID                        # Widget id                             // read-only
         ImGuiKey EventKey                 # Key pressed (up/down/tab)            // read-only    // [completion,history]
+        ImWchar EventChar                 # Character input                      // read-write   // [charfilter] replace character with another one, or set to zero to drop. return 1 is equivalent to setting eventchar=0;
+        bool EventActivated               # Input field just got activated       // read-only    // [always]
+        bool BufDirty                     # Set if you modify buf/buftextlen!    // write        // [completion,history,always]
         char* Buf                         # Text buffer                          // read-write   // [resize] can replace pointer / [completion,history,always] only write to pointed data, don't replace the actual pointer!
         int BufTextLen                    # Text length (in bytes)               // read-write   // [resize,completion,history,always] exclude zero-terminator storage. in c land: == strlen(some_text), in c++ land: string.length()
         int BufSize                       # Buffer size (in bytes) = capacity+1  // read-only    // [resize,completion,history,always] include zero-terminator storage. in c land: == arraysize(my_char_array), in c++ land: string.capacity()+1
-        bool BufDirty                     # Set if you modify buf/buftextlen!    // write        // [completion,history,always]
         int CursorPos                     # Read-write   // [completion,history,always]
         int SelectionStart                # Read-write   // [completion,history,always] == to selectionend when no selection
         int SelectionEnd                  # Read-write   // [completion,history,always]
@@ -1554,6 +1563,7 @@ cdef extern from "dcimgui.h":
     void ImGuiInputTextCallbackData_DeleteChars(ImGuiInputTextCallbackData* self, int pos, int bytes_count) except +
     void ImGuiInputTextCallbackData_InsertChars(ImGuiInputTextCallbackData* self, int pos, const char* text, const char* text_end) except +
     void ImGuiInputTextCallbackData_SelectAll(ImGuiInputTextCallbackData* self) except +
+    void ImGuiInputTextCallbackData_SetSelection(ImGuiInputTextCallbackData* self, int s, int e) except +
     void ImGuiInputTextCallbackData_ClearSelection(ImGuiInputTextCallbackData* self) except +
     bool ImGuiInputTextCallbackData_HasSelection(const ImGuiInputTextCallbackData* self) except +
 
@@ -2203,14 +2213,13 @@ cdef extern from "dcimgui.h":
         char* Name                            # <auto>   // name (strictly to ease debugging, hence limited size buffer)
         void* FontData                        # Ttf/otf data
         int FontDataSize                      # Ttf/otf data size
-        bool FontDataOwnedByAtlas             # True     // ttf/otf data ownership taken by the owner imfontatlas (will delete memory itself).
+        bool FontDataOwnedByAtlas             # True     // ttf/otf data ownership taken by the owner imfontatlas (will delete memory itself). since 1.92, the data needs to persist for whole duration of atlas.
         bool MergeMode                        # False    // merge into previous imfont, so you can combine multiple inputs font into one imfont (e.g. ascii font + icons + japanese glyphs). you may want to use glyphoffset.y when merge font of different heights.
-        bool PixelSnapH                       # False    // align every glyph advancex to pixel boundaries. useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, you can set oversampleh/v to 1.
-        bool PixelSnapV                       # True     // align scaled glyphoffset.y to pixel boundaries.
+        bool PixelSnapH                       # False    // align every glyph advancex to pixel boundaries. prevents fractional font size from working correctly! useful e.g. if you are merging a non-pixel aligned font with the default font. if enabled, oversampleh/v will default to 1.
         ImS8 OversampleH                      # 0 (2)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1 or 2 depending on size. note the difference between 2 and 3 is minimal. you can reduce this to 1 for large glyphs save memory. read https://github.com/nothings/stb/blob/master/tests/oversample/readme.md for details.
         ImS8 OversampleV                      # 0 (1)    // rasterize at higher quality for sub-pixel positioning. 0 == auto == 1. this is not really useful as we don't use sub-pixel positions on the y axis.
         ImWchar EllipsisChar                  # 0        // explicitly specify unicode codepoint of ellipsis character. when fonts are being merged first specified ellipsis will be used.
-        float SizePixels                      # Size in pixels for rasterizer (more or less maps to the resulting font height).
+        float SizePixels                      # Output size in pixels for rasterizer (more or less maps to the resulting font height).
         const ImWchar* GlyphRanges            # Null     // *legacy* the array data needs to persist as long as the font is alive. pointer to a user-provided list of unicode range (2 value per range, values are inclusive, zero-terminated list).
         const ImWchar* GlyphExcludeRanges     # Null     // pointer to a small user-provided list of unicode ranges (2 value per range, values are inclusive, zero-terminated list). this is very close to glyphranges[] but designed to exclude ranges from a font source, when merging fonts with overlapping glyphs. use 'input glyphs overlap detection tool' to find about your overlapping ranges.
         ImVec2 GlyphOffset                    # 0, 0     // offset (in pixels) all glyphs from this font input. absolute value for default size, other sizes will scale this value.
@@ -2221,6 +2230,7 @@ cdef extern from "dcimgui.h":
         unsigned int FontLoaderFlags          # 0        // settings for custom font builder. this is builder implementation dependent. leave as zero if unsure.
         float RasterizerMultiply              # 1.0f     // linearly brighten (>1.0f) or darken (<1.0f) font output. brightening small fonts may be a good workaround to make them more readable. this is a silly thing we may remove in the future.
         float RasterizerDensity               # 1.0f     // [legacy: this only makes sense when imguibackendflags_rendererhastextures is not supported] dpi scale multiplier for rasterization. not altering other font metrics: makes it easy to swap between e.g. a 100% and a 400% fonts for a zooming display, or handle retina screen. important: if you change this it is expected that you increase/decrease font scale roughly to the inverse of this, otherwise quality may look lowered.
+        float ExtraSizeScale                  # 1.0f     // extra rasterizer scale over sizepixels.
         ImFontFlags Flags                     # Font flags (don't use just yet, will be exposed in upcoming 1.92.x updates)
         ImFont* DstFont                       # Target font (as we merging fonts, multiple imfontconfig may target the same font)
         const ImFontLoader* FontLoader        # Custom font backend for this source (default source is the one stored in imfontatlas)
@@ -2339,7 +2349,15 @@ cdef extern from "dcimgui.h":
         ImGuiContext* OwnerContext                               # Context which own the atlas will be in charge of updating and destroying it.
 
     ImFont* ImFontAtlas_AddFont(ImFontAtlas* self, const ImFontConfig* font_cfg) except +
+
+    # Selects between addfontdefaultvector() and addfontdefaultbitmap().
     ImFont* ImFontAtlas_AddFontDefault(ImFontAtlas* self, const ImFontConfig* font_cfg) except +
+
+    # Embedded scalable font. recommended at any higher size.
+    ImFont* ImFontAtlas_AddFontDefaultVector(ImFontAtlas* self, const ImFontConfig* font_cfg) except +
+
+    # Embedded classic pixel-clean font. recommended at size 13px with no scaling.
+    ImFont* ImFontAtlas_AddFontDefaultBitmap(ImFontAtlas* self, const ImFontConfig* font_cfg) except +
     ImFont* ImFontAtlas_AddFontFromFileTTF(ImFontAtlas* self, const char* filename, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
 
     # Note: transfer ownership of 'ttf_data' to imfontatlas! will be deleted after destruction of the atlas. set font_cfg->fontdataownedbyatlas=false to keep ownership of your data and it won't be freed.
@@ -2417,7 +2435,7 @@ cdef extern from "dcimgui.h":
         unsigned int MetricsTotalSurface      # 3  // out // total surface in pixels to get an idea of the font rasterization/texture cost (not exact, we approximate the cost of padding between glyphs)
         unsigned int WantDestroy              # 0  //     // queued for destroy
         unsigned int LoadNoFallback           # 0  //     // disable loading fallback in lower-level calls.
-        unsigned int LoadNoRenderOnLayout     # 0  //     // enable a two-steps mode where calctextsize() calls will load advancex *without* rendering/packing glyphs. only advantagous if you know that the glyph is unlikely to actually be rendered, otherwise it is slower because we'd do one query on the first calctextsize and one query on the first draw.
+        unsigned int LoadNoRenderOnLayout     # 0  //     // enable a two-steps mode where calctextsize() calls will load advancex *without* rendering/packing glyphs. only advantageous if you know that the glyph is unlikely to actually be rendered, otherwise it is slower because we'd do one query on the first calctextsize and one query on the first draw.
         int LastUsedFrame                     # 4  //     // record of that time this was bounds
         ImGuiID BakedId                       # 4     //     // unique id for this baked storage
         ImFont* OwnerFont                     # 4-8   // in  // parent font
@@ -2447,10 +2465,10 @@ cdef extern from "dcimgui.h":
         ImGuiID FontId                       # Unique identifier for the font
         float LegacySize                     # 4     // in  // font size passed to addfont(). use for old code calling pushfont() expecting to use that size. (use imgui::getfontbaked() to get font baked at current bound size).
         ImVector_ImFontConfigPtr Sources     # 16    // in  // list of sources. pointers within owneratlas->sources[]
-        ImWchar EllipsisChar                 # 2-4   // out // character used for ellipsis rendering ('...').
+        ImWchar EllipsisChar                 # 2-4   // out // character used for ellipsis rendering ('...'). if you ever want to temporarily swap this for an alternative/dummy char, make sure to clear ellipsisautobake.
         ImWchar FallbackChar                 # 2-4   // out // character used if a glyph isn't found (u+fffd, '?')
-        ImU8* Used8kPagesMap                 # 1 bytes if imwchar=imwchar16, 16 bytes if imwchar==imwchar32. store 1-bit for each block of 4k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
-        bool EllipsisAutoBake                # 1     //     // mark when the '...' glyph needs to be generated.
+        ImU8* Used8kPagesMap                 # 1 bytes if imwchar=imwchar16, 17 bytes if imwchar==imwchar32. store 1-bit for each block of 8k codepoints that has one active glyph. this is mainly used to facilitate iterations across all used codepoints.
+        bool EllipsisAutoBake                # 1     //     // mark when the '...' glyph (== ellipsischar) needs to be generated by combining multiple '.'.
         ImGuiStorage RemapPairs              # 16    //     // remapping pairs when using addremapchar(), otherwise empty.
 
     bool ImFont_IsGlyphInFont(ImFont* self, ImWchar c) except +
@@ -2522,7 +2540,7 @@ cdef extern from "dcimgui.h":
 
     # Access via ImGui::GetPlatformIO()
     ctypedef struct ImGuiPlatformIO:
-        const char* (*Platform_GetClipboardTextFn)(ImGuiContext* ctx)
+        const char* (*Platform_GetClipboardTextFn)(ImGuiContext* ctx)                                                           # Should return null on failure (e.g. clipboard data is not text).
         void (*Platform_SetClipboardTextFn)(ImGuiContext* ctx, const char* text)
         void* Platform_ClipboardUserData
         bool (*Platform_OpenInShellFn)(ImGuiContext* ctx, const char* path)
@@ -3552,7 +3570,6 @@ cdef extern from "dcimgui.h":
     # - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
     # - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
     # - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
-    # - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter
     # Call to mark popup as open (don't call every frame!).
     void ImGui_OpenPopup(const char* str_id, ImGuiPopupFlags popup_flags) except +
 
@@ -3565,24 +3582,28 @@ cdef extern from "dcimgui.h":
     # Manually close the popup we have begin-ed into.
     void ImGui_CloseCurrentPopup() except +
 
-    # Popups: open+begin combined functions helpers
+    # Popups: Open+Begin popup combined functions helpers to create context menus.
     # - Helpers to do OpenPopup+BeginPopup where the Open action is triggered by e.g. hovering an item and right-clicking.
-    # - They are convenient to easily create context menus, hence the name.
     # - IMPORTANT: Notice that BeginPopupContextXXX takes ImGuiPopupFlags just like OpenPopup() and unlike BeginPopup(). For full consistency, we may add ImGuiWindowFlags to the BeginPopupContextXXX functions in the future.
-    # - IMPORTANT: Notice that we exceptionally default their flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter, so if you add other flags remember to re-add the ImGuiPopupFlags_MouseButtonRight.
-    # Implied str_id = null, popup_flags = 1
+    # - IMPORTANT: If you ever used the left mouse button with BeginPopupContextXXX() helpers before 1.92.6:
+    # - Before this version, OpenPopupOnItemClick(), BeginPopupContextItem(), BeginPopupContextWindow(), BeginPopupContextVoid() had 'a ImGuiPopupFlags popup_flags = 1' default value in their function signature.
+    # - Before: Explicitly passing a literal 0 meant ImGuiPopupFlags_MouseButtonLeft. The default = 1 meant ImGuiPopupFlags_MouseButtonRight.
+    # - After: The default = 0 means ImGuiPopupFlags_MouseButtonRight. Explicitly passing a literal 1 also means ImGuiPopupFlags_MouseButtonRight (if legacy behavior are enabled) or will assert (if legacy behavior are disabled).
+    # - TL;DR: if you don't want to use right mouse button for popups, always specify it explicitly using a named ImGuiPopupFlags_MouseButtonXXXX value.
+    # - Read "API BREAKING CHANGES" 2026/01/07 (1.92.6) entry in imgui.cpp or GitHub topic #9157 for all details.
+    # Implied str_id = null, popup_flags = 0
     bool ImGui_BeginPopupContextItem() except +
 
     # Open+begin popup when clicked on last item. use str_id==null to associate the popup to previous item. if you want to use that on a non-interactive item such as text() you need to pass in an explicit id here. read comments in .cpp!
     bool ImGui_BeginPopupContextItemEx(const char* str_id, ImGuiPopupFlags popup_flags) except +
 
-    # Implied str_id = null, popup_flags = 1
+    # Implied str_id = null, popup_flags = 0
     bool ImGui_BeginPopupContextWindow() except +
 
     # Open+begin popup when clicked on current window.
     bool ImGui_BeginPopupContextWindowEx(const char* str_id, ImGuiPopupFlags popup_flags) except +
 
-    # Implied str_id = null, popup_flags = 1
+    # Implied str_id = null, popup_flags = 0
     bool ImGui_BeginPopupContextVoid() except +
 
     # Open+begin popup when clicked in void (where there are no windows).
@@ -3626,7 +3647,7 @@ cdef extern from "dcimgui.h":
     # Implied row_flags = 0, min_row_height = 0.0f
     void ImGui_TableNextRow() except +
 
-    # Append into the first cell of a new row.
+    # Append into the first cell of a new row. 'min_row_height' include the minimum top and bottom padding aka cellpadding.y * 2.0f.
     void ImGui_TableNextRowEx(ImGuiTableRowFlags row_flags, float min_row_height) except +
 
     # Append into the next column (or first column of next row if currently in last column). return true when column is visible.
@@ -3740,19 +3761,21 @@ cdef extern from "dcimgui.h":
     # Docking
     # - Read https://github.com/ocornut/imgui/wiki/Docking for details.
     # - Enable with io.ConfigFlags |= ImGuiConfigFlags_DockingEnable.
-    # - You can use most Docking facilities without calling any API. You don't necessarily need to call a DockSpaceXXX function to use Docking!
+    # - You can use many Docking facilities without calling any API.
     # - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
     # - Drag from window menu button (upper-left button) to undock an entire node (all windows).
     # - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
+    # - DockSpaceOverViewport:
+    # - This is a helper to create an invisible window covering a viewport, then submit a DockSpace() into it.
+    # - Most applications can simply call DockSpaceOverViewport() once to allow docking windows into e.g. the edge of your screen.
+    # e.g. ImGui::NewFrame(); ImGui::DockSpaceOverViewport();                                                   // Create a dockspace in main viewport.
+    # or: ImGui::NewFrame(); ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode); // Create a dockspace in main viewport, central node is transparent.
     # - Dockspaces:
-    # - If you want to dock windows into the edge of your screen, most application can simply call DockSpaceOverViewport():
-    # e.g. ImGui::NewFrame(); then ImGui::DockSpaceOverViewport();  // Create a dockspace in main viewport.
-    # or: ImGui::NewFrame(); then ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);  // Create a dockspace in main viewport, where central node is transparent.
     # - A dockspace is an explicit dock node within an existing window.
-    # - DockSpaceOverViewport() basically creates an invisible window covering a viewport, and submit a DockSpace() into it.
     # - IMPORTANT: Dockspaces need to be submitted _before_ any window they can host. Submit them early in your frame!
     # - IMPORTANT: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
     # If you have e.g. multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
+    # - See 'Demo->Examples->Dockspace' or 'Demo->Examples->Documents' for more detailed demos.
     # - Programmatic docking:
     # - There is no public API yet other than the very limited SetNextWindowDockID() function. Sorry for that!
     # - Read https://github.com/ocornut/imgui/wiki/Docking for examples of how to use current internal API.
@@ -3769,6 +3792,8 @@ cdef extern from "dcimgui.h":
 
     # Set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)
     void ImGui_SetNextWindowClass(const ImGuiWindowClass* window_class) except +
+
+    # Get dock id of current window, or 0 if not associated to any docking node.
     ImGuiID ImGui_GetWindowDockID() except +
 
     # Is current window docked into another window?
@@ -3824,7 +3849,7 @@ cdef extern from "dcimgui.h":
     # Disabling [BETA API]
     # - Disable all user interactions and dim items visuals (applying style.DisabledAlpha over current colors)
     # - Those can be nested but it cannot be used to enable an already disabled section (a single BeginDisabled(true) in the stack is enough to keep everything disabled)
-    # - Tooltips windows are automatically opted out of disabling. Note that IsItemHovered() by default returns false on disabled items, unless using ImGuiHoveredFlags_AllowWhenDisabled. 
+    # - Tooltips windows are automatically opted out of disabling. Note that IsItemHovered() by default returns false on disabled items, unless using ImGuiHoveredFlags_AllowWhenDisabled.
     # - BeginDisabled(false)/EndDisabled() essentially does nothing but is provided to facilitate use of boolean expressions (as a micro-optimization: if you have tens of thousands of BeginDisabled(false)/EndDisabled() pairs, you might want to reformulate your code to avoid making those calls)
     void ImGui_BeginDisabled(bool disabled) except +
     void ImGui_EndDisabled() except +
@@ -3909,6 +3934,9 @@ cdef extern from "dcimgui.h":
     # Get size of last item
     ImVec2 ImGui_GetItemRectSize() except +
 
+    # Get generic flags of last item
+    ImGuiItemFlags ImGui_GetItemFlags() except +
+
     # Viewports
     # - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
     # - In 'docking' branch with multi-viewport enabled, we extend this concept to have multiple active viewports.
@@ -3963,17 +3991,17 @@ cdef extern from "dcimgui.h":
     void ImGui_ColorConvertRGBtoHSV(float r, float g, float b, float* out_h, float* out_s, float* out_v) except +
     void ImGui_ColorConvertHSVtoRGB(float h, float s, float v, float* out_r, float* out_g, float* out_b) except +
 
-    # Inputs Utilities: Keyboard/Mouse/Gamepad
+    # Inputs Utilities: Raw Keyboard/Mouse/Gamepad Access
+    # - Consider using the Shortcut() function instead of IsKeyPressed()/IsKeyChordPressed()! Shortcut() is easier to use and better featured (can do focus routing check).
     # - the ImGuiKey enum contains all possible keyboard, mouse and gamepad inputs (e.g. ImGuiKey_A, ImGuiKey_MouseLeft, ImGuiKey_GamepadDpadUp...).
-    # - (legacy: before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https://github.com/ocornut/imgui/issues/4921)
-    # - (legacy: any use of ImGuiKey will assert when key < 512 to detect passing legacy native/user indices)
+    # - (legacy: before v1.87 (2022-02), we used ImGuiKey < 512 values to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https://github.com/ocornut/imgui/issues/4921)
     # Is key being held.
     bool ImGui_IsKeyDown(ImGuiKey key) except +
 
     # Implied repeat = true
     bool ImGui_IsKeyPressed(ImGuiKey key) except +
 
-    # Was key pressed (went from !down to down)? if repeat=true, uses io.keyrepeatdelay / keyrepeatrate
+    # Was key pressed (went from !down to down)? repeat rate uses io.keyrepeatdelay / keyrepeatrate.
     bool ImGui_IsKeyPressedEx(ImGuiKey key, bool repeat) except +
 
     # Was key released (went from down to !down)?
@@ -3991,7 +4019,10 @@ cdef extern from "dcimgui.h":
     # Override io.wantcapturekeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. this is equivalent to setting 'io.wantcapturekeyboard = want_capture_keyboard'; after the next newframe() call.
     void ImGui_SetNextFrameWantCaptureKeyboard(bool want_capture_keyboard) except +
 
-    # Inputs Utilities: Shortcut Testing & Routing [BETA]
+    # Inputs Utilities: Shortcut Testing & Routing
+    # - Typical use is e.g.: 'if (ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_S)) ( ... )'.
+    # - Flags: Default route use ImGuiInputFlags_RouteFocused, but see ImGuiInputFlags_RouteGlobal and other options in ImGuiInputFlags_!
+    # - Flags: Use ImGuiInputFlags_Repeat to support repeat.
     # - ImGuiKeyChord = a ImGuiKey + optional ImGuiMod_Alt/ImGuiMod_Ctrl/ImGuiMod_Shift/ImGuiMod_Super.
     # ImGuiKey_C                          // Accepted by functions taking ImGuiKey or ImGuiKeyChord arguments
     # ImGuiMod_Ctrl | ImGuiKey_C          // Accepted by functions taking ImGuiKeyChord arguments
@@ -4003,8 +4034,10 @@ cdef extern from "dcimgui.h":
     # The whole system is order independent, so if Child1 makes its calls before Parent, results will be identical.
     # This is an important property as it facilitate working with foreign code or larger codebase.
     # - To understand the difference:
-    # - IsKeyChordPressed() compares mods and call IsKeyPressed() -> function has no side-effect.
-    # - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed() -> function has (desirable) side-effects as it can prevents another call from getting the route.
+    # - IsKeyChordPressed() compares mods and call IsKeyPressed()
+    # -> the function has no side-effect.
+    # - Shortcut() submits a route, routes are resolved, if it currently can be routed it calls IsKeyChordPressed()
+    # -> the function has (desirable) side-effects as it can prevents another call from getting the route.
     # - Visualize registered routes in 'Metrics/Debugger->Inputs'.
     bool ImGui_Shortcut(ImGuiKeyChord key_chord, ImGuiInputFlags flags) except +
     void ImGui_SetNextItemShortcut(ImGuiKeyChord key_chord, ImGuiInputFlags flags) except +
@@ -4104,7 +4137,9 @@ cdef extern from "dcimgui.h":
     const char* ImGui_SaveIniSettingsToMemory(size_t* out_ini_size) except +
 
     # Debug Utilities
-    # - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo->Tools->Metrics Debugger
+    # - Your main debugging friend is the ShowMetricsWindow() function.
+    # - Interactive tools are all accessible from the 'Dear ImGui Demo->Tools' menu.
+    # - Read https://github.com/ocornut/imgui/wiki/Debug-Tools for a description of all available debug tools.
     void ImGui_DebugTextEncoding(const char* text) except +
     void ImGui_DebugFlashStyleColor(ImGuiCol idx) except +
     void ImGui_DebugStartItemPicker() except +
@@ -4197,7 +4232,7 @@ cdef extern from "dcimgui_impl_glfw.h":
     void cImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window) except +
     void cImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window) except +
 
-    # GFLW callbacks options:
+    # GLFW callbacks options:
     # - Set 'chain_for_all_windows=true' to enable chaining callbacks for all windows (including secondary viewports created by backends or by user)
     void cImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows) except +
 
@@ -4244,7 +4279,7 @@ cdef extern from "dcimgui_impl_opengl3.h":
     bool cImGui_ImplOpenGL3_CreateDeviceObjects() except +
     void cImGui_ImplOpenGL3_DestroyDeviceObjects() except +
 
-    # (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = NULL to handle this manually.
+    # (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = nullptr to handle this manually.
     void cImGui_ImplOpenGL3_UpdateTexture(ImTextureData* tex) except +
 
 cdef extern from "dcimgui_internal.h":
