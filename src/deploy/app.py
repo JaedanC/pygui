@@ -88,7 +88,6 @@ def main():
     pygui.style_colors_dark()
     # pygui.style_colors_light()
     # pygui.style_colors_classic()
-    clear_color = (0.45, 0.55, 0.6, 1.0)
 
     pygui.IM_ASSERT(True, "You should never see this")
     try:
@@ -117,7 +116,7 @@ def main():
             pygui.render()
 
             gl.glViewport(0, 0, int(io.display_size[0]), int(io.display_size[1]))
-            gl.glClearColor(*clear_color)
+            gl.glClearColor(*clear_color.tuple())
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
             draw_data = pygui.get_draw_data()
