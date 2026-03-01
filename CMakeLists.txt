@@ -12,8 +12,6 @@ set(GLFW_DIRECTORY             src/external/glfw)
 set(GLFW_INCLUDE_DIRECTORY     ${GLFW_DIRECTORY}/include)
 
 set(PYGUI_CONFIG_DIRECTORY     ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config)
-set(PYGUI_CONFIG_H             ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.h)
-set(PYGUI_CONFIG_CPP           ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/pygui_config.cpp)
 set(IMGUI_CONFIG_H             ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config.h)
 set(IMGUI_CONFIG_EXPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_export_dll.h)
 set(IMGUI_CONFIG_IMPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_import_dll.h)

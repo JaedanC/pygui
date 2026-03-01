@@ -127,7 +127,7 @@ This step will compile:
 
 You may use Visual Studio or the command-line (developer console on windows) to run CMake. I will be using Visual Studio.
 
-Configure (build) CMake and then CMake "Install". This will build the targets and save them to `src/pygui`. An additional `./src/pygui/my_program.exe` has been included that compiles from `main.c`. This is to demonstrate the `dll`'s in action. If this program does not run correctly, then the `dll`'s are not ready for python.
+Configure (build) CMake and then CMake "Install". This will build the targets and save them to `src/pygui`. ImGui should compile to `./src/pygui/my_program_cpp.exe` for a sanity check, then `./src/pygui/my_program_c.exe` is compiled using `dear_bindings` and to demonstrate the `dll`'s in action. If this program does not run correctly, then the `dll`'s are not ready for python.
 
 You can choose debug or release for cmake. All github releases (from 1.90.6+) are built in release.
 
@@ -150,7 +150,7 @@ This will compile to `./src/pygui`:
 - The `__init__.py` file. This allows the `pygui` directory to be imported as `import pygui`
 - The `__init__.pyi` file. This gives the `pygui` module correct intellisense in editors as cython does not export symbols.
 
-It will also copy the entire `pygui` python module to directory called `portable`. This new directory will contains everything required for a new `pygui` project to be portable. It will not include the `src/pygui/libs` directory or `my_program.exe`.
+It will also copy the entire `pygui` python module to directory called `portable`. This new directory will contains everything required for a new `pygui` project to be portable. It will not include the `src/pygui/libs` directory or `my_program_c.exe` and `my_program_cpp.exe`.
 
 ## Developing pygui
 
@@ -243,43 +243,43 @@ If you are unsure about the output, run `python model_creator.py --trial`. This 
     # ...
     ```
 
-    Edit `src/cpp_config/pygui_config.h` to include your DLL exports and imports.
-    In theory, yes. The `model_creator.py` scripts uses `config.py`, and builds the headers as modules.
+    And using the CMake file as a reference, edit the header files inside `src/cpp_config` to include your DLL exports and imports.
 
-    `src/cpp_config/pygui_config.h`
+    `src/cpp_config/imgui_config_export_dll.h`
 
     ```c
-    #ifdef PYGUI_COMPILING_DLL
-    // ...
+    ...
     #define CIMGUI_API       __declspec(dllexport)
     #define CIMGUI_IMPL_API  __declspec(dllexport)
     #define MY_EXTENSION_API __declspec(dllexport)
-    // ...
-    #endif // PYGUI_COMPILING_DLL
+    ...
+    ```
 
+    `src/cpp_config/imgui_config_import_dll.h`
 
-    #ifdef PYGUI_COMPILING_DLL_APP
-    // ...
+    ```c
+    ...
     #define CIMGUI_API       __declspec(dllimport)
     #define CIMGUI_IMPL_API  __declspec(dllimport)
     #define MY_EXTENSION_API __declspec(dllimport)
-    // ...
-    #endif // PYGUI_COMPILING_DLL_APP
-
+    ...
     ```
 
 2. As long as all the functions in the header are defined in the format that is used by `dear_bindings`, then you can certainly include your library.
 
-    `src/config.py`
+    `src/model_creator.py`
 
     ```python
+    def load_modules():
+    ...
     # My extension
     with open("my_extension/extra.json") as f:
         modules.append(
             Binding.from_json(json.load(f), "extra.h", defines)
         )
+    ...
     ```
 
 3. Run the `model_creator.py` and (see above developing pygui) add/activate functions in the library.
 
-4. Compile the module with `setup.py`. The `__init__.pyi` file should be updated automatically.
+4. Update `setup.py` with any required includes or DLL links. The `__init__.pyi` file should be updated automatically.
