@@ -7,11 +7,10 @@ from pygui_demo import demo_fonts_init, pygui_demo_window, limit_fps
 
 
 vsync_enabled = pygui.Bool(True)
+show_pygui_demo = pygui.Bool(True)
+show_imgui_demo = pygui.Bool(True)
 enable_framecap = pygui.Bool(False)
 max_framerate = pygui.Int(60)
-show_imgui_demo = pygui.Bool(True)
-show_pygui_demo = pygui.Bool(True)
-
 clear_color = pygui.Vec4(0.45, 0.55, 0.60, 1)
 
 

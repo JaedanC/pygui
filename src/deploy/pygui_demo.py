@@ -3828,6 +3828,7 @@ class rand:
     jump_to_cache = []
     jump_to = pygui.Int(0)
     text_filter = pygui.ImGuiTextFilter.create()
+    ini_filename = None
 
 
 def show_random_extras():
@@ -5703,6 +5704,18 @@ def show_random_extras():
         pygui.tree_pop()
 
         pygui.tree_pop()
+
+    if pygui.tree_node("pygui.io().ini_filename"):
+        if rand.ini_filename is None:
+            rand.ini_filename = pygui.String(pygui.get_io().ini_filename)
+        
+        pygui.input_text("ini filename", rand.ini_filename)
+        pygui.text("rand.ini_filename: {}".format(rand.ini_filename.value))
+        pygui.text("pygui.get_io().ini_filename: {}".format(pygui.get_io().ini_filename))
+        if pygui.button("Set"):
+            pygui.get_io().ini_filename = rand.ini_filename.value
+        pygui.tree_pop()
+
 
     io = pygui.get_io()
     pygui.text("hash(pygui.get_io()): {}".format(hash(io)))
