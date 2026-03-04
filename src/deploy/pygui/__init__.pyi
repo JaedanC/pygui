@@ -121,6 +121,12 @@ class String:
     Read only size of the heap allocated buffer backing this string.
     """
     def __init__(self, initial_value: str="", buffer_size=256) -> String: ...
+    def resize(self, to_size: int):
+        """
+        Resize the internal buffer. Can be used to truncate the string. Usable
+        bytes are `to_size` - 1.
+        """
+        pass
 
 class Vec2:
     """

@@ -368,7 +368,7 @@ class Binding(IBinding):
             @buffer_size.setter
             def buffer_size(self, value: int):
                 raise NotImplementedError
-
+            
             @property
             def value(self):
                 return _from_bytes(self.buffer)
@@ -378,8 +378,21 @@ class Binding(IBinding):
                 # So to mark the end of the string, you should use the len(bytes).
                 c_bytes = _bytes(value)
                 n_bytes = len(c_bytes)
+                if n_bytes >= self._buffer_size:
+                    self.resize(self._buffer_size * 2)
                 strncpy(self.buffer, c_bytes, self._buffer_size)
                 self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
+            
+            def resize(self, to_size: int):
+                IM_ASSERT(to_size > 0)
+                new_buffer = <char*>{pxd_library_name}.ImGui_MemAlloc(to_size)
+                if new_buffer == NULL:
+                    raise MemoryError()
+                strncpy(new_buffer, self.buffer, min(to_size, self._buffer_size))
+                new_buffer[to_size - 1] = 0
+                {pxd_library_name}.ImGui_MemFree(self.buffer)
+                self.buffer = new_buffer
+                self._buffer_size = to_size
 
 
         cdef class Vec2:

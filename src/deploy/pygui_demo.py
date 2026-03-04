@@ -3761,7 +3761,7 @@ def show_demo_tables():
 
 
 class rand:
-    string_test = pygui.String()
+    string_test = pygui.String(buffer_size=10)
     begin_disabled = pygui.Bool(True)
     first_checkbox = pygui.Bool(False)
     second_checkbox = pygui.Bool(False)
@@ -3802,7 +3802,7 @@ class rand:
             pygui.INPUT_TEXT_FLAGS_CALLBACK_COMPLETION |\
             pygui.INPUT_TEXT_FLAGS_CALLBACK_HISTORY |\
             pygui.INPUT_TEXT_FLAGS_CALLBACK_CHAR_FILTER |\
-            # pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE |\
+            pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE |\
             pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT)
     input_lock_scroll = pygui.Bool(True)
     tree_checkboxes = [pygui.Bool(False) for _ in range(3)]
@@ -4694,11 +4694,15 @@ def show_random_extras():
 
     if pygui.tree_node("String() testing"):
         pygui.input_text("String test", rand.string_test)
-        pygui.text("Length: {} Value: '{}'".format(
-            rand.string_test.buffer_size, rand.string_test.value
-        ))
+        pygui.text("buffer_size: {}".format(rand.string_test.buffer_size))
+        pygui.text("value: '{}'".format(rand.string_test.value))
+        pygui.text("len(value): '{}'".format(len(rand.string_test.value)))
         if pygui.button("Set text to constant"):
             rand.string_test.value = "Hello"
+        if pygui.button("Resize to 20"):
+            rand.string_test.resize(20)
+        if pygui.button("Resize to 5"):
+            rand.string_test.resize(5)
         pygui.tree_pop()
 
     if pygui.tree_node("pygui.accept_drag_drop_payload()"):
@@ -5044,10 +5048,9 @@ def show_random_extras():
             return 0
 
         def input_text_char_resize_callback(cb: pygui.ImGuiInputTextCallbackData, log):
-            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE: {}".format(cb.buf_text_len))
-            # TODO: Have not been able to get resizing to work.
-            # rand.input_buffer.buffer_size = cb.buf_text_len + 1
-            # cb.buf = rand.input_buffer.value
+            log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_RESIZE: {}: buf_size:{}".format(cb.buf_text_len, cb.buf_size))
+            if cb.buf_text_len >= rand.input_buffer.buffer_size:
+                rand.input_buffer.resize(rand.input_buffer.buffer_size * 2)
 
         def input_text_char_edit_callback(cb: pygui.ImGuiInputTextCallbackData, log):
             log.append("pygui.INPUT_TEXT_FLAGS_CALLBACK_EDIT")
@@ -5088,7 +5091,7 @@ def show_random_extras():
 
         pygui.checkbox("Lock scroll", rand.input_lock_scroll)
         pygui.text("Events: {}".format(len(rand.input_buffer_log)))
-        if pygui.begin_child("Callback log", (400, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDERS):
+        if pygui.begin_child("Callback log", (600, pygui.get_text_line_height_with_spacing() * 10), pygui.CHILD_FLAGS_BORDERS):
             for i, event in enumerate(rand.input_buffer_log):
                 pygui.text("{}: {}".format(i, event))
             if pygui.get_io().mouse_wheel > 0 and pygui.get_scroll_y() < pygui.get_scroll_max_y():

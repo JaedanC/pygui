@@ -162,8 +162,21 @@ cdef class String:
         # So to mark the end of the string, you should use the len(bytes).
         c_bytes = _bytes(value)
         n_bytes = len(c_bytes)
+        if n_bytes >= self._buffer_size:
+            self.resize(self._buffer_size * 2)
         strncpy(self.buffer, c_bytes, self._buffer_size)
         self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
+
+    def resize(self, to_size: int):
+        IM_ASSERT(to_size > 0)
+        new_buffer = <char*>dcimgui.ImGui_MemAlloc(to_size)
+        if new_buffer == NULL:
+            raise MemoryError()
+        strncpy(new_buffer, self.buffer, min(to_size, self._buffer_size))
+        new_buffer[to_size - 1] = 0
+        dcimgui.ImGui_MemFree(self.buffer)
+        self.buffer = new_buffer
+        self._buffer_size = to_size
 
 
 cdef class Vec2:
@@ -16521,9 +16534,9 @@ cdef class ImFontConfig:
         if self._const_ptr != NULL:
             raise NotImplementedError
         cdef bytes c_string = _bytes(value)
-        cdef unsigned int string_length = min(39, len(c_string))
+        cdef unsigned int string_length = min(39, len(c_string)) # ImGui gives us a 40 char buffer
         strncpy(dereference(self._ptr).Name, c_string, string_length)
-        dereference(self._ptr).Name[string_length] = 0
+        dereference(self._ptr).Name[string_length] = 0 # NULL terminator in string buffer
         # raise NotImplementedError
     # [End Field]
 
@@ -17569,6 +17582,7 @@ cdef class ImGuiErrorRecoveryState:
 # ?invisible(False)
 # ?custom_comment_only(False)
 _io_clipboard = {}
+cdef String _io_ini_filename_dynamic = String()
 cdef class ImGuiIO:
     cdef dcimgui.ImGuiIO* _ptr
     cdef bool dynamically_allocated
@@ -18727,7 +18741,7 @@ cdef class ImGuiIO:
     # [End Field]
 
     # [Field]
-    # ?use_template(False)
+    # ?use_template(True)
     # ?active(True)
     # ?invisible(False)
     # ?custom_comment_only(False)
@@ -18741,8 +18755,11 @@ cdef class ImGuiIO:
         return _from_bytes(res)
     @ini_filename.setter
     def ini_filename(self, value: str):
-        # dereference(self._ptr).IniFilename = _bytes(value)
-        raise NotImplementedError
+        # IniFilename is only a const char* thus we must own the memory. ImGuiIO
+        # cannot hold the memory because the lifetime of the object is unknown.
+        _io_ini_filename_dynamic.value = value
+        dereference(self._ptr).IniFilename = _io_ini_filename_dynamic.buffer
+        # raise NotImplementedError
     # [End Field]
 
     # [Field]
