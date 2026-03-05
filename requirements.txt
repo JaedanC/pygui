@@ -5,4 +5,5 @@ numpy
 Pillow
 ply
 PyOpenGL
+scikit-build
 setuptools

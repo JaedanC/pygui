@@ -76,7 +76,7 @@ cdef dcimgui.ImVec4 _cast_tuple_ImVec4(quadruple):
 
 cdef class Bool:
     @staticmethod
-    cdef bool* ptr(ptr: Bool):
+    cdef bool* ptr(ptr: Optional[Bool]):
         return <bool*>(NULL if ptr is None else <void*>(&ptr.value))
 
     cdef public bool value
@@ -90,7 +90,7 @@ cdef class Bool:
 
 cdef class Int:
     @staticmethod
-    cdef int* ptr(ptr: Int):
+    cdef int* ptr(ptr: Optional[Int]):
         return <int*>(NULL if ptr is None else <void*>(&ptr.value))
 
     cdef public int value
@@ -100,7 +100,7 @@ cdef class Int:
 
 cdef class Long:
     @staticmethod
-    cdef long long* ptr(ptr: Long):
+    cdef long long* ptr(ptr: Optional[Long]):
         return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
 
     cdef public long long value
@@ -111,7 +111,7 @@ cdef class Long:
 
 cdef class Float:
     @staticmethod
-    cdef float* ptr(ptr: Float):
+    cdef float* ptr(ptr: Optional[Float]):
         return <float*>(NULL if ptr is None else <void*>(&ptr.value))
 
     cdef public float value
@@ -122,7 +122,7 @@ cdef class Float:
 
 cdef class Double:
     @staticmethod
-    cdef double* ptr(ptr: Double):
+    cdef double* ptr(ptr: Optional[Double]):
         return <double*>(NULL if ptr is None else <void*>(&ptr.value))
 
     cdef public double value
@@ -1332,12 +1332,12 @@ def arrow_button(str_id: str, dir_: int):
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def begin(name: str, p_open: Bool=None, flags: int=0):
+def begin(name: str, p_open: Optional[Bool]=None, flags: int=0):
     """
     Windows
     - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.

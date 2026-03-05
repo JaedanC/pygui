@@ -292,7 +292,7 @@ class Binding(IBinding):
 
         cdef class Bool:
             @staticmethod
-            cdef bool* ptr(ptr: Bool):
+            cdef bool* ptr(ptr: Optional[Bool]):
                 return <bool*>(NULL if ptr is None else <void*>(&ptr.value))
 
             cdef public bool value
@@ -306,7 +306,7 @@ class Binding(IBinding):
 
         cdef class Int:
             @staticmethod
-            cdef int* ptr(ptr: Int):
+            cdef int* ptr(ptr: Optional[Int]):
                 return <int*>(NULL if ptr is None else <void*>(&ptr.value))
 
             cdef public int value
@@ -316,7 +316,7 @@ class Binding(IBinding):
 
         cdef class Long:
             @staticmethod
-            cdef long long* ptr(ptr: Long):
+            cdef long long* ptr(ptr: Optional[Long]):
                 return <long long*>(NULL if ptr is None else <void*>(&ptr.value))
 
             cdef public long long value
@@ -327,7 +327,7 @@ class Binding(IBinding):
 
         cdef class Float:
             @staticmethod
-            cdef float* ptr(ptr: Float):
+            cdef float* ptr(ptr: Optional[Float]):
                 return <float*>(NULL if ptr is None else <void*>(&ptr.value))
 
             cdef public float value
@@ -338,7 +338,7 @@ class Binding(IBinding):
 
         cdef class Double:
             @staticmethod
-            cdef double* ptr(ptr: Double):
+            cdef double* ptr(ptr: Optional[Double]):
                 return <double*>(NULL if ptr is None else <void*>(&ptr.value))
 
             cdef public double value

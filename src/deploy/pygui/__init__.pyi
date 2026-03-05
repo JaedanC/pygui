@@ -1163,7 +1163,7 @@ def arrow_button(str_id: str, dir_: int) -> bool:
     """
     pass
 
-def begin(name: str, p_open: Bool=None, flags: int=0) -> bool:
+def begin(name: str, p_open: Optional[Bool]=None, flags: int=0) -> bool:
     """
     Windows
     - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.

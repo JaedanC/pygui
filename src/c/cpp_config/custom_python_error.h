@@ -29,7 +29,7 @@ CIMGUI_API PyObject* get_imgui_error();
     //       possible segmentation faults when using functions that
     //       does not return error values. Especially when pushing/poping
     //       style stack variables.
-    #pragma message ( "Preprocessor: Redefining IM_ASSERT to use Python" )
+    // #pragma message ( "Preprocessor: Redefining IM_ASSERT to use Python" )
     #define IM_ASSERT(EX) (void)((EX) || (__py_assert ("ImGui assertion error (" #EX ") at " AT),0))
 
     static PyObject* ImGuiError = NULL;

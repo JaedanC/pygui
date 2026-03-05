@@ -16,10 +16,18 @@ set(IMGUI_CONFIG_H             ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgu
 set(IMGUI_CONFIG_EXPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_export_dll.h)
 set(IMGUI_CONFIG_IMPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgui_config_import_dll.h)
 set(CUSTOM_PYTHON_ERROR_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/custom_python_error.cpp)
+
+set(PYGUI_PYX                  ${CMAKE_CURRENT_SOURCE_DIR}/src/binding/core/core.pyx)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(Python_FIND_ABI "ANY" "ANY" "ANY")
-find_package(Python3 COMPONENTS Development)
+
+# ★ Use modern FindPython (scikit-build-core backports it when needed)
+find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
+
+
+# set(Python_FIND_ABI "ANY" "ANY" "ANY")
+# find_package(Python3 COMPONENTS Development)
 message("Python_FOUND:${Python3_FOUND}")
 message("Python_VERSION:${Python3_VERSION}")
 message("Python_Development_FOUND:${Python3_Development_FOUND}")
@@ -122,7 +130,7 @@ target_compile_definitions(dcimgui_glfw_opengl3 PRIVATE
     USE_CUSTOM_PYTHON_ERROR      # Comment this to disable custom assert
     IMGUI_USER_CONFIG="${IMGUI_CONFIG_EXPORT_DLL_H}"
 )
-target_link_libraries(dcimgui_glfw_opengl3 glfw ${Python3_LIBRARIES})
+target_link_libraries(dcimgui_glfw_opengl3 glfw Python3::Module)
 
 
 # ------------------------------------------------------------------------------
@@ -168,14 +176,59 @@ target_link_libraries(my_program_c dcimgui_glfw_opengl3 opengl32)
 # the runtime (dll) and the archive (associated .lib). The .lib file is
 # for compiling with the dll. This is what setuptools is looking for. The
 # dlls must be present to run my_program and pygui.
-install(TARGETS dcimgui_glfw_opengl3 my_program_c my_program_cpp glfw
-        RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui
-        LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
-        ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs)
+install(
+    TARGETS dcimgui_glfw_opengl3 my_program_c my_program_cpp glfw
+    RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui
+    LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
+    ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
+)
 
-# For debugging my_program
+# # For debugging my_program
 message("Installing glfw and ${Python3_RUNTIME_LIBRARY} to build dir")
 install(TARGETS glfw
         RUNTIME DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${Python3_RUNTIME_LIBRARY}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+
+
+# Only runs with 'pip install .'
+if(DEFINED SKBUILD OR DEFINED SKBUILD_PROJECT_NAME)
+    find_package(Cython MODULE REQUIRED VERSION 4.1.0)
+    include(UseCython)
+
+    cython_transpile(${PYGUI_PYX} LANGUAGE CXX OUTPUT_VARIABLE BINDING_CPP)
+
+    # Python extension with correct tag; link to your DLL + Python
+    python3_add_library(core MODULE "${BINDING_CPP}" WITH_SOABI)
+    target_include_directories(core PRIVATE
+        ${PYGUI_CONFIG_DIRECTORY}
+        ${IMGUI_DIRECTORY}
+        ${DCIMGUI_DIRECTORY}
+        ${DCIMGUI_IMPL_DIRECTORY}
+    )
+    target_compile_definitions(core PRIVATE
+        IMGUI_USER_CONFIG="${IMGUI_CONFIG_EXPORT_DLL_H}"
+    )
+    target_link_libraries(core PRIVATE dcimgui_glfw_opengl3 Python3::Module)
+
+    install(TARGETS core DESTINATION ${SKBUILD_PROJECT_NAME})
+    install(TARGETS dcimgui_glfw_opengl3 glfw
+            RUNTIME DESTINATION ${SKBUILD_PROJECT_NAME}
+            LIBRARY DESTINATION ${SKBUILD_PROJECT_NAME}/libs
+            ARCHIVE DESTINATION ${SKBUILD_PROJECT_NAME}/libs
+    )
+
+    # Copy over auto-generated content for the module.
+    install(DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/
+        DESTINATION ${SKBUILD_PROJECT_NAME}
+        FILES_MATCHING
+          PATTERN "*.py"
+          PATTERN "*.pyi"
+    )
+    install(
+        DIRECTORY   ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/assets
+        DESTINATION ${SKBUILD_PROJECT_NAME}
+    )
+endif()

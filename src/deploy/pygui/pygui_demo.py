@@ -9,6 +9,7 @@ import sys
 import time
 from enum import Enum, auto
 from typing import List, Tuple
+from importlib.resources import files, as_file
 
 from PIL import Image
 import pygui
@@ -37,7 +38,16 @@ def clamp(n, smallest, largest):
 
 
 def resource_path(relative_path):
-    """Makes pygui compatible with PyInstaller"""
+    def is_legacy_installation():
+        return os.path.exists(os.path.join("pygui", "README.md"))
+    # If we are a package, the resources are directly inside
+    # the img/fonts folder etc.
+    if not is_legacy_installation():
+        resource = files("pygui") / relative_path
+        with as_file(resource) as real_path:
+            return str(real_path)
+    
+    # If we are not a package, then we are in legacy mode:
     try:
         # PyInstaller creates a temporary folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
@@ -1227,7 +1237,7 @@ class widget:
         return widget._singleton_instance
 
     def __init__(self):
-        self.widgets_image = Image.open(resource_path("pygui/img/code.png"))
+        self.widgets_image = Image.open(resource_path("assets/img/code.png"))
         self.widgets_image_texture_ref = pygui.ImTextureRef.create(pygui.load_image(self.widgets_image))
 
     general_clicked = 0
@@ -6517,12 +6527,12 @@ def demo_fonts_init():
     # io.Fonts->AddFontFromFileTTF("DroidSans.ttf", 0.0f, &config);           // Merge into first font to add e.g. Asian characters
     # io.Fonts->AddFontFromFileTTF("fontawesome-webfont.ttf", 0.0f, &config); // Merge into first font to add Icons
 
-    cascadia_mono_semi_bold_otf = resource_path("pygui/fonts/CascadiaMono-SemiBold.otf")
-    noto_sans_math_regular_ttf =  resource_path("pygui/fonts/NotoSansMath-Regular.ttf")
-    selawk_ttf =                  resource_path("pygui/fonts/selawk.ttf")
-    proggy_clean_ttf =            resource_path("pygui/fonts/ProggyClean.ttf")
-    droid_sans_ttf =              resource_path("pygui/fonts/DroidSans.ttf")
-    unifont_otf =                 resource_path("pygui/fonts/unifont-15.0.01.otf")
+    cascadia_mono_semi_bold_otf = resource_path("assets/fonts/CascadiaMono-SemiBold.otf")
+    noto_sans_math_regular_ttf =  resource_path("assets/fonts/NotoSansMath-Regular.ttf")
+    selawk_ttf =                  resource_path("assets/fonts/selawk.ttf")
+    proggy_clean_ttf =            resource_path("assets/fonts/ProggyClean.ttf")
+    droid_sans_ttf =              resource_path("assets/fonts/DroidSans.ttf")
+    unifont_otf =                 resource_path("assets/fonts/unifont-15.0.01.otf")
 
     io.fonts.add_font_from_file_ttf(cascadia_mono_semi_bold_otf)
     io.fonts.add_font_from_file_ttf(noto_sans_math_regular_ttf)
