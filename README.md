@@ -19,6 +19,41 @@ Python Version: `Python 3.12.10`
 
 This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as the C base. Pygui is inspired by [pyimgui](https://github.com/pyimgui/pyimgui).
 
+## Getting Started
+
+The easiest way to get started with pygui is to install using pip:
+
+```bash
+pip install pygui
+```
+
+You may will then need to setup the pygui environment. Use [app.py](https://github.com/JaedanC/pygui/blob/master/src/deploy/app.py) as a starting point.
+
+Note: Using pip requires the same Python version as stated above as the pre-compiled binaries link to the Python development module to raise custom exceptions.
+
+### Alternatively
+
+If you are running a different Python version, add this repository to your project and install from pip that way.
+
+```bash
+git submodule add https://github.com/JaedanC/pygui.git
+cd pygui
+pip install .
+```
+
+### Legacy way
+
+You may also download the precomplied binary which includes the minimal app example already. Just extract the contents to your Python project folder.
+
+Make sure you have installed the [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist).
+
+Open a terminal to the same directory as `app.py` and run:
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
 ## Why choose pygui over other ImGui python wrappers?
 
 1. The binding is **auto-generated**:
@@ -55,19 +90,6 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 2. glfw and dcimgui is linked at runtime with a DLL which may hurt performance slightly.
 3. Not all ImGui functions are activated, but with some work more can be. This is by design so that I can verify a function's template implementation works before activating it. See "Developing pygui" down below for more information.
 4. More work would be required to enable additional backends. Since dcimgui also wraps backends too, this should be possible to do as long as you have a way to write the c++ minimal example in Python.
-
-## Getting Started
-
-The easiest way to get started with pygui is to download the release. This includes pygui and dcimgui precompiled into a python package that can be imported. Just extract the contents to your Python project folder.
-
-Make sure you have installed the [Latest Microsoft Visual C++ Redistributable Version](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist).
-
-Open a terminal to the same directory as `app.py` and run:
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
 
 ## Compiling pygui
 

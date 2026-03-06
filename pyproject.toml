@@ -7,22 +7,48 @@ requires = [
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pygui"
+name = "pygui_JaedanC"
+description = "Dear Imgui in Python by JaedanC"
 version = "1.92.6.2"
 requires-python = ">=3.12"
-description = "Dear Imgui in Python by JaedanC"
-# (add your metadata: description, authors, classifiers, etc.)
+authors = [
+  { name="JaedanC" },
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+  "Cython==3.0.6",
+  "diff-match-patch",
+  "glfw",
+  "numpy",
+  "Pillow",
+  "ply",
+  "PyOpenGL",
+  "scikit-build",
+  "setuptools",
+]
+
+[project.urls]
+Repository = "https://github.com/JaedanC/pygui.git"
+Changelog = "https://github.com/JaedanC/pygui/releases"
 
 [tool.scikit-build]
-# Where your Python package(s) live:
 wheel.packages = ["src/binding/core"]
-# CMake is run automatically when building wheels (default true),
-# but shown here for clarity:
 wheel.cmake = true
 cmake.build-type = "Release"
-cmake.verbose = true
+build.verbose = true
 build-dir = "out/scikit-build" # To allow for caching
-
-# Helpful during development; editable installs are supported (with caveats):
 editable.mode = "redirect"
-# editable.rebuild = true  # uncomment to auto-rebuild on import in dev
+sdist.include = [
+  "CMakeLists.txt",
+  "src/binding/core/core.pyx",
+  "src/binding/core/dcimgui.pxd",
+  "src/c/**",
+  "src/external/dear_bindings/**",
+  "src/external/glfw/**",
+  "src/external/imgui/**",
+  "src/deploy/app.py",
+  "src/deploy/assets/**",
+  "src/deploy/pygui/pygui_demo.py",
+]
