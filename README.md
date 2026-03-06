@@ -102,7 +102,6 @@ pip install .
 
 This will automatically use the `scikit_build_core` backend to compile all the required objects.
 
-
 To compile the old way you will need to make cmake installed yourself.
 
 And these are the steps we will complete:

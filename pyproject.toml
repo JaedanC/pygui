@@ -9,7 +9,7 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "pygui_cython"
 description = "Dear ImGui in Python! A dynamically generated Cython wrapper of dear_bindings"
-version = "1.92.6.2"
+version = "1.92.6.3"
 requires-python = ">=3.12"
 authors = [
   { name="JaedanC" },
