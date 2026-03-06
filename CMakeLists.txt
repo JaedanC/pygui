@@ -18,8 +18,9 @@ set(IMGUI_CONFIG_IMPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgu
 set(CUSTOM_PYTHON_ERROR_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/custom_python_error.cpp)
 
 set(PYGUI_PYX                  ${CMAKE_CURRENT_SOURCE_DIR}/src/binding/core/core.pyx)
-set(PYI_DIRECTORY              ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui_cython/)
-set(ASSETS_DIRECTORY           ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/assets)
+set(DEPLOY_DIRECTORY           ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy)
+set(PYI_DIRECTORY              ${DEPLOY_DIRECTORY}/pygui_cython/)
+set(ASSETS_DIRECTORY           ${DEPLOY_DIRECTORY}/assets)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -220,7 +221,10 @@ if(DEFINED SKBUILD OR DEFINED SKBUILD_PROJECT_NAME)
             LIBRARY DESTINATION ${SKBUILD_PROJECT_NAME}/libs
             ARCHIVE DESTINATION ${SKBUILD_PROJECT_NAME}/libs
     )
-
+    install(
+        FILES       ${DEPLOY_DIRECTORY}/app.py
+        DESTINATION ${SKBUILD_PROJECT_NAME}
+    )
     # Copy over auto-generated content for the module.
     install(
         DIRECTORY   ${PYI_DIRECTORY}

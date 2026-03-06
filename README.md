@@ -9,10 +9,10 @@ Python Version: `Python 3.12.10`
 
 ## Features
 
-1. Imgui Docking Support.
-2. Imgui Multi-Viewport Support.
+1. ImGui Docking Support.
+2. ImGui Multi-Viewport Support.
 3. Intellisense Support. (`__init__.pyi` file)
-4. Uses Imgui's `glfw_opengl3` backend. Minimal understanding of OpenGL is needed.
+4. Uses ImGui's `glfw_opengl3` backend. Minimal understanding of OpenGL is needed.
 5. Includes an extensive pygui example (and a minimal c example).
 
 ![Intellisense](https://raw.githubusercontent.com/JaedanC/pygui/570d15e109e0bdda5cd697244fb358a375dd21a3/docs/img/intellisense.png)
@@ -27,7 +27,14 @@ The easiest way to get started with pygui is to install using pip:
 pip install pygui
 ```
 
-You may will then need to setup the pygui environment. Use [app.py](https://github.com/JaedanC/pygui/blob/master/src/deploy/app.py) as a starting point.
+You will then need to setup the pygui environment. Run the following, to get started:
+
+```python
+from pygui_cython.app import main
+main()
+```
+
+Copy [app.py](https://github.com/JaedanC/pygui/blob/master/src/deploy/app.py) into your project and use it as your application's starting point!
 
 Note: Using pip requires the same Python version as stated above as the pre-compiled binaries link to the Python development module to raise custom exceptions.
 
@@ -336,7 +343,7 @@ Then test the app using the minimal app example.
 Upload to production pypi:
 
 ```bash
-python -m twine upload .\dist\pygui-cython-<version> --verbose
+python -m twine upload .\dist\pygui_cython<version>
 ```
 
 Testing the applcation:
