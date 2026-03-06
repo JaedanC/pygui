@@ -12,7 +12,7 @@ from typing import List, Tuple
 from importlib.resources import files, as_file
 
 from PIL import Image
-import pygui
+import pygui_cython as pygui
 
 
 def help_marker(desc: str):
@@ -39,11 +39,11 @@ def clamp(n, smallest, largest):
 
 def resource_path(relative_path):
     def is_legacy_installation():
-        return os.path.exists(os.path.join("pygui", "README.md"))
+        return os.path.exists(os.path.join("pygui_cython", "README.md"))
     # If we are a package, the resources are directly inside
     # the img/fonts folder etc.
     if not is_legacy_installation():
-        resource = files("pygui") / relative_path
+        resource = files("pygui_cython") / relative_path
         with as_file(resource) as real_path:
             return str(real_path)
     

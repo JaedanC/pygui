@@ -13,7 +13,7 @@ def main():
         print(f"Creating {dest}")
         return shutil.copy2(start, dest)
 
-    shutil.copytree("deploy/pygui", PORTABLE_SAVE_LOCATION + "/pygui",
+    shutil.copytree("deploy/pygui_cython", PORTABLE_SAVE_LOCATION + "/pygui_cython",
         copy_function=verbose_copy,
         ignore=shutil.ignore_patterns(
             "__pycache__",

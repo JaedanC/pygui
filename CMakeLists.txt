@@ -18,6 +18,8 @@ set(IMGUI_CONFIG_IMPORT_DLL_H  ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/imgu
 set(CUSTOM_PYTHON_ERROR_CPP    ${CMAKE_CURRENT_SOURCE_DIR}/src/c/cpp_config/custom_python_error.cpp)
 
 set(PYGUI_PYX                  ${CMAKE_CURRENT_SOURCE_DIR}/src/binding/core/core.pyx)
+set(PYI_DIRECTORY              ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui_cython/)
+set(ASSETS_DIRECTORY           ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/assets)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -178,9 +180,9 @@ target_link_libraries(my_program_c dcimgui_glfw_opengl3 opengl32)
 # dlls must be present to run my_program and pygui.
 install(
     TARGETS dcimgui_glfw_opengl3 my_program_c my_program_cpp glfw
-    RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui
-    LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
-    ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/libs
+    RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui_cython
+    LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui_cython/libs
+    ARCHIVE DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui_cython/libs
 )
 
 # # For debugging my_program
@@ -220,15 +222,15 @@ if(DEFINED SKBUILD OR DEFINED SKBUILD_PROJECT_NAME)
     )
 
     # Copy over auto-generated content for the module.
-    install(DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/pygui/
+    install(
+        DIRECTORY   ${PYI_DIRECTORY}
         DESTINATION ${SKBUILD_PROJECT_NAME}
         FILES_MATCHING
           PATTERN "*.py"
           PATTERN "*.pyi"
     )
     install(
-        DIRECTORY   ${CMAKE_CURRENT_SOURCE_DIR}/src/deploy/assets
+        DIRECTORY   ${ASSETS_DIRECTORY}
         DESTINATION ${SKBUILD_PROJECT_NAME}
     )
 endif()

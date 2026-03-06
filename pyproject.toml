@@ -7,8 +7,8 @@ requires = [
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pygui_JaedanC"
-description = "Dear Imgui in Python by JaedanC"
+name = "pygui_cython"
+description = "Dear ImGui in Python! A dynamically generated Cython wrapper of dear_bindings"
 version = "1.92.6.2"
 requires-python = ">=3.12"
 authors = [
@@ -45,10 +45,11 @@ sdist.include = [
   "src/binding/core/core.pyx",
   "src/binding/core/dcimgui.pxd",
   "src/c/**",
-  "src/external/dear_bindings/**",
+  "src/external/dear_bindings/generated/**",
   "src/external/glfw/**",
-  "src/external/imgui/**",
+  "src/external/imgui/**.cpp",
+  "src/external/imgui/**.h",
   "src/deploy/app.py",
   "src/deploy/assets/**",
-  "src/deploy/pygui/pygui_demo.py",
+  "src/deploy/pygui_cython/pygui_demo.py",
 ]
