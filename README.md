@@ -24,7 +24,7 @@ This project uses [dear_bindings](https://github.com/dearimgui/dear_bindings) as
 The easiest way to get started with pygui is to install using pip:
 
 ```bash
-pip install pygui
+pip install pygui-cython
 ```
 
 You will then need to setup the pygui environment. Run the following, to get started:
