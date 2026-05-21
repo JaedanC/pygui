@@ -10,8 +10,11 @@ __pycache__
 build/
 
 *.dll
+*.so*
 *.lib
 *.exe
+my_program_c*
+my_program_cpp*
 
 core.c
 core.cpp

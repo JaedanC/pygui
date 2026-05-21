@@ -9,7 +9,12 @@
 //#define IMGUI_API __attribute__((visibility("default")))  // GCC/Clang: override visibility when set is hidden
 
 // The Cython binding will interface with the CIMGUI_API functions. 
-#define CIMGUI_API       __declspec(dllimport)
-#define CIMGUI_IMPL_API  __declspec(dllimport)
+#ifdef _WIN32
+    #define CIMGUI_API       __declspec(dllimport)
+    #define CIMGUI_IMPL_API  __declspec(dllimport)
+#else
+    #define CIMGUI_API      __attribute__((visibility("default")))
+    #define CIMGUI_IMPL_API __attribute__((visibility("default")))
+#endif
 
 #include "imgui_config.h"
