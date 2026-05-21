@@ -103,10 +103,10 @@ cdef extern from "dcimgui.h":
     # - In Visual Studio: Ctrl+Comma ("Edit.GoToAll") can follow symbols inside comments, whereas Ctrl+F12 ("Edit.GoToImplementation") cannot.
     # - In Visual Studio w/ Visual Assist installed: Alt+G ("VAssistX.GoToImplementation") can also follow symbols inside comments.
     # - In VS Code, CLion, etc.: Ctrl+Click can follow symbols inside comments.
-    ctypedef int ImGuiDir                     # -> enum imguidir              // enum: a cardinal direction (left, right, up, down)
-    ctypedef int ImGuiKey                     # -> enum imguikey              // enum: a key identifier (imguikey_xxx or imguimod_xxx value)
-    ctypedef int ImGuiMouseSource             # -> enum imguimousesource      // enum; a mouse input source identifier (mouse, touchscreen, pen)
-    ctypedef ImU8 ImGuiSortDirection          # -> enum imguisortdirection    // enum: a sorting direction (ascending or descending)
+    #ctypedef int ImGuiDir                     # -> enum imguidir              // enum: a cardinal direction (left, right, up, down)
+    #ctypedef int ImGuiKey                     # -> enum imguikey              // enum: a key identifier (imguikey_xxx or imguimod_xxx value)
+    #ctypedef int ImGuiMouseSource             # -> enum imguimousesource      // enum; a mouse input source identifier (mouse, touchscreen, pen)
+    #ctypedef ImU8 ImGuiSortDirection          # -> enum imguisortdirection    // enum: a sorting direction (ascending or descending)
     ctypedef int ImGuiCol                     # -> enum imguicol_             // enum: a color identifier for styling
     ctypedef int ImGuiCond                    # -> enum imguicond_            // enum: a condition for many set*() functions
     ctypedef int ImGuiDataType                # -> enum imguidatatype_        // enum: a primary data type
@@ -4205,7 +4205,7 @@ cdef extern from "dcimgui_impl_glfw.h":
     ctypedef struct GLFWmonitor
     ctypedef struct ImDrawData
 
-    ctypedef unsigned short ImDrawIdx     # Default: 16-bit (for maximum compatibility with renderer backends)
+    #ctypedef unsigned short ImDrawIdx     # Default: 16-bit (for maximum compatibility with renderer backends)
 
 
     ctypedef struct GLFWwindow:
@@ -4259,7 +4259,7 @@ cdef extern from "dcimgui_impl_glfw.h":
 cdef extern from "dcimgui_impl_opengl3.h":
     ctypedef struct ImDrawData
 
-    ctypedef unsigned short ImDrawIdx     # Default: 16-bit (for maximum compatibility with renderer backends)
+    #ctypedef unsigned short ImDrawIdx     # Default: 16-bit (for maximum compatibility with renderer backends)
 
 
     ctypedef struct ImDrawData:

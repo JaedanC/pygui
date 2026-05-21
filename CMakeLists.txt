@@ -28,6 +28,9 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # ★ Use modern FindPython (scikit-build-core backports it when needed)
 find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
+if (LINUX)
+    find_package(OpenGL)
+endif()
 
 # set(Python_FIND_ABI "ANY" "ANY" "ANY")
 # find_package(Python3 COMPONENTS Development)
@@ -83,8 +86,12 @@ target_compile_definitions(my_program_cpp PRIVATE
 )
 # No Console window on startup
 # set_target_properties(my_program_cpp PROPERTIES
-#    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
-target_link_libraries(my_program_cpp opengl32 glfw)
+#    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")\
+if (LINUX)
+    target_link_libraries(my_program_cpp OpenGL::GL glfw)
+else()
+    target_link_libraries(my_program_cpp opengl32 glfw)
+endif()
 
 
 # ------------------------------------------------------------------------------
@@ -130,9 +137,16 @@ target_include_directories(dcimgui_glfw_opengl3 PRIVATE
     ${PYGUI_CONFIG_DIRECTORY}
 )
 target_compile_definitions(dcimgui_glfw_opengl3 PRIVATE
-    USE_CUSTOM_PYTHON_ERROR      # Comment this to disable custom assert
+    # USE_CUSTOM_PYTHON_ERROR      # Comment this to disable custom assert
     IMGUI_USER_CONFIG="${IMGUI_CONFIG_EXPORT_DLL_H}"
 )
+if (LINUX)
+    target_compile_options(dcimgui_glfw_opengl3 PRIVATE
+        -Wformat-security
+        -Wint-to-pointer-cast
+        -fpermissive
+    )
+endif()
 target_link_libraries(dcimgui_glfw_opengl3 glfw Python3::Module)
 
 
@@ -172,7 +186,11 @@ target_compile_definitions(my_program_c PRIVATE
 # No Console window on startup
 # set_target_properties(my_program_c PROPERTIES
 #    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
-target_link_libraries(my_program_c dcimgui_glfw_opengl3 opengl32)
+if (LINUX)
+    target_link_libraries(my_program_c dcimgui_glfw_opengl3 OpenGL::GL)
+else()
+    target_link_libraries(my_program_c dcimgui_glfw_opengl3 opengl32)
+endif()
 
 
 # Since we are compiling SHARED dll's, then we are mostly interesting in
@@ -213,6 +231,13 @@ if(DEFINED SKBUILD OR DEFINED SKBUILD_PROJECT_NAME)
     target_compile_definitions(core PRIVATE
         IMGUI_USER_CONFIG="${IMGUI_CONFIG_EXPORT_DLL_H}"
     )
+    if (LINUX)
+        target_compile_options(core PRIVATE
+            -Wformat-security
+            -Wint-to-pointer-cast
+            -fpermissive
+        )
+    endif()
     target_link_libraries(core PRIVATE dcimgui_glfw_opengl3 Python3::Module)
 
     install(TARGETS core DESTINATION ${SKBUILD_PROJECT_NAME})
