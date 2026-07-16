@@ -49,7 +49,7 @@ class Argument(IArgument):
                 default_value = default_value.replace("ImVec4", "")
                 default_value = default_value.replace("f", "")
             
-            found = re.match("sizeof\((.*)\)", default_value)
+            found = re.match(r"sizeof\((.*)\)", default_value)
             if found:
                 default_value = "4"
             

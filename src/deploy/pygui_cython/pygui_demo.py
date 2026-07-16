@@ -4413,7 +4413,6 @@ def show_random_extras():
                 (cx + 20, cy + 30),
             ],
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.4, 1, 0.8)),
-            pygui.IM_DRAW_FLAGS_NONE,
             2
         )
         pygui.dummy((50, 50))
@@ -4447,8 +4446,7 @@ def show_random_extras():
             (cx + 50, cy + 50),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.55, 1, 0.8)),
             0,
-            pygui.IM_DRAW_FLAGS_NONE,
-            2
+            2,
         )
         pygui.dummy((50, 50))
         pygui.same_line()
@@ -4538,7 +4536,6 @@ def show_random_extras():
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.90, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4553,7 +4550,6 @@ def show_random_extras():
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.95, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4569,7 +4565,6 @@ def show_random_extras():
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(1, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4583,7 +4578,6 @@ def show_random_extras():
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.05, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4602,7 +4596,6 @@ def show_random_extras():
         dl.path_line_to((cx + 25, cy))
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.10, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4621,7 +4614,6 @@ def show_random_extras():
         dl.path_line_to_merge_duplicate((cx, cy))
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.15, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4637,7 +4629,6 @@ def show_random_extras():
         dl.path_line_to((cx, cy))
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.2, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4661,7 +4652,6 @@ def show_random_extras():
         dl.path_line_to((cx + 25, cy))
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.30, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4678,7 +4668,6 @@ def show_random_extras():
         )
         dl.path_stroke(
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.30, 1, 0.8)),
-            0,
             2
         )
         pygui.dummy((50, 50))
@@ -4982,7 +4971,8 @@ def show_random_extras():
                 (cs[0] + size/2,        cs[1] + i * gap + size/3),
                 (cs[0] + size/2 + size, cs[1] + i * gap + size + size/3),
                 pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb((0.5 + 0.1 * i), 1, 0.8)),
-                20, 0, 8
+                20,
+                8,
             )
         splitter.merge(draw_list)
         splitter.destroy()
@@ -5251,7 +5241,8 @@ def show_random_extras():
             (viewport.pos[0] + margin, viewport.pos[1] + margin),
             (viewport.pos[0] + viewport.size[0] - margin, viewport.pos[1] + viewport.size[1] - margin),
             pygui.color_convert_float4_to_u32((0, 1, 0, 1)),
-            0, 0, 2
+            0,
+            2,
         )
 
         if pygui.checkbox("Show Monitors", rand.show_monitors):
@@ -5276,7 +5267,8 @@ def show_random_extras():
                         (monitor.work_pos[0], monitor.work_pos[1]),
                         (monitor.work_pos[0] + monitor.work_size[0], monitor.work_pos[1] + monitor.work_size[1]),
                         pygui.color_convert_float4_to_u32((1, 1, 0, 1)),
-                        0, 0, 2
+                        0,
+                        2
                     )
                     pygui.text("monitor.dpi_scale: {}".format(monitor.dpi_scale))
                     pygui.text("monitor.main_pos: {}".format(monitor.main_pos))
@@ -6117,11 +6109,11 @@ def show_app_custom_rendering(p_open: pygui.Bool):
                 x += sz + spacing  # N-gon
                 draw_list.add_circle((x + sz*0.5, y + sz*0.5), sz*0.5, col, circle_segments, th)
                 x += sz + spacing  # Circle
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, 0.0, pygui.IM_DRAW_FLAGS_NONE, th)
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, 0.0, th)
                 x += sz + spacing  # Square
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, pygui.IM_DRAW_FLAGS_NONE, th)
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, th)
                 x += sz + spacing  # Square with all rounded corners
-                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, corners_tl_br, th)
+                draw_list.add_rect((x, y), (x + sz, y + sz), col, rounding, th, corners_tl_br)
                 x += sz + spacing  # Square with two rounded corners
                 draw_list.add_triangle((x+sz*0.5,y), (x+sz, y+sz-0.5), (x, y+sz-0.5), col, th)
                 x += sz + spacing  # Triangle
