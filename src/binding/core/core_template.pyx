@@ -12903,7 +12903,7 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)

@@ -315,6 +315,8 @@ It is best to run `python model_creator.py --trial` first (before doing `--all`)
 
 ## Pushing to pypi
 
+First update `pyproject.toml` with the desired version release number.
+
 ```bash
 python -m pip install --upgrade build
 python -m pip install --upgrade twine

@@ -12903,22 +12903,22 @@ cdef class ImDrawList:
 
     # [Method]
     # ?use_template(False)
-    # ?active(False)
+    # ?active(True)
     # ?invisible(True)
     # ?custom_comment_only(False)
     # ?returns(None)
-    # def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str):
-    #     """
-    #     Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
-    #     """
-    #     dcimgui.ImDrawList_AddTextImFontPtr(
-    #         self._ptr,
-    #         font._ptr,
-    #         font_size,
-    #         _cast_tuple_ImVec2(pos),
-    #         col,
-    #         _bytes(text_begin)
-    #     )
+    def add_text_im_font_ptr(self: ImDrawList, font: ImFont, font_size: float, pos: Tuple[float, float], col: int, text_begin: str):
+        """
+        Implied text_end = null, wrap_width = 0.0f, cpu_fine_clip_rect = null
+        """
+        dcimgui.ImDrawList_AddTextImFontPtr(
+            self._ptr,
+            font._ptr,
+            font_size,
+            _cast_tuple_ImVec2(pos),
+            col,
+            _bytes(text_begin)
+        )
     # [End Method]
 
     # [Method]
