@@ -128,7 +128,7 @@ cdef extern from "dcimgui.h":
     ctypedef int ImGuiBackendFlags            # -> enum imguibackendflags_    // flags: for io.backendflags
     ctypedef int ImGuiButtonFlags             # -> enum imguibuttonflags_     // flags: for invisiblebutton()
     ctypedef int ImGuiChildFlags              # -> enum imguichildflags_      // flags: for beginchild()
-    ctypedef int ImGuiColorEditFlags          # -> enum imguicoloreditflags_  // flags: for coloredit4(), colorpicker4() etc.
+    ctypedef int ImGuiColorEditFlags          # -> enum imguicoloreditflags_  // flags: for coloredit4(), colorpicker4(), io.configcoloreditflags etc.
     ctypedef int ImGuiConfigFlags             # -> enum imguiconfigflags_     // flags: for io.configflags
     ctypedef int ImGuiComboFlags              # -> enum imguicomboflags_      // flags: for begincombo()
     ctypedef int ImGuiDockNodeFlags           # -> enum imguidocknodeflags_   // flags: for dockspace()
@@ -221,14 +221,17 @@ cdef extern from "dcimgui.h":
         ImGuiChildFlags_NavFlattened               # [beta] share focus scope, allow keyboard/gamepad navigation to cross over parent border to this child or between sibling child windows.
 
     ctypedef enum ImGuiItemFlags_:
-        ImGuiItemFlags_None                  # (default)
-        ImGuiItemFlags_NoTabStop             # False    // disable keyboard tabbing. this is a 'lighter' version of imguiitemflags_nonav.
-        ImGuiItemFlags_NoNav                 # False    // disable any form of focusing (keyboard/gamepad directional navigation and setkeyboardfocushere() calls).
-        ImGuiItemFlags_NoNavDefaultFocus     # False    // disable item being a candidate for default focus (e.g. used by title bar items).
-        ImGuiItemFlags_ButtonRepeat          # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
-        ImGuiItemFlags_AutoClosePopups       # True     // menuitem()/selectable() automatically close their parent popup window.
-        ImGuiItemFlags_AllowDuplicateId      # False    // allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.configdebughighlightidconflicts is set.
-        ImGuiItemFlags_Disabled              # False    // [internal] disable interactions. does not affect visuals. this is used by begindisabled()/enddisabled() and only provided here so you can read back via getitemflags().
+        ImGuiItemFlags_None                      # Default:
+        ImGuiItemFlags_NoTabStop                 # False    // disable keyboard tabbing. this is a 'lighter' version of imguiitemflags_nonav.
+        ImGuiItemFlags_NoNav                     # False    // disable any form of focusing: keyboard/gamepad directional navigation and setkeyboardfocushere() calls.
+        ImGuiItemFlags_NoNavDefaultFocus         # False    // disable item being a candidate for default focus (e.g. used by title bar items).
+        ImGuiItemFlags_ButtonRepeat              # False    // any button-like behavior will have repeat mode enabled (based on io.keyrepeatdelay and io.keyrepeatrate values). note that you can also call isitemactive() after any button to tell if it is being held.
+        ImGuiItemFlags_AutoClosePopups           # True     // menuitem()/selectable() automatically close their parent popup window.
+        ImGuiItemFlags_AllowDuplicateId          # False    // allow submitting an item with the same identifier as an item already submitted this frame without triggering a warning tooltip if io.configdebughighlightidconflicts is set.
+        ImGuiItemFlags_Disabled                  # False    // [internal] disable interactions. does not affect visuals. this is used by begindisabled()/enddisabled() and only provided here so you can read back via getitemflags().
+        ImGuiItemFlags_LiveEditOnInputText       # True     // inputtext: apply keyboard edits to backing value while typing. otherwise, edits are applied when validating, tabbing out or losing focus.
+        ImGuiItemFlags_LiveEditOnInputScalar     # False    // dragxxx, sliderxxx, inputscalar: apply keyboard edits to backing value while typing. otherwise, edits are applied when validating, tabbing out or losing focus.
+        ImGuiItemFlags_LiveEditOnInput
 
     ctypedef enum ImGuiInputTextFlags_:
         ImGuiInputTextFlags_None
@@ -238,7 +241,7 @@ cdef extern from "dcimgui.h":
         ImGuiInputTextFlags_CharsUppercase          # Turn a..z into a..z
         ImGuiInputTextFlags_CharsNoBlank            # Filter out spaces, tabs
         ImGuiInputTextFlags_AllowTabInput           # Pressing tab input a '\t' character into the text field
-        ImGuiInputTextFlags_EnterReturnsTrue        # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider using isitemdeactivatedafteredit() instead!
+        ImGuiInputTextFlags_EnterReturnsTrue        # Return 'true' when enter is pressed (as opposed to every time the value was modified). consider disabling liveedit! or using isitemdeactivatedafteredit() instead!
         ImGuiInputTextFlags_EscapeClearsAll         # Escape key clears content if not empty, and deactivate otherwise (contrast to default behavior of escape to revert)
         ImGuiInputTextFlags_CtrlEnterForNewLine     # In multi-line mode: validate with enter, add new line with ctrl+enter (default is opposite: validate with ctrl+enter, add line with enter). note that shift+enter always enter a new line either way.
         ImGuiInputTextFlags_ReadOnly                # Read-only mode
@@ -738,6 +741,8 @@ cdef extern from "dcimgui.h":
         ImGuiStyleVar_TableAngledHeadersTextAlign     # Imvec2  tableangledheaderstextalign
         ImGuiStyleVar_TreeLinesSize                   # Float     treelinessize
         ImGuiStyleVar_TreeLinesRounding               # Float     treelinesrounding
+        ImGuiStyleVar_MenuItemRounding                # Float     menuitemrounding
+        ImGuiStyleVar_SelectableRounding              # Float     selectablerounding
         ImGuiStyleVar_DragDropTargetRounding          # Float     dragdroptargetrounding
         ImGuiStyleVar_ButtonTextAlign                 # Imvec2    buttontextalign
         ImGuiStyleVar_SelectableTextAlign             # Imvec2    selectabletextalign
@@ -782,6 +787,7 @@ cdef extern from "dcimgui.h":
         ImGuiColorEditFlags_Float                # [datatype]   // coloredit, colorpicker, colorbutton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. no round-trip of value via integers.
         ImGuiColorEditFlags_PickerHueBar         # [picker]     // colorpicker: bar for hue, rectangle for sat/value.
         ImGuiColorEditFlags_PickerHueWheel       # [picker]     // colorpicker: wheel for hue, triangle for sat/value.
+        ImGuiColorEditFlags_PickerNoRotate       # [picker]     // colorpicker: disable rotating sat/value triangle. best set in io.configcoloreditflags once.
         ImGuiColorEditFlags_InputRGB             # [input]      // coloredit, colorpicker: input and output data in rgb format.
         ImGuiColorEditFlags_InputHSV             # [input]      // coloredit, colorpicker: input and output data in hsv format.
         ImGuiColorEditFlags_DefaultOptions_
@@ -942,6 +948,7 @@ cdef extern from "dcimgui.h":
         ImGuiMultiSelectFlags_NavWrapX                  # [temporary] enable navigation wrapping on x axis. provided as a convenience because we don't have a design for the general nav api for this yet. when the more general feature be public we may obsolete this flag in favor of new one.
         ImGuiMultiSelectFlags_NoSelectOnRightClick      # Disable default right-click processing, which selects item on mouse down, and is designed for context-menus.
         ImGuiMultiSelectFlags_SelectOnMask_
+        ImGuiMultiSelectFlags_CheckboxMode_             # [internal]
 
     ctypedef enum ImGuiSelectionRequestType:
         ImGuiSelectionRequestType_None
@@ -950,20 +957,20 @@ cdef extern from "dcimgui.h":
 
     ctypedef enum ImDrawFlags_:
         ImDrawFlags_None
-        ImDrawFlags_RoundCornersTopLeft         # Addrect(), addrectfilled(), pathrect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). was 0x01.
-        ImDrawFlags_RoundCornersTopRight        # Addrect(), addrectfilled(), pathrect(): enable rounding top-right corner only (when rounding > 0.0f, we default to all corners). was 0x02.
-        ImDrawFlags_RoundCornersBottomLeft      # Addrect(), addrectfilled(), pathrect(): enable rounding bottom-left corner only (when rounding > 0.0f, we default to all corners). was 0x04.
-        ImDrawFlags_RoundCornersBottomRight     # Addrect(), addrectfilled(), pathrect(): enable rounding bottom-right corner only (when rounding > 0.0f, we default to all corners). wax 0x08.
-        ImDrawFlags_RoundCornersNone            # Addrect(), addrectfilled(), pathrect(): disable rounding on all corners (when rounding > 0.0f). this is not zero, not an implicit flag!
-        ImDrawFlags_Closed                      # Pathstroke(), addpolyline(): specify that shape should be closed (important: this is always == 1 for legacy reason)
+        ImDrawFlags_RoundCornersTopLeft         # Round top-left corner only (when rounding > 0.0f, we default to all corners).
+        ImDrawFlags_RoundCornersTopRight        # Round top-right corner only (when rounding > 0.0f, we default to all corners).
+        ImDrawFlags_RoundCornersBottomLeft      # Round bottom-left corner only (when rounding > 0.0f, we default to all corners).
+        ImDrawFlags_RoundCornersBottomRight     # Round bottom-right corner only (when rounding > 0.0f, we default to all corners).
+        ImDrawFlags_RoundCornersNone            # Disable rounding even if `float rounding > 0.0f`. this is not zero, not an implicit flag!
+        ImDrawFlags_RoundCornersAll             # (default!!)
+        ImDrawFlags_RoundCornersDefault_        # Default to all corners if none of the _roundcornersxx flags are specified!
         ImDrawFlags_RoundCornersTop
         ImDrawFlags_RoundCornersBottom
         ImDrawFlags_RoundCornersLeft
         ImDrawFlags_RoundCornersRight
-        ImDrawFlags_RoundCornersAll
-        ImDrawFlags_RoundCornersDefault_        # Default to all corners if none of the _roundcornersxx flags are specified.
         ImDrawFlags_RoundCornersMask_
-        ImDrawFlags_InvalidMask_
+        ImDrawFlags_Closed                      # Pathstroke(), addpolyline(): specify that shape should be closed.
+        ImDrawFlags_InvalidMask_                # == 0x8000000f,
 
     ctypedef enum ImDrawListFlags_:
         ImDrawListFlags_None
@@ -971,6 +978,7 @@ cdef extern from "dcimgui.h":
         ImDrawListFlags_AntiAliasedLinesUseTex     # Enable anti-aliased lines/borders using textures when possible. require backend to render with bilinear filtering (not point/nearest filtering).
         ImDrawListFlags_AntiAliasedFill            # Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
         ImDrawListFlags_AllowVtxOffset             # Can emit 'vtxoffset > 0' to allow large meshes. set when 'imguibackendflags_rendererhasvtxoffset' is enabled.
+        ImDrawListFlags_TextNoPixelSnap            # Disable automatically snapping addtext() calls to pixel boundaries.
 
     ctypedef enum ImTextureFormat:
         ImTextureFormat_RGBA32     # 4 components per pixel, each is unsigned 8-bit. total size = texwidth * texheight * 4
@@ -1068,7 +1076,7 @@ cdef extern from "dcimgui.h":
 
     # Sorting specification for one column of a table (sizeof == 12 bytes)
     ctypedef struct ImGuiTableColumnSortSpecs:
-        ImGuiID ColumnUserID                 # User id of the column (if specified by a tablesetupcolumn() call)
+        ImGuiID ColumnUserID                 # User data for the column (if specified by a tablesetupcolumn() call in the 'imguiid user_data' field). fixme: should be called 'userdata'..
         ImS16 ColumnIndex                    # Index of the column
         ImS16 SortOrder                      # Index within parent imguitablesortspecs (always stored in order starting from 0, tables sorted on a single criteria will always have a 0 here)
         ImGuiSortDirection SortDirection     # Imguisortdirection_ascending or imguisortdirection_descending
@@ -1330,6 +1338,8 @@ cdef extern from "dcimgui.h":
         ImGuiTreeNodeFlags TreeLinesFlags               # Default way to draw lines connecting treenode hierarchy. imguitreenodeflags_drawlinesnone or imguitreenodeflags_drawlinesfull or imguitreenodeflags_drawlinestonodes.
         float TreeLinesSize                             # Thickness of outlines when using imguitreenodeflags_drawlines.
         float TreeLinesRounding                         # Radius of lines connecting child nodes to the vertical line.
+        float MenuItemRounding                          # Radius of menuitem, beginmenu rounding. 
+        float SelectableRounding                        # Radius of selectable rounding. modifying this is discouraged. contiguous selections will not look right. (#7589)
         float DragDropTargetRounding                    # Radius of the drag and drop target frame. when <0.0f: use framerounding.
         float DragDropTargetBorderSize                  # Thickness of the drag and drop target border.
         float DragDropTargetPadding                     # Size to expand the drag and drop target from actual target item size.
@@ -1337,6 +1347,7 @@ cdef extern from "dcimgui.h":
         ImGuiDir ColorButtonPosition                    # Side of the color button in the coloredit4 widget (left/right). defaults to imguidir_right.
         ImVec2 ButtonTextAlign                          # Alignment of button text when button is larger than text. defaults to (0.5f, 0.5f) (centered).
         ImVec2 SelectableTextAlign                      # Alignment of selectable text. defaults to (0.0f, 0.0f) (top-left aligned). it's generally important to keep this left-aligned if you want to lay multiple items on a same line.
+        float InputTextCursorSize                       # Thickness of cursor/caret in inputtext().
         float SeparatorSize                             # Thickness of border in separator(). must be >= 1.0f.
         float SeparatorTextBorderSize                   # Thickness of border in separatortext()
         ImVec2 SeparatorTextAlign                       # Alignment of text within the separator. defaults to (0.0f, 0.5f) (left aligned, center).
@@ -1407,19 +1418,24 @@ cdef extern from "dcimgui.h":
         bool ConfigViewportsPlatformFocusSetsImGuiFocus        # = true // when a platform window is focused (e.g. using alt+tab, clicking platform title bar), apply corresponding focus on imgui windows (may clear focus/active id from imgui windows location in other platform windows). in principle this is better enabled but we provide an opt-out, because some linux window managers tend to eagerly focus windows (e.g. on mouse hover, or even a simple window pos/size change).
         bool ConfigDpiScaleFonts                               # = false          // [experimental] automatically overwrite style.fontscaledpi when monitor dpi changes. this will scale fonts but _not_ scale sizes/padding for now.
         bool ConfigDpiScaleViewports                           # = false          // [experimental] scale dear imgui and platform windows when monitor dpi changes.
-        bool MouseDrawCursor                                   # = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
         bool ConfigMacOSXBehaviors                             # = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
         bool ConfigInputTrickleEventQueue                      # = true           // enable input queue trickling: some types of events submitted during the same frame (e.g. button down + up) will be spread over multiple frames, improving interactions with low framerates.
         bool ConfigInputTextCursorBlink                        # = true           // enable blinking cursor (optional as some users consider it to be distracting).
-        bool ConfigInputTextEnterKeepActive                    # = false          // [beta] pressing enter will reactivate item and select all text (single-line only).
+        bool ConfigInputTextEnterKeepActive                    # = false          // [beta] pressing enter will reactivate item and select all text (single-line only). ctrl+enter or shift+enter will deactivate normally.
+        ImGuiColorEditFlags ConfigColorEditFlags               # = <defaults>     // current settings for coloredit/colorpicker widgets. must have one bit of imguicoloreditflags_displaymask_, one bit of imguicoloreditflags_datatypemask_, one bit of imguicoloreditflags_pickermask_, one bit of imguicoloreditflags_inputmask_. defaults to imguicoloreditflags_defaultoptions_. may be further edited by users, unless you also set imguicoloreditflags_nooptions.
         bool ConfigDragClickToInputText                        # = false          // [beta] enable turning dragxxx widgets into text input with a simple mouse click-release (without moving). not desirable on devices without a keyboard.
         bool ConfigWindowsResizeFromEdges                      # = true           // enable resizing of windows from their edges and from the lower-left corner. this requires imguibackendflags_hasmousecursors for better mouse cursor feedback. (this used to be a per-window imguiwindowflags_resizefromanyside flag)
         bool ConfigWindowsMoveFromTitleBarOnly                 # = false      // enable allowing to move windows only when clicking on their title bar. does not apply to windows without a title bar.
         bool ConfigWindowsCopyContentsWithCtrlC                # = false      // [experimental] ctrl+c copy the contents of focused window into the clipboard. experimental because: (1) has known issues with nested begin/end pairs (2) text output quality varies (3) text output is in submission order rather than spatial order.
         bool ConfigScrollbarScrollByPage                       # = true           // enable scrolling page by page when clicking outside the scrollbar grab. when disabled, always scroll to clicked location. when enabled, shift+click scrolls to clicked location.
+        bool ConfigIniSettingsSaveLastUsedDate                 # = true         // enable loading/saving last used day (yyyymmdd) in some .ini struct, making things easier to audit and allowing custom tools to cleanup old data.
+        int ConfigIniSettingsAutoDiscardMonths                 # = 0          // [beta] set number of months after which unused .ini entries are discarded on load. require platform_io.platform_sessiondate to be set. for systems supporting the feature, .ini entries without a lastused field will always be discarded! please report if you are using this.
+        bool ConfigDebugIniSettings                            # = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
+        bool MouseDrawCursor                                   # = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
         float ConfigMemoryCompactTimer                         # = 60.0f          // timer (in seconds) to free transient windows/tables memory buffers when unused. set to -1.0f to disable.
-        float MouseDoubleClickTime                             # = 0.30f          // time for a double-click, in seconds.
-        float MouseDoubleClickMaxDist                          # = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
+        float MouseDoubleClickTime                             # = 0.30f          // time for consecutive clicks to account as a double-click, in seconds.
+        float MouseDoubleClickMaxDist                          # = 6.0f           // distance threshold to stay in to validate a double-click or multiple clicks, in pixels.
+        float MouseSingleClickDelay                            # = 0.60f          // time for a delayed click when using getitemclickedcountwithsingleclickdelay() or ismousereleasedwithdelay(), in seconds. must be > io.mousedoubleclicktime.
         float MouseDragThreshold                               # = 6.0f           // distance threshold before considering we are dragging.
         float KeyRepeatDelay                                   # = 0.275f         // when holding a key/button, time before it starts repeating, in seconds (for buttons in repeat mode, etc.).
         float KeyRepeatRate                                    # = 0.050f         // when holding a key/button, rate at which it repeats, in seconds.
@@ -1433,7 +1449,6 @@ cdef extern from "dcimgui.h":
         bool ConfigDebugBeginReturnValueOnce                   # = false          // first-time calls to begin()/beginchild() will return false. needs to be set at application boot time if you don't want to miss windows.
         bool ConfigDebugBeginReturnValueLoop                   # = false          // some calls to begin()/beginchild() will return false. will cycle through window depths then repeat. suggested use: add 'io.configdebugbeginreturnvalue = io.keyshift' in your main loop then occasionally press shift. windows should be flickering while running.
         bool ConfigDebugIgnoreFocusLoss                        # = false          // ignore io.addfocusevent(false), consequently not calling io.clearinputkeys()/io.clearinputmouse() in input processing.
-        bool ConfigDebugIniSettings                            # = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
         const char* BackendPlatformName                        # = null
         const char* BackendRendererName                        # = null
         void* BackendPlatformUserData                          # = null           // user data for platform backend
@@ -2154,7 +2169,7 @@ cdef extern from "dcimgui.h":
     # as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)
     ctypedef struct ImDrawData:
         bool Valid                              # Only valid after render() is called and before the next newframe() is called.
-        int CmdListsCount                       # == cmdlists.size. (obsolete: exists for legacy reasons). number of imdrawlist* to render.
+        int FrameCount                          # Frame counter of the emitter context. mostly for debugging purpose.
         int TotalIdxCount                       # For convenience, sum of all imdrawlist's idxbuffer.size
         int TotalVtxCount                       # For convenience, sum of all imdrawlist's vtxbuffer.size
         ImVector_ImDrawListPtr CmdLists         # Array of imdrawlist* to render. the imdrawlists are owned by imguicontext and only pointed to from here.
@@ -2180,8 +2195,8 @@ cdef extern from "dcimgui.h":
     # When a texture is in ImTextureStatus_WantUpdates state, we provide a list of individual rectangles to copy to the graphics system.
     # You may use ImTextureData::Updates[] for the list, or ImTextureData::UpdateBox for a single bounding box.
     ctypedef struct ImTextureRect:
-        unsigned short x     # Upper-left coordinates of rectangle to update
-        unsigned short y     # Upper-left coordinates of rectangle to update
+        unsigned short x     # Upper-left coordinates of rectangle to update, within the parent pixels[] array.
+        unsigned short y     # Upper-left coordinates of rectangle to update, within the parent pixels[] array.
         unsigned short w     # Size of rectangle to update (in pixels)
         unsigned short h     # Size of rectangle to update (in pixels)
 
@@ -2198,12 +2213,13 @@ cdef extern from "dcimgui.h":
         int UniqueID                       # W    -   // [debug] sequential index to facilitate identifying a texture when debugging/printing. unique per atlas.
         ImTextureStatus Status             # Rw   rw  // imtexturestatus_ok/_wantcreate/_wantupdates/_wantdestroy. always use setstatus() to modify!
         void* BackendUserData              # -    rw  // convenience storage for backend. some backends may have enough with texid.
+        void* QueueUserData                # R    -   // convenience storage for a staged/multi-threaded rendering texture queue (e.g. imgui_threaded_rendering.h. see #8597). when != null, core assumes the texture is referenced by the queue.
         ImTextureID TexID                  # R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
         ImTextureFormat Format             # W    r   // imtextureformat_rgba32 (default) or imtextureformat_alpha8
         int Width                          # W    r   // texture width
         int Height                         # W    r   // texture height
         int BytesPerPixel                  # W    r   // 4 or 1
-        unsigned char* Pixels              # W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+        unsigned char* Pixels              # W    r   // pointer to whole texture buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
         ImTextureRect UsedRect             # W    r   // bounding box encompassing all past and queued updates[].
         ImTextureRect UpdateRect           # W    r   // bounding box encompassing all queued updates[].
         ImVector_ImTextureRect Updates     # W    r   // array of individual updates.
@@ -2388,13 +2404,9 @@ cdef extern from "dcimgui.h":
 
     # 'compressed_font_data_base85' still owned by caller. compress with binary_to_compressed_c.cpp with -base85 parameter.
     ImFont* ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(ImFontAtlas* self, const char* compressed_font_data_base85, float size_pixels, const ImFontConfig* font_cfg, const ImWchar* glyph_ranges) except +
+
+    # Remove a font
     void ImFontAtlas_RemoveFont(ImFontAtlas* self, ImFont* font) except +
-
-    # Clear everything (fonts + textures). don't call mid-frame!
-    void ImFontAtlas_Clear(ImFontAtlas* self) except +
-
-    # Clear input+output font data/glyphs. you can call this mid-frame if you load new fonts afterwards!
-    void ImFontAtlas_ClearFonts(ImFontAtlas* self) except +
 
     # Compact cached glyphs and texture.
     void ImFontAtlas_CompactCache(ImFontAtlas* self) except +
@@ -2402,7 +2414,16 @@ cdef extern from "dcimgui.h":
     # Change font loader at runtime.
     void ImFontAtlas_SetFontLoader(ImFontAtlas* self, const ImFontLoader* font_loader) except +
 
-    # As we are transitioning toward a new font system, we expect to obsolete those soon:
+    # Clearing the atlas/fonts has little use nowadays, unless you want to batch remove all fonts. 
+    # - Since 1.92, you can call ClearFonts() mid-frame, if you load new fonts afterwards. 
+    # - As we are transitioning toward our new font system the semantic for those functions gets increasingly misleading and are often a source of issues.
+    # TL;DR; most likely, don't use any of those functions. We expect to obsolete/rework them.
+    # Clear everything (fonts + textures). don't call mid-frame!
+    void ImFontAtlas_Clear(ImFontAtlas* self) except +
+
+    # Clear input+output font data/glyphs. new fonts and textures will be recreated afterwards.
+    void ImFontAtlas_ClearFonts(ImFontAtlas* self) except +
+
     # [obsolete] clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
     void ImFontAtlas_ClearInputData(ImFontAtlas* self) except +
 
@@ -2570,6 +2591,7 @@ cdef extern from "dcimgui.h":
         void (*Platform_SetImeDataFn)(ImGuiContext* ctx, ImGuiViewport* viewport, ImGuiPlatformImeData* data)
         void* Platform_ImeUserData
         ImWchar Platform_LocaleDecimalPoint                                                                                     # '.'
+        int Platform_SessionDate                                                                                                # Integer storing yyyymmdd e.g. 20261231 corresponding to the beginning of application session.
         int Renderer_TextureMaxWidth
         int Renderer_TextureMaxHeight
         void* Renderer_RenderState
@@ -3093,10 +3115,11 @@ cdef extern from "dcimgui.h":
     ImGuiID ImGui_GetIDInt(int int_id) except +
 
     # Widgets: Text
+    # - Note that all functions taking format strings in the API may be passed ("%s", text) or ("%.*s", text_len, text): which will automatically bypass the formatter.
     # Implied text_end = null
     void ImGui_TextUnformatted(const char* text) except +
 
-    # Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
+    # Raw text without formatting. practically equivalent to 'text('%s', text)' but doesn't require null terminated string if 'text_end' is specified.
     void ImGui_TextUnformattedEx(const char* text, const char* text_end) except +
 
     # Formatted text
@@ -3169,7 +3192,7 @@ cdef extern from "dcimgui.h":
     # Widgets: Images
     # - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     # - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-    # - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
+    # - Image() adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
     # - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
     # - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
     # Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1)
@@ -3398,9 +3421,6 @@ cdef extern from "dcimgui.h":
     # Display a color square/button, hover for details, return true when pressed.
     bool ImGui_ColorButtonEx(const char* desc_id, ImVec4 col, ImGuiColorEditFlags flags, ImVec2 size) except +
 
-    # Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
-    void ImGui_SetColorEditOptions(ImGuiColorEditFlags flags) except +
-
     # Widgets: Trees
     # - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.
     bool ImGui_TreeNode(const char* label) except +
@@ -3516,7 +3536,7 @@ cdef extern from "dcimgui.h":
     # - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
     # - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
     # - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
-    # - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
+    # - Note that MenuItem() keyboard shortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
     # Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
     bool ImGui_BeginMenuBar() except +
 
@@ -3574,7 +3594,7 @@ cdef extern from "dcimgui.h":
 
     # Popups, Modals
     # - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.
-    # - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    # - If not modal: they can be closed by clicking anywhere outside them, or by pressing Escape (call 'Shortcut(ImGuiKey_Escape)' to claim a higher-priority shortcut).
     # - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.
     # - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.
     # - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().
@@ -3592,20 +3612,22 @@ cdef extern from "dcimgui.h":
     void ImGui_EndPopup() except +
 
     # Popups: open/close functions
-    # - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
+    # - OpenPopup(): set popup state to open (unless one of the specified ImGuiPopupFlags prevent opening).
+    # - OpenPopupXXX() functions return true when the popup is toggled open, which allows you to capture local state if needed.
+    # You may also call IsWindowAppearing() inside the later BeginPopup() scope if you need to prepare/compute data for the popup.
     # - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
     # - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
     # - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
     # - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().
     # - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
     # Call to mark popup as open (don't call every frame!).
-    void ImGui_OpenPopup(const char* str_id, ImGuiPopupFlags popup_flags) except +
+    bool ImGui_OpenPopup(const char* str_id, ImGuiPopupFlags popup_flags) except +
 
     # Id overload to facilitate calling from nested stacks
-    void ImGui_OpenPopupID(ImGuiID id_, ImGuiPopupFlags popup_flags) except +
+    bool ImGui_OpenPopupID(ImGuiID id_, ImGuiPopupFlags popup_flags) except +
 
     # Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)
-    void ImGui_OpenPopupOnItemClick(const char* str_id, ImGuiPopupFlags popup_flags) except +
+    bool ImGui_OpenPopupOnItemClick(const char* str_id, ImGuiPopupFlags popup_flags) except +
 
     # Manually close the popup we have begin-ed into.
     void ImGui_CloseCurrentPopup() except +
@@ -3685,16 +3707,17 @@ cdef extern from "dcimgui.h":
     bool ImGui_TableSetColumnIndex(int column_n) except +
 
     # Tables: Headers & Columns declaration
-    # - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
+    # - Use TableSetupColumn() to specify label, resizing policy, default width/weight, various other flags etc.
+    # (the trailing 'ImGuiID user_data', which used to be referred to as 'ImGuiID user_id', is merely user data that is blindly copied in ImGuiTableColumnSortSpecs).
     # - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
     # Headers are required to perform: reordering, sorting, and opening the context menu.
     # The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
     # - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
     # some advanced use cases (e.g. adding custom widgets in header row).
     # - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled. When freezing columns you would usually also use ImGuiTableColumnFlags_NoHide on them.
-    # Implied init_width_or_weight = 0.0f, user_id = 0
+    # Implied init_width_or_weight = 0.0f, user_data = 0
     void ImGui_TableSetupColumn(const char* label, ImGuiTableColumnFlags flags) except +
-    void ImGui_TableSetupColumnEx(const char* label, ImGuiTableColumnFlags flags, float init_width_or_weight, ImGuiID user_id) except +
+    void ImGui_TableSetupColumnEx(const char* label, ImGuiTableColumnFlags flags, float init_width_or_weight, ImGuiID user_data) except +
 
     # Lock columns/rows so they stay visible when scrolled.
     void ImGui_TableSetupScrollFreeze(int cols, int rows) except +
@@ -3965,6 +3988,12 @@ cdef extern from "dcimgui.h":
     # Get generic flags of last item
     ImGuiItemFlags ImGui_GetItemFlags() except +
 
+    # Implied mouse_button = 0, delay = -1.0f
+    int ImGui_GetItemClickedCountWithSingleClickDelay() except +
+
+    # [beta] building block for disambiguation between single-click and double-click. returns 1 on single-click but delayed by io.mousesingleclickdelay after mouse release. returns 2+ on double-click or repeated clicks.
+    int ImGui_GetItemClickedCountWithSingleClickDelayEx(ImGuiMouseButton mouse_button, float delay) except +
+
     # Viewports
     # - Currently represents the Platform Window created by the application which is hosting our Dear ImGui windows.
     # - In 'docking' branch with multi-viewport enabled, we extend this concept to have multiple active viewports.
@@ -4099,8 +4128,11 @@ cdef extern from "dcimgui.h":
     # Did mouse button double-clicked? same as getmouseclickedcount() == 2. (note that a double-click will also report ismouseclicked() == true)
     bool ImGui_IsMouseDoubleClicked(ImGuiMouseButton button) except +
 
-    # Delayed mouse release (use very sparingly!). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test. this is a very rarely used ui idiom, but some apps use this: e.g. ms explorer single click on an icon to rename.
-    bool ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button, float delay) except +
+    # Implied delay = -1.f
+    bool ImGui_IsMouseReleasedWithDelay(ImGuiMouseButton button) except +
+
+    # Delayed mouse release. use sparingly. prefer higher-level helper getitemclickedcountwithsingleclickdelay(). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test.
+    bool ImGui_IsMouseReleasedWithDelayEx(ImGuiMouseButton button, float delay) except +
 
     # Return the number of successive mouse-clicks at the time where a click happen (otherwise 0).
     int ImGui_GetMouseClickedCount(ImGuiMouseButton button) except +
@@ -4287,12 +4319,24 @@ cdef extern from "dcimgui_impl_glfw.h":
 
 cdef extern from "dcimgui_impl_opengl3.h":
     ctypedef struct ImDrawData
+    ctypedef struct ImGui_ImplOpenGL3_RenderState
 
     ctypedef unsigned short ImDrawIdx     # Default: 16-bit (for maximum compatibility with renderer backends)
 
 
     ctypedef struct ImDrawData:
         pass
+
+    # [BETA] Selected render state data shared with callbacks.
+    # This is temporarily stored in GetPlatformIO().Renderer_RenderState during the ImGui_ImplOpenGL3_RenderDrawData() call.
+    # (Please open an issue if you feel you need access to more data)
+    ctypedef struct ImGui_ImplOpenGL3_RenderState:
+        bool UseBindSampler
+        bool UseTexParameterFilter
+        unsigned int CurrentSampler                # (gluint) used if usebindsampler == true, otherwise always 0
+        unsigned int CurrentTexParameterFilter     # (gluint) used if usetexparametertosetsampler == true
+
+
 
 
 
@@ -4310,6 +4354,7 @@ cdef extern from "dcimgui_impl_opengl3.h":
 
     # (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = nullptr to handle this manually.
     void cImGui_ImplOpenGL3_UpdateTexture(ImTextureData* tex) except +
+    ImGui_ImplOpenGL3_RenderState* cImGui_ImplOpenGL3_GetRenderState() except +
 
 cdef extern from "dcimgui_internal.h":
     ctypedef struct ImGuiErrorRecoveryState

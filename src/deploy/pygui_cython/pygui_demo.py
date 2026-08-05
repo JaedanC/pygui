@@ -2735,7 +2735,7 @@ def show_demo_widgets():
         help_marker(
             "ColorEdit defaults to displaying RGB inputs if you don't specify a display mode, "
             "but the user can change it with a right-click on those inputs.\n\nColorPicker defaults to displaying RGB+HSV+Hex "
-            "if you don't specify a display mode.\n\nYou can change the defaults using SetColorEditOptions().")
+            "if you don't specify a display mode.\n\nYou can change the defaults using io.ConfigColorEditFlags.")
         pygui.same_line()
         help_marker("When not specified explicitly (Auto/Current mode), user can right-click the picker to change mode.")
         flags = widget.colour_base_flags.value
@@ -2766,10 +2766,11 @@ def show_demo_widgets():
             "We don't have Push/Pop functions because you can force options on a per-widget basis if needed,"
             "and the user can change non-forced ones with the options menu.\nWe don't have a getter to avoid"
             "encouraging you to persistently save values that aren't forward-compatible.")
+        io = pygui.get_io()
         if pygui.button("Default: Uint8 + HSV + Hue Bar"):
-            pygui.set_color_edit_options(pygui.COLOR_EDIT_FLAGS_UINT8 | pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.COLOR_EDIT_FLAGS_PICKER_HUE_BAR)
+            io.config_color_edit_flags = pygui.COLOR_EDIT_FLAGS_UINT8 | pygui.COLOR_EDIT_FLAGS_DISPLAY_HSV | pygui.COLOR_EDIT_FLAGS_PICKER_HUE_BAR
         if pygui.button("Default: Float + HDR + Hue Wheel"):
-            pygui.set_color_edit_options(pygui.COLOR_EDIT_FLAGS_FLOAT | pygui.COLOR_EDIT_FLAGS_HDR | pygui.COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL)
+            io.config_color_edit_flags = pygui.COLOR_EDIT_FLAGS_FLOAT | pygui.COLOR_EDIT_FLAGS_HDR | pygui.COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL
 
         # Always both a small version of both types of pickers (to make it more visible in the demo to people who are skimming quickly through it)
         pygui.text("Both types:")
@@ -4457,7 +4458,6 @@ def show_random_extras():
             (cx + 50, cy + 50),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.60, 1, 0.8)),
             0,
-            pygui.IM_DRAW_FLAGS_NONE,
         )
         pygui.dummy((50, 50))
 
@@ -4498,7 +4498,14 @@ def show_random_extras():
         dl.add_text(
             (cx, cy),
             pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.70, 0.4, 0.8)),
-            "Hello\nWorld"
+            "Hello"
+        )
+        dl.add_text_im_font_ptr(
+            pygui.get_font(),
+            20,
+            (cx, cy + pygui.get_text_line_height_with_spacing()),
+            pygui.color_convert_float4_to_u32(pygui.color_convert_hsv_to_rgb(0.70, 0.4, 0.8)),
+            "World"
         )
         pygui.dummy((50, 50))
         pygui.same_line()
@@ -4972,7 +4979,7 @@ def show_random_extras():
                 (cs[0] + size/2 + size, cs[1] + i * gap + size + size/3),
                 pygui.get_color_u32_im_vec4(pygui.color_convert_hsv_to_rgb((0.5 + 0.1 * i), 1, 0.8)),
                 20,
-                8,
+                8
             )
         splitter.merge(draw_list)
         splitter.destroy()
@@ -5242,7 +5249,7 @@ def show_random_extras():
             (viewport.pos[0] + viewport.size[0] - margin, viewport.pos[1] + viewport.size[1] - margin),
             pygui.color_convert_float4_to_u32((0, 1, 0, 1)),
             0,
-            2,
+            2
         )
 
         if pygui.checkbox("Show Monitors", rand.show_monitors):

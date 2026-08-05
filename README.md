@@ -4,8 +4,8 @@ Pygui is a dynamic wrapper for [Dear ImGui](https://github.com/ocornut/imgui) us
 
 ![Hello From pygui](https://raw.githubusercontent.com/JaedanC/pygui/570d15e109e0bdda5cd697244fb358a375dd21a3/docs/img/hello_from_pygui.png)
 
-ImGui Version: `v1.92.8-docking`
-Python Version: `Python 3.12.9`
+ImGui Version: `v1.92.9b-docking`
+Python Version: `Python 3.12.10`
 
 ## Features
 
