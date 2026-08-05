@@ -158,14 +158,14 @@ cdef class String:
         return _from_bytes(self.buffer)
     @value.setter
     def value(self, value: str):
-        # Remember: len(bytes(str)) != len(str)
+        # Remember: len(_bytes(value)) != len(value)
         # So to mark the end of the string, you should use the len(bytes).
-        c_bytes = _bytes(value)
-        n_bytes = len(c_bytes)
-        if n_bytes >= self._buffer_size:
-            self.resize(self._buffer_size * 2)
-        strncpy(self.buffer, c_bytes, self._buffer_size)
-        self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
+        c_str = _bytes(value)
+        c_str_len = len(c_str)
+        if c_str_len >= self._buffer_size - 1:
+            self.resize(max(self._buffer_size * 2, c_str_len * 2))
+        strncpy(self.buffer, c_str, c_str_len)
+        self.buffer[min(c_str_len, self._buffer_size - 1)] = 0
 
     def resize(self, to_size: int):
         IM_ASSERT(to_size > 0)
@@ -587,6 +587,9 @@ ITEM_FLAGS_BUTTON_REPEAT = dcimgui.ImGuiItemFlags_ButtonRepeat
 ITEM_FLAGS_AUTO_CLOSE_POPUPS = dcimgui.ImGuiItemFlags_AutoClosePopups
 ITEM_FLAGS_ALLOW_DUPLICATE_ID = dcimgui.ImGuiItemFlags_AllowDuplicateId
 ITEM_FLAGS_DISABLED = dcimgui.ImGuiItemFlags_Disabled
+ITEM_FLAGS_LIVE_EDIT_ON_INPUT_TEXT = dcimgui.ImGuiItemFlags_LiveEditOnInputText
+ITEM_FLAGS_LIVE_EDIT_ON_INPUT_SCALAR = dcimgui.ImGuiItemFlags_LiveEditOnInputScalar
+ITEM_FLAGS_LIVE_EDIT_ON_INPUT = dcimgui.ImGuiItemFlags_LiveEditOnInput
 INPUT_TEXT_FLAGS_NONE = dcimgui.ImGuiInputTextFlags_None
 INPUT_TEXT_FLAGS_CHARS_DECIMAL = dcimgui.ImGuiInputTextFlags_CharsDecimal
 INPUT_TEXT_FLAGS_CHARS_HEXADECIMAL = dcimgui.ImGuiInputTextFlags_CharsHexadecimal
@@ -976,6 +979,7 @@ COL_SCROLLBAR_GRAB = dcimgui.ImGuiCol_ScrollbarGrab
 COL_SCROLLBAR_GRAB_HOVERED = dcimgui.ImGuiCol_ScrollbarGrabHovered
 COL_SCROLLBAR_GRAB_ACTIVE = dcimgui.ImGuiCol_ScrollbarGrabActive
 COL_CHECK_MARK = dcimgui.ImGuiCol_CheckMark
+COL_CHECKBOX_SELECTED_BG = dcimgui.ImGuiCol_CheckboxSelectedBg
 COL_SLIDER_GRAB = dcimgui.ImGuiCol_SliderGrab
 COL_SLIDER_GRAB_ACTIVE = dcimgui.ImGuiCol_SliderGrabActive
 COL_BUTTON = dcimgui.ImGuiCol_Button
@@ -1055,8 +1059,12 @@ STYLE_VAR_TABLE_ANGLED_HEADERS_ANGLE = dcimgui.ImGuiStyleVar_TableAngledHeadersA
 STYLE_VAR_TABLE_ANGLED_HEADERS_TEXT_ALIGN = dcimgui.ImGuiStyleVar_TableAngledHeadersTextAlign
 STYLE_VAR_TREE_LINES_SIZE = dcimgui.ImGuiStyleVar_TreeLinesSize
 STYLE_VAR_TREE_LINES_ROUNDING = dcimgui.ImGuiStyleVar_TreeLinesRounding
+STYLE_VAR_MENU_ITEM_ROUNDING = dcimgui.ImGuiStyleVar_MenuItemRounding
+STYLE_VAR_SELECTABLE_ROUNDING = dcimgui.ImGuiStyleVar_SelectableRounding
+STYLE_VAR_DRAG_DROP_TARGET_ROUNDING = dcimgui.ImGuiStyleVar_DragDropTargetRounding
 STYLE_VAR_BUTTON_TEXT_ALIGN = dcimgui.ImGuiStyleVar_ButtonTextAlign
 STYLE_VAR_SELECTABLE_TEXT_ALIGN = dcimgui.ImGuiStyleVar_SelectableTextAlign
+STYLE_VAR_SEPARATOR_SIZE = dcimgui.ImGuiStyleVar_SeparatorSize
 STYLE_VAR_SEPARATOR_TEXT_BORDER_SIZE = dcimgui.ImGuiStyleVar_SeparatorTextBorderSize
 STYLE_VAR_SEPARATOR_TEXT_ALIGN = dcimgui.ImGuiStyleVar_SeparatorTextAlign
 STYLE_VAR_SEPARATOR_TEXT_PADDING = dcimgui.ImGuiStyleVar_SeparatorTextPadding
@@ -1068,6 +1076,7 @@ BUTTON_FLAGS_MOUSE_BUTTON_RIGHT = dcimgui.ImGuiButtonFlags_MouseButtonRight
 BUTTON_FLAGS_MOUSE_BUTTON_MIDDLE = dcimgui.ImGuiButtonFlags_MouseButtonMiddle
 BUTTON_FLAGS_MOUSE_BUTTON_MASK = dcimgui.ImGuiButtonFlags_MouseButtonMask_
 BUTTON_FLAGS_ENABLE_NAV = dcimgui.ImGuiButtonFlags_EnableNav
+BUTTON_FLAGS_ALLOW_OVERLAP = dcimgui.ImGuiButtonFlags_AllowOverlap
 COLOR_EDIT_FLAGS_NONE = dcimgui.ImGuiColorEditFlags_None
 COLOR_EDIT_FLAGS_NO_ALPHA = dcimgui.ImGuiColorEditFlags_NoAlpha
 COLOR_EDIT_FLAGS_NO_PICKER = dcimgui.ImGuiColorEditFlags_NoPicker
@@ -1092,6 +1101,7 @@ COLOR_EDIT_FLAGS_UINT8 = dcimgui.ImGuiColorEditFlags_Uint8
 COLOR_EDIT_FLAGS_FLOAT = dcimgui.ImGuiColorEditFlags_Float
 COLOR_EDIT_FLAGS_PICKER_HUE_BAR = dcimgui.ImGuiColorEditFlags_PickerHueBar
 COLOR_EDIT_FLAGS_PICKER_HUE_WHEEL = dcimgui.ImGuiColorEditFlags_PickerHueWheel
+COLOR_EDIT_FLAGS_PICKER_NO_ROTATE = dcimgui.ImGuiColorEditFlags_PickerNoRotate
 COLOR_EDIT_FLAGS_INPUT_RGB = dcimgui.ImGuiColorEditFlags_InputRGB
 COLOR_EDIT_FLAGS_INPUT_HSV = dcimgui.ImGuiColorEditFlags_InputHSV
 COLOR_EDIT_FLAGS_DEFAULT_OPTIONS = dcimgui.ImGuiColorEditFlags_DefaultOptions_
@@ -1224,32 +1234,37 @@ MULTI_SELECT_FLAGS_CLEAR_ON_ESCAPE = dcimgui.ImGuiMultiSelectFlags_ClearOnEscape
 MULTI_SELECT_FLAGS_CLEAR_ON_CLICK_VOID = dcimgui.ImGuiMultiSelectFlags_ClearOnClickVoid
 MULTI_SELECT_FLAGS_SCOPE_WINDOW = dcimgui.ImGuiMultiSelectFlags_ScopeWindow
 MULTI_SELECT_FLAGS_SCOPE_RECT = dcimgui.ImGuiMultiSelectFlags_ScopeRect
-MULTI_SELECT_FLAGS_SELECT_ON_CLICK = dcimgui.ImGuiMultiSelectFlags_SelectOnClick
+MULTI_SELECT_FLAGS_SELECT_ON_AUTO = dcimgui.ImGuiMultiSelectFlags_SelectOnAuto
+MULTI_SELECT_FLAGS_SELECT_ON_CLICK_ALWAYS = dcimgui.ImGuiMultiSelectFlags_SelectOnClickAlways
 MULTI_SELECT_FLAGS_SELECT_ON_CLICK_RELEASE = dcimgui.ImGuiMultiSelectFlags_SelectOnClickRelease
 MULTI_SELECT_FLAGS_NAV_WRAP_X = dcimgui.ImGuiMultiSelectFlags_NavWrapX
 MULTI_SELECT_FLAGS_NO_SELECT_ON_RIGHT_CLICK = dcimgui.ImGuiMultiSelectFlags_NoSelectOnRightClick
+MULTI_SELECT_FLAGS_SELECT_ON_MASK = dcimgui.ImGuiMultiSelectFlags_SelectOnMask_
+MULTI_SELECT_FLAGS_CHECKBOX_MODE = dcimgui.ImGuiMultiSelectFlags_CheckboxMode_
 SELECTION_REQUEST_TYPE_NONE = dcimgui.ImGuiSelectionRequestType_None
 SELECTION_REQUEST_TYPE_SET_ALL = dcimgui.ImGuiSelectionRequestType_SetAll
 SELECTION_REQUEST_TYPE_SET_RANGE = dcimgui.ImGuiSelectionRequestType_SetRange
 IM_DRAW_FLAGS_NONE = dcimgui.ImDrawFlags_None
-IM_DRAW_FLAGS_CLOSED = dcimgui.ImDrawFlags_Closed
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_LEFT = dcimgui.ImDrawFlags_RoundCornersTopLeft
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP_RIGHT = dcimgui.ImDrawFlags_RoundCornersTopRight
 IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_LEFT = dcimgui.ImDrawFlags_RoundCornersBottomLeft
 IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM_RIGHT = dcimgui.ImDrawFlags_RoundCornersBottomRight
 IM_DRAW_FLAGS_ROUND_CORNERS_NONE = dcimgui.ImDrawFlags_RoundCornersNone
+IM_DRAW_FLAGS_ROUND_CORNERS_ALL = dcimgui.ImDrawFlags_RoundCornersAll
+IM_DRAW_FLAGS_ROUND_CORNERS_DEFAULT = dcimgui.ImDrawFlags_RoundCornersDefault_
 IM_DRAW_FLAGS_ROUND_CORNERS_TOP = dcimgui.ImDrawFlags_RoundCornersTop
 IM_DRAW_FLAGS_ROUND_CORNERS_BOTTOM = dcimgui.ImDrawFlags_RoundCornersBottom
 IM_DRAW_FLAGS_ROUND_CORNERS_LEFT = dcimgui.ImDrawFlags_RoundCornersLeft
 IM_DRAW_FLAGS_ROUND_CORNERS_RIGHT = dcimgui.ImDrawFlags_RoundCornersRight
-IM_DRAW_FLAGS_ROUND_CORNERS_ALL = dcimgui.ImDrawFlags_RoundCornersAll
-IM_DRAW_FLAGS_ROUND_CORNERS_DEFAULT = dcimgui.ImDrawFlags_RoundCornersDefault_
 IM_DRAW_FLAGS_ROUND_CORNERS_MASK = dcimgui.ImDrawFlags_RoundCornersMask_
+IM_DRAW_FLAGS_CLOSED = dcimgui.ImDrawFlags_Closed
+IM_DRAW_FLAGS_INVALID_MASK = dcimgui.ImDrawFlags_InvalidMask_
 IM_DRAW_LIST_FLAGS_NONE = dcimgui.ImDrawListFlags_None
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES = dcimgui.ImDrawListFlags_AntiAliasedLines
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_LINES_USE_TEX = dcimgui.ImDrawListFlags_AntiAliasedLinesUseTex
 IM_DRAW_LIST_FLAGS_ANTI_ALIASED_FILL = dcimgui.ImDrawListFlags_AntiAliasedFill
 IM_DRAW_LIST_FLAGS_ALLOW_VTX_OFFSET = dcimgui.ImDrawListFlags_AllowVtxOffset
+IM_DRAW_LIST_FLAGS_TEXT_NO_PIXEL_SNAP = dcimgui.ImDrawListFlags_TextNoPixelSnap
 IM_TEXTURE_FORMAT_RGBA_32 = dcimgui.ImTextureFormat_RGBA32
 IM_TEXTURE_FORMAT_ALPHA8 = dcimgui.ImTextureFormat_Alpha8
 IM_TEXTURE_STATUS_OK = dcimgui.ImTextureStatus_OK
@@ -1265,6 +1280,7 @@ IM_FONT_FLAGS_NONE = dcimgui.ImFontFlags_None
 IM_FONT_FLAGS_NO_LOAD_ERROR = dcimgui.ImFontFlags_NoLoadError
 IM_FONT_FLAGS_NO_LOAD_GLYPHS = dcimgui.ImFontFlags_NoLoadGlyphs
 IM_FONT_FLAGS_LOCK_BAKED_SIZES = dcimgui.ImFontFlags_LockBakedSizes
+IM_FONT_FLAGS_IMPLICIT_REF_SIZE = dcimgui.ImFontFlags_ImplicitRefSize
 VIEWPORT_FLAGS_NONE = dcimgui.ImGuiViewportFlags_None
 VIEWPORT_FLAGS_IS_PLATFORM_WINDOW = dcimgui.ImGuiViewportFlags_IsPlatformWindow
 VIEWPORT_FLAGS_IS_PLATFORM_MONITOR = dcimgui.ImGuiViewportFlags_IsPlatformMonitor
@@ -3325,6 +3341,7 @@ def get_id_int(int_id: int):
 def text_unformatted(text: str):
     """
     Widgets: Text
+    - Note that all functions taking format strings in the API may be passed ("%s", text) or ("%.*s", text_len, text): which will automatically bypass the formatter.
     Implied text_end = null
     """
     dcimgui.ImGui_TextUnformatted(
@@ -3340,7 +3357,7 @@ def text_unformatted(text: str):
 # ?returns(None)
 def text_unformatted_ex(text: str, text_end: str=None):
     """
-    Raw text without formatting. roughly equivalent to text('%s', text) but: a) doesn't require null terminated string if 'text_end' is specified, b) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.
+    Raw text without formatting. practically equivalent to 'text('%s', text)' but doesn't require null terminated string if 'text_end' is specified.
     """
     bytes_text_end = _bytes(text_end) if text_end is not None else None
 
@@ -3788,7 +3805,7 @@ def image(tex_ref: ImTextureRef, image_size: Tuple[float, float]):
     Widgets: Images
     - Read about ImTextureID/ImTextureRef  here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
     - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-    - Image() pads adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
+    - Image() adds style.ImageBorderSize on each side, ImageButton() adds style.FramePadding on each side.
     - ImageButton() draws a background based on regular Button() color + optionally an inner background if specified.
     - An obsolete version of Image(), before 1.91.9 (March 2025), had a 'tint_col' parameter which is now supported by the ImageWithBg() function.
     Implied uv0 = imvec2(0, 0), uv1 = imvec2(1, 1)
@@ -5595,21 +5612,6 @@ def color_button_ex(desc_id: str, col: Tuple[float, float, float, float], flags:
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
-def set_color_edit_options(flags: int):
-    """
-    Initialize current options (generally on application startup) if you want to select a default format, picker type, etc. user will be able to change many settings, unless you pass the _nooptions flag to your calls.
-    """
-    dcimgui.ImGui_SetColorEditOptions(
-        flags
-    )
-# [End Function]
-
-# [Function]
-# ?use_template(False)
-# ?active(False)
-# ?invisible(False)
-# ?custom_comment_only(False)
 # ?returns(bool)
 def tree_node(label: str):
     """
@@ -5879,6 +5881,22 @@ def set_next_item_storage_id(storage_id: int):
     dcimgui.ImGui_SetNextItemStorageID(
         storage_id
     )
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def tree_node_get_open(storage_id: int):
+    """
+    Retrieve tree node open/close state.
+    """
+    cdef bool res = dcimgui.ImGui_TreeNodeGetOpen(
+        storage_id
+    )
+    return res
 # [End Function]
 
 # [Function]
@@ -6295,7 +6313,7 @@ def begin_menu_bar():
     - Use BeginMenuBar() on a window ImGuiWindowFlags_MenuBar to append to its menu bar.
     - Use BeginMainMenuBar() to create a menu bar at the top of the screen and append to it.
     - Use BeginMenu() to create a menu. You can call BeginMenu() multiple time with the same identifier to append more items to it.
-    - Not that MenuItem() keyboardshortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
+    - Note that MenuItem() keyboard shortcuts are displayed as a convenience but _not processed_ by Dear ImGui at the moment.
     Append to menu-bar of current window (requires imguiwindowflags_menubar flag set on parent window).
     """
     cdef bool res = dcimgui.ImGui_BeginMenuBar()
@@ -6557,7 +6575,7 @@ def begin_popup(str_id: str, flags: int=0):
     """
     Popups, Modals
     - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.
-    - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
+    - If not modal: they can be closed by clicking anywhere outside them, or by pressing Escape (call 'Shortcut(ImGuiKey_Escape)' to claim a higher-priority shortcut).
     - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.
     - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.
     - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().
@@ -6610,11 +6628,13 @@ def end_popup():
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def open_popup(str_id: str, popup_flags: int=0):
     """
     Popups: open/close functions
-    - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.
+    - OpenPopup(): set popup state to open (unless one of the specified ImGuiPopupFlags prevent opening).
+    - OpenPopupXXX() functions return true when the popup is toggled open, which allows you to capture local state if needed.
+    You may also call IsWindowAppearing() inside the later BeginPopup() scope if you need to prepare/compute data for the popup.
     - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.
     - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.
     - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).
@@ -6622,10 +6642,11 @@ def open_popup(str_id: str, popup_flags: int=0):
     - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.
     Call to mark popup as open (don't call every frame!).
     """
-    dcimgui.ImGui_OpenPopup(
+    cdef bool res = dcimgui.ImGui_OpenPopup(
         _bytes(str_id),
         popup_flags
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -6633,15 +6654,16 @@ def open_popup(str_id: str, popup_flags: int=0):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def open_popup_id(id_: int, popup_flags: int=0):
     """
     Id overload to facilitate calling from nested stacks
     """
-    dcimgui.ImGui_OpenPopupID(
+    cdef bool res = dcimgui.ImGui_OpenPopupID(
         id_,
         popup_flags
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -6649,17 +6671,18 @@ def open_popup_id(id_: int, popup_flags: int=0):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def open_popup_on_item_click(str_id: str=None, popup_flags: int=0):
     """
     Helper to open popup when clicked on last item. default to imguipopupflags_mousebuttonright == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)
     """
     bytes_str_id = _bytes(str_id) if str_id is not None else None
 
-    dcimgui.ImGui_OpenPopupOnItemClick(
+    cdef bool res = dcimgui.ImGui_OpenPopupOnItemClick(
         ((<char*>bytes_str_id if str_id is not None else NULL)),
         popup_flags
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -6941,14 +6964,15 @@ def table_set_column_index(column_n: int):
 def table_setup_column(label: str, flags: int=0):
     """
     Tables: Headers & Columns declaration
-    - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.
+    - Use TableSetupColumn() to specify label, resizing policy, default width/weight, various other flags etc.
+    (the trailing 'ImGuiID user_data', which used to be referred to as 'ImGuiID user_id', is merely user data that is blindly copied in ImGuiTableColumnSortSpecs).
     - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.
     Headers are required to perform: reordering, sorting, and opening the context menu.
     The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.
     - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in
     some advanced use cases (e.g. adding custom widgets in header row).
-    - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.
-    Implied init_width_or_weight = 0.0f, user_id = 0
+    - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled. When freezing columns you would usually also use ImGuiTableColumnFlags_NoHide on them.
+    Implied init_width_or_weight = 0.0f, user_data = 0
     """
     dcimgui.ImGui_TableSetupColumn(
         _bytes(label),
@@ -6962,12 +6986,12 @@ def table_setup_column(label: str, flags: int=0):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_id: int=0):
+def table_setup_column_ex(label: str, flags: int=0, init_width_or_weight: float=0.0, user_data: int=0):
     dcimgui.ImGui_TableSetupColumnEx(
         _bytes(label),
         flags,
         init_width_or_weight,
-        user_id
+        user_data
     )
 # [End Function]
 
@@ -7877,7 +7901,7 @@ def set_nav_cursor_visible(visible: bool):
 def set_next_item_allow_overlap():
     """
     Overlapping mode
-    Allow next item to be overlapped by a subsequent item. useful with invisible buttons, selectable, treenode covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
+    Allow next item to be overlapped by a subsequent item. typically useful with invisiblebutton(), selectable(), treenode() covering an area where subsequent items may need to be added. note that both selectable() and treenode() have dedicated flags doing this.
     """
     dcimgui.ImGui_SetNextItemAllowOverlap()
 # [End Function]
@@ -8152,6 +8176,37 @@ def get_item_flags():
     Get generic flags of last item
     """
     cdef dcimgui.ImGuiItemFlags res = dcimgui.ImGui_GetItemFlags()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(int)
+def get_item_clicked_count_with_single_click_delay():
+    """
+    Implied mouse_button = 0, delay = -1.0f
+    """
+    cdef int res = dcimgui.ImGui_GetItemClickedCountWithSingleClickDelay()
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(int)
+def get_item_clicked_count_with_single_click_delay_ex(mouse_button: int=0, delay: float=-1.0):
+    """
+    [beta] building block for disambiguation between single-click and double-click. returns 1 on single-click but delayed by io.mousesingleclickdelay after mouse release. returns 2+ on double-click or repeated clicks.
+    """
+    cdef int res = dcimgui.ImGui_GetItemClickedCountWithSingleClickDelayEx(
+        mouse_button,
+        delay
+    )
     return res
 # [End Function]
 
@@ -8638,20 +8693,22 @@ def set_next_item_shortcut(key_chord: int, flags: int=0):
 # ?active(False)
 # ?invisible(False)
 # ?custom_comment_only(False)
-# ?returns(None)
+# ?returns(bool)
 def set_item_key_owner(key: int):
     """
     Inputs Utilities: Key/Input Ownership [BETA]
     - One common use case would be to allow your items to disable standard inputs behaviors such
     as Tab or Alt key handling, Mouse Wheel scrolling, etc.
-    e.g. Button(...); SetItemKeyOwner(ImGuiKey_MouseWheelY); to make hovering/activating a button disable wheel for scrolling.
+    e.g. `Button(...); if (SetItemKeyOwner(ImGuiKey_MouseWheelY)) ( ... )` to make hovering/activating a button disable wheel for scrolling.
     - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.
+    - The return value of SetItemKeyOwner() says if ownership has been requested for the item, which is a shortcut to calling yet non-public TestKeyOwner() function.
     - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.
-    Set key owner to last item id if it is hovered or active. equivalent to 'if (isitemhovered() || isitemactive()) ( setkeyowner(key, getitemid());'.
+    Set key owner to last item id if it is hovered or active. return true when ownership has been set. roughly equivalent to 'if (testkeyowner(key, getitemid()) && (isitemhovered() || isitemactive())) ( setkeyowner(key, getitemid());'. 
     """
-    dcimgui.ImGui_SetItemKeyOwner(
+    cdef bool res = dcimgui.ImGui_SetItemKeyOwner(
         key
     )
+    return res
 # [End Function]
 
 # [Function]
@@ -8745,11 +8802,27 @@ def is_mouse_double_clicked(button: int):
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(bool)
-def is_mouse_released_with_delay(button: int, delay: float):
+def is_mouse_released_with_delay(button: int):
     """
-    Delayed mouse release (use very sparingly!). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test. this is a very rarely used ui idiom, but some apps use this: e.g. ms explorer single click on an icon to rename.
+    Implied delay = -1.f
     """
     cdef bool res = dcimgui.ImGui_IsMouseReleasedWithDelay(
+        button
+    )
+    return res
+# [End Function]
+
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(bool)
+def is_mouse_released_with_delay_ex(button: int, delay: float=-1.):
+    """
+    Delayed mouse release. use sparingly. prefer higher-level helper getitemclickedcountwithsingleclickdelay(). generally used with 'delay >= io.mousedoubleclicktime' + combined with a 'io.mouseclickedlastcount==1' test.
+    """
+    cdef bool res = dcimgui.ImGui_IsMouseReleasedWithDelayEx(
         button,
         delay
     )
@@ -9999,7 +10072,7 @@ cdef class ImGuiTableColumnSortSpecs:
     @property
     def column_user_id(self):
         """
-        User id of the column (if specified by a tablesetupcolumn() call)
+        User data for the column (if specified by a tablesetupcolumn() call in the 'imguiid user_data' field). fixme: should be called 'userdata'..
         """
         cdef dcimgui.ImGuiID res = dereference(self._ptr).ColumnUserID
         return res
@@ -13159,7 +13232,7 @@ cdef class ImGuiStyle:
     @property
     def tab_close_button_min_width_selected(self):
         """
-        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width.
+        -1: always visible. 0.0f: visible when hovered. >0.0f: visible when hovered if minimum width. flt_max: never shrink, will behave like imguitabbarflags_fittingpolicyscroll.
         """
         cdef float res = dereference(self._ptr).TabCloseButtonMinWidthSelected
         return res
@@ -13328,9 +13401,47 @@ cdef class ImGuiStyle:
     # ?custom_comment_only(False)
     # ?returns(float)
     @property
+    def menu_item_rounding(self):
+        """
+        Radius of menuitem, beginmenu rounding. 
+        """
+        cdef float res = dereference(self._ptr).MenuItemRounding
+        return res
+    @menu_item_rounding.setter
+    def menu_item_rounding(self, value: float):
+        # dereference(self._ptr).MenuItemRounding = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def selectable_rounding(self):
+        """
+        Radius of selectable rounding. modifying this is discouraged. contiguous selections will not look right. (#7589)
+        """
+        cdef float res = dereference(self._ptr).SelectableRounding
+        return res
+    @selectable_rounding.setter
+    def selectable_rounding(self, value: float):
+        # dereference(self._ptr).SelectableRounding = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
     def drag_drop_target_rounding(self):
         """
-        Radius of the drag and drop target frame.
+        Radius of the drag and drop target frame. when <0.0f: use framerounding.
         """
         cdef float res = dereference(self._ptr).DragDropTargetRounding
         return res
@@ -13451,6 +13562,44 @@ cdef class ImGuiStyle:
     @selectable_text_align.setter
     def selectable_text_align(self, value: Tuple[float, float]):
         # dereference(self._ptr).SelectableTextAlign = _cast_tuple_ImVec2(value)
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def input_text_cursor_size(self):
+        """
+        Thickness of cursor/caret in inputtext().
+        """
+        cdef float res = dereference(self._ptr).InputTextCursorSize
+        return res
+    @input_text_cursor_size.setter
+    def input_text_cursor_size(self, value: float):
+        # dereference(self._ptr).InputTextCursorSize = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def separator_size(self):
+        """
+        Thickness of border in separator(). must be >= 1.0f.
+        """
+        cdef float res = dereference(self._ptr).SeparatorSize
+        return res
+    @separator_size.setter
+    def separator_size(self, value: float):
+        # dereference(self._ptr).SeparatorSize = value
         raise NotImplementedError
     # [End Field]
 
@@ -13827,7 +13976,7 @@ cdef class ImGuiStyle:
     def main_scale(self):
         """
         [Internal]
-        Fixme-wip: reference scale, as applied by scaleallsizes().
+        Fixme-wip: reference scale, as applied by scaleallsizes(). please do not use this for now.
         """
         cdef float res = dereference(self._ptr)._MainScale
         return res
@@ -13864,7 +14013,7 @@ cdef class ImGuiStyle:
     # ?returns(None)
     def scale_all_sizes(self: ImGuiStyle, scale_factor: float):
         """
-        Scale all spacing/padding/thickness values. do not scale fonts.
+        Scale all spacing/padding/thickness values. do not scale fonts. see comments in definition. consider not calling this if your initial scale factor if <1.0.
         """
         dcimgui.ImGuiStyle_ScaleAllSizes(
             self._ptr,
@@ -14499,6 +14648,7 @@ cdef class ImGuiIO:
     def config_viewports_no_auto_merge(self):
         """
         Viewport options (when ImGuiConfigFlags_ViewportsEnable is set)
+        (sorry for the amount of "NoXXXX" flags, which may be harder to reason about! may rework someday)
         = false;         // set to make all floating imgui windows always create their own viewport. otherwise, they are merged into the main host viewports when overlapping it. may also set imguiviewportflags_noautomerge on individual viewport.
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoAutoMerge
@@ -14556,7 +14706,7 @@ cdef class ImGuiIO:
     @property
     def config_viewports_no_default_parent(self):
         """
-        = true           // when false: set secondary viewports' parentviewportid to main viewport id by default. expects the platform backend to setup a parent/child relationship between the os windows based on this value. some backend may ignore this. set to true if you want viewports to automatically be parent of main viewport, otherwise all viewports will be top-level os windows.
+        = true           // disable setting os window parent to main viewport by default. the platform backend is expected to honor `viewport->parentviewportid` to setup a parent/child relationship between the os windows (supported if imguibackendflags_hasparentviewport is set). when parented: child windows always appear in front of their parent. set to false if you want viewports to automatically be parent of main viewport, otherwise all viewports will be top-level os windows. parent/child relationship may be set on a per-window basis using imguiwindowclass.
         """
         cdef bool res = dereference(self._ptr).ConfigViewportsNoDefaultParent
         return res
@@ -14632,29 +14782,9 @@ cdef class ImGuiIO:
     # ?custom_comment_only(False)
     # ?returns(bool)
     @property
-    def mouse_draw_cursor(self):
-        """
-        Miscellaneous options
-        (you can visualize and interact with all options in 'Demo->Configuration')
-        = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
-        """
-        cdef bool res = dereference(self._ptr).MouseDrawCursor
-        return res
-    @mouse_draw_cursor.setter
-    def mouse_draw_cursor(self, value: bool):
-        # dereference(self._ptr).MouseDrawCursor = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
     def config_mac_osx_behaviors(self):
         """
+        Widget options
         = defined(__apple__) // swap cmd<>ctrl keys + os x style text editing cursor movement using alt instead of ctrl, shortcuts using cmd/super instead of ctrl, line/text start and end using cmd+arrows instead of home/end, double click selects by word instead of selecting whole text, multi-selection in lists uses cmd/super instead of ctrl.
         """
         cdef bool res = dereference(self._ptr).ConfigMacOSXBehaviors
@@ -14712,13 +14842,32 @@ cdef class ImGuiIO:
     @property
     def config_input_text_enter_keep_active(self):
         """
-        = false          // [beta] pressing enter will keep item active and select contents (single-line only).
+        = false          // [beta] pressing enter will reactivate item and select all text (single-line only). ctrl+enter or shift+enter will deactivate normally.
         """
         cdef bool res = dereference(self._ptr).ConfigInputTextEnterKeepActive
         return res
     @config_input_text_enter_keep_active.setter
     def config_input_text_enter_keep_active(self, value: bool):
         # dereference(self._ptr).ConfigInputTextEnterKeepActive = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def config_color_edit_flags(self):
+        """
+        = <defaults>     // current settings for coloredit/colorpicker widgets. must have one bit of imguicoloreditflags_displaymask_, one bit of imguicoloreditflags_datatypemask_, one bit of imguicoloreditflags_pickermask_, one bit of imguicoloreditflags_inputmask_. defaults to imguicoloreditflags_defaultoptions_. may be further edited by users, unless you also set imguicoloreditflags_nooptions.
+        """
+        cdef dcimgui.ImGuiColorEditFlags res = dereference(self._ptr).ConfigColorEditFlags
+        return res
+    @config_color_edit_flags.setter
+    def config_color_edit_flags(self, value: int):
+        # dereference(self._ptr).ConfigColorEditFlags = value
         raise NotImplementedError
     # [End Field]
 
@@ -14822,6 +14971,85 @@ cdef class ImGuiIO:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_ini_settings_save_last_used_date(self):
+        """
+        Ini Settings options
+        = true         // enable loading/saving last used day (yyyymmdd) in some .ini struct, making things easier to audit and allowing custom tools to cleanup old data.
+        """
+        cdef bool res = dereference(self._ptr).ConfigIniSettingsSaveLastUsedDate
+        return res
+    @config_ini_settings_save_last_used_date.setter
+    def config_ini_settings_save_last_used_date(self, value: bool):
+        # dereference(self._ptr).ConfigIniSettingsSaveLastUsedDate = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def config_ini_settings_auto_discard_months(self):
+        """
+        = 0          // [beta] set number of months after which unused .ini entries are discarded on load. require platform_io.platform_sessiondate to be set. for systems supporting the feature, .ini entries without a lastused field will always be discarded! please report if you are using this.
+        """
+        cdef int res = dereference(self._ptr).ConfigIniSettingsAutoDiscardMonths
+        return res
+    @config_ini_settings_auto_discard_months.setter
+    def config_ini_settings_auto_discard_months(self, value: int):
+        # dereference(self._ptr).ConfigIniSettingsAutoDiscardMonths = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def config_debug_ini_settings(self):
+        """
+        = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
+        """
+        cdef bool res = dereference(self._ptr).ConfigDebugIniSettings
+        return res
+    @config_debug_ini_settings.setter
+    def config_debug_ini_settings(self, value: bool):
+        # dereference(self._ptr).ConfigDebugIniSettings = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def mouse_draw_cursor(self):
+        """
+        Miscellaneous options
+        (you can visualize and interact with all options in 'Demo->Configuration')
+        = false          // request imgui to draw a mouse cursor for you (if you are on a platform without a mouse cursor). cannot be easily renamed to 'io.configxxx' because this is frequently used by backend implementations.
+        """
+        cdef bool res = dereference(self._ptr).MouseDrawCursor
+        return res
+    @mouse_draw_cursor.setter
+    def mouse_draw_cursor(self, value: bool):
+        # dereference(self._ptr).MouseDrawCursor = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(float)
     @property
     def config_memory_compact_timer(self):
@@ -14847,7 +15075,7 @@ cdef class ImGuiIO:
         """
         Inputs Behaviors
         (other variables, ones which are expected to be tweaked within UI code, are exposed in ImGuiStyle)
-        = 0.30f          // time for a double-click, in seconds.
+        = 0.30f          // time for consecutive clicks to account as a double-click, in seconds.
         """
         cdef float res = dereference(self._ptr).MouseDoubleClickTime
         return res
@@ -14866,13 +15094,32 @@ cdef class ImGuiIO:
     @property
     def mouse_double_click_max_dist(self):
         """
-        = 6.0f           // distance threshold to stay in to validate a double-click, in pixels.
+        = 6.0f           // distance threshold to stay in to validate a double-click or multiple clicks, in pixels.
         """
         cdef float res = dereference(self._ptr).MouseDoubleClickMaxDist
         return res
     @mouse_double_click_max_dist.setter
     def mouse_double_click_max_dist(self, value: float):
         # dereference(self._ptr).MouseDoubleClickMaxDist = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(float)
+    @property
+    def mouse_single_click_delay(self):
+        """
+        = 0.60f          // time for a delayed click when using getitemclickedcountwithsingleclickdelay() or ismousereleasedwithdelay(), in seconds. must be > io.mousedoubleclicktime.
+        """
+        cdef float res = dereference(self._ptr).MouseSingleClickDelay
+        return res
+    @mouse_single_click_delay.setter
+    def mouse_single_click_delay(self, value: float):
+        # dereference(self._ptr).MouseSingleClickDelay = value
         raise NotImplementedError
     # [End Field]
 
@@ -15149,26 +15396,6 @@ cdef class ImGuiIO:
     @config_debug_ignore_focus_loss.setter
     def config_debug_ignore_focus_loss(self, value: bool):
         # dereference(self._ptr).ConfigDebugIgnoreFocusLoss = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(bool)
-    @property
-    def config_debug_ini_settings(self):
-        """
-        Option to audit .ini data
-        = false          // save .ini data with extra comments (particularly helpful for docking, but makes saving slower)
-        """
-        cdef bool res = dereference(self._ptr).ConfigDebugIniSettings
-        return res
-    @config_debug_ini_settings.setter
-    def config_debug_ini_settings(self, value: bool):
-        # dereference(self._ptr).ConfigDebugIniSettings = value
         raise NotImplementedError
     # [End Field]
 
@@ -16620,7 +16847,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def id(self):
         """
-        Widget id                             // read-only
+        Widget id                            // read-only
         """
         cdef dcimgui.ImGuiID res = dereference(self._ptr).ID
         return res
@@ -16777,7 +17004,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def cursor_pos(self):
         """
-        Read-write   // [completion,history,always]
+        Read-write   // [completion,history,always,charfilter]
         """
         cdef int res = dereference(self._ptr).CursorPos
         return res
@@ -16796,7 +17023,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def selection_start(self):
         """
-        Read-write   // [completion,history,always] == to selectionend when no selection
+        Read-write   // [completion,history,always,charfilter] == to selectionend when no selection
         """
         cdef int res = dereference(self._ptr).SelectionStart
         return res
@@ -16815,7 +17042,7 @@ cdef class ImGuiInputTextCallbackData:
     @property
     def selection_end(self):
         """
-        Read-write   // [completion,history,always]
+        Read-write   // [completion,history,always,charfilter]
         """
         cdef int res = dereference(self._ptr).SelectionEnd
         return res
@@ -17041,7 +17268,7 @@ cdef class ImGuiWindowClass:
     before we stabilize Docking features. Please be mindful if using this.
     Provide hints:
     - To the platform backend via altered viewport flags (enable/disable OS decoration, OS task bar icons, etc.)
-    - To the platform backend for OS level parent/child relationships of viewport.
+    - To the platform backend for OS level parent/child relationships of viewport (otherwise: default is configured via io.ConfigViewportsNoDefaultParent)
     - To the docking system for various options and filtering.
     """
     cdef dcimgui.ImGuiWindowClass* _ptr
@@ -17242,6 +17469,25 @@ cdef class ImGuiWindowClass:
     @docking_allow_unclassed.setter
     def docking_allow_unclassed(self, value: bool):
         # dereference(self._ptr).DockingAllowUnclassed = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
+    def platform_icon_data(self):
+        """
+        [experimental] pass opaque data for platform backend to handle.
+        """
+        cdef void* res = dereference(self._ptr).PlatformIconData
+        return res
+    @platform_icon_data.setter
+    def platform_icon_data(self, value: Any):
+        # dereference(self._ptr).PlatformIconData = value
         raise NotImplementedError
     # [End Field]
 
@@ -18390,25 +18636,6 @@ cdef class ImGuiListClipper:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
-    # ?returns(ImGuiContext)
-    @property
-    def ctx(self):
-        """
-        Parent ui context
-        """
-        cdef dcimgui.ImGuiContext* res = dereference(self._ptr).Ctx
-        return ImGuiContext.from_ptr(res)
-    @ctx.setter
-    def ctx(self, value: ImGuiContext):
-        # dereference(self._ptr).Ctx = value._ptr
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
     # ?returns(int)
     @property
     def display_start(self):
@@ -18439,6 +18666,25 @@ cdef class ImGuiListClipper:
     @display_end.setter
     def display_end(self, value: int):
         # dereference(self._ptr).DisplayEnd = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def user_index(self):
+        """
+        Helper storage for user convenience/code. optional, and otherwise unused if you don't use it.
+        """
+        cdef int res = dereference(self._ptr).UserIndex
+        return res
+    @user_index.setter
+    def user_index(self, value: int):
+        # dereference(self._ptr).UserIndex = value
         raise NotImplementedError
     # [End Field]
 
@@ -18485,6 +18731,25 @@ cdef class ImGuiListClipper:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def flags(self):
+        """
+        [internal] flags, currently not yet well exposed.
+        """
+        cdef dcimgui.ImGuiListClipperFlags res = dereference(self._ptr).Flags
+        return res
+    @flags.setter
+    def flags(self, value: int):
+        # dereference(self._ptr).Flags = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(float)
     @property
     def start_pos_y(self):
@@ -18523,6 +18788,25 @@ cdef class ImGuiListClipper:
     # ?active(False)
     # ?invisible(False)
     # ?custom_comment_only(False)
+    # ?returns(ImGuiContext)
+    @property
+    def ctx(self):
+        """
+        [internal] parent ui context
+        """
+        cdef dcimgui.ImGuiContext* res = dereference(self._ptr).Ctx
+        return ImGuiContext.from_ptr(res)
+    @ctx.setter
+    def ctx(self, value: ImGuiContext):
+        # dereference(self._ptr).Ctx = value._ptr
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
     # ?returns(Any)
     @property
     def temp_data(self):
@@ -18534,25 +18818,6 @@ cdef class ImGuiListClipper:
     @temp_data.setter
     def temp_data(self, value: Any):
         # dereference(self._ptr).TempData = value
-        raise NotImplementedError
-    # [End Field]
-
-    # [Field]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(int)
-    @property
-    def flags(self):
-        """
-        [internal] flags, currently not yet well exposed.
-        """
-        cdef dcimgui.ImGuiListClipperFlags res = dereference(self._ptr).Flags
-        return res
-    @flags.setter
-    def flags(self, value: int):
-        # dereference(self._ptr).Flags = value
         raise NotImplementedError
     # [End Field]
 
@@ -20568,9 +20833,81 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
+    def add_line_h(self: ImDrawList, min_x: float, max_x: float, y: float, col: int):
+        """
+        Implied thickness = 1.0f
+        """
+        dcimgui.ImDrawList_AddLineH(
+            self._ptr,
+            min_x,
+            max_x,
+            y,
+            col
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_line_h_ex(self: ImDrawList, min_x: float, max_x: float, y: float, col: int, thickness: float=1.0):
+        dcimgui.ImDrawList_AddLineHEx(
+            self._ptr,
+            min_x,
+            max_x,
+            y,
+            col,
+            thickness
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_line_v(self: ImDrawList, x: float, min_y: float, max_y: float, col: int):
+        """
+        Implied thickness = 1.0f
+        """
+        dcimgui.ImDrawList_AddLineV(
+            self._ptr,
+            x,
+            min_y,
+            max_y,
+            col
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def add_line_v_ex(self: ImDrawList, x: float, min_y: float, max_y: float, col: int, thickness: float=1.0):
+        dcimgui.ImDrawList_AddLineVEx(
+            self._ptr,
+            x,
+            min_y,
+            max_y,
+            col,
+            thickness
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
     def add_rect(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int):
         """
-        Implied rounding = 0.0f, flags = 0, thickness = 1.0f
+        Implied rounding = 0.0f, thickness = 1.0f, flags = 0
         """
         dcimgui.ImDrawList_AddRect(
             self._ptr,
@@ -20586,7 +20923,7 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_rect_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, flags: int=0, thickness: float=1.0):
+    def add_rect_ex(self: ImDrawList, p_min: Tuple[float, float], p_max: Tuple[float, float], col: int, rounding: float=0.0, thickness: float=1.0, flags: int=0):
         """
         A: upper-left, b: lower-right (== upper-left + size)
         """
@@ -20596,8 +20933,8 @@ cdef class ImDrawList:
             _cast_tuple_ImVec2(p_max),
             col,
             rounding,
-            flags,
-            thickness
+            thickness,
+            flags
         )
     # [End Method]
 
@@ -21065,7 +21402,7 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, flags: int, thickness: float):
+    def add_polyline(self: ImDrawList, points: ImVec2, num_points: int, col: int, thickness: float, flags: int=0):
         """
         General polygon
         - Only simple polygons are supported by filling functions (no self-intersections, no holes).
@@ -21076,8 +21413,8 @@ cdef class ImDrawList:
             points._ptr,
             num_points,
             col,
-            flags,
-            thickness
+            thickness,
+            flags
         )
     # [End Method]
 
@@ -21288,12 +21625,12 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def path_stroke(self: ImDrawList, col: int, flags: int=0, thickness: float=1.0):
+    def path_stroke(self: ImDrawList, col: int, thickness: float=1.0, flags: int=0):
         dcimgui.ImDrawList_PathStroke(
             self._ptr,
             col,
-            flags,
-            thickness
+            thickness,
+            flags
         )
     # [End Method]
 
@@ -21433,23 +21770,23 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_callback(self: ImDrawList, callback: Callable, userdata: Any):
+    def add_callback(self: ImDrawList, callback: Callable):
         """
         Advanced: Draw Callbacks
         - May be used to alter render state (change sampler, blending, current shader). May be used to emit custom rendering commands (difficult to do correctly, but possible).
-        - Use special ImDrawCallback_ResetRenderState callback to instruct backend to reset its render state to the default.
+        - Use special GetPlatformIO().DrawCallback_ResetRenderState callback to instruct backend to reset its render state to the default.
+        - See other standard callbacks in GetPlatformIO(), which may or not be supported by your backend.
         - Your rendering loop must check for 'UserCallback' in ImDrawCmd and call the function instead of rendering triangles. All standard backends are honoring this.
         - For some backends, the callback may access selected render-states exposed by the backend in a ImGui_ImplXXXX_RenderState structure pointed to by platform_io.Renderer_RenderState.
         - IMPORTANT: please be mindful of the different level of indirection between using size==0 (copying argument) and using size>0 (copying pointed data into a buffer).
         - If userdata_size == 0: we copy/store the 'userdata' argument as-is. It will be available unmodified in ImDrawCmd::UserCallbackData during render.
         - If userdata_size > 0,  we copy/store 'userdata_size' bytes pointed to by 'userdata'. We store them in a buffer stored inside the drawlist. ImDrawCmd::UserCallbackData will point inside that buffer so you have to retrieve data from there. Your callback may need to use ImDrawCmd::UserCallbackDataSize if you expect dynamically-sized data.
         - Support for userdata_size > 0 was added in v1.91.4, October 2024. So earlier code always only allowed to copy/store a simple void*.
-        Implied userdata_size = 0
+        Implied userdata = null, userdata_size = 0
         """
         dcimgui.ImDrawList_AddCallback(
             self._ptr,
-            callback,
-            userdata
+            callback
         )
     # [End Method]
 
@@ -21459,7 +21796,7 @@ cdef class ImDrawList:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def add_callback_ex(self: ImDrawList, callback: Callable, userdata: Any, userdata_size: int=0):
+    def add_callback_ex(self: ImDrawList, callback: Callable, userdata: Any=None, userdata_size: int=0):
         dcimgui.ImDrawList_AddCallbackEx(
             self._ptr,
             callback,
@@ -21912,15 +22249,15 @@ cdef class ImDrawData:
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
-    def cmd_lists_count(self):
+    def frame_count(self):
         """
-        == cmdlists.size. (obsolete: exists for legacy reasons). number of imdrawlist* to render.
+        Frame counter of the emitter context. mostly for debugging purpose.
         """
-        cdef int res = dereference(self._ptr).CmdListsCount
+        cdef int res = dereference(self._ptr).FrameCount
         return res
-    @cmd_lists_count.setter
-    def cmd_lists_count(self, value: int):
-        # dereference(self._ptr).CmdListsCount = value
+    @frame_count.setter
+    def frame_count(self, value: int):
+        # dereference(self._ptr).FrameCount = value
         raise NotImplementedError
     # [End Field]
 
@@ -22188,7 +22525,7 @@ cdef class ImTextureRect:
     @property
     def x(self):
         """
-        Upper-left coordinates of rectangle to update
+        Upper-left coordinates of rectangle to update, within the parent pixels[] array.
         """
         cdef unsigned short res = dereference(self._ptr).x
         return res
@@ -22207,7 +22544,7 @@ cdef class ImTextureRect:
     @property
     def y(self):
         """
-        Upper-left coordinates of rectangle to update
+        Upper-left coordinates of rectangle to update, within the parent pixels[] array.
         """
         cdef unsigned short res = dereference(self._ptr).y
         return res
@@ -22368,6 +22705,25 @@ cdef class ImTextureData:
     # ?custom_comment_only(False)
     # ?returns(Any)
     @property
+    def queue_user_data(self):
+        """
+        R    -   // convenience storage for a staged/multi-threaded rendering texture queue (e.g. imgui_threaded_rendering.h. see #8597). when != null, core assumes the texture is referenced by the queue.
+        """
+        cdef void* res = dereference(self._ptr).QueueUserData
+        return res
+    @queue_user_data.setter
+    def queue_user_data(self, value: Any):
+        # dereference(self._ptr).QueueUserData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
     def tex_id(self):
         """
         R    w   // backend-specific texture identifier. always use settexid() to modify! the identifier will stored in imdrawcmd::gettexid() and passed to backend's renderdrawdata function.
@@ -22465,7 +22821,7 @@ cdef class ImTextureData:
     @property
     def pixels(self):
         """
-        W    r   // pointer to buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
+        W    r   // pointer to whole texture buffer holding 'width*height' pixels and 'width*height*bytesperpixels' bytes.
         """
         cdef unsigned char* res = dereference(self._ptr).Pixels
         return res
@@ -23932,7 +24288,7 @@ cdef class ImFontAtlas:
     - Call Build() + GetTexDataAsAlpha8() or GetTexDataAsRGBA32() to build and retrieve pixels data.
     - Call SetTexID(my_tex_id); and pass the pointer/identifier to your texture in a format natural to your graphics API.
     Common pitfalls:
-    - If you pass a 'glyph_ranges' array to AddFont*** functions, you need to make sure that your array persist up until the
+    - If you pass a 'glyph_ranges' array to AddFont*** functions, you need to make sure that your array persists up until the
     atlas is build (when calling GetTexData*** or Build()). We only copy the pointer, not the data.
     - Important: By default, AddFontFromMemoryTTF() takes ownership of the data. Even though we are not writing to it, we will free the pointer on destruction.
     You can set font_cfg->FontDataOwnedByAtlas=false to keep ownership of your data and it won't be freed,
@@ -24692,24 +25048,12 @@ cdef class ImFontAtlas:
     # ?custom_comment_only(False)
     # ?returns(None)
     def remove_font(self: ImFontAtlas, font: ImFont):
+        """
+        Remove a font
+        """
         dcimgui.ImFontAtlas_RemoveFont(
             self._ptr,
             font._ptr
-        )
-    # [End Method]
-
-    # [Method]
-    # ?use_template(False)
-    # ?active(False)
-    # ?invisible(False)
-    # ?custom_comment_only(False)
-    # ?returns(None)
-    def clear(self: ImFontAtlas):
-        """
-        Clear everything (input fonts, output glyphs/textures).
-        """
-        dcimgui.ImFontAtlas_Clear(
-            self._ptr
         )
     # [End Method]
 
@@ -24750,12 +25094,15 @@ cdef class ImFontAtlas:
     # ?invisible(False)
     # ?custom_comment_only(False)
     # ?returns(None)
-    def clear_input_data(self: ImFontAtlas):
+    def clear(self: ImFontAtlas):
         """
-        As we are transitioning toward a new font system, we expect to obsolete those soon:
-        [obsolete] clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+        Clearing the atlas/fonts has little use nowadays, unless you want to batch remove all fonts. 
+        - Since 1.92, you can call ClearFonts() mid-frame, if you load new fonts afterwards. 
+        - As we are transitioning toward our new font system the semantic for those functions gets increasingly misleading and are often a source of issues.
+        TL;DR; most likely, don't use any of those functions. We expect to obsolete/rework them.
+        Clear everything (fonts + textures). don't call mid-frame!
         """
-        dcimgui.ImFontAtlas_ClearInputData(
+        dcimgui.ImFontAtlas_Clear(
             self._ptr
         )
     # [End Method]
@@ -24768,9 +25115,24 @@ cdef class ImFontAtlas:
     # ?returns(None)
     def clear_fonts(self: ImFontAtlas):
         """
-        [obsolete] clear input+output font data (same as clearinputdata() + glyphs storage, uv coordinates).
+        Clear input+output font data/glyphs. new fonts and textures will be recreated afterwards.
         """
         dcimgui.ImFontAtlas_ClearFonts(
+            self._ptr
+        )
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(None)
+    def clear_input_data(self: ImFontAtlas):
+        """
+        [obsolete] clear input data (all imfontconfig structures including sizes, ttf data, glyph ranges, etc.) = all the data used to build the texture and fonts.
+        """
+        dcimgui.ImFontAtlas_ClearInputData(
             self._ptr
         )
     # [End Method]
@@ -26150,6 +26512,25 @@ cdef class ImGuiViewport:
     # ?custom_comment_only(False)
     # ?returns(Any)
     @property
+    def platform_icon_data(self):
+        """
+        Void* to hold custom data structure for the os / platform to specify an icon. currently unused for exposed to allow experiments.
+        """
+        cdef void* res = dereference(self._ptr).PlatformIconData
+        return res
+    @platform_icon_data.setter
+    def platform_icon_data(self, value: Any):
+        # dereference(self._ptr).PlatformIconData = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Any)
+    @property
     def platform_handle(self):
         """
         Void* to hold higher-level, platform window handle (e.g. hwnd for win32 backend, uint32 windowid for sdl, glfwwindow* for glfw), for findviewportbyplatformhandle().
@@ -26284,6 +26665,19 @@ cdef class ImGuiViewport:
             self._ptr
         )
         return _cast_ImVec2_tuple(res)
+    # [End Method]
+
+    # [Method]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(str)
+    def get_debug_name(self: ImGuiViewport):
+        cdef const char* res = dcimgui.ImGuiViewport_GetDebugName(
+            self._ptr
+        )
+        return _from_bytes(res)
     # [End Method]
 
 # [End Class]
@@ -26481,6 +26875,27 @@ cdef class ImGuiPlatformIO:
     # ?custom_comment_only(False)
     # ?returns(int)
     @property
+    def platform_session_date(self):
+        """
+        Optional: Platform time/date
+        This is automatically filled on startup. Used to store a "last used date" in some .ini structures. Facilitate creating tools to clean up old/unused data.
+        Integer storing yyyymmdd e.g. 20261231 corresponding to the beginning of application session.
+        """
+        cdef int res = dereference(self._ptr).Platform_SessionDate
+        return res
+    @platform_session_date.setter
+    def platform_session_date(self, value: int):
+        # dereference(self._ptr).Platform_SessionDate = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
     def renderer_texture_max_width(self):
         """
         Optional: Maximum texture size supported by renderer (used to adjust how we size textures). 0 if not known.
@@ -26525,6 +26940,64 @@ cdef class ImGuiPlatformIO:
     @renderer_render_state.setter
     def renderer_render_state(self, value: Any):
         # dereference(self._ptr).Renderer_RenderState = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def draw_callback_reset_render_state(self):
+        """
+        Standard draw callbacks provided by renderer backend.
+        Request to reset the graphics/render state.
+        """
+        cdef dcimgui.ImDrawCallback res = dereference(self._ptr).DrawCallback_ResetRenderState
+        return res
+    @draw_callback_reset_render_state.setter
+    def draw_callback_reset_render_state(self, value: Callable):
+        # dereference(self._ptr).DrawCallback_ResetRenderState = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def draw_callback_set_sampler_linear(self):
+        """
+        Request backend to set texture sampling to linear.
+        """
+        cdef dcimgui.ImDrawCallback res = dereference(self._ptr).DrawCallback_SetSamplerLinear
+        return res
+    @draw_callback_set_sampler_linear.setter
+    def draw_callback_set_sampler_linear(self, value: Callable):
+        # dereference(self._ptr).DrawCallback_SetSamplerLinear = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(Callable)
+    @property
+    def draw_callback_set_sampler_nearest(self):
+        """
+        Request backend to set texture sampling to nearest/point.
+        """
+        cdef dcimgui.ImDrawCallback res = dereference(self._ptr).DrawCallback_SetSamplerNearest
+        return res
+    @draw_callback_set_sampler_nearest.setter
+    def draw_callback_set_sampler_nearest(self, value: Callable):
+        # dereference(self._ptr).DrawCallback_SetSamplerNearest = value
         raise NotImplementedError
     # [End Field]
 
@@ -27890,6 +28363,17 @@ def c_impl_open_gl3_update_texture(tex: Any):
     )
 # [End Function]
 
+# [Function]
+# ?use_template(False)
+# ?active(False)
+# ?invisible(False)
+# ?custom_comment_only(False)
+# ?returns(ImGui_ImplOpenGL3_RenderState)
+def c_impl_open_gl3_get_render_state():
+    cdef dcimgui.ImGui_ImplOpenGL3_RenderState* res = dcimgui.cImGui_ImplOpenGL3_GetRenderState()
+    return ImGui_ImplOpenGL3_RenderState.from_ptr(res)
+# [End Function]
+
 # [Class]
 # [Class Constants]
 # ?use_template(False)
@@ -27926,6 +28410,120 @@ cdef class ImDrawData:
         cdef unsigned int ptr_int = <uintptr_t>self._ptr
         return hash(ptr_int)
     # [End Class Constants]
+
+# [End Class]
+
+# [Class]
+# [Class Constants]
+# ?use_template(False)
+# ?active(True)
+# ?invisible(False)
+# ?custom_comment_only(False)
+cdef class ImGui_ImplOpenGL3_RenderState:
+    """
+    [BETA] Selected render state data shared with callbacks.
+    This is temporarily stored in GetPlatformIO().Renderer_RenderState during the ImGui_ImplOpenGL3_RenderDrawData() call.
+    (Please open an issue if you feel you need access to more data)
+    """
+    cdef dcimgui.ImGui_ImplOpenGL3_RenderState* _ptr
+    cdef bool dynamically_allocated
+    
+    @staticmethod
+    cdef ImGui_ImplOpenGL3_RenderState from_ptr(dcimgui.ImGui_ImplOpenGL3_RenderState* _ptr):
+        if _ptr == NULL:
+            return None
+        cdef ImGui_ImplOpenGL3_RenderState wrapper = ImGui_ImplOpenGL3_RenderState.__new__(ImGui_ImplOpenGL3_RenderState)
+        wrapper._ptr = _ptr
+        wrapper.dynamically_allocated = False
+        return wrapper
+    
+    @staticmethod
+    cdef ImGui_ImplOpenGL3_RenderState from_heap_ptr(dcimgui.ImGui_ImplOpenGL3_RenderState* _ptr):
+        wrapper = ImGui_ImplOpenGL3_RenderState.from_ptr(_ptr)
+        if wrapper is None:
+            return None
+        wrapper.dynamically_allocated = True
+        return wrapper
+    
+    def __init__(self):
+        raise TypeError("This class cannot be instantiated directly.")
+
+    def __hash__(self) -> int:
+        if self._ptr == NULL:
+            raise RuntimeError("Won't hash a NULL pointer")
+        cdef unsigned int ptr_int = <uintptr_t>self._ptr
+        return hash(ptr_int)
+    # [End Class Constants]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def use_bind_sampler(self):
+        cdef bool res = dereference(self._ptr).UseBindSampler
+        return res
+    @use_bind_sampler.setter
+    def use_bind_sampler(self, value: bool):
+        # dereference(self._ptr).UseBindSampler = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(bool)
+    @property
+    def use_tex_parameter_filter(self):
+        cdef bool res = dereference(self._ptr).UseTexParameterFilter
+        return res
+    @use_tex_parameter_filter.setter
+    def use_tex_parameter_filter(self, value: bool):
+        # dereference(self._ptr).UseTexParameterFilter = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def current_sampler(self):
+        """
+        (gluint) used if usebindsampler == true, otherwise always 0
+        """
+        cdef unsigned int res = dereference(self._ptr).CurrentSampler
+        return res
+    @current_sampler.setter
+    def current_sampler(self, value: int):
+        # dereference(self._ptr).CurrentSampler = value
+        raise NotImplementedError
+    # [End Field]
+
+    # [Field]
+    # ?use_template(False)
+    # ?active(False)
+    # ?invisible(False)
+    # ?custom_comment_only(False)
+    # ?returns(int)
+    @property
+    def current_tex_parameter_filter(self):
+        """
+        (gluint) used if usetexparametertosetsampler == true
+        """
+        cdef unsigned int res = dereference(self._ptr).CurrentTexParameterFilter
+        return res
+    @current_tex_parameter_filter.setter
+    def current_tex_parameter_filter(self, value: int):
+        # dereference(self._ptr).CurrentTexParameterFilter = value
+        raise NotImplementedError
+    # [End Field]
 
 # [End Class]
 

@@ -374,14 +374,14 @@ class Binding(IBinding):
                 return _from_bytes(self.buffer)
             @value.setter
             def value(self, value: str):
-                # Remember: len(bytes(str)) != len(str)
+                # Remember: len(_bytes(value)) != len(value)
                 # So to mark the end of the string, you should use the len(bytes).
-                c_bytes = _bytes(value)
-                n_bytes = len(c_bytes)
-                if n_bytes >= self._buffer_size:
-                    self.resize(self._buffer_size * 2)
-                strncpy(self.buffer, c_bytes, self._buffer_size)
-                self.buffer[min(n_bytes, self._buffer_size - 1)] = 0
+                c_str = _bytes(value)
+                c_str_len = len(c_str)
+                if c_str_len >= self._buffer_size - 1:
+                    self.resize(max(self._buffer_size * 2, c_str_len * 2))
+                strncpy(self.buffer, c_str, c_str_len)
+                self.buffer[min(c_str_len, self._buffer_size - 1)] = 0
             
             def resize(self, to_size: int):
                 IM_ASSERT(to_size > 0)
