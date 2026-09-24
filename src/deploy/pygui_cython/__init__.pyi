@@ -2735,7 +2735,7 @@ def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), o
 #     """
 #     pass
 
-def push_font_float(font: ImFont, font_size_base_unscaled: float) -> None:
+def push_font_float(font: Optional[ImFont], font_size_base_unscaled: float) -> None:
     """
     Parameters stacks (font)
     - PushFont(font, 0.0f)                       // Change font and keep current size

@@ -7725,12 +7725,12 @@ def progress_bar(fraction: float, size_arg: Tuple[float, float]=(-FLT_MIN, 0), o
 # [End Function]
 
 # [Function]
-# ?use_template(False)
+# ?use_template(True)
 # ?active(True)
 # ?invisible(False)
 # ?custom_comment_only(False)
 # ?returns(None)
-def push_font_float(font: ImFont, font_size_base_unscaled: float):
+def push_font_float(font: Optional[ImFont], font_size_base_unscaled: float):
     """
     Parameters stacks (font)
     - PushFont(font, 0.0f)                       // Change font and keep current size
@@ -7751,7 +7751,7 @@ def push_font_float(font: ImFont, font_size_base_unscaled: float):
     Use null as a shortcut to keep current font. use 0.0f to keep current size.
     """
     dcimgui.ImGui_PushFontFloat(
-        font._ptr,
+        NULL if font is not None else font._ptr,
         font_size_base_unscaled
     )
 # [End Function]
